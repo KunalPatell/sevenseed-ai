@@ -87,6 +87,13 @@ COPY --chown=user apps/breakdown-factor/backend/ $HOME/app/apps/breakdown-factor
 COPY --chown=user apps/avp-charitable-trust/backend/ $HOME/app/apps/avp-charitable-trust/backend/
 COPY --chown=user apps/decode-forest-pharmacy/backend/ $HOME/app/apps/decode-forest-pharmacy/backend/
 COPY --chown=user apps/sevenforce/backend/ $HOME/app/apps/sevenforce/backend/
+# Comonk: flat layout (backend source IS the app root), copy whole folder minus heavy backup files
+COPY --chown=user apps/comonk/comonk_backend.py $HOME/app/apps/comonk/comonk_backend.py
+COPY --chown=user apps/comonk/comonk_agents.py $HOME/app/apps/comonk/comonk_agents.py
+COPY --chown=user apps/comonk/comonk_rag.py $HOME/app/apps/comonk/comonk_rag.py
+COPY --chown=user apps/comonk/questions.py $HOME/app/apps/comonk/questions.py
+COPY --chown=user apps/comonk/requirements_comonk.txt $HOME/app/apps/comonk/requirements_comonk.txt
+COPY --chown=user apps/comonk/comonk.db $HOME/app/apps/comonk/comonk.db
 
 # Unified static tree the hub serves directly (prefixes match child_processes.CHILDREN)
 COPY --chown=user --from=sevenseed-frontend /app/sevenseed/out $HOME/app/apps/sevenseed/backend/static
@@ -96,6 +103,8 @@ COPY --chown=user --from=breakdown-frontend /app/breakdown/out $HOME/app/apps/se
 COPY --chown=user --from=trust-frontend /app/trust/out $HOME/app/apps/sevenseed/backend/static/trust
 COPY --chown=user --from=pharmacy-frontend /app/pharmacy/out $HOME/app/apps/sevenseed/backend/static/pharmacy
 COPY --chown=user apps/sevenforce/backend/static/ $HOME/app/apps/sevenseed/backend/static/sevenforce/
+# Comonk frontend: plain HTML/JS (no Next.js build needed)
+COPY --chown=user apps/comonk/frontend/ $HOME/app/apps/sevenseed/backend/static/comonk-ai/
 
 WORKDIR $HOME/app/apps/sevenseed/backend
 RUN chown -R user:user $HOME/app

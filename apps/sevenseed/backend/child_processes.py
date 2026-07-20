@@ -32,7 +32,8 @@ own first request, and stops itself after IDLE_TIMEOUT_SECONDS of no traffic,
 so steady-state memory is the hub plus whatever's actually in use - not all six
 at once.
 
-Comonk is deliberately not in this list - see main.py for why.
+Comonk is also included as a child process here — it runs alongside its own
+separate live Render service (comonk-ai.onrender.com) which stays untouched.
 """
 from __future__ import annotations
 
@@ -49,7 +50,9 @@ from fastapi import Request, Response
 
 APPS_DIR = Path(__file__).resolve().parents[2]
 
-# prefix -> (folder name under apps/, internal port)
+# prefix -> (folder name under apps/, internal port, optional overrides)
+# backend_subdir: subfolder under folder/ that contains main.py (default: "backend")
+# main_file: entry point filename (default: "main.py")
 CHILDREN: Dict[str, Dict[str, object]] = {
     "avp-emart": {"folder": "avp-emart", "port": 8001},
     "avpu": {"folder": "avpu", "port": 8002},
@@ -57,6 +60,8 @@ CHILDREN: Dict[str, Dict[str, object]] = {
     "trust": {"folder": "avp-charitable-trust", "port": 8004},
     "pharmacy": {"folder": "decode-forest-pharmacy", "port": 8005},
     "sevenforce": {"folder": "sevenforce", "port": 8006},
+    # Comonk: flat structure (no /backend/ subfolder), entry point is comonk_backend.py
+    "comonk-ai": {"folder": "comonk", "port": 8007, "backend_subdir": "", "main_file": "comonk_backend.py"},
 }
 
 _HOP_BY_HOP = {"content-length", "transfer-encoding", "connection", "keep-alive"}
@@ -86,11 +91,16 @@ def _is_running(prefix: str) -> bool:
 
 def _spawn(prefix: str) -> None:
     info = CHILDREN[prefix]
-    backend_dir = APPS_DIR / str(info["folder"]) / "backend"
+    backend_subdir = str(info.get("backend_subdir", "backend"))
+    main_file = str(info.get("main_file", "main.py"))
+    if backend_subdir:
+        backend_dir = APPS_DIR / str(info["folder"]) / backend_subdir
+    else:
+        backend_dir = APPS_DIR / str(info["folder"])
     env = dict(os.environ)
     env["PORT"] = str(info["port"])
     print(f"[hub] starting child '{prefix}' from {backend_dir} on port {info['port']}")
-    _procs[prefix] = subprocess.Popen([sys.executable, "main.py"], cwd=str(backend_dir), env=env)
+    _procs[prefix] = subprocess.Popen([sys.executable, main_file], cwd=str(backend_dir), env=env)
 
 
 def _stop(prefix: str) -> None:

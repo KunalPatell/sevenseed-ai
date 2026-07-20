@@ -312,18 +312,10 @@ def delete_pitch(item_id: int):
 from features import router as _feat_router
 app.include_router(_feat_router)
 
-# ── Comonk redirect: comonk stays as its own live Render service.
-# /comonk-ai and /comonk-ai/* all redirect to comonk-ai.onrender.com
-from fastapi.responses import RedirectResponse
-
-@app.get("/comonk-ai")
-@app.get("/comonk-ai/")
-async def _comonk_redirect_root():
-    return RedirectResponse(url="https://comonk-ai.onrender.com/", status_code=301)
-
-@app.api_route("/comonk-ai/{tail:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
-async def _comonk_redirect(tail: str):
-    return RedirectResponse(url=f"https://comonk-ai.onrender.com/{tail}", status_code=301)
+# ── Comonk is now also a child process inside the monolith (port 8007).
+# It runs comonk_backend.py from apps/comonk/ (flat folder, no /backend/ subdir).
+# The old comonk-ai.onrender.com stays live as a separate Render service — both
+# can exist simultaneously; users can use either one.
 
 # ── Child apps: each is its own isolated process (see child_processes.py for
 # why), reached here through a thin reverse proxy.
