@@ -73,8 +73,29 @@ class SymptomReq(BaseModel):
 class MedicineSearchReq(BaseModel):
     query: str
 
+class HospitalReq(BaseModel):
+    city: str
+    radius_km: float | None = 20.0
+
 
 # ── API ───────────────────────────────────────────────────────────────────────
+@app.post("/api/hospitals/nearby")
+def get_nearby_hospitals(req: HospitalReq):
+    from pharmacy_data import HOSPITALS
+    city_lower = req.city.strip().lower()
+    matches = [h for h in HOSPITALS if h["city"].lower() == city_lower]
+    return {"hospitals": matches, "count": len(matches)}
+
+@app.get("/api/health-camps")
+def get_health_camps():
+    from pharmacy_data import CAMPS
+    return {"camps": CAMPS, "count": len(CAMPS)}
+
+@app.get("/api/free-schemes")
+def get_free_schemes():
+    from pharmacy_data import SCHEMES
+    return {"schemes": SCHEMES, "count": len(SCHEMES)}
+
 @app.get("/api/health")
 def health():
     return {

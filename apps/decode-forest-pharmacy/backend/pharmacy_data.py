@@ -136,3 +136,77 @@ SYMPTOMS: list[dict] = [
     {"symptom": "Diarrhoea", "otc": "ORS (Oral Rehydration Salts) + Zinc 20 mg; Loperamide for adults only", "warning": "Blood in stool or high fever → consult doctor."},
     {"symptom": "Constipation", "otc": "Isabgol (Psyllium husk) with water; Lactulose syrup", "warning": "Sudden change in bowel habits lasting > 3 weeks → GP review."},
 ]
+
+# -- Hospitals directory (Gujarat focus) --------------------------------------
+HOSPITALS: list[dict] = [
+    {"name": "Civil Hospital Ahmedabad", "type": "Government General & Referral",
+     "address": "Asarwa", "city": "Ahmedabad", "state": "Gujarat", "zip": "380016", "phone": "079-22683721", "rating": 4.1},
+    {"name": "Apollo Hospitals International", "type": "Multi-specialty Private",
+     "address": "Plot No. 1A, GIDC Estate, Bhat", "city": "Gandhinagar", "state": "Gujarat", "zip": "382428", "phone": "079-66701800", "rating": 4.5},
+    {"name": "Karnavati Dental College & Hospital", "type": "Dental Specialty",
+     "address": "Uvarsad", "city": "Gandhinagar", "state": "Gujarat", "zip": "382422", "phone": "079-23970295", "rating": 4.2},
+    {"name": "Zydus Hospital", "type": "Super Specialty Corporate",
+     "address": "Zydus Hospital Road, SG Highway", "city": "Ahmedabad", "state": "Gujarat", "zip": "380054", "phone": "079-66190201", "rating": 4.6},
+    {"name": "UN Mehta Institute of Cardiology", "type": "Government Cardiac Specialty",
+     "address": "Civil Hospital Campus, Asarwa", "city": "Ahmedabad", "state": "Gujarat", "zip": "380016", "phone": "079-22684200", "rating": 4.4},
+    {"name": "GCRI (Gujarat Cancer & Research Institute)", "type": "Government Cancer Care",
+     "address": "Asarwa", "city": "Ahmedabad", "state": "Gujarat", "zip": "380016", "phone": "079-22688000", "rating": 4.3},
+    {"name": "Sterling Hospital", "type": "Multi-specialty Private",
+     "address": "Sterling Hospital Road, Gurukul", "city": "Ahmedabad", "state": "Gujarat", "zip": "380052", "phone": "079-40011111", "rating": 4.4},
+    {"name": "Sardar Vallabhbhai Patel (SVP) Hospital", "type": "Municipal General",
+     "address": "Ellisbridge", "city": "Ahmedabad", "state": "Gujarat", "zip": "380006", "phone": "079-26577621", "rating": 4.3},
+    {"name": "Sal Hospital & Medical Institute", "type": "Multi-specialty Private",
+     "address": "Drive-In Road", "city": "Ahmedabad", "state": "Gujarat", "zip": "380054", "phone": "079-66115600", "rating": 4.2},
+    {"name": "Sir Sayajirao General (SSG) Hospital", "type": "Government General & Medical College",
+     "address": "Jail Road, Alkapuri", "city": "Vadodara", "state": "Gujarat", "zip": "390001", "phone": "0265-2424848", "rating": 4.1},
+    {"name": "New Civil Hospital Surat", "type": "Government General & Medical College",
+     "address": "Majura Gate", "city": "Surat", "state": "Gujarat", "zip": "395001", "phone": "0261-2244456", "rating": 4.0},
+    {"name": "PDU Medical College & Hospital", "type": "Government General",
+     "address": "Jamnagar Road", "city": "Rajkot", "state": "Gujarat", "zip": "360001", "phone": "0281-2476565", "rating": 4.0}
+]
+
+# -- Free Health Camps --------------------------------------------------------
+CAMPS: list[dict] = [
+    {"category": "Blood Donation", "date": "2026-07-26", "title": "Mega Blood Donation Camp",
+     "description": "Donate blood and save lives. Free health checkup card & refreshments provided to all donors.",
+     "venue": "Sabarmati Ashram Community Hall", "city": "Ahmedabad", "time": "09:00 AM - 05:00 PM", "organizer": "Red Cross Gujarat"},
+    {"category": "Free Consultation", "date": "2026-08-02", "title": "Free General Health & Sugar Audit",
+     "description": "Complimentary checkup for diabetes, high blood pressure, and general health consultation by senior medical officers.",
+     "venue": "GIDC Sector 21 Community Center", "city": "Gandhinagar", "time": "10:00 AM - 04:00 PM", "organizer": "Apollo Clinic Foundation"},
+    {"category": "Eye Checkup", "date": "2026-08-09", "title": "Free Cataract Screening & Specs Distribution",
+     "description": "Comprehensive vision testing, diagnostics, and free eye drops and basic specs distribution for underprivileged citizens.",
+     "venue": "Sardar Patel Stadium Hall", "city": "Ahmedabad", "time": "09:00 AM - 03:00 PM", "organizer": "Rotary Club Metro"},
+    {"category": "Cardiac Care", "date": "2026-08-15", "title": "Free ECG & Heart Health Screening",
+     "description": "Cardiac profiling, free ECG test, and consultations with senior cardiologists for chest pain or cardiac history.",
+     "venue": "Civil Hospital Campus, Asarwa", "city": "Ahmedabad", "time": "08:30 AM - 01:00 PM", "organizer": "UN Mehta Cardiac Trust"},
+    {"category": "Paediatric Care", "date": "2026-08-23", "title": "Free Child Vaccination & Wellness Camp",
+     "description": "Free height/weight growth audits, immunizations, and paediatric counseling including free multivitamin syrups.",
+     "venue": "Community Health Center (CHC)", "city": "Gandhinagar", "time": "09:00 AM - 04:00 PM", "organizer": "WHO Volunteers Gujarat"}
+]
+
+# -- Free Schemes -------------------------------------------------------------
+SCHEMES: list[dict] = [
+    {"name": "Ayushman Bharat PM-JAY", "coverage": "Family cover of ?5,00,000 per year for secondary and tertiary care hospitalization",
+     "benefits": [
+         "Cashless medical treatment at all empanelled public and private hospitals nationwide",
+         "Covers pre-hospitalization expenses up to 3 days and post-hospitalization up to 15 days",
+         "Includes drug prescriptions, diagnostic tests, medical consumables and ICU stays",
+         "Zero premium or co-pay required from eligible families"
+     ],
+     "eligibility": "Families listed in SECC 2011 database, active labor card holders, or low-income households.", "contact": "14555 / 1800-111-565"},
+    {"name": "Mukhyamantri Amrutum (MA) Yojana", "coverage": "Cashless surgical cover of up to ?5,00,000 per family per year for critical illnesses",
+     "benefits": [
+         "Cashless cover for major cardiac surgeries, neurosurgery, organ transplants, joint replacements, and burns",
+         "Includes travel subsidy of ?300 per hospitalization visit",
+         "Pre-negotiated package rates across top multi-specialty empanelled private hospitals in Gujarat",
+         "Covers all family members named on the MA Card"
+     ],
+     "eligibility": "Families with annual household income below ?4,00,000 residing in Gujarat.", "contact": "1800-233-1022"},
+    {"name": "Pradhan Mantri Bhartiya Janaushadhi Pariyojana", "coverage": "Access to high-quality generic medicines at 50% to 90% cheaper prices than branded drugs",
+     "benefits": [
+         "Generic medicines chemically identical, bioequivalent, and just as safe as brand-name drugs",
+         "Available at dedicated PMBJP Kendra outlets across Gujarat (all government hospitals have one)",
+         "Includes major therapeutic categories: antidiabetic, cardiovascular, antibiotics, and oncology"
+     ],
+     "eligibility": "Open to all citizens without any registration, income limits, or prescription constraints.", "contact": "1800-180-8080"}
+]
