@@ -311,6 +311,7 @@
       <div class="sb-nav-label" style="margin-top:20px">ACCOUNT</div>
       <button class="sb-item" data-panel="test" id="sb-test-btn"><i class="fas fa-graduation-cap"></i><span>Take Aptitude Test</span><span class="badge purple" id="sb-verified-badge" style="display:none;margin-left:auto;font-size:9px">✓</span></button>
       <button class="sb-item" data-panel="admin" id="sb-admin-btn" style="display:none"><i class="fas fa-shield-alt"></i><span>Admin</span></button>
+      <button class="sb-item" onclick="openApiKeysModal()" id="sb-apikeys-btn"><i class="fas fa-key"></i><span>My API Keys</span><span class="sb-badge" id="sb-keys-saved" style="display:none;background:rgba(16,185,129,0.2);color:var(--c-green)">SAVED</span></button>
       <div class="sb-nav-label" style="margin-top:12px">BONUS TOOLS</div>
       <button class="sb-item" data-panel="trending"><i class="fas fa-fire"></i><span>Trending Repos</span></button>
       <button class="sb-item" data-panel="stackoverflow"><i class="fab fa-stack-overflow"></i><span>Stack Overflow</span></button>
@@ -1712,6 +1713,145 @@
       <div id="otp-err" style="margin-top:8px"></div>
     </div>
     <button onclick="closeAuthModal()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:var(--text-3);font-size:18px;cursor:pointer"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     BYOK — Bring Your Own Key API Settings Modal
+     Keys stored in localStorage, sent as headers to backend.
+     Backend reads X-Api-Key-Groq header first, falls back to env var.
+══════════════════════════════════════════════════════════════════ -->
+<div id="apikeys-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:9000;align-items:center;justify-content:center" onclick="if(event.target===this)closeApiKeysModal()">
+  <div style="background:var(--bg-1);border:1px solid var(--border);border-radius:20px;width:min(680px,95vw);max-height:90vh;overflow-y:auto;padding:36px;position:relative;box-shadow:0 24px 80px rgba(0,0,0,0.5)">
+    <!-- Header -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px">
+      <div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+          <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#4f46e5);display:flex;align-items:center;justify-content:center;font-size:20px">🔑</div>
+          <div>
+            <h2 style="margin:0;font-size:20px;font-weight:800">My API Keys</h2>
+            <p style="margin:0;font-size:13px;color:var(--text-3)">Your keys are stored locally — never sent to any server except the selected API directly.</p>
+          </div>
+        </div>
+      </div>
+      <button onclick="closeApiKeysModal()" style="background:var(--bg-3);border:1px solid var(--border);border-radius:8px;color:var(--text-2);width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- Info banner -->
+    <div style="background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:12px;padding:14px 16px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start">
+      <i class="fas fa-shield-halved" style="color:var(--c-purple-l);margin-top:2px"></i>
+      <div style="font-size:13px;line-height:1.6">
+        <strong style="color:var(--c-purple-l)">100% Private — BYOK Model</strong><br>
+        All keys are stored in your browser's localStorage only. When you use AI features, your key is sent directly to the LLM provider. Comonk never logs or stores your API keys on any server.
+      </div>
+    </div>
+
+    <!-- LLM Keys -->
+    <div style="margin-bottom:24px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text-3);margin-bottom:14px">🤖 LANGUAGE MODELS (AI FEATURES)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label style="font-size:12px;color:var(--text-2);font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:6px">
+            <img src="https://groq.com/favicon.ico" style="width:14px;height:14px" onerror="this.style.display='none'">
+            Groq API Key <span style="color:var(--c-green);font-size:10px">FREE tier available</span>
+          </label>
+          <div style="position:relative">
+            <input type="password" id="byok-groq" class="inp" placeholder="gsk_..." style="padding-right:40px">
+            <button onclick="toggleKeyVis('byok-groq')" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-3);cursor:pointer"><i class="fas fa-eye" id="byok-groq-eye"></i></button>
+          </div>
+          <a href="https://console.groq.com/keys" target="_blank" style="font-size:11px;color:var(--c-purple-l)">Get free key →</a>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text-2);font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:6px">
+            <img src="https://www.gstatic.com/lamda/images/favicon_v1_150160cddff7f294ce30.svg" style="width:14px;height:14px" onerror="this.style.display='none'">
+            Gemini API Key <span style="color:var(--c-green);font-size:10px">FREE tier available</span>
+          </label>
+          <div style="position:relative">
+            <input type="password" id="byok-gemini" class="inp" placeholder="AIza..." style="padding-right:40px">
+            <button onclick="toggleKeyVis('byok-gemini')" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-3);cursor:pointer"><i class="fas fa-eye" id="byok-gemini-eye"></i></button>
+          </div>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:11px;color:var(--c-purple-l)">Get free key →</a>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text-2);font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:6px">
+            🌐 OpenRouter API Key <span style="color:var(--c-blue-l);font-size:10px">Multi-model</span>
+          </label>
+          <div style="position:relative">
+            <input type="password" id="byok-openrouter" class="inp" placeholder="sk-or-..." style="padding-right:40px">
+            <button onclick="toggleKeyVis('byok-openrouter')" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-3);cursor:pointer"><i class="fas fa-eye" id="byok-openrouter-eye"></i></button>
+          </div>
+          <a href="https://openrouter.ai/keys" target="_blank" style="font-size:11px;color:var(--c-purple-l)">Get key →</a>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text-2);font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:6px">
+            🧠 Mistral API Key
+          </label>
+          <div style="position:relative">
+            <input type="password" id="byok-mistral" class="inp" placeholder="..." style="padding-right:40px">
+            <button onclick="toggleKeyVis('byok-mistral')" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-3);cursor:pointer"><i class="fas fa-eye" id="byok-mistral-eye"></i></button>
+          </div>
+          <a href="https://console.mistral.ai/api-keys/" target="_blank" style="font-size:11px;color:var(--c-purple-l)">Get key →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data & Integration Keys -->
+    <div style="margin-bottom:24px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text-3);margin-bottom:14px">🔌 DATA & INTEGRATIONS</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label style="font-size:12px;color:var(--text-2);font-weight:600;margin-bottom:6px;display:block">📺 YouTube Data API v3 <span style="color:var(--c-green);font-size:10px">FREE 10K/day</span></label>
+          <input type="password" id="byok-youtube" class="inp" placeholder="AIza...">
+          <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="font-size:11px;color:var(--c-purple-l)">Get key →</a>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text-2);font-weight:600;margin-bottom:6px;display:block"><i class="fab fa-github"></i> GitHub Token <span style="color:var(--c-green);font-size:10px">FREE</span></label>
+          <input type="password" id="byok-github" class="inp" placeholder="ghp_...">
+          <a href="https://github.com/settings/tokens" target="_blank" style="font-size:11px;color:var(--c-purple-l)">Get token →</a>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text-2);font-weight:600;margin-bottom:6px;display:block">📰 NewsAPI Key <span style="color:var(--c-green);font-size:10px">FREE 100/day</span></label>
+          <input type="password" id="byok-newsapi" class="inp" placeholder="...">
+          <a href="https://newsapi.org/register" target="_blank" style="font-size:11px;color:var(--c-purple-l)">Get key →</a>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text-2);font-weight:600;margin-bottom:6px;display:block">💼 Adzuna App ID & Key <span style="color:var(--c-green);font-size:10px">FREE 1K/day</span></label>
+          <input type="password" id="byok-adzuna-id" class="inp" placeholder="App ID" style="margin-bottom:6px">
+          <input type="password" id="byok-adzuna-key" class="inp" placeholder="App Key">
+          <a href="https://developer.adzuna.com/" target="_blank" style="font-size:11px;color:var(--c-purple-l)">Get key →</a>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text-2);font-weight:600;margin-bottom:6px;display:block">📧 Hunter.io Key <span style="color:var(--c-green);font-size:10px">FREE 25/month</span></label>
+          <input type="password" id="byok-hunter" class="inp" placeholder="...">
+          <a href="https://hunter.io/api-keys" target="_blank" style="font-size:11px;color:var(--c-purple-l)">Get key →</a>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text-2);font-weight:600;margin-bottom:6px;display:block">📱 Twilio (SMS Alerts)</label>
+          <input type="password" id="byok-twilio-sid" class="inp" placeholder="Account SID" style="margin-bottom:6px">
+          <input type="password" id="byok-twilio-token" class="inp" placeholder="Auth Token">
+          <a href="https://console.twilio.com/" target="_blank" style="font-size:11px;color:var(--c-purple-l)">Get keys →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active provider indicator -->
+    <div id="byok-active-provider" style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:13px">
+      <i class="fas fa-circle-dot" style="color:var(--c-green)"></i>
+      <span id="byok-active-text">Using: <strong>Server default (Groq LLaMA 3.3 70B)</strong></span>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:12px">
+      <button onclick="saveApiKeys()" class="btn-primary" style="flex:1;justify-content:center">
+        <i class="fas fa-save"></i> Save API Keys
+      </button>
+      <button onclick="clearApiKeys()" class="btn-ghost" style="padding:0 20px">
+        <i class="fas fa-trash-alt"></i> Clear All
+      </button>
+    </div>
+    <p style="font-size:11px;color:var(--text-3);text-align:center;margin-top:12px">
+      <i class="fas fa-lock"></i> Keys never leave your browser · Stored in localStorage · Cleared on logout
+    </p>
   </div>
 </div>
 

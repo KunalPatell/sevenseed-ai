@@ -258,6 +258,31 @@ def _get_providers():
         _llm_providers = p
     return _llm_providers
 
+def _get_providers_for_request(request=None):
+    """BYOK: Check request headers for user-supplied API keys first.
+    Frontend sends X-Api-Key-Groq, X-Api-Key-Gemini, etc. from localStorage.
+    Falls back to server env vars if no header key is present."""
+    if request is None:
+        return _get_providers()
+    p = []
+    groq_key  = request.headers.get("x-api-key-groq",        "").strip()
+    gemini_key= request.headers.get("x-api-key-gemini",      "").strip()
+    mistral_key=request.headers.get("x-api-key-mistral",     "").strip()
+    or_key    = request.headers.get("x-api-key-openrouter",  "").strip()
+    if groq_key:
+        p.append({"name":"groq","key":groq_key,"base_url":"https://api.groq.com/openai/v1","model":"llama-3.3-70b-versatile"})
+    if gemini_key:
+        p.append({"name":"gemini-openai","key":gemini_key,"base_url":"https://generativelanguage.googleapis.com/v1beta/openai","model":"gemini-1.5-flash"})
+    if or_key:
+        p.append({"name":"openrouter","key":or_key,"base_url":"https://openrouter.ai/api/v1","model":"mistralai/mistral-7b-instruct"})
+    if mistral_key:
+        p.append({"name":"mistral","key":mistral_key,"base_url":"https://api.mistral.ai/v1","model":"mistral-small-latest"})
+    # Fall back to server env vars if user provided no keys
+    if not p:
+        return _get_providers()
+    return p
+
+
 def _llm_client(p):
     if p["name"] not in _llm_clients:
         from openai import OpenAI

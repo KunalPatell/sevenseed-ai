@@ -5372,3 +5372,147 @@ async function compareOffers() {
   }
 }
 window.compareOffers = compareOffers;
+
+// ------------------------------------------------------------------------------
+//  BYOK — Bring Your Own Key API Settings
+//  Keys stored in localStorage. Sent to backend as X-Api-Key-* headers.
+//  Backend reads headers first, falls back to server env vars.
+// ------------------------------------------------------------------------------
+const BYOK_KEYS = [
+  { id: 'byok-groq',        ls: 'byok_groq',         label: 'Groq'       },
+  { id: 'byok-gemini',      ls: 'byok_gemini',        label: 'Gemini'     },
+  { id: 'byok-openrouter',  ls: 'byok_openrouter',    label: 'OpenRouter' },
+  { id: 'byok-mistral',     ls: 'byok_mistral',       label: 'Mistral'    },
+  { id: 'byok-youtube',     ls: 'byok_youtube',       label: 'YouTube'    },
+  { id: 'byok-github',      ls: 'byok_github',        label: 'GitHub'     },
+  { id: 'byok-newsapi',     ls: 'byok_newsapi',       label: 'NewsAPI'    },
+  { id: 'byok-adzuna-id',   ls: 'byok_adzuna_id',     label: 'Adzuna ID'  },
+  { id: 'byok-adzuna-key',  ls: 'byok_adzuna_key',    label: 'Adzuna Key' },
+  { id: 'byok-hunter',      ls: 'byok_hunter',        label: 'Hunter'     },
+  { id: 'byok-twilio-sid',  ls: 'byok_twilio_sid',    label: 'Twilio SID' },
+  { id: 'byok-twilio-token',ls: 'byok_twilio_token',  label: 'Twilio Token'},
+];
+
+function openApiKeysModal() {
+  // Load saved values into fields
+  BYOK_KEYS.forEach(k => {
+    const el = document.getElementById(k.id);
+    if (el) el.value = localStorage.getItem(k.ls) || '';
+  });
+  updateByokProviderIndicator();
+  const ov = document.getElementById('apikeys-overlay');
+  ov.style.display = 'flex';
+  setTimeout(() => ov.style.opacity = '1', 10);
+}
+
+function closeApiKeysModal() {
+  const ov = document.getElementById('apikeys-overlay');
+  ov.style.display = 'none';
+}
+
+function saveApiKeys() {
+  let saved = 0;
+  BYOK_KEYS.forEach(k => {
+    const el = document.getElementById(k.id);
+    if (el && el.value.trim()) {
+      localStorage.setItem(k.ls, el.value.trim());
+      saved++;
+    } else if (el) {
+      localStorage.removeItem(k.ls); // clear if field empty
+    }
+  });
+  updateByokSavedBadge();
+  updateByokProviderIndicator();
+  toast(`? API keys saved! (${saved} key${saved !== 1 ? 's' : ''} active)`, 'success');
+  setTimeout(closeApiKeysModal, 1200);
+}
+
+function clearApiKeys() {
+  if (!confirm('Clear all saved API keys? You will revert to server defaults.')) return;
+  BYOK_KEYS.forEach(k => {
+    localStorage.removeItem(k.ls);
+    const el = document.getElementById(k.id);
+    if (el) el.value = '';
+  });
+  updateByokSavedBadge();
+  updateByokProviderIndicator();
+  toast('API keys cleared — using server defaults', 'info');
+}
+
+function toggleKeyVis(id) {
+  const el = document.getElementById(id);
+  const eye = document.getElementById(id + '-eye');
+  if (!el) return;
+  if (el.type === 'password') {
+    el.type = 'text';
+    if (eye) { eye.classList.remove('fa-eye'); eye.classList.add('fa-eye-slash'); }
+  } else {
+    el.type = 'password';
+    if (eye) { eye.classList.remove('fa-eye-slash'); eye.classList.add('fa-eye'); }
+  }
+}
+
+function updateByokSavedBadge() {
+  const badge = document.getElementById('sb-keys-saved');
+  if (!badge) return;
+  const hasKeys = BYOK_KEYS.some(k => localStorage.getItem(k.ls));
+  badge.style.display = hasKeys ? 'inline-flex' : 'none';
+}
+
+function updateByokProviderIndicator() {
+  const txt = document.getElementById('byok-active-text');
+  if (!txt) return;
+  const groq   = localStorage.getItem('byok_groq');
+  const gemini = localStorage.getItem('byok_gemini');
+  const or_key = localStorage.getItem('byok_openrouter');
+  const mistral= localStorage.getItem('byok_mistral');
+  let provider = 'Server default (Groq LLaMA 3.3 70B)';
+  if (groq)    provider = 'Your Groq API Key (LLaMA 3.3 70B)';
+  else if (gemini) provider = 'Your Gemini API Key';
+  else if (or_key) provider = 'Your OpenRouter Key';
+  else if (mistral) provider = 'Your Mistral API Key';
+  txt.innerHTML = `Using: <strong>${provider}</strong>`;
+}
+
+// Attach BYOK headers to every fetch call to /api/*
+// We wrap the global fetch so all existing API calls automatically use the saved keys
+(function() {
+  const _origFetch = window.fetch;
+  window.fetch = function(url, opts = {}) {
+    const s = typeof url === 'string' ? url : (url.url || '');
+    if (s.includes('/api/')) {
+      opts.headers = opts.headers || {};
+      const map = {
+        'X-Api-Key-Groq':        'byok_groq',
+        'X-Api-Key-Gemini':      'byok_gemini',
+        'X-Api-Key-Openrouter':  'byok_openrouter',
+        'X-Api-Key-Mistral':     'byok_mistral',
+        'X-Api-Key-Youtube':     'byok_youtube',
+        'X-Api-Key-Github':      'byok_github',
+        'X-Api-Key-Newsapi':     'byok_newsapi',
+        'X-Api-Key-Adzuna-Id':   'byok_adzuna_id',
+        'X-Api-Key-Adzuna-Key':  'byok_adzuna_key',
+        'X-Api-Key-Hunter':      'byok_hunter',
+        'X-Api-Key-Twilio-Sid':  'byok_twilio_sid',
+        'X-Api-Key-Twilio-Token':'byok_twilio_token',
+      };
+      Object.entries(map).forEach(([header, ls]) => {
+        const val = localStorage.getItem(ls);
+        if (val) opts.headers[header] = val;
+      });
+    }
+    return _origFetch.call(this, url, opts);
+  };
+})();
+
+// On page load, update badge and indicator
+document.addEventListener('DOMContentLoaded', () => {
+  updateByokSavedBadge();
+  updateByokProviderIndicator();
+});
+
+window.openApiKeysModal  = openApiKeysModal;
+window.closeApiKeysModal = closeApiKeysModal;
+window.saveApiKeys       = saveApiKeys;
+window.clearApiKeys      = clearApiKeys;
+window.toggleKeyVis      = toggleKeyVis;
