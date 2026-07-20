@@ -312,10 +312,21 @@ def delete_pitch(item_id: int):
 from features import router as _feat_router
 app.include_router(_feat_router)
 
+# ── Comonk redirect: comonk stays as its own live Render service.
+# /comonk-ai and /comonk-ai/* all redirect to comonk-ai.onrender.com
+from fastapi.responses import RedirectResponse
+
+@app.get("/comonk-ai")
+@app.get("/comonk-ai/")
+async def _comonk_redirect_root():
+    return RedirectResponse(url="https://comonk-ai.onrender.com/", status_code=301)
+
+@app.api_route("/comonk-ai/{tail:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+async def _comonk_redirect(tail: str):
+    return RedirectResponse(url=f"https://comonk-ai.onrender.com/{tail}", status_code=301)
+
 # ── Child apps: each is its own isolated process (see child_processes.py for
-# why), reached here through a thin reverse proxy. Comonk is deliberately not
-# a child here - it stays its own separately-deployed live service, and the
-# hub's ventures data links to it externally instead.
+# why), reached here through a thin reverse proxy.
 @app.api_route("/{prefix}/api/{tail:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
 async def _proxy_child(request: Request, prefix: str, tail: str):
     if prefix not in CHILDREN:
