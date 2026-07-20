@@ -103,8 +103,6 @@ COPY --chown=user --from=breakdown-frontend /app/breakdown/out $HOME/app/apps/se
 COPY --chown=user --from=trust-frontend /app/trust/out $HOME/app/apps/sevenseed/backend/static/trust
 COPY --chown=user --from=pharmacy-frontend /app/pharmacy/out $HOME/app/apps/sevenseed/backend/static/pharmacy
 COPY --chown=user apps/sevenforce/backend/static/ $HOME/app/apps/sevenseed/backend/static/sevenforce/
-# Comonk frontend: plain HTML/JS (no Next.js build needed)
-COPY --chown=user apps/comonk/frontend/ $HOME/app/apps/sevenseed/backend/static/comonk-ai/
 
 WORKDIR $HOME/app/apps/sevenseed/backend
 RUN chown -R user:user $HOME/app

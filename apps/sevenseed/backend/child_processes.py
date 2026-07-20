@@ -60,8 +60,6 @@ CHILDREN: Dict[str, Dict[str, object]] = {
     "trust": {"folder": "avp-charitable-trust", "port": 8004},
     "pharmacy": {"folder": "decode-forest-pharmacy", "port": 8005},
     "sevenforce": {"folder": "sevenforce", "port": 8006},
-    # Comonk: flat structure (no /backend/ subfolder), entry point is comonk_backend.py
-    "comonk-ai": {"folder": "comonk", "port": 8007, "backend_subdir": "", "main_file": "comonk_backend.py"},
 }
 
 _HOP_BY_HOP = {"content-length", "transfer-encoding", "connection", "keep-alive"}
