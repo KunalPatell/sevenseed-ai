@@ -26,8 +26,8 @@
 # ones. To group what you already have, use the dashboard instead -- it takes a
 # few seconds, needs no redeploy, and touches nothing else:
 #
-#   Dashboard - select all 8 services - Move - new project "Sevenseed"
-#   (or per service: --- menu - Move)
+#   Dashboard -> select all 8 services -> Move -> new project "Sevenseed"
+#   (or one at a time: the service's "..." menu -> Move)
 #
 # Use this file as the source of truth once the monorepo repo is connected.
 #
