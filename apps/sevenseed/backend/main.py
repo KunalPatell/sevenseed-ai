@@ -318,10 +318,9 @@ app.include_router(_feat_router)
 # hub's ventures data links to it externally instead.
 @app.api_route("/{prefix}/api/{tail:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
 async def _proxy_child(request: Request, prefix: str, tail: str):
-    child = CHILDREN.get(prefix)
-    if child is None:
+    if prefix not in CHILDREN:
         raise HTTPException(status_code=404, detail="Unknown app")
-    return await proxy_to_child(request, int(child["port"]), tail)
+    return await proxy_to_child(request, prefix, tail)
 
 if config.STATIC_DIR.exists():
     # Mount each child's pre-built static frontend at its own prefix.

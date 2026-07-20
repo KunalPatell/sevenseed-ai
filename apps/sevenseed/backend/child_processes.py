@@ -21,6 +21,17 @@ first would silently call a *different child's* AI logic. Booting fine while
 being wrong is exactly the failure mode worth avoiding. Separate OS processes
 have separate sys.modules, so this class of bug cannot happen here.
 
+Why lazy-start instead of starting all six at hub boot: verified live on Render
+(free plan, 512MB) - starting all six eagerly put four of them (avpu,
+breakdown-factor, avp-charitable-trust, decode-forest-pharmacy - all import
+onnxruntime/insightface/opencv/scikit-learn) mid-import at the same moment the
+container's memory crossed the limit, OOM-killing the whole container roughly
+every 100 seconds in a permanent crash-restart loop; only avp-emart (no heavy
+ML deps) ever finished booting before the next kill. So: a child starts on its
+own first request, and stops itself after IDLE_TIMEOUT_SECONDS of no traffic,
+so steady-state memory is the hub plus whatever's actually in use - not all six
+at once.
+
 Comonk is deliberately not in this list - see main.py for why.
 """
 from __future__ import annotations
@@ -29,6 +40,7 @@ import asyncio
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 from typing import Dict
 
@@ -49,51 +61,91 @@ CHILDREN: Dict[str, Dict[str, object]] = {
 
 _HOP_BY_HOP = {"content-length", "transfer-encoding", "connection", "keep-alive"}
 
-_procs: list[subprocess.Popen] = []
+IDLE_TIMEOUT_SECONDS = 600  # stop a child after 10 minutes with no requests
+REAPER_INTERVAL_SECONDS = 60
+
+_procs: Dict[str, subprocess.Popen] = {}
+_last_used: Dict[str, float] = {}
+_locks: Dict[str, asyncio.Lock] = {prefix: asyncio.Lock() for prefix in CHILDREN}
+_reaper_task: asyncio.Task | None = None
+
+
+def _is_running(prefix: str) -> bool:
+    proc = _procs.get(prefix)
+    return proc is not None and proc.poll() is None
+
+
+def _spawn(prefix: str) -> None:
+    info = CHILDREN[prefix]
+    backend_dir = APPS_DIR / str(info["folder"]) / "backend"
+    env = dict(os.environ)
+    env["PORT"] = str(info["port"])
+    print(f"[hub] starting child '{prefix}' from {backend_dir} on port {info['port']}")
+    _procs[prefix] = subprocess.Popen([sys.executable, "main.py"], cwd=str(backend_dir), env=env)
+
+
+def _stop(prefix: str) -> None:
+    proc = _procs.pop(prefix, None)
+    if proc is None:
+        return
+    print(f"[hub] stopping idle child '{prefix}'")
+    proc.terminate()
+    try:
+        proc.wait(timeout=10)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+
+
+async def ensure_child_running(prefix: str) -> None:
+    """Start this child if it isn't already running (or has crashed/exited)."""
+    async with _locks[prefix]:
+        if not _is_running(prefix):
+            _spawn(prefix)
+    _last_used[prefix] = time.monotonic()
+
+
+async def _reap_idle_children() -> None:
+    while True:
+        await asyncio.sleep(REAPER_INTERVAL_SECONDS)
+        now = time.monotonic()
+        for prefix in list(_procs):
+            if now - _last_used.get(prefix, now) > IDLE_TIMEOUT_SECONDS:
+                async with _locks[prefix]:
+                    _stop(prefix)
 
 
 def start_children() -> None:
-    """Launch every child backend as its own subprocess. Called once at hub startup."""
-    for prefix, info in CHILDREN.items():
-        backend_dir = APPS_DIR / str(info["folder"]) / "backend"
-        env = dict(os.environ)
-        env["PORT"] = str(info["port"])
-        print(f"[hub] starting child '{prefix}' from {backend_dir} on port {info['port']}")
-        proc = subprocess.Popen(
-            [sys.executable, "main.py"],
-            cwd=str(backend_dir),
-            env=env,
-        )
-        _procs.append(proc)
+    """Start the idle-reaper background task. Children start lazily on first request."""
+    global _reaper_task
+    _reaper_task = asyncio.get_running_loop().create_task(_reap_idle_children())
 
 
 def stop_children() -> None:
-    """Terminate every child subprocess. Called once at hub shutdown."""
-    for proc in _procs:
-        proc.terminate()
-    for proc in _procs:
-        try:
-            proc.wait(timeout=10)
-        except subprocess.TimeoutExpired:
-            proc.kill()
-    _procs.clear()
+    """Stop the reaper and every currently-running child. Called at hub shutdown."""
+    if _reaper_task is not None:
+        _reaper_task.cancel()
+    for prefix in list(_procs):
+        _stop(prefix)
 
 
-async def proxy_to_child(request: Request, port: int, tail: str) -> Response:
+async def proxy_to_child(request: Request, prefix: str, tail: str) -> Response:
     """Forward one incoming request to a child's own /api/<tail> and relay its response.
 
-    Children take a few seconds to finish their (often heavy) imports on boot, so a
-    request arriving before a child is ready gets a short retry loop rather than an
-    immediate 502 - this only retries on connection failure, never on a real
-    response from the child (a genuine 4xx/5xx is returned as-is).
+    Starts the child on first use, then retries on connection failure for up to
+    ~90s - long enough for a cold child to finish importing onnxruntime/insightface
+    style dependencies. A child that's already warm answers on the first attempt,
+    so this only costs time for the actual first request after an idle period.
+    A genuine 4xx/5xx response from the child is returned as-is, never retried.
     """
+    await ensure_child_running(prefix)
+    port = int(CHILDREN[prefix]["port"])
     url = f"http://127.0.0.1:{port}/api/{tail}"
     body = await request.body()
     headers = {k: v for k, v in request.headers.items() if k.lower() != "host"}
 
     last_error: Exception | None = None
     async with httpx.AsyncClient(timeout=60) as client:
-        for attempt in range(6):
+        for attempt in range(45):
             try:
                 resp = await client.request(
                     request.method,
@@ -102,6 +154,7 @@ async def proxy_to_child(request: Request, port: int, tail: str) -> Response:
                     headers=headers,
                     content=body,
                 )
+                _last_used[prefix] = time.monotonic()
                 out_headers = {
                     k: v for k, v in resp.headers.items() if k.lower() not in _HOP_BY_HOP
                 }
@@ -113,7 +166,7 @@ async def proxy_to_child(request: Request, port: int, tail: str) -> Response:
                 )
             except httpx.ConnectError as e:
                 last_error = e
-                await asyncio.sleep(1)
+                await asyncio.sleep(2)
 
     return Response(
         content=f'{{"error":"child service unavailable","detail":"{last_error}"}}',
