@@ -410,12 +410,12 @@ def score_company(c: dict, skills: List[str]) -> int:
     text = (c["roles"] + " " + c["category"]).lower()
     return sum(1 for s in skills if s.lower() in text)
 
-from fastapi.security import HTTPBasic, HTTPBasicCredentials, HTTPBasicCredentials
-from fastapi import Depends, status, Request as _Req
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi import Depends, status
 
 security = HTTPBasic(auto_error=False)
 
-def authenticate_user(request: _Req, credentials: Optional[HTTPBasicCredentials] = Depends(security)):
+def authenticate_user(request: Request, credentials: Optional[HTTPBasicCredentials] = Depends(security)):
     # Health endpoint is always public — hub uses it to verify child is alive
     if request.url.path == "/api/health":
         return "health-check"
