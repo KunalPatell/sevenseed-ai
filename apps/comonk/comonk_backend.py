@@ -385,12 +385,21 @@ def score_company(c: dict, skills: List[str]) -> int:
     text = (c["roles"] + " " + c["category"]).lower()
     return sum(1 for s in skills if s.lower() in text)
 
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from fastapi import Depends, status
+from fastapi.security import HTTPBasic, HTTPBasicCredentials, HTTPBasicCredentials
+from fastapi import Depends, status, Request as _Req
 
-security = HTTPBasic()
+security = HTTPBasic(auto_error=False)
 
-def authenticate_user(credentials: HTTPBasicCredentials = Depends(security)):
+def authenticate_user(request: _Req, credentials: Optional[HTTPBasicCredentials] = Depends(security)):
+    # Health endpoint is always public — hub uses it to verify child is alive
+    if request.url.path == "/api/health":
+        return "health-check"
+    if credentials is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required",
+            headers={"WWW-Authenticate": "Basic"},
+        )
     correct_username = secrets.compare_digest(credentials.username, "Kunal")
     correct_password = secrets.compare_digest(credentials.password, "Comonk@77")
     if not (correct_username and correct_password):
@@ -439,6 +448,10 @@ async def rate_limit_middleware(request: Request, call_next):
     return await call_next(request)
 
 _FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend")
+
+@app.get("/api/health", dependencies=[])
+def health():
+    return {"status": "ok", "service": "comonk-ai"}
 
 @app.get("/")
 def root():
