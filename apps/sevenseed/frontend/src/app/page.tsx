@@ -230,45 +230,53 @@ export default function Home() {
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
               Enterprise AI career platform — multi-agent counselors, ATS optimizer, mock interviews.
             </p>
-            <a href="https://comonk-ai.onrender.com" target="_blank" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
+            <Link href="/comonk-ai" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
               Launch App <ExternalLink className="h-3 w-3" />
-            </a>
+            </Link>
           </div>
 
           <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
-            <span className="text-[10px] text-[#3b82f6] font-mono font-bold tracking-wider uppercase">Building · EdTech</span>
+            <span className="text-[10px] text-[#3b82f6] font-mono font-bold tracking-wider uppercase">Live · EdTech</span>
             <h4 className="text-base font-bold text-white mt-1">AVP University (AVPU)</h4>
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
               AI-powered digital learning — personal AI tutor, adaptive assessments, placement matcher.
             </p>
-            <span className="text-xs text-[#9aa0b8] font-semibold w-fit">Incubating</span>
+            <Link href="/avpu" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
+              Launch App <ExternalLink className="h-3 w-3" />
+            </Link>
           </div>
 
           <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
-            <span className="text-[10px] text-[#10b981] font-mono font-bold tracking-wider uppercase">Building · HealthTech</span>
+            <span className="text-[10px] text-[#10b981] font-mono font-bold tracking-wider uppercase">Live · HealthTech</span>
             <h4 className="text-base font-bold text-white mt-1">Decode Forest Pharmacy</h4>
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
               AI pharmacy — OCR prescription reader, drug compatibility check, refill tracker.
             </p>
-            <span className="text-xs text-[#9aa0b8] font-semibold w-fit">Incubating</span>
+            <Link href="/pharmacy" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
+              Launch App <ExternalLink className="h-3 w-3" />
+            </Link>
           </div>
 
           <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
-            <span className="text-[10px] text-[#f59e0b] font-mono font-bold tracking-wider uppercase">Building · ConTech</span>
+            <span className="text-[10px] text-[#f59e0b] font-mono font-bold tracking-wider uppercase">Live · ConTech</span>
             <h4 className="text-base font-bold text-white mt-1">Breakdown Factor</h4>
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
               AI-driven construction — site safety monitors, cost predictors, structural crack defect detectors.
             </p>
-            <span className="text-xs text-[#9aa0b8] font-semibold w-fit">Incubating</span>
+            <Link href="/breakdown" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
+              Launch App <ExternalLink className="h-3 w-3" />
+            </Link>
           </div>
 
           <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
-            <span className="text-[10px] text-[#ec4899] font-mono font-bold tracking-wider uppercase">Building · Impact</span>
+            <span className="text-[10px] text-[#ec4899] font-mono font-bold tracking-wider uppercase">Live · Impact</span>
             <h4 className="text-base font-bold text-white mt-1">AVP Charitable Trust</h4>
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
               AI social impact — finds regional needs, matches beneficiaries, transparent reporting.
             </p>
-            <span className="text-xs text-[#9aa0b8] font-semibold w-fit">Incubating</span>
+            <Link href="/trust" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
+              Launch App <ExternalLink className="h-3 w-3" />
+            </Link>
           </div>
 
           <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
@@ -277,9 +285,20 @@ export default function Home() {
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
               AI price comparison — compares live prices across 4 online stores, ML value scoring.
             </p>
-            <a href="https://price-com-7.streamlit.app/" target="_blank" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
+            <Link href="/avp-emart" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
               Launch App <ExternalLink className="h-3 w-3" />
-            </a>
+            </Link>
+          </div>
+
+          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
+            <span className="text-[10px] text-[#f43f5e] font-mono font-bold tracking-wider uppercase">Live · B2B</span>
+            <h4 className="text-base font-bold text-white mt-1">Sevenforce</h4>
+            <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
+              AI-driven sales CRM — automated lead scoring, speech sentiment analyzer, smart pipelines tracker.
+            </p>
+            <Link href="/sevenforce" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
+              Launch App <ExternalLink className="h-3 w-3" />
+            </Link>
           </div>
         </div>
       </section>
