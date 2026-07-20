@@ -64,6 +64,15 @@ _HOP_BY_HOP = {"content-length", "transfer-encoding", "connection", "keep-alive"
 IDLE_TIMEOUT_SECONDS = 600  # stop a child after 10 minutes with no requests
 REAPER_INTERVAL_SECONDS = 60
 
+# Verified live on Render (free plan, 512MB): three of these children warm at
+# once (each imports onnxruntime/insightface/opencv/scikit-learn/pandas) pushed
+# the container over the memory limit and OOM-killed the whole process, even
+# with lazy-start - lazy-start only prevents the all-six-at-boot case, it does
+# not cap how many end up resident from ordinary concurrent traffic. Capping
+# concurrently-running children and evicting the least-recently-used one when
+# a new one is needed keeps steady-state memory bounded regardless of traffic.
+MAX_CONCURRENT_CHILDREN = 2
+
 _procs: Dict[str, subprocess.Popen] = {}
 _last_used: Dict[str, float] = {}
 _locks: Dict[str, asyncio.Lock] = {prefix: asyncio.Lock() for prefix in CHILDREN}
@@ -97,10 +106,26 @@ def _stop(prefix: str) -> None:
 
 
 async def ensure_child_running(prefix: str) -> None:
-    """Start this child if it isn't already running (or has crashed/exited)."""
+    """Start this child if it isn't already running (or has crashed/exited).
+
+    If starting it would exceed MAX_CONCURRENT_CHILDREN, first stop whichever
+    other running child was used longest ago - an LRU cap, not just an idle
+    reaper, since idle timeout alone is too slow to prevent a memory spike from
+    ordinary traffic hitting several heavy children within the same minute.
+    """
     async with _locks[prefix]:
-        if not _is_running(prefix):
-            _spawn(prefix)
+        if _is_running(prefix):
+            _last_used[prefix] = time.monotonic()
+            return
+
+        running = [p for p in _procs if _is_running(p)]
+        while len(running) >= MAX_CONCURRENT_CHILDREN:
+            lru_prefix = min(running, key=lambda p: _last_used.get(p, 0))
+            async with _locks[lru_prefix]:
+                _stop(lru_prefix)
+            running = [p for p in _procs if _is_running(p)]
+
+        _spawn(prefix)
     _last_used[prefix] = time.monotonic()
 
 

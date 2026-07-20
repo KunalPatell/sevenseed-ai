@@ -80,28 +80,36 @@ def counts():
     return {"knowledge":len(TRUST_KNOWLEDGE),"programs":len(PROGRAMS),"metrics":len(IMPACT_METRICS)}
 
 # ── LLM ───────────────────────────────────────────────────────────────────────
+from app.api_keys import groq_key_var, gemini_key_var, openai_key_var
+
+
+def _groq_key(): return groq_key_var.get().strip() or os.environ.get("GROQ_API_KEY", "").strip()
+def _gemini_key(): return gemini_key_var.get().strip() or os.environ.get("GEMINI_API_KEY", "").strip()
+def _openai_key(): return openai_key_var.get().strip() or os.environ.get("OPENAI_API_KEY", "").strip()
+
+
 def _get_llm(t=0.4):
-    if os.environ.get("GROQ_API_KEY","").strip():
+    if _groq_key():
         try:
             from langchain_groq import ChatGroq
-            return ChatGroq(api_key=os.environ["GROQ_API_KEY"],model=os.environ.get("GROQ_MODEL","llama-3.3-70b-versatile"),temperature=t)
+            return ChatGroq(api_key=_groq_key(),model=os.environ.get("GROQ_MODEL","llama-3.3-70b-versatile"),temperature=t)
         except: pass
-    if os.environ.get("GEMINI_API_KEY","").strip():
+    if _gemini_key():
         try:
             from langchain_google_genai import ChatGoogleGenerativeAI
-            return ChatGoogleGenerativeAI(google_api_key=os.environ["GEMINI_API_KEY"],model="gemini-1.5-flash",temperature=t)
+            return ChatGoogleGenerativeAI(google_api_key=_gemini_key(),model="gemini-1.5-flash",temperature=t)
         except: pass
-    if os.environ.get("OPENAI_API_KEY","").strip():
+    if _openai_key():
         try:
             from langchain_openai import ChatOpenAI
-            return ChatOpenAI(api_key=os.environ["OPENAI_API_KEY"],model="gpt-4o-mini",temperature=t)
+            return ChatOpenAI(api_key=_openai_key(),model="gpt-4o-mini",temperature=t)
         except: pass
     return None
 
 def active_provider():
-    if os.environ.get("GROQ_API_KEY","").strip(): return f"Groq ({os.environ.get('GROQ_MODEL','llama-3.3-70b-versatile')})"
-    if os.environ.get("GEMINI_API_KEY","").strip(): return "Google Gemini 1.5 Flash"
-    if os.environ.get("OPENAI_API_KEY","").strip(): return "OpenAI GPT-4o-mini"
+    if _groq_key(): return f"Groq ({os.environ.get('GROQ_MODEL','llama-3.3-70b-versatile')})"
+    if _gemini_key(): return "Google Gemini 1.5 Flash"
+    if _openai_key(): return "OpenAI GPT-4o-mini"
     return "offline"
 
 def _llm(sys_prompt,user,t=0.4):
@@ -179,6 +187,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def api_key_override_middleware(request, call_next):
+    groq_key_var.set(request.headers.get("x-groq-api-key", ""))
+    gemini_key_var.set(request.headers.get("x-gemini-api-key", ""))
+    openai_key_var.set(request.headers.get("x-openai-api-key", ""))
+    return await call_next(request)
 
 # Initialize SQLite database
 db.init()

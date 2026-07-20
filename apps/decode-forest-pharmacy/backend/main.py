@@ -34,6 +34,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from app.api_keys import groq_key_var, gemini_key_var, openai_key_var
+
+@app.middleware("http")
+async def api_key_override_middleware(request, call_next):
+    groq_key_var.set(request.headers.get("x-groq-api-key", ""))
+    gemini_key_var.set(request.headers.get("x-gemini-api-key", ""))
+    openai_key_var.set(request.headers.get("x-openai-api-key", ""))
+    return await call_next(request)
+
 # Initialize Database
 db.init()
 

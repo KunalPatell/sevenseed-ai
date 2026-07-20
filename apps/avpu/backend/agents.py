@@ -19,26 +19,34 @@ import rag
 
 
 # ── LLM factory ──────────────────────────────────────────────────────────────
+from app.api_keys import groq_key_var, gemini_key_var, openai_key_var
+
+
+def _groq_key(): return groq_key_var.get().strip() or os.environ.get("GROQ_API_KEY", "").strip()
+def _gemini_key(): return gemini_key_var.get().strip() or os.environ.get("GEMINI_API_KEY", "").strip()
+def _openai_key(): return openai_key_var.get().strip() or os.environ.get("OPENAI_API_KEY", "").strip()
+
+
 def _get_llm(temperature: float = 0.4):
-    if os.environ.get("GROQ_API_KEY", "").strip():
+    if _groq_key():
         try:
             from langchain_groq import ChatGroq
-            return ChatGroq(api_key=os.environ["GROQ_API_KEY"],
+            return ChatGroq(api_key=_groq_key(),
                             model=os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile"),
                             temperature=temperature)
         except Exception:
             pass
-    if os.environ.get("GEMINI_API_KEY", "").strip():
+    if _gemini_key():
         try:
             from langchain_google_genai import ChatGoogleGenerativeAI
-            return ChatGoogleGenerativeAI(google_api_key=os.environ["GEMINI_API_KEY"],
+            return ChatGoogleGenerativeAI(google_api_key=_gemini_key(),
                                           model="gemini-1.5-flash", temperature=temperature)
         except Exception:
             pass
-    if os.environ.get("OPENAI_API_KEY", "").strip():
+    if _openai_key():
         try:
             from langchain_openai import ChatOpenAI
-            return ChatOpenAI(api_key=os.environ["OPENAI_API_KEY"],
+            return ChatOpenAI(api_key=_openai_key(),
                               model="gpt-4o-mini", temperature=temperature)
         except Exception:
             pass
@@ -46,11 +54,11 @@ def _get_llm(temperature: float = 0.4):
 
 
 def active_provider() -> str:
-    if os.environ.get("GROQ_API_KEY", "").strip():
+    if _groq_key():
         return f"Groq ({os.environ.get('GROQ_MODEL', 'llama-3.3-70b-versatile')})"
-    if os.environ.get("GEMINI_API_KEY", "").strip():
+    if _gemini_key():
         return "Google Gemini 1.5 Flash"
-    if os.environ.get("OPENAI_API_KEY", "").strip():
+    if _openai_key():
         return "OpenAI GPT-4o-mini"
     return "offline"
 
