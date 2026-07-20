@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVP Emart — AI Shopping App</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🛒%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="side-logo" href="/">
+      <span class="logo-icon"><i class="fas fa-cart-shopping"></i></span>
+      <span class="logo-text">AVP <span class="logo-accent">Emart</span></span>
+    </a>
+    <nav class="side-nav">
+      <button class="nav-item active" data-panel="dashboard"><i class="fas fa-gauge-high"></i> <span>Dashboard</span></button>
+      <button class="nav-item" data-panel="compare"><i class="fas fa-scale-balanced"></i> <span>Compare Prices</span></button>
+      <button class="nav-item" data-panel="assistant"><i class="fas fa-robot"></i> <span>Shopping Assistant</span></button>
+      <button class="nav-item" data-panel="reviews"><i class="fas fa-comments"></i> <span>Review Intelligence</span></button>
+      <button class="nav-item" data-panel="trends"><i class="fas fa-chart-line"></i> <span>Price Trends</span></button>
+      <button class="nav-item" data-panel="recommend"><i class="fas fa-wand-magic-sparkles"></i> <span>Recommendations</span></button>
+    </nav>
+    <div class="side-foot">
+      <div class="sysbadge" id="sysBadge"><i class="fas fa-circle-notch fa-spin"></i> connecting…</div>
+      <a class="side-back" href="/"><i class="fas fa-arrow-left"></i> Back to site</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+      <div class="topbar-title"><h1 id="panelTitle">Dashboard</h1><p id="panelDesc">AI smart-shopping across Amazon, Flipkart, Reliance & Snapdeal</p></div>
+      <div class="topbar-right"><span class="prov-chip" id="provChip"><i class="fas fa-microchip"></i> …</span></div>
+    </header>
+
+    <div class="panels">
+      <!-- Dashboard -->
+      <section class="panel active" id="panel-dashboard">
+        <div class="welcome">
+          <div><h2>Shop smart 🛒</h2><p>Search any product — AI compares live prices across 4 platforms, scores the best value, and finds you the smartest buy.</p></div>
+        </div>
+        <div class="form-card" style="max-width:100%">
+          <label>Quick compare</label>
+          <div style="display:flex;gap:10px"><input class="field" id="dashSearch" placeholder="e.g. iPhone 15, boAt earbuds, air fryer"><button class="btn btn-primary" id="dashSearchBtn"><i class="fas fa-magnifying-glass"></i> Compare</button></div>
+        </div>
+        <div class="stat-tiles" id="statTiles" style="margin-top:22px"></div>
+        <h3 class="block-title">AI tools</h3>
+        <div class="quick-grid" id="quickGrid"></div>
+      </section>
+
+      <!-- Compare -->
+      <section class="panel" id="panel-compare">
+        <div class="form-card" style="max-width:100%">
+          <label>Product to compare</label>
+          <div style="display:flex;gap:10px"><input class="field" id="cmpSearch" placeholder="Search a product across Amazon, Flipkart, Reliance, Snapdeal"><button class="btn btn-primary" id="cmpBtn"><i class="fas fa-scale-balanced"></i> Compare</button></div>
+          <div class="quick-skills" id="cmpSuggest"></div>
+        </div>
+        <div id="cmpResults"></div>
+      </section>
+
+      <!-- Assistant -->
+      <section class="panel" id="panel-assistant">
+        <div class="chat-wrap">
+          <div class="chat-scroll" id="chatScroll">
+            <div class="msg ai"><div class="msg-ic"><i class="fas fa-robot"></i></div><div class="msg-body">Hi! I'm your AVP Emart shopping assistant. Tell me what you want — e.g. "find the best earbuds under ₹2000" — and I'll compare prices and pick the best value for you.</div></div>
+          </div>
+          <div class="chat-input">
+            <input type="text" id="askInput" placeholder='e.g. best 5G phone under ₹20000' autocomplete="off">
+            <button class="btn btn-primary" id="askSend"><i class="fas fa-paper-plane"></i></button>
+          </div>
+          <div class="chat-suggest" id="askSuggest"></div>
+        </div>
+      </section>
+
+      <!-- Reviews -->
+      <section class="panel" id="panel-reviews">
+        <div class="tool-intro">Get an AI verdict with pros & cons — from a product's ratings, or paste real reviews to summarize.</div>
+        <div class="form-card">
+          <label>Product</label>
+          <input class="field" id="revProduct" placeholder="e.g. Redmi Note 13 Pro">
+          <label>Paste reviews (optional)</label>
+          <textarea class="field" id="revText" rows="5" placeholder="Paste customer reviews here to summarize them (optional)"></textarea>
+          <button class="btn btn-primary lg" id="revBtn"><i class="fas fa-comments"></i> Analyze reviews</button>
+        </div>
+        <div class="results" id="revResults"></div>
+      </section>
+
+      <!-- Trends -->
+      <section class="panel" id="panel-trends">
+        <div class="tool-intro">See how a product's price has moved and whether it's a good time to buy.</div>
+        <div class="form-card">
+          <label>Product</label>
+          <div style="display:flex;gap:10px"><input class="field" id="trendSearch" placeholder="e.g. Sony WH-CH520"><button class="btn btn-primary" id="trendBtn"><i class="fas fa-chart-line"></i> Analyze</button></div>
+        </div>
+        <div class="results" id="trendResults"></div>
+      </section>
+
+      <!-- Recommendations -->
+      <section class="panel" id="panel-recommend">
+        <div class="tool-intro">AI-curated best-value picks by category.</div>
+        <div class="seg" id="catSeg"></div>
+        <div class="results" id="recResults"></div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="app-ui.js"></script>
+</body>
+</html>

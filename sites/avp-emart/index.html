@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVP Emart — AI-Powered E-Commerce & Smart Shopping</title>
+  <meta name="description" content="An AI-powered marketplace that compares live prices across Amazon, Flipkart, Reliance Digital, and Snapdeal, scores the best value with ML, and delivers it to your door.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🛒%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<span id="top"></span>
+
+<div class="preloader" id="preloader">
+  <div class="pl-glow pl-glow-1"></div>
+  <div class="pl-glow pl-glow-2"></div>
+  <div class="pl-content">
+    <div class="pl-logo">
+      <div class="pl-icon-wrap"><i class="fas fa-cart-shopping pl-icon"></i><span class="pl-ring"></span></div>
+      <div class="pl-name">AVP Emart</div>
+    </div>
+    <div class="pl-progress">
+      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
+      <div class="pl-text">INITIALIZING SYSTEM… <span id="plPct">0</span>%</div>
+    </div>
+  </div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="logo" href="#top">
+    <span class="logo-icon"><i class="fas fa-cart-shopping"></i></span>
+    <span class="logo-text">AVP <span class="logo-accent">Emart</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#about">About</a>
+    <a href="#services">AI Tools</a>
+    
+    <a href="#sandbox">Live Demo</a>
+    <a href="#process">Process</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost" href="http://localhost:8007/dashboard"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-primary" href="https://price-com-7.streamlit.app/" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <canvas id="particles"></canvas>
+  <div class="hero-content">
+    <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI Price Comparison · Best-Value Scoring · LLM Shopping Assistant</span></div>
+    <h1 class="hero-title" data-blur-in style="--i:1">AI shopping that finds you the<br><span class="grad">best price</span>, every time</h1>
+    <p class="hero-sub" data-blur-in style="--i:2">An AI-powered marketplace that compares live prices across Amazon, Flipkart, Reliance Digital, and Snapdeal, scores the best value with ML, and delivers it to your door.</p>
+    <div class="hero-actions" data-blur-in style="--i:3">
+      <a class="btn btn-primary lg" href="https://price-com-7.streamlit.app/" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Try the AI Price Comparator</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
+    </div>
+    <div class="stats-row" data-blur-in style="--i:4">
+        <div class="hs"><div class="hs-num count">4</div><div class="hs-lbl">Platforms Compared</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">10k+</div><div class="hs-lbl">Products</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">24/7</div><div class="hs-lbl">AI Assistant</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">₹1Cr</div><div class="hs-lbl">GMV Year 1</div></div>
+    </div>
+    <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>AI Price Compare</span><span>Best-Value Scoring</span><span>Shopping Assistant</span><span>Smart Recommendations</span><span>Price Forecasting</span><span>Review Intelligence</span><span>Amazon</span><span>Flipkart</span><span>Reliance Digital</span><span>Snapdeal</span><span>AI Price Compare</span><span>Best-Value Scoring</span><span>Shopping Assistant</span><span>Smart Recommendations</span><span>Price Forecasting</span><span>Review Intelligence</span><span>Amazon</span><span>Flipkart</span><span>Reliance Digital</span><span>Snapdeal</span></div></div>
+  </div>
+</header>
+
+<section class="pillars-band">
+  <div class="pillars-inner">
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-scale-balanced"></i></div><div class="pillar-txt"><strong>AI Compare</strong><span>Live prices across four platforms.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-piggy-bank"></i></div><div class="pillar-txt"><strong>Best-Value AI</strong><span>ML scoring on every product.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-robot"></i></div><div class="pillar-txt"><strong>Shopping Assistant</strong><span>Ask, and AI finds it for you.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-truck-fast"></i></div><div class="pillar-txt"><strong>Fast Delivery</strong><span>Quick, reliable fulfilment.</span></div></div>
+  </div>
+</section>
+
+<section class="ai-strip">
+  <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
+  <div class="ai-chips"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>ML Scoring</span><span class="ai-chip"><i class="fas fa-microchip"></i>NLP Summarisation</span></div>
+</section>
+
+<section class="section about" id="about">
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <div class="eyebrow">Est. 2026 · AI-Powered E-Commerce & Smart Shopping</div>
+      <h2 class="sec-title left">Shop smart. AI always finds the best price.</h2>
+      <p>AVP Emart is a smart-shopping platform powered by AI. Our engine checks Amazon, Flipkart, Reliance Digital, and Snapdeal in real time, then a weighted ML algorithm scores each product by price, ratings, and reviews.</p><p>Ask our LLM shopping assistant in plain language, get personalised recommendations, and let AI summarise thousands of reviews into a quick verdict — then we deliver your best-value pick to your door.</p>
+    </div>
+    <aside class="about-card glow reveal">
+      <div class="about-card-ic"><i class="fas fa-cart-shopping"></i></div>
+      <h3>Why AVP?</h3>
+      <ul class="hl-list">
+          <li><i class="fas fa-check"></i>Live AI price compare, 4 platforms</li>
+          <li><i class="fas fa-check"></i>Best-value ML scoring</li>
+          <li><i class="fas fa-check"></i>LLM shopping assistant</li>
+          <li><i class="fas fa-check"></i>AI review summaries & trends</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="eyebrow center">AI CAPABILITIES</div>
+  <h2 class="sec-title">AI that shops smarter than you</h2>
+  <div class="svc-grid">
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-scale-balanced"></i></div><h4>AI Price Comparison</h4><p>Real-time AI compares prices, ratings, and reviews across four platforms at once.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Live Aggregation</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-star-half-stroke"></i></div><h4>Best-Value Scoring</h4><p>A weighted ML algorithm ranks products by price, ratings, and reviews.</p><span class="svc-tag"><i class="fas fa-bolt"></i>ML Scoring</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-robot"></i></div><h4>LLM Shopping Assistant</h4><p>Ask in plain language — an AI assistant finds exactly the right product.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Groq LLaMA 3.3</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-wand-magic-sparkles"></i></div><h4>Smart Recommendations</h4><p>Personalised product recommendations tuned to your preferences.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Recommender</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-chart-line"></i></div><h4>Price-Trend Forecasting</h4><p>AI predicts price movements so you buy at exactly the right time.</p><span class="svc-tag"><i class="fas fa-bolt"></i>ML Forecasting</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-comments"></i></div><h4>Review Intelligence</h4><p>NLP summarises thousands of reviews into a fast, trustworthy verdict.</p><span class="svc-tag"><i class="fas fa-bolt"></i>NLP Summarisation</span></article>
+  </div>
+</section>
+
+
+<section class="section sandbox-sec" id="sandbox">
+  <div class="eyebrow center">AI PLAYGROUND</div>
+  <h2 class="sec-title">Try the AI Live</h2>
+  <p class="sandbox-subtitle center">Simulate live shopping queries across online platforms. Enter a product name to search Flipkart, Amazon, Reliance, and Snapdeal.</p>
+  
+  <div class="sandbox-container reveal">
+    <div class="sandbox-card glow">
+      <div class="sandbox-card-header">
+        <div class="sandbox-dot red"></div>
+        <div class="sandbox-dot yellow"></div>
+        <div class="sandbox-dot green"></div>
+        <span class="sandbox-card-title">AI Price Comparator & Value Scorer</span>
+      </div>
+      <div class="sandbox-card-body">
+        <form class="sandbox-form" id="sandboxForm" data-endpoint="http://localhost:8007/api/compare">
+          
+        <div class="sandbox-field">
+          <label for="sb-query">Product Name</label>
+          <input type="text" id="sb-query" placeholder="e.g. iPhone 15 Pro Max" required>
+        </div>
+        
+          <button type="submit" class="btn btn-primary lg" id="sandboxBtn">
+            <i class="fas fa-play"></i> Run AI Model
+          </button>
+        </form>
+        <div class="sandbox-result">
+          <div class="sandbox-result-header">
+            <span>Terminal Output</span>
+            <button class="sandbox-copy-btn" id="sandboxCopy" type="button" aria-label="Copy output">
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+          <div class="sandbox-pre-wrap">
+            <pre class="sandbox-pre" id="sandboxOutput">// Output will be displayed here after you execute the model...</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section process" id="process">
+  <div class="eyebrow center">THE PROCESS</div>
+  <h2 class="sec-title">From search to doorstep, powered by AI</h2>
+  <div class="proc-grid">
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">01</div><div class="proc-ic"><i class="fas fa-magnifying-glass"></i></div><h4>Search or Ask</h4><p>Search a product or just ask our AI shopping assistant.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">02</div><div class="proc-ic"><i class="fas fa-scale-balanced"></i></div><h4>AI Compares</h4><p>Live AI compares prices, ratings, and reviews across platforms.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">03</div><div class="proc-ic"><i class="fas fa-award"></i></div><h4>Best-Value Pick</h4><p>Our ML scoring engine highlights the smartest buy for you.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">04</div><div class="proc-ic"><i class="fas fa-truck-fast"></i></div><h4>Order & Deliver</h4><p>Check out and get it delivered fast to your door.</p></div>
+  </div>
+</section>
+
+<section class="impact" id="impact">
+  <div class="impact-inner">
+    <div class="eyebrow center">BY THE NUMBERS</div>
+    <h2 class="sec-title">AI built to save you money</h2>
+    <div class="impact-grid">
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">4</div><div class="metric-lbl">Platforms</div><div class="metric-sub">Compared in real time</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">10000+</div><div class="metric-lbl">Products</div><div class="metric-sub">And growing</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">1Cr</div><div class="metric-lbl">GMV Target</div><div class="metric-sub">Crore in Year 1</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="testimonials">
+  <div class="eyebrow center">WHAT PEOPLE SAY</div>
+  <h2 class="sec-title">Trusted by the people we serve</h2>
+  <div class="tgrid">
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The AI found me a price 20% lower than where I was about to buy.&rdquo;</blockquote><figcaption><span class="tavatar">S</span><span class="tmeta"><strong>Shopper</strong><small>Ahmedabad</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;I just asked the assistant and it compared everything for me — shopping finally makes sense.&rdquo;</blockquote><figcaption><span class="tavatar">S</span><span class="tmeta"><strong>Shopper</strong><small>Vadodara</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The best-value score takes the guesswork out of every purchase.&rdquo;</blockquote><figcaption><span class="tavatar">S</span><span class="tmeta"><strong>Shopper</strong><small>Surat</small></span></figcaption></figure>
+  </div>
+</section>
+
+<section class="section faq-sec" id="faq">
+  <div class="eyebrow center">FAQ</div>
+  <h2 class="sec-title">Questions, answered</h2>
+  <div class="faq-list">
+        <details class="faq reveal"><summary>How does the AI comparison work?<i class="fas fa-plus"></i></summary><div class="faq-a">Our engine aggregates live listings from Amazon, Flipkart, Reliance Digital, and Snapdeal, then a weighted ML algorithm scores each by price, ratings, and reviews.</div></details>
+        <details class="faq reveal"><summary>What is the AI shopping assistant?<i class="fas fa-plus"></i></summary><div class="faq-a">A Groq LLaMA-powered assistant that understands plain-language requests and finds the right product and best price for you.</div></details>
+        <details class="faq reveal"><summary>Is there a live demo?<i class="fas fa-plus"></i></summary><div class="faq-a">Yes — try our live AI price comparator to search any product and compare instantly across all four platforms.</div></details>
+        <details class="faq reveal"><summary>Do you deliver?<i class="fas fa-plus"></i></summary><div class="faq-a">Yes — we integrate with delivery partners like Shiprocket and Delhivery for fast, reliable fulfilment.</div></details>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="cta-glow"></div>
+  <div class="cta-content reveal">
+    <div class="cta-badge"><i class="fas fa-microchip"></i> Est. 2026 · AI-Powered E-Commerce & Smart Shopping</div>
+    <h2>Start shopping smarter with AI.</h2>
+    <p>Try the live AI price comparator — search any product and instantly see the best value across Amazon, Flipkart, Reliance Digital, and Snapdeal.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary lg" href="https://price-com-7.streamlit.app/" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Try the AI Price Comparator</a>
+      <a class="btn btn-ghost lg" href="tel:+918490861586"><i class="fas fa-phone"></i> +91 84908 61586</a>
+    </div>
+    <form class="contact-form" id="contactForm" data-email="shop@avpemart.com" data-company="AVP Emart">
+      <div class="cf-row">
+        <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
+        <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
+      </div>
+      <input type="text" id="cf-subject" placeholder="Subject">
+      <textarea id="cf-msg" rows="4" placeholder="How can we help you?" required></textarea>
+      <button type="submit" class="btn btn-primary lg"><i class="fas fa-paper-plane"></i> Send message</button>
+      <p class="cf-note" id="cf-note" role="status"></p>
+    </form>
+    <div class="cta-contact">
+      <span><i class="fas fa-envelope"></i> shop@avpemart.com</span>
+      <span><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="logo" href="#top">
+        <span class="logo-icon"><i class="fas fa-cart-shopping"></i></span>
+        <span class="logo-text">AVP <span class="logo-accent">Emart</span></span>
+      </a>
+      <p>An AI-powered marketplace that compares live prices across Amazon, Flipkart, Reliance Digital, and Snapdeal, scores the best value with ML, and delivers it to your door.</p>
+      <div class="foot-social">
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="mailto:shop@avpemart.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Explore</h5>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">AI Tools</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>The AI Group</h5>
+      <ul>
+          <li><a href="../comonk/index.html">Comonk Technology</a></li>
+          <li><a href="../index.html">Sevenseed</a></li>
+          <li><a href="../sevenforce/index.html">Sevenforce</a></li>
+          <li><a href="../avpu/index.html">Alpaben Vipulbhai Patel University</a></li>
+          <li><a href="../decode-forest-pharmacy/index.html">Decode Forest Pharmacy</a></li>
+          <li><a href="../breakdown-factor/index.html">Breakdown Factor Construction</a></li>
+          <li><a href="../avp-charitable-trust/index.html">AVP Charitable Trust</a></li>
+          <li><span class="foot-current">AVP Emart</span></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Get in touch</h5>
+      <ul class="foot-contact">
+        <li><i class="fas fa-envelope"></i> shop@avpemart.com</li>
+        <li><i class="fas fa-phone"></i> +91 84908 61586</li>
+        <li><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© <span data-year></span> AVP Emart. All rights reserved.</span>
+    <span class="foot-venture"><i class="fas fa-seedling"></i> A Sevenseed AI venture</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

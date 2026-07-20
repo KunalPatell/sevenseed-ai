@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pydantic>=2
+python-dotenv
+requests
+# Optional — enable full LLM mode (assistant/reviews) with any one key:
+langchain-core
+langchain-groq
+langchain-openai
+langchain-google-genai
+itsdangerous

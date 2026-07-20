@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVP AgenticOS — Autonomous AI Agent Workforce</title>
+  <meta name="description" content="An enterprise-grade autonomous AI workforce platform that orchestrates custom agents to handle development, business analysis, automated testing, omnichannel outreach, and meeting coordination.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🤖%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<span id="top"></span>
+
+<div class="preloader" id="preloader">
+  <div class="pl-glow pl-glow-1"></div>
+  <div class="pl-glow pl-glow-2"></div>
+  <div class="pl-content">
+    <div class="pl-logo">
+      <div class="pl-icon-wrap"><i class="fas fa-network-wired pl-icon"></i><span class="pl-ring"></span></div>
+      <div class="pl-name">AVP AgenticOS</div>
+    </div>
+    <div class="pl-progress">
+      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
+      <div class="pl-text">INITIALIZING SYSTEM… <span id="plPct">0</span>%</div>
+    </div>
+  </div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="logo" href="#top">
+    <span class="logo-icon"><i class="fas fa-network-wired"></i></span>
+    <span class="logo-text">AVP <span class="logo-accent">AgenticOS</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#about">About</a>
+    <a href="#services">AI Tools</a>
+    
+    <a href="#process">Process</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-primary" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <canvas id="particles"></canvas>
+  <div class="hero-content">
+    <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">Autonomous Agents · LangGraph Orchestration · Task Automation</span></div>
+    <h1 class="hero-title" data-blur-in style="--i:1">Deploy your <span class="grad">AI Agent workforce</span><br>in minutes</h1>
+    <p class="hero-sub" data-blur-in style="--i:2">An enterprise-grade autonomous AI workforce platform that orchestrates custom agents to handle development, business analysis, automated testing, omnichannel outreach, and meeting coordination.</p>
+    <div class="hero-actions" data-blur-in style="--i:3">
+      <a class="btn btn-primary lg" href="#contact"><i class="fas fa-paper-plane"></i> Request Demo Session</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
+    </div>
+    <div class="stats-row" data-blur-in style="--i:4">
+        <div class="hs"><div class="hs-num count">10k+</div><div class="hs-lbl">Tasks Done</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">80%</div><div class="hs-lbl">Cost Saved</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">120+</div><div class="hs-lbl">Connected APIs</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">24/7</div><div class="hs-lbl">Active Agents</div></div>
+    </div>
+    <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>Developer Agents</span><span>Meeting Agents</span><span>Outreach Agents</span><span>Analyst Agents</span><span>Content Agents</span><span>Figma-to-QA</span><span>LangGraph Teams</span><span>WhatsWay API</span><span>BlogPost.ai</span><span>Zoho Sync</span><span>Developer Agents</span><span>Meeting Agents</span><span>Outreach Agents</span><span>Analyst Agents</span><span>Content Agents</span><span>Figma-to-QA</span><span>LangGraph Teams</span><span>WhatsWay API</span><span>BlogPost.ai</span><span>Zoho Sync</span></div></div>
+  </div>
+</header>
+
+<section class="pillars-band">
+  <div class="pillars-inner">
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-network-wired"></i></div><div class="pillar-txt"><strong>Multi-Agent Teams</strong><span>Orchestrated agents collaborating on tasks.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-code"></i></div><div class="pillar-txt"><strong>Code & QA Automation</strong><span>Automated app creation and test coverage.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-bullhorn"></i></div><div class="pillar-txt"><strong>Omnichannel Outreach</strong><span>Campaigns on WhatsApp, social, and email.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-sync"></i></div><div class="pillar-txt"><strong>Real-time Sync</strong><span>Direct integration with Zoho, GitHub, & Figma.</span></div></div>
+  </div>
+</section>
+
+<section class="ai-strip">
+  <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
+  <div class="ai-chips"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>WhatsApp Cloud API</span><span class="ai-chip"><i class="fas fa-microchip"></i>Figma API</span><span class="ai-chip"><i class="fas fa-microchip"></i>GitHub API</span></div>
+</section>
+
+<section class="section about" id="about">
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <div class="eyebrow">Est. 2026 · Autonomous AI Agent Workforce</div>
+      <h2 class="sec-title left">Your enterprise operations, automated.</h2>
+      <p>AVP AgenticOS provides businesses with a secure, scalable platform to deploy specialized AI agents. Our agents integrate with your existing codebase, communication channels, and project dashboards to perform high-value operations autonomously.</p><p>By coordinating developer agents (auto-coding), analyst agents (design to test docs), meeting agents (MeetBot transcription and task sync), and outreach agents (WhatsApp & email validation), we help teams scale operations without increasing headcount.</p>
+    </div>
+    <aside class="about-card glow reveal">
+      <div class="about-card-ic"><i class="fas fa-network-wired"></i></div>
+      <h3>Why AVP?</h3>
+      <ul class="hl-list">
+          <li><i class="fas fa-check"></i>Multi-agent team coordination</li>
+          <li><i class="fas fa-check"></i>WhatsApp & email automation</li>
+          <li><i class="fas fa-check"></i>Codebase & Figma integration</li>
+          <li><i class="fas fa-check"></i>Direct Zoho Projects sync</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="eyebrow center">AI CAPABILITIES</div>
+  <h2 class="sec-title">Autonomous agents at your service</h2>
+  <div class="svc-grid">
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-code"></i></div><h4>Developer Agent</h4><p>Automates coding, refactoring, and multi-model execution in secure workspace sandboxes.</p><span class="svc-tag"><i class="fas fa-bolt"></i>CodingAgent</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-clipboard-list"></i></div><h4>Analyst & QA Agent</h4><p>Parses Figma designs to auto-generate requirements documents and test suites.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Figma-to-QA</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-microphone"></i></div><h4>Meeting Agent</h4><p>Captures, transcribes, and summarizes video calls, pushing action items to dashboards.</p><span class="svc-tag"><i class="fas fa-bolt"></i>MeetBot</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-paper-plane"></i></div><h4>Outreach Agent</h4><p>Orchestrates cold campaigns on email and WhatsApp with real-time validation.</p><span class="svc-tag"><i class="fas fa-bolt"></i>WhatsWay</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-pen-nib"></i></div><h4>Content & Social Agent</h4><p>Generates SEO-ready articles, designs 2D animated assets, and schedules posts.</p><span class="svc-tag"><i class="fas fa-bolt"></i>BlogPost.ai</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-tasks"></i></div><h4>Task Coordinator</h4><p>Syncs tasks, tickets, and timesheets between AI agents and project tools.</p><span class="svc-tag"><i class="fas fa-bolt"></i>ZohoAgent</span></article>
+  </div>
+</section>
+
+<section class="section process" id="process">
+  <div class="eyebrow center">THE PROCESS</div>
+  <h2 class="sec-title">How AVP AgenticOS scales your team</h2>
+  <div class="proc-grid">
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">01</div><div class="proc-ic"><i class="fas fa-sliders"></i></div><h4>Configure Agents</h4><p>Select and customize developer, analyst, or outreach agents for your workflow.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">02</div><div class="proc-ic"><i class="fas fa-plug"></i></div><h4>Connect Tools</h4><p>Integrate WhatsApp, GitHub, Figma, and Zoho Projects in one click.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">03</div><div class="proc-ic"><i class="fas fa-play"></i></div><h4>Deploy Workflows</h4><p>Agents listen to project tickets and coordinate task execution autonomously.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">04</div><div class="proc-ic"><i class="fas fa-chart-pie"></i></div><h4>Monitor Metrics</h4><p>Track timesheets, completed tasks, and campaign ROI on your central dashboard.</p></div>
+  </div>
+</section>
+
+<section class="impact" id="impact">
+  <div class="impact-inner">
+    <div class="eyebrow center">BY THE NUMBERS</div>
+    <h2 class="sec-title">Unparalleled business efficiency</h2>
+    <div class="impact-grid">
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">10000+</div><div class="metric-lbl">Tasks Automated</div><div class="metric-sub">Across group companies</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">80%</div><div class="metric-lbl">Cost Reduction</div><div class="metric-sub">Compared to manual execution</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">120+</div><div class="metric-lbl">API Integrations</div><div class="metric-sub">Ready to plug and play</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="testimonials">
+  <div class="eyebrow center">WHAT PEOPLE SAY</div>
+  <h2 class="sec-title">Trusted by the people we serve</h2>
+  <div class="tgrid">
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;AgenticOS developer and analyst agents allowed us to ship three SaaS prototypes in a month.&rdquo;</blockquote><figcaption><span class="tavatar">C</span><span class="tmeta"><strong>CTO</strong><small>Comonk Technology</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The WhatsApp automation and lead validation doubled our outbound sales conversions.&rdquo;</blockquote><figcaption><span class="tavatar">GL</span><span class="tmeta"><strong>Growth Lead</strong><small>AVP Emart</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;MeetBot transcripts and action-item sync save our team hours of administration daily.&rdquo;</blockquote><figcaption><span class="tavatar">OM</span><span class="tmeta"><strong>Operations Manager</strong><small>Sevenseed Studio</small></span></figcaption></figure>
+  </div>
+</section>
+
+<section class="section faq-sec" id="faq">
+  <div class="eyebrow center">FAQ</div>
+  <h2 class="sec-title">Questions, answered</h2>
+  <div class="faq-list">
+        <details class="faq reveal"><summary>How do developer and analyst agents work?<i class="fas fa-plus"></i></summary><div class="faq-a">Developer agents write and run code locally in secure sandboxes, while analyst agents read designs (like Figma) to write documentation and QA tests.</div></details>
+        <details class="faq reveal"><summary>Can we connect our own tools?<i class="fas fa-plus"></i></summary><div class="faq-a">Yes. AgenticOS features pre-built integrations for GitHub, GitLab, Zoho Projects, Figma, Slack, WhatsApp Cloud API, and SMTP email services.</div></details>
+        <details class="faq reveal"><summary>Is multi-agent execution safe?<i class="fas fa-plus"></i></summary><div class="faq-a">Absolutely. Agents run in secure sandbox environments, and you can define human-in-the-loop checkpoints before any code is committed or outreach is sent.</div></details>
+        <details class="faq reveal"><summary>How does Zoho project sync work?<i class="fas fa-plus"></i></summary><div class="faq-a">Our task coordinator agent reads active project tickets, allocates them to specialized developer or content agents, and automatically updates ticket logs.</div></details>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="cta-glow"></div>
+  <div class="cta-content reveal">
+    <div class="cta-badge"><i class="fas fa-microchip"></i> Est. 2026 · Autonomous AI Agent Workforce</div>
+    <h2>Ready to deploy your AI workforce?</h2>
+    <p>Schedule a demo of AVP AgenticOS, or explore how custom AI agents can automate your development, sales, and operations today.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary lg" href="mailto:agents@avpagenticos.com"><i class="fas fa-paper-plane"></i> Request Demo Session</a>
+      <a class="btn btn-ghost lg" href="tel:+918490861586"><i class="fas fa-phone"></i> +91 84908 61586</a>
+    </div>
+    <form class="contact-form" id="contactForm" data-email="agents@avpagenticos.com" data-company="AVP AgenticOS">
+      <div class="cf-row">
+        <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
+        <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
+      </div>
+      <input type="text" id="cf-subject" placeholder="Subject">
+      <textarea id="cf-msg" rows="4" placeholder="How can we help you?" required></textarea>
+      <button type="submit" class="btn btn-primary lg"><i class="fas fa-paper-plane"></i> Send message</button>
+      <p class="cf-note" id="cf-note" role="status"></p>
+    </form>
+    <div class="cta-contact">
+      <span><i class="fas fa-envelope"></i> agents@avpagenticos.com</span>
+      <span><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="logo" href="#top">
+        <span class="logo-icon"><i class="fas fa-network-wired"></i></span>
+        <span class="logo-text">AVP <span class="logo-accent">AgenticOS</span></span>
+      </a>
+      <p>An enterprise-grade autonomous AI workforce platform that orchestrates custom agents to handle development, business analysis, automated testing, omnichannel outreach, and meeting coordination.</p>
+      <div class="foot-social">
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="mailto:agents@avpagenticos.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Explore</h5>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">AI Tools</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>The AI Group</h5>
+      <ul>
+          <li><a href="https://comonk-ai.onrender.com" target="_blank" rel="noopener">Comonk Technology</a></li>
+          <li><a href="../sevenseed/index.html">Sevenseed</a></li>
+          <li><a href="../avpu/index.html">Alpaben Vipulbhai Patel University</a></li>
+          <li><a href="../decode-forest-pharmacy/index.html">Decode Forest Pharmacy</a></li>
+          <li><a href="../breakdown-factor/index.html">Breakdown Factor Construction</a></li>
+          <li><a href="../avp-charitable-trust/index.html">AVP Charitable Trust</a></li>
+          <li><a href="../avp-emart/index.html">AVP Emart</a></li>
+          <li><span class="foot-current">AVP AgenticOS</span></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Get in touch</h5>
+      <ul class="foot-contact">
+        <li><i class="fas fa-envelope"></i> agents@avpagenticos.com</li>
+        <li><i class="fas fa-phone"></i> +91 84908 61586</li>
+        <li><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© <span data-year></span> AVP AgenticOS. All rights reserved.</span>
+    <span class="foot-venture"><i class="fas fa-seedling"></i> A Sevenseed AI venture</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

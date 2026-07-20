@@ -1,0 +1,49 @@
+# Secrets
+.env
+
+# Database (rebuilt at startup)
+comonk.db
+comonk.db-wal
+comonk.db-shm
+chroma_db/
+
+# Large personal data files
+*.pdf
+*.vcf
+*.csv
+clean_hr_linkedin_list.csv
+emails.csv
+all_bcc_emails.txt
+linkedin_profiles.csv
+
+# Unneeded Excel files (only FINAL_MASTER.xlsx is used)
+1500+_hr_list.xlsx
+AI_Engineer_Job_Targets.xlsx
+Ahmedabad_AIML_Companies_HR_Contacts.xlsx
+Ahmedabad_IT_AIML_Companies_Master.xlsx
+HR Mail List.xlsx
+
+# Scripts / scratch
+scratch/
+__pycache__/
+*.pyc
+*.pyo
+build_*.py
+generate_excel.py
+merge_vcf_update.py
+export_aiml.py
+append_endpoints.py
+check_output.py
+inspect_files.py
+parse_vcf_preview.py
+out.txt
+new_num.txt
+
+# Dev files
+.env.example
+COMONK_PLAN.md
+test_*.py
+db_setup.py
+main.py
+AIML_Companies_Apply_List.csv
+Gandhinagar_GIFTCity_Companies.csv

@@ -1,0 +1,44 @@
+# Secrets — NEVER commit
+.env
+
+# Database files (ephemeral)
+comonk.db
+comonk.db-wal
+comonk.db-shm
+chroma_db/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large personal data files (not needed in repo)
+*.pdf
+*.vcf
+*.csv
+*.xlsx
+*.xls
+*.txt
+!requirements*.txt
+clean_hr_linkedin_list.csv
+emails.csv
+all_bcc_emails.txt
+linkedin_profiles.csv
+1500+_hr_list.xlsx
+AI_Engineer_Job_Targets.xlsx
+Ahmedabad_AIML_Companies_HR_Contacts.xlsx
+Ahmedabad_IT_AIML_Companies_Master.xlsx
+HR\ Mail\ List.xlsx
+
+# Scratch / temp
+scratch/
+out.txt
+new_num.txt

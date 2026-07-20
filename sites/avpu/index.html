@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVP University — AI-Powered Higher Education</title>
+  <meta name="description" content="A future-ready university where AI tutors, adaptive learning paths, and intelligent placement engines help every student learn faster, build real skills, and graduate career-ready.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🎓%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<span id="top"></span>
+
+<div class="preloader" id="preloader">
+  <div class="pl-glow pl-glow-1"></div>
+  <div class="pl-glow pl-glow-2"></div>
+  <div class="pl-content">
+    <div class="pl-logo">
+      <div class="pl-icon-wrap"><i class="fas fa-graduation-cap pl-icon"></i><span class="pl-ring"></span></div>
+      <div class="pl-name">AVP University</div>
+    </div>
+    <div class="pl-progress">
+      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
+      <div class="pl-text">INITIALIZING SYSTEM… <span id="plPct">0</span>%</div>
+    </div>
+  </div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="logo" href="#top">
+    <span class="logo-icon"><i class="fas fa-graduation-cap"></i></span>
+    <span class="logo-text">AVP <span class="logo-accent">University</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#about">About</a>
+    <a href="#services">AI Tools</a>
+    
+    <a href="#sandbox">Live Demo</a>
+    <a href="#process">Process</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost" href="http://localhost:8003/dashboard"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-primary" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <canvas id="particles"></canvas>
+  <div class="hero-content">
+    <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI Tutors · Adaptive Learning · LangGraph Agents</span></div>
+    <h1 class="hero-title" data-blur-in style="--i:1">AI-powered education that adapts<br>to <span class="grad">every learner</span></h1>
+    <p class="hero-sub" data-blur-in style="--i:2">A future-ready university where AI tutors, adaptive learning paths, and intelligent placement engines help every student learn faster, build real skills, and graduate career-ready.</p>
+    <div class="hero-actions" data-blur-in style="--i:3">
+      <a class="btn btn-primary lg" href="#contact"><i class="fas fa-paper-plane"></i> Enquire About Admissions</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
+    </div>
+    <div class="stats-row" data-blur-in style="--i:4">
+        <div class="hs"><div class="hs-num count">20+</div><div class="hs-lbl">AI-Enhanced Programs</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">24/7</div><div class="hs-lbl">AI Tutor</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">90%</div><div class="hs-lbl">Placement Goal</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">100%</div><div class="hs-lbl">Personalised</div></div>
+    </div>
+    <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>AI Tutors</span><span>Adaptive Learning</span><span>Auto-Grading</span><span>Placement AI</span><span>Research Copilot</span><span>Skill Analytics</span><span>Live Projects</span><span>Scholarships</span><span>Industry Links</span><span>Innovation</span><span>AI Tutors</span><span>Adaptive Learning</span><span>Auto-Grading</span><span>Placement AI</span><span>Research Copilot</span><span>Skill Analytics</span><span>Live Projects</span><span>Scholarships</span><span>Industry Links</span><span>Innovation</span></div></div>
+  </div>
+</header>
+
+<section class="pillars-band">
+  <div class="pillars-inner">
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-robot"></i></div><div class="pillar-txt"><strong>Personal AI Tutor</strong><span>24/7 guidance for every student.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-route"></i></div><div class="pillar-txt"><strong>Adaptive Learning</strong><span>Curriculum that adjusts to you.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-briefcase"></i></div><div class="pillar-txt"><strong>AI Placements</strong><span>Semantic matching to real roles.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-award"></i></div><div class="pillar-txt"><strong>Scholarships</strong><span>Merit & need-based support.</span></div></div>
+  </div>
+</section>
+
+<section class="ai-strip">
+  <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
+  <div class="ai-chips"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>Adaptive ML</span><span class="ai-chip"><i class="fas fa-microchip"></i>NLP</span></div>
+</section>
+
+<section class="section about" id="about">
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <div class="eyebrow">Est. 2026 · AI-Powered Higher Education</div>
+      <h2 class="sec-title left">A university with AI built into every classroom.</h2>
+      <p>Alpaben Vipulbhai Patel University reimagines higher education for the AI era. Every learner gets a personal AI tutor, an adaptive curriculum, and instant feedback — so no one is left behind and no one is held back.</p><p>We pair AI-driven learning with real industry projects and a semantic placement engine, so students graduate with the knowledge, skills, and job matches to launch their careers.</p>
+    </div>
+    <aside class="about-card glow reveal">
+      <div class="about-card-ic"><i class="fas fa-graduation-cap"></i></div>
+      <h3>Why AVP?</h3>
+      <ul class="hl-list">
+          <li><i class="fas fa-check"></i>Personal AI tutor for every student</li>
+          <li><i class="fas fa-check"></i>Adaptive, ML-personalised curriculum</li>
+          <li><i class="fas fa-check"></i>Semantic AI placement matching</li>
+          <li><i class="fas fa-check"></i>Research copilot for projects</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="eyebrow center">AI CAPABILITIES</div>
+  <h2 class="sec-title">AI tools that power your degree</h2>
+  <div class="svc-grid">
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-robot"></i></div><h4>AI Tutor & Doubt Solver</h4><p>A 24/7 LLM tutor answers questions and explains concepts from your own course material.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Groq LLaMA 3.3</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-route"></i></div><h4>Adaptive Learning Paths</h4><p>ML models personalise each student's curriculum to their pace and performance.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Adaptive ML</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-briefcase"></i></div><h4>AI Placement Matcher</h4><p>Semantic vector search matches students to the right companies and roles.</p><span class="svc-tag"><i class="fas fa-bolt"></i>RAG + Embeddings</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-clipboard-check"></i></div><h4>Automated Assessment</h4><p>AI grades assignments and returns instant, detailed, actionable feedback.</p><span class="svc-tag"><i class="fas fa-bolt"></i>NLP</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-flask"></i></div><h4>Research Copilot</h4><p>An AI assistant for literature review, summarisation, and academic drafting.</p><span class="svc-tag"><i class="fas fa-bolt"></i>LLM + RAG</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-user-graduate"></i></div><h4>Smart Admissions</h4><p>AI counselling guides every applicant to the program that fits them best.</p><span class="svc-tag"><i class="fas fa-bolt"></i>AI Agent</span></article>
+  </div>
+</section>
+
+
+<section class="section sandbox-sec" id="sandbox">
+  <div class="eyebrow center">AI PLAYGROUND</div>
+  <h2 class="sec-title">Try the AI Live</h2>
+  <p class="sandbox-subtitle center">Personalize your learning path. Enter a topic you want to master, specify your availability, and generate a customized study curriculum.</p>
+  
+  <div class="sandbox-container reveal">
+    <div class="sandbox-card glow">
+      <div class="sandbox-card-header">
+        <div class="sandbox-dot red"></div>
+        <div class="sandbox-dot yellow"></div>
+        <div class="sandbox-dot green"></div>
+        <span class="sandbox-card-title">Adaptive Study Planner</span>
+      </div>
+      <div class="sandbox-card-body">
+        <form class="sandbox-form" id="sandboxForm" data-endpoint="http://localhost:8003/api/tools/study-plan">
+          
+        <div class="sandbox-field">
+          <label for="sb-goal">Learning Goal</label>
+          <input type="text" id="sb-goal" placeholder="e.g. Learn Python Data Analysis from scratch" required>
+        </div>
+        <div class="sandbox-field">
+          <label for="sb-hours">Study Hours Per Day</label>
+          <input type="number" id="sb-hours" value="2" min="0.5" max="8" step="0.5" required>
+        </div>
+        <div class="sandbox-field">
+          <label for="sb-days">Target Days</label>
+          <input type="number" id="sb-days" value="7" min="1" max="30" required>
+        </div>
+        
+          <button type="submit" class="btn btn-primary lg" id="sandboxBtn">
+            <i class="fas fa-play"></i> Run AI Model
+          </button>
+        </form>
+        <div class="sandbox-result">
+          <div class="sandbox-result-header">
+            <span>Terminal Output</span>
+            <button class="sandbox-copy-btn" id="sandboxCopy" type="button" aria-label="Copy output">
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+          <div class="sandbox-pre-wrap">
+            <pre class="sandbox-pre" id="sandboxOutput">// Output will be displayed here after you execute the model...</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section process" id="process">
+  <div class="eyebrow center">THE PROCESS</div>
+  <h2 class="sec-title">Your AI-assisted journey with AVPU</h2>
+  <div class="proc-grid">
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">01</div><div class="proc-ic"><i class="fas fa-user-graduate"></i></div><h4>Apply</h4><p>AI counselling helps you choose the right program in minutes.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">02</div><div class="proc-ic"><i class="fas fa-robot"></i></div><h4>Learn with AI</h4><p>Study with a personal AI tutor and an adaptive curriculum.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">03</div><div class="proc-ic"><i class="fas fa-diagram-project"></i></div><h4>Build</h4><p>Ship live projects and research with an AI research copilot.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">04</div><div class="proc-ic"><i class="fas fa-briefcase"></i></div><h4>Get Placed</h4><p>A semantic AI engine matches you to the right roles.</p></div>
+  </div>
+</section>
+
+<section class="impact" id="impact">
+  <div class="impact-inner">
+    <div class="eyebrow center">BY THE NUMBERS</div>
+    <h2 class="sec-title">AI education that delivers outcomes</h2>
+    <div class="impact-grid">
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">20+</div><div class="metric-lbl">Programs</div><div class="metric-sub">AI-enhanced curricula</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">90%</div><div class="metric-lbl">Placement Target</div><div class="metric-sub">AI-matched roles</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">100%</div><div class="metric-lbl">Personalised</div><div class="metric-sub">One tutor per student</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="testimonials">
+  <div class="eyebrow center">WHAT PEOPLE SAY</div>
+  <h2 class="sec-title">Trusted by the people we serve</h2>
+  <div class="tgrid">
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The AI tutor answered my doubts at midnight before exams — it's like having a mentor 24/7.&rdquo;</blockquote><figcaption><span class="tavatar">FS</span><span class="tmeta"><strong>Final-Year Student</strong><small>B.Tech, Computer Science</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Adaptive learning meant the course moved at exactly my pace.&rdquo;</blockquote><figcaption><span class="tavatar">A</span><span class="tmeta"><strong>Alumna</strong><small>MBA, Class of 2026</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The AI placement engine matched me to a role I didn't even know existed.&rdquo;</blockquote><figcaption><span class="tavatar">G</span><span class="tmeta"><strong>Graduate</strong><small>PG Diploma</small></span></figcaption></figure>
+  </div>
+</section>
+
+<section class="section faq-sec" id="faq">
+  <div class="eyebrow center">FAQ</div>
+  <h2 class="sec-title">Questions, answered</h2>
+  <div class="faq-list">
+        <details class="faq reveal"><summary>How does the AI tutor work?<i class="fas fa-plus"></i></summary><div class="faq-a">A Groq LLaMA-powered assistant, grounded in your course material via RAG, answers questions and explains concepts 24/7.</div></details>
+        <details class="faq reveal"><summary>Are the programs accredited?<i class="fas fa-plus"></i></summary><div class="faq-a">We are actively pursuing accreditation and recognition from national education bodies.</div></details>
+        <details class="faq reveal"><summary>Do you offer scholarships?<i class="fas fa-plus"></i></summary><div class="faq-a">Yes — merit and need-based scholarships, including support through the AVP Charitable Trust.</div></details>
+        <details class="faq reveal"><summary>Is there placement support?<i class="fas fa-plus"></i></summary><div class="faq-a">A semantic AI placement engine plus a dedicated cell provide matching, training, and interview prep.</div></details>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="cta-glow"></div>
+  <div class="cta-content reveal">
+    <div class="cta-badge"><i class="fas fa-microchip"></i> Est. 2026 · AI-Powered Higher Education</div>
+    <h2>Ready to learn in the AI era?</h2>
+    <p>Join a university built around your success — with a personal AI tutor, adaptive learning, and intelligent placement support. Take the first step today.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary lg" href="mailto:admissions@avpu.edu.in"><i class="fas fa-paper-plane"></i> Enquire About Admissions</a>
+      <a class="btn btn-ghost lg" href="tel:+918490861586"><i class="fas fa-phone"></i> +91 84908 61586</a>
+    </div>
+    <form class="contact-form" id="contactForm" data-email="admissions@avpu.edu.in" data-company="AVP University">
+      <div class="cf-row">
+        <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
+        <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
+      </div>
+      <input type="text" id="cf-subject" placeholder="Subject">
+      <textarea id="cf-msg" rows="4" placeholder="How can we help you?" required></textarea>
+      <button type="submit" class="btn btn-primary lg"><i class="fas fa-paper-plane"></i> Send message</button>
+      <p class="cf-note" id="cf-note" role="status"></p>
+    </form>
+    <div class="cta-contact">
+      <span><i class="fas fa-envelope"></i> admissions@avpu.edu.in</span>
+      <span><i class="fas fa-location-dot"></i> Anand, Gujarat, India</span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="logo" href="#top">
+        <span class="logo-icon"><i class="fas fa-graduation-cap"></i></span>
+        <span class="logo-text">AVP <span class="logo-accent">University</span></span>
+      </a>
+      <p>A future-ready university where AI tutors, adaptive learning paths, and intelligent placement engines help every student learn faster, build real skills, and graduate career-ready.</p>
+      <div class="foot-social">
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="mailto:admissions@avpu.edu.in" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Explore</h5>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">AI Tools</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>The AI Group</h5>
+      <ul>
+          <li><a href="../comonk/index.html">Comonk Technology</a></li>
+          <li><a href="../index.html">Sevenseed</a></li>
+          <li><a href="../sevenforce/index.html">Sevenforce</a></li>
+          <li><span class="foot-current">Alpaben Vipulbhai Patel University</span></li>
+          <li><a href="../decode-forest-pharmacy/index.html">Decode Forest Pharmacy</a></li>
+          <li><a href="../breakdown-factor/index.html">Breakdown Factor Construction</a></li>
+          <li><a href="../avp-charitable-trust/index.html">AVP Charitable Trust</a></li>
+          <li><a href="../avp-emart/index.html">AVP Emart</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Get in touch</h5>
+      <ul class="foot-contact">
+        <li><i class="fas fa-envelope"></i> admissions@avpu.edu.in</li>
+        <li><i class="fas fa-phone"></i> +91 84908 61586</li>
+        <li><i class="fas fa-location-dot"></i> Anand, Gujarat, India</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© <span data-year></span> AVP University. All rights reserved.</span>
+    <span class="foot-venture"><i class="fas fa-seedling"></i> A Sevenseed AI venture</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

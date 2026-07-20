@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv
+python-multipart
+httpx
+requests
+pandas
+openpyxl
+pdfplumber
+openai
+chromadb
+langgraph
+langchain-core
+langchain-groq
+langchain-openai
+langchain-google-genai

@@ -1,0 +1,34 @@
+# ── Secrets ──────────────────────────────────────────────────────────────────
+# Never commit these. apps/sevenforce/.gitignore was missing the .env rule while
+# apps/sevenforce/backend/.env holds ~20 live keys (GITHUB_TOKEN, OPENAI_API_KEY,
+# BREVO/RESEND, ...). Covering it here closes that gap for every app at once.
+.env
+.env.*
+!.env.example
+*.pem
+*credential*.json
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.sqlite3
+db.sqlite3
+db.sqlite3.bak
+
+# ── Node / Next.js ───────────────────────────────────────────────────────────
+node_modules/
+.next/
+out/
+
+# ── Built frontend copied into the backend at build time ─────────────────────
+# The six Next.js apps generate backend/static/ locally from frontend/out/; none
+# of them tracked it before and the Dockerfile rebuilds it, so it stays ignored.
+# Sevenforce is the exception: its backend/static/ is a hand-written dashboard
+# (real source, 4 files) and WAS tracked — keep committing that one.
+apps/*/backend/static/
+!apps/sevenforce/backend/static/
+
+# ── Migration leftovers ──────────────────────────────────────────────────────
+# The eight original per-app .git directories, moved aside during the monorepo
+# migration. Kept on disk so nothing is lost, but not part of this repo.
+_old-git/

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVPU Student Portal — AI University</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🎓%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a class="side-logo" href="/">
+      <span class="logo-icon"><i class="fas fa-graduation-cap"></i></span>
+      <span class="logo-text">AVP <span class="logo-accent">University</span></span>
+    </a>
+    <nav class="side-nav">
+      <button class="nav-item active" data-panel="dashboard"><i class="fas fa-gauge-high"></i> <span>Dashboard</span></button>
+      <button class="nav-item" data-panel="tutor"><i class="fas fa-robot"></i> <span>AI Tutor</span></button>
+      <button class="nav-item" data-panel="placement"><i class="fas fa-briefcase"></i> <span>Placement Matcher</span></button>
+      <button class="nav-item" data-panel="admissions"><i class="fas fa-user-graduate"></i> <span>Smart Admissions</span></button>
+      <button class="nav-item" data-panel="assess"><i class="fas fa-clipboard-check"></i> <span>Auto Assessment</span></button>
+      <button class="nav-item" data-panel="research"><i class="fas fa-flask"></i> <span>Research Copilot</span></button>
+      <button class="nav-item" data-panel="roadmap"><i class="fas fa-route"></i> <span>Learning Roadmap</span></button>
+    </nav>
+    <div class="side-foot">
+      <div class="sysbadge" id="sysBadge"><i class="fas fa-circle-notch fa-spin"></i> connecting…</div>
+      <a class="side-back" href="/"><i class="fas fa-arrow-left"></i> Back to site</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Menu"><i class="fas fa-bars"></i></button>
+      <div class="topbar-title"><h1 id="panelTitle">Dashboard</h1><p id="panelDesc">Your AI-powered student portal</p></div>
+      <div class="topbar-right"><span class="prov-chip" id="provChip"><i class="fas fa-microchip"></i> …</span></div>
+    </header>
+
+    <div class="panels">
+      <!-- Dashboard -->
+      <section class="panel active" id="panel-dashboard">
+        <div class="welcome">
+          <div>
+            <h2>Welcome to your AI campus 🎓</h2>
+            <p>Six AI tools to help you learn, get assessed, choose a program, and land a job — all in one place.</p>
+          </div>
+        </div>
+        <div class="stat-tiles" id="statTiles"></div>
+        <h3 class="block-title">Quick actions</h3>
+        <div class="quick-grid" id="quickGrid"></div>
+        <h3 class="block-title">Explore programs</h3>
+        <div class="prog-grid" id="progGrid"></div>
+      </section>
+
+      <!-- AI Tutor -->
+      <section class="panel" id="panel-tutor">
+        <div class="chat-wrap">
+          <div class="chat-scroll" id="chatScroll">
+            <div class="msg ai"><div class="msg-ic"><i class="fas fa-robot"></i></div><div class="msg-body">Hi! I'm your AVPU AI Tutor. Ask me about any concept (Python, ML, DBMS, RAG…), your programs, admissions or placements. I answer using AVPU's knowledge base.</div></div>
+          </div>
+          <div class="chat-input">
+            <input type="text" id="tutorInput" placeholder="Ask anything… e.g. Explain how RAG works" autocomplete="off">
+            <button class="btn btn-primary" id="tutorSend"><i class="fas fa-paper-plane"></i></button>
+          </div>
+          <div class="chat-suggest" id="tutorSuggest"></div>
+        </div>
+      </section>
+
+      <!-- Placement Matcher -->
+      <section class="panel" id="panel-placement">
+        <div class="tool-intro">Add your skills and let AI match you to hiring partners — with your skill gaps for each role.</div>
+        <div class="form-card">
+          <label>Your skills</label>
+          <div class="chips-input"><div class="chips" id="skillChips"></div><input type="text" id="skillInput" placeholder="Type a skill + Enter (e.g. Python)"></div>
+          <div class="quick-skills" id="quickSkills"></div>
+          <label>Interests / target role (optional)</label>
+          <input type="text" class="field" id="placeInterests" placeholder="e.g. AI Engineer, backend development">
+          <button class="btn btn-primary lg" id="placeBtn"><i class="fas fa-wand-magic-sparkles"></i> Match me to companies</button>
+        </div>
+        <div class="results" id="placeResults"></div>
+      </section>
+
+      <!-- Smart Admissions -->
+      <section class="panel" id="panel-admissions">
+        <div class="tool-intro">Tell us about you and AI will recommend the best-fit AVPU program.</div>
+        <div class="form-card">
+          <label>Your interests</label>
+          <input type="text" class="field" id="admInterests" placeholder="e.g. I love AI, data and building apps">
+          <div class="form-row">
+            <div><label>Background</label><input type="text" class="field" id="admBackground" placeholder="e.g. 12th science / BCA graduate"></div>
+            <div><label>Career goal</label><input type="text" class="field" id="admGoal" placeholder="e.g. become an AI engineer"></div>
+          </div>
+          <button class="btn btn-primary lg" id="admBtn"><i class="fas fa-wand-magic-sparkles"></i> Recommend a program</button>
+        </div>
+        <div class="results" id="admResults"></div>
+      </section>
+
+      <!-- Auto Assessment -->
+      <section class="panel" id="panel-assess">
+        <div class="tool-intro">Answer a question and get an instant AI grade with feedback.</div>
+        <div class="form-card">
+          <label>Question</label>
+          <textarea class="field" id="assessQ" rows="2" placeholder="e.g. What is a stack data structure and where is it used?"></textarea>
+          <label>Your answer</label>
+          <textarea class="field" id="assessA" rows="5" placeholder="Write your answer here…"></textarea>
+          <button class="btn btn-primary lg" id="assessBtn"><i class="fas fa-clipboard-check"></i> Grade my answer</button>
+        </div>
+        <div class="results" id="assessResults"></div>
+      </section>
+
+      <!-- Research Copilot -->
+      <section class="panel" id="panel-research">
+        <div class="tool-intro">Paste any text — get a clean summary or a structured outline.</div>
+        <div class="form-card">
+          <label>Text</label>
+          <textarea class="field" id="researchText" rows="8" placeholder="Paste an article, notes or a paragraph…"></textarea>
+          <div class="seg" id="researchMode">
+            <button class="seg-btn active" data-mode="summarize">Summarize</button>
+            <button class="seg-btn" data-mode="outline">Outline</button>
+          </div>
+          <button class="btn btn-primary lg" id="researchBtn"><i class="fas fa-flask"></i> Run copilot</button>
+        </div>
+        <div class="results" id="researchResults"></div>
+      </section>
+
+      <!-- Learning Roadmap -->
+      <section class="panel" id="panel-roadmap">
+        <div class="tool-intro">Get a personalised, week-by-week learning plan for any goal.</div>
+        <div class="form-card">
+          <label>Your goal</label>
+          <input type="text" class="field" id="roadGoal" placeholder="e.g. Become an AI engineer">
+          <div class="form-row">
+            <div><label>Current level</label>
+              <select class="field" id="roadLevel"><option>beginner</option><option>intermediate</option><option>advanced</option></select></div>
+            <div><label>Weeks</label>
+              <select class="field" id="roadWeeks"><option>6</option><option selected>8</option><option>12</option><option>16</option></select></div>
+          </div>
+          <button class="btn btn-primary lg" id="roadBtn"><i class="fas fa-route"></i> Build my roadmap</button>
+        </div>
+        <div class="results" id="roadResults"></div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="app-ui.js"></script>
+</body>
+</html>

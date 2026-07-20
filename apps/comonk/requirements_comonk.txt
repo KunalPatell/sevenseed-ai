@@ -1,0 +1,30 @@
+# ── Core web framework ────────────────────────────────────────────
+fastapi>=0.110.0
+uvicorn[standard]>=0.25.0
+python-multipart>=0.0.9
+pydantic>=2.5.0
+
+# ── Data / Excel / PDF ───────────────────────────────────────────
+openpyxl
+pdfplumber
+httpx
+
+# ── LangChain + LangGraph (real multi-agent system) ──────────────
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-community>=0.3.0
+langgraph>=0.2.28
+langchain-groq           # Groq provider (free LLM)
+langchain-openai         # OpenAI-compatible (also used for Gemini via OpenAI SDK)
+
+# ── Optional: Google Gemini (free tier LLM) ───────────────────────
+# langchain-google-genai  # Uncomment if you have GEMINI_API_KEY
+
+# ── RAG vector store (local, no cloud needed) ─────────────────────
+chromadb                 # includes ONNX embeddings (all-MiniLM-L6-v2)
+
+# ── LLM SDK (simple fallback layer) ──────────────────────────────
+openai>=1.58.1
+
+# ── SMS / Notifications ───────────────────────────────────────────
+twilio                   # SMS + WhatsApp job alerts (free trial credit)

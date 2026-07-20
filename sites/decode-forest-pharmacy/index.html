@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decode Forest Pharmacy — AI-Powered Pharmacy & Healthcare</title>
+  <meta name="description" content="A modern pharmacy where AI reads prescriptions, checks drug interactions, and recommends affordable alternatives — with intelligent, on-time doorstep delivery you can trust.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E💊%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<span id="top"></span>
+
+<div class="preloader" id="preloader">
+  <div class="pl-glow pl-glow-1"></div>
+  <div class="pl-glow pl-glow-2"></div>
+  <div class="pl-content">
+    <div class="pl-logo">
+      <div class="pl-icon-wrap"><i class="fas fa-mortar-pestle pl-icon"></i><span class="pl-ring"></span></div>
+      <div class="pl-name">Decode Forest Pharmacy</div>
+    </div>
+    <div class="pl-progress">
+      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
+      <div class="pl-text">INITIALIZING SYSTEM… <span id="plPct">0</span>%</div>
+    </div>
+  </div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="logo" href="#top">
+    <span class="logo-icon"><i class="fas fa-mortar-pestle"></i></span>
+    <span class="logo-text">Decode Forest <span class="logo-accent">Pharmacy</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#about">About</a>
+    <a href="#services">AI Tools</a>
+    
+    <a href="#sandbox">Live Demo</a>
+    <a href="#process">Process</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost" href="http://localhost:8004/dashboard"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-primary" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <canvas id="particles"></canvas>
+  <div class="hero-content">
+    <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI Prescription Reading · Drug-Interaction AI · Smart Delivery</span></div>
+    <h1 class="hero-title" data-blur-in style="--i:1">AI-powered pharmacy — <span class="grad">smarter, safer</span><br>healthcare for everyone</h1>
+    <p class="hero-sub" data-blur-in style="--i:2">A modern pharmacy where AI reads prescriptions, checks drug interactions, and recommends affordable alternatives — with intelligent, on-time doorstep delivery you can trust.</p>
+    <div class="hero-actions" data-blur-in style="--i:3">
+      <a class="btn btn-primary lg" href="#contact"><i class="fas fa-paper-plane"></i> Order Now</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
+    </div>
+    <div class="stats-row" data-blur-in style="--i:4">
+        <div class="hs"><div class="hs-num count">10k+</div><div class="hs-lbl">Products</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">24/7</div><div class="hs-lbl">AI Assistant</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">100%</div><div class="hs-lbl">AI-Verified</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">60min</div><div class="hs-lbl">Smart Delivery</div></div>
+    </div>
+    <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>AI Prescription Reader</span><span>Drug-Interaction AI</span><span>Smart Substitutes</span><span>Refill Prediction</span><span>Health Assistant</span><span>Route Optimisation</span><span>Genuine Medicines</span><span>Wellness</span><span>Doorstep Delivery</span><span>Lab Tests</span><span>AI Prescription Reader</span><span>Drug-Interaction AI</span><span>Smart Substitutes</span><span>Refill Prediction</span><span>Health Assistant</span><span>Route Optimisation</span><span>Genuine Medicines</span><span>Wellness</span><span>Doorstep Delivery</span><span>Lab Tests</span></div></div>
+  </div>
+</header>
+
+<section class="pillars-band">
+  <div class="pillars-inner">
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-file-prescription"></i></div><div class="pillar-txt"><strong>AI Reads Scripts</strong><span>OCR + vision extract your medicines.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-shield-halved"></i></div><div class="pillar-txt"><strong>AI Safety Checks</strong><span>Drug-interaction alerts on every order.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-indian-rupee-sign"></i></div><div class="pillar-txt"><strong>Smart Savings</strong><span>AI finds affordable generics.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-truck-fast"></i></div><div class="pillar-txt"><strong>Smart Delivery</strong><span>Route-optimised, often within the hour.</span></div></div>
+  </div>
+</section>
+
+<section class="ai-strip">
+  <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
+  <div class="ai-chips"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>OCR + Vision</span><span class="ai-chip"><i class="fas fa-microchip"></i>ML Forecasting</span></div>
+</section>
+
+<section class="section about" id="about">
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <div class="eyebrow">Est. 2026 · AI-Powered Pharmacy & Healthcare</div>
+      <h2 class="sec-title left">Healthcare made smarter with AI.</h2>
+      <p>Decode Forest Pharmacy blends genuine medicines with intelligent software. AI reads your prescription, checks for harmful drug interactions, and suggests affordable alternatives — so every order is safer and easier.</p><p>With an AI health assistant, refill prediction, and route-optimised delivery, staying healthy has never been more convenient. Every product is 100% genuine and sourced from licensed distributors.</p>
+    </div>
+    <aside class="about-card glow reveal">
+      <div class="about-card-ic"><i class="fas fa-mortar-pestle"></i></div>
+      <h3>Why Decode Forest?</h3>
+      <ul class="hl-list">
+          <li><i class="fas fa-check"></i>AI reads & verifies prescriptions</li>
+          <li><i class="fas fa-check"></i>Automatic drug-interaction safety</li>
+          <li><i class="fas fa-check"></i>Smart affordable substitutes</li>
+          <li><i class="fas fa-check"></i>Route-optimised fast delivery</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="eyebrow center">AI CAPABILITIES</div>
+  <h2 class="sec-title">Intelligent tools for your health</h2>
+  <div class="svc-grid">
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-file-prescription"></i></div><h4>AI Prescription Reader</h4><p>Computer vision and OCR read handwritten prescriptions and extract medicines instantly.</p><span class="svc-tag"><i class="fas fa-bolt"></i>OCR + Vision</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-triangle-exclamation"></i></div><h4>Drug Interaction Checker</h4><p>An AI safety layer flags potentially harmful drug interactions before dispatch.</p><span class="svc-tag"><i class="fas fa-bolt"></i>LLM Safety</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-pills"></i></div><h4>Smart Substitutes</h4><p>ML recommends genuine, affordable generic alternatives that save you more.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Recommender</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-robot"></i></div><h4>AI Health Assistant</h4><p>A 24/7 LLM assistant answers your medicine and wellness questions.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Groq LLaMA 3.3</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-calendar-check"></i></div><h4>Refill Prediction</h4><p>AI predicts when you'll run out and reminds you to reorder in time.</p><span class="svc-tag"><i class="fas fa-bolt"></i>ML Forecasting</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-truck-fast"></i></div><h4>Smart Delivery Routing</h4><p>Route-optimisation AI ensures the fastest possible doorstep delivery.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Optimisation</span></article>
+  </div>
+</section>
+
+
+<section class="section sandbox-sec" id="sandbox">
+  <div class="eyebrow center">AI PLAYGROUND</div>
+  <h2 class="sec-title">Try the AI Live</h2>
+  <p class="sandbox-subtitle center">Scan medicine lists for dangerous chemical interactions. Type in two drugs to run our LLM safety protocols.</p>
+  
+  <div class="sandbox-container reveal">
+    <div class="sandbox-card glow">
+      <div class="sandbox-card-header">
+        <div class="sandbox-dot red"></div>
+        <div class="sandbox-dot yellow"></div>
+        <div class="sandbox-dot green"></div>
+        <span class="sandbox-card-title">AI Drug Interaction Checker</span>
+      </div>
+      <div class="sandbox-card-body">
+        <form class="sandbox-form" id="sandboxForm" data-endpoint="http://localhost:8004/api/interactions">
+          
+        <div class="sandbox-field">
+          <label for="sb-drug1">Primary Medicine (Drug 1)</label>
+          <input type="text" id="sb-drug1" placeholder="e.g. Aspirin" required>
+        </div>
+        <div class="sandbox-field">
+          <label for="sb-drug2">Secondary Medicine (Drug 2)</label>
+          <input type="text" id="sb-drug2" placeholder="e.g. Warfarin" required>
+        </div>
+        
+          <button type="submit" class="btn btn-primary lg" id="sandboxBtn">
+            <i class="fas fa-play"></i> Run AI Model
+          </button>
+        </form>
+        <div class="sandbox-result">
+          <div class="sandbox-result-header">
+            <span>Terminal Output</span>
+            <button class="sandbox-copy-btn" id="sandboxCopy" type="button" aria-label="Copy output">
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+          <div class="sandbox-pre-wrap">
+            <pre class="sandbox-pre" id="sandboxOutput">// Output will be displayed here after you execute the model...</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section process" id="process">
+  <div class="eyebrow center">THE PROCESS</div>
+  <h2 class="sec-title">Get your medicines the smart way</h2>
+  <div class="proc-grid">
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">01</div><div class="proc-ic"><i class="fas fa-file-arrow-up"></i></div><h4>Upload Prescription</h4><p>Snap it — AI reads and extracts your medicines in seconds.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">02</div><div class="proc-ic"><i class="fas fa-shield-halved"></i></div><h4>AI Safety Check</h4><p>Our AI verifies interactions and suggests affordable options.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">03</div><div class="proc-ic"><i class="fas fa-box"></i></div><h4>Pack & Dispatch</h4><p>Licensed pharmacists confirm and dispatch your order.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">04</div><div class="proc-ic"><i class="fas fa-house-medical"></i></div><h4>Smart Delivery</h4><p>Route-optimised delivery brings it to your door, fast.</p></div>
+  </div>
+</section>
+
+<section class="impact" id="impact">
+  <div class="impact-inner">
+    <div class="eyebrow center">BY THE NUMBERS</div>
+    <h2 class="sec-title">AI care you can count on</h2>
+    <div class="impact-grid">
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">10000</div><div class="metric-lbl">Products</div><div class="metric-sub">Medicines & wellness</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">100%</div><div class="metric-lbl">AI-Verified</div><div class="metric-sub">Every order checked</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">60min</div><div class="metric-lbl">Delivery</div><div class="metric-sub">Minutes, route-optimised</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="testimonials">
+  <div class="eyebrow center">WHAT PEOPLE SAY</div>
+  <h2 class="sec-title">Trusted by the people we serve</h2>
+  <div class="tgrid">
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The app read my doctor's messy handwriting perfectly — and flagged an interaction my last pharmacy missed.&rdquo;</blockquote><figcaption><span class="tavatar">RC</span><span class="tmeta"><strong>Regular Customer</strong><small>Ahmedabad</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;AI suggested a generic that cut my monthly bill in half.&rdquo;</blockquote><figcaption><span class="tavatar">C</span><span class="tmeta"><strong>Customer</strong><small>Maninagar</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Quick, genuine, and genuinely smart. Exactly what a pharmacy should be.&rdquo;</blockquote><figcaption><span class="tavatar">C</span><span class="tmeta"><strong>Customer</strong><small>Satellite</small></span></figcaption></figure>
+  </div>
+</section>
+
+<section class="section faq-sec" id="faq">
+  <div class="eyebrow center">FAQ</div>
+  <h2 class="sec-title">Questions, answered</h2>
+  <div class="faq-list">
+        <details class="faq reveal"><summary>How does the AI read my prescription?<i class="fas fa-plus"></i></summary><div class="faq-a">Computer vision and OCR extract the medicines from a photo, then our AI verifies them before a licensed pharmacist confirms the order.</div></details>
+        <details class="faq reveal"><summary>Is the drug-interaction check reliable?<i class="fas fa-plus"></i></summary><div class="faq-a">Our AI safety layer flags potential interactions for review, and a licensed pharmacist always confirms before dispatch.</div></details>
+        <details class="faq reveal"><summary>Are your medicines genuine?<i class="fas fa-plus"></i></summary><div class="faq-a">Yes — every product is 100% authentic and sourced only from licensed distributors.</div></details>
+        <details class="faq reveal"><summary>How fast is delivery?<i class="fas fa-plus"></i></summary><div class="faq-a">Route-optimisation AI enables in-city delivery within 60 minutes to a few hours.</div></details>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="cta-glow"></div>
+  <div class="cta-content reveal">
+    <div class="cta-badge"><i class="fas fa-microchip"></i> Est. 2026 · AI-Powered Pharmacy & Healthcare</div>
+    <h2>Your health, made smarter.</h2>
+    <p>Order genuine medicines with AI safety checks and fast, intelligent delivery. Smarter, safer healthcare — that's the Decode Forest promise.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary lg" href="mailto:care@decodeforest.in"><i class="fas fa-paper-plane"></i> Order Now</a>
+      <a class="btn btn-ghost lg" href="tel:+918490861586"><i class="fas fa-phone"></i> +91 84908 61586</a>
+    </div>
+    <form class="contact-form" id="contactForm" data-email="care@decodeforest.in" data-company="Decode Forest Pharmacy">
+      <div class="cf-row">
+        <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
+        <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
+      </div>
+      <input type="text" id="cf-subject" placeholder="Subject">
+      <textarea id="cf-msg" rows="4" placeholder="How can we help you?" required></textarea>
+      <button type="submit" class="btn btn-primary lg"><i class="fas fa-paper-plane"></i> Send message</button>
+      <p class="cf-note" id="cf-note" role="status"></p>
+    </form>
+    <div class="cta-contact">
+      <span><i class="fas fa-envelope"></i> care@decodeforest.in</span>
+      <span><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="logo" href="#top">
+        <span class="logo-icon"><i class="fas fa-mortar-pestle"></i></span>
+        <span class="logo-text">Decode Forest <span class="logo-accent">Pharmacy</span></span>
+      </a>
+      <p>A modern pharmacy where AI reads prescriptions, checks drug interactions, and recommends affordable alternatives — with intelligent, on-time doorstep delivery you can trust.</p>
+      <div class="foot-social">
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="mailto:care@decodeforest.in" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Explore</h5>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">AI Tools</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>The AI Group</h5>
+      <ul>
+          <li><a href="../comonk/index.html">Comonk Technology</a></li>
+          <li><a href="../index.html">Sevenseed</a></li>
+          <li><a href="../sevenforce/index.html">Sevenforce</a></li>
+          <li><a href="../avpu/index.html">Alpaben Vipulbhai Patel University</a></li>
+          <li><span class="foot-current">Decode Forest Pharmacy</span></li>
+          <li><a href="../breakdown-factor/index.html">Breakdown Factor Construction</a></li>
+          <li><a href="../avp-charitable-trust/index.html">AVP Charitable Trust</a></li>
+          <li><a href="../avp-emart/index.html">AVP Emart</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Get in touch</h5>
+      <ul class="foot-contact">
+        <li><i class="fas fa-envelope"></i> care@decodeforest.in</li>
+        <li><i class="fas fa-phone"></i> +91 84908 61586</li>
+        <li><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© <span data-year></span> Decode Forest Pharmacy. All rights reserved.</span>
+    <span class="foot-venture"><i class="fas fa-seedling"></i> A Sevenseed AI venture</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

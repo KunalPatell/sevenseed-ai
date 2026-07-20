@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decode Forest Pharmacy — AI Pharmacy Portal</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E💊%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a class="side-logo" href="/">
+      <span class="logo-icon"><i class="fas fa-mortar-pestle"></i></span>
+      <span class="logo-text">Decode <span class="logo-accent">Forest</span></span>
+    </a>
+    <nav class="side-nav">
+      <button class="nav-item active" data-panel="dashboard"><i class="fas fa-gauge-high"></i> <span>Dashboard</span></button>
+      <button class="nav-item" data-panel="assistant"><i class="fas fa-robot"></i> <span>AI Health Assistant</span></button>
+      <button class="nav-item" data-panel="prescription"><i class="fas fa-file-prescription"></i> <span>Prescription Reader</span></button>
+      <button class="nav-item" data-panel="interactions"><i class="fas fa-triangle-exclamation"></i> <span>Drug Interactions</span></button>
+      <button class="nav-item" data-panel="substitutes"><i class="fas fa-pills"></i> <span>Smart Substitutes</span></button>
+      <button class="nav-item" data-panel="refill"><i class="fas fa-calendar-check"></i> <span>Refill Predictor</span></button>
+      <button class="nav-item" data-panel="symptoms"><i class="fas fa-stethoscope"></i> <span>Symptom Guide</span></button>
+      <button class="nav-item" data-panel="medicines"><i class="fas fa-capsules"></i> <span>Medicine Search</span></button>
+    </nav>
+    <div class="side-foot">
+      <div class="sysbadge" id="sysBadge"><i class="fas fa-circle-notch fa-spin"></i> connecting…</div>
+      <a class="side-back" href="/"><i class="fas fa-arrow-left"></i> Back to site</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Menu"><i class="fas fa-bars"></i></button>
+      <div class="topbar-title"><h1 id="panelTitle">Dashboard</h1><p id="panelDesc">Your AI-powered pharmacy portal</p></div>
+      <div class="topbar-right"><span class="prov-chip" id="provChip"><i class="fas fa-microchip"></i> …</span></div>
+    </header>
+
+    <div class="panels">
+
+      <!-- Dashboard -->
+      <section class="panel active" id="panel-dashboard">
+        <div class="welcome">
+          <div>
+            <h2>Welcome to Decode Forest Pharmacy 💊</h2>
+            <p>Seven AI tools to check medicines, interactions, read prescriptions, find generics, and predict your next refill — powered by AI.</p>
+          </div>
+        </div>
+        <div class="stat-tiles" id="statTiles"></div>
+        <h3 class="block-title">Quick actions</h3>
+        <div class="quick-grid" id="quickGrid"></div>
+        <div class="warn-note" style="max-width:700px">
+          <i class="fas fa-triangle-exclamation"></i>
+          <span><strong>Medical disclaimer:</strong> This AI assistant provides general health information only. It does not replace professional medical advice. Always consult a licensed doctor or pharmacist for personal health decisions. In emergencies, call <strong>108</strong>.</span>
+        </div>
+      </section>
+
+      <!-- AI Health Assistant -->
+      <section class="panel" id="panel-assistant">
+        <div class="chat-wrap">
+          <div class="chat-scroll" id="chatScroll">
+            <div class="msg ai"><div class="msg-ic"><i class="fas fa-robot"></i></div><div class="msg-body">👋 Hi! I'm the Decode Forest AI Health Assistant. Ask me about any medicine, drug interaction, symptom, or health topic. I'll give you clear, responsible information grounded in our pharmacy knowledge base.<br><br>⚕️ <em>For emergencies: call 108 immediately.</em></div></div>
+          </div>
+          <div class="chat-input">
+            <input type="text" id="assistantInput" placeholder="Ask anything… e.g. What is Metformin used for?" autocomplete="off">
+            <button class="btn btn-primary" id="assistantSend"><i class="fas fa-paper-plane"></i></button>
+          </div>
+          <div class="chat-suggest" id="assistantSuggest"></div>
+        </div>
+      </section>
+
+      <!-- Prescription Reader -->
+      <section class="panel" id="panel-prescription">
+        <div class="tool-intro">Paste your prescription text (or type the medicine names and doses) — AI will explain each medicine, its purpose, and flag any potential interactions.</div>
+        <div class="warn-note" style="max-width:720px;margin-bottom:16px">
+          <i class="fas fa-shield-halved"></i>
+          <span>Your prescription text is processed by AI and never stored. Always keep your original prescription.</span>
+        </div>
+        <div class="form-card">
+          <label>Prescription / Medicine list</label>
+          <textarea class="field" id="rxText" rows="7" placeholder="Example:&#10;Tab. Metformin 500mg BD&#10;Tab. Atorvastatin 10mg HS&#10;Tab. Omeprazole 20mg OD AC&#10;Tab. Losartan 50mg OD&#10;&#10;Or simply list: Paracetamol, Ibuprofen, Cetirizine"></textarea>
+          <button class="btn btn-primary lg" id="rxBtn"><i class="fas fa-file-prescription"></i> Read my prescription</button>
+        </div>
+        <div class="results" id="rxResults"></div>
+      </section>
+
+      <!-- Drug Interactions -->
+      <section class="panel" id="panel-interactions">
+        <div class="tool-intro">Enter two or more medicines to check for interactions. AI flags severity and gives clinical advice.</div>
+        <div class="form-card">
+          <label>Medicines to check</label>
+          <div class="chips-input" id="drugChipsWrap"><div class="chips" id="drugChips"></div><input type="text" id="drugInput" placeholder="Type a medicine name + Enter"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px" id="commonDrugs"></div>
+          <button class="btn btn-primary lg" id="interactBtn"><i class="fas fa-triangle-exclamation"></i> Check interactions</button>
+        </div>
+        <div class="results" id="interactResults"></div>
+      </section>
+
+      <!-- Smart Substitutes -->
+      <section class="panel" id="panel-substitutes">
+        <div class="tool-intro">Find safe, affordable generic substitutes for any medicine. AI identifies the active ingredient and suggests bioequivalent alternatives available in India.</div>
+        <div class="form-card">
+          <label>Medicine name</label>
+          <input type="text" class="field" id="subMed" placeholder="e.g. Calpol, Lipitor, Zithromax, Prilosec">
+          <button class="btn btn-primary lg" id="subBtn"><i class="fas fa-pills"></i> Find substitutes</button>
+        </div>
+        <div class="results" id="subResults"></div>
+      </section>
+
+      <!-- Refill Predictor -->
+      <section class="panel" id="panel-refill">
+        <div class="tool-intro">Enter your medicine details to calculate when you'll run out and set a refill reminder.</div>
+        <div class="form-card">
+          <label>Medicine name</label>
+          <input type="text" class="field" id="refillMed" placeholder="e.g. Metformin 500mg">
+          <div class="form-row3">
+            <div><label>Quantity (tablets/units)</label><input type="number" class="field" id="refillQty" placeholder="e.g. 60" min="1"></div>
+            <div><label>Tablets per day</label><input type="number" class="field" id="refillDose" placeholder="e.g. 2" min="0.25" step="0.25"></div>
+            <div><label>Start date</label><input type="date" class="field" id="refillDate"></div>
+          </div>
+          <button class="btn btn-primary lg" id="refillBtn"><i class="fas fa-calendar-check"></i> Predict refill date</button>
+        </div>
+        <div class="results" id="refillResults"></div>
+      </section>
+
+      <!-- Symptom Guide -->
+      <section class="panel" id="panel-symptoms">
+        <div class="tool-intro">Describe your symptom and get responsible OTC medicine guidance. This does <strong>not</strong> replace a doctor's consultation.</div>
+        <div class="form-card">
+          <label>Your symptom</label>
+          <input type="text" class="field" id="symptomInput" placeholder="e.g. mild fever, runny nose, heartburn, mild allergy">
+          <button class="btn btn-primary lg" id="symptomBtn"><i class="fas fa-stethoscope"></i> Get OTC guidance</button>
+        </div>
+        <div class="results" id="symptomResults"></div>
+      </section>
+
+      <!-- Medicine Search -->
+      <section class="panel" id="panel-medicines">
+        <div class="tool-intro">Search our medicine database by name, symptom, or category.</div>
+        <div class="form-card" style="flex-direction:row;align-items:flex-end;gap:10px;max-width:600px">
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+            <label>Search medicines</label>
+            <input type="text" class="field" id="medSearchInput" placeholder="e.g. Paracetamol, fever, antibiotic, diabetes" id="medSearch">
+          </div>
+          <button class="btn btn-primary" id="medSearchBtn" style="padding:11px 20px;white-space:nowrap"><i class="fas fa-search"></i> Search</button>
+        </div>
+        <div class="med-grid" id="medGrid" style="margin-top:22px"></div>
+      </section>
+
+    </div>
+  </main>
+</div>
+<script src="app-ui.js"></script>
+</body>
+</html>

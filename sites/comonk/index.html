@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comonk AI — AI Career Intelligence Platform</title>
+  <meta name="description" content="Comonk is a free, AI-native career platform for the Ahmedabad/Gandhinagar tech market — resume tailoring, an approval-gated AI application autopilot, mock interviews with real-time scoring, and a full application tracker, all in one place.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🧠%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<span id="top"></span>
+
+<div class="preloader" id="preloader">
+  <div class="pl-glow pl-glow-1"></div>
+  <div class="pl-glow pl-glow-2"></div>
+  <div class="pl-content">
+    <div class="pl-logo">
+      <div class="pl-icon-wrap"><i class="fas fa-brain pl-icon"></i><span class="pl-ring"></span></div>
+      <div class="pl-name">Comonk AI</div>
+    </div>
+    <div class="pl-progress">
+      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
+      <div class="pl-text">INITIALIZING SYSTEM… <span id="plPct">0</span>%</div>
+    </div>
+  </div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="logo" href="#top">
+    <span class="logo-icon"><i class="fas fa-brain"></i></span>
+    <span class="logo-text">Comonk <span class="logo-accent">AI</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#about">About</a>
+    <a href="#services">AI Tools</a>
+    
+    <a href="#sandbox">Live Demo</a>
+    <a href="#process">Process</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost" href="https://comonk-ai.onrender.com"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-primary" href="https://comonk-ai.onrender.com" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <canvas id="particles"></canvas>
+  <div class="hero-content">
+    <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI Career Copilot · LangGraph Agents · 100% Free</span></div>
+    <h1 class="hero-title" data-blur-in style="--i:1">Your AI-powered <span class="grad">career copilot</span><br>for landing the job you want</h1>
+    <p class="hero-sub" data-blur-in style="--i:2">Comonk is a free, AI-native career platform for the Ahmedabad/Gandhinagar tech market — resume tailoring, an approval-gated AI application autopilot, mock interviews with real-time scoring, and a full application tracker, all in one place.</p>
+    <div class="hero-actions" data-blur-in style="--i:3">
+      <a class="btn btn-primary lg" href="https://comonk-ai.onrender.com" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch Comonk</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
+    </div>
+    <div class="stats-row" data-blur-in style="--i:4">
+        <div class="hs"><div class="hs-num count">2,000+</div><div class="hs-lbl">Companies Tracked</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">40+</div><div class="hs-lbl">AI Career Tools</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">100%</div><div class="hs-lbl">Free Forever</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">24/7</div><div class="hs-lbl">AI Copilot</div></div>
+    </div>
+    <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>Resume AI</span><span>ATS Optimizer</span><span>Mock Interviews</span><span>Job Autopilot</span><span>Salary Insights</span><span>LinkedIn AI</span><span>Application Tracker</span><span>Cover Letters</span><span>Skill Roadmaps</span><span>RAG Job Matching</span><span>Resume AI</span><span>ATS Optimizer</span><span>Mock Interviews</span><span>Job Autopilot</span><span>Salary Insights</span><span>LinkedIn AI</span><span>Application Tracker</span><span>Cover Letters</span><span>Skill Roadmaps</span><span>RAG Job Matching</span></div></div>
+  </div>
+</header>
+
+<section class="pillars-band">
+  <div class="pillars-inner">
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-gift"></i></div><div class="pillar-txt"><strong>100% Free</strong><span>No subscription, no paywall, ever.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-robot"></i></div><div class="pillar-txt"><strong>AI Autopilot</strong><span>Matches and drafts outreach for your approval.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-diagram-project"></i></div><div class="pillar-txt"><strong>Application Tracker</strong><span>Every stage, every follow-up, one board.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-microphone-lines"></i></div><div class="pillar-txt"><strong>Real Interview Practice</strong><span>Voice, video, and scored PDF reports.</span></div></div>
+  </div>
+</section>
+
+<section class="ai-strip">
+  <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
+  <div class="ai-chips"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span></div>
+</section>
+
+<section class="section about" id="about">
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <div class="eyebrow">Est. 2026 · AI Career Intelligence Platform</div>
+      <h2 class="sec-title left">Free AI career intelligence, built for the Ahmedabad/Gandhinagar tech market.</h2>
+      <p>Comonk is a 100% free AI career platform — resume parsing and RAG-based company matching, an ATS optimizer, LinkedIn profile optimization, salary intelligence, and AI-generated career roadmaps, all powered by a LangGraph multi-agent engine on Groq LLaMA 3.3 70B.</p><p>Beyond search, Comonk runs your job hunt end-to-end: an approval-gated AI autopilot matches and drafts outreach to the best-fit companies, a full application tracker keeps every stage organised with automatic follow-ups, and voice/video mock interviews score your answers and generate a PDF report.</p>
+    </div>
+    <aside class="about-card glow reveal">
+      <div class="about-card-ic"><i class="fas fa-brain"></i></div>
+      <h3>Why Comonk?</h3>
+      <ul class="hl-list">
+          <li><i class="fas fa-check"></i>Free RAG-based company matching</li>
+          <li><i class="fas fa-check"></i>Approval-gated AI application autopilot</li>
+          <li><i class="fas fa-check"></i>Voice & video mock interviews with PDF reports</li>
+          <li><i class="fas fa-check"></i>Full application tracker with follow-up automation</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="eyebrow center">AI CAREER TOOLS</div>
+  <h2 class="sec-title">Everything your job search needs, in one AI platform</h2>
+  <div class="svc-grid">
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-robot"></i></div><h4>AI Application Autopilot</h4><p>Matches your resume against thousands of companies and drafts outreach for your approval — you stay in control.</p><span class="svc-tag"><i class="fas fa-bolt"></i>LangGraph Agent</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-file-circle-check"></i></div><h4>ATS Resume Optimizer</h4><p>Rewrites and tailors your resume to beat applicant tracking systems and match any job description.</p><span class="svc-tag"><i class="fas fa-bolt"></i>LLM + RAG</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-microphone-lines"></i></div><h4>Mock Interviews</h4><p>Practice with AI-generated questions via text, voice, or recorded video — get a scored PDF report.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Groq LLaMA</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-money-bill-trend-up"></i></div><h4>Salary Intelligence</h4><p>Real salary estimates and offer comparison so you know your worth before you negotiate.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Market Data</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-diagram-project"></i></div><h4>Application Tracker</h4><p>A kanban board for every application with automatic follow-up reminders and HR-reply detection.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Automation</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-map"></i></div><h4>AI Career Roadmap</h4><p>A personalised, AI-generated learning roadmap from your current skills to your target role.</p><span class="svc-tag"><i class="fas fa-bolt"></i>LLM Planning</span></article>
+  </div>
+</section>
+
+
+<section class="section process" id="process">
+  <div class="eyebrow center">THE PROCESS</div>
+  <h2 class="sec-title">How Comonk works</h2>
+  <div class="proc-grid">
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">01</div><div class="proc-ic"><i class="fas fa-file-arrow-up"></i></div><h4>Upload your resume</h4><p>AI parses your skills, experience, and target role instantly.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">02</div><div class="proc-ic"><i class="fas fa-brain"></i></div><h4>Get matched</h4><p>RAG-based matching ranks the best-fit companies for you.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">03</div><div class="proc-ic"><i class="fas fa-robot"></i></div><h4>Let autopilot help</h4><p>Review and approve AI-drafted outreach to your top matches.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">04</div><div class="proc-ic"><i class="fas fa-chart-line"></i></div><h4>Track & land the job</h4><p>Follow every application to offer from one dashboard.</p></div>
+  </div>
+</section>
+
+<section class="impact" id="impact">
+  <div class="impact-inner">
+    <div class="eyebrow center">BY THE NUMBERS</div>
+    <h2 class="sec-title">Built to actually get you hired</h2>
+    <div class="impact-grid">
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">2,000+</div><div class="metric-lbl">Companies Tracked</div><div class="metric-sub">Ahmedabad/Gandhinagar focus</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">40+</div><div class="metric-lbl">AI Tools</div><div class="metric-sub">Free, no paywall</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">100%</div><div class="metric-lbl">Free Forever</div><div class="metric-sub">No subscription</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="testimonials">
+  <div class="eyebrow center">WHAT PEOPLE SAY</div>
+  <h2 class="sec-title">Trusted by the people we serve</h2>
+  <div class="tgrid">
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The autopilot found companies I'd never have thought to apply to — and I stayed in control of every message it drafted.&rdquo;</blockquote><figcaption><span class="tavatar">JS</span><span class="tmeta"><strong>Job Seeker</strong><small>Ahmedabad</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The mock interview scoring told me exactly where I was losing points before the real thing.&rdquo;</blockquote><figcaption><span class="tavatar">C</span><span class="tmeta"><strong>Candidate</strong><small>Gandhinagar</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Free, and genuinely more useful than tools I've paid for.&rdquo;</blockquote><figcaption><span class="tavatar">JS</span><span class="tmeta"><strong>Job Seeker</strong><small>Ahmedabad</small></span></figcaption></figure>
+  </div>
+</section>
+
+<section class="section faq-sec" id="faq">
+  <div class="eyebrow center">FAQ</div>
+  <h2 class="sec-title">Questions, answered</h2>
+  <div class="faq-list">
+        <details class="faq reveal"><summary>Is Comonk really free?<i class="fas fa-plus"></i></summary><div class="faq-a">Yes — 100% free, no subscription or paywall. It's built to help the Ahmedabad/Gandhinagar tech community find AI/ML and software roles.</div></details>
+        <details class="faq reveal"><summary>What is the AI application autopilot?<i class="fas fa-plus"></i></summary><div class="faq-a">It matches your resume against thousands of tracked companies using RAG-based scoring, then drafts outreach — but never sends anything without your explicit approval.</div></details>
+        <details class="faq reveal"><summary>Can I practice interviews with it?<i class="fas fa-plus"></i></summary><div class="faq-a">Yes — text, voice, or full video mock interviews, each scored with a detailed PDF report you can review afterward.</div></details>
+        <details class="faq reveal"><summary>Does it track my applications?<i class="fas fa-plus"></i></summary><div class="faq-a">Yes — a full kanban-style tracker with automatic follow-up reminders and HR-reply detection, so nothing falls through the cracks.</div></details>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="cta-glow"></div>
+  <div class="cta-content reveal">
+    <div class="cta-badge"><i class="fas fa-microchip"></i> Est. 2026 · AI Career Intelligence Platform</div>
+    <h2>Ready to land your next AI/ML role?</h2>
+    <p>Comonk is 100% free — no subscription, no paywall. Upload your resume and let your AI career copilot take it from there.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary lg" href="https://comonk-ai.onrender.com" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch Comonk</a>
+      <a class="btn btn-ghost lg" href="tel:+918490861586"><i class="fas fa-phone"></i> +91 84908 61586</a>
+    </div>
+    <form class="contact-form" id="contactForm" data-email="hello@comonk.ai" data-company="Comonk AI">
+      <div class="cf-row">
+        <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
+        <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
+      </div>
+      <input type="text" id="cf-subject" placeholder="Subject">
+      <textarea id="cf-msg" rows="4" placeholder="How can we help you?" required></textarea>
+      <button type="submit" class="btn btn-primary lg"><i class="fas fa-paper-plane"></i> Send message</button>
+      <p class="cf-note" id="cf-note" role="status"></p>
+    </form>
+    <div class="cta-contact">
+      <span><i class="fas fa-envelope"></i> hello@comonk.ai</span>
+      <span><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="logo" href="#top">
+        <span class="logo-icon"><i class="fas fa-brain"></i></span>
+        <span class="logo-text">Comonk <span class="logo-accent">AI</span></span>
+      </a>
+      <p>Comonk is a free, AI-native career platform for the Ahmedabad/Gandhinagar tech market — resume tailoring, an approval-gated AI application autopilot, mock interviews with real-time scoring, and a full application tracker, all in one place.</p>
+      <div class="foot-social">
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="mailto:hello@comonk.ai" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Explore</h5>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">AI Tools</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>The AI Group</h5>
+      <ul>
+          <li><span class="foot-current">Comonk Technology</span></li>
+          <li><a href="../index.html">Sevenseed</a></li>
+          <li><a href="../sevenforce/index.html">Sevenforce</a></li>
+          <li><a href="../avpu/index.html">Alpaben Vipulbhai Patel University</a></li>
+          <li><a href="../decode-forest-pharmacy/index.html">Decode Forest Pharmacy</a></li>
+          <li><a href="../breakdown-factor/index.html">Breakdown Factor Construction</a></li>
+          <li><a href="../avp-charitable-trust/index.html">AVP Charitable Trust</a></li>
+          <li><a href="../avp-emart/index.html">AVP Emart</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Get in touch</h5>
+      <ul class="foot-contact">
+        <li><i class="fas fa-envelope"></i> hello@comonk.ai</li>
+        <li><i class="fas fa-phone"></i> +91 84908 61586</li>
+        <li><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© <span data-year></span> Comonk AI. All rights reserved.</span>
+    <span class="foot-venture"><i class="fas fa-seedling"></i> A Sevenseed AI venture</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comonk AI — Enterprise Career Intelligence Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LANDING PAGE -->
+<div id="landing">
+  <nav class="land-nav">
+    <div class="land-logo">
+      <div class="logo-icon"><i class="fas fa-brain"></i></div>
+      <span class="logo-text">Comonk <span class="logo-ai">AI</span></span>
+    </div>
+    <div class="land-badges">
+      <span class="lbadge green"><i class="fas fa-circle"></i> Live</span>
+      <span class="lbadge purple"><i class="fas fa-infinity"></i> 100% Free</span>
+      <span class="lbadge blue"><i class="fas fa-project-diagram"></i> LangGraph v3</span>
+    </div>
+    <div class="land-nav-actions">
+      <button class="btn-ghost" onclick="openLogin()"><i class="fas fa-sign-in-alt"></i> Login</button>
+      <button class="btn-primary" onclick="startOnboarding()"><i class="fas fa-rocket"></i> Get Started Free</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-bg-glow"></div>
+    <canvas id="hero-particles"></canvas>
+    <div class="hero-content">
+      <div class="hero-pill"><i class="fas fa-bolt"></i> Groq LLaMA 3.3 70B &nbsp;·&nbsp; LangGraph Multi-Agent &nbsp;·&nbsp; ChromaDB RAG</div>
+      <h1 class="hero-title">Your <span class="grad">AI-Powered</span><br>Career Intelligence<br>Platform</h1>
+      <p class="hero-sub">541 Gujarat IT/AI companies · 537 HR contacts · 12 AI tools · Forever free. No subscriptions, no hidden charges.</p>
+
+      <div class="hero-stats-row">
+        <div class="hs"><div class="hs-num" id="h-companies">—</div><div class="hs-lbl">Companies</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num" id="h-contacts">—</div><div class="hs-lbl">HR Contacts</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num" id="h-tools">—</div><div class="hs-lbl">AI Tools</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num" style="color:var(--c-green)">₹0</div><div class="hs-lbl">Cost Ever</div></div>
+      </div>
+
+      <!-- Scrolling company marquee -->
+      <div class="hero-marquee">
+        <div class="marquee-track">
+          <span>Infostretch</span><span>Tatvasoft</span><span>Rapidops</span><span>ValueCoders</span><span>Space-O Technologies</span><span>Bacancy Technology</span><span>CMARIX Technolabs</span><span>Tops Infosolutions</span><span>Zignuts Technolab</span><span>WDP Technologies</span><span>ESparkBiz</span><span>Icoderz Solutions</span><span>Shreeji Softech</span><span>Robosoft Technologies</span><span>Mobisoft Infotech</span><span>Infostretch</span><span>Tatvasoft</span><span>Rapidops</span><span>ValueCoders</span><span>Space-O Technologies</span><span>Bacancy Technology</span><span>CMARIX Technolabs</span><span>Tops Infosolutions</span><span>Zignuts Technolab</span>
+        </div>
+      </div>
+
+      <div id="upload-zone" class="upload-zone">
+        <input type="file" id="resume-file" accept="application/pdf" style="display:none">
+        <div id="upload-idle">
+          <div class="up-icon-ring"><i class="fas fa-file-pdf"></i></div>
+          <h3>Drop Your Resume Here</h3>
+          <p class="muted">PDF only · Parsed by AI · Never uploaded to any server</p>
+          <div class="up-btns">
+            <button class="btn-primary lg" onclick="document.getElementById('resume-file').click()"><i class="fas fa-upload"></i> Choose PDF Resume</button>
+            <button class="btn-ghost lg" id="demo-btn"><i class="fas fa-magic"></i> Try Demo Profile</button>
+          </div>
+        </div>
+        <div id="upload-parsing" style="display:none">
+          <div class="parse-spinner"></div>
+          <h3 id="parse-headline">Reading your resume…</h3>
+          <p class="muted" id="parse-sub">AI extracting your skills and experience</p>
+          <div class="parse-prog-track"><div id="parse-prog-bar"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features-sec">
+    <div class="sec-eyebrow">ENTERPRISE AI TOOLS — ALL FREE</div>
+    <h2 class="sec-title">12 Tools to Accelerate Your Career</h2>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-ic purple"><i class="fas fa-comments"></i></div><h4>AI Career Counselor</h4><p>LangGraph multi-agent chat with persistent session memory. Gives personalized guidance using your resume profile.</p><span class="feat-tech">Groq LLaMA 3.3 70B</span></div>
+      <div class="feat-card"><div class="feat-ic blue"><i class="fas fa-building"></i></div><h4>Company Matcher</h4><p>Semantic vector search over 541 Ahmedabad & Gandhinagar companies with verified HR emails and phone numbers.</p><span class="feat-tech">ChromaDB RAG</span></div>
+      <div class="feat-card"><div class="feat-ic green"><i class="fas fa-briefcase"></i></div><h4>Live Job Board</h4><p>Real-time jobs from RemoteOK, Remotive, Arbeitnow and Adzuna India filtered to your skills.</p><span class="feat-tech">4 Live Sources</span></div>
+      <div class="feat-card"><div class="feat-ic gold"><i class="fas fa-columns"></i></div><h4>Application Tracker</h4><p>Kanban pipeline to track every company from Saved → Applied → Interview → Offer. Never lose track.</p><span class="feat-tech">Local Storage</span></div>
+      <div class="feat-card"><div class="feat-ic red"><i class="fas fa-microphone"></i></div><h4>Mock Interview</h4><p>Role-specific Q&A with difficulty levels, ideal answers, common mistakes, and follow-up questions.</p><span class="feat-tech">AI-Generated</span></div>
+      <div class="feat-card"><div class="feat-ic purple"><i class="fas fa-chart-bar"></i></div><h4>ATS Optimizer</h4><p>Score your resume against any job role. Get keyword gaps, section-by-section quick wins, and rewritten bullets.</p><span class="feat-tech">ATS Score 0-100</span></div>
+      <div class="feat-card"><div class="feat-ic blue"><i class="fab fa-linkedin"></i></div><h4>LinkedIn Optimizer</h4><p>Rewrite your About section, generate 3 headline options, and get profile positioning tips for the Gujarat market.</p><span class="feat-tech">Profile Boost</span></div>
+      <div class="feat-card"><div class="feat-ic green"><i class="fas fa-graduation-cap"></i></div><h4>Learning Hub</h4><p>Dev.to articles, HackerNews stories, and YouTube video tutorials — all filtered to your exact skill gaps.</p><span class="feat-tech">YouTube + Dev.to</span></div>
+      <div class="feat-card"><div class="feat-ic gold"><i class="fas fa-map"></i></div><h4>Career Roadmap</h4><p>90-day AI-generated action plan with weekly milestones, free resources, and Gujarat salary benchmarks.</p><span class="feat-tech">90-Day Plan</span></div>
+      <div class="feat-card"><div class="feat-ic red"><i class="fas fa-rupee-sign"></i></div><h4>Salary Insights</h4><p>AI-powered salary analysis for Ahmedabad market with negotiation scripts, city comparison, and skills premium.</p><span class="feat-tech">Market Intelligence</span></div>
+      <div class="feat-card"><div class="feat-ic purple"><i class="fab fa-github"></i></div><h4>GitHub Analyzer</h4><p>Portfolio strength score, top repositories, language breakdown, and AI-powered improvement recommendations.</p><span class="feat-tech">GitHub API</span></div>
+      <div class="feat-card"><div class="feat-ic blue"><i class="fas fa-envelope"></i></div><h4>HR Email Finder</h4><p>Find HR email patterns for any company domain and draft personalized cold emails with AI in one click.</p><span class="feat-tech">Hunter.io + AI</span></div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-works-sec">
+    <div class="sec-eyebrow">THE PROCESS</div>
+    <h2 class="sec-title">Land your dream role in 4 steps</h2>
+    <div class="hiw-grid">
+      <div class="hiw-step"><div class="hiw-num">01</div><div class="hiw-ic"><i class="fas fa-file-pdf"></i></div><h4>Upload Resume</h4><p>Drop your PDF — AI extracts skills, experience, and target roles in under 10 seconds.</p></div>
+      <div class="hiw-step"><div class="hiw-num">02</div><div class="hiw-ic"><i class="fas fa-building"></i></div><h4>Match Companies</h4><p>ChromaDB vector search instantly matches you against 541 Gujarat IT/AI/ML companies with HR contacts.</p></div>
+      <div class="hiw-step"><div class="hiw-num">03</div><div class="hiw-ic"><i class="fas fa-microphone"></i></div><h4>Prepare & Practice</h4><p>AI mock interviews, ATS optimizer, LinkedIn rewriter, and 90-day roadmap — all in one platform.</p></div>
+      <div class="hiw-step"><div class="hiw-num">04</div><div class="hiw-ic"><i class="fas fa-paper-plane"></i></div><h4>Apply with Confidence</h4><p>Personalized cover letters, verified HR contacts, and tailored resume — everything you need to get hired.</p></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-sec">
+    <div class="cta-glow"></div>
+    <div class="cta-content">
+      <div class="cta-badge"><i class="fas fa-bolt"></i> 100% Free · Forever</div>
+      <h2>Ready to land your dream AI/ML role in Ahmedabad?</h2>
+      <p>Join engineers across Gujarat who use Comonk AI for their job search. No subscriptions. No hidden charges. No credit card.</p>
+      <div class="cta-actions">
+        <button class="btn-primary lg" onclick="startOnboarding()"><i class="fas fa-rocket"></i> Get Started Free</button>
+        <button class="btn-ghost lg" onclick="openLogin()"><i class="fas fa-sign-in-alt"></i> Already have account</button>
+      </div>
+      <div class="cta-trust"><span><i class="fas fa-shield-alt"></i> Resume never stored</span><span><i class="fas fa-lock"></i> No tracking</span><span><i class="fas fa-infinity"></i> Unlimited use</span></div>
+    </div>
+  </section>
+</div>
+
+
+<!-- ONBOARDING OVERLAY -->
+<div id="onboarding" style="display:none">
+  <div class="ob-card">
+    <!-- Left brand panel -->
+    <aside class="ob-brand">
+      <div class="ob-brand-top">
+        <div class="land-logo"><div class="logo-icon"><i class="fas fa-brain"></i></div><span class="logo-text">Comonk <span class="logo-ai">AI</span></span></div>
+        <p class="ob-brand-tag">Your AI career co-pilot for the Ahmedabad & Gandhinagar tech market.</p>
+      </div>
+      <ul class="ob-brand-points">
+        <li><i class="fas fa-circle-check"></i> 541 Gujarat IT/AI companies, mapped</li>
+        <li><i class="fas fa-circle-check"></i> 5 verified HR contacts every month</li>
+        <li><i class="fas fa-circle-check"></i> AI mock interviews, resume & roadmap</li>
+        <li><i class="fas fa-circle-check"></i> 100% free — forever</li>
+      </ul>
+      <div class="ob-brand-foot"><i class="fas fa-shield-halved"></i> Your resume is parsed by AI and never shared.</div>
+    </aside>
+    <!-- Right step panel -->
+    <section class="ob-main">
+      <button class="ob-close" onclick="closeOnboarding()"><i class="fas fa-times"></i></button>
+      <!-- Stepper -->
+      <div class="ob-steps">
+        <div class="ob-step active" data-step="1"><span class="ob-step-dot">1</span><span class="ob-step-lbl">Account</span></div>
+        <div class="ob-step-line"></div>
+        <div class="ob-step" data-step="2"><span class="ob-step-dot">2</span><span class="ob-step-lbl">Verify</span></div>
+        <div class="ob-step-line"></div>
+        <div class="ob-step" data-step="3"><span class="ob-step-dot">3</span><span class="ob-step-lbl">Resume</span></div>
+        <div class="ob-step-line"></div>
+        <div class="ob-step" data-step="4"><span class="ob-step-dot">4</span><span class="ob-step-lbl">Ready</span></div>
+      </div>
+
+      <!-- Step 1: Account -->
+      <div class="ob-pane" id="ob-pane-1">
+        <h2>Create your free account</h2>
+        <p class="muted">Takes 30 seconds. No credit card, ever.</p>
+        <div class="form-row-2" style="margin-top:18px">
+          <div class="fg"><label>Full Name</label><input type="text" id="ob-name" class="inp" placeholder="Rahul Patel"></div>
+          <div class="fg"><label>Phone</label><input type="tel" id="ob-phone" class="inp" placeholder="9876543210"></div>
+          <div class="fg"><label>Email</label><input type="email" id="ob-email" class="inp" placeholder="you@example.com"></div>
+          <div class="fg"><label>Password</label><input type="password" id="ob-password" class="inp" placeholder="Min 6 characters"></div>
+          <div class="fg"><label>Target Role</label>
+            <select id="ob-role" class="inp">
+              <option>AI/ML Engineer</option><option>Software Engineer</option><option>Data Scientist</option>
+              <option>Data Engineer</option><option>Backend Engineer</option><option>Full Stack</option>
+            </select>
+          </div>
+          <div class="fg"><label>City</label>
+            <select id="ob-city" class="inp"><option>Ahmedabad</option><option>Gandhinagar</option><option>Surat</option><option>Vadodara</option><option>Rajkot</option><option>Other</option></select>
+          </div>
+        </div>
+        <button class="btn-primary lg" style="width:100%;margin-top:8px" id="ob-register-btn"><i class="fas fa-arrow-right"></i> Continue</button>
+        <div id="ob-reg-err" style="margin-top:10px"></div>
+        <p class="ob-switch">Already have an account? <a onclick="openLogin()">Log in</a></p>
+      </div>
+
+      <!-- Step 2: OTP -->
+      <div class="ob-pane" id="ob-pane-2" style="display:none">
+        <h2>Verify your email</h2>
+        <p class="muted">We sent a 6-digit code to <b id="ob-otp-email">your email</b>.</p>
+        <div class="otp-boxes" id="ob-otp-boxes">
+          <input class="otp-box" maxlength="1" inputmode="numeric"><input class="otp-box" maxlength="1" inputmode="numeric"><input class="otp-box" maxlength="1" inputmode="numeric"><input class="otp-box" maxlength="1" inputmode="numeric"><input class="otp-box" maxlength="1" inputmode="numeric"><input class="otp-box" maxlength="1" inputmode="numeric">
+        </div>
+        <button class="btn-primary lg" style="width:100%;margin-top:18px" id="ob-otp-btn"><i class="fas fa-circle-check"></i> Verify & Continue</button>
+        <div id="ob-otp-err" style="margin-top:10px"></div>
+        <p class="ob-switch"><a onclick="obGoStep(1)">← Change email</a></p>
+      </div>
+
+      <!-- Step 3: Resume -->
+      <div class="ob-pane" id="ob-pane-3" style="display:none">
+        <h2>Add your resume</h2>
+        <p class="muted">AI reads it to match companies and personalize everything. Or skip with a demo profile.</p>
+        <div id="ob-upload-zone" class="upload-zone" style="margin-top:18px">
+          <div id="ob-upload-idle">
+            <div class="up-icon-ring"><i class="fas fa-file-pdf"></i></div>
+            <h3>Drop your PDF resume</h3>
+            <p class="muted">Parsed by AI · Never uploaded anywhere</p>
+            <div class="up-btns">
+              <button class="btn-primary" onclick="document.getElementById('ob-resume-file').click()"><i class="fas fa-upload"></i> Choose PDF</button>
+              <button class="btn-ghost" id="ob-demo-btn"><i class="fas fa-magic"></i> Use Demo Profile</button>
+            </div>
+            <input type="file" id="ob-resume-file" accept="application/pdf" style="display:none">
+          </div>
+          <div id="ob-upload-parsing" style="display:none">
+            <div class="parse-spinner"></div>
+            <h3 id="ob-parse-headline">Reading your resume…</h3>
+            <p class="muted" id="ob-parse-sub">AI extracting skills and experience</p>
+            <div class="parse-prog-track"><div id="ob-parse-prog-bar"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Ready -->
+      <div class="ob-pane" id="ob-pane-4" style="display:none">
+        <div class="ob-ready">
+          <div class="ob-ready-ring"><i class="fas fa-check"></i></div>
+          <h2>You're all set, <span id="ob-ready-name">there</span>!</h2>
+          <p class="muted">Your profile is saved. Take the aptitude test to unlock HR contacts, or jump straight into your dashboard.</p>
+          <div class="ob-ready-stats" id="ob-ready-stats"></div>
+          <button class="btn-primary lg" style="width:100%;margin-top:8px" onclick="finishOnboarding()"><i class="fas fa-gauge-high"></i> Enter Dashboard</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" style="display:none">
+  <div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Top Bar -->
+  <header id="topbar">
+    <div class="tb-left">
+      <button id="sidebar-toggle" class="icon-btn" title="Toggle sidebar"><i class="fas fa-bars"></i></button>
+      <div class="tb-brand"><div class="logo-icon sm"><i class="fas fa-brain"></i></div><span>Comonk <b>AI</b></span></div>
+    </div>
+    <div class="tb-center">
+      <div class="tb-search-wrap" onclick="openGSearch()" style="cursor:pointer">
+        <i class="fas fa-search"></i>
+        <input type="text" id="global-search" placeholder="Search panels, features… (⌘K)" autocomplete="off" readonly style="cursor:pointer">
+        <kbd>⌘K</kbd>
+      </div>
+    </div>
+    <div class="tb-right">
+      <div class="llm-pill" id="llm-pill"><i class="fas fa-bolt"></i><span id="llm-pill-text">Groq</span></div>
+      <select id="lang-select" class="sel-sm" style="background:var(--bg-2);border-color:var(--border);padding:5px 8px;font-size:12px;height:34px;margin-right:4px">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+        <option value="gu">ગુજરાતી</option>
+      </select>
+      <button class="icon-btn" id="theme-toggle" title="Toggle light/dark mode"><i class="fas fa-moon" id="theme-icon"></i></button>
+      <div class="weather-pill" id="weather-pill" style="display:none"><span id="wp-emoji">☀️</span><span id="wp-temp">—°C</span></div>
+      <button class="icon-btn rel" id="notif-btn" title="Notifications"><i class="fas fa-bell"></i><span class="notif-dot" id="notif-dot" style="display:none"></span></button>
+      <button class="icon-btn" id="byok-settings-btn" title="API Settings" onclick="openByokModal()"><i class="fas fa-cog"></i></button>
+      <button class="btn-sm primary" id="tb-login-btn" onclick="openAuthModal()" style="display:none"><i class="fas fa-sign-in-alt"></i> Login</button>
+      <div class="tb-profile">
+        <div class="tb-avatar" id="tb-avatar">?</div>
+        <div class="tb-prof-info">
+          <div class="tb-prof-name" id="tb-name">Loading…</div>
+          <div class="tb-prof-level" id="tb-level">—</div>
+        </div>
+        <span id="tb-verified-chip" style="display:none;background:rgba(16,185,129,0.15);color:var(--c-green);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;margin-left:6px">✓ VERIFIED</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="sidebar-user">
+      <div class="su-avatar" id="su-avatar">?</div>
+      <div class="su-info">
+        <div class="su-name" id="su-name">—</div>
+        <div class="su-match-bar"><div id="su-match-fill" style="width:0%"></div></div>
+        <div class="su-match-label"><span id="su-match-pct">0%</span> profile match</div>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="sb-nav-label">WORKSPACE</div>
+      <button class="sb-item active" data-panel="overview"><i class="fas fa-th-large"></i><span>Overview</span></button>
+      <button class="sb-item" data-panel="briefing"><i class="fas fa-sun"></i><span>Daily Briefing</span><span class="sb-badge new">NEW</span></button>
+      <button class="sb-item" data-panel="chat"><i class="fas fa-comments"></i><span>AI Counselor</span></button>
+      <button class="sb-item" data-panel="targets"><i class="fas fa-building"></i><span>Job Targets</span><span class="sb-badge" id="sb-targets-count">0</span></button>
+      <button class="sb-item" data-panel="livejobs"><i class="fas fa-briefcase"></i><span>Live Jobs</span></button>
+      <button class="sb-item" data-panel="tracker"><i class="fas fa-columns"></i><span>App Tracker</span><span class="sb-badge" id="sb-tracker-count">0</span></button>
+      <button class="sb-item" data-panel="autopilot"><i class="fas fa-robot"></i><span>Autopilot Agent</span><span class="sb-badge new">FLAGSHIP</span></button>
+      <button class="sb-item" data-panel="outreach"><i class="fas fa-chart-funnel"></i><span>Outreach Analytics</span><span class="sb-badge new">NEW</span></button>
+
+      <div class="sb-nav-label" style="margin-top:20px">AI TOOLS</div>
+      <button class="sb-item" data-panel="mockvoice"><i class="fas fa-microphone-lines"></i><span>AI Mock Interview</span><span class="sb-badge new">NEW</span></button>
+      <button class="sb-item" data-panel="resumestudio"><i class="fas fa-wand-magic-sparkles"></i><span>Resume Studio</span><span class="sb-badge new">NEW</span></button>
+      <button class="sb-item" data-panel="calendar"><i class="fas fa-calendar-days"></i><span>Calendar</span><span class="sb-badge new">NEW</span></button>
+      <button class="sb-item" data-panel="interview"><i class="fas fa-comments"></i><span>Interview Q&A</span></button>
+      <button class="sb-item" data-panel="ats"><i class="fas fa-chart-bar"></i><span>ATS Optimizer</span></button>
+      <button class="sb-item" data-panel="linkedin"><i class="fab fa-linkedin"></i><span>LinkedIn</span></button>
+      <button class="sb-item" data-panel="learning"><i class="fas fa-graduation-cap"></i><span>Learning Hub</span></button>
+      <button class="sb-item" data-panel="roadmap"><i class="fas fa-map"></i><span>Career Roadmap</span></button>
+      <button class="sb-item" data-panel="cheatsheets"><i class="fas fa-file-code"></i><span>Cheat Sheets</span></button>
+      <button class="sb-item" data-panel="resources"><i class="fas fa-cubes"></i><span>Resources Hub</span></button>
+      <button class="sb-item" data-panel="salary"><i class="fas fa-rupee-sign"></i><span>Salary Insights</span></button>
+      <button class="sb-item" data-panel="github"><i class="fab fa-github"></i><span>GitHub Analyzer</span></button>
+      <button class="sb-item" data-panel="emailscorer"><i class="fas fa-envelope-circle-check"></i><span>Email Scorer</span><span class="sb-badge new">NEW</span></button>
+      <button class="sb-item" data-panel="offers"><i class="fas fa-scale-balanced"></i><span>Offer Comparator</span><span class="sb-badge new">NEW</span></button>
+
+      <div class="sb-nav-label" style="margin-top:20px">ACCOUNT</div>
+      <button class="sb-item" data-panel="test" id="sb-test-btn"><i class="fas fa-graduation-cap"></i><span>Take Aptitude Test</span><span class="badge purple" id="sb-verified-badge" style="display:none;margin-left:auto;font-size:9px">✓</span></button>
+      <button class="sb-item" data-panel="admin" id="sb-admin-btn" style="display:none"><i class="fas fa-shield-alt"></i><span>Admin</span></button>
+      <div class="sb-nav-label" style="margin-top:12px">BONUS TOOLS</div>
+      <button class="sb-item" data-panel="trending"><i class="fas fa-fire"></i><span>Trending Repos</span></button>
+      <button class="sb-item" data-panel="stackoverflow"><i class="fab fa-stack-overflow"></i><span>Stack Overflow</span></button>
+      <button class="sb-item" data-panel="codingstats"><i class="fas fa-code"></i><span>Coding Stats</span></button>
+      <button class="sb-item" data-panel="flashcards"><i class="fas fa-layer-group"></i><span>Flashcards</span></button>
+      <button class="sb-item" data-panel="network"><i class="fas fa-user-friends"></i><span>Network Log</span></button>
+      <button class="sb-item" data-panel="heatmap"><i class="fas fa-th"></i><span>Skill Heatmap</span></button>
+      <button class="sb-item" data-panel="pomodoro"><i class="fas fa-clock"></i><span>Focus Timer</span></button>
+      <button class="sb-item" data-panel="alerts"><i class="fas fa-bell"></i><span>Job Alerts Setup</span></button>
+    </nav>
+
+    <div class="sb-footer">
+      <button class="sb-footer-btn" id="reset-btn"><i class="fas fa-sign-out-alt"></i><span>New Resume</span></button>
+    </div>
+  </aside>
+
+  <!-- Content Area -->
+  <main id="content">
+
+    <!-- Overview -->
+    <div id="panel-overview" class="panel active">
+      <div class="panel-hdr">
+        <div><h2>Overview</h2><span class="panel-hdr-sub" id="ov-greeting">Welcome back</span></div>
+      </div>
+      <!-- AI Career Score + Daily Tip + Achievements -->
+      <div class="ov-score-row">
+        <!-- Career Score Ring -->
+        <div class="card score-ring-card">
+          <div class="card-hdr"><h4><i class="fas fa-trophy" style="color:var(--c-gold)"></i> AI Career Score</h4><span class="badge" id="score-grade" style="background:rgba(124,58,237,0.15);color:var(--c-purple-l)">—</span></div>
+          <div class="score-ring-wrap">
+            <canvas id="score-canvas" width="160" height="160"></canvas>
+            <div class="score-overlay"><div id="score-val" class="score-num">—</div><div class="score-lbl">/ 100</div></div>
+          </div>
+          <div class="score-breakdown" id="score-breakdown"></div>
+        </div>
+        <!-- Daily AI Tip -->
+        <div class="card daily-tip-card">
+          <div class="card-hdr"><h4><i class="fas fa-lightbulb" style="color:var(--c-gold)"></i> Today's Career Tip</h4><span class="badge purple" id="tip-date-badge">Daily</span></div>
+          <div class="tip-icon-row"><div class="tip-icon-wrap"><i id="tip-icon" class="fas fa-star"></i></div></div>
+          <p class="tip-text" id="tip-text">Loading your personalized tip…</p>
+          <div class="tip-action" id="tip-action"></div>
+        </div>
+        <!-- Achievements -->
+        <div class="card achievements-card">
+          <div class="card-hdr"><h4><i class="fas fa-medal" style="color:var(--c-gold)"></i> Achievements</h4><span class="badge" id="ach-count-badge" style="background:rgba(124,58,237,0.15);color:var(--c-purple-l)">0/8</span></div>
+          <div class="ach-grid" id="ach-grid"></div>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card"><div class="kpi-ic purple"><i class="fas fa-building"></i></div><div><div class="kpi-val" id="kpi-matches">0</div><div class="kpi-lbl">Companies Matched</div></div></div>
+        <div class="kpi-card"><div class="kpi-ic green"><i class="fas fa-paper-plane"></i></div><div><div class="kpi-val" id="kpi-applied">0</div><div class="kpi-lbl">Applications Tracked</div></div></div>
+        <div class="kpi-card"><div class="kpi-ic blue"><i class="fas fa-microphone"></i></div><div><div class="kpi-val" id="kpi-interviews">0</div><div class="kpi-lbl">Interviews Practiced</div></div></div>
+        <div class="kpi-card"><div class="kpi-ic gold"><i class="fas fa-chart-bar"></i></div><div><div class="kpi-val" id="kpi-ats">—</div><div class="kpi-lbl">Last ATS Score</div></div></div>
+      </div>
+      <div class="ov-grid">
+        <div class="card">
+          <div class="card-hdr"><h4>Your Profile</h4><button class="btn-xs ghost" onclick="openPanel('chat')">Ask AI <i class="fas fa-arrow-right"></i></button></div>
+          <div class="prof-rows">
+            <div class="prof-row"><span class="pr-lbl">Name</span><span id="ov-name">—</span></div>
+            <div class="prof-row"><span class="pr-lbl">Level</span><span id="ov-level">—</span></div>
+            <div class="prof-row"><span class="pr-lbl">Experience</span><span id="ov-exp">—</span></div>
+          </div>
+          <div class="skill-chips" id="ov-skills"></div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><h4>Quick Actions</h4></div>
+          <div class="qa-grid">
+            <button class="qa-btn" onclick="openPanel('chat')"><i class="fas fa-comments"></i><span>AI Chat</span></button>
+            <button class="qa-btn" onclick="openPanel('targets')"><i class="fas fa-building"></i><span>Matches</span></button>
+            <button class="qa-btn" onclick="openPanel('interview')"><i class="fas fa-microphone"></i><span>Interview</span></button>
+            <button class="qa-btn" onclick="openPanel('roadmap')"><i class="fas fa-map"></i><span>Roadmap</span></button>
+            <button class="qa-btn" onclick="openPanel('salary')"><i class="fas fa-rupee-sign"></i><span>Salary</span></button>
+            <button class="qa-btn" onclick="openPanel('ats')"><i class="fas fa-chart-bar"></i><span>ATS Check</span></button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><h4>Gujarat Market</h4></div>
+          <div class="market-rows">
+            <div class="mkt-row"><span>Total IT Companies</span><span class="mkt-val" id="ms-total">—</span></div>
+            <div class="mkt-row"><span>AI / ML Companies</span><span class="mkt-val purple" id="ms-aiml">—</span></div>
+            <div class="mkt-row"><span>HR Contacts</span><span class="mkt-val green" id="ms-hr">—</span></div>
+            <div class="mkt-row"><span>AI Engine</span><span class="mkt-val blue" id="ms-llm">—</span></div>
+          </div>
+        </div>
+        <!-- Weather + Countdown -->
+        <div class="card" id="ov-weather-card" style="display:none">
+          <div class="card-hdr"><h4><i class="fas fa-cloud-sun"></i> Today — Ahmedabad</h4></div>
+          <div class="weather-main"><span id="ov-w-emoji" style="font-size:40px">☁️</span><div><div id="ov-w-temp" style="font-size:28px;font-weight:800">—°C</div><div id="ov-w-desc" class="muted" style="font-size:13px">—</div></div></div>
+          <div id="ov-w-forecast" class="w-forecast-row"></div>
+          <div id="ov-w-tip" class="muted" style="font-size:12px;margin-top:8px"></div>
+        </div>
+        <!-- Skills Radar -->
+        <div class="card">
+          <div class="card-hdr"><h4><i class="fas fa-spider"></i> Skills Radar</h4><button class="btn-xs ghost" onclick="openPanel('heatmap')">Heatmap ↗</button></div>
+          <canvas id="skills-radar" height="220"></canvas>
+        </div>
+        <!-- Progress Analytics -->
+        <div class="card">
+          <div class="card-hdr"><h4><i class="fas fa-chart-line"></i> Application Progress</h4></div>
+          <canvas id="progress-chart" height="160"></canvas>
+          <div id="ov-interview-countdown" style="display:none;margin-top:12px" class="countdown-badge"><i class="fas fa-calendar-check"></i> Next interview: <b id="countdown-days">—</b> days away</div>
+        </div>
+        <!-- Activity Heatmap -->
+        <div class="card heatmap-card">
+          <div class="card-hdr"><h4><i class="fas fa-fire" style="color:var(--c-red)"></i> Activity — Last 30 Days</h4><span class="muted" style="font-size:12px" id="heatmap-streak"></span></div>
+          <div class="heatmap-grid" id="activity-heatmap"></div>
+          <div class="heatmap-legend"><span class="muted" style="font-size:11px">Less</span><div class="hm-l-cells"><div style="background:var(--bg-3)"></div><div style="background:rgba(124,58,237,0.2)"></div><div style="background:rgba(124,58,237,0.45)"></div><div style="background:rgba(124,58,237,0.7)"></div><div style="background:var(--c-purple)"></div></div><span class="muted" style="font-size:11px">More</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Counselor -->
+    <div id="panel-chat" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fas fa-comments"></i> AI Career Counselor</h2></div>
+        <div class="hdr-badges"><span class="hbadge purple">LangGraph Memory</span><span class="hbadge green" id="chat-prov-badge">Groq</span></div>
+      </div>
+      <div class="chat-wrap">
+        <div class="chat-msgs" id="chat-msgs">
+          <div class="chat-welcome">
+            <div class="cw-avatar"><i class="fas fa-robot"></i></div>
+            <h3>Hello! I'm your Comonk AI counselor.</h3>
+            <p>I have your full profile loaded and access to 541 Gujarat IT companies with HR contacts. Ask me anything.</p>
+          </div>
+        </div>
+        <div class="chat-chips" id="chat-chips">
+          <button class="chip" data-msg="Which AI/ML companies in Ahmedabad should I apply to first?">Which AI/ML companies to target?</button>
+          <button class="chip" data-msg="What is the salary range for a fresher AI Engineer in Ahmedabad?">Fresher salary guide</button>
+          <button class="chip" data-msg="Review my profile and suggest 3 improvements to get hired faster">Improve my profile</button>
+          <button class="chip" data-msg="Create a 30-day action plan for my job search">30-day action plan</button>
+        </div>
+        <div class="chat-input-wrap">
+          <textarea id="chat-input" placeholder="Ask about companies, salary, resume tips, interview prep…" rows="1"></textarea>
+          <button id="chat-send-btn" class="chat-send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+        <div class="chat-footer">
+          <span id="chat-typing" class="typing-ind" style="display:none"><span></span><span></span><span></span> AI is thinking…</span>
+          <button class="btn-xs ghost" id="chat-clear-btn"><i class="fas fa-trash-alt"></i> Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Job Targets -->
+    <div id="panel-targets" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fas fa-building"></i> Job Targets</h2></div>
+        <div class="hdr-controls">
+          <div class="mini-search"><i class="fas fa-search"></i><input type="text" id="targets-search" placeholder="Filter…"></div>
+          <select id="targets-cat" class="sel-sm">
+            <option value="">All Categories</option>
+            <option value="AI / ML">AI / ML</option>
+            <option value="Software Development">Software Dev</option>
+            <option value="IT Services">IT Services</option>
+            <option value="Data Analytics">Data Analytics</option>
+          </select>
+          <span class="count-pill" id="targets-count-label">0 companies</span>
+        </div>
+      </div>
+      <div class="co-grid" id="companies-grid">
+        <div class="empty-state"><i class="fas fa-building"></i><p>Upload your resume to see matched companies</p></div>
+      </div>
+    </div>
+
+    <!-- Live Jobs -->
+    <div id="panel-livejobs" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fas fa-briefcase"></i> Live Jobs</h2></div>
+        <div class="hdr-controls">
+          <div class="src-tabs" id="job-src-tabs">
+            <button class="src-tab active" data-src="all">All</button>
+            <button class="src-tab" data-src="remoteok">RemoteOK</button>
+            <button class="src-tab" data-src="remotive">Remotive</button>
+            <button class="src-tab" data-src="india">Adzuna India</button>
+            <button class="src-tab" data-src="hn"><i class="fab fa-hacker-news"></i> HN Hiring</button>
+            <button class="src-tab" data-src="reddit"><i class="fab fa-reddit"></i> Reddit</button>
+            <button class="src-tab" data-src="greenhouse">🌱 Greenhouse</button>
+            <button class="src-tab" data-src="internshala">🇮🇳 India Boards</button>
+          </div>
+          <button class="btn-sm primary" id="refresh-jobs-btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+        </div>
+      </div>
+      <div class="jobs-grid" id="jobs-grid">
+        <div class="empty-state"><i class="fas fa-briefcase"></i><p>Loading live jobs…</p></div>
+      </div>
+    </div>
+
+    <!-- Application Tracker -->
+    <div id="panel-tracker" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fas fa-columns"></i> Application Tracker</h2></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-ghost btn-sm" id="export-csv-btn"><i class="fas fa-download"></i> Export CSV</button>
+          <button class="btn-sm primary" id="add-app-btn"><i class="fas fa-plus"></i> Add Application</button>
+        </div>
+      </div>
+      <div class="tracker-kpis">
+        <div class="tk"><span class="tk-num" id="tk-saved">0</span><span class="tk-lbl">Saved</span></div>
+        <div class="tk"><span class="tk-num blue" id="tk-applied">0</span><span class="tk-lbl">Applied</span></div>
+        <div class="tk"><span class="tk-num gold" id="tk-interview">0</span><span class="tk-lbl">Interviews</span></div>
+        <div class="tk"><span class="tk-num green" id="tk-offer">0</span><span class="tk-lbl">Offers</span></div>
+        <div class="tk"><span class="tk-num red" id="tk-rejected">0</span><span class="tk-lbl">Rejected</span></div>
+      </div>
+      <div class="kanban" id="kanban">
+        <div class="k-col" data-status="saved"><div class="k-col-hdr"><span class="k-dot purple"></span>Saved<span class="k-cnt" id="kc-saved">0</span></div><div class="k-cards" id="col-saved"><div class="k-empty">Drop apps here</div></div></div>
+        <div class="k-col" data-status="applied"><div class="k-col-hdr"><span class="k-dot blue"></span>Applied<span class="k-cnt" id="kc-applied">0</span></div><div class="k-cards" id="col-applied"><div class="k-empty">Move applied here</div></div></div>
+        <div class="k-col" data-status="interview"><div class="k-col-hdr"><span class="k-dot gold"></span>Interview<span class="k-cnt" id="kc-interview">0</span></div><div class="k-cards" id="col-interview"><div class="k-empty">Interviews here</div></div></div>
+        <div class="k-col" data-status="offer"><div class="k-col-hdr"><span class="k-dot green"></span>Offer<span class="k-cnt" id="kc-offer">0</span></div><div class="k-cards" id="col-offer"><div class="k-empty">Offers here</div></div></div>
+        <div class="k-col" data-status="rejected"><div class="k-col-hdr"><span class="k-dot red"></span>Rejected<span class="k-cnt" id="kc-rejected">0</span></div><div class="k-cards" id="col-rejected"><div class="k-empty">Rejections here</div></div></div>
+      </div>
+    </div>
+
+    <!-- Autopilot Panel -->
+    <div id="panel-autopilot" class="panel">
+      <div class="panel-hdr">
+        <div>
+          <h2><i class="fas fa-robot"></i> Job-Hunt Autopilot</h2>
+          <div class="panel-hdr-sub">Chains resume analysis, target matching, and personalized outreach automatically.</div>
+        </div>
+      </div>
+
+      <div class="ov-grid" style="grid-template-columns: 1fr 2fr; gap: 20px">
+        <!-- Configuration Card -->
+        <div class="card" style="align-self: start">
+          <h4 style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--c-purple-l)"><i class="fas fa-sliders"></i> Configure Run</h4>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="fg">
+              <label>Target Role</label>
+              <input class="inp" id="ap-role" placeholder="e.g. AI/ML Engineer">
+            </div>
+            <div class="fg">
+              <label>Outreach Tone</label>
+              <select class="inp" id="ap-tone">
+                <option value="professional">Professional</option>
+                <option value="enthusiastic">Enthusiastic & Tech-heavy</option>
+                <option value="creative">Creative & Direct</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Companies count</label>
+              <div style="display:flex;align-items:center;gap:10px">
+                <input type="range" id="ap-count" min="1" max="10" value="5" style="flex:1">
+                <span id="ap-count-val" style="font-weight:bold">5</span>
+              </div>
+            </div>
+            <button class="btn-primary" id="ap-run-btn" style="width:100%;margin-top:10px;justify-content:center">
+              <i class="fas fa-play"></i> Start Autopilot Run
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Queue / Status Card -->
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <h4 style="font-size:14px;font-weight:700;color:var(--c-blue-l)"><i class="fas fa-clipboard-list"></i> Outbox Approval Queue</h4>
+            <span class="badge purple" id="ap-status-badge">Idle</span>
+          </div>
+
+          <div id="ap-queue-container" style="display:flex;flex-direction:column;gap:16px">
+            <div class="empty-state">
+              <i class="fas fa-robot" style="font-size:48px;color:var(--text-3)"></i>
+              <p>Configure and launch autopilot to search Ahmedabad companies and draft tailored outreach emails.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- History log -->
+      <div class="card" style="margin-top:20px">
+        <h4 style="margin-bottom:12px;font-weight:700"><i class="fas fa-history"></i> Autopilot Run History</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm" style="border-collapse:collapse;width:100%">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border);color:var(--text-3)">
+                <th style="padding:10px 0;width:20%">Date</th>
+                <th style="width:30%">Target Role</th>
+                <th style="width:20%">Status</th>
+                <th style="width:30%">Outcome Summary</th>
+              </tr>
+            </thead>
+            <tbody id="ap-history-tbody">
+              <tr>
+                <td colspan="4" style="text-align:center;padding:20px;color:var(--text-3)">No runs registered yet</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mock Interview -->
+    <div id="panel-interview" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fas fa-microphone"></i> Mock Interview</h2></div></div>
+      <div class="card iv-setup" id="iv-setup">
+        <h3>Configure Your Interview Session</h3>
+        <div class="form-row-2" style="margin-bottom:14px">
+          <div class="fg"><label>Target Role</label><input type="text" id="iv-role" class="inp" value="AI/ML Engineer"></div>
+          <div class="fg">
+            <label>Target Company (Grounding)</label>
+            <select id="iv-company" class="inp">
+              <option value="-1">General Technical Interview</option>
+              <!-- JavaScript will populate companies list here -->
+            </select>
+          </div>
+        </div>
+        <div class="form-row-2" style="margin-bottom:14px">
+          <div class="fg"><label>Experience Level</label><select id="iv-level" class="inp"><option value="fresher">Fresher</option><option value="junior">Junior (0–2 yr)</option><option value="mid">Mid (2–5 yr)</option><option value="senior">Senior (5+ yr)</option></select></div>
+          <div class="fg"><label>Difficulty</label><select id="iv-difficulty" class="inp"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select></div>
+        </div>
+        <button class="btn-primary" id="start-iv-btn"><i class="fas fa-play"></i> Start Interview</button>
+      </div>
+      <!-- STAR Templates -->
+      <div class="card star-templates-card" style="margin-top:16px">
+        <div class="card-hdr"><h4><i class="fas fa-star" style="color:var(--c-gold)"></i> STAR Method Templates</h4><span class="badge purple">Behavioral</span></div>
+        <div class="star-grid" id="star-grid">
+          <div class="star-q" onclick="this.classList.toggle('open')"><div class="star-q-title"><i class="fas fa-chevron-right star-arrow"></i> Tell me about a time you solved a difficult problem</div><div class="star-body"><div class="star-section"><b>Situation:</b> "In my [X] project / internship at [Company]…"</div><div class="star-section"><b>Task:</b> "I was responsible for [specific task]…"</div><div class="star-section"><b>Action:</b> "I [specific actions taken — use numbers]…"</div><div class="star-section"><b>Result:</b> "This resulted in [quantified outcome]…"</div></div></div>
+          <div class="star-q" onclick="this.classList.toggle('open')"><div class="star-q-title"><i class="fas fa-chevron-right star-arrow"></i> Describe a time you worked under pressure</div><div class="star-body"><div class="star-section"><b>Situation:</b> "During [deadline/project], we faced [constraint]…"</div><div class="star-section"><b>Task:</b> "I needed to [deliver X] within [Y hours/days]…"</div><div class="star-section"><b>Action:</b> "I prioritized by [method], delegated [task], and…"</div><div class="star-section"><b>Result:</b> "We delivered on time and [positive outcome]…"</div></div></div>
+          <div class="star-q" onclick="this.classList.toggle('open')"><div class="star-q-title"><i class="fas fa-chevron-right star-arrow"></i> Tell me about a conflict with a teammate</div><div class="star-body"><div class="star-section"><b>Situation:</b> "During [project], my teammate and I disagreed on [approach]…"</div><div class="star-section"><b>Task:</b> "We needed to align quickly to keep the project on track…"</div><div class="star-section"><b>Action:</b> "I scheduled a 1:1, listened to their perspective, and proposed…"</div><div class="star-section"><b>Result:</b> "We reached consensus, shipped on time, and improved our process…"</div></div></div>
+          <div class="star-q" onclick="this.classList.toggle('open')"><div class="star-q-title"><i class="fas fa-chevron-right star-arrow"></i> What is your biggest achievement?</div><div class="star-body"><div class="star-section"><b>Situation:</b> "The company/team was facing [challenge]…"</div><div class="star-section"><b>Task:</b> "I was assigned to [lead/build/improve] X…"</div><div class="star-section"><b>Action:</b> "I [specific technical actions + leadership]…"</div><div class="star-section"><b>Result:</b> "Achieved [metric] — [% improvement / time saved / revenue]…"</div></div></div>
+          <div class="star-q" onclick="this.classList.toggle('open')"><div class="star-q-title"><i class="fas fa-chevron-right star-arrow"></i> Describe when you learned a new skill quickly</div><div class="star-body"><div class="star-section"><b>Situation:</b> "Our project required [new tech] which I hadn't used before…"</div><div class="star-section"><b>Task:</b> "I had [X days] to become productive in [skill]…"</div><div class="star-section"><b>Action:</b> "I followed [resource], built [project], and applied it to…"</div><div class="star-section"><b>Result:</b> "Within [time], I contributed [X] to the project successfully…"</div></div></div>
+          <div class="star-q" onclick="this.classList.toggle('open')"><div class="star-q-title"><i class="fas fa-chevron-right star-arrow"></i> Why do you want to work at this company?</div><div class="star-body"><div class="star-section"><b>Research angle:</b> "I've followed [company] since [project/product]…"</div><div class="star-section"><b>Skill match:</b> "My background in [X] aligns with your [team/product]…"</div><div class="star-section"><b>Growth angle:</b> "I want to grow in [area] and your [role/team] offers…"</div><div class="star-section"><b>Closing:</b> "I believe I can contribute [specific value] from day one."</div></div></div>
+        </div>
+      </div>
+      <div id="iv-session" style="display:none" class="card">
+        <div class="iv-prog-track"><div id="iv-prog-fill"></div></div>
+        <div class="iv-meta" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <span id="iv-q-label" style="font-weight:bold;color:var(--c-purple-l)">Question 1 / 3</span>
+          <div style="display:flex;gap:10px;align-items:center">
+            <div class="iv-timer-box"><i class="fas fa-clock"></i> <span id="iv-time">0:00</span></div>
+            <button class="btn-xs ghost" id="iv-end-btn" style="color:var(--c-red);border-color:rgba(239,68,68,0.3)"><i class="fas fa-stop"></i> End Interview</button>
+          </div>
+        </div>
+
+        <div class="iv-q-card" style="margin-bottom:20px">
+          <div class="iv-q-text" id="iv-q-text" style="font-size:18px;font-weight:600;line-height:1.5;color:var(--text)">Loading question...</div>
+          <button class="btn-xs ghost" id="iv-speak-btn" style="margin-top:10px"><i class="fas fa-volume-up"></i> Listen to Question</button>
+        </div>
+
+        <div class="fg" style="margin-bottom:14px">
+          <label>Your Oral Answer (Speak / Speak Transcript)</label>
+          <textarea class="inp ta-md" id="iv-answer-transcript" placeholder="Click 'Record Answer' below to speak your response..."></textarea>
+        </div>
+
+        <div style="display:flex;gap:10px;align-items:center">
+          <button class="btn-primary" id="iv-record-btn" style="background:var(--c-purple)"><i class="fas fa-microphone"></i> Start Recording Answer</button>
+          <button class="btn-ghost" id="iv-submit-answer-btn"><i class="fas fa-paper-plane"></i> Submit Answer</button>
+        </div>
+
+        <!-- Single feedback section -->
+        <div id="iv-feedback-section" style="display:none;margin-top:16px;padding:12px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);border-radius:8px">
+          <h5 style="color:var(--c-green-l);margin-bottom:4px;font-weight:bold">Score Feedback:</h5>
+          <p id="iv-feedback-text" style="font-size:13px;color:var(--text-2)"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATS Optimizer -->
+    <div id="panel-ats" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fas fa-chart-bar"></i> ATS Resume Optimizer</h2></div></div>
+      <div class="ats-layout">
+        <div class="card ats-input">
+          <h3>Analyze Your Resume</h3>
+          <div class="fg"><label>Target Role</label><input type="text" id="ats-role" class="inp" value="AI/ML Engineer"></div>
+          <div class="fg"><label>Paste Resume Text</label><textarea id="ats-resume" class="inp ta-lg" placeholder="Paste your full resume text here…" rows="16"></textarea></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn-primary" id="ats-btn"><i class="fas fa-search"></i> Analyze ATS Score</button>
+            <button class="btn-ghost" id="grammar-ats-btn"><i class="fas fa-spell-check"></i> Grammar Check</button>
+            <button class="btn-ghost" id="export-resume-btn"><i class="fas fa-file-pdf"></i> Export PDF</button>
+          </div>
+          <div id="grammar-ats-out" style="display:none" class="grammar-out"></div>
+        </div>
+        <div id="ats-out" style="display:none" class="ats-results">
+          <div class="card ats-score-card">
+            <div class="ats-gauge-wrap"><canvas id="ats-gauge" width="160" height="160"></canvas><div class="ats-gauge-overlay"><span id="ats-score-num">0</span><small>/100</small></div></div>
+            <div class="ats-grade-badge" id="ats-grade">A</div>
+            <p id="ats-sum" class="muted"></p>
+          </div>
+          <div class="card"><h4>Keywords Found <span class="badge green" id="kf-count">0</span></h4><div class="chip-row green-chips" id="kw-found"></div></div>
+          <div class="card"><h4>Keywords Missing <span class="badge red" id="km-count">0</span></h4><div class="chip-row red-chips" id="kw-missing"></div></div>
+          <div class="card"><h4>Quick Wins</h4><div id="ats-wins"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LinkedIn Optimizer -->
+    <div id="panel-linkedin" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fab fa-linkedin"></i> LinkedIn Optimizer</h2></div></div>
+      <div class="li-layout">
+        <div class="card li-input">
+          <h3>Optimize Your LinkedIn Profile</h3>
+          <div class="fg"><label>Target Role</label><input type="text" id="li-role" class="inp" value="AI/ML Engineer"></div>
+          <div class="fg"><label>Current About Section (optional)</label><textarea id="li-about" class="inp ta-md" rows="5" placeholder="Paste your current About section…"></textarea></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn-primary" id="li-btn"><i class="fab fa-linkedin"></i> Generate Optimization</button>
+            <button class="btn-ghost" id="grammar-li-btn"><i class="fas fa-spell-check"></i> Grammar Check About</button>
+          </div>
+          <div id="grammar-li-out" style="display:none" class="grammar-out"></div>
+        </div>
+        <div id="li-out" style="display:none" class="li-results">
+          <div class="card"><h4><i class="fas fa-heading"></i> Headline Options <span class="badge purple">3 Variants</span></h4><div id="li-headlines"></div></div>
+          <div class="card"><h4><i class="fas fa-align-left"></i> Rewritten About</h4><div class="li-about-box" id="li-about-out"></div><button class="btn-sm ghost" id="li-copy-btn"><i class="fas fa-copy"></i> Copy</button></div>
+          <div class="card"><h4><i class="fas fa-lightbulb"></i> Profile Tips</h4><ul id="li-tips" class="tips-ul"></ul></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Learning Hub -->
+    <div id="panel-learning" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fas fa-graduation-cap"></i> Learning Hub</h2></div>
+        <div class="learn-tabs" id="learn-tabs">
+          <button class="ltab active" data-lt="articles"><i class="fas fa-newspaper"></i> Articles</button>
+          <button class="ltab" data-lt="youtube"><i class="fab fa-youtube"></i> YouTube</button>
+          <button class="ltab" data-lt="news"><i class="fas fa-rss"></i> Tech News</button>
+          <button class="ltab" data-lt="cheatsheets"><i class="fas fa-scroll"></i> Cheat Sheets</button>
+          <button class="ltab" data-lt="roadmaps"><i class="fas fa-map-signs"></i> Roadmaps</button>
+          <button class="ltab" data-lt="github-trending"><i class="fab fa-github"></i> Trending</button>
+          <button class="ltab" data-lt="producthunt"><i class="fas fa-rocket"></i> Product Hunt</button>
+          <button class="ltab" data-lt="studyplan"><i class="fas fa-tasks"></i> Study Planner</button>
+        </div>
+      </div>
+      <div id="learn-content" class="learn-grid">
+        <div class="empty-state"><i class="fas fa-graduation-cap"></i><p>Loading resources for your skills…</p></div>
+      </div>
+    </div>
+
+    <!-- Career Roadmap -->
+    <div id="panel-roadmap" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fas fa-map"></i> Career Roadmap</h2></div>
+        <button class="btn-ghost btn-sm" id="notion-roadmap-btn" title="Export to Notion"><i class="fas fa-book-open"></i> Export to Notion</button>
+      </div>
+      <div class="card rm-controls">
+        <div class="form-row-2">
+          <div class="fg"><label>Target Role</label><input type="text" id="rm-role" class="inp" value="AI/ML Engineer"></div>
+          <div class="fg"><label>Current Level</label><select id="rm-level" class="inp"><option value="fresher">Fresher</option><option value="junior">Junior (0-2 yr)</option><option value="mid">Mid-Level (2-5 yr)</option><option value="senior">Senior (5+ yr)</option></select></div>
+        </div>
+        <button class="btn-primary" id="gen-rm-btn"><i class="fas fa-magic"></i> Generate My 90-Day Roadmap</button>
+      </div>
+
+      <!-- Toggle for visual vs text -->
+      <div id="rm-tabs-wrap" class="rm-tabs" style="display:none; margin-bottom: 15px;">
+        <button class="rm-tab active" id="rm-tab-visual"><i class="fas fa-project-diagram"></i> Interactive Roadmap</button>
+        <button class="rm-tab" id="rm-tab-text"><i class="fas fa-file-alt"></i> Text Guide</button>
+      </div>
+
+      <!-- Visual output -->
+      <div id="rm-visual-out" class="rm-visual-container" style="display:none">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Text output -->
+      <div id="rm-out" class="card rm-out-card" style="display:none">
+        <div id="rm-content" class="md-body"></div>
+      </div>
+
+      <!-- Official Roadmaps from roadmap.sh -->
+      <div class="rm-official-section">
+        <div class="rm-section-hdr">
+          <div>
+            <h3><i class="fas fa-map-signs" style="color:var(--c-purple-l)"></i> Official Roadmaps — roadmap.sh</h3>
+            <p class="muted">Community-curated, always up-to-date · 100% free &amp; open source</p>
+          </div>
+          <a href="https://roadmap.sh" target="_blank" class="btn-ghost btn-sm"><i class="fas fa-external-link-alt"></i> Browse All</a>
+        </div>
+        <div class="roadmap-cards" id="roadmap-sh-cards">
+          <div class="empty-state"><div class="parse-spinner"></div><p>Loading official roadmaps…</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Salary Insights -->
+    <div id="panel-salary" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fas fa-rupee-sign"></i> Salary Insights</h2></div></div>
+      <div class="sal-layout">
+        <div class="card sal-input">
+          <h3>Get Market Data</h3>
+          <div class="form-row-3">
+            <div class="fg"><label>Role</label><input type="text" id="sal-role" class="inp" value="AI/ML Engineer"></div>
+            <div class="fg"><label>Level</label><select id="sal-level" class="inp"><option value="fresher">Fresher</option><option value="junior">Junior</option><option value="mid" selected>Mid-Level</option><option value="senior">Senior</option></select></div>
+            <div class="fg"><label>Years Experience</label><input type="number" id="sal-years" class="inp" value="0" min="0" max="30"></div>
+          </div>
+          <button class="btn-primary" id="sal-btn"><i class="fas fa-search"></i> Get Salary Data</button>
+        </div>
+        <div id="sal-out" style="display:none" class="sal-results">
+          <div class="card sal-range-card">
+            <h4>Salary Range — Ahmedabad/Gujarat</h4>
+            <div class="sal-bar-wrap"><div id="sal-bar"></div></div>
+            <div class="sal-vals"><span id="sal-min">—</span><span id="sal-typ">—</span><span id="sal-max">—</span></div>
+            <div class="sal-val-labels"><span>Minimum</span><span>Typical</span><span>Maximum</span></div>
+          </div>
+          <div class="card"><h4>City Comparison</h4><canvas id="city-chart" height="180"></canvas></div>
+          <div class="card" id="fx-card" style="display:none">
+            <h4><i class="fas fa-globe"></i> Global Equivalent <span class="badge blue">Live Rates</span></h4>
+            <div class="fx-row"><span class="fx-flag">🇺🇸</span><span class="fx-lbl">USD</span><span class="fx-val" id="fx-usd">—</span></div>
+            <div class="fx-row"><span class="fx-flag">🇪🇺</span><span class="fx-lbl">EUR</span><span class="fx-val" id="fx-eur">—</span></div>
+            <div class="fx-row"><span class="fx-flag">🇬🇧</span><span class="fx-lbl">GBP</span><span class="fx-val" id="fx-gbp">—</span></div>
+          </div>
+          <div class="card"><h4><i class="fas fa-handshake"></i> Negotiation Tips</h4><ul id="sal-tips" class="tips-ul"></ul></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GitHub Analyzer -->
+    <div id="panel-github" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fab fa-github"></i> GitHub Portfolio Analyzer</h2></div></div>
+      <div class="card gh-input">
+        <div class="form-row-2">
+          <div class="fg" style="flex:1"><label>GitHub Username</label><input type="text" id="gh-username" class="inp" placeholder="e.g. your-github-username"></div>
+          <div class="fg align-end"><button class="btn-primary" id="gh-analyze-btn"><i class="fab fa-github"></i> Analyze Profile</button></div>
+        </div>
+      </div>
+      <div id="gh-out" style="display:none">
+        <div class="card gh-profile-hdr">
+          <img id="gh-avatar" src="" alt="" class="gh-av">
+          <div class="gh-prof-info">
+            <h3 id="gh-name">—</h3>
+            <p id="gh-bio" class="muted"></p>
+            <div class="gh-stats"><span><i class="fas fa-code-branch"></i> <b id="gh-repos-cnt">0</b> repos</span><span><i class="fas fa-star"></i> <b id="gh-stars-cnt">0</b> stars</span><span><i class="fas fa-users"></i> <b id="gh-followers-cnt">0</b> followers</span></div>
+            <div class="lang-chips" id="gh-langs"></div>
+          </div>
+          <div id="gh-score-box" class="gh-score" style="display:none"><div class="gh-score-num" id="gh-score-val">—</div><div class="gh-score-lbl">Portfolio Score</div></div>
+        </div>
+        <div class="gh-repos-grid" id="gh-repos-grid"></div>
+        <div id="gh-analysis-card" class="card" style="display:none">
+          <h4><i class="fas fa-robot"></i> AI Portfolio Analysis</h4>
+          <div id="gh-strengths"></div>
+          <div id="gh-improvements"></div>
+          <p id="gh-ai-sum" class="muted"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Free Cheat Sheets -->
+    <div id="panel-cheatsheets" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fas fa-file-code"></i> Free AI Cheat Sheets</h2></div>
+        <div class="hdr-controls">
+          <div class="mini-search"><i class="fas fa-search"></i><input type="text" id="cs-custom-topic" placeholder="Custom technology…"></div>
+          <button class="btn-sm primary" id="cs-custom-btn"><i class="fas fa-magic"></i> Generate</button>
+        </div>
+      </div>
+      
+      <!-- Browse Grid -->
+      <div id="cs-browse-wrap" class="card">
+        <h3>Browse Popular Cheat Sheets</h3>
+        <p class="muted" style="margin-bottom: 15px;">Select a technology to instantly generate a complete, practical AI cheat sheet combined with curated learning links.</p>
+        <div id="cs-categories" class="cs-categories-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Cheat Sheet Output -->
+      <div id="cs-out" class="cs-out-container" style="display:none">
+        <div class="card cs-header-card">
+          <div class="cs-header-accent" id="cs-accent-bar"></div>
+          <div class="cs-header-flex">
+            <div>
+              <h2 id="cs-title">—</h2>
+              <p id="cs-tagline" class="muted"></p>
+            </div>
+            <span class="badge purple" id="cs-level">Beginner</span>
+          </div>
+          <div class="cs-install-row" id="cs-install-wrap">
+            <span class="cs-install-label">Install:</span>
+            <code id="cs-install-cmd">npm install...</code>
+            <button class="btn-xs ghost" id="cs-install-copy"><i class="fas fa-copy"></i> Copy</button>
+          </div>
+        </div>
+
+        <div class="cs-main-grid">
+          <!-- Syntax Sections (Grid of Cards) -->
+          <div class="cs-col-main" id="cs-sections-grid"></div>
+          
+          <div class="cs-col-side">
+            <!-- One Liners -->
+            <div class="card cs-side-card">
+              <h4><i class="fas fa-bolt"></i> Popular One-Liners</h4>
+              <div id="cs-oneliners" class="cs-list-container"></div>
+            </div>
+
+            <!-- Pro Tips -->
+            <div class="card cs-side-card border-green">
+              <h4><i class="fas fa-check-circle text-green"></i> Pro Tips</h4>
+              <div id="cs-protips" class="cs-list-container"></div>
+            </div>
+
+            <!-- Common Mistakes -->
+            <div class="card cs-side-card border-red">
+              <h4><i class="fas fa-times-circle text-red"></i> Common Mistakes</h4>
+              <div id="cs-mistakes" class="cs-list-container"></div>
+            </div>
+
+            <!-- Curated resources -->
+            <div class="card cs-side-card">
+              <h4><i class="fas fa-graduation-cap"></i> Curated Learning Links</h4>
+              <div id="cs-resources" class="cs-resources-box"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resources Hub -->
+    <div id="panel-resources" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fas fa-cubes"></i> Free Resources Hub</h2></div>
+        <div class="hdr-controls">
+          <div class="mini-search"><i class="fas fa-search"></i><input type="text" id="res-search-input" placeholder="Search technology (e.g. Docker, Python)…" value="Python"></div>
+          <button class="btn-sm primary" id="res-search-btn"><i class="fas fa-search"></i> Search</button>
+        </div>
+      </div>
+
+      <div class="res-dashboard" id="res-dashboard" style="display:none">
+        <div class="card res-info-card">
+          <h3 id="res-tech-title">Python Learning Hub</h3>
+          <p class="muted">Live resources retrieved from official documents, GitHub repositories, and StackOverflow forums.</p>
+        </div>
+
+        <div class="res-grid">
+          <!-- Left: Curated & Standard -->
+          <div class="card res-card">
+            <h4><i class="fas fa-bookmark text-blue"></i> Curated Courses & Docs</h4>
+            <div id="res-curated-list" class="res-list"></div>
+            <h4 style="margin-top:20px;"><i class="fas fa-globe text-purple"></i> Free Platforms</h4>
+            <div id="res-platforms-list" class="res-list"></div>
+          </div>
+
+          <!-- Middle: GitHub repos -->
+          <div class="card res-card">
+            <h4><i class="fab fa-github text-white"></i> Top GitHub Repositories</h4>
+            <div id="res-github-list" class="res-list"></div>
+          </div>
+
+          <!-- Right: StackOverflow questions -->
+          <div class="card res-card">
+            <h4><i class="fab fa-stack-overflow text-orange"></i> StackOverflow Q&A</h4>
+            <div id="res-stackoverflow-list" class="res-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Coding Stats Panel ═══ -->
+    <div id="panel-codingstats" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fas fa-code"></i> Coding Stats</h2><span class="panel-hdr-sub">LeetCode · Codeforces · npm · GitHub all in one place</span></div></div>
+      <div class="coding-stats-grid">
+        <!-- LeetCode -->
+        <div class="card">
+          <div class="card-hdr"><h4><i class="fas fa-code" style="color:#ffa116"></i> LeetCode</h4></div>
+          <div class="fg"><label>Username</label><div style="display:flex;gap:8px"><input type="text" id="lc-username" class="inp" placeholder="your-leetcode-username"><button class="btn-sm primary" id="lc-btn">Fetch</button></div></div>
+          <div id="lc-out" style="margin-top:14px"></div>
+        </div>
+        <!-- Codeforces -->
+        <div class="card">
+          <div class="card-hdr"><h4><i class="fas fa-trophy" style="color:#318ce7"></i> Codeforces</h4></div>
+          <div class="fg"><label>Handle</label><div style="display:flex;gap:8px"><input type="text" id="cf-handle" class="inp" placeholder="your-cf-handle"><button class="btn-sm primary" id="cf-btn">Fetch</button></div></div>
+          <div id="cf-out" style="margin-top:14px"></div>
+        </div>
+        <!-- npm Package -->
+        <div class="card">
+          <div class="card-hdr"><h4><i class="fab fa-npm" style="color:#cb3837"></i> npm Package Stats</h4></div>
+          <div class="fg"><label>Package Name</label><div style="display:flex;gap:8px"><input type="text" id="npm-pkg" class="inp" placeholder="e.g. react, lodash"><button class="btn-sm primary" id="npm-btn">Fetch</button></div></div>
+          <div id="npm-out" style="margin-top:14px"></div>
+        </div>
+        <!-- Company Wikipedia -->
+        <div class="card">
+          <div class="card-hdr"><h4><i class="fab fa-wikipedia-w"></i> Company Info — Wikipedia</h4></div>
+          <div class="fg"><label>Company Name</label><div style="display:flex;gap:8px"><input type="text" id="wiki-query" class="inp" placeholder="e.g. Infosys, TCS"><button class="btn-sm primary" id="wiki-btn">Search</button></div></div>
+          <div id="wiki-out" style="margin-top:14px"></div>
+        </div>
+        <!-- GitHub Profile -->
+        <div class="card">
+          <div class="card-hdr"><h4><i class="fab fa-github"></i> GitHub Profile Stats</h4></div>
+          <div class="fg"><label>GitHub Username</label><div style="display:flex;gap:8px"><input type="text" id="gh-username" class="inp" placeholder="your-github-username"><button class="btn-sm primary" id="gh-profile-btn">Fetch</button></div></div>
+          <div id="gh-profile-out" style="margin-top:14px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Flashcards Panel ═══ -->
+    <div id="panel-flashcards" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fas fa-layer-group"></i> Tech Flashcards</h2><span class="panel-hdr-sub">Spaced repetition — master concepts fast</span></div>
+        <div class="hdr-controls">
+          <select id="fc-skill-sel" class="sel-sm">
+            <option value="python">Python</option>
+            <option value="ml">Machine Learning</option>
+            <option value="sql">SQL</option>
+            <option value="system-design">System Design</option>
+            <option value="javascript">JavaScript</option>
+            <option value="dsa">DSA / Algorithms</option>
+            <option value="react">React</option>
+            <option value="kubernetes">Kubernetes</option>
+            <option value="aws">AWS Cloud</option>
+            <option value="git">Git</option>
+            <option value="docker">Docker</option>
+            <option value="os">OS / CS Fundamentals</option>
+          </select>
+          <button class="btn-sm primary" id="fc-start-btn"><i class="fas fa-play"></i> Start</button>
+        </div>
+      </div>
+      <div id="fc-area" class="fc-area">
+        <div class="empty-state"><i class="fas fa-layer-group"></i><p>Select a topic and click Start</p></div>
+      </div>
+    </div>
+
+    <!-- ═══ Network Contact Log Panel ═══ -->
+    <div id="panel-network" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fas fa-user-friends"></i> Network Contact Log</h2><span class="panel-hdr-sub">Track LinkedIn connections, referrals, and coffee chats</span></div>
+        <button class="btn-sm primary" id="add-contact-btn"><i class="fas fa-plus"></i> Add Contact</button>
+      </div>
+      <div id="network-add-form" class="card" style="display:none;margin-bottom:16px">
+        <div class="form-row-2">
+          <div class="fg"><label>Name</label><input type="text" id="nc-name" class="inp" placeholder="John Doe"></div>
+          <div class="fg"><label>Company</label><input type="text" id="nc-company" class="inp" placeholder="Infosys, TCS…"></div>
+          <div class="fg"><label>Role</label><input type="text" id="nc-role" class="inp" placeholder="HR, Engineering Manager…"></div>
+          <div class="fg"><label>LinkedIn / Email</label><input type="text" id="nc-link" class="inp" placeholder="linkedin.com/in/…"></div>
+        </div>
+        <div class="fg" style="margin-top:8px"><label>Notes</label><input type="text" id="nc-notes" class="inp" placeholder="Met at event, referred by…"></div>
+        <div style="display:flex;gap:8px;margin-top:10px"><button class="btn-primary" id="nc-save-btn"><i class="fas fa-save"></i> Save</button><button class="btn-ghost" id="nc-cancel-btn">Cancel</button></div>
+      </div>
+      <div id="network-grid" class="network-grid">
+        <div class="empty-state"><i class="fas fa-user-friends"></i><p>No contacts yet — add your first connection</p></div>
+      </div>
+    </div>
+
+    <!-- ═══ Skill Demand Heatmap Panel ═══ -->
+    <div id="panel-heatmap" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fas fa-th"></i> Skill Demand Heatmap</h2><span class="panel-hdr-sub">Which skills appear most in live job listings — updated live</span></div>
+        <button class="btn-sm primary" id="heatmap-load-btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+      </div>
+      <div id="heatmap-area">
+        <div class="empty-state"><div class="parse-spinner"></div><p>Loading skill demand data…</p></div>
+      </div>
+    </div>
+
+    <!-- ═══ AI Mock Interview (Voice) Panel ═══ -->
+    <div id="panel-mockvoice" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fas fa-microphone-lines"></i> AI Mock Interview</h2><span class="panel-hdr-sub">Answer by voice or text · AI scores clarity, structure & confidence</span></div></div>
+      <div id="mockvoice-area"></div>
+    </div>
+
+    <!-- ═══ Resume Studio Panel ═══ -->
+    <div id="panel-resumestudio" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fas fa-wand-magic-sparkles"></i> Resume Studio</h2><span class="panel-hdr-sub">AI rewrites your resume for ATS + generates tailored cover letters</span></div>
+        <div class="rs-tabs">
+          <button class="rs-tab active" data-rs="rewrite">Resume Rewriter</button>
+          <button class="rs-tab" data-rs="cover">Cover Letter</button>
+          <button class="rs-tab" data-rs="jdgap">Resume ↔ JD Gap Analyzer</button>
+        </div>
+      </div>
+      <!-- Rewriter -->
+      <div id="rs-pane-rewrite" class="rs-pane">
+        <div class="rs-grid">
+          <div class="card">
+            <div class="card-hdr"><h4><i class="fas fa-file-lines"></i> Your Resume Text</h4></div>
+            <div class="fg"><label>Target Role</label><input type="text" id="rs-role" class="inp" placeholder="AI/ML Engineer"></div>
+            <textarea id="rs-resume-text" class="inp" rows="12" placeholder="Paste your resume text here (experience, skills, projects)…" style="resize:vertical;font-family:inherit"></textarea>
+            <button class="btn-primary" style="width:100%;margin-top:12px" id="rs-rewrite-btn"><i class="fas fa-wand-magic-sparkles"></i> Rewrite for ATS</button>
+          </div>
+          <div class="card" id="rs-rewrite-out"><div class="empty-state"><i class="fas fa-arrow-left"></i><p>Your ATS-optimized resume will appear here</p></div></div>
+        </div>
+      </div>
+      <!-- Cover letter -->
+      <div id="rs-pane-cover" class="rs-pane" style="display:none">
+        <div class="rs-grid">
+          <div class="card">
+            <div class="card-hdr"><h4><i class="fas fa-envelope-open-text"></i> Cover Letter Details</h4></div>
+            <div class="fg"><label>Company</label><input type="text" id="cl-company" class="inp" placeholder="e.g. Tata Technologies"></div>
+            <div class="fg"><label>Target Role</label><input type="text" id="cl-role" class="inp" placeholder="AI/ML Engineer"></div>
+            <div class="fg"><label>Tone</label><select id="cl-tone" class="inp"><option value="professional">Professional</option><option value="enthusiastic">Enthusiastic</option><option value="confident">Confident</option><option value="warm">Warm</option></select></div>
+            <button class="btn-primary" style="width:100%;margin-top:6px" id="cl-gen-btn"><i class="fas fa-feather"></i> Generate Cover Letter</button>
+          </div>
+          <div class="card" id="cl-out"><div class="empty-state"><i class="fas fa-arrow-left"></i><p>Your personalized cover letter will appear here</p></div></div>
+        </div>
+      </div>
+
+      <!-- JD Gap Analyzer -->
+      <div id="rs-pane-jdgap" class="rs-pane" style="display:none">
+        <div class="rs-grid" style="grid-template-columns: 1fr 1fr; gap: 20px">
+          <div class="card">
+            <div class="card-hdr"><h4><i class="fas fa-paste"></i> Job Description (JD) text</h4></div>
+            <textarea id="rs-jd-text" class="inp" rows="12" placeholder="Paste the target job description here to analyze gaps and auto-tailor..." style="resize:vertical;font-family:inherit"></textarea>
+            <button class="btn-primary" style="width:100%;margin-top:12px" id="rs-jd-analyze-btn"><i class="fas fa-chart-line"></i> Analyze Gaps & Tailor Resume</button>
+          </div>
+          <div class="card" id="rs-jd-out">
+            <div class="empty-state">
+              <i class="fas fa-chart-bar" style="font-size:40px;color:var(--text-3)"></i>
+              <p>Analysis of skill gaps, match percentages, and tailored bullet lists will be generated inline.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Calendar Panel ═══ -->
+    <div id="panel-calendar" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fas fa-calendar-days"></i> Interview & Deadline Calendar</h2><span class="panel-hdr-sub">Track interviews, application deadlines & follow-ups</span></div>
+        <button class="btn-sm primary" id="cal-add-btn"><i class="fas fa-plus"></i> Add Event</button>
+      </div>
+      <div class="cal-wrap">
+        <div class="cal-main card">
+          <div class="cal-nav">
+            <button class="icon-btn" id="cal-prev"><i class="fas fa-chevron-left"></i></button>
+            <h3 id="cal-month-label">—</h3>
+            <button class="icon-btn" id="cal-next"><i class="fas fa-chevron-right"></i></button>
+            <button class="btn-ghost btn-sm" id="cal-today" style="margin-left:auto">Today</button>
+          </div>
+          <div class="cal-grid-head"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+          <div class="cal-grid" id="cal-grid"></div>
+        </div>
+        <aside class="cal-side card">
+          <h4><i class="fas fa-list-ul"></i> Upcoming</h4>
+          <div id="cal-upcoming"></div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ═══ Aptitude Test Panel ═══ -->
+    <div id="panel-test" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fas fa-graduation-cap"></i> Comonk Verified Test</h2><span class="panel-hdr-sub">Pass to unlock HR contacts · 20 questions · 70% to pass</span></div></div>
+      <div id="test-area"></div>
+    </div>
+
+    <!-- ═══ Admin Panel ═══ -->
+    <div id="panel-admin" class="panel">
+      <div class="panel-hdr"><div><h2><i class="fas fa-shield-alt"></i> Admin Dashboard</h2></div>
+        <button class="btn-ghost btn-sm" id="admin-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+      <div id="admin-login-wall" class="card" style="max-width:360px;margin:40px auto">
+        <div class="card-hdr"><h4><i class="fas fa-lock"></i> Admin Access</h4></div>
+        <div class="fg"><label>Admin Password</label><input type="password" id="admin-pw-inp" class="inp" placeholder="Enter admin password"></div>
+        <button class="btn-primary" style="margin-top:12px;width:100%" id="admin-login-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
+        <div id="admin-login-err" style="margin-top:8px"></div>
+      </div>
+      <div id="admin-dashboard" style="display:none">
+        <div class="kpi-row" id="admin-stats-row"></div>
+        <div class="admin-tabs" style="margin-top:20px">
+          <button class="admin-tab active" data-tab="requests">Pending Requests</button>
+          <button class="admin-tab" data-tab="users">All Users</button>
+          <button class="admin-tab" data-tab="attempts">Test Attempts</button>
+        </div>
+        <div id="admin-tab-requests" class="admin-tab-content" style="margin-top:16px"></div>
+        <div id="admin-tab-users" class="admin-tab-content" style="display:none;margin-top:16px"></div>
+        <div id="admin-tab-attempts" class="admin-tab-content" style="display:none;margin-top:16px"></div>
+      </div>
+    </div>
+
+    <!-- ═══ GitHub Trending Panel ═══ -->
+    <div id="panel-trending" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fab fa-github"></i> GitHub Trending Repos</h2><span class="panel-hdr-sub">Hottest repositories right now — filtered to your stack</span></div>
+        <div class="hdr-controls">
+          <select id="trend-lang" class="sel-sm">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="typescript">TypeScript</option>
+            <option value="go">Go</option>
+            <option value="rust">Rust</option>
+            <option value="java">Java</option>
+            <option value="cpp">C++</option>
+            <option value="jupyter-notebook">Jupyter Notebook</option>
+          </select>
+          <select id="trend-period" class="sel-sm">
+            <option value="daily">Today</option>
+            <option value="weekly" selected>This Week</option>
+            <option value="monthly">This Month</option>
+          </select>
+          <button class="btn-sm primary" id="trend-load-btn"><i class="fas fa-sync-alt"></i> Load</button>
+        </div>
+      </div>
+      <div id="trend-grid" class="trend-grid">
+        <div class="empty-state"><i class="fab fa-github"></i><p>Select a language and click Load</p></div>
+      </div>
+    </div>
+
+    <!-- ═══ Stack Overflow Panel ═══ -->
+    <div id="panel-stackoverflow" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fab fa-stack-overflow"></i> Stack Overflow Q&amp;A</h2><span class="panel-hdr-sub">Top voted questions for your skills — great interview prep</span></div>
+        <div class="hdr-controls">
+          <input type="text" id="so-skill" class="inp" style="width:200px" placeholder="e.g. python, react, docker…">
+          <button class="btn-sm primary" id="so-search-btn"><i class="fas fa-search"></i> Search</button>
+        </div>
+      </div>
+      <div id="so-grid" class="so-grid">
+        <div class="empty-state"><i class="fab fa-stack-overflow"></i><p>Enter a skill and search</p></div>
+      </div>
+    </div>
+
+    <!-- ═══ Focus / Pomodoro Timer Panel ═══ -->
+    <div id="panel-pomodoro" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fas fa-clock"></i> Focus Timer — Pomodoro</h2><span class="panel-hdr-sub">25 min work · 5 min break · Stay in flow</span></div>
+      </div>
+      <div class="pomo-layout">
+        <!-- Timer card -->
+        <div class="card pomo-main-card">
+          <div class="pomo-mode-tabs">
+            <button class="pomo-mode active" data-mode="work">Work · 25m</button>
+            <button class="pomo-mode" data-mode="short">Short Break · 5m</button>
+            <button class="pomo-mode" data-mode="long">Long Break · 15m</button>
+          </div>
+          <div class="pomo-ring-wrap">
+            <svg class="pomo-ring" viewBox="0 0 200 200">
+              <circle class="pomo-track" cx="100" cy="100" r="88"/>
+              <circle class="pomo-progress" id="pomo-arc" cx="100" cy="100" r="88"/>
+            </svg>
+            <div class="pomo-center">
+              <div class="pomo-time" id="pomo-display">25:00</div>
+              <div class="pomo-label" id="pomo-label">Ready to focus</div>
+            </div>
+          </div>
+          <div class="pomo-controls">
+            <button class="btn-primary lg" id="pomo-start-btn"><i class="fas fa-play"></i> Start</button>
+            <button class="btn-ghost" id="pomo-reset-btn"><i class="fas fa-redo"></i> Reset</button>
+          </div>
+          <div class="pomo-session-info">
+            <span><i class="fas fa-fire" style="color:var(--c-red)"></i> Sessions today: <b id="pomo-count">0</b></span>
+            <span><i class="fas fa-clock" style="color:var(--c-gold)"></i> Total focused: <b id="pomo-total-time">0m</b></span>
+          </div>
+        </div>
+        <!-- Quote + task card -->
+        <div class="pomo-side">
+          <div class="card pomo-quote-card">
+            <div class="pomo-quote-icon"><i class="fas fa-quote-left"></i></div>
+            <div id="pomo-quote-text" class="pomo-quote">"The secret of getting ahead is getting started."</div>
+            <div id="pomo-quote-author" class="pomo-author">— Mark Twain</div>
+            <button class="btn-xs ghost" id="pomo-refresh-quote"><i class="fas fa-sync-alt"></i> New Quote</button>
+          </div>
+          <div class="card pomo-task-card">
+            <h4><i class="fas fa-tasks"></i> Focus Task</h4>
+            <input type="text" id="pomo-task-input" class="inp" placeholder="What are you working on?">
+            <div class="pomo-task-list" id="pomo-task-list"></div>
+            <button class="btn-xs ghost" style="margin-top:8px" id="pomo-add-task"><i class="fas fa-plus"></i> Add Task</button>
+          </div>
+          <div class="card pomo-waka-card" id="pomo-waka-card" style="display:none">
+            <h4><i class="fas fa-chart-bar"></i> WakaTime This Week</h4>
+            <div id="pomo-waka-stats"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Job Alerts Setup Panel ═══ -->
+    <div id="panel-alerts" class="panel">
+      <div class="panel-hdr">
+        <div><h2><i class="fas fa-bell"></i> Job Alerts Setup</h2><span class="panel-hdr-sub">Get notified on new matching jobs — all free</span></div>
+      </div>
+      <div class="alerts-grid">
+
+        <!-- Telegram -->
+        <div class="card alert-card" id="alert-telegram">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(0,136,204,0.15);color:#0088cc"><i class="fab fa-telegram"></i></div>
+            <div>
+              <h4>Telegram Alerts</h4>
+              <p class="muted">100% free · Unlimited messages · Instant delivery</p>
+            </div>
+            <span class="badge" id="tg-status-badge" style="background:rgba(239,68,68,0.15);color:var(--c-red)">Not Set Up</span>
+          </div>
+          <div class="alert-steps" id="tg-setup-steps">
+            <div class="alert-step"><span class="step-num">1</span><span>Open Telegram → search <b>@BotFather</b></span></div>
+            <div class="alert-step"><span class="step-num">2</span><span>Send <code>/newbot</code> → follow prompts → copy token</span></div>
+            <div class="alert-step"><span class="step-num">3</span><span>Send any message to your bot</span></div>
+            <div class="alert-step"><span class="step-num">4</span><span>Search <b>@userinfobot</b> → it shows your chat ID</span></div>
+            <div class="alert-step"><span class="step-num">5</span><span>Add to <code>.env</code> → restart server</span></div>
+          </div>
+          <div class="alert-env-snippet">
+            <code>TELEGRAM_BOT_TOKEN=your_bot_token<br>TELEGRAM_CHAT_ID=your_chat_id</code>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <a href="https://t.me/BotFather" target="_blank" class="btn-primary"><i class="fab fa-telegram"></i> Open BotFather</a>
+            <button class="btn-ghost" id="tg-test-btn"><i class="fas fa-paper-plane"></i> Send Test Message</button>
+          </div>
+          <div id="tg-test-result" style="margin-top:10px"></div>
+        </div>
+
+        <!-- SMS / WhatsApp — Twilio -->
+        <div class="card alert-card" id="alert-sms">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(245,158,11,0.15);color:var(--c-gold)"><i class="fas fa-sms"></i></div>
+            <div>
+              <h4>SMS &amp; WhatsApp Alerts <span class="sb-badge new" style="font-size:10px;padding:2px 8px">NEW</span></h4>
+              <p class="muted">Twilio · Free trial $15 credit · Reach your phone directly</p>
+            </div>
+            <span class="badge" id="sms-status-badge" style="background:rgba(239,68,68,0.15);color:var(--c-red)">Not Set Up</span>
+          </div>
+          <div class="alert-steps" id="sms-setup-steps">
+            <div class="alert-step"><span class="step-num">1</span><span>Sign up at <b>twilio.com</b> → free trial gives $15 credit (no card needed)</span></div>
+            <div class="alert-step"><span class="step-num">2</span><span>Console → Get a trial phone number (US number works for SMS)</span></div>
+            <div class="alert-step"><span class="step-num">3</span><span>Copy Account SID, Auth Token, and your Twilio number</span></div>
+            <div class="alert-step"><span class="step-num">4</span><span>For WhatsApp: enable sandbox at <b>console.twilio.com/develop/sms/try-it-out/whatsapp-learn</b></span></div>
+          </div>
+          <div class="alert-env-snippet">
+            <code>TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxx<br>TWILIO_AUTH_TOKEN=your_auth_token<br>TWILIO_FROM_NUMBER=+1xxxxxxxxxx</code>
+          </div>
+          <div class="sms-test-row" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:flex-end">
+            <div class="fg" style="flex:1;min-width:160px">
+              <label style="font-size:12px;color:var(--text-2);margin-bottom:4px;display:block">Your phone number</label>
+              <input type="tel" id="sms-phone-inp" class="inp" placeholder="+91 9876543210">
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-ghost sms-channel-btn active" id="sms-ch-sms" data-ch="sms"><i class="fas fa-sms"></i> SMS</button>
+              <button class="btn-ghost sms-channel-btn" id="sms-ch-wa" data-ch="whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+            <a href="https://www.twilio.com/try-twilio" target="_blank" class="btn-primary"><i class="fas fa-external-link-alt"></i> Get Free Trial</a>
+            <button class="btn-ghost" id="sms-test-btn"><i class="fas fa-paper-plane"></i> Send Test Message</button>
+          </div>
+          <div id="sms-test-result" style="margin-top:10px"></div>
+        </div>
+
+        <!-- Brevo Email -->
+        <div class="card alert-card" id="alert-brevo">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(16,185,129,0.15);color:var(--c-green)"><i class="fas fa-envelope"></i></div>
+            <div>
+              <h4>Email Digest — Brevo</h4>
+              <p class="muted">300 free emails/day · Daily job digest · Interview reminders</p>
+            </div>
+            <span class="badge" id="brevo-status-badge" style="background:rgba(239,68,68,0.15);color:var(--c-red)">Not Set Up</span>
+          </div>
+          <div class="alert-steps">
+            <div class="alert-step"><span class="step-num">1</span><span>Go to <b>app.brevo.com</b> → sign up free (no card)</span></div>
+            <div class="alert-step"><span class="step-num">2</span><span>Settings → API Keys → Generate new key</span></div>
+            <div class="alert-step"><span class="step-num">3</span><span>Add to <code>.env</code> as <code>BREVO_API_KEY</code></span></div>
+          </div>
+          <div class="alert-env-snippet"><code>BREVO_API_KEY=your_brevo_key</code></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <a href="https://app.brevo.com" target="_blank" class="btn-primary"><i class="fas fa-envelope"></i> Open Brevo</a>
+            <div class="fg" style="flex:1;min-width:180px"><input type="email" id="brevo-test-email" class="inp" placeholder="Your email for test"></div>
+            <button class="btn-ghost" id="brevo-test-btn"><i class="fas fa-paper-plane"></i> Send Test</button>
+          </div>
+          <div id="brevo-test-result" style="margin-top:10px"></div>
+        </div>
+
+        <!-- Gemini Flash -->
+        <div class="card alert-card" id="alert-gemini">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(59,130,246,0.15);color:var(--c-blue-l)"><i class="fas fa-robot"></i></div>
+            <div>
+              <h4>Google Gemini Flash — Extra AI</h4>
+              <p class="muted">Free · 1M tokens/day · 15 req/min · No credit card</p>
+            </div>
+            <span class="badge" id="gemini-status-badge" style="background:rgba(239,68,68,0.15);color:var(--c-red)">Not Set Up</span>
+          </div>
+          <div class="alert-steps">
+            <div class="alert-step"><span class="step-num">1</span><span>Go to <b>aistudio.google.com</b> → Get API Key</span></div>
+            <div class="alert-step"><span class="step-num">2</span><span>Create key → copy it</span></div>
+            <div class="alert-step"><span class="step-num">3</span><span>Add to <code>.env</code> as <code>GEMINI_API_KEY</code></span></div>
+          </div>
+          <div class="alert-env-snippet"><code>GEMINI_API_KEY=your_gemini_key</code></div>
+          <div style="margin-top:12px">
+            <a href="https://aistudio.google.com" target="_blank" class="btn-primary"><i class="fas fa-external-link-alt"></i> Get Free Key</a>
+          </div>
+        </div>
+
+        <!-- WakaTime -->
+        <div class="card alert-card" id="alert-wakatime">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(245,158,11,0.15);color:var(--c-gold)"><i class="fas fa-chart-line"></i></div>
+            <div>
+              <h4>WakaTime — Coding Stats</h4>
+              <p class="muted">Track hours coded · Top languages · Best day streak</p>
+            </div>
+            <span class="badge" id="waka-status-badge" style="background:rgba(239,68,68,0.15);color:var(--c-red)">Not Set Up</span>
+          </div>
+          <div class="alert-steps">
+            <div class="alert-step"><span class="step-num">1</span><span>Sign up free at <b>wakatime.com</b></span></div>
+            <div class="alert-step"><span class="step-num">2</span><span>Install WakaTime plugin in VS Code</span></div>
+            <div class="alert-step"><span class="step-num">3</span><span>Settings → API Key → copy it</span></div>
+            <div class="alert-step"><span class="step-num">4</span><span>Add to <code>.env</code> as <code>WAKATIME_API_KEY</code></span></div>
+          </div>
+          <div class="alert-env-snippet"><code>WAKATIME_API_KEY=your_wakatime_key</code></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <a href="https://wakatime.com/settings/api-key" target="_blank" class="btn-primary"><i class="fas fa-external-link-alt"></i> Get API Key</a>
+            <button class="btn-ghost" id="waka-load-btn"><i class="fas fa-chart-bar"></i> Load My Stats</button>
+          </div>
+          <div id="waka-stats-out" style="margin-top:12px;display:none"></div>
+        </div>
+
+        <!-- QR Code -->
+        <div class="card alert-card">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(124,58,237,0.15);color:var(--c-purple-l)"><i class="fas fa-qrcode"></i></div>
+            <div>
+              <h4>QR Code Generator</h4>
+              <p class="muted">Share your LinkedIn / portfolio as scannable QR code</p>
+            </div>
+            <span class="badge green">Ready</span>
+          </div>
+          <div class="fg" style="margin-top:12px"><label>URL or Text to encode</label>
+            <input type="text" id="qr-input" class="inp" placeholder="https://linkedin.com/in/yourprofile">
+          </div>
+          <div style="display:flex;gap:10px;margin-top:10px;align-items:flex-end">
+            <button class="btn-primary" id="qr-gen-btn"><i class="fas fa-qrcode"></i> Generate QR</button>
+          </div>
+          <div id="qr-out" style="margin-top:16px;display:none;text-align:center">
+            <img id="qr-img" src="" alt="QR Code" style="border-radius:12px;border:2px solid var(--border)">
+            <div style="margin-top:8px"><a id="qr-download" class="btn-xs ghost" download="qrcode.png"><i class="fas fa-download"></i> Download PNG</a></div>
+          </div>
+        </div>
+
+        <!-- Discord -->
+        <div class="card alert-card">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(88,101,242,0.15);color:#5865f2"><i class="fab fa-discord"></i></div>
+            <div><h4>Discord Alerts</h4><p class="muted">Free forever · Any Discord server or DM channel</p></div>
+            <span class="badge" id="dc-status-badge" style="background:rgba(239,68,68,0.15);color:var(--c-red)">Not Set Up</span>
+          </div>
+          <div class="alert-steps">
+            <div class="alert-step"><span class="step-num">1</span><span>Discord server → Edit channel → Integrations → Webhooks → New</span></div>
+            <div class="alert-step"><span class="step-num">2</span><span>Copy Webhook URL → add to <code>.env</code> as <code>DISCORD_WEBHOOK_URL</code></span></div>
+          </div>
+          <div class="alert-env-snippet"><code>DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/…</code></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <a href="https://discord.com/developers/docs/resources/webhook" target="_blank" class="btn-primary"><i class="fab fa-discord"></i> Discord Docs</a>
+            <button class="btn-ghost" id="dc-test-btn"><i class="fas fa-paper-plane"></i> Send Test</button>
+          </div>
+          <div id="dc-test-result" style="margin-top:10px"></div>
+        </div>
+
+        <!-- OpenRouter -->
+        <div class="card alert-card">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(124,58,237,0.15);color:var(--c-purple-l)"><i class="fas fa-robot"></i></div>
+            <div><h4>OpenRouter — 50+ Free LLMs</h4><p class="muted">Llama 3.1, Gemma 2, Mistral · Free credits on signup</p></div>
+            <span class="badge" id="or-status-badge" style="background:rgba(239,68,68,0.15);color:var(--c-red)">Not Set Up</span>
+          </div>
+          <div class="alert-env-snippet"><code>OPENROUTER_API_KEY=your_key</code></div>
+          <div style="margin-top:12px"><a href="https://openrouter.ai" target="_blank" class="btn-primary"><i class="fas fa-external-link-alt"></i> Get Free Key at openrouter.ai</a></div>
+        </div>
+
+        <!-- Cohere -->
+        <div class="card alert-card">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(16,185,129,0.15);color:var(--c-green)"><i class="fas fa-brain"></i></div>
+            <div><h4>Cohere — 1M Free Tokens/Month</h4><p class="muted">Best embeddings · Command-R+ model · No credit card</p></div>
+            <span class="badge" id="co-status-badge" style="background:rgba(239,68,68,0.15);color:var(--c-red)">Not Set Up</span>
+          </div>
+          <div class="alert-env-snippet"><code>COHERE_API_KEY=your_key</code></div>
+          <div style="margin-top:12px"><a href="https://dashboard.cohere.com" target="_blank" class="btn-primary"><i class="fas fa-external-link-alt"></i> Get Free Key at dashboard.cohere.com</a></div>
+        </div>
+
+        <!-- Abstract API Email Validation -->
+        <div class="card alert-card">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(59,130,246,0.15);color:var(--c-blue-l)"><i class="fas fa-at"></i></div>
+            <div><h4>Email Validator — Abstract API</h4><p class="muted">Validate HR emails before sending cold emails · 100 free/month</p></div>
+            <span class="badge green">Ready once key added</span>
+          </div>
+          <div class="alert-steps">
+            <div class="alert-step"><span class="step-num">1</span><span>Go to <b>app.abstractapi.com/api/email-validation</b> → Free signup</span></div>
+            <div class="alert-step"><span class="step-num">2</span><span>Copy API Key → Add to .env as <code>ABSTRACT_API_KEY</code></span></div>
+          </div>
+          <div class="alert-env-snippet"><code>ABSTRACT_API_KEY=your_key</code></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <a href="https://app.abstractapi.com/api/email-validation" target="_blank" class="btn-primary">Get Free Key</a>
+            <div style="display:flex;gap:8px;flex:1;min-width:200px"><input type="email" id="abstract-email-inp" class="inp" placeholder="test@company.com"><button class="btn-ghost" id="abstract-test-btn">Validate</button></div>
+          </div>
+          <div id="abstract-result" style="margin-top:10px"></div>
+        </div>
+
+        <!-- Notion Export -->
+        <div class="card alert-card">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(255,255,255,0.08);color:var(--text-2)"><i class="fas fa-book-open"></i></div>
+            <div><h4>Notion Export</h4><p class="muted">Export career roadmap & notes to your Notion workspace · Free</p></div>
+          </div>
+          <div class="alert-steps">
+            <div class="alert-step"><span class="step-num">1</span><span>notion.so/my-integrations → New Integration → Copy Token ✓ (done)</span></div>
+            <div class="alert-step"><span class="step-num">2</span><span>Open any Notion page → click <b>···</b> (top right) → <b>Add connections</b> → select your integration</span></div>
+            <div class="alert-step"><span class="step-num">3</span><span>Now click Export Roadmap — it will create a new page inside that shared page</span></div>
+          </div>
+          <div class="alert-env-snippet"><code>NOTION_TOKEN=secret_xxxxx</code></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <a href="https://www.notion.so/my-integrations" target="_blank" class="btn-primary"><i class="fas fa-external-link-alt"></i> Get Token</a>
+            <button class="btn-ghost" id="notion-export-btn"><i class="fas fa-upload"></i> Export Roadmap</button>
+          </div>
+          <div id="notion-result" style="margin-top:10px"></div>
+        </div>
+
+        <!-- Resend Email -->
+        <div class="card alert-card">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(16,185,129,0.15);color:var(--c-green)"><i class="fas fa-envelope-open-text"></i></div>
+            <div><h4>Resend — 3000 Free Emails/Month</h4><p class="muted">Better deliverability than Brevo · No credit card</p></div>
+          </div>
+          <div class="alert-env-snippet"><code>RESEND_API_KEY=re_xxxxx</code></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <a href="https://resend.com" target="_blank" class="btn-primary"><i class="fas fa-external-link-alt"></i> Get Free Key at resend.com</a>
+            <button class="btn-ghost" id="resend-test-btn"><i class="fas fa-paper-plane"></i> Send Test</button>
+          </div>
+          <div id="resend-result" style="margin-top:10px"></div>
+        </div>
+
+        <!-- HuggingFace -->
+        <div class="card alert-card">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(255,167,38,0.15);color:#ffa726"><i class="fas fa-robot"></i></div>
+            <div><h4>HuggingFace — Open Source AI Models</h4><p class="muted">Mistral-7B, Llama, Zephyr · 30,000 free tokens/month</p></div>
+          </div>
+          <div class="alert-env-snippet"><code>HUGGINGFACE_API_KEY=hf_xxxxx</code></div>
+          <div style="margin-top:12px"><a href="https://huggingface.co/settings/tokens" target="_blank" class="btn-primary"><i class="fas fa-external-link-alt"></i> Get Free Key at huggingface.co</a></div>
+        </div>
+
+        <!-- Product Hunt Trending -->
+        <div class="card alert-card">
+          <div class="alert-card-hdr">
+            <div class="alert-icon" style="background:rgba(245,158,11,0.15);color:var(--c-gold)"><i class="fas fa-rocket"></i></div>
+            <div>
+              <h4>Product Hunt Trending</h4>
+              <p class="muted">Discover new AI tools and startup companies — no key</p>
+            </div>
+            <span class="badge green">Ready</span>
+          </div>
+          <button class="btn-primary" style="margin-top:12px" id="ph-load-btn"><i class="fas fa-rocket"></i> Load Today's Products</button>
+          <div id="ph-out" style="margin-top:12px"></div>
+        </div>
+
+      </div>
+    </div>
+
+  <!-- ── Panel: Daily Briefing ─────────────────────────────────────────── -->
+  <div id="panel-briefing" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2 class="panel-title"><i class="fas fa-sun" style="color:var(--c-gold)"></i> Good Morning!</h2>
+        <p class="panel-sub" id="briefing-date">Loading your daily briefing...</p>
+      </div>
+      <button class="btn-primary sm" onclick="loadDailyBriefing()"><i class="fas fa-sync"></i> Refresh</button>
+    </div>
+    <div id="briefing-body" style="display:grid;gap:18px;grid-template-columns:1fr 1fr">
+      <div class="card" style="grid-column:1/-1"><div class="sk-line" style="width:60%"></div><div class="sk-line"></div></div>
+    </div>
+  </div>
+
+  <!-- ── Panel: Outreach Analytics ────────────────────────────────────── -->
+  <div id="panel-outreach" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2 class="panel-title"><i class="fas fa-chart-funnel" style="color:var(--c-purple)"></i> Outreach Analytics</h2>
+        <p class="panel-sub">Your complete job hunt performance dashboard</p>
+      </div>
+      <button class="btn-primary sm" onclick="loadOutreachAnalytics()"><i class="fas fa-sync"></i> Refresh</button>
+    </div>
+    <div id="outreach-body" style="display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">
+      <div class="card"><div class="sk-line" style="width:50%"></div><div class="sk-line"></div></div>
+    </div>
+  </div>
+
+  <!-- ── Panel: Cold Email Scorer ──────────────────────────────────────── -->
+  <div id="panel-emailscorer" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2 class="panel-title"><i class="fas fa-envelope-circle-check" style="color:var(--c-blue)"></i> Cold Email Scorer</h2>
+        <p class="panel-sub">Paste your cold email or LinkedIn note and get an instant AI score</p>
+      </div>
+    </div>
+    <div style="display:grid;gap:18px;grid-template-columns:1fr 1fr">
+      <div class="card" style="display:flex;flex-direction:column;gap:12px">
+        <label class="form-label">Your Email / LinkedIn Message</label>
+        <textarea id="email-scorer-text" class="form-input" rows="10" placeholder="Hi [Name], I came across your company and I'm excited about the [Role] position..."></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <label class="form-label" style="font-size:11px">Company Name (optional)</label>
+            <input id="email-scorer-company" class="form-input" type="text" placeholder="e.g. TCS, Infosys...">
+          </div>
+          <div>
+            <label class="form-label" style="font-size:11px">Recipient Name (optional)</label>
+            <input id="email-scorer-recipient" class="form-input" type="text" placeholder="e.g. Priya, Rahul...">
+          </div>
+        </div>
+        <button class="btn-primary" onclick="scoreEmail()" id="score-email-btn"><i class="fas fa-wand-magic-sparkles"></i> Score My Email</button>
+      </div>
+      <div id="email-score-results" class="card" style="display:flex;flex-direction:column;gap:14px">
+        <div class="empty-state" style="padding:40px">
+          <i class="fas fa-envelope-open-text" style="font-size:40px;color:var(--c-blue);opacity:0.5"></i>
+          <p class="muted" style="margin-top:12px">Paste your email and click Score to get AI feedback</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Panel: Offer Comparator ───────────────────────────────────────── -->
+  <div id="panel-offers" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2 class="panel-title"><i class="fas fa-scale-balanced" style="color:var(--c-green)"></i> Offer Comparator</h2>
+        <p class="panel-sub">Compare up to 3 job offers side by side with in-hand salary & AI recommendation</p>
+      </div>
+      <button class="btn-primary sm" onclick="addOfferSlot()" id="add-offer-btn"><i class="fas fa-plus"></i> Add Offer</button>
+    </div>
+    <div id="offers-grid" style="display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))"></div>
+    <div id="offers-ai-result" style="margin-top:18px;display:none"></div>
+    <div style="margin-top:14px;text-align:center">
+      <button class="btn-primary" onclick="compareOffers()" id="compare-btn" style="display:none"><i class="fas fa-scale-balanced"></i> Compare & Get AI Pick</button>
+    </div>
+  </div>
+
+  </main>
+</div>
+
+
+<!-- Notifications Drawer -->
+<div id="notif-drawer" style="display:none">
+  <div class="nd-hdr"><h4>Notifications</h4><button class="icon-btn" id="nd-close"><i class="fas fa-times"></i></button></div>
+  <div id="nd-list"><div class="empty-state sm"><i class="fas fa-bell"></i><p>No notifications yet</p></div></div>
+</div>
+<div id="nd-backdrop" style="display:none" class="backdrop"></div>
+
+<!-- Modal -->
+<div id="modal-wrap" style="display:none" class="modal-wrap">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3 id="modal-title">—</h3><button class="icon-btn" id="modal-close-btn"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot" id="modal-foot"></div>
+  </div>
+</div>
+
+<!-- Toasts -->
+<div id="toasts"></div>
+
+<!-- Global Search (Cmd+K) -->
+<div id="gsearch">
+  <div id="gsearch-box">
+    <div class="gsearch-input-wrap">
+      <i class="fas fa-search gsearch-ico"></i>
+      <input id="gsearch-input" autocomplete="off" spellcheck="false" placeholder="Search panels, AI tools, features…">
+      <kbd class="gsearch-esc" onclick="closeGSearch()">Esc</kbd>
+    </div>
+    <div id="gsearch-results"></div>
+    <div class="gsearch-hint"><kbd>↑</kbd><kbd>↓</kbd> navigate &nbsp;·&nbsp; <kbd>↵</kbd> open &nbsp;·&nbsp; <kbd>Esc</kbd> close</div>
+  </div>
+</div>
+
+<!-- Calendar Event Modal -->
+<div id="cal-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px)">
+  <div class="card auth-modal-box" style="max-width:420px">
+    <button onclick="closeCalModal()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:var(--text-3);font-size:18px;cursor:pointer"><i class="fas fa-times"></i></button>
+    <h3 id="cal-modal-title" style="margin-bottom:16px"><i class="fas fa-calendar-plus"></i> Add Event</h3>
+    <div class="fg"><label>Title</label><input type="text" id="cal-ev-title" class="inp" placeholder="Interview — Tata Technologies"></div>
+    <div class="form-row-2">
+      <div class="fg"><label>Date</label><input type="date" id="cal-ev-date" class="inp"></div>
+      <div class="fg"><label>Time</label><input type="time" id="cal-ev-time" class="inp"></div>
+    </div>
+    <div class="fg"><label>Type</label>
+      <select id="cal-ev-type" class="inp"><option value="interview">Interview</option><option value="deadline">Application Deadline</option><option value="followup">Follow-up</option><option value="test">Online Test</option><option value="other">Other</option></select>
+    </div>
+    <div class="fg"><label>Notes (optional)</label><input type="text" id="cal-ev-notes" class="inp" placeholder="Round 2 · with HR · video call"></div>
+    <input type="hidden" id="cal-ev-id">
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn-primary" style="flex:1" id="cal-save-btn"><i class="fas fa-check"></i> Save</button>
+      <button class="btn-ghost" id="cal-delete-btn" style="display:none"><i class="fas fa-trash"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- BYOK Settings Modal -->
+<div id="byok-settings-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center">
+  <div class="card" style="width:100%;max-width:480px;background:var(--bg-1);border:1px solid var(--border);border-radius:12px;padding:24px;position:relative;box-shadow:0 8px 32px rgba(0,0,0,0.5)">
+    <h3 style="margin-top:0;margin-bottom:8px;font-size:18px;color:#fff;display:flex;align-items:center;gap:8px"><i class="fas fa-cog"></i> API Key Settings</h3>
+    <p style="font-size:12px;color:var(--text-3);margin-bottom:20px;line-height:1.5">Enter your own custom API keys to run model invocations directly on your account. Leaving a key empty will fall back to using default server keys.</p>
+    
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
+      <div class="fg" style="margin-bottom:10px">
+        <label style="font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px">Groq API Key</label>
+        <input type="password" id="byok-groq" class="inp" placeholder="gsk_..." style="width:100%;margin-top:4px">
+      </div>
+      <div class="fg" style="margin-bottom:10px">
+        <label style="font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px">Gemini API Key</label>
+        <input type="password" id="byok-gemini" class="inp" placeholder="AIzaSy..." style="width:100%;margin-top:4px">
+      </div>
+      <div class="fg" style="margin-bottom:10px">
+        <label style="font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px">OpenAI API Key</label>
+        <input type="password" id="byok-openai" class="inp" placeholder="sk-proj-..." style="width:100%;margin-top:4px">
+      </div>
+      <div class="fg" style="margin-bottom:10px">
+        <label style="font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px">Mistral API Key</label>
+        <input type="password" id="byok-mistral" class="inp" placeholder="mistral-..." style="width:100%;margin-top:4px">
+      </div>
+    </div>
+    
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn-sm" onclick="closeByokModal()" style="background:var(--bg-3);border:1px solid var(--border);color:var(--text-1)">Cancel</button>
+      <button class="btn-sm primary" onclick="saveByokKeys()">Save & Apply</button>
+    </div>
+    
+    <button onclick="closeByokModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-3);font-size:18px;cursor:pointer"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<!-- Auth Modal -->
+<div id="auth-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:none;align-items:center;justify-content:center">
+  <div class="card auth-modal-box">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</button>
+      <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Register</button>
+    </div>
+    <!-- Login -->
+    <div id="auth-login-form">
+      <div class="fg"><label>Email</label><input type="email" id="login-email" class="inp" placeholder="you@example.com"></div>
+      <div class="fg"><label>Password</label><input type="password" id="login-password" class="inp" placeholder="Your password"></div>
+      <button class="btn-primary" style="width:100%;margin-top:14px" id="login-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
+      <div id="login-err" style="margin-top:8px"></div>
+    </div>
+    <!-- Register -->
+    <div id="auth-register-form" style="display:none">
+      <div class="form-row-2">
+        <div class="fg"><label>Full Name</label><input type="text" id="reg-name" class="inp" placeholder="Rahul Patel"></div>
+        <div class="fg"><label>Phone</label><input type="tel" id="reg-phone" class="inp" placeholder="9876543210"></div>
+        <div class="fg"><label>Email</label><input type="email" id="reg-email" class="inp" placeholder="you@example.com"></div>
+        <div class="fg"><label>Password</label><input type="password" id="reg-password" class="inp" placeholder="Min 6 characters"></div>
+        <div class="fg"><label>Target Role</label>
+          <select id="reg-role" class="inp">
+            <option>AI/ML Engineer</option><option>Software Engineer</option><option>Data Scientist</option>
+            <option>Data Engineer</option><option>Backend Engineer</option><option>Full Stack</option>
+          </select>
+        </div>
+        <div class="fg"><label>City</label><input type="text" id="reg-city" class="inp" placeholder="Ahmedabad"></div>
+      </div>
+      <button class="btn-primary" style="width:100%;margin-top:14px" id="register-btn"><i class="fas fa-user-plus"></i> Create Account</button>
+      <div id="reg-err" style="margin-top:8px"></div>
+    </div>
+    <!-- OTP -->
+    <div id="auth-otp-form" style="display:none">
+      <p class="muted" style="margin-bottom:12px">Enter the OTP sent to your email</p>
+      <div class="fg"><label>OTP</label><input type="text" id="otp-inp" class="inp" placeholder="6-digit code" maxlength="6"></div>
+      <button class="btn-primary" style="width:100%;margin-top:14px" id="otp-btn"><i class="fas fa-check-circle"></i> Verify OTP</button>
+      <div id="otp-err" style="margin-top:8px"></div>
+    </div>
+    <button onclick="closeAuthModal()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:var(--text-3);font-size:18px;cursor:pointer"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seven force — AI Workforce & Business Automation</title>
+  <meta name="description" content="Sevenforce gives every business a team of specialised AI employees — for marketing, sales, hiring, meetings, documents, and data — all running on Sevenseed's shared AI stack.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🤖%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<span id="top"></span>
+
+<div class="preloader" id="preloader">
+  <div class="pl-glow pl-glow-1"></div>
+  <div class="pl-glow pl-glow-2"></div>
+  <div class="pl-content">
+    <div class="pl-logo">
+      <div class="pl-icon-wrap"><i class="fas fa-users-gear pl-icon"></i><span class="pl-ring"></span></div>
+      <div class="pl-name">Seven force</div>
+    </div>
+    <div class="pl-progress">
+      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
+      <div class="pl-text">INITIALIZING SYSTEM… <span id="plPct">0</span>%</div>
+    </div>
+  </div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="logo" href="#top">
+    <span class="logo-icon"><i class="fas fa-users-gear"></i></span>
+    <span class="logo-text">Seven <span class="logo-accent">force</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#about">About</a>
+    <a href="#services">AI Tools</a>
+    
+    <a href="#sandbox">Live Demo</a>
+    <a href="#process">Process</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost" href="http://localhost:8002/app"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-primary" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <canvas id="particles"></canvas>
+  <div class="hero-content">
+    <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">7 AI Employees · Growth AI · Agency AI</span></div>
+    <h1 class="hero-title" data-blur-in style="--i:1">Hire your <span class="grad">AI workforce</span><br>— seven experts, one platform</h1>
+    <p class="hero-sub" data-blur-in style="--i:2">Sevenforce gives every business a team of specialised AI employees — for marketing, sales, hiring, meetings, documents, and data — all running on Sevenseed's shared AI stack.</p>
+    <div class="hero-actions" data-blur-in style="--i:3">
+      <a class="btn btn-primary lg" href="#contact"><i class="fas fa-paper-plane"></i> Hire Your AI Team</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
+    </div>
+    <div class="stats-row" data-blur-in style="--i:4">
+        <div class="hs"><div class="hs-num count">7</div><div class="hs-lbl">AI Employees</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">2</div><div class="hs-lbl">AI Suites</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">24/7</div><div class="hs-lbl">Always On</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">1</div><div class="hs-lbl">Unified Dashboard</div></div>
+    </div>
+    <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>Content AI</span><span>Social AI</span><span>WhatsApp AI</span><span>Proposals & BRD</span><span>Meeting Notes</span><span>AI Recruiter</span><span>Ask-Your-Data</span><span>Campaigns</span><span>Test Cases</span><span>Automation</span><span>Content AI</span><span>Social AI</span><span>WhatsApp AI</span><span>Proposals & BRD</span><span>Meeting Notes</span><span>AI Recruiter</span><span>Ask-Your-Data</span><span>Campaigns</span><span>Test Cases</span><span>Automation</span></div></div>
+  </div>
+</header>
+
+<section class="pillars-band">
+  <div class="pillars-inner">
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-users-gear"></i></div><div class="pillar-txt"><strong>7 AI Employees</strong><span>A specialist for every core business job.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-rocket"></i></div><div class="pillar-txt"><strong>Growth AI Suite</strong><span>Content, social & campaigns that compound.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-building"></i></div><div class="pillar-txt"><strong>Agency AI Suite</strong><span>Proposals, meetings, hiring & delivery.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-plug"></i></div><div class="pillar-txt"><strong>One Platform</strong><span>Every agent on Sevenseed's shared AI stack.</span></div></div>
+  </div>
+</section>
+
+<section class="ai-strip">
+  <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
+  <div class="ai-chips"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>Multi-Agent Orchestration</span><span class="ai-chip"><i class="fas fa-microchip"></i>NL-to-SQL</span></div>
+</section>
+
+<section class="section about" id="about">
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <div class="eyebrow">Est. 2026 · AI Workforce & Business Automation</div>
+      <h2 class="sec-title left">Don't just use AI — hire an AI team.</h2>
+      <p>Sevenforce turns AI into your team. Instead of juggling a dozen disconnected tools, you hire specialised AI employees — each an expert at one job — that work together from a single dashboard, around the clock.</p><p>Two suites cover the whole business: Growth AI runs your content, social media, and campaigns, while Agency AI handles proposals, documents, meetings, hiring, and data — every agent powered by Sevenseed's shared AI backbone.</p>
+    </div>
+    <aside class="about-card glow reveal">
+      <div class="about-card-ic"><i class="fas fa-users-gear"></i></div>
+      <h3>Why Seven?</h3>
+      <ul class="hl-list">
+          <li><i class="fas fa-check"></i>7 specialised AI employees</li>
+          <li><i class="fas fa-check"></i>Growth AI: content, social & campaigns</li>
+          <li><i class="fas fa-check"></i>Agency AI: proposals, meetings & hiring</li>
+          <li><i class="fas fa-check"></i>One dashboard, always on</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="eyebrow center">YOUR AI EMPLOYEES</div>
+  <h2 class="sec-title">Meet the team that never sleeps</h2>
+  <div class="svc-grid">
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-pen-nib"></i></div><h4>Maya — Content & SEO</h4><p>Builds a brand profile from any URL, then generates SEO topics and full long-form articles.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Growth AI</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-hashtag"></i></div><h4>Vibe — Social Media</h4><p>Writes platform-perfect captions and posts, schedules them, and tracks engagement.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Growth AI</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-comment-dots"></i></div><h4>Wave — Sales & Comms</h4><p>Runs WhatsApp broadcasts, an auto-reply chatbot, and personalised bulk-email campaigns.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Growth AI</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-file-signature"></i></div><h4>Nova — Business Analyst</h4><p>Turns a brief into proposals, BRD/PRD docs (Word export), user stories and test cases.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Agency AI</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-microphone-lines"></i></div><h4>Echo — Meeting Assistant</h4><p>Turns any transcript into a clean summary, decisions, and owner-tagged action items.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Agency AI</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-user-tie"></i></div><h4>Scout — AI Recruiter</h4><p>Screens resumes, generates interview questions, and scores answers on seven dimensions.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Agency AI</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-chart-column"></i></div><h4>Sage — Data Analyst</h4><p>Answers questions about your data in plain English with a safe, instant NL-to-SQL engine.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Agency AI</span></article>
+  </div>
+</section>
+
+
+<section class="section sandbox-sec" id="sandbox">
+  <div class="eyebrow center">AI PLAYGROUND</div>
+  <h2 class="sec-title">Try the AI Live</h2>
+  <p class="sandbox-subtitle center">Simulate our Scout HR Agent. Input a target role and job description to automatically generate tailored interview questions and evaluation guidance.</p>
+  
+  <div class="sandbox-container reveal">
+    <div class="sandbox-card glow">
+      <div class="sandbox-card-header">
+        <div class="sandbox-dot red"></div>
+        <div class="sandbox-dot yellow"></div>
+        <div class="sandbox-dot green"></div>
+        <span class="sandbox-card-title">Scout — AI Recruiter Simulator</span>
+      </div>
+      <div class="sandbox-card-body">
+        <form class="sandbox-form" id="sandboxForm" data-endpoint="http://localhost:8002/api/tools/interview-generate">
+          
+        <div class="sandbox-field">
+          <label for="sb-role">Target Role</label>
+          <input type="text" id="sb-role" placeholder="e.g. Senior Python Engineer" required>
+        </div>
+        <div class="sandbox-field">
+          <label for="sb-jd">Job Description (Brief)</label>
+          <textarea id="sb-jd" rows="3" placeholder="Core duties, technology stack, and requirements..." required></textarea>
+        </div>
+        <div class="sandbox-field">
+          <label for="sb-resume">Candidate Profile (Optional)</label>
+          <textarea id="sb-resume" rows="2" placeholder="Paste resume bullet points or skills summary..."></textarea>
+        </div>
+        
+          <button type="submit" class="btn btn-primary lg" id="sandboxBtn">
+            <i class="fas fa-play"></i> Run AI Model
+          </button>
+        </form>
+        <div class="sandbox-result">
+          <div class="sandbox-result-header">
+            <span>Terminal Output</span>
+            <button class="sandbox-copy-btn" id="sandboxCopy" type="button" aria-label="Copy output">
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+          <div class="sandbox-pre-wrap">
+            <pre class="sandbox-pre" id="sandboxOutput">// Output will be displayed here after you execute the model...</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section process" id="process">
+  <div class="eyebrow center">THE PROCESS</div>
+  <h2 class="sec-title">How Sevenforce works</h2>
+  <div class="proc-grid">
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">01</div><div class="proc-ic"><i class="fas fa-user-plus"></i></div><h4>Hire an AI employee</h4><p>Pick the agents your business needs — all from one dashboard.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">02</div><div class="proc-ic"><i class="fas fa-sliders"></i></div><h4>Brief them once</h4><p>Give context once; they learn your brand, data, and goals.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">03</div><div class="proc-ic"><i class="fas fa-robot"></i></div><h4>They do the work</h4><p>Content, campaigns, docs, meetings, hiring and analytics — automated.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">04</div><div class="proc-ic"><i class="fas fa-chart-line"></i></div><h4>You scale</h4><p>Ship more with a lean team and an AI workforce that never sleeps.</p></div>
+  </div>
+</section>
+
+<section class="impact" id="impact">
+  <div class="impact-inner">
+    <div class="eyebrow center">BY THE NUMBERS</div>
+    <h2 class="sec-title">An AI team, at a fraction of the cost</h2>
+    <div class="impact-grid">
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">7</div><div class="metric-lbl">AI Employees</div><div class="metric-sub">Across two suites</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">2</div><div class="metric-lbl">AI Suites</div><div class="metric-sub">Growth AI + Agency AI</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">24/7</div><div class="metric-lbl">Always On</div><div class="metric-sub">Hours a day, no downtime</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="testimonials">
+  <div class="eyebrow center">WHAT PEOPLE SAY</div>
+  <h2 class="sec-title">Trusted by the people we serve</h2>
+  <div class="tgrid">
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;We replaced five disconnected tools with Sevenforce's AI team — and now move twice as fast.&rdquo;</blockquote><figcaption><span class="tavatar">F</span><span class="tmeta"><strong>Founder</strong><small>Growth-Stage SaaS</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Nova drafted our client proposal and Echo handled the meeting notes. Unreal.&rdquo;</blockquote><figcaption><span class="tavatar">O</span><span class="tmeta"><strong>Owner</strong><small>Digital Agency</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Sage answers our data questions in plain English — no analyst required.&rdquo;</blockquote><figcaption><span class="tavatar">OL</span><span class="tmeta"><strong>Operations Lead</strong><small>D2C Brand</small></span></figcaption></figure>
+  </div>
+</section>
+
+<section class="section faq-sec" id="faq">
+  <div class="eyebrow center">FAQ</div>
+  <h2 class="sec-title">Questions, answered</h2>
+  <div class="faq-list">
+        <details class="faq reveal"><summary>What is Sevenforce?<i class="fas fa-plus"></i></summary><div class="faq-a">An AI workforce platform — hire specialised AI employees for marketing, sales, hiring, meetings, documents and data, all from one dashboard.</div></details>
+        <details class="faq reveal"><summary>What are the Growth AI and Agency AI suites?<i class="fas fa-plus"></i></summary><div class="faq-a">Growth AI covers content, social and campaigns (Maya, Vibe, Wave). Agency AI covers proposals & docs, meetings, hiring and data (Nova, Echo, Scout, Sage).</div></details>
+        <details class="faq reveal"><summary>Do I have to hire all seven?<i class="fas fa-plus"></i></summary><div class="faq-a">No — start with the AI employees you need most and add more anytime. Each works on its own or together with the rest.</div></details>
+        <details class="faq reveal"><summary>What powers Sevenforce?<i class="fas fa-plus"></i></summary><div class="faq-a">Sevenseed's shared AI backbone — LangGraph multi-agent orchestration, Groq LLaMA 3.3 70B, RAG, and a safe NL-to-SQL engine.</div></details>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="cta-glow"></div>
+  <div class="cta-content reveal">
+    <div class="cta-badge"><i class="fas fa-microchip"></i> Est. 2026 · AI Workforce & Business Automation</div>
+    <h2>Ready to hire your AI workforce?</h2>
+    <p>Give your business a team of AI employees for marketing, sales, hiring, meetings and data — all on Sevenseed's shared AI stack. Start with the agents you need most.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary lg" href="mailto:hello@sevenforce.ai"><i class="fas fa-paper-plane"></i> Hire Your AI Team</a>
+      <a class="btn btn-ghost lg" href="tel:+918490861586"><i class="fas fa-phone"></i> +91 84908 61586</a>
+    </div>
+    <form class="contact-form" id="contactForm" data-email="hello@sevenforce.ai" data-company="Seven force">
+      <div class="cf-row">
+        <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
+        <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
+      </div>
+      <input type="text" id="cf-subject" placeholder="Subject">
+      <textarea id="cf-msg" rows="4" placeholder="How can we help you?" required></textarea>
+      <button type="submit" class="btn btn-primary lg"><i class="fas fa-paper-plane"></i> Send message</button>
+      <p class="cf-note" id="cf-note" role="status"></p>
+    </form>
+    <div class="cta-contact">
+      <span><i class="fas fa-envelope"></i> hello@sevenforce.ai</span>
+      <span><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="logo" href="#top">
+        <span class="logo-icon"><i class="fas fa-users-gear"></i></span>
+        <span class="logo-text">Seven <span class="logo-accent">force</span></span>
+      </a>
+      <p>Sevenforce gives every business a team of specialised AI employees — for marketing, sales, hiring, meetings, documents, and data — all running on Sevenseed's shared AI stack.</p>
+      <div class="foot-social">
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="mailto:hello@sevenforce.ai" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Explore</h5>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">AI Tools</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>The AI Group</h5>
+      <ul>
+          <li><a href="../comonk/index.html">Comonk Technology</a></li>
+          <li><a href="../index.html">Sevenseed</a></li>
+          <li><span class="foot-current">Sevenforce</span></li>
+          <li><a href="../avpu/index.html">Alpaben Vipulbhai Patel University</a></li>
+          <li><a href="../decode-forest-pharmacy/index.html">Decode Forest Pharmacy</a></li>
+          <li><a href="../breakdown-factor/index.html">Breakdown Factor Construction</a></li>
+          <li><a href="../avp-charitable-trust/index.html">AVP Charitable Trust</a></li>
+          <li><a href="../avp-emart/index.html">AVP Emart</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Get in touch</h5>
+      <ul class="foot-contact">
+        <li><i class="fas fa-envelope"></i> hello@sevenforce.ai</li>
+        <li><i class="fas fa-phone"></i> +91 84908 61586</li>
+        <li><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© <span data-year></span> Seven force. All rights reserved.</span>
+    <span class="foot-venture"><i class="fas fa-seedling"></i> A Sevenseed AI venture</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVP Charitable Trust — AI for Social Impact · Non-Profit</title>
+  <meta name="description" content="A non-profit that uses AI to identify community needs, match beneficiaries to the right programs, and report transparent, measurable impact for every rupee raised.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🤝%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<span id="top"></span>
+
+<div class="preloader" id="preloader">
+  <div class="pl-glow pl-glow-1"></div>
+  <div class="pl-glow pl-glow-2"></div>
+  <div class="pl-content">
+    <div class="pl-logo">
+      <div class="pl-icon-wrap"><i class="fas fa-hand-holding-heart pl-icon"></i><span class="pl-ring"></span></div>
+      <div class="pl-name">AVP Charitable Trust</div>
+    </div>
+    <div class="pl-progress">
+      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
+      <div class="pl-text">INITIALIZING SYSTEM… <span id="plPct">0</span>%</div>
+    </div>
+  </div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="logo" href="#top">
+    <span class="logo-icon"><i class="fas fa-hand-holding-heart"></i></span>
+    <span class="logo-text">AVP <span class="logo-accent">Charitable Trust</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#about">About</a>
+    <a href="#services">AI Tools</a>
+    
+    <a href="#process">Process</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-primary" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <canvas id="particles"></canvas>
+  <div class="hero-content">
+    <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI Needs Assessment · Impact Analytics · Donor AI</span></div>
+    <h1 class="hero-title" data-blur-in style="--i:1">AI for good — turning generosity<br>into <span class="grad">measurable impact</span></h1>
+    <p class="hero-sub" data-blur-in style="--i:2">A non-profit that uses AI to identify community needs, match beneficiaries to the right programs, and report transparent, measurable impact for every rupee raised.</p>
+    <div class="hero-actions" data-blur-in style="--i:3">
+      <a class="btn btn-primary lg" href="#contact"><i class="fas fa-paper-plane"></i> Donate or Volunteer</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
+    </div>
+    <div class="stats-row" data-blur-in style="--i:4">
+        <div class="hs"><div class="hs-num count">4+</div><div class="hs-lbl">Programs / Year</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">1000+</div><div class="hs-lbl">Lives Touched</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">100%</div><div class="hs-lbl">AI-Transparent</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">24/7</div><div class="hs-lbl">Donor AI</div></div>
+    </div>
+    <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>Needs Assessment AI</span><span>Beneficiary Matching</span><span>Impact Analytics</span><span>Donor Assistant</span><span>Anomaly Detection</span><span>Volunteer Matching</span><span>Scholarships</span><span>Health Camps</span><span>CSR</span><span>Community</span><span>Needs Assessment AI</span><span>Beneficiary Matching</span><span>Impact Analytics</span><span>Donor Assistant</span><span>Anomaly Detection</span><span>Volunteer Matching</span><span>Scholarships</span><span>Health Camps</span><span>CSR</span><span>Community</span></div></div>
+  </div>
+</header>
+
+<section class="pillars-band">
+  <div class="pillars-inner">
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-magnifying-glass-chart"></i></div><div class="pillar-txt"><strong>AI Finds Need</strong><span>Data pinpoints where to help.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-eye"></i></div><div class="pillar-txt"><strong>AI Transparency</strong><span>Every rupee tracked and reported.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-graduation-cap"></i></div><div class="pillar-txt"><strong>Education-Focused</strong><span>Scholarships that change lives.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-hand-holding-heart"></i></div><div class="pillar-txt"><strong>Impact-Driven</strong><span>Measured by lives we touch.</span></div></div>
+  </div>
+</section>
+
+<section class="ai-strip">
+  <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
+  <div class="ai-chips"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>Anomaly Detection</span><span class="ai-chip"><i class="fas fa-microchip"></i>ML Analytics</span></div>
+</section>
+
+<section class="section about" id="about">
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <div class="eyebrow">Est. 2026 · AI for Social Impact · Non-Profit</div>
+      <h2 class="sec-title left">Compassion, amplified by AI.</h2>
+      <p>The AVP Charitable Trust channels the success of our AI group back into communities. AI analyses real data to find where help matters most, then matches beneficiaries to scholarships, healthcare, and welfare programs.</p><p>Every rupee is tracked with AI-powered transparency and anomaly detection, and every program's impact is measured and reported. Because giving back should be as intelligent as it is heartfelt.</p>
+    </div>
+    <aside class="about-card glow reveal">
+      <div class="about-card-ic"><i class="fas fa-hand-holding-heart"></i></div>
+      <h3>Why AVP?</h3>
+      <ul class="hl-list">
+          <li><i class="fas fa-check"></i>AI finds where help matters most</li>
+          <li><i class="fas fa-check"></i>Semantic beneficiary matching</li>
+          <li><i class="fas fa-check"></i>AI-powered transparent reporting</li>
+          <li><i class="fas fa-check"></i>Anomaly detection on every rupee</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="eyebrow center">AI CAPABILITIES</div>
+  <h2 class="sec-title">AI that maximises every rupee</h2>
+  <div class="svc-grid">
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-magnifying-glass-chart"></i></div><h4>AI Needs Assessment</h4><p>ML analyses community data to pinpoint where support matters most.</p><span class="svc-tag"><i class="fas fa-bolt"></i>ML Analytics</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-people-group"></i></div><h4>Beneficiary Matching</h4><p>Semantic matching connects beneficiaries to the right programs and scholarships.</p><span class="svc-tag"><i class="fas fa-bolt"></i>RAG + Embeddings</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-chart-pie"></i></div><h4>AI Impact Reporting</h4><p>AI compiles transparent, real-time impact reports for every donor.</p><span class="svc-tag"><i class="fas fa-bolt"></i>LLM Reports</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-robot"></i></div><h4>Donor Assistant</h4><p>An AI assistant answers donor questions and suggests where to give.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Groq LLaMA 3.3</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-shield-halved"></i></div><h4>Transparency & Fraud AI</h4><p>Anomaly detection keeps every disbursement transparent and accountable.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Anomaly Detection</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-hands-helping"></i></div><h4>Volunteer Coordinator</h4><p>AI matches volunteers to programs by their skills and availability.</p><span class="svc-tag"><i class="fas fa-bolt"></i>AI Agent</span></article>
+  </div>
+</section>
+
+<section class="section process" id="process">
+  <div class="eyebrow center">THE PROCESS</div>
+  <h2 class="sec-title">How AI turns your support into impact</h2>
+  <div class="proc-grid">
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">01</div><div class="proc-ic"><i class="fas fa-magnifying-glass"></i></div><h4>AI Finds the Need</h4><p>ML analyses data to find communities that need us most.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">02</div><div class="proc-ic"><i class="fas fa-hand-holding-dollar"></i></div><h4>Mobilize Resources</h4><p>Donations and CSR partnerships fund the right programs.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">03</div><div class="proc-ic"><i class="fas fa-hands-helping"></i></div><h4>Deliver Programs</h4><p>Volunteers, matched by AI, bring programs to the ground.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">04</div><div class="proc-ic"><i class="fas fa-chart-line"></i></div><h4>Report Impact</h4><p>AI publishes transparent reports on every rupee and life touched.</p></div>
+  </div>
+</section>
+
+<section class="impact" id="impact">
+  <div class="impact-inner">
+    <div class="eyebrow center">BY THE NUMBERS</div>
+    <h2 class="sec-title">Impact you can measure</h2>
+    <div class="impact-grid">
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">4+</div><div class="metric-lbl">Programs / Year</div><div class="metric-sub">AI-prioritised</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">1000+</div><div class="metric-lbl">Lives Touched</div><div class="metric-sub">Across communities</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">100%</div><div class="metric-lbl">Transparent</div><div class="metric-sub">AI-tracked funds</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="testimonials">
+  <div class="eyebrow center">WHAT PEOPLE SAY</div>
+  <h2 class="sec-title">Trusted by the people we serve</h2>
+  <div class="tgrid">
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The scholarship changed my life — an AI match connected me to it when no one else did.&rdquo;</blockquote><figcaption><span class="tavatar">B</span><span class="tmeta"><strong>Beneficiary</strong><small>Scholarship Recipient</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Their AI-driven health camp reached families who had nowhere else to turn.&rdquo;</blockquote><figcaption><span class="tavatar">V</span><span class="tmeta"><strong>Volunteer</strong><small>Community Health Camp</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The AI impact reports show me exactly where my donation goes. Total trust.&rdquo;</blockquote><figcaption><span class="tavatar">D</span><span class="tmeta"><strong>Donor</strong><small>Monthly Contributor</small></span></figcaption></figure>
+  </div>
+</section>
+
+<section class="section faq-sec" id="faq">
+  <div class="eyebrow center">FAQ</div>
+  <h2 class="sec-title">Questions, answered</h2>
+  <div class="faq-list">
+        <details class="faq reveal"><summary>How does AI help your cause?<i class="fas fa-plus"></i></summary><div class="faq-a">AI analyses community data to find where support matters most, matches beneficiaries to programs, and generates transparent impact reports for donors.</div></details>
+        <details class="faq reveal"><summary>How is my donation used?<i class="fas fa-plus"></i></summary><div class="faq-a">Every contribution funds welfare, education, and healthcare programs — with AI-tracked, transparent reporting on impact.</div></details>
+        <details class="faq reveal"><summary>Is my donation tax-exempt?<i class="fas fa-plus"></i></summary><div class="faq-a">We are applying for 80G tax-exempt status; updates will be shared with our donors as we progress.</div></details>
+        <details class="faq reveal"><summary>Can I volunteer?<i class="fas fa-plus"></i></summary><div class="faq-a">Yes — our AI coordinator matches volunteers to programs by skills and availability. Reach out to get involved.</div></details>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="cta-glow"></div>
+  <div class="cta-content reveal">
+    <div class="cta-badge"><i class="fas fa-microchip"></i> Est. 2026 · AI for Social Impact · Non-Profit</div>
+    <h2>Join us in creating measurable change.</h2>
+    <p>Whether you donate, partner, or volunteer, AI ensures your support reaches the right people — with full transparency on the impact you create. Be part of the change.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary lg" href="mailto:connect@avptrust.org"><i class="fas fa-paper-plane"></i> Donate or Volunteer</a>
+      <a class="btn btn-ghost lg" href="tel:+918490861586"><i class="fas fa-phone"></i> +91 84908 61586</a>
+    </div>
+    <form class="contact-form" id="contactForm" data-email="connect@avptrust.org" data-company="AVP Charitable Trust">
+      <div class="cf-row">
+        <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
+        <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
+      </div>
+      <input type="text" id="cf-subject" placeholder="Subject">
+      <textarea id="cf-msg" rows="4" placeholder="How can we help you?" required></textarea>
+      <button type="submit" class="btn btn-primary lg"><i class="fas fa-paper-plane"></i> Send message</button>
+      <p class="cf-note" id="cf-note" role="status"></p>
+    </form>
+    <div class="cta-contact">
+      <span><i class="fas fa-envelope"></i> connect@avptrust.org</span>
+      <span><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="logo" href="#top">
+        <span class="logo-icon"><i class="fas fa-hand-holding-heart"></i></span>
+        <span class="logo-text">AVP <span class="logo-accent">Charitable Trust</span></span>
+      </a>
+      <p>A non-profit that uses AI to identify community needs, match beneficiaries to the right programs, and report transparent, measurable impact for every rupee raised.</p>
+      <div class="foot-social">
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="mailto:connect@avptrust.org" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Explore</h5>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">AI Tools</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>The AI Group</h5>
+      <ul>
+          <li><a href="https://comonk-ai.onrender.com" target="_blank" rel="noopener">Comonk Technology</a></li>
+          <li><a href="../sevenseed/index.html">Sevenseed</a></li>
+          <li><a href="../avpu/index.html">Alpaben Vipulbhai Patel University</a></li>
+          <li><a href="../decode-forest-pharmacy/index.html">Decode Forest Pharmacy</a></li>
+          <li><a href="../breakdown-factor/index.html">Breakdown Factor Construction</a></li>
+          <li><span class="foot-current">AVP Charitable Trust</span></li>
+          <li><a href="../avp-emart/index.html">AVP Emart</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Get in touch</h5>
+      <ul class="foot-contact">
+        <li><i class="fas fa-envelope"></i> connect@avptrust.org</li>
+        <li><i class="fas fa-phone"></i> +91 84908 61586</li>
+        <li><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© <span data-year></span> AVP Charitable Trust. All rights reserved.</span>
+    <span class="foot-venture"><i class="fas fa-seedling"></i> A Sevenseed AI venture</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

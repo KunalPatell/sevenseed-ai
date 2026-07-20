@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+pydantic>=2
+python-dotenv
+python-multipart
+langgraph
+langchain-core
+langchain-groq
+langchain-openai
+langchain-google-genai
+scikit-learn
+numpy
+# Optional (auto-used if present): richer embeddings / vector store
+itsdangerous
+python-docx>=1.1.0
+requests>=2.31.0
