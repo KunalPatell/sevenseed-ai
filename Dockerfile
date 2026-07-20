@@ -1,3 +1,17 @@
+# Sevenseed hub - one Render service, one container.
+#
+# Runtime shape: the hub (apps/sevenseed/backend/main.py) is the only process
+# Render talks to. On startup it launches six children as their own OS
+# subprocesses (apps/sevenseed/backend/child_processes.py) - each runs its real,
+# unmodified main.py exactly as it does standalone - and reverse-proxies
+# /<slug>/api/* to whichever one owns that prefix. Static frontends for all six
+# are pre-built below and served directly by the hub, no proxy needed for those.
+#
+# Comonk is intentionally NOT part of this image. It stays its own separately
+# deployed, already-live Render service; the hub only links out to it. Its
+# frontend was never built with "living under a subpath" in mind, and it's the
+# one app here with real users - not worth the risk of forcing it in.
+
 # ── Stage 1: Build sevenseed landing page ──
 FROM node:20-alpine AS sevenseed-frontend
 WORKDIR /app/sevenseed
@@ -46,7 +60,7 @@ RUN npm install --legacy-peer-deps
 COPY apps/decode-forest-pharmacy/frontend/ ./
 RUN npm run build
 
-# ── Stage 7: FastAPI runtime serving API + static sites ──
+# ── Stage 7: runtime - hub + six child backends as subprocesses ──
 FROM python:3.12-slim AS runtime
 RUN useradd -m -u 1000 user
 ENV HOME=/home/user PATH=/home/user/.local/bin:$PATH PYTHONUNBUFFERED=1
@@ -57,22 +71,30 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
+# One shared Python environment for the hub and all six children - this is why
+# sevenseed/backend/requirements.txt is a union of every child's own deps
+# (verified: nothing in any child's requirements.txt is missing from it).
 COPY --chown=user apps/sevenseed/backend/requirements.txt ./apps/sevenseed/backend/requirements.txt
 RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r ./apps/sevenseed/backend/requirements.txt
 
-# Copy all child backend code for router imports
-COPY --chown=user apps/ $HOME/app/apps/
+# Each child's own backend source, unmodified - copied individually (not the
+# whole apps/ tree) so comonk and every child's frontend/ source stay out of
+# this image entirely.
+COPY --chown=user apps/sevenseed/backend/ $HOME/app/apps/sevenseed/backend/
+COPY --chown=user apps/avp-emart/backend/ $HOME/app/apps/avp-emart/backend/
+COPY --chown=user apps/avpu/backend/ $HOME/app/apps/avpu/backend/
+COPY --chown=user apps/breakdown-factor/backend/ $HOME/app/apps/breakdown-factor/backend/
+COPY --chown=user apps/avp-charitable-trust/backend/ $HOME/app/apps/avp-charitable-trust/backend/
+COPY --chown=user apps/decode-forest-pharmacy/backend/ $HOME/app/apps/decode-forest-pharmacy/backend/
+COPY --chown=user apps/sevenforce/backend/ $HOME/app/apps/sevenforce/backend/
 
-# Setup unified static directory tree
+# Unified static tree the hub serves directly (prefixes match child_processes.CHILDREN)
 COPY --chown=user --from=sevenseed-frontend /app/sevenseed/out $HOME/app/apps/sevenseed/backend/static
 COPY --chown=user --from=emart-frontend /app/emart/out $HOME/app/apps/sevenseed/backend/static/avp-emart
 COPY --chown=user --from=avpu-frontend /app/avpu/out $HOME/app/apps/sevenseed/backend/static/avpu
 COPY --chown=user --from=breakdown-frontend /app/breakdown/out $HOME/app/apps/sevenseed/backend/static/breakdown
 COPY --chown=user --from=trust-frontend /app/trust/out $HOME/app/apps/sevenseed/backend/static/trust
 COPY --chown=user --from=pharmacy-frontend /app/pharmacy/out $HOME/app/apps/sevenseed/backend/static/pharmacy
-
-# Copy static frontend HTML folders directly (no node build required)
-COPY --chown=user apps/comonk/frontend/ $HOME/app/apps/sevenseed/backend/static/comonk/
 COPY --chown=user apps/sevenforce/backend/static/ $HOME/app/apps/sevenseed/backend/static/sevenforce/
 
 WORKDIR $HOME/app/apps/sevenseed/backend

@@ -1,6 +1,12 @@
-# Sevenseed Monolith — 1 Render Service hosting Sevenseed Hub + 7 Child Apps
+# Sevenseed Monolith - 1 Render Service hosting the Sevenseed Hub + 6 Child Apps
+# (avp-emart, avpu, breakdown-factor, avp-charitable-trust, decode-forest-pharmacy,
+# sevenforce). Comonk is NOT included - it stays its own separately deployed,
+# already-live service; the hub only links out to it.
 #
-# Single web service definition that builds all frontends and runs the unified FastAPI backend.
+# Each child runs as its own subprocess inside this one container (see
+# apps/sevenseed/backend/child_processes.py) and is reverse-proxied at
+# /<slug>/api/*, so this is one Docker build + one Render service, but every
+# child keeps the same process isolation it has when deployed standalone.
 
 services:
   - type: web

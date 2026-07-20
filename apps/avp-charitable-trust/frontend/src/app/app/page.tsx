@@ -34,6 +34,11 @@ import {
   Settings
 } from "lucide-react";
 
+// This dashboard is served under the "/trust" path when merged into the
+// Sevenseed hub (see apps/sevenseed/backend/child_processes.py); its own API
+// calls must go through that same prefix, not root-relative "/api/...".
+const API_BASE = "/trust";
+
 type PanelType = "dashboard" | "donor" | "needs" | "beneficiary" | "grant" | "volunteers" | "ledger" | "reporter" | "finance" | "emergency";
 
 interface DonorSession {
@@ -219,7 +224,7 @@ export default function NGOStatusHub() {
     setFinanceLoading(true);
     setFinanceResult(null);
     try {
-      const res = await fetch("/api/tools/ask-data", {
+      const res = await fetch(API_BASE + "/api/tools/ask-data", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: financeQuestion })
@@ -249,7 +254,7 @@ export default function NGOStatusHub() {
     try {
       const formData = new FormData();
       formData.append("file", targetFile);
-      const res = await fetch("/api/tools/emergency-voice-prioritize", {
+      const res = await fetch(API_BASE + "/api/tools/emergency-voice-prioritize", {
         method: "POST",
         body: formData
       });
@@ -277,7 +282,7 @@ export default function NGOStatusHub() {
 
   const loadHealthAndData = async () => {
     try {
-      const hRes = await fetch("/api/health");
+      const hRes = await fetch(API_BASE + "/api/health");
       if (hRes.ok) {
         const hData = await hRes.json();
         setLlmEnabled(hData.llm_enabled);
@@ -285,7 +290,7 @@ export default function NGOStatusHub() {
         setRagBackend(hData.rag_backend || "Vector RAG");
       }
 
-      const pRes = await fetch("/api/programs");
+      const pRes = await fetch(API_BASE + "/api/programs");
       if (pRes.ok) {
         const pData = await pRes.json();
         setProgramsList(pData.programs || []);
@@ -299,19 +304,19 @@ export default function NGOStatusHub() {
 
   const loadDbHistory = async () => {
     try {
-      const sRes = await fetch("/api/history/donor");
+      const sRes = await fetch(API_BASE + "/api/history/donor");
       if (sRes.ok) {
         const sData = await sRes.json();
         setHistorySessions(sData.sessions || []);
       }
 
-      const nRes = await fetch("/api/history/needs");
+      const nRes = await fetch(API_BASE + "/api/history/needs");
       if (nRes.ok) {
         const nData = await nRes.json();
         setHistoryNeeds(nData.needs || []);
       }
 
-      const bRes = await fetch("/api/history/beneficiaries");
+      const bRes = await fetch(API_BASE + "/api/history/beneficiaries");
       if (bRes.ok) {
         const bData = await bRes.json();
         setHistoryBeneficiaries(bData.matches || []);
@@ -321,7 +326,7 @@ export default function NGOStatusHub() {
 
   const fetchUser = async (tok: string) => {
     try {
-      const res = await fetch("/api/auth/me", {
+      const res = await fetch(API_BASE + "/api/auth/me", {
         headers: { Authorization: `Bearer ${tok}` }
       });
       if (res.ok) {
@@ -333,14 +338,14 @@ export default function NGOStatusHub() {
 
   const fetchDonationsAndVolunteers = async () => {
     try {
-      const dRes = await fetch("/api/donations");
+      const dRes = await fetch(API_BASE + "/api/donations");
       if (dRes.ok) {
         const d = await dRes.json();
         setDonations(d.donations || []);
         setTotalRaised(d.total || 0);
       }
 
-      const vRes = await fetch("/api/volunteers");
+      const vRes = await fetch(API_BASE + "/api/volunteers");
       if (vRes.ok) {
         const v = await vRes.json();
         setVolunteers(v.volunteers || []);
@@ -352,7 +357,7 @@ export default function NGOStatusHub() {
   const handleSignup = async () => {
     setAuthFeedback("");
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch(API_BASE + "/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: authName, email: authEmail, password: authPassword })
@@ -374,7 +379,7 @@ export default function NGOStatusHub() {
   const handleLogin = async () => {
     setAuthFeedback("");
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch(API_BASE + "/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: authEmail, password: authPassword })
@@ -412,7 +417,7 @@ export default function NGOStatusHub() {
     if (!activeSessionId) setActiveSessionId(sid);
 
     try {
-      const res = await fetch("/api/donor", {
+      const res = await fetch(API_BASE + "/api/donor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text, session_id: sid })
@@ -453,7 +458,7 @@ export default function NGOStatusHub() {
     setNeedsLoading(true);
     setNeedsResult("");
     try {
-      const res = await fetch("/api/needs", {
+      const res = await fetch(API_BASE + "/api/needs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ location: needsLocation, population: needsPopulation, issues: needsIssues, income_level: needsIncome })
@@ -475,7 +480,7 @@ export default function NGOStatusHub() {
     setBenLoading(true);
     setBenResult("");
     try {
-      const res = await fetch("/api/beneficiary", {
+      const res = await fetch(API_BASE + "/api/beneficiary", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: benName, age: benAge, location: benLocation, issues: benIssues, income: benIncome })
@@ -497,7 +502,7 @@ export default function NGOStatusHub() {
     setGrantLoading(true);
     setGrantResult("");
     try {
-      const res = await fetch("/api/tools/grant-writer", {
+      const res = await fetch(API_BASE + "/api/tools/grant-writer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ program: grantProg, funder: grantFunder, amount: grantAmount })
@@ -516,7 +521,7 @@ export default function NGOStatusHub() {
   const handleVolunteerSubmit = async () => {
     if (!volName.trim() || !volEmail.trim()) return;
     try {
-      const res = await fetch("/api/volunteers", {
+      const res = await fetch(API_BASE + "/api/volunteers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: volName, email: volEmail, skills: volSkills, availability: volAvail })
@@ -534,7 +539,7 @@ export default function NGOStatusHub() {
     if (!donorName.trim() || !donorAmount) return;
     setReceiptFeedback("Registering donation...");
     try {
-      const res = await fetch("/api/donations", {
+      const res = await fetch(API_BASE + "/api/donations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ donor: donorName, email: donorEmail, amount: donorAmount, pan: donorPAN, purpose: donorPurpose })
@@ -557,7 +562,7 @@ export default function NGOStatusHub() {
     setReportLoading(true);
     setReportResult("");
     try {
-      const res = await fetch("/api/impact", {
+      const res = await fetch(API_BASE + "/api/impact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ period: reportPeriod })

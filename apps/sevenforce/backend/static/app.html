@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
+const API_BASE = "/sevenforce";
+
   // Setup demo token if not present
   if (!localStorage.getItem('sevenforce_token')) {
     localStorage.setItem('sevenforce_token', 'demo_token');
@@ -682,7 +684,7 @@ function loadUserState() {
   const offline = localStorage.getItem("sevenforce_offline_mode") === "1";
   const name = localStorage.getItem("sevenforce_offline_username") || "User";
   if (token && !offline) {
-    fetch("/api/auth/me", {headers:{"Authorization":`Bearer ${token}`}})
+    fetch(API_BASE + "/api/auth/me", {headers:{"Authorization":`Bearer ${token}`}})
       .then(r => r.json()).then(d => {
         if (d.user) { userInfo = d.user; updateUserBadge(d.user.name); }
         else { clearAuth(); }
@@ -702,7 +704,7 @@ function updateUserBadge(name) {
 
 async function fetchHealth() {
   try {
-    const r = await fetch("/api/health");
+    const r = await fetch(API_BASE + "/api/health");
     if (r.ok) {
       const d = await r.json();
       $("#prov-name").textContent = d.provider || "offline";
@@ -935,7 +937,7 @@ async function runTool(tool, card) {
   const mistral = localStorage.getItem("user_mistral_key"); if (mistral) headers["X-Mistral-API-Key"] = mistral;
 
   try {
-    const res = await fetch(tool.ep, { method: "POST", headers, body: JSON.stringify(payload) });
+    const res = await fetch(API_BASE + tool.ep, { method: "POST", headers, body: JSON.stringify(payload) });
     if (tool.download) {
       if (!res.ok) throw new Error("HTTP " + res.status);
       const blob = await res.blob();
@@ -1067,7 +1069,7 @@ async function doLogin() {
   const pw = $("#login-pw").value;
   if (!email || !pw) { showAuthAlert("Please fill in all fields."); return; }
   try {
-    const res = await fetch("/api/auth/login", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password:pw})});
+    const res = await fetch(API_BASE + "/api/auth/login", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password:pw})});
     const d = await res.json();
     if (d.error) { showAuthAlert(d.error); return; }
     localStorage.setItem("sevenforce_token", d.token);
@@ -1085,7 +1087,7 @@ async function doSignup() {
   const pw = $("#signup-pw").value;
   if (!name || !email || !pw) { showAuthAlert("Please fill in all fields."); return; }
   try {
-    const res = await fetch("/api/auth/signup", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,email,password:pw})});
+    const res = await fetch(API_BASE + "/api/auth/signup", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,email,password:pw})});
     const d = await res.json();
     if (d.error) { showAuthAlert(d.error); return; }
     localStorage.setItem("sevenforce_token", d.token);

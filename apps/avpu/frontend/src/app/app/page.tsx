@@ -36,6 +36,11 @@ import {
   MapPin
 } from "lucide-react";
 
+// This dashboard is served under the "/avpu" path when merged into the
+// Sevenseed hub (see apps/sevenseed/backend/child_processes.py); its own API
+// calls must go through that same prefix, not root-relative "/api/...".
+const API_BASE = "/avpu";
+
 type PanelType = "dashboard" | "tutor" | "roadmaps" | "assessments" | "placements" | "admissions" | "research" | "quiz";
 
 interface StudyRoadmap {
@@ -197,7 +202,7 @@ export default function StudentPortal() {
 
   const loadHealthAndPrograms = async () => {
     try {
-      const hRes = await fetch("/api/health");
+      const hRes = await fetch(API_BASE + "/api/health");
       if (hRes.ok) {
         const hData = await hRes.json();
         setLlmEnabled(hData.llm_enabled);
@@ -205,7 +210,7 @@ export default function StudentPortal() {
         setRagBackend(hData.rag_backend || "Vector RAG");
       }
 
-      const pRes = await fetch("/api/programs");
+      const pRes = await fetch(API_BASE + "/api/programs");
       if (pRes.ok) {
         const pData = await pRes.json();
         setProgramsList(pData.programs || []);
@@ -217,19 +222,19 @@ export default function StudentPortal() {
 
   const loadDbHistory = async () => {
     try {
-      const sRes = await fetch("/api/history/sessions");
+      const sRes = await fetch(API_BASE + "/api/history/sessions");
       if (sRes.ok) {
         const sData = await sRes.json();
         setHistorySessions(sData.sessions || []);
       }
 
-      const rRes = await fetch("/api/history/roadmaps");
+      const rRes = await fetch(API_BASE + "/api/history/roadmaps");
       if (rRes.ok) {
         const rData = await rRes.json();
         setHistoryRoadmaps(rData.roadmaps || []);
       }
 
-      const aRes = await fetch("/api/history/assessments");
+      const aRes = await fetch(API_BASE + "/api/history/assessments");
       if (aRes.ok) {
         const aData = await aRes.json();
         setHistoryAssessments(aData.assessments || []);
@@ -249,7 +254,7 @@ export default function StudentPortal() {
     if (!activeSessionId) setActiveSessionId(sid);
 
     try {
-      const res = await fetch("/api/tutor", {
+      const res = await fetch(API_BASE + "/api/tutor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text, session_id: sid, subject: tutorSubject })
@@ -292,7 +297,7 @@ export default function StudentPortal() {
     setRoadmapLoading(true);
     setGeneratedRoadmap(null);
     try {
-      const res = await fetch("/api/roadmap", {
+      const res = await fetch(API_BASE + "/api/roadmap", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ goal, level: roadmapLevel, weeks: roadmapWeeks })
@@ -314,7 +319,7 @@ export default function StudentPortal() {
     setAssessLoading(true);
     setAssessFeedback(null);
     try {
-      const res = await fetch("/api/assess", {
+      const res = await fetch(API_BASE + "/api/assess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: assessQ, answer: ans })
@@ -338,7 +343,7 @@ export default function StudentPortal() {
     setQuizAnswers({});
     setQuizSubmitted(false);
     try {
-      const res = await fetch("/api/tools/quiz", {
+      const res = await fetch(API_BASE + "/api/tools/quiz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topic: quizTopic, n: quizCount })
@@ -362,7 +367,7 @@ export default function StudentPortal() {
     setQuizSubmitted(true);
     const score = quizQuestions.reduce((acc, q, i) => acc + (quizAnswers[i] === q.answer ? 1 : 0), 0);
     try {
-      await fetch("/api/tools/quiz/save", {
+      await fetch(API_BASE + "/api/tools/quiz/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topic: quizTopic, score, total: quizQuestions.length })
@@ -377,7 +382,7 @@ export default function StudentPortal() {
     setPlacementResults(null);
     try {
       const skillsArray = placementSkills.split(",").map(s => s.trim()).filter(Boolean);
-      const res = await fetch("/api/placement", {
+      const res = await fetch(API_BASE + "/api/placement", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ skills: skillsArray, interests: placementInterests })
@@ -397,7 +402,7 @@ export default function StudentPortal() {
     setAdmissionLoading(true);
     setAdmissionResult(null);
     try {
-      const res = await fetch("/api/admissions", {
+      const res = await fetch(API_BASE + "/api/admissions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ interests: admissionInterests, background: admissionBg, goal: admissionGoal })
@@ -417,7 +422,7 @@ export default function StudentPortal() {
     setResearchLoading(true);
     setResearchResult("");
     try {
-      const res = await fetch("/api/research", {
+      const res = await fetch(API_BASE + "/api/research", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: researchText, mode: "summarize" })

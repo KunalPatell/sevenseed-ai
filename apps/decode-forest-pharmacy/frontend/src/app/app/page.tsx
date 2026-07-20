@@ -30,6 +30,11 @@ import {
   Building2
 } from "lucide-react";
 
+// This dashboard is served under the "/pharmacy" path when merged into the
+// Sevenseed hub (see apps/sevenseed/backend/child_processes.py); its own API
+// calls must go through that same prefix, not root-relative "/api/...".
+const API_BASE = "/pharmacy";
+
 type PanelType = "dashboard" | "assistant" | "prescription" | "interactions" | "substitutes" | "refill" | "symptoms" | "medicines" | "hospitals" | "camps" | "schemes";
 
 interface Medicine {
@@ -162,7 +167,7 @@ export default function AppPortal() {
 
   const loadHealthAndData = async () => {
     try {
-      const res = await fetch("/api/health");
+      const res = await fetch(API_BASE + "/api/health");
       if (res.ok) {
         const d = await res.json();
         setLlmEnabled(d.llm_enabled);
@@ -179,7 +184,7 @@ export default function AppPortal() {
 
   const loadAllMedicines = async () => {
     try {
-      const res = await fetch("/api/medicines");
+      const res = await fetch(API_BASE + "/api/medicines");
       if (res.ok) {
         const d = await res.json();
         setMedicines(d.medicines || []);
@@ -190,19 +195,19 @@ export default function AppPortal() {
 
   const loadDbHistory = async () => {
     try {
-      const rRes = await fetch("/api/refills");
+      const rRes = await fetch(API_BASE + "/api/refills");
       if (rRes.ok) {
         const rData = await rRes.json();
         setRefills(rData.refills || []);
       }
 
-      const pRes = await fetch("/api/prescriptions");
+      const pRes = await fetch(API_BASE + "/api/prescriptions");
       if (pRes.ok) {
         const pData = await pRes.json();
         setPrescriptions(pData.prescriptions || []);
       }
 
-      const iRes = await fetch("/api/interactions-history");
+      const iRes = await fetch(API_BASE + "/api/interactions-history");
       if (iRes.ok) {
         const iData = await iRes.json();
         setInteractionsHistory(iData.interactions || []);
@@ -218,7 +223,7 @@ export default function AppPortal() {
     setChatMessages(prev => [...prev, { role: "user", text: msg }]);
     setChatLoading(true);
     try {
-      const res = await fetch("/api/assistant", {
+      const res = await fetch(API_BASE + "/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: msg, session_id: sessionId })
@@ -242,7 +247,7 @@ export default function AppPortal() {
     setRxLoading(true);
     setRxResult("");
     try {
-      const res = await fetch("/api/prescription", {
+      const res = await fetch(API_BASE + "/api/prescription", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: rxInput })
@@ -264,7 +269,7 @@ export default function AppPortal() {
     setInteractLoading(true);
     setInteractResult("");
     try {
-      const res = await fetch("/api/interactions", {
+      const res = await fetch(API_BASE + "/api/interactions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ drugs: drugChips })
@@ -286,7 +291,7 @@ export default function AppPortal() {
     setSubLoading(true);
     setSubResult("");
     try {
-      const res = await fetch("/api/substitutes", {
+      const res = await fetch(API_BASE + "/api/substitutes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ medicine: subInput })
@@ -307,7 +312,7 @@ export default function AppPortal() {
     setRefillLoading(true);
     setRefillResult(null);
     try {
-      const res = await fetch("/api/refill", {
+      const res = await fetch(API_BASE + "/api/refill", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -334,7 +339,7 @@ export default function AppPortal() {
     setSymptomLoading(true);
     setSymptomResult("");
     try {
-      const res = await fetch("/api/symptoms", {
+      const res = await fetch(API_BASE + "/api/symptoms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ symptom: symptomInput })
@@ -357,7 +362,7 @@ export default function AppPortal() {
     }
     setSearchLoading(true);
     try {
-      const res = await fetch("/api/search", {
+      const res = await fetch(API_BASE + "/api/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: searchQuery })
@@ -378,7 +383,7 @@ export default function AppPortal() {
     setHospitalError("");
     setHospitalResults([]);
     try {
-      const res = await fetch("/api/hospitals/nearby", {
+      const res = await fetch(API_BASE + "/api/hospitals/nearby", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ city: hospitalCity, radius_km: hospitalRadius * 1.6 })
@@ -401,12 +406,12 @@ export default function AppPortal() {
 
   const loadCampsAndSchemes = async () => {
     try {
-      const cRes = await fetch("/api/health-camps");
+      const cRes = await fetch(API_BASE + "/api/health-camps");
       if (cRes.ok) {
         const cData = await cRes.json();
         setCamps(cData.camps || []);
       }
-      const sRes = await fetch("/api/free-schemes");
+      const sRes = await fetch(API_BASE + "/api/free-schemes");
       if (sRes.ok) {
         const sData = await sRes.json();
         setSchemes(sData.schemes || []);
@@ -416,7 +421,7 @@ export default function AppPortal() {
 
   const deleteRefillRecord = async (id: number) => {
     try {
-      const res = await fetch(`/api/refills/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_BASE}/api/refills/${id}`, { method: "DELETE" });
       if (res.ok) {
         setRefills(prev => prev.filter(r => r.id !== id));
       }
@@ -1115,7 +1120,7 @@ export default function AppPortal() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   setCampLoading(true);
-                  fetch(`/api/health-camps?query=${encodeURIComponent(campQuery)}`)
+                  fetch(`${API_BASE}/api/health-camps?query=${encodeURIComponent(campQuery)}`)
                     .then(res => res.json())
                     .then(d => { setCamps(d.camps || []); setCampLoading(false); });
                 }
@@ -1127,7 +1132,7 @@ export default function AppPortal() {
           <button
             onClick={() => {
               setCampLoading(true);
-              fetch(`/api/health-camps?query=${encodeURIComponent(campQuery)}`)
+              fetch(`${API_BASE}/api/health-camps?query=${encodeURIComponent(campQuery)}`)
                 .then(res => res.json())
                 .then(d => { setCamps(d.camps || []); setCampLoading(false); });
             }}
@@ -1195,7 +1200,7 @@ export default function AppPortal() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   setSchemeLoading(true);
-                  fetch(`/api/free-schemes?query=${encodeURIComponent(schemeQuery)}`)
+                  fetch(`${API_BASE}/api/free-schemes?query=${encodeURIComponent(schemeQuery)}`)
                     .then(res => res.json())
                     .then(d => { setSchemes(d.schemes || []); setSchemeLoading(false); });
                 }
@@ -1207,7 +1212,7 @@ export default function AppPortal() {
           <button
             onClick={() => {
               setSchemeLoading(true);
-              fetch(`/api/free-schemes?query=${encodeURIComponent(schemeQuery)}`)
+              fetch(`${API_BASE}/api/free-schemes?query=${encodeURIComponent(schemeQuery)}`)
                 .then(res => res.json())
                 .then(d => { setSchemes(d.schemes || []); setSchemeLoading(false); });
             }}

@@ -32,6 +32,11 @@ import {
   ArrowDown
 } from "lucide-react";
 
+// This dashboard is served under the "/avp-emart" path when merged into the
+// Sevenseed hub (see apps/sevenseed/backend/child_processes.py); its own API
+// calls must go through that same prefix, not root-relative "/api/...".
+const API_BASE = "/avp-emart";
+
 type PanelType = "dashboard" | "comparator" | "assistant" | "reviews" | "trends" | "wishlist" | "alerts";
 
 interface ProductComparison {
@@ -176,7 +181,7 @@ export default function AppPortal() {
 
   const loadHealthAndData = async () => {
     try {
-      const res = await fetch("/api/health");
+      const res = await fetch(API_BASE + "/api/health");
       if (res.ok) {
         const d = await res.json();
         setLlmEnabled(d.llm_enabled);
@@ -190,19 +195,19 @@ export default function AppPortal() {
 
   const loadDbHistory = async () => {
     try {
-      const wRes = await fetch("/api/wishlist");
+      const wRes = await fetch(API_BASE + "/api/wishlist");
       if (wRes.ok) {
         const wData = await wRes.json();
         setWishlist(wData.wishlist || []);
       }
 
-      const aRes = await fetch("/api/alerts");
+      const aRes = await fetch(API_BASE + "/api/alerts");
       if (aRes.ok) {
         const aData = await aRes.json();
         setAlerts(aData.alerts || []);
       }
 
-      const sRes = await fetch("/api/searches");
+      const sRes = await fetch(API_BASE + "/api/searches");
       if (sRes.ok) {
         const sData = await sRes.json();
         setSearchHistory(sData.searches || []);
@@ -218,7 +223,7 @@ export default function AppPortal() {
     setCompareResults([]);
     if (!q) setCompareQuery(query);
     try {
-      const res = await fetch("/api/compare", {
+      const res = await fetch(API_BASE + "/api/compare", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query })
@@ -242,7 +247,7 @@ export default function AppPortal() {
     setChatMessages(prev => [...prev, { role: "user", text: msg }]);
     setChatLoading(true);
     try {
-      const res = await fetch("/api/assistant", {
+      const res = await fetch(API_BASE + "/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: msg })
@@ -265,7 +270,7 @@ export default function AppPortal() {
     setReviewLoading(true);
     setReviewResult("");
     try {
-      const res = await fetch("/api/reviews", {
+      const res = await fetch(API_BASE + "/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ product: reviewProd, reviews_text: reviewText })
@@ -286,7 +291,7 @@ export default function AppPortal() {
     setTrendLoading(true);
     setTrendResult(null);
     try {
-      const res = await fetch("/api/trend", {
+      const res = await fetch(API_BASE + "/api/trend", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: trendQuery })
@@ -304,7 +309,7 @@ export default function AppPortal() {
 
   const handleAddToWishlist = async (p: ProductComparison) => {
     try {
-      const res = await fetch("/api/wishlist", {
+      const res = await fetch(API_BASE + "/api/wishlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -323,7 +328,7 @@ export default function AppPortal() {
 
   const handleDeleteWishlistItem = async (id: number) => {
     try {
-      const res = await fetch(`/api/wishlist/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_BASE}/api/wishlist/${id}`, { method: "DELETE" });
       if (res.ok) {
         setWishlist(prev => prev.filter(item => item.id !== id));
       }
@@ -332,7 +337,7 @@ export default function AppPortal() {
 
   const handleCreateAlert = async (p: ProductComparison, target: number) => {
     try {
-      const res = await fetch("/api/alerts", {
+      const res = await fetch(API_BASE + "/api/alerts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -351,7 +356,7 @@ export default function AppPortal() {
 
   const handleDeleteAlert = async (id: number) => {
     try {
-      const res = await fetch(`/api/alerts/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_BASE}/api/alerts/${id}`, { method: "DELETE" });
       if (res.ok) {
         setAlerts(prev => prev.filter(item => item.id !== id));
       }

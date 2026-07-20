@@ -1,4 +1,6 @@
 // Enterprise site interactions — Sevenseed AI portfolio
+const API_BASE = "/sevenforce";
+
 document.body.classList.add('js');
 
 // Entrance orchestration: reveal blur-in elements + fire scramble
@@ -235,7 +237,7 @@ async function submitLogin(e) {
   submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
   
   try {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch(API_BASE + '/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -278,7 +280,7 @@ async function submitSignup(e) {
   submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
   
   try {
-    const res = await fetch('/api/auth/signup', {
+    const res = await fetch(API_BASE + '/api/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password })

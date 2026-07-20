@@ -12,13 +12,16 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path: 
     sys.path.insert(0, _HERE)
 
-from fastapi import FastAPI, HTTPException
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from app import config, db
+from child_processes import CHILDREN, proxy_to_child, start_children, stop_children
 
 try: 
     from dotenv import load_dotenv; load_dotenv()
@@ -208,7 +211,13 @@ def portfolio_analysis():
 
 
 # ── FastAPI setup ─────────────────────────────────────────────────────────────
-app=FastAPI(title="Sevenseed AI Venture Studio",version="1.0.0")
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    start_children()
+    yield
+    stop_children()
+
+app=FastAPI(title="Sevenseed AI Venture Studio",version="1.0.0",lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -303,39 +312,24 @@ def delete_pitch(item_id: int):
 from features import router as _feat_router
 app.include_router(_feat_router)
 
-# Import child routers
-from routers.comonk import router as comonk_router
-from routers.avp_emart import router as avp_emart_router
-from routers.avpu import router as avpu_router
-from routers.breakdown import router as breakdown_router
-from routers.trust import router as trust_router
-from routers.pharmacy import router as pharmacy_router
-from routers.sevenforce import router as sevenforce_router
-
-# Include child routers with prefixes
-app.include_router(comonk_router, prefix="/comonk")
-app.include_router(avp_emart_router, prefix="/avp-emart")
-app.include_router(avpu_router, prefix="/avpu")
-app.include_router(breakdown_router, prefix="/breakdown")
-app.include_router(trust_router, prefix="/trust")
-app.include_router(pharmacy_router, prefix="/pharmacy")
-app.include_router(sevenforce_router, prefix="/sevenforce")
+# ── Child apps: each is its own isolated process (see child_processes.py for
+# why), reached here through a thin reverse proxy. Comonk is deliberately not
+# a child here - it stays its own separately-deployed live service, and the
+# hub's ventures data links to it externally instead.
+@app.api_route("/{prefix}/api/{tail:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+async def _proxy_child(request: Request, prefix: str, tail: str):
+    child = CHILDREN.get(prefix)
+    if child is None:
+        raise HTTPException(status_code=404, detail="Unknown app")
+    return await proxy_to_child(request, int(child["port"]), tail)
 
 if config.STATIC_DIR.exists():
-    # Mount child static folders first
-    for path_prefix, folder_name in [
-        ("/comonk", "comonk"),
-        ("/avp-emart", "avp-emart"),
-        ("/avpu", "avpu"),
-        ("/breakdown", "breakdown"),
-        ("/trust", "trust"),
-        ("/pharmacy", "pharmacy"),
-        ("/sevenforce", "sevenforce"),
-    ]:
-        static_sub = config.STATIC_DIR / folder_name
+    # Mount each child's pre-built static frontend at its own prefix.
+    for prefix in CHILDREN:
+        static_sub = config.STATIC_DIR / prefix
         if static_sub.exists():
-            app.mount(path_prefix, StaticFiles(directory=str(static_sub), html=True), name=folder_name)
-    
+            app.mount(f"/{prefix}", StaticFiles(directory=str(static_sub), html=True), name=prefix)
+
     # Mount root landing page last
     app.mount("/", StaticFiles(directory=str(config.STATIC_DIR), html=True), name="frontend")
 else:

@@ -44,6 +44,11 @@ import {
   ClipboardCheck
 } from "lucide-react";
 
+// This dashboard is served under the "/breakdown" path when merged into the
+// Sevenseed hub (see apps/sevenseed/backend/child_processes.py); its own API
+// calls must go through that same prefix, not root-relative "/api/...".
+const API_BASE = "/breakdown";
+
 type PanelType = "dashboard" | "copilot" | "boq" | "defect" | "timeline" | "tender" | "safety" | "financials" | "sitedoc";
 
 interface CopilotSession {
@@ -217,7 +222,7 @@ export default function ConstructionPortal() {
     try {
       const formData = new FormData();
       formData.append("file", targetFile);
-      const res = await fetch("/api/tools/site-doc-ocr", {
+      const res = await fetch(API_BASE + "/api/tools/site-doc-ocr", {
         method: "POST",
         body: formData
       });
@@ -253,7 +258,7 @@ export default function ConstructionPortal() {
 
   const loadHealthAndData = async () => {
     try {
-      const hRes = await fetch("/api/health");
+      const hRes = await fetch(API_BASE + "/api/health");
       if (hRes.ok) {
         const hData = await hRes.json();
         setLlmEnabled(hData.llm_enabled);
@@ -268,13 +273,13 @@ export default function ConstructionPortal() {
 
   const loadDbHistory = async () => {
     try {
-      const sRes = await fetch("/api/history/copilot");
+      const sRes = await fetch(API_BASE + "/api/history/copilot");
       if (sRes.ok) {
         const sData = await sRes.json();
         setHistorySessions(sData.sessions || []);
       }
 
-      const dRes = await fetch("/api/history/scans");
+      const dRes = await fetch(API_BASE + "/api/history/scans");
       if (dRes.ok) {
         const dData = await dRes.json();
         setHistoryScans(dData.scans || []);
@@ -284,7 +289,7 @@ export default function ConstructionPortal() {
 
   const fetchUser = async (tok: string) => {
     try {
-      const res = await fetch("/api/auth/me", {
+      const res = await fetch(API_BASE + "/api/auth/me", {
         headers: { Authorization: `Bearer ${tok}` }
       });
       if (res.ok) {
@@ -296,13 +301,13 @@ export default function ConstructionPortal() {
 
   const fetchProjects = async () => {
     try {
-      const res = await fetch("/api/projects");
+      const res = await fetch(API_BASE + "/api/projects");
       if (res.ok) {
         const d = await res.json();
         setProjectsList(d.projects || []);
       }
 
-      const rRes = await fetch("/api/reminders");
+      const rRes = await fetch(API_BASE + "/api/reminders");
       if (rRes.ok) {
         const rd = await rRes.json();
         setRemindersList(rd.reminders || []);
@@ -314,7 +319,7 @@ export default function ConstructionPortal() {
   const handleSignup = async () => {
     setAuthFeedback("");
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch(API_BASE + "/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: authName, email: authEmail, password: authPassword })
@@ -336,7 +341,7 @@ export default function ConstructionPortal() {
   const handleLogin = async () => {
     setAuthFeedback("");
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch(API_BASE + "/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: authEmail, password: authPassword })
@@ -365,7 +370,7 @@ export default function ConstructionPortal() {
   // Project Logging
   const handleSaveProject = async () => {
     try {
-      const res = await fetch("/api/projects", {
+      const res = await fetch(API_BASE + "/api/projects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -397,7 +402,7 @@ export default function ConstructionPortal() {
     if (!activeSessionId) setActiveSessionId(sid);
 
     try {
-      const res = await fetch("/api/copilot", {
+      const res = await fetch(API_BASE + "/api/copilot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text, session_id: sid })
@@ -437,7 +442,7 @@ export default function ConstructionPortal() {
     if (!boqArea || boqLoading) return;
     setBoqLoading(true);
     try {
-      const res = await fetch("/api/tools/boq", {
+      const res = await fetch(API_BASE + "/api/tools/boq", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ area: boqArea, quality: boqQuality })
@@ -468,7 +473,7 @@ export default function ConstructionPortal() {
     formData.append("file", selectedFile);
 
     try {
-      const res = await fetch("/api/defect/scan", {
+      const res = await fetch(API_BASE + "/api/defect/scan", {
         method: "POST",
         body: formData
       });
@@ -485,7 +490,7 @@ export default function ConstructionPortal() {
 
   const handleDeleteScan = async (id: number) => {
     try {
-      const res = await fetch(`/api/history/scans/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_BASE}/api/history/scans/${id}`, { method: "DELETE" });
       if (res.ok) {
         setHistoryScans(prev => prev.filter(s => s.id !== id));
       }
@@ -497,7 +502,7 @@ export default function ConstructionPortal() {
     if (!timelineArea || timelineLoading) return;
     setTimelineLoading(true);
     try {
-      const res = await fetch("/api/tools/timeline", {
+      const res = await fetch(API_BASE + "/api/tools/timeline", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ project_type: timelineType, area: timelineArea })
@@ -518,7 +523,7 @@ export default function ConstructionPortal() {
     setTenderLoading(true);
     setTenderResult("");
     try {
-      const res = await fetch("/api/tools/tender", {
+      const res = await fetch(API_BASE + "/api/tools/tender", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ scope: tenderScope, budget: tenderBudget })
@@ -536,7 +541,7 @@ export default function ConstructionPortal() {
   // Financials
   const handleEMICalculate = async () => {
     try {
-      const res = await fetch("/api/tools/emi", {
+      const res = await fetch(API_BASE + "/api/tools/emi", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ principal: emiPrincipal, rate: emiRate, years: emiYears })
@@ -550,7 +555,7 @@ export default function ConstructionPortal() {
 
   const handleROICalculate = async () => {
     try {
-      const res = await fetch("/api/tools/roi", {
+      const res = await fetch(API_BASE + "/api/tools/roi", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ cost: roiCost, monthly_rent: roiRent })
@@ -568,7 +573,7 @@ export default function ConstructionPortal() {
     setSafetyLoading(true);
     setSafetyResult("");
     try {
-      const res = await fetch("/api/tools/safety-checklist", {
+      const res = await fetch(API_BASE + "/api/tools/safety-checklist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ site_type: safetyType })
@@ -599,7 +604,7 @@ export default function ConstructionPortal() {
         reader.onerror = reject;
         reader.readAsDataURL(targetFile);
       });
-      const res = await fetch("/api/tools/safety-detect", {
+      const res = await fetch(API_BASE + "/api/tools/safety-detect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image_base64 })
