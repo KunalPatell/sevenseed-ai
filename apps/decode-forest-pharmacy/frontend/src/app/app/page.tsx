@@ -23,6 +23,7 @@ import {
   MapPin,
   HeartPulse,
   Shield,
+  Settings,
   Phone,
   ClipboardList,
   ShieldAlert,
@@ -34,6 +35,29 @@ import {
 // Sevenseed hub (see apps/sevenseed/backend/child_processes.py); its own API
 // calls must go through that same prefix, not root-relative "/api/...".
 const API_BASE = "/pharmacy";
+
+// Bring-your-own-key: a visitor can paste their own Groq/Gemini/OpenAI key
+// (localStorage, this browser only) instead of using the shared server key.
+// apiFetch is a drop-in fetch() that adds those keys as headers automatically.
+function getByokHeaders(): Record<string, string> {
+  if (typeof window === "undefined") return {};
+  const h: Record<string, string> = {};
+  const groq = localStorage.getItem("byok_groq_key");
+  const gemini = localStorage.getItem("byok_gemini_key");
+  const openai = localStorage.getItem("byok_openai_key");
+  if (groq) h["x-groq-api-key"] = groq;
+  if (gemini) h["x-gemini-api-key"] = gemini;
+  if (openai) h["x-openai-api-key"] = openai;
+  return h;
+}
+
+function apiFetch(url: string, options: RequestInit = {}): Promise<Response> {
+  return fetch(url, {
+    ...options,
+    headers: { ...getByokHeaders(), ...(options.headers || {}) },
+  });
+}
+
 
 type PanelType = "dashboard" | "assistant" | "prescription" | "interactions" | "substitutes" | "refill" | "symptoms" | "medicines" | "hospitals" | "camps" | "schemes";
 
@@ -77,6 +101,48 @@ interface InteractionRecord {
 export default function AppPortal() {
   const [activePanel, setActivePanel] = useState<PanelType>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [groqKey, setGroqKey] = useState("");
+  const [geminiKey, setGeminiKey] = useState("");
+  const [openaiKey, setOpenaiKey] = useState("");
+  const [huggingfaceKey, setHuggingfaceKey] = useState("");
+  const [mistralKey, setMistralKey] = useState("");
+
+  useEffect(() => {
+    setGroqKey(localStorage.getItem("user_groq_key") || "");
+    setGeminiKey(localStorage.getItem("user_gemini_key") || "");
+    setOpenaiKey(localStorage.getItem("user_openai_key") || "");
+    setHuggingfaceKey(localStorage.getItem("user_huggingface_key") || "");
+    setMistralKey(localStorage.getItem("user_mistral_key") || "");
+  }, []);
+
+  useEffect(() => {
+    const originalFetch = window.fetch;
+    window.fetch = async (input, init) => {
+      const path = typeof input === "string" ? input : input instanceof Request ? input.url : "";
+      if (path.includes("/api/")) {
+        const groq = localStorage.getItem("user_groq_key") || "";
+        const gemini = localStorage.getItem("user_gemini_key") || "";
+        const openai = localStorage.getItem("user_openai_key") || "";
+        const huggingface = localStorage.getItem("user_huggingface_key") || "";
+        const mistral = localStorage.getItem("user_mistral_key") || "";
+
+        const headers = new Headers(init?.headers || {});
+        if (groq) headers.set("X-Groq-API-Key", groq);
+        if (gemini) headers.set("X-Gemini-API-Key", gemini);
+        if (openai) headers.set("X-OpenAI-API-Key", openai);
+        if (huggingface) headers.set("X-HuggingFace-API-Key", huggingface);
+        if (mistral) headers.set("X-Mistral-API-Key", mistral);
+
+        init = { ...init, headers };
+      }
+      return originalFetch(input, init);
+    };
+    return () => {
+      window.fetch = originalFetch;
+    };
+  }, []);
+
   const [llmEnabled, setLlmEnabled] = useState(false);
   const [providerName, setProviderName] = useState("Offline AI");
   const [ragBackend, setRagBackend] = useState("token-overlap");
@@ -167,7 +233,7 @@ export default function AppPortal() {
 
   const loadHealthAndData = async () => {
     try {
-      const res = await fetch(API_BASE + "/api/health");
+      const res = await apiFetch(API_BASE + "/api/health");
       if (res.ok) {
         const d = await res.json();
         setLlmEnabled(d.llm_enabled);
@@ -184,7 +250,7 @@ export default function AppPortal() {
 
   const loadAllMedicines = async () => {
     try {
-      const res = await fetch(API_BASE + "/api/medicines");
+      const res = await apiFetch(API_BASE + "/api/medicines");
       if (res.ok) {
         const d = await res.json();
         setMedicines(d.medicines || []);
@@ -195,19 +261,19 @@ export default function AppPortal() {
 
   const loadDbHistory = async () => {
     try {
-      const rRes = await fetch(API_BASE + "/api/refills");
+      const rRes = await apiFetch(API_BASE + "/api/refills");
       if (rRes.ok) {
         const rData = await rRes.json();
         setRefills(rData.refills || []);
       }
 
-      const pRes = await fetch(API_BASE + "/api/prescriptions");
+      const pRes = await apiFetch(API_BASE + "/api/prescriptions");
       if (pRes.ok) {
         const pData = await pRes.json();
         setPrescriptions(pData.prescriptions || []);
       }
 
-      const iRes = await fetch(API_BASE + "/api/interactions-history");
+      const iRes = await apiFetch(API_BASE + "/api/interactions-history");
       if (iRes.ok) {
         const iData = await iRes.json();
         setInteractionsHistory(iData.interactions || []);
@@ -223,7 +289,7 @@ export default function AppPortal() {
     setChatMessages(prev => [...prev, { role: "user", text: msg }]);
     setChatLoading(true);
     try {
-      const res = await fetch(API_BASE + "/api/assistant", {
+      const res = await apiFetch(API_BASE + "/api/assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: msg, session_id: sessionId })
@@ -247,7 +313,7 @@ export default function AppPortal() {
     setRxLoading(true);
     setRxResult("");
     try {
-      const res = await fetch(API_BASE + "/api/prescription", {
+      const res = await apiFetch(API_BASE + "/api/prescription", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: rxInput })
@@ -269,7 +335,7 @@ export default function AppPortal() {
     setInteractLoading(true);
     setInteractResult("");
     try {
-      const res = await fetch(API_BASE + "/api/interactions", {
+      const res = await apiFetch(API_BASE + "/api/interactions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ drugs: drugChips })
@@ -291,7 +357,7 @@ export default function AppPortal() {
     setSubLoading(true);
     setSubResult("");
     try {
-      const res = await fetch(API_BASE + "/api/substitutes", {
+      const res = await apiFetch(API_BASE + "/api/substitutes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ medicine: subInput })
@@ -312,7 +378,7 @@ export default function AppPortal() {
     setRefillLoading(true);
     setRefillResult(null);
     try {
-      const res = await fetch(API_BASE + "/api/refill", {
+      const res = await apiFetch(API_BASE + "/api/refill", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -339,7 +405,7 @@ export default function AppPortal() {
     setSymptomLoading(true);
     setSymptomResult("");
     try {
-      const res = await fetch(API_BASE + "/api/symptoms", {
+      const res = await apiFetch(API_BASE + "/api/symptoms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ symptom: symptomInput })
@@ -362,7 +428,7 @@ export default function AppPortal() {
     }
     setSearchLoading(true);
     try {
-      const res = await fetch(API_BASE + "/api/search", {
+      const res = await apiFetch(API_BASE + "/api/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: searchQuery })
@@ -383,7 +449,7 @@ export default function AppPortal() {
     setHospitalError("");
     setHospitalResults([]);
     try {
-      const res = await fetch(API_BASE + "/api/hospitals/nearby", {
+      const res = await apiFetch(API_BASE + "/api/hospitals/nearby", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ city: hospitalCity, radius_km: hospitalRadius * 1.6 })
@@ -406,12 +472,12 @@ export default function AppPortal() {
 
   const loadCampsAndSchemes = async () => {
     try {
-      const cRes = await fetch(API_BASE + "/api/health-camps");
+      const cRes = await apiFetch(API_BASE + "/api/health-camps");
       if (cRes.ok) {
         const cData = await cRes.json();
         setCamps(cData.camps || []);
       }
-      const sRes = await fetch(API_BASE + "/api/free-schemes");
+      const sRes = await apiFetch(API_BASE + "/api/free-schemes");
       if (sRes.ok) {
         const sData = await sRes.json();
         setSchemes(sData.schemes || []);
@@ -421,7 +487,7 @@ export default function AppPortal() {
 
   const deleteRefillRecord = async (id: number) => {
     try {
-      const res = await fetch(`${API_BASE}/api/refills/${id}`, { method: "DELETE" });
+      const res = await apiFetch(`${API_BASE}/api/refills/${id}`, { method: "DELETE" });
       if (res.ok) {
         setRefills(prev => prev.filter(r => r.id !== id));
       }
@@ -1120,7 +1186,7 @@ export default function AppPortal() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   setCampLoading(true);
-                  fetch(`${API_BASE}/api/health-camps?query=${encodeURIComponent(campQuery)}`)
+                  apiFetch(`${API_BASE}/api/health-camps?query=${encodeURIComponent(campQuery)}`)
                     .then(res => res.json())
                     .then(d => { setCamps(d.camps || []); setCampLoading(false); });
                 }
@@ -1132,7 +1198,7 @@ export default function AppPortal() {
           <button
             onClick={() => {
               setCampLoading(true);
-              fetch(`${API_BASE}/api/health-camps?query=${encodeURIComponent(campQuery)}`)
+              apiFetch(`${API_BASE}/api/health-camps?query=${encodeURIComponent(campQuery)}`)
                 .then(res => res.json())
                 .then(d => { setCamps(d.camps || []); setCampLoading(false); });
             }}
@@ -1200,7 +1266,7 @@ export default function AppPortal() {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   setSchemeLoading(true);
-                  fetch(`${API_BASE}/api/free-schemes?query=${encodeURIComponent(schemeQuery)}`)
+                  apiFetch(`${API_BASE}/api/free-schemes?query=${encodeURIComponent(schemeQuery)}`)
                     .then(res => res.json())
                     .then(d => { setSchemes(d.schemes || []); setSchemeLoading(false); });
                 }
@@ -1212,7 +1278,7 @@ export default function AppPortal() {
           <button
             onClick={() => {
               setSchemeLoading(true);
-              fetch(`${API_BASE}/api/free-schemes?query=${encodeURIComponent(schemeQuery)}`)
+              apiFetch(`${API_BASE}/api/free-schemes?query=${encodeURIComponent(schemeQuery)}`)
                 .then(res => res.json())
                 .then(d => { setSchemes(d.schemes || []); setSchemeLoading(false); });
             }}
@@ -1314,6 +1380,9 @@ export default function AppPortal() {
         </nav>
 
         <div className="side-foot flex flex-col gap-3 pt-4 border-t border-white/5 mt-auto">
+          <button onClick={() => setSettingsOpen(true)} className="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all text-[#8890aa] hover:bg-[#12121e] hover:text-white">
+            <Settings className="h-4 w-4" /> API Settings
+          </button>
           <div className={`sysbadge flex items-center gap-2 text-[10.5px] font-mono rounded-lg border p-2.5 transition-all duration-300 ${
             llmEnabled ? "text-[#10b981] border-[#10b981]/30 bg-[#10b981]/5" : "text-[#8890aa] border-white/5 bg-[#12121e]"
           }`}>
@@ -1348,6 +1417,58 @@ export default function AppPortal() {
           {panels[activePanel]}
         </main>
       </div>
+
+      {settingsOpen && (
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#0d0f0e] border border-white/10 rounded-2xl p-6 max-w-md w-full flex flex-col gap-4 animate-[fade_0.2s_ease]">
+            <div className="flex justify-between items-center border-b border-white/5 pb-3">
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider">Configure API Keys</h3>
+              <button onClick={() => setSettingsOpen(false)} className="text-white/50 hover:text-white transition-all cursor-pointer bg-transparent border-none">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="flex flex-col gap-3 text-xs text-[#9aa0b8]">
+              <p>Keys are stored locally in your browser (localStorage) and sent only in the request headers.</p>
+              <div>
+                <label className="block mb-1 text-[10px] uppercase font-bold text-[#8890aa]">Groq API Key</label>
+                <input type="password" value={groqKey} onChange={(e) => setGroqKey(e.target.value)} placeholder="gsk_..." className="w-full bg-[#12121e] border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#10b981]" />
+              </div>
+              <div>
+                <label className="block mb-1 text-[10px] uppercase font-bold text-[#8890aa]">Gemini API Key</label>
+                <input type="password" value={geminiKey} onChange={(e) => setGeminiKey(e.target.value)} placeholder="AIzaSy..." className="w-full bg-[#12121e] border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#10b981]" />
+              </div>
+              <div>
+                <label className="block mb-1 text-[10px] uppercase font-bold text-[#8890aa]">OpenAI API Key</label>
+                <input type="password" value={openaiKey} onChange={(e) => setOpenaiKey(e.target.value)} placeholder="sk-proj-..." className="w-full bg-[#12121e] border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#10b981]" />
+              </div>
+              <div>
+                <label className="block mb-1 text-[10px] uppercase font-bold text-[#8890aa]">HuggingFace Token</label>
+                <input type="password" value={huggingfaceKey} onChange={(e) => setHuggingfaceKey(e.target.value)} placeholder="hf_..." className="w-full bg-[#12121e] border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#10b981]" />
+              </div>
+              <div>
+                <label className="block mb-1 text-[10px] uppercase font-bold text-[#8890aa]">Mistral API Key</label>
+                <input type="password" value={mistralKey} onChange={(e) => setMistralKey(e.target.value)} placeholder="..." className="w-full bg-[#12121e] border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-[#10b981]" />
+              </div>
+            </div>
+            <div className="flex gap-3 justify-end border-t border-white/5 pt-4">
+              <button onClick={() => setSettingsOpen(false)} className="btn bg-white/5 border border-white/10 text-xs text-white px-4 py-2 rounded-lg hover:bg-[#18182a] cursor-pointer">
+                Cancel
+              </button>
+              <button onClick={() => {
+                localStorage.setItem("user_groq_key", groqKey);
+                localStorage.setItem("user_gemini_key", geminiKey);
+                localStorage.setItem("user_openai_key", openaiKey);
+                localStorage.setItem("user_huggingface_key", huggingfaceKey);
+                localStorage.setItem("user_mistral_key", mistralKey);
+                setSettingsOpen(false);
+                window.location.reload();
+              }} className="btn bg-[#10b981] hover:bg-[#0d9668] text-white font-bold text-xs px-4 py-2 rounded-lg cursor-pointer border-none">
+                Save & Reload
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
