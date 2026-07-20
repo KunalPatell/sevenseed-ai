@@ -1,218 +1,32 @@
-# Sevenseed -- one Render Project, one repo, eight services.
+# Sevenseed Monolith — 1 Render Service hosting Sevenseed Hub + 7 Child Apps
 #
-# Render's grouping model is a PROJECT containing services. There is no
-# "parent service owning child services" -- so Sevenseed is the project, and all
-# eight services live inside it:
-#
-#   Project: Sevenseed
-#     \-- production
-#           sevenseed                (the hub that handles all seven ventures)
-#           sevenforce-ai            \
-#           avpu-ai                  |
-#           avp-emart                |
-#           avp-charitable-trust     |-- the seven ventures
-#           breakdown-factor         |
-#           decode-forest-pharmacy   |
-#           comonk-ai                /
-#
-# `rootDir` is what makes the monorepo work: each service builds only from its
-# own folder, so a push touching apps/avpu/ does not rebuild the other seven.
-# Every service keeps the exact settings and env vars it had in its own
-# standalone render.yaml -- only rootDir and the project grouping are new.
-#
-# -- IMPORTANT, READ BEFORE APPLYING ------------------------------------------
-# Your eight services already exist and are live. Applying this Blueprint to a
-# NEW repo can create a second set of services rather than moving the existing
-# ones. To group what you already have, use the dashboard instead -- it takes a
-# few seconds, needs no redeploy, and touches nothing else:
-#
-#   Dashboard -> select all 8 services -> Move -> new project "Sevenseed"
-#   (or one at a time: the service's "..." menu -> Move)
-#
-# Use this file as the source of truth once the monorepo repo is connected.
-#
-# -- PLANS --------------------------------------------------------------------
-# All eight are still `plan: free`. The free tier shares ~750 instance-hours per
-# month across the whole account, so eight always-on services do not fit and each
-# keeps spinning down and cold-starting. To get an always-warm hub, upgrade
-# `sevenseed` alone (one service ~ 730 hrs/month fits) and leave the children
-# free. That is a billing decision -- left unchanged here.
+# Single web service definition that builds all frontends and runs the unified FastAPI backend.
 
-projects:
-  - name: Sevenseed
-    environments:
-      - name: production
-        services:
-          # --------------------------- PARENT HUB ---------------------------
-          - type: web
-            name: sevenseed
-            rootDir: apps/sevenseed
-            env: docker
-            plan: free
-            healthCheckPath: /api/health
-            envVars:
-              - key: PORT
-                value: 8000
-              - key: GROQ_API_KEY
-                sync: false
-              - key: GROQ_MODEL
-                value: llama-3.3-70b-versatile
-
-          # ----------------------- THE SEVEN VENTURES -----------------------
-          - type: web
-            name: sevenforce-ai
-            rootDir: apps/sevenforce
-            env: docker
-            plan: free
-            healthCheckPath: /api/health
-            envVars:
-              - key: PORT
-                value: 8000
-              - key: GROQ_API_KEY
-                sync: false
-              - key: GROQ_MODEL
-                value: llama-3.3-70b-versatile
-              - key: GEMINI_API_KEY
-                sync: false
-              - key: OPENAI_API_KEY
-                sync: false
-              - key: HUGGINGFACE_API_KEY
-                sync: false
-              - key: WHATSAPP_ACCESS_TOKEN
-                sync: false
-              - key: WHATSAPP_PHONE_NUMBER_ID
-                sync: false
-              - key: BREVO_API_KEY
-                sync: false
-              - key: BREVO_SENDER
-                sync: false
-
-          - type: web
-            name: avpu-ai
-            rootDir: apps/avpu
-            env: docker
-            plan: free
-            healthCheckPath: /api/health
-            envVars:
-              - key: PORT
-                value: 8000
-              - key: GROQ_API_KEY
-                sync: false
-              - key: GROQ_MODEL
-                value: llama-3.3-70b-versatile
-
-          - type: web
-            name: avp-emart
-            rootDir: apps/avp-emart
-            env: docker
-            plan: free
-            healthCheckPath: /api/health
-            envVars:
-              - key: PORT
-                value: 8000
-              - key: GROQ_API_KEY
-                sync: false
-              - key: GROQ_MODEL
-                value: llama-3.3-70b-versatile
-
-          - type: web
-            name: avp-charitable-trust
-            rootDir: apps/avp-charitable-trust
-            env: docker
-            plan: free
-            healthCheckPath: /api/health
-            envVars:
-              - key: PORT
-                value: 8000
-              - key: GROQ_API_KEY
-                sync: false
-              - key: GROQ_MODEL
-                value: llama-3.3-70b-versatile
-
-          - type: web
-            name: breakdown-factor
-            rootDir: apps/breakdown-factor
-            env: docker
-            plan: free
-            healthCheckPath: /api/health
-            envVars:
-              - key: PORT
-                value: 8000
-              - key: GROQ_API_KEY
-                sync: false
-              - key: GROQ_MODEL
-                value: llama-3.3-70b-versatile
-
-          - type: web
-            name: decode-forest-pharmacy
-            rootDir: apps/decode-forest-pharmacy
-            env: docker
-            plan: free
-            healthCheckPath: /api/health
-            envVars:
-              - key: PORT
-                value: 8000
-              - key: GROQ_API_KEY
-                sync: false
-              - key: GROQ_MODEL
-                value: llama-3.3-70b-versatile
-
-          # comonk is the one live-in-production venture and the only non-docker
-          # service. Move it into the project LAST, after the other seven are green.
-          - type: web
-            name: comonk-ai
-            rootDir: apps/comonk
-            runtime: python
-            buildCommand: pip install -r requirements_comonk.txt
-            startCommand: python comonk_backend.py
-            envVars:
-              - key: PORT
-                value: 10000
-              - key: GROQ_API_KEY
-                sync: false
-              - key: MISTRAL_API_KEY
-                sync: false
-              - key: GEMINI_API_KEY
-                sync: false
-              - key: OPENROUTER_API_KEY
-                sync: false
-              - key: COHERE_API_KEY
-                sync: false
-              - key: GITHUB_TOKEN
-                sync: false
-              - key: YOUTUBE_API_KEY
-                sync: false
-              - key: NEWSAPI_KEY
-                sync: false
-              - key: GNEWS_API_KEY
-                sync: false
-              - key: ADZUNA_APP_ID
-                sync: false
-              - key: ADZUNA_API_KEY
-                sync: false
-              - key: HUNTER_API_KEY
-                sync: false
-              - key: BREVO_API_KEY
-                sync: false
-              - key: RESEND_API_KEY
-                sync: false
-              - key: WAKATIME_API_KEY
-                sync: false
-              - key: ABSTRACT_API_KEY
-                sync: false
-              - key: NOTION_TOKEN
-                sync: false
-              - key: TWILIO_ACCOUNT_SID
-                sync: false
-              - key: TWILIO_AUTH_TOKEN
-                sync: false
-              - key: TWILIO_FROM_NUMBER
-                sync: false
-              - key: ADMIN_PASSWORD
-                sync: false
-              - key: TELEGRAM_BOT_TOKEN
-                sync: false
-              - key: TELEGRAM_CHAT_ID
-                sync: false
-              - key: DISCORD_WEBHOOK_URL
-                sync: false
+services:
+  - type: web
+    name: sevenseed
+    env: docker
+    dockerfilePath: apps/sevenseed/Dockerfile
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: HUGGINGFACE_API_KEY
+        sync: false
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_SENDER
+        sync: false

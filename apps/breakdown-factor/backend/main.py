@@ -125,12 +125,12 @@ async def scan_defect(file: UploadFile = File(...)):
 
 @app.get("/api/cost-items")
 def cost_items():
-    from data import COST_ITEMS
+    from breakdown_data import COST_ITEMS
     return {"items": COST_ITEMS, "count": len(COST_ITEMS)}
 
 @app.get("/api/safety-risks")
 def safety_risks():
-    from data import SAFETY_RISKS
+    from breakdown_data import SAFETY_RISKS
     return {"risks": SAFETY_RISKS, "count": len(SAFETY_RISKS)}
 
 

@@ -166,17 +166,6 @@ async function api(method, path, body, isForm = false) {
   const opts = { method, headers: {} };
   if (body && !isForm) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
   if (body && isForm) { opts.body = body; }
-  
-  // Attach user keys if set in localStorage
-  const groq = localStorage.getItem('user_groq_key');
-  if (groq) opts.headers['x-groq-key'] = groq;
-  const gemini = localStorage.getItem('user_gemini_key');
-  if (gemini) opts.headers['x-gemini-key'] = gemini;
-  const openai = localStorage.getItem('user_openai_key');
-  if (openai) opts.headers['x-openai-key'] = openai;
-  const mistral = localStorage.getItem('user_mistral_key');
-  if (mistral) opts.headers['x-mistral-key'] = mistral;
-
   const res = await fetch(API + path, opts);
   if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || `HTTP ${res.status}`); }
   return res.json();
@@ -5383,35 +5372,3 @@ async function compareOffers() {
   }
 }
 window.compareOffers = compareOffers;
-
-
-/* ── BYOK Settings Helpers ───────────────────────────────────────── */
-window.openByokModal = function() {
-  document.getElementById('byok-groq').value = localStorage.getItem('user_groq_key') || '';
-  document.getElementById('byok-gemini').value = localStorage.getItem('user_gemini_key') || '';
-  document.getElementById('byok-openai').value = localStorage.getItem('user_openai_key') || '';
-  document.getElementById('byok-mistral').value = localStorage.getItem('user_mistral_key') || '';
-  
-  const modal = document.getElementById('byok-settings-modal');
-  modal.style.display = 'flex';
-};
-
-window.closeByokModal = function() {
-  document.getElementById('byok-settings-modal').style.display = 'none';
-};
-
-window.saveByokKeys = function() {
-  const groq = document.getElementById('byok-groq').value.trim();
-  const gemini = document.getElementById('byok-gemini').value.trim();
-  const openai = document.getElementById('byok-openai').value.trim();
-  const mistral = document.getElementById('byok-mistral').value.trim();
-  
-  if (groq) localStorage.setItem('user_groq_key', groq); else localStorage.removeItem('user_groq_key');
-  if (gemini) localStorage.setItem('user_gemini_key', gemini); else localStorage.removeItem('user_gemini_key');
-  if (openai) localStorage.setItem('user_openai_key', openai); else localStorage.removeItem('user_openai_key');
-  if (mistral) localStorage.setItem('user_mistral_key', mistral); else localStorage.removeItem('user_mistral_key');
-  
-  closeByokModal();
-  alert('API Key settings saved! Page will reload to apply.');
-  window.location.reload();
-};

@@ -50,7 +50,7 @@ _knowledge_idx = _cost_idx = _safety_idx = _defect_idx = None
 def _load():
     global _knowledge_idx, _cost_idx, _safety_idx, _defect_idx
     if _knowledge_idx is not None: return
-    from data import CONSTRUCTION_KNOWLEDGE, COST_ITEMS, SAFETY_RISKS, DEFECT_TYPES
+    from breakdown_data import CONSTRUCTION_KNOWLEDGE, COST_ITEMS, SAFETY_RISKS, DEFECT_TYPES
     _knowledge_idx = Index([f"{t}. {t}. {b}" for t,b in CONSTRUCTION_KNOWLEDGE],
                            [{"title":t,"body":b} for t,b in CONSTRUCTION_KNOWLEDGE])
     _cost_idx = Index([f"{c['item']} {c['unit']} {c['category']}" for c in COST_ITEMS], list(COST_ITEMS))
@@ -63,6 +63,6 @@ def search_costs(q, n=6): _load(); return _cost_idx.search(q, n)
 def search_safety(q, n=4): _load(); return _safety_idx.search(q, n)
 def search_defects(q, n=4): _load(); return _defect_idx.search(q, n)
 def counts():
-    from data import CONSTRUCTION_KNOWLEDGE, COST_ITEMS, SAFETY_RISKS, DEFECT_TYPES
+    from breakdown_data import CONSTRUCTION_KNOWLEDGE, COST_ITEMS, SAFETY_RISKS, DEFECT_TYPES
     return {"knowledge":len(CONSTRUCTION_KNOWLEDGE),"cost_items":len(COST_ITEMS),
             "safety_risks":len(SAFETY_RISKS),"defect_types":len(DEFECT_TYPES)}

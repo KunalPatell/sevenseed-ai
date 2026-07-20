@@ -518,7 +518,7 @@ class InteractionGraphReq(BaseModel): drugs: list[str] = []
 
 def _find_interaction(a, b):
     try:
-        from data import INTERACTIONS
+        from pharmacy_data import INTERACTIONS
     except Exception:
         return None
     al, bl = a.lower(), b.lower()

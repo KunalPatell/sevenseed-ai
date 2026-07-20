@@ -66,7 +66,7 @@ _kidx=_pidx=_midx=None
 def _load():
     global _kidx,_pidx,_midx
     if _kidx is not None: return
-    from data import TRUST_KNOWLEDGE,PROGRAMS,IMPACT_METRICS
+    from trust_data import TRUST_KNOWLEDGE,PROGRAMS,IMPACT_METRICS
     _kidx=Index([f"{t}. {t}. {b}" for t,b in TRUST_KNOWLEDGE],[{"title":t,"body":b} for t,b in TRUST_KNOWLEDGE])
     _pidx=Index([f"{p['name']} {p['beneficiary']} {p.get('eligibility','')} {p.get('district','')}" for p in PROGRAMS],list(PROGRAMS))
     _midx=Index([f"{m['metric']} {m['value']} {m['unit']}" for m in IMPACT_METRICS],list(IMPACT_METRICS))
@@ -76,7 +76,7 @@ def search_knowledge(q,n=4): _load(); return _kidx.search(q,n)
 def search_programs(q,n=4): _load(); return _pidx.search(q,n)
 def search_metrics(q,n=4): _load(); return _midx.search(q,n)
 def counts():
-    from data import TRUST_KNOWLEDGE,PROGRAMS,IMPACT_METRICS
+    from trust_data import TRUST_KNOWLEDGE,PROGRAMS,IMPACT_METRICS
     return {"knowledge":len(TRUST_KNOWLEDGE),"programs":len(PROGRAMS),"metrics":len(IMPACT_METRICS)}
 
 # ── LLM ───────────────────────────────────────────────────────────────────────
@@ -157,7 +157,7 @@ def match_beneficiary(name,age,location,issues,income):
     return {"result":ans,"matched":results,"provider":active_provider()}
 
 def generate_impact_report(period="2024-25"):
-    from data import IMPACT_METRICS,PROGRAMS
+    from trust_data import IMPACT_METRICS,PROGRAMS
     ans=_llm("You are a professional NGO impact report writer. Generate a concise, compelling quarterly impact report in structured format including: executive summary, beneficiaries served, funds utilized, key achievements, and outlook.",
              f"Period: {period}\nMetrics: {[m for m in IMPACT_METRICS]}\nPrograms: {[p['name'] for p in PROGRAMS]}")
     if not ans:
@@ -227,7 +227,7 @@ def health():
 
 @app.get("/api/programs")
 def get_programs():
-    from data import PROGRAMS,IMPACT_METRICS
+    from trust_data import PROGRAMS,IMPACT_METRICS
     return {"programs":PROGRAMS,"metrics":IMPACT_METRICS}
 
 @app.post("/api/donor")

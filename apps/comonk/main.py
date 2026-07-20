@@ -44,7 +44,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
 GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 MISTRAL_MODEL = os.getenv("MISTRAL_MODEL", "mistral-small-latest")
-DB_PATH = "comonk.db"
+DB_PATH = os.environ.get("COMONK_DB_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "comonk.db"))
 
 # ─── In-memory session store for persistent chat memory ─────────────────────
 _session_store: dict[str, ChatMessageHistory] = {}
@@ -139,7 +139,7 @@ async def call_llm(messages: list, response_format: Optional[dict] = None) -> st
 def match_jobs_tool(skills: List[str]) -> str:
     """Matches job targets and companies from the database using candidate skills.
     Use this tool when the candidate asks for company recommendations or job matches."""
-    conn = sqlite3.connect("comonk.db")
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM companies")
@@ -236,7 +236,7 @@ def career_roadmap_tool(current_skills: List[str], target_role: str) -> str:
 def get_hr_contacts_tool(company_name: str) -> str:
     """Fetches HR contacts for a specific company from the database.
     Use this when the user asks for recruiter or HR contact details at a named company."""
-    conn = sqlite3.connect("comonk.db")
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM companies WHERE name LIKE ?", (f"%{company_name}%",))
@@ -301,7 +301,7 @@ def enricher_node(state: AgentState):
 
     # --- RAG: Company Matching ---
     if skills and any(x in query_lower for x in ["match", "company", "companies", "job", "jobs", "target", "apply", "hire", "hiring"]):
-        conn = sqlite3.connect("comonk.db")
+        conn = sqlite3.connect(DB_PATH)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM companies")
@@ -346,7 +346,7 @@ def enricher_node(state: AgentState):
     email_match = re.search(r'(draft|write|email|letter|pitch).*?(?:for|to)\s+([a-zA-Z0-9\s\.\-_]+)', last_user_message, re.IGNORECASE)
     if email_match:
         company_query = email_match.group(2).strip()
-        conn = sqlite3.connect("comonk.db")
+        conn = sqlite3.connect(DB_PATH)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM companies WHERE name LIKE ?", (f"%{company_query}%",))

@@ -24,7 +24,7 @@ Free API keys to add in .env  (see .env.example):
 import os, re, json, io, asyncio, sqlite3, hashlib, secrets, time, collections
 from typing import List, Optional
 import httpx
-from fastapi import FastAPI, File, UploadFile, HTTPException, Request
+from fastapi import FastAPI, File, Form, UploadFile, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
@@ -240,43 +240,32 @@ def _get_run_chat():
     return _run_chat_fn
 
 # ── Simple LLM fallback (when langgraph not installed) ───────────────────────
-from contextvars import ContextVar
-
-# ContextVars for API Key Overrides
-groq_key_var = ContextVar("groq_key", default="")
-gemini_key_var = ContextVar("gemini_key", default="")
-openai_key_var = ContextVar("openai_key", default="")
-serpapi_key_var = ContextVar("serpapi_key", default="")
-huggingface_token_var = ContextVar("huggingface_token", default="")
-mistral_key_var = ContextVar("mistral_key", default="")
-
+_llm_providers = None
 _llm_clients: dict = {}
 
 def _get_providers():
-    p = []
-    groq_key = groq_key_var.get().strip() or os.environ.get("GROQ_API_KEY", "").strip()
-    if groq_key:
-        p.append({"name":"groq","key":groq_key,"base_url":"https://api.groq.com/openai/v1","model":os.environ.get("GROQ_MODEL","llama-3.3-70b-versatile")})
-    gemini_key = gemini_key_var.get().strip() or os.environ.get("GEMINI_API_KEY", "").strip()
-    if gemini_key:
-        p.append({"name":"gemini-openai","key":gemini_key,"base_url":"https://generativelanguage.googleapis.com/v1beta/openai","model":"gemini-1.5-flash"})
-    mistral_key = mistral_key_var.get().strip() or os.environ.get("MISTRAL_API_KEY", "").strip()
-    if mistral_key:
-        p.append({"name":"mistral","key":mistral_key,"base_url":"https://api.mistral.ai/v1","model":os.environ.get("MISTRAL_MODEL","mistral-small-latest")})
-    openai_key = openai_key_var.get().strip() or os.environ.get("OPENAI_API_KEY", "").strip()
-    if openai_key:
-        p.append({"name":"openai","key":openai_key,"base_url":None,"model":os.environ.get("OPENAI_MODEL","gpt-4o-mini")})
-    return p
+    global _llm_providers
+    if _llm_providers is None:
+        p = []
+        if os.environ.get("GROQ_API_KEY", "").strip():
+            p.append({"name":"groq","key":os.environ["GROQ_API_KEY"].strip(),"base_url":"https://api.groq.com/openai/v1","model":os.environ.get("GROQ_MODEL","llama-3.3-70b-versatile")})
+        if os.environ.get("GEMINI_API_KEY", "").strip():
+            p.append({"name":"gemini-openai","key":os.environ["GEMINI_API_KEY"].strip(),"base_url":"https://generativelanguage.googleapis.com/v1beta/openai","model":"gemini-1.5-flash"})
+        if os.environ.get("MISTRAL_API_KEY", "").strip():
+            p.append({"name":"mistral","key":os.environ["MISTRAL_API_KEY"].strip(),"base_url":"https://api.mistral.ai/v1","model":os.environ.get("MISTRAL_MODEL","mistral-small-latest")})
+        if os.environ.get("OPENAI_API_KEY", "").strip():
+            p.append({"name":"openai","key":os.environ["OPENAI_API_KEY"].strip(),"base_url":None,"model":os.environ.get("OPENAI_MODEL","gpt-4o-mini")})
+        _llm_providers = p
+    return _llm_providers
 
 def _llm_client(p):
-    cache_key = (p["name"], p["key"])
-    if cache_key not in _llm_clients:
+    if p["name"] not in _llm_clients:
         from openai import OpenAI
         kw = {"api_key": p["key"]}
         if p["base_url"]:
             kw["base_url"] = p["base_url"]
-        _llm_clients[cache_key] = OpenAI(**kw)
-    return _llm_clients[cache_key]
+        _llm_clients[p["name"]] = OpenAI(**kw)
+    return _llm_clients[p["name"]]
 
 def llm_enabled() -> bool:
     return len(_get_providers()) > 0
@@ -396,12 +385,27 @@ def score_company(c: dict, skills: List[str]) -> int:
     text = (c["roles"] + " " + c["category"]).lower()
     return sum(1 for s in skills if s.lower() in text)
 
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi import Depends, status
+
+security = HTTPBasic()
+
+def authenticate_user(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = secrets.compare_digest(credentials.username, "Kunal")
+    correct_password = secrets.compare_digest(credentials.password, "Comonk@77")
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return credentials.username
+
 # ── FastAPI app ───────────────────────────────────────────────────────────────
-# Public product — no blanket auth. /api/admin/* routes protect themselves via
-# _admin_check()/ADMIN_PW below; nothing else needs gating.
 app = FastAPI(
     title="Comonk AI",
     version="3.0.0",
+    dependencies=[Depends(authenticate_user)]
 )
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
@@ -422,16 +426,6 @@ class TokenBucketRateLimiter:
         return True
 
 _api_limiter = TokenBucketRateLimiter(requests=20, window=60)
-
-@app.middleware("http")
-async def api_key_override_middleware(request: Request, call_next):
-    groq_key_var.set(request.headers.get("x-groq-key", ""))
-    gemini_key_var.set(request.headers.get("x-gemini-key", ""))
-    openai_key_var.set(request.headers.get("x-openai-key", ""))
-    serpapi_key_var.set(request.headers.get("x-serpapi-key", ""))
-    huggingface_token_var.set(request.headers.get("x-huggingface-token", ""))
-    mistral_key_var.set(request.headers.get("x-mistral-key", ""))
-    return await call_next(request)
 
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
@@ -780,30 +774,21 @@ def admin_page():
 
 @app.get("/api/stats")
 def api_stats():
-    try:
-        total_hr = sum(1 for c in COMPANIES if c.get("emails") or c.get("phone"))
-        ai_count = sum(1 for c in COMPANIES if "AI" in (c.get("category") or ""))
-        providers = _get_providers()
-        llm_provider = providers[0]["name"] if providers else "offline"
-        llm_on = llm_enabled()
-    except Exception as e:
-        print(f"[api_stats] company/provider stats failed: {e}")
-        total_hr = ai_count = 0
-        llm_provider = "offline"
-        llm_on = False
+    total_hr = sum(1 for c in COMPANIES if c["emails"] or c["phone"])
+    ai_count = sum(1 for c in COMPANIES if "AI" in c["category"])
+    providers = _get_providers()
     try:
         from comonk_rag import get_company_count
         rag_count = get_company_count()
-    except Exception as e:
-        print(f"[api_stats] rag count failed: {e}")
+    except Exception:
         rag_count = 0
     return {
         "total_companies": len(COMPANIES),
         "total_hr_contacts": total_hr,
         "agent_tools_active": 12,   # updated count with all new features
         "ai_ml_companies": ai_count,
-        "llm_active": llm_on,
-        "llm_provider": llm_provider,
+        "llm_active": llm_enabled(),
+        "llm_provider": providers[0]["name"] if providers else "offline",
         "langgraph_active": True,
         "rag_indexed": rag_count,
     }
@@ -5004,6 +4989,148 @@ def api_daily_briefing(request: Request):
     }
 
 
+def generate_interview_pdf(candidate_name: str, role: str, score: float, transcripts: List[str]) -> io.BytesIO:
+    import datetime
+    from reportlab.lib.pagesizes import letter
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib import colors
+
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=letter, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
+    story = []
+    
+    styles = getSampleStyleSheet()
+    accent_color = colors.HexColor("#1A3C6B")
+    
+    title_style = ParagraphStyle(
+        'DocTitle',
+        parent=styles['Heading1'],
+        fontName='Helvetica-Bold',
+        fontSize=24,
+        textColor=accent_color,
+        spaceAfter=15,
+        alignment=1
+    )
+    
+    meta_style = ParagraphStyle(
+        'MetaText',
+        parent=styles['Normal'],
+        fontName='Helvetica',
+        fontSize=10,
+        textColor=colors.HexColor("#555555"),
+        spaceAfter=10
+    )
+    
+    body_style = ParagraphStyle(
+        'BodyText',
+        parent=styles['Normal'],
+        fontName='Helvetica',
+        fontSize=10,
+        leading=14,
+        spaceAfter=8
+    )
+    
+    story.append(Paragraph("Comonk AI — Candidate Interview Evaluation", title_style))
+    story.append(Paragraph(f"<b>Candidate:</b> {candidate_name}", meta_style))
+    story.append(Paragraph(f"<b>Role:</b> {role}", meta_style))
+    story.append(Paragraph(f"<b>Overall Score:</b> {score}/100", meta_style))
+    story.append(Paragraph(f"<b>Date:</b> {datetime.date.today().isoformat()}", meta_style))
+    story.append(Spacer(1, 15))
+    
+    story.append(Paragraph("<b>Competency Assessment</b>", styles['Heading2']))
+    story.append(Spacer(1, 5))
+    
+    data = [
+        ["Competency", "Score", "Notes"],
+        ["Technical Depth", f"{int(score * 0.9)}/100", "Demonstrates strong conceptual knowledge and syntax familiarity."],
+        ["Communication", f"{int(score * 0.85)}/100", "Clear, structured answers; low filler word count."],
+        ["Problem Solving", f"{int(score * 0.95)}/100", "Excellent optimization paths and edge-case awareness."]
+    ]
+    t = Table(data, colWidths=[150, 80, 300])
+    t.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), accent_color),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+        ('TOPPADDING', (0,0), (-1,-1), 6),
+        ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.HexColor("#F0F4FA"), colors.white]),
+        ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor("#DDDDDD"))
+    ]))
+    story.append(t)
+    story.append(Spacer(1, 20))
+    
+    story.append(Paragraph("<b>Full Interview Transcript</b>", styles['Heading2']))
+    story.append(Spacer(1, 5))
+    for idx, text in enumerate(transcripts):
+        story.append(Paragraph(f"<b>Q{idx+1}:</b> {text}", body_style))
+        
+    doc.build(story)
+    buf.seek(0)
+    return buf
+
+class PDFReportRequest(BaseModel):
+    candidate_name: str
+    role: str
+    score: float
+    transcripts: List[str]
+
+@app.post("/api/interview/process-session")
+def process_session(room_id: str = Form(...), files: List[UploadFile] = File(...)):
+    import tempfile
+    import shutil
+    import subprocess
+    
+    temp_dir = tempfile.mkdtemp()
+    webm_files = []
+    
+    try:
+        for idx, file in enumerate(files):
+            temp_file_path = os.path.join(temp_dir, f"Q{idx+1}.webm")
+            with open(temp_file_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+            webm_files.append(temp_file_path)
+            
+        output_mp4 = os.path.join(temp_dir, "session_output.mp4")
+        if len(webm_files) == 1:
+            cmd = ["ffmpeg", "-y", "-i", webm_files[0], "-c:v", "libx264", "-c:a", "aac", "-preset", "fast", output_mp4]
+        else:
+            inputs = []
+            filter_complex = ""
+            for i, f in enumerate(webm_files):
+                inputs.extend(["-i", f])
+                filter_complex += f"[{i}:v][{i}:a]"
+            filter_complex += f"concat=n={len(webm_files)}:v=1:a=1[outv][outa]"
+            cmd = ["ffmpeg", "-y"] + inputs + ["-filter_complex", filter_complex, "-map", "[outv]", "-map", "[outa]", "-c:v", "libx264", "-c:a", "aac", "-preset", "fast", output_mp4]
+            
+        subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        
+        storage_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend", "interviews", room_id)
+        os.makedirs(storage_dir, exist_ok=True)
+        final_mp4 = os.path.join(storage_dir, "interview.mp4")
+        shutil.copy(output_mp4, final_mp4)
+        
+        return {"status": "success", "file": f"/interviews/{room_id}/interview.mp4", "message": "Video joined successfully."}
+    except Exception as e:
+        raise HTTPException(500, f"Stitching failed: {e}")
+    finally:
+        shutil.rmtree(temp_dir, ignore_errors=True)
+
+@app.post("/api/interview/report-pdf")
+def get_report_pdf(r: PDFReportRequest):
+    from fastapi.responses import StreamingResponse
+    buf = generate_interview_pdf(r.candidate_name, r.role, r.score, r.transcripts)
+    filename = f"{r.candidate_name.lower().replace(' ', '_')}_interview_report.pdf"
+    headers = {
+        "Content-Disposition": f"attachment; filename={filename}"
+    }
+    return StreamingResponse(
+        buf,
+        media_type="application/pdf",
+        headers=headers
+    )
+
+
 # ── Catch-all: serve frontend static files (CSS, JS, images) ─────────────────
 @app.get("/{file_path:path}")
 def serve_static(file_path: str):
@@ -5022,11 +5149,11 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     providers = _get_providers()
     print("=" * 62)
-    print("  COMONK AI v3 -- LangChain + LangGraph Career Platform")
+    print("  COMONK AI v3 — LangChain + LangGraph Career Platform")
     print(f"  API + Frontend : http://127.0.0.1:{port}")
-    print(f"  LLM            : {'ON -- ' + providers[0]['name'] + ' (' + providers[0]['model'] + ')' if providers else 'OFF -- add GROQ_API_KEY to .env'}")
+    print(f"  LLM            : {'ON — ' + providers[0]['name'] + ' (' + providers[0]['model'] + ')' if providers else 'OFF — add GROQ_API_KEY to .env'}")
     print(f"  Companies      : {len(COMPANIES)} loaded")
     print(f"  Features       : YouTube, GitHub, News, Jobs, Salary, HR Email, SMS/WhatsApp")
     print("  Press CTRL+C to stop.")
     print("=" * 62)
-    uvicorn.run("comonk_backend:app", host="0.0.0.0", port=port, reload=False)
+    uvicorn.run("comonk_backend:app", host="0.0.0.0", port=port, reload=True)

@@ -110,7 +110,7 @@ def _load():
     global _knowledge_index, _program_index, _company_index
     if _knowledge_index is not None:
         return
-    from data import PROGRAMS, COMPANIES, KNOWLEDGE
+    from avpu_data import PROGRAMS, COMPANIES, KNOWLEDGE
 
     # Knowledge (tutor) — title repeated to weight topic keywords in retrieval
     kdocs = [f"{title}. {title}. {body}" for title, body in KNOWLEDGE]
@@ -152,5 +152,5 @@ def search_companies(query: str, n: int = 6) -> List[Dict[str, Any]]:
 
 
 def counts() -> Dict[str, int]:
-    from data import PROGRAMS, COMPANIES, KNOWLEDGE
+    from avpu_data import PROGRAMS, COMPANIES, KNOWLEDGE
     return {"programs": len(PROGRAMS), "companies": len(COMPANIES), "knowledge": len(KNOWLEDGE)}

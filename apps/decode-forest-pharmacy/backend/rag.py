@@ -90,7 +90,7 @@ def _load():
     global _health_index, _medicine_index, _interaction_index, _symptom_index
     if _health_index is not None:
         return
-    from data import MEDICINES, INTERACTIONS, HEALTH_KNOWLEDGE, SYMPTOMS
+    from pharmacy_data import MEDICINES, INTERACTIONS, HEALTH_KNOWLEDGE, SYMPTOMS
 
     # Health knowledge
     kdocs = [f"{t}. {t}. {b}" for t, b in HEALTH_KNOWLEDGE]
@@ -132,6 +132,6 @@ def search_symptoms(query: str, n: int = 3) -> List[Dict[str, Any]]:
     _load(); return _symptom_index.search(query, n)
 
 def counts() -> Dict[str, int]:
-    from data import MEDICINES, INTERACTIONS, HEALTH_KNOWLEDGE, SYMPTOMS
+    from pharmacy_data import MEDICINES, INTERACTIONS, HEALTH_KNOWLEDGE, SYMPTOMS
     return {"medicines": len(MEDICINES), "interactions": len(INTERACTIONS),
             "health_topics": len(HEALTH_KNOWLEDGE), "symptoms": len(SYMPTOMS)}

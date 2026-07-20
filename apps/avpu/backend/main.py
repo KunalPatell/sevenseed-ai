@@ -20,7 +20,7 @@ from pydantic import BaseModel
 from app import config, db
 import agents
 import rag
-from data import PROGRAMS
+from avpu_data import PROGRAMS
 
 try:
     from dotenv import load_dotenv; load_dotenv()

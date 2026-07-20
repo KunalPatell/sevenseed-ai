@@ -171,7 +171,7 @@ def estimate_cost(project_type, area_sqft, floors, quality, location, extra=""):
 
 # ── Material Calculator ───────────────────────────────────────────────────────
 def calc_materials(work_type, quantity, unit):
-    from data import COST_ITEMS
+    from breakdown_data import COST_ITEMS
     results = rag.search_costs(work_type, 4)
     llm_ans = _llm_text(
         "You are an expert quantity surveyor. Calculate material quantities needed for a given construction work item. "

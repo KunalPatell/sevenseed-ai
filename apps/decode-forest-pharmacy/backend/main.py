@@ -78,7 +78,7 @@ def health():
 
 @app.get("/api/medicines")
 def list_medicines():
-    from data import MEDICINES
+    from pharmacy_data import MEDICINES
     return {"medicines": MEDICINES, "count": len(MEDICINES)}
 
 @app.post("/api/assistant")

@@ -303,7 +303,40 @@ def delete_pitch(item_id: int):
 from features import router as _feat_router
 app.include_router(_feat_router)
 
+# Import child routers
+from routers.comonk import router as comonk_router
+from routers.avp_emart import router as avp_emart_router
+from routers.avpu import router as avpu_router
+from routers.breakdown import router as breakdown_router
+from routers.trust import router as trust_router
+from routers.pharmacy import router as pharmacy_router
+from routers.sevenforce import router as sevenforce_router
+
+# Include child routers with prefixes
+app.include_router(comonk_router, prefix="/comonk")
+app.include_router(avp_emart_router, prefix="/avp-emart")
+app.include_router(avpu_router, prefix="/avpu")
+app.include_router(breakdown_router, prefix="/breakdown")
+app.include_router(trust_router, prefix="/trust")
+app.include_router(pharmacy_router, prefix="/pharmacy")
+app.include_router(sevenforce_router, prefix="/sevenforce")
+
 if config.STATIC_DIR.exists():
+    # Mount child static folders first
+    for path_prefix, folder_name in [
+        ("/comonk", "comonk"),
+        ("/avp-emart", "avp-emart"),
+        ("/avpu", "avpu"),
+        ("/breakdown", "breakdown"),
+        ("/trust", "trust"),
+        ("/pharmacy", "pharmacy"),
+        ("/sevenforce", "sevenforce"),
+    ]:
+        static_sub = config.STATIC_DIR / folder_name
+        if static_sub.exists():
+            app.mount(path_prefix, StaticFiles(directory=str(static_sub), html=True), name=folder_name)
+    
+    # Mount root landing page last
     app.mount("/", StaticFiles(directory=str(config.STATIC_DIR), html=True), name="frontend")
 else:
     @app.get("/")
