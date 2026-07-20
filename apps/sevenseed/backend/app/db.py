@@ -49,6 +49,20 @@ def init() -> None:
                 )
                 """
             )
+            # Public contact form submissions
+            c.execute(
+                """
+                CREATE TABLE IF NOT EXISTS contact_messages (
+                    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                    created_at TEXT    NOT NULL,
+                    name       TEXT    NOT NULL,
+                    email      TEXT    NOT NULL,
+                    subject    TEXT    NOT NULL,
+                    message    TEXT    NOT NULL,
+                    ip         TEXT
+                )
+                """
+            )
         log.info("Database initialized successfully at %s", config.DB_PATH)
     except Exception as exc:
         _available = False
@@ -147,3 +161,31 @@ def delete_pitch(item_id: int) -> bool:
             return cur.rowcount > 0
     except Exception:
         return False
+
+
+# ── Contact Messages CRUD ──────────────────────────────────────────────────────
+def save_contact_message(name: str, email: str, subject: str, message: str, ip: str = "") -> int | None:
+    if not _available: return None
+    now = datetime.datetime.utcnow().isoformat() + "Z"
+    try:
+        with _lock, _conn() as c:
+            cur = c.execute(
+                """
+                INSERT INTO contact_messages (created_at, name, email, subject, message, ip)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (now, name, email, subject, message, ip),
+            )
+            return int(cur.lastrowid)
+    except Exception as e:
+        log.warning("Failed to save contact message: %s", e)
+        return None
+
+def list_contact_messages(limit: int = 50) -> list[dict]:
+    if not _available: return []
+    try:
+        with _conn() as c:
+            rows = c.execute("SELECT * FROM contact_messages ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
+            return [dict(r) for r in rows]
+    except Exception:
+        return []

@@ -2,21 +2,35 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { 
-  Leaf, 
-  Layers, 
-  Lightbulb, 
-  Rocket, 
-  Cpu, 
-  ChevronDown, 
-  Search, 
+import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
+import { GlowCard } from "@/components/GlowCard";
+import { AIDemoWidget } from "@/components/AIDemoWidget";
+import { Testimonials } from "@/components/Testimonials";
+import { apiFetch } from "@/lib/api";
+import {
+  Leaf,
+  Layers,
+  Lightbulb,
+  Rocket,
+  Cpu,
+  ChevronDown,
+  Search,
   Star,
   Activity,
   Briefcase,
   ExternalLink
 } from "lucide-react";
+
+const HERO_STATS = [
+  { value: 7, suffix: "", label: "Ventures Incubated" },
+  { value: 1.5, prefix: "₹", suffix: "Cr+", decimals: 1, label: "Studio GMV" },
+  { value: 2, suffix: " weeks", label: "MVP Sprint" },
+  { value: 100, suffix: "%", label: "AI-Native" },
+];
 
 export default function Home() {
   const [scrollPct, setScrollPct] = useState(0);
@@ -24,7 +38,9 @@ export default function Home() {
   const [contactEmail, setContactEmail] = useState("");
   const [contactSubject, setContactSubject] = useState("");
   const [contactMsg, setContactMsg] = useState("");
+  const [contactWebsite, setContactWebsite] = useState(""); // honeypot
   const [feedbackMsg, setFeedbackMsg] = useState("");
+  const [feedbackOk, setFeedbackOk] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,14 +56,33 @@ export default function Home() {
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFeedbackMsg("Sending message...");
+    setFeedbackOk(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const res = await apiFetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: contactName,
+          email: contactEmail,
+          subject: contactSubject,
+          message: contactMsg,
+          website: contactWebsite,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setFeedbackOk(false);
+        setFeedbackMsg(data?.detail || "Could not send message. Please try again.");
+        return;
+      }
+      setFeedbackOk(true);
       setFeedbackMsg("Thank you! Your message has been sent successfully.");
       setContactName("");
       setContactEmail("");
       setContactSubject("");
       setContactMsg("");
     } catch (err) {
+      setFeedbackOk(false);
       setFeedbackMsg("Could not send message. Please try again.");
     }
   };
@@ -60,52 +95,70 @@ export default function Home() {
       {/* Hero Section */}
       <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-24 overflow-hidden bg-[#060609]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(139,92,246,0.18),transparent_60%)]" />
+        <div className="mesh-bg" />
         <div className="hero-grid" />
-        
+
         <div className="relative z-10 max-w-[900px] w-full flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#ddd6fe] bg-[#8b5cf6]/10 border border-[#8b5cf6]/25 mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#ddd6fe] bg-[#8b5cf6]/10 border border-[#8b5cf6]/25 mb-8"
+          >
             <Cpu className="h-3.5 w-3.5" />
             <span>AI Venture Ideation · Incubation Hub · Shared AI Backbone</span>
-          </div>
+          </motion.div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6"
+          >
             We plant the seeds of <br /><span className="grad">AI-first startups</span>
-          </h1>
+          </motion.h1>
 
-          <p className="text-sm md:text-lg text-[#9aa0b8] max-w-[670px] leading-relaxed mb-10">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+            className="text-sm md:text-lg text-[#9aa0b8] max-w-[670px] leading-relaxed mb-10"
+          >
             Sevenseed is an AI startup studio. We ideate, incubate, and scale enterprise AI products using a shared vector RAG & LLM backend.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-wrap gap-4 justify-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-wrap gap-4 justify-center mb-16"
+          >
             <Link href="/app/" className="btn bg-gradient-to-r from-[#8b5cf6] to-[#10b981] hover:scale-[1.02] text-white font-semibold text-sm md:text-base px-6 py-3 rounded-lg shadow-[0_6px_22px_rgba(139,92,246,0.3)] transition-all duration-200">
               <i className="fas fa-rocket mr-2"></i> Launch Studio Hub
             </Link>
             <a href="#portfolio" className="btn border border-white/15 bg-white/[0.03] text-white hover:bg-[#18182a] hover:border-[#8b5cf6]/50 text-sm md:text-base px-6 py-3 rounded-lg transition-all duration-200">
               <i className="fas fa-seedling mr-2"></i> View Startups Portfolio
             </a>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-wrap items-center justify-center bg-[#12121e]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12">
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#ddd6fe] to-[#6ee7b7] bg-clip-text text-transparent">7</div>
-              <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">Ventures Incubated</div>
-            </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#ddd6fe] to-[#6ee7b7] bg-clip-text text-transparent">₹1.5Cr+</div>
-              <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">Studio GMV</div>
-            </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#ddd6fe] to-[#6ee7b7] bg-clip-text text-transparent">2 weeks</div>
-              <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">MVP Sprint</div>
-            </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#ddd6fe] to-[#6ee7b7] bg-clip-text text-transparent">100%</div>
-              <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">AI-Native</div>
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-wrap items-center justify-center bg-[#12121e]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12"
+          >
+            {HERO_STATS.map((s, i) => (
+              <React.Fragment key={s.label}>
+                {i > 0 && <div className="w-[1px] self-stretch bg-white/5" />}
+                <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
+                  <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#ddd6fe] to-[#6ee7b7] bg-clip-text text-transparent">
+                    <AnimatedCounter value={s.value} prefix={s.prefix} suffix={s.suffix} decimals={s.decimals || 0} />
+                  </div>
+                  <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">{s.label}</div>
+                </div>
+              </React.Fragment>
+            ))}
+          </motion.div>
 
           <div className="w-full max-w-[760px] mask-image-gradient overflow-hidden select-none opacity-50">
             <div className="marquee-track text-[#5b5f78] text-xs font-mono font-semibold">
@@ -126,7 +179,7 @@ export default function Home() {
 
       {/* Pillars Band */}
       <section className="bg-[#0b0b12] border-y border-white/5 py-8 px-6 md:px-12">
-        <div className="max-w-[1180px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <RevealOnScroll className="max-w-[1180px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="flex gap-4 items-center">
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#8b5cf6]/15 text-[#ddd6fe] shrink-0">
               <Leaf className="h-5 w-5" />
@@ -163,7 +216,7 @@ export default function Home() {
               <p className="text-xs text-[#9aa0b8] mt-0.5">Dockerized deployments on Render.</p>
             </div>
           </div>
-        </div>
+        </RevealOnScroll>
       </section>
 
       {/* AI Stack Strip */}
@@ -182,7 +235,7 @@ export default function Home() {
 
       {/* About Section */}
       <section className="max-w-[1180px] mx-auto py-24 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center" id="about">
-        <div className="lg:col-span-7 flex flex-col gap-4">
+        <RevealOnScroll className="lg:col-span-7 flex flex-col gap-4">
           <span className="eyebrow">Est. 2026 · Startup Studio Hub</span>
           <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">We build and scale AI-native SaaS companies.</h2>
           <p className="text-sm md:text-base text-[#9aa0b8] leading-relaxed mt-2">
@@ -191,8 +244,9 @@ export default function Home() {
           <p className="text-sm md:text-base text-[#9aa0b8] leading-relaxed">
             By building on top of pre-integrated stacks, we cut average development time down from 6 months to 2 weeks. Check our active ventures below or pitch your idea to receive instant automated AI feedback.
           </p>
-        </div>
-        <div className="lg:col-span-5 glow-card bg-gradient-to-br from-[#12121e] to-[#0d0d16] border border-white/5 rounded-2xl p-8">
+        </RevealOnScroll>
+        <RevealOnScroll delay={0.1} className="lg:col-span-5">
+        <GlowCard className="glow-card bg-gradient-to-br from-[#12121e] to-[#0d0d16] border border-white/5 rounded-2xl p-8">
           <div className="w-14 h-14 rounded-xl grid place-items-center text-white bg-gradient-to-br from-[#8b5cf6] to-[#10b981] shadow-[0_8px_24px_rgba(139,92,246,0.3)] mb-6">
             <Leaf className="h-6 w-6" />
           </div>
@@ -215,16 +269,20 @@ export default function Home() {
               <span>Live portfolio tracking and developer pipelines</span>
             </li>
           </ul>
-        </div>
+        </GlowCard>
+        </RevealOnScroll>
       </section>
 
       {/* Startups Portfolio */}
       <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="portfolio">
+        <RevealOnScroll>
         <span className="eyebrow center block">STARTUPS PORTFOLIO</span>
         <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Startups we have launched</h2>
-        
+        </RevealOnScroll>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
+          <RevealOnScroll delay={0.02}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col h-full">
             <span className="text-[10px] text-[#8b5cf6] font-mono font-bold tracking-wider uppercase">Live · B2B</span>
             <h4 className="text-base font-bold text-white mt-1">Comonk Technology</h4>
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
@@ -233,9 +291,11 @@ export default function Home() {
             <Link href="/comonk-ai" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
               Launch App <ExternalLink className="h-3 w-3" />
             </Link>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
+          <RevealOnScroll delay={0.06}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col h-full">
             <span className="text-[10px] text-[#3b82f6] font-mono font-bold tracking-wider uppercase">Live · EdTech</span>
             <h4 className="text-base font-bold text-white mt-1">AVP University (AVPU)</h4>
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
@@ -244,9 +304,11 @@ export default function Home() {
             <Link href="/avpu" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
               Launch App <ExternalLink className="h-3 w-3" />
             </Link>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
+          <RevealOnScroll delay={0.1}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col h-full">
             <span className="text-[10px] text-[#10b981] font-mono font-bold tracking-wider uppercase">Live · HealthTech</span>
             <h4 className="text-base font-bold text-white mt-1">Decode Forest Pharmacy</h4>
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
@@ -255,9 +317,11 @@ export default function Home() {
             <Link href="/pharmacy" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
               Launch App <ExternalLink className="h-3 w-3" />
             </Link>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
+          <RevealOnScroll delay={0.02}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col h-full">
             <span className="text-[10px] text-[#f59e0b] font-mono font-bold tracking-wider uppercase">Live · ConTech</span>
             <h4 className="text-base font-bold text-white mt-1">Breakdown Factor</h4>
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
@@ -266,9 +330,11 @@ export default function Home() {
             <Link href="/breakdown" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
               Launch App <ExternalLink className="h-3 w-3" />
             </Link>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
+          <RevealOnScroll delay={0.06}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col h-full">
             <span className="text-[10px] text-[#ec4899] font-mono font-bold tracking-wider uppercase">Live · Impact</span>
             <h4 className="text-base font-bold text-white mt-1">AVP Charitable Trust</h4>
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
@@ -277,9 +343,11 @@ export default function Home() {
             <Link href="/trust" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
               Launch App <ExternalLink className="h-3 w-3" />
             </Link>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
+          <RevealOnScroll delay={0.1}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col h-full">
             <span className="text-[10px] text-[#f97316] font-mono font-bold tracking-wider uppercase">Live · E-Commerce</span>
             <h4 className="text-base font-bold text-white mt-1">AVP Emart</h4>
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
@@ -288,9 +356,11 @@ export default function Home() {
             <Link href="/avp-emart" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
               Launch App <ExternalLink className="h-3 w-3" />
             </Link>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col">
+          <RevealOnScroll delay={0.14}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#8b5cf6]/50 transition-all flex flex-col h-full">
             <span className="text-[10px] text-[#f43f5e] font-mono font-bold tracking-wider uppercase">Live · B2B</span>
             <h4 className="text-base font-bold text-white mt-1">Sevenforce</h4>
             <p className="text-xs md:text-sm text-[#9aa0b8] leading-relaxed mt-2 mb-6 flex-1">
@@ -299,101 +369,78 @@ export default function Home() {
             <Link href="/sevenforce" className="text-xs text-[#6ee7b7] font-semibold flex items-center gap-1.5 w-fit hover:underline">
               Launch App <ExternalLink className="h-3 w-3" />
             </Link>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
         </div>
       </section>
 
       {/* Venture Ideation Band */}
       <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="ideate">
+        <RevealOnScroll>
         <span className="eyebrow center block">STUDIO sandbox</span>
         <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Venture Ideation & Incubation</h2>
-        
+        </RevealOnScroll>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative">
+          <RevealOnScroll delay={0.02}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative h-full">
             <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">01</div>
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#8b5cf6]/10 text-[#ddd6fe] mb-4 font-bold text-sm">
               I
             </div>
             <h4 className="text-sm font-bold text-white mb-2">Ideation Sandbox</h4>
-            <p className="text-xs text-[#9aa0b8] leading-relaxed">Enter your business domain & problem, and our generator will draft 3 distinct AI venture pitches.</p>
-          </div>
+            <p className="text-xs text-[#9aa0b8] leading-relaxed">Enter your business domain & problem below and try a real AI-generated venture concept — no signup needed.</p>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative">
+          <RevealOnScroll delay={0.06}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative h-full">
             <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">02</div>
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#10b981]/10 text-[#6ee7b7] mb-4 font-bold text-sm">
               II
             </div>
             <h4 className="text-sm font-bold text-white mb-2">Technical Feasibility</h4>
             <p className="text-xs text-[#9aa0b8] leading-relaxed">AI analyzes integration Moat, outlines exact model architecture and training strategies.</p>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative">
+          <RevealOnScroll delay={0.1}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative h-full">
             <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">03</div>
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#8b5cf6]/10 text-[#ddd6fe] mb-4 font-bold text-sm">
               III
             </div>
             <h4 className="text-sm font-bold text-white mb-2">90-Day MVP Plan</h4>
             <p className="text-xs text-[#9aa0b8] leading-relaxed">Studio framework exports step-by-step sprint guidelines to ship your SaaS product quickly.</p>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
         </div>
+
+        <RevealOnScroll delay={0.15}>
+          <AIDemoWidget />
+        </RevealOnScroll>
       </section>
 
       {/* Testimonials */}
       <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="testimonials">
+        <RevealOnScroll>
         <span className="eyebrow center block">REVIEWS</span>
         <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">What our partners say</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <figure className="tcard flex flex-col gap-4">
-            <div className="text-[#ddd6fe] flex gap-1"><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /></div>
-            <blockquote className="text-sm text-[#9aa0b8] italic flex-1 leading-relaxed">
-              &ldquo;The shared AI backend saved us months of coding. We shipped AVP Emart price comparators in less than two weeks.&rdquo;
-            </blockquote>
-            <figcaption className="flex items-center gap-3 border-t border-white/5 pt-4">
-              <div className="w-9 h-9 rounded-full bg-[#12121e] border border-white/10 flex items-center justify-center font-bold text-[#ddd6fe] text-xs">V</div>
-              <div className="text-xs">
-                <strong className="block text-white">Venture Founder</strong>
-                <span className="text-[#5b5f78]">Ahmedabad</span>
-              </div>
-            </figcaption>
-          </figure>
+        </RevealOnScroll>
 
-          <figure className="tcard flex flex-col gap-4">
-            <div className="text-[#ddd6fe] flex gap-1"><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /></div>
-            <blockquote className="text-sm text-[#9aa0b8] italic flex-1 leading-relaxed">
-              &ldquo;Ideating with Sevenseed sandbox drafted full architecture pitches. Moat and weekly sprint checklists are extremely clear.&rdquo;
-            </blockquote>
-            <figcaption className="flex items-center gap-3 border-t border-white/5 pt-4">
-              <div className="w-9 h-9 rounded-full bg-[#12121e] border border-white/10 flex items-center justify-center font-bold text-[#ddd6fe] text-xs">A</div>
-              <div className="text-xs">
-                <strong className="block text-white">Incubated Partner</strong>
-                <span className="text-[#5b5f78]">Sanand</span>
-              </div>
-            </figcaption>
-          </figure>
-
-          <figure className="tcard flex flex-col gap-4">
-            <div className="text-[#ddd6fe] flex gap-1"><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /></div>
-            <blockquote className="text-sm text-[#9aa0b8] italic flex-1 leading-relaxed">
-              &ldquo;We share data vectors across companies. Recommenders can suggest campus pharmacy drugs directly to students.&rdquo;
-            </blockquote>
-            <figcaption className="flex items-center gap-3 border-t border-white/5 pt-4">
-              <div className="w-9 h-9 rounded-full bg-[#12121e] border border-white/10 flex items-center justify-center font-bold text-[#ddd6fe] text-xs">M</div>
-              <div className="text-xs">
-                <strong className="block text-white">SaaS Developer</strong>
-                <span className="text-[#5b5f78]">Ahmedabad</span>
-              </div>
-            </figcaption>
-          </figure>
-        </div>
+        <RevealOnScroll delay={0.1}>
+          <Testimonials />
+        </RevealOnScroll>
       </section>
 
       {/* FAQ */}
       <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="faq">
+        <RevealOnScroll>
         <span className="eyebrow center block">FAQ</span>
         <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Studio questions, answered</h2>
-        
-        <div className="max-w-[760px] mx-auto faq-list">
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={0.1} className="max-w-[760px] mx-auto faq-list">
           <details>
             <summary className="faq-summary">What is a venture studio? <ChevronDown className="h-4 w-4 text-[#ddd6fe]" /></summary>
             <p className="text-xs md:text-sm text-[#9aa0b8] mt-3 leading-relaxed">
@@ -421,14 +468,15 @@ export default function Home() {
               We are based in Ahmedabad, Gujarat, India.
             </p>
           </details>
-        </div>
+        </RevealOnScroll>
       </section>
 
       {/* Contact Section */}
       <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="contact">
-        <div className="bg-[#12121e] border border-white/5 rounded-2xl p-8 relative overflow-hidden flex flex-col items-center">
+        <RevealOnScroll>
+        <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-8 relative overflow-hidden flex flex-col items-center">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(139,92,246,0.1),transparent_60%)] pointer-events-none" />
-          
+
           <div className="relative z-10 max-w-[640px] w-full text-center flex flex-col items-center">
             <span className="eyebrow">GET IN TOUCH</span>
             <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Build the next AI giant with us.</h2>
@@ -437,50 +485,65 @@ export default function Home() {
             </p>
 
             <form onSubmit={handleContactSubmit} className="w-full flex flex-col gap-3">
+              {/* Honeypot — hidden from real users, bots tend to fill every field */}
+              <input
+                type="text"
+                value={contactWebsite}
+                onChange={(e) => setContactWebsite(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="absolute -left-[9999px] w-px h-px opacity-0"
+              />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={contactName}
                   onChange={(e) => setContactName(e.target.value)}
-                  placeholder="Your Name" 
+                  placeholder="Your Name"
                   required
-                  className="w-full px-4 py-3 bg-[#0d0d16] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#8b5cf6]" 
+                  className="w-full px-4 py-3 bg-[#0d0d16] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#8b5cf6]"
                 />
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   value={contactEmail}
                   onChange={(e) => setContactEmail(e.target.value)}
-                  placeholder="Your Email" 
+                  placeholder="Your Email"
                   required
-                  className="w-full px-4 py-3 bg-[#0d0d16] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#8b5cf6]" 
+                  className="w-full px-4 py-3 bg-[#0d0d16] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#8b5cf6]"
                 />
               </div>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={contactSubject}
                 onChange={(e) => setContactSubject(e.target.value)}
-                placeholder="Subject" 
+                placeholder="Subject"
                 required
-                className="w-full px-4 py-3 bg-[#0d0d16] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#8b5cf6]" 
+                className="w-full px-4 py-3 bg-[#0d0d16] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#8b5cf6]"
               />
-              <textarea 
-                rows={4} 
+              <textarea
+                rows={4}
                 value={contactMsg}
                 onChange={(e) => setContactMsg(e.target.value)}
-                placeholder="Tell us about your venture idea..." 
+                placeholder="Tell us about your venture idea..."
                 required
-                className="w-full px-4 py-3 bg-[#0d0d16] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#8b5cf6] resize-none" 
+                className="w-full px-4 py-3 bg-[#0d0d16] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#8b5cf6] resize-none"
               />
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="btn w-full bg-gradient-to-r from-[#8b5cf6] to-[#10b981] text-white font-semibold py-3 rounded-lg hover:scale-[1.01] transition-all cursor-pointer"
               >
                 Send Message
               </button>
-              {feedbackMsg && <p className="text-xs text-[#6ee7b7] font-semibold mt-2">{feedbackMsg}</p>}
+              {feedbackMsg && (
+                <p className={`text-xs font-semibold mt-2 ${feedbackOk ? "text-[#6ee7b7]" : "text-[#fca5a5]"}`}>
+                  {feedbackMsg}
+                </p>
+              )}
             </form>
           </div>
-        </div>
+        </GlowCard>
+        </RevealOnScroll>
       </section>
 
       <Footer />

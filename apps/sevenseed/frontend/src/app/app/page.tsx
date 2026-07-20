@@ -511,11 +511,21 @@ export default function StudioHub() {
   const strRandom = () => Math.random().toString(36).substring(2, 15);
 
   const formatMd = (s: string) => {
-    return s
-      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-      .replace(/\*(.+?)\*/g, "<em>$1</em>")
-      .split("\n")
-      .map((line, idx) => <span key={idx} className="block mt-1">{line}</span>);
+    // Splits into real JSX <strong>/<em> elements rather than string-replacing
+    // in literal tag text, which React would otherwise escape and render as
+    // visible "<strong>...</strong>" characters instead of bold text.
+    return s.split("\n").map((line, idx) => {
+      const boldParts = line.split(/\*\*(.+?)\*\*/g);
+      return (
+        <span key={idx} className="block mt-1">
+          {boldParts.map((part, i) => {
+            if (i % 2 === 1) return <strong key={i}>{part}</strong>;
+            const italicParts = part.split(/\*(.+?)\*/g);
+            return italicParts.map((ip, j) => (j % 2 === 1 ? <em key={`${i}-${j}`}>{ip}</em> : ip));
+          })}
+        </span>
+      );
+    });
   };
 
   const menuItems = [

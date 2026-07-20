@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Sevenseed AI Venture Studio — Incubating the Next Generation of AI",
   description: "Sevenseed is an AI-native venture studio that ideates, incubates, and launches market-leading AI software startups in India.",
+  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({
