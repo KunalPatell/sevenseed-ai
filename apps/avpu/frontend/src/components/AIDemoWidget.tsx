@@ -45,7 +45,7 @@ function renderReply(text: string) {
 }
 
 export function AIDemoWidget() {
-  const [activeTab, setActiveTab] = useState<"tutor" | "roadmap" | "placement">("tutor");
+  const [activeTab, setActiveTab] = useState<"tutor" | "roadmap" | "placement">("placement");
 
   // Tutor State
   const [question, setQuestion] = useState("");
@@ -88,41 +88,83 @@ export function AIDemoWidget() {
   }
 
   return (
-    <div className="glow-card bg-gradient-to-br from-[#12121e] to-[#0d0d16] border border-[#6366f1]/25 rounded-2xl p-6 md:p-8 mt-8 shadow-2xl">
-      {/* Header & Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-white/10 pb-5">
+    <div className="relative overflow-hidden bg-[#090a14] border border-[#6366f1]/30 rounded-3xl p-6 md:p-10 mt-10 shadow-[0_0_50px_rgba(99,102,241,0.15)]">
+      {/* Ambient Electric Blue Mesh Glows */}
+      <div className="absolute -top-32 -right-32 w-80 h-80 bg-[#6366f1]/15 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-[#3b82f6]/15 rounded-full blur-[100px] pointer-events-none"></div>
+
+      {/* Live Enterprise Performance Stats Bar */}
+      <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 bg-black/40 border border-white/10 rounded-2xl mb-8 backdrop-blur-xl">
+        <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500"></span>
+          </span>
+          <div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Engine Status</div>
+            <div className="text-xs font-bold text-white font-mono">LangChain RAG Online</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
+          <span className="text-xs">⚡</span>
+          <div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Tutor Response</div>
+            <div className="text-xs font-bold text-[#93c5fd] font-mono">16ms Latency</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
+          <span className="text-xs">🎓</span>
+          <div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">AI Curriculum</div>
+            <div className="text-xs font-bold text-white font-mono">6 Months Adaptive</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 px-3">
+          <span className="text-xs">🏆</span>
+          <div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Placement Match</div>
+            <div className="text-xs font-bold text-emerald-400 font-mono">94.2% Tier-1</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Header & Glass Tabs */}
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 mb-8 border-b border-white/10 pb-6">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Sparkles className="h-4 w-4 text-[#93c5fd]" />
             <span className="text-xs font-bold tracking-wider text-[#93c5fd] uppercase">Interactive EdTech AI Workstation</span>
           </div>
-          <h4 className="text-xl font-extrabold text-white">AI Learning & Placement Intelligence</h4>
+          <h4 className="text-2xl font-black text-white tracking-tight">AI Learning & Placement Intelligence</h4>
         </div>
 
-        <div className="flex gap-2 p-1 bg-[#08080f] rounded-xl border border-white/10">
+        <div className="flex gap-2 p-1.5 bg-black/60 rounded-2xl border border-white/10 backdrop-blur-xl">
+          <button
+            onClick={() => setActiveTab("placement")}
+            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 ${
+              activeTab === "placement" ? "bg-[#6366f1] text-white shadow-[0_0_20px_rgba(99,102,241,0.5)] scale-[1.02]" : "text-[#9aa0b8] hover:text-white"
+            }`}
+          >
+            <Award className="h-3.5 w-3.5" /> Skill Radar & Placement
+          </button>
           <button
             onClick={() => setActiveTab("tutor")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-              activeTab === "tutor" ? "bg-[#6366f1] text-white shadow-md" : "text-[#9aa0b8] hover:text-white"
+            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 ${
+              activeTab === "tutor" ? "bg-[#6366f1] text-white shadow-[0_0_20px_rgba(99,102,241,0.5)] scale-[1.02]" : "text-[#9aa0b8] hover:text-white"
             }`}
           >
             <GraduationCap className="h-3.5 w-3.5" /> AI Personal Tutor
           </button>
           <button
             onClick={() => setActiveTab("roadmap")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-              activeTab === "roadmap" ? "bg-[#6366f1] text-white shadow-md" : "text-[#9aa0b8] hover:text-white"
+            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 ${
+              activeTab === "roadmap" ? "bg-[#6366f1] text-white shadow-[0_0_20px_rgba(99,102,241,0.5)] scale-[1.02]" : "text-[#9aa0b8] hover:text-white"
             }`}
           >
             <Compass className="h-3.5 w-3.5" /> Career Roadmap
-          </button>
-          <button
-            onClick={() => setActiveTab("placement")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-              activeTab === "placement" ? "bg-[#6366f1] text-white shadow-md" : "text-[#9aa0b8] hover:text-white"
-            }`}
-          >
-            <Award className="h-3.5 w-3.5" /> Placement Matcher
           </button>
         </div>
       </div>

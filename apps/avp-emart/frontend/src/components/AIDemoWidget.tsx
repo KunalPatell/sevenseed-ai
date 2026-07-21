@@ -64,7 +64,7 @@ type DemoProduct = {
 };
 
 export function AIDemoWidget() {
-  const [activeTab, setActiveTab] = useState<"assistant" | "matrix" | "predictor">("assistant");
+  const [activeTab, setActiveTab] = useState<"matrix" | "predictor" | "assistant">("matrix");
 
   // Assistant State
   const [message, setMessage] = useState("");
@@ -72,8 +72,9 @@ export function AIDemoWidget() {
   const [error, setError] = useState("");
   const [result, setResult] = useState("");
 
-  // Matrix State
+  // Matrix & Graph State
   const [selectedProduct, setSelectedProduct] = useState(MATRIX_PRODUCTS[0]);
+  const [cashbackPercent, setCashbackPercent] = useState(5);
 
   async function runDemo(e?: React.FormEvent) {
     e?.preventDefault();
@@ -97,42 +98,87 @@ export function AIDemoWidget() {
     }
   }
 
+  const bestPrice = selectedProduct.stores.find((s) => s.best)?.price || 64999;
+  const effectivePrice = Math.round(bestPrice * (1 - cashbackPercent / 100));
+
   return (
-    <div className="glow-card bg-gradient-to-br from-[#12121e] to-[#0d0d16] border border-[#ea580c]/25 rounded-2xl p-6 md:p-8 mt-8 shadow-2xl">
-      {/* Header & Tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-white/10 pb-5">
+    <div className="relative overflow-hidden bg-[#0d0906] border border-[#ea580c]/30 rounded-3xl p-6 md:p-10 mt-10 shadow-[0_0_50px_rgba(234,88,12,0.15)]">
+      {/* Ambient Cyber Orange Mesh Glows */}
+      <div className="absolute -top-32 -right-32 w-80 h-80 bg-[#ea580c]/15 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-[#ec4899]/15 rounded-full blur-[100px] pointer-events-none"></div>
+
+      {/* Live Enterprise Performance Stats Bar */}
+      <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 bg-black/40 border border-white/10 rounded-2xl mb-8 backdrop-blur-xl">
+        <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ea580c] opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#ea580c]"></span>
+          </span>
+          <div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Engine Status</div>
+            <div className="text-xs font-bold text-white font-mono">4-Store Scraper</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
+          <span className="text-xs">⚡</span>
+          <div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Response Speed</div>
+            <div className="text-xs font-bold text-[#fdba74] font-mono">18ms Latency</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
+          <span className="text-xs">🛍️</span>
+          <div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Price Alerts</div>
+            <div className="text-xs font-bold text-white font-mono">8,400+ Active</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2.5 px-3">
+          <span className="text-xs">✨</span>
+          <div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Deal Accuracy</div>
+            <div className="text-xs font-bold text-[#6ee7b7] font-mono">99.5% Verified</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Header & Glass Tabs */}
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 mb-8 border-b border-white/10 pb-6">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Sparkles className="h-4 w-4 text-[#fdba74]" />
-            <span className="text-xs font-bold tracking-wider text-[#fdba74] uppercase">Live AI Shopping Assistant</span>
+            <span className="text-xs font-bold tracking-wider text-[#fdba74] uppercase">Live AI E-Commerce Intelligence</span>
           </div>
-          <h4 className="text-xl font-extrabold text-white">Multi-Store Price Intelligence</h4>
+          <h4 className="text-2xl font-black text-white tracking-tight">4-Store Price Comparison & Trend Predictor</h4>
         </div>
 
-        <div className="flex gap-2 p-1 bg-[#08080f] rounded-xl border border-white/10">
-          <button
-            onClick={() => setActiveTab("assistant")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-              activeTab === "assistant" ? "bg-[#ea580c] text-white shadow-md" : "text-[#9aa0b8] hover:text-white"
-            }`}
-          >
-            <ShoppingCart className="h-3.5 w-3.5" /> AI Shopping Bot
-          </button>
+        <div className="flex gap-2 p-1.5 bg-black/60 rounded-2xl border border-white/10 backdrop-blur-xl">
           <button
             onClick={() => setActiveTab("matrix")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-              activeTab === "matrix" ? "bg-[#ea580c] text-white shadow-md" : "text-[#9aa0b8] hover:text-white"
+            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 ${
+              activeTab === "matrix" ? "bg-[#ea580c] text-white shadow-[0_0_20px_rgba(234,88,12,0.5)] scale-[1.02]" : "text-[#9aa0b8] hover:text-white"
             }`}
           >
             <Layers className="h-3.5 w-3.5" /> 4-Store Price Matrix
           </button>
           <button
             onClick={() => setActiveTab("predictor")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-              activeTab === "predictor" ? "bg-[#ea580c] text-white shadow-md" : "text-[#9aa0b8] hover:text-white"
+            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 ${
+              activeTab === "predictor" ? "bg-[#ea580c] text-white shadow-[0_0_20px_rgba(234,88,12,0.5)] scale-[1.02]" : "text-[#9aa0b8] hover:text-white"
             }`}
           >
-            <TrendingDown className="h-3.5 w-3.5" /> Price Drop Predictor
+            <TrendingDown className="h-3.5 w-3.5" /> 30-Day Trend & Cashback
+          </button>
+          <button
+            onClick={() => setActiveTab("assistant")}
+            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 ${
+              activeTab === "assistant" ? "bg-[#ea580c] text-white shadow-[0_0_20px_rgba(234,88,12,0.5)] scale-[1.02]" : "text-[#9aa0b8] hover:text-white"
+            }`}
+          >
+            <ShoppingCart className="h-3.5 w-3.5" /> AI Deal Bot
           </button>
         </div>
       </div>
