@@ -388,13 +388,12 @@ def get_contacts(limit: int = 50, x_admin_key: str = Header(default="")):
 from features import router as _feat_router
 app.include_router(_feat_router)
 
-# ── Comonk is now also a child process inside the monolith (port 8007).
-# It runs comonk_backend.py from apps/comonk/ (flat folder, no /backend/ subdir).
-# The old comonk-ai.onrender.com stays live as a separate Render service — both
-# can exist simultaneously; users can use either one.
-
-
 # ── Comonk AI embedded route ─────────────────────────────────────────────────
+# Comonk is NOT a child process here (a subprocess-merge was tried and reverted
+# - see git history around "add comonk-ai as 7th child process" - its frontend
+# was never built for living under a subpath, and it's the one app with real
+# users). This just embeds the real, separately-deployed comonk-ai.onrender.com
+# under /comonk-ai via an iframe, so it appears part of the same site.
 @app.get("/comonk-ai", include_in_schema=False)
 @app.get("/comonk-ai/", include_in_schema=False)
 @app.get("/comonk-ai/{tail:path}", include_in_schema=False)

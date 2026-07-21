@@ -19,6 +19,10 @@ db.sqlite3.bak
 node_modules/
 .next/
 out/
+tsconfig.tsbuildinfo
+
+# ── Local debug output ────────────────────────────────────────────────────────
+_run_log.txt
 
 # ── Built frontend copied into the backend at build time ─────────────────────
 # The six Next.js apps generate backend/static/ locally from frontend/out/; none
