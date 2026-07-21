@@ -9,17 +9,16 @@ import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { GlowCard } from "@/components/GlowCard";
 import { AIDemoWidget } from "@/components/AIDemoWidget";
 import { ValOrb } from "@/components/ValOrb";
-import { PriceBoard } from "@/components/PriceBoard";
+import { CustomCursor } from "@/components/CustomCursor";
+import { TextScramble } from "@/components/TextScramble";
+import { Tilt } from "@/components/Tilt";
 import {
   Scale, PiggyBank, Bot, Truck, Cpu,
   ChevronDown, Search, TrendingUp, Sparkles,
   ShoppingCart, CheckCircle2, Zap, Star,
 } from "lucide-react";
 
-// ════════════════════════════════════════════════════════════
-//  LIVE PRICE COMPARISON VISUAL
-//  Simulates Val comparing 4 stores in real-time
-// ════════════════════════════════════════════════════════════
+// Live Price Comparison Visual
 const PRODUCTS = [
   {
     name: "Samsung 65\" Crystal 4K UHD TV",
@@ -30,7 +29,7 @@ const PRODUCTS = [
       { name: "Reliance", price: 56999, rating: 4.1, reviews:  764, score: 78 },
       { name: "Snapdeal", price: 51999, rating: 3.9, reviews:  412, score: 74 },
     ],
-    winner: 1, // Flipkart index
+    winner: 1,
   },
   {
     name: "OnePlus 12 5G (256GB)",
@@ -41,7 +40,7 @@ const PRODUCTS = [
       { name: "Reliance", price: 65999, rating: 4.2, reviews:  921, score: 80 },
       { name: "Snapdeal", price: 63999, rating: 3.8, reviews:  234, score: 70 },
     ],
-    winner: 0, // Amazon
+    winner: 0,
   },
 ];
 
@@ -87,117 +86,108 @@ function PriceComparisonVisual() {
   }, [productIdx, runComparison]);
 
   return (
-    <div className="w-full rounded-2xl overflow-hidden border border-[rgba(99,102,241,0.2)] bg-[#060618] shadow-[0_0_80px_rgba(99,102,241,0.07)]">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#09091e] border-b border-[rgba(99,102,241,0.12)]">
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute h-full w-full rounded-full bg-[#6366f1] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#6366f1]" />
+    <Tilt className="w-full">
+      <div className="w-full rounded-2xl overflow-hidden border border-[rgba(99,102,241,0.25)] bg-[#060618] shadow-[0_0_80px_rgba(99,102,241,0.1)]">
+        <div className="flex items-center justify-between px-4 py-3 bg-[#09091e] border-b border-[rgba(99,102,241,0.12)]">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute h-full w-full rounded-full bg-[#6366f1] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#6366f1]" />
+            </span>
+            <span className="text-[10px] font-mono font-bold text-[#a5b4fc] uppercase tracking-widest">VAL · PRICE INTELLIGENCE</span>
+          </div>
+          <span className="text-[9px] font-mono text-[#6471c4]">
+            {phase === "loading" ? "FETCHING PRICES..." : phase === "comparing" ? "ANALYZING..." : "WINNER FOUND ✓"}
           </span>
-          <span className="text-[10px] font-mono font-bold text-[#a5b4fc] uppercase tracking-widest">VAL · PRICE INTELLIGENCE</span>
         </div>
-        <span className="text-[9px] font-mono text-[#6471c4]">
-          {phase === "loading" ? "FETCHING PRICES..." : phase === "comparing" ? "ANALYZING..." : "WINNER FOUND ✓"}
-        </span>
-      </div>
 
-      {/* Product header */}
-      <div className="px-4 py-3 border-b border-[rgba(99,102,241,0.1)] bg-[#080819]">
-        <div className="text-[9px] font-mono text-[#6471c4] uppercase tracking-wider mb-1">{product.cat}</div>
-        <div className="text-sm font-bold text-white truncate">{product.name}</div>
-      </div>
+        <div className="px-4 py-3 border-b border-[rgba(99,102,241,0.1)] bg-[#080819]">
+          <div className="text-[9px] font-mono text-[#6471c4] uppercase tracking-wider mb-1">{product.cat}</div>
+          <div className="text-sm font-bold text-white truncate">{product.name}</div>
+        </div>
 
-      {/* Store rows */}
-      <div className="flex flex-col divide-y divide-[rgba(99,102,241,0.08)]">
-        <AnimatePresence mode="popLayout">
-          {product.stores.map((store, i) => {
-            const isRevealed = i < revealCount;
-            const isWinner = phase === "result" && i === product.winner;
-            const color = STORE_COLORS[store.name];
-            return (
-              <motion.div
-                key={`${productIdx}-${i}`}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: isRevealed ? 1 : 0.3, y: 0 }}
-                transition={{ duration: 0.3, delay: i * 0.05 }}
-                className="flex items-center gap-3 px-4 py-3 relative"
-                style={{ background: isWinner ? `${color}08` : "transparent" }}
-              >
-                {isWinner && (
-                  <div className="absolute right-3 top-3">
-                    <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full" style={{ background:`${color}20`, color }}>
-                      BEST VALUE ↑
+        <div className="flex flex-col divide-y divide-[rgba(99,102,241,0.08)]">
+          <AnimatePresence mode="popLayout">
+            {product.stores.map((store, i) => {
+              const isRevealed = i < revealCount;
+              const isWinner = phase === "result" && i === product.winner;
+              const color = STORE_COLORS[store.name];
+              return (
+                <motion.div
+                  key={`${productIdx}-${i}`}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: isRevealed ? 1 : 0.3, y: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.05 }}
+                  className="flex items-center gap-3 px-4 py-3 relative"
+                  style={{ background: isWinner ? `${color}08` : "transparent" }}
+                >
+                  {isWinner && (
+                    <div className="absolute right-3 top-3">
+                      <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full" style={{ background:`${color}20`, color }}>
+                        BEST VALUE ↑
+                      </span>
+                    </div>
+                  )}
+                  
+                  <div className="w-16 flex-shrink-0">
+                    <div className="text-[11px] font-bold" style={{ color }}>{store.name}</div>
+                  </div>
+
+                  <div className="w-20 flex-shrink-0">
+                    <div className="text-sm font-black text-white">
+                      {isRevealed ? `₹${store.price.toLocaleString()}` : "—"}
+                    </div>
+                  </div>
+
+                  <div className="flex-1">
+                    <div className="h-1.5 bg-[rgba(99,102,241,0.1)] rounded-full overflow-hidden">
+                      {isRevealed && (
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${store.score}%` }}
+                          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                          className="h-full rounded-full"
+                          style={{ background: isWinner ? color : "rgba(99,102,241,0.5)" }}
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="w-8 text-right flex-shrink-0">
+                    <span className="text-[11px] font-mono font-bold" style={{ color: isRevealed ? (isWinner ? color : "rgba(165,180,252,0.7)") : "transparent" }}>
+                      {store.score}
                     </span>
                   </div>
-                )}
-                
-                {/* Store name */}
-                <div className="w-16 flex-shrink-0">
-                  <div className="text-[11px] font-bold" style={{ color }}>{store.name}</div>
-                </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
 
-                {/* Price */}
-                <div className="w-20 flex-shrink-0">
-                  <div className="text-sm font-black text-white">
-                    {isRevealed ? `₹${store.price.toLocaleString()}` : "—"}
-                  </div>
+        <AnimatePresence>
+          {phase === "result" && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="border-t border-[rgba(99,102,241,0.15)] bg-[#080819]"
+            >
+              <div className="px-4 py-3 flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-[rgba(99,102,241,0.2)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Bot className="h-3.5 w-3.5 text-[#a5b4fc]" />
                 </div>
-
-                {/* Score bar */}
-                <div className="flex-1">
-                  <div className="h-1.5 bg-[rgba(99,102,241,0.1)] rounded-full overflow-hidden">
-                    {isRevealed && (
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${store.score}%` }}
-                        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                        className="h-full rounded-full"
-                        style={{ background: isWinner ? color : "rgba(99,102,241,0.5)" }}
-                      />
-                    )}
-                  </div>
-                </div>
-
-                {/* Score */}
-                <div className="w-8 text-right flex-shrink-0">
-                  <span className="text-[11px] font-mono font-bold" style={{ color: isRevealed ? (isWinner ? color : "rgba(165,180,252,0.7)") : "transparent" }}>
-                    {store.score}
-                  </span>
-                </div>
-              </motion.div>
-            );
-          })}
+                <p className="text-[11px] text-[#a5b4fc] leading-relaxed">
+                  <strong className="text-white">Val recommends {product.stores[product.winner].name}</strong> — best value score ({product.stores[product.winner].score}/100) with ₹{(Math.max(...product.stores.map(s => s.price)) - product.stores[product.winner].price).toLocaleString()} savings vs highest price.
+                </p>
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
-
-      {/* Val recommendation */}
-      <AnimatePresence>
-        {phase === "result" && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="border-t border-[rgba(99,102,241,0.15)] bg-[#080819]"
-          >
-            <div className="px-4 py-3 flex items-start gap-3">
-              <div className="w-6 h-6 rounded-full bg-[rgba(99,102,241,0.2)] flex items-center justify-center flex-shrink-0 mt-0.5">
-                <Bot className="h-3.5 w-3.5 text-[#a5b4fc]" />
-              </div>
-              <p className="text-[11px] text-[#a5b4fc] leading-relaxed">
-                <strong className="text-white">Val recommends {product.stores[product.winner].name}</strong> — best value score ({product.stores[product.winner].score}/100) with ₹{(Math.max(...product.stores.map(s => s.price)) - product.stores[product.winner].price).toLocaleString()} savings vs highest price.
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    </Tilt>
   );
 }
 
-// ════════════════════════════════════════════════════════════
-//  MAIN PAGE
-// ════════════════════════════════════════════════════════════
 export default function Home() {
   const [scrollPct, setScrollPct] = useState(0);
   const [contactName, setContactName] = useState("");
@@ -225,25 +215,16 @@ export default function Home() {
 
   return (
     <>
+      <CustomCursor />
       <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
       <Navbar />
 
-      {/* ────────────────────────────────────────────────────
-          HERO  –  Split: text ← | → live price comparison
-      ──────────────────────────────────────────────────── */}
+      {/* HERO */}
       <header className="relative min-h-screen flex items-center overflow-hidden bg-[#04040c] pt-[var(--nav-h)]">
         <div className="star-field" />
         <div className="space-grid" />
 
-        {/* Orbs */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-40 -left-20 w-[700px] h-[700px] rounded-full bg-[#6366f1]/5 blur-[140px]" />
-          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-[#22d3ee]/4 blur-[120px]" />
-        </div>
-
         <div className="relative z-10 w-full max-w-[var(--maxw)] mx-auto px-6 md:px-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-          {/* LEFT */}
           <div className="flex flex-col gap-7">
             <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }}>
               <span className="eyebrow">
@@ -262,7 +243,7 @@ export default function Home() {
               className="text-4xl sm:text-5xl xl:text-[4.2rem] font-black leading-[1.04] tracking-tighter text-white"
             >
               Compare 4 stores.<br/>
-              <span className="grad">Val picks the winner.</span>
+              <span className="grad"><TextScramble text="Val picks the winner." /></span>
             </motion.h1>
 
             <motion.p
@@ -292,7 +273,6 @@ export default function Home() {
               </a>
             </motion.div>
 
-            {/* Chips */}
             <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.42 }}
               className="flex flex-wrap gap-2.5">
               {["Amazon","Flipkart","Reliance Digital","Snapdeal","BYOK Free","Offline Scoring"].map((tag, i) => (
@@ -303,7 +283,6 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* RIGHT */}
           <motion.div
             initial={{ opacity:0, x:40 }}
             animate={{ opacity:1, x:0 }}
@@ -318,7 +297,7 @@ export default function Home() {
         </a>
       </header>
 
-      {/* ── STATS BAND ────────────────────────────────────── */}
+      {/* STATS BAND */}
       <section id="stats" className="bg-[#08081a] border-y border-[rgba(99,102,241,0.1)]">
         <div className="max-w-[var(--maxw)] mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-[rgba(99,102,241,0.1)]">
           {[
@@ -335,7 +314,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── MEET VAL ─────────────────────────────────────── */}
+      {/* MEET VAL */}
       <section className="bg-[#08081a] border-b border-[rgba(99,102,241,0.1)] py-16 px-6 md:px-12">
         <div className="max-w-[var(--maxw)] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           <RevealOnScroll className="lg:col-span-4 flex flex-col items-center lg:items-start text-center lg:text-left">
@@ -356,22 +335,24 @@ export default function Home() {
               { icon:Truck,     title:"Tracks",     desc:"Set a target price and Val watches for the drop and notifies you." },
             ].map(({ icon: Icon, title, desc }, i) => (
               <RevealOnScroll key={i} delay={i * 0.06}>
-                <div className="flex gap-4 p-4 rounded-xl bg-[#0d0d24] border border-[rgba(99,102,241,0.1)]">
-                  <div className="w-10 h-10 rounded-lg grid place-items-center bg-[rgba(99,102,241,0.12)] text-[#a5b4fc] flex-shrink-0">
-                    <Icon className="h-5 w-5" />
+                <Tilt className="h-full">
+                  <div className="flex gap-4 p-4 rounded-xl bg-[#0d0d24] border border-[rgba(99,102,241,0.1)] h-full">
+                    <div className="w-10 h-10 rounded-lg grid place-items-center bg-[rgba(99,102,241,0.12)] text-[#a5b4fc] flex-shrink-0">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-sm text-white">{title}</div>
+                      <p className="text-xs text-[#6471c4] mt-0.5 leading-relaxed">{desc}</p>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-bold text-sm text-white">{title}</div>
-                    <p className="text-xs text-[#6471c4] mt-0.5 leading-relaxed">{desc}</p>
-                  </div>
-                </div>
+                </Tilt>
               </RevealOnScroll>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── FEATURES ─────────────────────────────────────── */}
+      {/* FEATURES */}
       <section className="max-w-[var(--maxw)] mx-auto py-24 px-6 md:px-12" id="features">
         <RevealOnScroll>
           <div className="text-center mb-14">
@@ -391,28 +372,30 @@ export default function Home() {
             { icon:Zap,          color:"#6366f1", badge:"Free",        title:"BYOK — Free Forever",      desc:"Bring your own Gemini or Groq key. Run unlimited comparisons at zero cost." },
           ].map(({ icon: Icon, color, badge, title, desc }, i) => (
             <RevealOnScroll key={i} delay={i * 0.06}>
-              <GlowCard className="glow-card bg-[#08081a] border border-[rgba(99,102,241,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-xl grid place-items-center flex-shrink-0"
-                    style={{ background:`${color}14`, color }}>
-                    <Icon className="h-5 w-5" />
+              <Tilt className="h-full">
+                <GlowCard className="glow-card bg-[#08081a] border border-[rgba(99,102,241,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
+                  <div className="flex items-center justify-between">
+                    <div className="w-11 h-11 rounded-xl grid place-items-center flex-shrink-0"
+                      style={{ background:`${color}14`, color }}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span className="text-[9px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
+                      style={{ background:`${color}12`, color }}>
+                      {badge}
+                    </span>
                   </div>
-                  <span className="text-[9px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
-                    style={{ background:`${color}12`, color }}>
-                    {badge}
-                  </span>
-                </div>
-                <div>
-                  <h3 className="text-[15px] font-bold text-white mb-1.5">{title}</h3>
-                  <p className="text-sm text-[#a5b4fc] leading-relaxed opacity-80">{desc}</p>
-                </div>
-              </GlowCard>
+                  <div>
+                    <h3 className="text-[15px] font-bold text-white mb-1.5">{title}</h3>
+                    <p className="text-sm text-[#a5b4fc] leading-relaxed opacity-80">{desc}</p>
+                  </div>
+                </GlowCard>
+              </Tilt>
             </RevealOnScroll>
           ))}
         </div>
       </section>
 
-      {/* ── AI DEMO WIDGET ───────────────────────────────── */}
+      {/* AI DEMO WIDGET */}
       <section className="bg-[#08081a] py-20 px-6 md:px-12" id="tools">
         <div className="max-w-[var(--maxw)] mx-auto">
           <RevealOnScroll>
@@ -430,7 +413,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ─────────────────────────────────── */}
+      {/* TESTIMONIALS */}
       <section className="max-w-[var(--maxw)] mx-auto py-20 px-6 md:px-12" id="testimonials">
         <RevealOnScroll>
           <div className="text-center mb-12">
@@ -445,29 +428,31 @@ export default function Home() {
             { t:"I was about to buy a product with 4.2 stars until Val showed me the review count was fake. Avoided a terrible purchase.", a:"Ananya S.", c:"Marketing Lead, Delhi" },
           ].map(({ t, a, c }, i) => (
             <RevealOnScroll key={i} delay={i * 0.07}>
-              <GlowCard className="glow-card bg-[#0d0d24] border border-[rgba(99,102,241,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
-                <figure className="h-full flex flex-col gap-4">
-                  <div className="flex gap-1">
-                    {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-[#f59e0b] text-[#f59e0b]" />)}
-                  </div>
-                  <blockquote className="text-sm text-[#a5b4fc] italic flex-1 leading-relaxed">"{t}"</blockquote>
-                  <figcaption className="flex items-center gap-3 border-t border-[rgba(99,102,241,0.1)] pt-4">
-                    <div className="w-9 h-9 rounded-full bg-[rgba(99,102,241,0.15)] border border-[rgba(99,102,241,0.3)] flex items-center justify-center font-bold text-[#a5b4fc] text-xs">
-                      {a[0]}
+              <Tilt className="h-full">
+                <GlowCard className="glow-card bg-[#0d0d24] border border-[rgba(99,102,241,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
+                  <figure className="h-full flex flex-col gap-4">
+                    <div className="flex gap-1">
+                      {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-[#f59e0b] text-[#f59e0b]" />)}
                     </div>
-                    <div className="text-xs">
-                      <strong className="block text-white">{a}</strong>
-                      <span className="text-[#6471c4]">{c}</span>
-                    </div>
-                  </figcaption>
-                </figure>
-              </GlowCard>
+                    <blockquote className="text-sm text-[#a5b4fc] italic flex-1 leading-relaxed">"{t}"</blockquote>
+                    <figcaption className="flex items-center gap-3 border-t border-[rgba(99,102,241,0.1)] pt-4">
+                      <div className="w-9 h-9 rounded-full bg-[rgba(99,102,241,0.15)] border border-[rgba(99,102,241,0.3)] flex items-center justify-center font-bold text-[#a5b4fc] text-xs">
+                        {a[0]}
+                      </div>
+                      <div className="text-xs">
+                        <strong className="block text-white">{a}</strong>
+                        <span className="text-[#6471c4]">{c}</span>
+                      </div>
+                    </figcaption>
+                  </figure>
+                </GlowCard>
+              </Tilt>
             </RevealOnScroll>
           ))}
         </div>
       </section>
 
-      {/* ── CONTACT CTA ──────────────────────────────────── */}
+      {/* CONTACT CTA */}
       <section className="max-w-[var(--maxw)] mx-auto py-16 px-6 md:px-12" id="contact">
         <RevealOnScroll>
           <GlowCard className="glow-card bg-[#08081a] border border-[rgba(99,102,241,0.1)] rounded-2xl p-10 relative overflow-hidden">
@@ -483,14 +468,14 @@ export default function Home() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input type="text" value={contactName} onChange={e => setContactName(e.target.value)}
                     placeholder="Your Name" required
-                    className="px-4 py-3 bg-[#04040c] border border-[rgba(99,102,241,0.15)] rounded-xl text-sm text-white focus:outline-none focus:border-[#6366f1] transition-colors placeholder:text-[#6471c4]" />
+                    className="px-4 py-3 bg-[#04040c] border border-[rgba(99,102,241,0.15)] rounded-xl text-sm text-white focus:outline-none focus:border-[#6366f1] transition-colors placeholder:text-[#64748b]" />
                   <input type="email" value={contactEmail} onChange={e => setContactEmail(e.target.value)}
                     placeholder="Your Email" required
-                    className="px-4 py-3 bg-[#04040c] border border-[rgba(99,102,241,0.15)] rounded-xl text-sm text-white focus:outline-none focus:border-[#6366f1] transition-colors placeholder:text-[#6471c4]" />
+                    className="px-4 py-3 bg-[#04040c] border border-[rgba(99,102,241,0.15)] rounded-xl text-sm text-white focus:outline-none focus:border-[#6366f1] transition-colors placeholder:text-[#64748b]" />
                 </div>
                 <textarea rows={3} value={contactMsg} onChange={e => setContactMsg(e.target.value)}
                   placeholder="Your message…" required
-                  className="px-4 py-3 bg-[#04040c] border border-[rgba(99,102,241,0.15)] rounded-xl text-sm text-white focus:outline-none focus:border-[#6366f1] transition-colors placeholder:text-[#6471c4] resize-none" />
+                  className="px-4 py-3 bg-[#04040c] border border-[rgba(99,102,241,0.15)] rounded-xl text-sm text-white focus:outline-none focus:border-[#6366f1] transition-colors placeholder:text-[#64748b] resize-none" />
                 <button type="submit" className="btn-primary w-full text-base">
                   Send Message
                 </button>

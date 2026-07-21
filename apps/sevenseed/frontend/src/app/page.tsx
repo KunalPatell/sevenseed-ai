@@ -8,17 +8,18 @@ import { Footer } from "@/components/Footer";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { GlowCard } from "@/components/GlowCard";
 import { AIDemoWidget } from "@/components/AIDemoWidget";
-import { HubLogo } from "@/components/HubLogo";
+import { CustomCursor } from "@/components/CustomCursor";
+import { StarCanvas } from "@/components/StarCanvas";
+import { TextScramble } from "@/components/TextScramble";
+import { Tilt } from "@/components/Tilt";
 import {
-  Rocket, Layers, Cpu, Shield, Zap, Sparkles,
-  ChevronDown, Star, ArrowRight, ExternalLink,
+  Rocket, Layers, Cpu,
+  ChevronDown, ArrowRight, ExternalLink,
   HardHat, HeartPulse, ShoppingCart, GraduationCap,
-  Heart, Users, FileText, Server,
+  Heart, FileText, Server,
 } from "lucide-react";
 
-// ════════════════════════════════════════════════════════════
-//  LIVE 8-STARTUP ECOSYSTEM ORBIT VISUAL
-// ════════════════════════════════════════════════════════════
+// Live 8-Startup Orbit Visual
 const STARTUPS = [
   { name: "Breakdown Factor", tag: "Construction AI", icon: HardHat,       color: "#f59e0b", link: "/app/breakdown-factor" },
   { name: "Decode Pharmacy",  tag: "Free Healthcare",  icon: HeartPulse,    color: "#10b981", link: "/app/decode-forest-pharmacy" },
@@ -42,92 +43,87 @@ function StartupOrbitVisual() {
   }, []);
 
   return (
-    <div className="w-full rounded-2xl overflow-hidden border border-[rgba(245,158,11,0.25)] bg-[#090914] shadow-[0_0_80px_rgba(245,158,11,0.08)]">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#0f0f22] border-b border-[rgba(245,158,11,0.12)]">
-        <div className="flex items-center gap-2">
-          <Rocket className="h-4 w-4 text-[#f59e0b]" />
-          <span className="text-[10px] font-mono font-bold text-[#f59e0b] uppercase tracking-widest">
-            SEVENSEED VENTURE STUDIO · 8 PORTFOLIO LABS
-          </span>
-        </div>
-        <span className="text-[9px] font-mono text-[#06b6d4]">SUBPROCESS ENGINE ACTIVE</span>
-      </div>
-
-      {/* Grid of 8 Startups */}
-      <div className="p-4 bg-[#030308]">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-4">
-          {STARTUPS.map((s, i) => {
-            const Icon = s.icon;
-            const isSelected = i === selectedIdx;
-            return (
-              <div
-                key={i}
-                onClick={() => setSelectedIdx(i)}
-                className={`cursor-pointer rounded-xl p-2.5 border transition-all duration-300 flex flex-col gap-1.5 ${
-                  isSelected
-                    ? "bg-[#0f0f22] border-[#f59e0b] shadow-[0_0_15px_rgba(245,158,11,0.25)]"
-                    : "bg-[#090914]/80 border-[rgba(255,255,255,0.06)] hover:border-[#f59e0b]/50"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <Icon className="h-4 w-4" style={{ color: s.color }} />
-                  <span className="text-[8px] font-mono text-[#64748b]">0{i+1}</span>
-                </div>
-                <div className="text-[11px] font-bold text-white leading-tight truncate">{s.name}</div>
-                <div className="text-[9px] font-mono text-[#cbd5e1] opacity-75">{s.tag}</div>
-              </div>
-            );
-          })}
+    <Tilt className="w-full">
+      <div className="w-full rounded-2xl overflow-hidden border border-[rgba(245,158,11,0.25)] bg-[#090914] shadow-[0_0_80px_rgba(245,158,11,0.1)]">
+        <div className="flex items-center justify-between px-4 py-3 bg-[#0f0f22] border-b border-[rgba(245,158,11,0.12)]">
+          <div className="flex items-center gap-2">
+            <Rocket className="h-4 w-4 text-[#f59e0b]" />
+            <span className="text-[10px] font-mono font-bold text-[#f59e0b] uppercase tracking-widest">
+              SEVENSEED VENTURE STUDIO · 8 PORTFOLIO LABS
+            </span>
+          </div>
+          <span className="text-[9px] font-mono text-[#06b6d4]">SUBPROCESS ENGINE ACTIVE</span>
         </div>
 
-        {/* Selected Startup Detail Card */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedIdx}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25 }}
-            className="rounded-xl p-4 bg-[#0f0f22] border border-[rgba(245,158,11,0.2)] flex items-center justify-between flex-wrap gap-3"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl grid place-items-center bg-black/40 border border-white/10" style={{ color: activeStartup.color }}>
-                {React.createElement(activeStartup.icon, { className: "h-5 w-5" })}
-              </div>
-              <div>
-                <div className="text-sm font-bold text-white flex items-center gap-2">
-                  {activeStartup.name}
-                  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase" style={{ background:`${activeStartup.color}20`, color: activeStartup.color }}>
-                    {activeStartup.tag}
-                  </span>
+        <div className="p-4 bg-[#030308]">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-4">
+            {STARTUPS.map((s, i) => {
+              const Icon = s.icon;
+              const isSelected = i === selectedIdx;
+              return (
+                <div
+                  key={i}
+                  onClick={() => setSelectedIdx(i)}
+                  className={`cursor-pointer rounded-xl p-2.5 border transition-all duration-300 flex flex-col gap-1.5 ${
+                    isSelected
+                      ? "bg-[#0f0f22] border-[#f59e0b] shadow-[0_0_15px_rgba(245,158,11,0.25)]"
+                      : "bg-[#090914]/80 border-[rgba(255,255,255,0.06)] hover:border-[#f59e0b]/50"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <Icon className="h-4 w-4" style={{ color: s.color }} />
+                    <span className="text-[8px] font-mono text-[#64748b]">0{i+1}</span>
+                  </div>
+                  <div className="text-[11px] font-bold text-white leading-tight truncate">{s.name}</div>
+                  <div className="text-[9px] font-mono text-[#cbd5e1] opacity-75">{s.tag}</div>
                 </div>
-                <div className="text-[11px] text-[#cbd5e1] mt-0.5">Live subprocess product inside Sevenseed Venture Platform</div>
-              </div>
-            </div>
+              );
+            })}
+          </div>
 
-            <Link
-              href={activeStartup.link}
-              className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#fef08a] hover:underline bg-black/40 border border-white/10 px-3 py-1.5 rounded-lg"
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedIdx}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="rounded-xl p-4 bg-[#0f0f22] border border-[rgba(245,158,11,0.2)] flex items-center justify-between flex-wrap gap-3"
             >
-              Launch Site <ExternalLink className="h-3 w-3" />
-            </Link>
-          </motion.div>
-        </AnimatePresence>
-      </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl grid place-items-center bg-black/40 border border-white/10" style={{ color: activeStartup.color }}>
+                  {React.createElement(activeStartup.icon, { className: "h-5 w-5" })}
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-white flex items-center gap-2">
+                    {activeStartup.name}
+                    <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase" style={{ background:`${activeStartup.color}20`, color: activeStartup.color }}>
+                      {activeStartup.tag}
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-[#cbd5e1] mt-0.5">Live subprocess product inside Sevenseed Venture Platform</div>
+                </div>
+              </div>
 
-      {/* Footer bar */}
-      <div className="px-4 py-2.5 bg-[#0f0f22] border-t border-[rgba(245,158,11,0.12)] flex items-center justify-between text-[9px] font-mono text-[#64748b]">
-        <span>SINGLE FASTAPI SUBPROCESS ORCHESTRATOR</span>
-        <span>BYOK KEY MANAGER READY</span>
+              <Link
+                href={activeStartup.link}
+                className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#fef08a] hover:underline bg-black/40 border border-white/10 px-3 py-1.5 rounded-lg"
+              >
+                Launch Site <ExternalLink className="h-3 w-3" />
+              </Link>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        <div className="px-4 py-2.5 bg-[#0f0f22] border-t border-[rgba(245,158,11,0.12)] flex items-center justify-between text-[9px] font-mono text-[#64748b]">
+          <span>SINGLE FASTAPI SUBPROCESS ORCHESTRATOR</span>
+          <span>BYOK KEY MANAGER READY</span>
+        </div>
       </div>
-    </div>
+    </Tilt>
   );
 }
 
-// ════════════════════════════════════════════════════════════
-//  MAIN PAGE
-// ════════════════════════════════════════════════════════════
 export default function Home() {
   const [scrollPct, setScrollPct] = useState(0);
   const [contactName, setContactName] = useState("");
@@ -155,24 +151,16 @@ export default function Home() {
 
   return (
     <>
+      <CustomCursor />
       <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
       <Navbar />
 
-      {/* ────────────────────────────────────────────────────
-          HERO  –  Split: Text ← | → 8-Startup Orbit Visual
-      ──────────────────────────────────────────────────── */}
+      {/* HERO */}
       <header className="relative min-h-screen flex items-center overflow-hidden bg-[#030308] pt-[var(--nav-h)]">
+        <StarCanvas />
         <div className="venture-mesh" />
 
-        {/* Ambient Glows */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-40 -left-20 w-[700px] h-[700px] rounded-full bg-[#f59e0b]/6 blur-[140px]" />
-          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-[#06b6d4]/5 blur-[120px]" />
-        </div>
-
         <div className="relative z-10 w-full max-w-[var(--maxw)] mx-auto px-6 md:px-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-          {/* LEFT */}
           <div className="flex flex-col gap-7">
             <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }}>
               <span className="eyebrow">
@@ -188,7 +176,7 @@ export default function Home() {
               className="text-4xl sm:text-5xl xl:text-[4.2rem] font-black leading-[1.04] tracking-tighter text-white"
             >
               8 AI Startups.<br/>
-              <span className="grad">1 Unified Studio.</span>
+              <span className="grad"><TextScramble text="1 Unified Studio." /></span>
             </motion.h1>
 
             <motion.p
@@ -216,7 +204,6 @@ export default function Home() {
               </a>
             </motion.div>
 
-            {/* Chips */}
             <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.42 }}
               className="flex flex-wrap gap-2.5">
               {["YOLOv8 Computer Vision", "Prescription OCR", "Groq LLaMA 3.3", "BYOK Key Manager", "Python FastAPI Subprocesses"].map((tag, i) => (
@@ -227,7 +214,6 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* RIGHT: 8-Startup Visual */}
           <motion.div
             initial={{ opacity:0, x:40 }}
             animate={{ opacity:1, x:0 }}
@@ -242,7 +228,7 @@ export default function Home() {
         </a>
       </header>
 
-      {/* ── STATS BAND ────────────────────────────────────── */}
+      {/* STATS BAND */}
       <section id="stats" className="bg-[#090914] border-y border-[rgba(245,158,11,0.12)]">
         <div className="max-w-[var(--maxw)] mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-[rgba(245,158,11,0.12)]">
           {[
@@ -259,7 +245,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── PORTFOLIO GRID ─────────────────────────────────── */}
+      {/* PORTFOLIO GRID */}
       <section className="max-w-[var(--maxw)] mx-auto py-24 px-6 md:px-12" id="portfolio">
         <RevealOnScroll>
           <div className="text-center mb-14">
@@ -275,30 +261,32 @@ export default function Home() {
             const Icon = s.icon;
             return (
               <RevealOnScroll key={i} delay={i * 0.05}>
-                <GlowCard className="glow-card bg-[#090914] border border-[rgba(245,158,11,0.1)] rounded-2xl p-5 h-full flex flex-col justify-between gap-4">
-                  <div>
-                    <div className="w-10 h-10 rounded-xl grid place-items-center mb-3" style={{ background: `${s.color}15`, color: s.color }}>
-                      <Icon className="h-5 w-5" />
+                <Tilt className="h-full">
+                  <GlowCard className="glow-card bg-[#090914] border border-[rgba(245,158,11,0.1)] rounded-2xl p-5 h-full flex flex-col justify-between gap-4">
+                    <div>
+                      <div className="w-10 h-10 rounded-xl grid place-items-center mb-3" style={{ background: `${s.color}15`, color: s.color }}>
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <h3 className="text-base font-bold text-white mb-1">{s.name}</h3>
+                      <span className="text-[9px] font-mono font-semibold uppercase px-2 py-0.5 rounded-full" style={{ background: `${s.color}15`, color: s.color }}>
+                        {s.tag}
+                      </span>
                     </div>
-                    <h3 className="text-base font-bold text-white mb-1">{s.name}</h3>
-                    <span className="text-[9px] font-mono font-semibold uppercase px-2 py-0.5 rounded-full" style={{ background: `${s.color}15`, color: s.color }}>
-                      {s.tag}
-                    </span>
-                  </div>
-                  <Link
-                    href={s.link}
-                    className="inline-flex items-center justify-between text-xs font-mono font-bold text-white hover:text-[#f59e0b] border-t border-white/5 pt-3 transition-colors"
-                  >
-                    Open Platform <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </GlowCard>
+                    <Link
+                      href={s.link}
+                      className="inline-flex items-center justify-between text-xs font-mono font-bold text-white hover:text-[#f59e0b] border-t border-white/5 pt-3 transition-colors"
+                    >
+                      Open Platform <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </GlowCard>
+                </Tilt>
               </RevealOnScroll>
             );
           })}
         </div>
       </section>
 
-      {/* ── AI DEMO WIDGET ───────────────────────────────── */}
+      {/* AI DEMO WIDGET */}
       <section className="bg-[#090914] py-20 px-6 md:px-12" id="tools">
         <div className="max-w-[var(--maxw)] mx-auto">
           <RevealOnScroll>
@@ -316,7 +304,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CONTACT CTA ──────────────────────────────────── */}
+      {/* CONTACT CTA */}
       <section className="max-w-[var(--maxw)] mx-auto py-16 px-6 md:px-12" id="contact">
         <RevealOnScroll>
           <GlowCard className="glow-card bg-[#090914] border border-[rgba(245,158,11,0.1)] rounded-2xl p-10 relative overflow-hidden">

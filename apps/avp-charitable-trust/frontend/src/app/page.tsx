@@ -1,109 +1,103 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { GlowCard } from "@/components/GlowCard";
 import { AIDemoWidget } from "@/components/AIDemoWidget";
-import { TrustOrb } from "@/components/TrustOrb";
+import { CustomCursor } from "@/components/CustomCursor";
+import { TextScramble } from "@/components/TextScramble";
+import { Tilt } from "@/components/Tilt";
 import {
-  Heart, Shield, Receipt, Users, Award, BookOpen,
-  ChevronDown, Star, ArrowRight, CheckCircle2, FileCheck,
-  Building2, Sparkles, HandHeart, Scale,
+  Heart, Shield, Receipt, Award, BookOpen,
+  ChevronDown, Star, FileCheck,
+  Building2, HandHeart,
 } from "lucide-react";
 
-// ════════════════════════════════════════════════════════════
-//  LIVE 80G TAX RECEIPT & IMPACT VISUAL
-// ════════════════════════════════════════════════════════════
+// Live 80G Tax Receipt & Impact Visual
 function ImpactGeneratorVisual() {
   const [donationAmt, setDonationAmt] = useState(10000);
-  const taxExemption = Math.round(donationAmt * 0.5); // 50% under 80G
+  const taxExemption = Math.round(donationAmt * 0.5);
   const mealsProvided = Math.round(donationAmt / 40);
   const healthCheckups = Math.round(donationAmt / 500);
 
   return (
-    <div className="w-full rounded-2xl overflow-hidden border border-[rgba(245,158,11,0.25)] bg-[#120c06] shadow-[0_0_80px_rgba(245,158,11,0.08)]">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#181109] border-b border-[rgba(245,158,11,0.12)]">
-        <div className="flex items-center gap-2">
-          <Heart className="h-4 w-4 text-[#f59e0b] fill-[#f59e0b]" />
-          <span className="text-[10px] font-mono font-bold text-[#f59e0b] uppercase tracking-widest">
-            AVP TRUST · 80G TAX & IMPACT CALCULATOR
-          </span>
-        </div>
-        <span className="text-[9px] font-mono text-[#22c55e]">VERIFIED 80G APPROVED</span>
-      </div>
-
-      {/* Interactive Slider */}
-      <div className="p-5 flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold text-[#a3957f]">Select Donation Amount:</span>
-          <span className="text-xl font-black text-white font-mono">₹{donationAmt.toLocaleString()}</span>
-        </div>
-
-        <input
-          type="range"
-          min="1000"
-          max="100000"
-          step="1000"
-          value={donationAmt}
-          onChange={e => setDonationAmt(Number(e.target.value))}
-          className="w-full h-2 bg-[#20170d] rounded-lg appearance-none cursor-pointer accent-[#f59e0b]"
-        />
-
-        <div className="flex justify-between text-[10px] font-mono text-[#a3957f]">
-          <span>₹1,000</span>
-          <span>₹50,000</span>
-          <span>₹1,00,000</span>
-        </div>
-
-        {/* Impact Output Cards */}
-        <div className="grid grid-cols-2 gap-3 mt-1">
-          <div className="rounded-xl p-3 bg-[#1a120a] border border-[rgba(245,158,11,0.15)]">
-            <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#22c55e] mb-1">
-              <Receipt className="h-3.5 w-3.5" /> 80G TAX DEDUCTION
-            </div>
-            <div className="text-lg font-black text-white font-mono">₹{taxExemption.toLocaleString()}</div>
-            <div className="text-[9px] text-[#a3957f]">50% Tax Exemption Benefit</div>
-          </div>
-
-          <div className="rounded-xl p-3 bg-[#1a120a] border border-[rgba(245,158,11,0.15)]">
-            <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#f59e0b] mb-1">
-              <HandHeart className="h-3.5 w-3.5" /> COMMUNITY IMPACT
-            </div>
-            <div className="text-lg font-black text-white font-mono">{mealsProvided} Meals</div>
-            <div className="text-[9px] text-[#a3957f]">or {healthCheckups} Free Health Audits</div>
-          </div>
-        </div>
-
-        {/* Mock Tax Receipt Badge */}
-        <div className="rounded-xl p-3 bg-[#181109] border border-dashed border-[rgba(245,158,11,0.3)] flex items-center justify-between text-xs">
+    <Tilt className="w-full">
+      <div className="w-full rounded-2xl overflow-hidden border border-[rgba(245,158,11,0.25)] bg-[#120c06] shadow-[0_0_80px_rgba(245,158,11,0.1)]">
+        <div className="flex items-center justify-between px-4 py-3 bg-[#181109] border-b border-[rgba(245,158,11,0.12)]">
           <div className="flex items-center gap-2">
-            <FileCheck className="h-4 w-4 text-[#f59e0b]" />
-            <div>
-              <div className="font-bold text-white text-[11px]">Instant 80G Certificate PDF</div>
-              <div className="text-[9px] text-[#a3957f]">Govt Reg: AABTA1234F20261</div>
+            <Heart className="h-4 w-4 text-[#f59e0b] fill-[#f59e0b]" />
+            <span className="text-[10px] font-mono font-bold text-[#f59e0b] uppercase tracking-widest">
+              AVP TRUST · 80G TAX & IMPACT CALCULATOR
+            </span>
+          </div>
+          <span className="text-[9px] font-mono text-[#22c55e]">VERIFIED 80G APPROVED</span>
+        </div>
+
+        <div className="p-5 flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#a3957f]">Select Donation Amount:</span>
+            <span className="text-xl font-black text-white font-mono">₹{donationAmt.toLocaleString()}</span>
+          </div>
+
+          <input
+            type="range"
+            min="1000"
+            max="100000"
+            step="1000"
+            value={donationAmt}
+            onChange={e => setDonationAmt(Number(e.target.value))}
+            className="w-full h-2 bg-[#20170d] rounded-lg appearance-none cursor-pointer accent-[#f59e0b]"
+          />
+
+          <div className="flex justify-between text-[10px] font-mono text-[#a3957f]">
+            <span>₹1,000</span>
+            <span>₹50,000</span>
+            <span>₹1,00,000</span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 mt-1">
+            <div className="rounded-xl p-3 bg-[#1a120a] border border-[rgba(245,158,11,0.15)]">
+              <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#22c55e] mb-1">
+                <Receipt className="h-3.5 w-3.5" /> 80G TAX DEDUCTION
+              </div>
+              <div className="text-lg font-black text-white font-mono">₹{taxExemption.toLocaleString()}</div>
+              <div className="text-[9px] text-[#a3957f]">50% Tax Exemption Benefit</div>
+            </div>
+
+            <div className="rounded-xl p-3 bg-[#1a120a] border border-[rgba(245,158,11,0.15)]">
+              <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#f59e0b] mb-1">
+                <HandHeart className="h-3.5 w-3.5" /> COMMUNITY IMPACT
+              </div>
+              <div className="text-lg font-black text-white font-mono">{mealsProvided} Meals</div>
+              <div className="text-[9px] text-[#a3957f]">or {healthCheckups} Free Health Audits</div>
             </div>
           </div>
-          <span className="text-[10px] font-mono font-bold text-[#f59e0b] bg-[rgba(245,158,11,0.1)] px-2 py-1 rounded">AUTO-GENERATE</span>
+
+          <div className="rounded-xl p-3 bg-[#181109] border border-dashed border-[rgba(245,158,11,0.3)] flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <FileCheck className="h-4 w-4 text-[#f59e0b]" />
+              <div>
+                <div className="font-bold text-white text-[11px]">Instant 80G Certificate PDF</div>
+                <div className="text-[9px] text-[#a3957f]">Govt Reg: AABTA1234F20261</div>
+              </div>
+            </div>
+            <span className="text-[10px] font-mono font-bold text-[#f59e0b] bg-[rgba(245,158,11,0.1)] px-2 py-1 rounded">AUTO-GENERATE</span>
+          </div>
+        </div>
+
+        <div className="px-4 py-2.5 bg-[#181109] border-t border-[rgba(245,158,11,0.12)] flex items-center justify-between text-[9px] font-mono text-[#a3957f]">
+          <span>100% TRANSPARENT PUBLIC LEDGER</span>
+          <span>0% ADMINISTRATIVE CUT</span>
         </div>
       </div>
-
-      {/* Trust Footer */}
-      <div className="px-4 py-2.5 bg-[#181109] border-t border-[rgba(245,158,11,0.12)] flex items-center justify-between text-[9px] font-mono text-[#a3957f]">
-        <span>100% TRANSPARENT PUBLIC LEDGER</span>
-        <span>0% ADMINISTRATIVE CUT</span>
-      </div>
-    </div>
+    </Tilt>
   );
 }
 
-// ════════════════════════════════════════════════════════════
-//  MAIN PAGE
-// ════════════════════════════════════════════════════════════
 export default function Home() {
   const [scrollPct, setScrollPct] = useState(0);
   const [contactName, setContactName] = useState("");
@@ -131,24 +125,15 @@ export default function Home() {
 
   return (
     <>
+      <CustomCursor />
       <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
       <Navbar />
 
-      {/* ────────────────────────────────────────────────────
-          HERO  –  Split: Text ← | → 80G Tax & Impact Calculator
-      ──────────────────────────────────────────────────── */}
+      {/* HERO */}
       <header className="relative min-h-screen flex items-center overflow-hidden bg-[#0d0905] pt-[var(--nav-h)]">
         <div className="warm-sunburst" />
 
-        {/* Ambient Orbs */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-40 -left-20 w-[700px] h-[700px] rounded-full bg-[#f59e0b]/6 blur-[140px]" />
-          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-[#f97316]/5 blur-[120px]" />
-        </div>
-
         <div className="relative z-10 w-full max-w-[var(--maxw)] mx-auto px-6 md:px-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-          {/* LEFT */}
           <div className="flex flex-col gap-7">
             <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }}>
               <span className="eyebrow">
@@ -164,7 +149,7 @@ export default function Home() {
               className="text-4xl sm:text-5xl xl:text-[4.2rem] font-black leading-[1.04] tracking-tighter text-white"
             >
               Transform lives.<br/>
-              <span className="grad">Save on your taxes.</span>
+              <span className="grad"><TextScramble text="Save on your taxes." /></span>
             </motion.h1>
 
             <motion.p
@@ -192,7 +177,6 @@ export default function Home() {
               </a>
             </motion.div>
 
-            {/* Chips */}
             <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.42 }}
               className="flex flex-wrap gap-2.5">
               {["80G Certified", "12A Registered", "Instant PDF Receipts", "0% Admin Fee", "Public Ledger"].map((tag, i) => (
@@ -203,7 +187,6 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* RIGHT: 80G Tax Calculator Visual */}
           <motion.div
             initial={{ opacity:0, x:40 }}
             animate={{ opacity:1, x:0 }}
@@ -218,7 +201,7 @@ export default function Home() {
         </a>
       </header>
 
-      {/* ── STATS BAND ────────────────────────────────────── */}
+      {/* STATS BAND */}
       <section id="stats" className="bg-[#161009] border-y border-[rgba(245,158,11,0.12)]">
         <div className="max-w-[var(--maxw)] mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-[rgba(245,158,11,0.12)]">
           {[
@@ -235,7 +218,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── INITIATIVES / FEATURES ─────────────────────────── */}
+      {/* INITIATIVES */}
       <section className="max-w-[var(--maxw)] mx-auto py-24 px-6 md:px-12" id="initiatives">
         <RevealOnScroll>
           <div className="text-center mb-14">
@@ -255,28 +238,30 @@ export default function Home() {
             { icon:Award,     color:"#f59e0b", badge:"Recognition", title:"Corporate CSR Matching",   desc:"Enables corporate partners to double their impact with structured CSR allocation and certificates." },
           ].map(({ icon: Icon, color, badge, title, desc }, i) => (
             <RevealOnScroll key={i} delay={i * 0.06}>
-              <GlowCard className="glow-card bg-[#161009] border border-[rgba(245,158,11,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-xl grid place-items-center flex-shrink-0"
-                    style={{ background:`${color}14`, color }}>
-                    <Icon className="h-5 w-5" />
+              <Tilt className="h-full">
+                <GlowCard className="glow-card bg-[#161009] border border-[rgba(245,158,11,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
+                  <div className="flex items-center justify-between">
+                    <div className="w-11 h-11 rounded-xl grid place-items-center flex-shrink-0"
+                      style={{ background:`${color}14`, color }}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span className="text-[9px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
+                      style={{ background:`${color}12`, color }}>
+                      {badge}
+                    </span>
                   </div>
-                  <span className="text-[9px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
-                    style={{ background:`${color}12`, color }}>
-                    {badge}
-                  </span>
-                </div>
-                <div>
-                  <h3 className="text-[15px] font-bold text-white mb-1.5">{title}</h3>
-                  <p className="text-sm text-[#fde68a] leading-relaxed opacity-80">{desc}</p>
-                </div>
-              </GlowCard>
+                  <div>
+                    <h3 className="text-[15px] font-bold text-white mb-1.5">{title}</h3>
+                    <p className="text-sm text-[#fde68a] leading-relaxed opacity-80">{desc}</p>
+                  </div>
+                </GlowCard>
+              </Tilt>
             </RevealOnScroll>
           ))}
         </div>
       </section>
 
-      {/* ── AI DEMO WIDGET ───────────────────────────────── */}
+      {/* AI DEMO WIDGET */}
       <section className="bg-[#161009] py-20 px-6 md:px-12" id="tools">
         <div className="max-w-[var(--maxw)] mx-auto">
           <RevealOnScroll>
@@ -294,7 +279,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ─────────────────────────────────── */}
+      {/* TESTIMONIALS */}
       <section className="max-w-[var(--maxw)] mx-auto py-20 px-6 md:px-12" id="testimonials">
         <RevealOnScroll>
           <div className="text-center mb-12">
@@ -309,29 +294,31 @@ export default function Home() {
             { t:"The scholarship sponsored my entire final year engineering fee. Forever grateful to AVP Charitable Trust.", a:"Rahul T.", c:"AVPU Alumnus & Software Engineer" },
           ].map(({ t, a, c }, i) => (
             <RevealOnScroll key={i} delay={i * 0.07}>
-              <GlowCard className="glow-card bg-[#20170d] border border-[rgba(245,158,11,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
-                <figure className="h-full flex flex-col gap-4">
-                  <div className="flex gap-1">
-                    {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-[#f59e0b] text-[#f59e0b]" />)}
-                  </div>
-                  <blockquote className="text-sm text-[#fde68a] italic flex-1 leading-relaxed">"{t}"</blockquote>
-                  <figcaption className="flex items-center gap-3 border-t border-[rgba(245,158,11,0.1)] pt-4">
-                    <div className="w-9 h-9 rounded-full bg-[rgba(245,158,11,0.15)] border border-[rgba(245,158,11,0.3)] flex items-center justify-center font-bold text-[#f59e0b] text-xs">
-                      {a[0]}
+              <Tilt className="h-full">
+                <GlowCard className="glow-card bg-[#20170d] border border-[rgba(245,158,11,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
+                  <figure className="h-full flex flex-col gap-4">
+                    <div className="flex gap-1">
+                      {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-[#f59e0b] text-[#f59e0b]" />)}
                     </div>
-                    <div className="text-xs">
-                      <strong className="block text-white">{a}</strong>
-                      <span className="text-[#a3957f]">{c}</span>
-                    </div>
-                  </figcaption>
-                </figure>
-              </GlowCard>
+                    <blockquote className="text-sm text-[#fde68a] italic flex-1 leading-relaxed">"{t}"</blockquote>
+                    <figcaption className="flex items-center gap-3 border-t border-[rgba(245,158,11,0.1)] pt-4">
+                      <div className="w-9 h-9 rounded-full bg-[rgba(245,158,11,0.15)] border border-[rgba(245,158,11,0.3)] flex items-center justify-center font-bold text-[#f59e0b] text-xs">
+                        {a[0]}
+                      </div>
+                      <div className="text-xs">
+                        <strong className="block text-white">{a}</strong>
+                        <span className="text-[#a3957f]">{c}</span>
+                      </div>
+                    </figcaption>
+                  </figure>
+                </GlowCard>
+              </Tilt>
             </RevealOnScroll>
           ))}
         </div>
       </section>
 
-      {/* ── CONTACT CTA ──────────────────────────────────── */}
+      {/* CONTACT CTA */}
       <section className="max-w-[var(--maxw)] mx-auto py-16 px-6 md:px-12" id="contact">
         <RevealOnScroll>
           <GlowCard className="glow-card bg-[#161009] border border-[rgba(245,158,11,0.1)] rounded-2xl p-10 relative overflow-hidden">

@@ -1,24 +1,24 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { GlowCard } from "@/components/GlowCard";
 import { AIDemoWidget } from "@/components/AIDemoWidget";
 import { GyanOrb } from "@/components/GyanOrb";
-import { CurriculumPath } from "@/components/CurriculumPath";
+import { CustomCursor } from "@/components/CustomCursor";
+import { TextScramble } from "@/components/TextScramble";
+import { Tilt } from "@/components/Tilt";
 import {
   GraduationCap, BookOpen, Map, Award, Cpu,
   ChevronDown, Search, Star, Briefcase, MessageCircle,
-  CheckCircle2, Sparkles, BookMarked, Users, TrendingUp,
+  Sparkles, BookMarked, Users,
 } from "lucide-react";
 
-// ════════════════════════════════════════════════════════════
-//  LIVE KNOWLEDGE GRAPH & TUTOR VISUAL
-// ════════════════════════════════════════════════════════════
+// Live Knowledge Node Graph & Placement Score Visual
 const COURSES = [
   { id: "ai_ml",    name: "AI & Machine Learning", score: 94, level: "Sem 6", status: "Mastered" },
   { id: "ds_algo",  name: "Data Structures & Algos",score: 88, level: "Sem 4", status: "Mastered" },
@@ -38,92 +38,85 @@ function GyanNodeVisual() {
   }, []);
 
   return (
-    <div className="w-full rounded-2xl overflow-hidden border border-[rgba(245,158,11,0.25)] bg-[#03071c] shadow-[0_0_80px_rgba(59,130,246,0.08)]">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#060c2b] border-b border-[rgba(56,189,248,0.12)]">
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute h-full w-full rounded-full bg-[#f59e0b] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#f59e0b]" />
-          </span>
-          <span className="text-[10px] font-mono font-bold text-[#f59e0b] uppercase tracking-widest">
-            GYAN · KNOWLEDGE GRAPH & PLACEMENT SCORE
-          </span>
-        </div>
-        <span className="text-[9px] font-mono text-[#38bdf8]">PLACEMENT READY</span>
-      </div>
-
-      {/* Interactive knowledge node graph SVG */}
-      <div className="relative aspect-[16/10] bg-[#020514] p-4 flex flex-col justify-between overflow-hidden">
-        {/* Constellation lines SVG */}
-        <svg viewBox="0 0 400 220" className="absolute inset-0 w-full h-full pointer-events-none opacity-40">
-          <line x1="80" y1="60" x2="200" y2="110" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3,3" />
-          <line x1="320" y1="60" x2="200" y2="110" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3,3" />
-          <line x1="80" y1="170" x2="200" y2="110" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3,3" />
-          <line x1="320" y1="170" x2="200" y2="110" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3,3" />
-          <circle cx="200" cy="110" r="35" fill="none" stroke="#f59e0b" strokeWidth="1.5" />
-        </svg>
-
-        {/* Floating node chips */}
-        <div className="relative z-10 grid grid-cols-2 gap-3 mb-2">
-          {COURSES.map((c, i) => {
-            const isActive = i === activeIdx;
-            return (
-              <div
-                key={c.id}
-                onClick={() => setActiveIdx(i)}
-                className={`cursor-pointer rounded-xl p-3 border transition-all duration-300 ${
-                  isActive
-                    ? "bg-[#0b1336] border-[#f59e0b] shadow-[0_0_20px_rgba(245,158,11,0.2)]"
-                    : "bg-[#060b24]/80 border-[rgba(56,189,248,0.12)] hover:border-[#38bdf8]"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[9px] font-mono text-[#38bdf8] uppercase">{c.level}</span>
-                  <span className="text-[10px] font-mono font-bold text-[#f59e0b]">{c.score}%</span>
-                </div>
-                <div className="text-xs font-bold text-white truncate">{c.name}</div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Active Node Detail Box */}
-        <div className="relative z-10 rounded-xl bg-[#0b1336]/90 border border-[rgba(245,158,11,0.2)] p-3 backdrop-blur">
-          <div className="flex items-center justify-between text-xs mb-1">
-            <span className="font-bold text-white flex items-center gap-1">
-              <Sparkles className="h-3.5 w-3.5 text-[#f59e0b]" /> Gyan Tutor Explanation
+    <Tilt className="w-full">
+      <div className="w-full rounded-2xl overflow-hidden border border-[rgba(245,158,11,0.25)] bg-[#03071c] shadow-[0_0_80px_rgba(59,130,246,0.1)]">
+        <div className="flex items-center justify-between px-4 py-3 bg-[#060c2b] border-b border-[rgba(56,189,248,0.12)]">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute h-full w-full rounded-full bg-[#f59e0b] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#f59e0b]" />
             </span>
-            <span className="text-[10px] font-mono text-[#38bdf8]">{activeCourse.status}</span>
+            <span className="text-[10px] font-mono font-bold text-[#f59e0b] uppercase tracking-widest">
+              GYAN · KNOWLEDGE GRAPH & PLACEMENT SCORE
+            </span>
           </div>
-          <p className="text-[11px] text-[#cbd5e1] leading-relaxed">
-            "{activeCourse.name} is key for top placement rounds. Focus on practice questions and real-world system implementations."
-          </p>
+          <span className="text-[9px] font-mono text-[#38bdf8]">PLACEMENT READY</span>
         </div>
-      </div>
 
-      {/* Score gauge row */}
-      <div className="grid grid-cols-3 border-t border-[rgba(56,189,248,0.12)] bg-[#060c2b] text-center py-2.5 px-2">
-        <div>
-          <div className="text-[8px] font-mono text-[#64748b] uppercase">PLACEMENT INDEX</div>
-          <div className="text-sm font-mono font-black text-[#f59e0b]">92 / 100</div>
+        <div className="relative aspect-[16/10] bg-[#020514] p-4 flex flex-col justify-between overflow-hidden">
+          <svg viewBox="0 0 400 220" className="absolute inset-0 w-full h-full pointer-events-none opacity-40">
+            <line x1="80" y1="60" x2="200" y2="110" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3,3" />
+            <line x1="320" y1="60" x2="200" y2="110" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3,3" />
+            <line x1="80" y1="170" x2="200" y2="110" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3,3" />
+            <line x1="320" y1="170" x2="200" y2="110" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3,3" />
+            <circle cx="200" cy="110" r="35" fill="none" stroke="#f59e0b" strokeWidth="1.5" />
+          </svg>
+
+          <div className="relative z-10 grid grid-cols-2 gap-3 mb-2">
+            {COURSES.map((c, i) => {
+              const isActive = i === activeIdx;
+              return (
+                <div
+                  key={c.id}
+                  onClick={() => setActiveIdx(i)}
+                  className={`cursor-pointer rounded-xl p-3 border transition-all duration-300 ${
+                    isActive
+                      ? "bg-[#0b1336] border-[#f59e0b] shadow-[0_0_20px_rgba(245,158,11,0.2)]"
+                      : "bg-[#060b24]/80 border-[rgba(56,189,248,0.12)] hover:border-[#38bdf8]"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[9px] font-mono text-[#38bdf8] uppercase">{c.level}</span>
+                    <span className="text-[10px] font-mono font-bold text-[#f59e0b]">{c.score}%</span>
+                  </div>
+                  <div className="text-xs font-bold text-white truncate">{c.name}</div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="relative z-10 rounded-xl bg-[#0b1336]/90 border border-[rgba(245,158,11,0.2)] p-3 backdrop-blur">
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="font-bold text-white flex items-center gap-1">
+                <Sparkles className="h-3.5 w-3.5 text-[#f59e0b]" /> Gyan Tutor Explanation
+              </span>
+              <span className="text-[10px] font-mono text-[#38bdf8]">{activeCourse.status}</span>
+            </div>
+            <p className="text-[11px] text-[#cbd5e1] leading-relaxed">
+              "{activeCourse.name} is key for top placement rounds. Focus on practice questions and real-world system implementations."
+            </p>
+          </div>
         </div>
-        <div>
-          <div className="text-[8px] font-mono text-[#64748b] uppercase">ACTIVE TUTOR</div>
-          <div className="text-sm font-mono font-bold text-[#38bdf8]">Gyan RAG v2</div>
-        </div>
-        <div>
-          <div className="text-[8px] font-mono text-[#64748b] uppercase">HIRING PARTNERS</div>
-          <div className="text-sm font-mono font-bold text-[#22c55e]">120+ Companies</div>
+
+        <div className="grid grid-cols-3 border-t border-[rgba(56,189,248,0.12)] bg-[#060c2b] text-center py-2.5 px-2">
+          <div>
+            <div className="text-[8px] font-mono text-[#64748b] uppercase">PLACEMENT INDEX</div>
+            <div className="text-sm font-mono font-black text-[#f59e0b]">92 / 100</div>
+          </div>
+          <div>
+            <div className="text-[8px] font-mono text-[#64748b] uppercase">ACTIVE TUTOR</div>
+            <div className="text-sm font-mono font-bold text-[#38bdf8]">Gyan RAG v2</div>
+          </div>
+          <div>
+            <div className="text-[8px] font-mono text-[#64748b] uppercase">HIRING PARTNERS</div>
+            <div className="text-sm font-mono font-bold text-[#22c55e]">120+ Companies</div>
+          </div>
         </div>
       </div>
-    </div>
+    </Tilt>
   );
 }
 
-// ════════════════════════════════════════════════════════════
-//  MAIN PAGE
-// ════════════════════════════════════════════════════════════
 export default function Home() {
   const [scrollPct, setScrollPct] = useState(0);
   const [contactName, setContactName] = useState("");
@@ -151,24 +144,15 @@ export default function Home() {
 
   return (
     <>
+      <CustomCursor />
       <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
       <Navbar />
 
-      {/* ────────────────────────────────────────────────────
-          HERO  –  Split: Text ← | → Gyan Knowledge Graph
-      ──────────────────────────────────────────────────── */}
+      {/* HERO */}
       <header className="relative min-h-screen flex items-center overflow-hidden bg-[#020514] pt-[var(--nav-h)]">
         <div className="constellation-grid" />
 
-        {/* Ambient Glow Orbs */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-40 -left-20 w-[700px] h-[700px] rounded-full bg-[#3b82f6]/6 blur-[140px]" />
-          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-[#f59e0b]/5 blur-[120px]" />
-        </div>
-
         <div className="relative z-10 w-full max-w-[var(--maxw)] mx-auto px-6 md:px-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-          {/* LEFT */}
           <div className="flex flex-col gap-7">
             <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }}>
               <span className="eyebrow">
@@ -184,7 +168,7 @@ export default function Home() {
               className="text-4xl sm:text-5xl xl:text-[4.2rem] font-black leading-[1.04] tracking-tighter text-white"
             >
               Ask Gyan.<br/>
-              <span className="grad">Get a grounded answer.</span>
+              <span className="grad"><TextScramble text="Get a grounded answer." /></span>
             </motion.h1>
 
             <motion.p
@@ -212,7 +196,6 @@ export default function Home() {
               </a>
             </motion.div>
 
-            {/* Chips */}
             <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.42 }}
               className="flex flex-wrap gap-2.5">
               {["Syllabus RAG", "Placement Scoring", "Instant Feedback", "WhatsApp AI Tutor", "100% Free BYOK"].map((tag, i) => (
@@ -223,7 +206,6 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* RIGHT: Knowledge Node Visual */}
           <motion.div
             initial={{ opacity:0, x:40 }}
             animate={{ opacity:1, x:0 }}
@@ -238,7 +220,7 @@ export default function Home() {
         </a>
       </header>
 
-      {/* ── STATS BAND ────────────────────────────────────── */}
+      {/* STATS BAND */}
       <section id="stats" className="bg-[#060b24] border-y border-[rgba(56,189,248,0.1)]">
         <div className="max-w-[var(--maxw)] mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-[rgba(56,189,248,0.1)]">
           {[
@@ -255,7 +237,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── MEET GYAN ─────────────────────────────────────── */}
+      {/* MEET GYAN */}
       <section className="bg-[#060b24] border-b border-[rgba(56,189,248,0.1)] py-16 px-6 md:px-12">
         <div className="max-w-[var(--maxw)] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           <RevealOnScroll className="lg:col-span-4 flex flex-col items-center lg:items-start text-center lg:text-left">
@@ -276,22 +258,24 @@ export default function Home() {
               { icon:Briefcase,     title:"Evaluates",   desc:"Scores your technical skills against job market standards for campus placements." },
             ].map(({ icon: Icon, title, desc }, i) => (
               <RevealOnScroll key={i} delay={i * 0.06}>
-                <div className="flex gap-4 p-4 rounded-xl bg-[#0b1336] border border-[rgba(56,189,248,0.1)]">
-                  <div className="w-10 h-10 rounded-lg grid place-items-center bg-[rgba(245,158,11,0.12)] text-[#f59e0b] flex-shrink-0">
-                    <Icon className="h-5 w-5" />
+                <Tilt className="h-full">
+                  <div className="flex gap-4 p-4 rounded-xl bg-[#0b1336] border border-[rgba(56,189,248,0.1)] h-full">
+                    <div className="w-10 h-10 rounded-lg grid place-items-center bg-[rgba(245,158,11,0.12)] text-[#f59e0b] flex-shrink-0">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-sm text-white">{title}</div>
+                      <p className="text-xs text-[#64748b] mt-0.5 leading-relaxed">{desc}</p>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-bold text-sm text-white">{title}</div>
-                    <p className="text-xs text-[#64748b] mt-0.5 leading-relaxed">{desc}</p>
-                  </div>
-                </div>
+                </Tilt>
               </RevealOnScroll>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── FEATURES ─────────────────────────────────────── */}
+      {/* FEATURES */}
       <section className="max-w-[var(--maxw)] mx-auto py-24 px-6 md:px-12" id="features">
         <RevealOnScroll>
           <div className="text-center mb-14">
@@ -311,28 +295,30 @@ export default function Home() {
             { icon:Sparkles,   color:"#f59e0b", badge:"Open",       title:"BYOK — Free Forever",    desc:"Plug in your own API key and use all AVPU learning tools with zero subscription cost." },
           ].map(({ icon: Icon, color, badge, title, desc }, i) => (
             <RevealOnScroll key={i} delay={i * 0.06}>
-              <GlowCard className="glow-card bg-[#060b24] border border-[rgba(56,189,248,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-xl grid place-items-center flex-shrink-0"
-                    style={{ background:`${color}14`, color }}>
-                    <Icon className="h-5 w-5" />
+              <Tilt className="h-full">
+                <GlowCard className="glow-card bg-[#060b24] border border-[rgba(56,189,248,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
+                  <div className="flex items-center justify-between">
+                    <div className="w-11 h-11 rounded-xl grid place-items-center flex-shrink-0"
+                      style={{ background:`${color}14`, color }}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span className="text-[9px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
+                      style={{ background:`${color}12`, color }}>
+                      {badge}
+                    </span>
                   </div>
-                  <span className="text-[9px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
-                    style={{ background:`${color}12`, color }}>
-                    {badge}
-                  </span>
-                </div>
-                <div>
-                  <h3 className="text-[15px] font-bold text-white mb-1.5">{title}</h3>
-                  <p className="text-sm text-[#cbd5e1] leading-relaxed opacity-80">{desc}</p>
-                </div>
-              </GlowCard>
+                  <div>
+                    <h3 className="text-[15px] font-bold text-white mb-1.5">{title}</h3>
+                    <p className="text-sm text-[#cbd5e1] leading-relaxed opacity-80">{desc}</p>
+                  </div>
+                </GlowCard>
+              </Tilt>
             </RevealOnScroll>
           ))}
         </div>
       </section>
 
-      {/* ── AI DEMO WIDGET ───────────────────────────────── */}
+      {/* AI DEMO WIDGET */}
       <section className="bg-[#060b24] py-20 px-6 md:px-12" id="tools">
         <div className="max-w-[var(--maxw)] mx-auto">
           <RevealOnScroll>
@@ -350,7 +336,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ─────────────────────────────────── */}
+      {/* TESTIMONIALS */}
       <section className="max-w-[var(--maxw)] mx-auto py-20 px-6 md:px-12" id="testimonials">
         <RevealOnScroll>
           <div className="text-center mb-12">
@@ -365,29 +351,31 @@ export default function Home() {
             { t:"Being able to ask study questions on WhatsApp while traveling saves me so much time every single day.", a:"Aditya M.", c:"Information Technology" },
           ].map(({ t, a, c }, i) => (
             <RevealOnScroll key={i} delay={i * 0.07}>
-              <GlowCard className="glow-card bg-[#0b1336] border border-[rgba(56,189,248,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
-                <figure className="h-full flex flex-col gap-4">
-                  <div className="flex gap-1">
-                    {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-[#f59e0b] text-[#f59e0b]" />)}
-                  </div>
-                  <blockquote className="text-sm text-[#cbd5e1] italic flex-1 leading-relaxed">"{t}"</blockquote>
-                  <figcaption className="flex items-center gap-3 border-t border-[rgba(56,189,248,0.1)] pt-4">
-                    <div className="w-9 h-9 rounded-full bg-[rgba(245,158,11,0.15)] border border-[rgba(245,158,11,0.3)] flex items-center justify-center font-bold text-[#f59e0b] text-xs">
-                      {a[0]}
+              <Tilt className="h-full">
+                <GlowCard className="glow-card bg-[#0b1336] border border-[rgba(56,189,248,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
+                  <figure className="h-full flex flex-col gap-4">
+                    <div className="flex gap-1">
+                      {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-[#f59e0b] text-[#f59e0b]" />)}
                     </div>
-                    <div className="text-xs">
-                      <strong className="block text-white">{a}</strong>
-                      <span className="text-[#64748b]">{c}</span>
-                    </div>
-                  </figcaption>
-                </figure>
-              </GlowCard>
+                    <blockquote className="text-sm text-[#cbd5e1] italic flex-1 leading-relaxed">"{t}"</blockquote>
+                    <figcaption className="flex items-center gap-3 border-t border-[rgba(56,189,248,0.1)] pt-4">
+                      <div className="w-9 h-9 rounded-full bg-[rgba(245,158,11,0.15)] border border-[rgba(245,158,11,0.3)] flex items-center justify-center font-bold text-[#f59e0b] text-xs">
+                        {a[0]}
+                      </div>
+                      <div className="text-xs">
+                        <strong className="block text-white">{a}</strong>
+                        <span className="text-[#64748b]">{c}</span>
+                      </div>
+                    </figcaption>
+                  </figure>
+                </GlowCard>
+              </Tilt>
             </RevealOnScroll>
           ))}
         </div>
       </section>
 
-      {/* ── CONTACT CTA ──────────────────────────────────── */}
+      {/* CONTACT CTA */}
       <section className="max-w-[var(--maxw)] mx-auto py-16 px-6 md:px-12" id="contact">
         <RevealOnScroll>
           <GlowCard className="glow-card bg-[#060b24] border border-[rgba(56,189,248,0.1)] rounded-2xl p-10 relative overflow-hidden">

@@ -9,14 +9,17 @@ import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { GlowCard } from "@/components/GlowCard";
 import { AIDemoWidget } from "@/components/AIDemoWidget";
 import { ArgusAvatar } from "@/components/ArgusAvatar";
+import { CustomCursor } from "@/components/CustomCursor";
+import { StarCanvas } from "@/components/StarCanvas";
+import { Tilt } from "@/components/Tilt";
+import { TextScramble } from "@/components/TextScramble";
 import {
   ChevronDown, Star, Shield, Zap, Clock, ScanLine,
-  HardHat, FileText, AlertTriangle, Layers,
+  HardHat, FileText, AlertTriangle, Layers, ArrowRight,
 } from "lucide-react";
 
 // ════════════════════════════════════════════════════════════
 //  LIVE DEFECT SCANNER VISUAL
-//  Shows a building elevation being scanned by the Argus model
 // ════════════════════════════════════════════════════════════
 const DEFECTS = [
   { id: 1, x: 8,  y: 12, w: 22, h: 18, label: "Wall Crack",   conf: 96, sev: "critical" },
@@ -64,122 +67,107 @@ function DefectScannerVisual() {
   const critical = DEFECTS.filter(d => d.sev === "critical" && visible.includes(d.id)).length;
 
   return (
-    <div className="w-full rounded-2xl overflow-hidden border border-[rgba(245,158,11,0.18)] bg-[#080603] shadow-[0_0_80px_rgba(245,158,11,0.06)]">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-[rgba(255,255,255,0.05)]">
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute h-full w-full rounded-full bg-[#f59e0b] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#f59e0b]" />
-          </span>
-          <span className="text-[10px] font-mono font-bold text-[#f59e0b] uppercase tracking-widest">ARGUS · YOLOv8 · best.pt</span>
-        </div>
-        <span className="text-[9px] font-mono text-[#7c7268]">
-          {phase === "scan" ? "SCANNING..." : phase === "hold" ? `${found} DEFECTS FOUND` : "RELOADING..."}
-        </span>
-      </div>
-
-      {/* Viewport */}
-      <div className="relative" style={{ aspectRatio: "16/10" }}>
-        {/* Blueprint grid */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: `linear-gradient(rgba(96,165,250,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(96,165,250,0.05) 1px,transparent 1px)`,
-          backgroundSize: "28px 28px",
-        }} />
-
-        {/* Building elevation SVG */}
-        <svg viewBox="0 0 800 500" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet" aria-hidden>
-          {/* Main tower */}
-          <rect x="30" y="60" width="330" height="430" fill="rgba(20,12,5,0.7)" stroke="rgba(245,158,11,0.25)" strokeWidth="1.5"/>
-          {[0,1,2,3,4,5].map(i => (
-            <line key={`fl-${i}`} x1="30" y1={140+i*58} x2="360" y2={140+i*58} stroke="rgba(245,158,11,0.12)" strokeWidth="0.8"/>
-          ))}
-          {[0,1,2,3,4].map(row => [0,1,2].map(col => (
-            <rect key={`w${row}-${col}`}
-              x={55+col*90} y={78+row*58} width={52} height={38}
-              fill="rgba(10,7,4,0.8)" stroke="rgba(245,158,11,0.18)" strokeWidth="0.8" rx="2"/>
-          )))}
-          {/* Door */}
-          <rect x="165" y="430" width="60" height="60" fill="rgba(10,7,4,0.9)" stroke="rgba(245,158,11,0.3)" strokeWidth="1"/>
-
-          {/* Annexe */}
-          <rect x="440" y="150" width="310" height="340" fill="rgba(20,12,5,0.6)" stroke="rgba(245,158,11,0.18)" strokeWidth="1.2"/>
-          {[0,1,2,3].map(i => (
-            <line key={`af-${i}`} x1="440" y1={230+i*64} x2="750" y2={230+i*64} stroke="rgba(245,158,11,0.1)" strokeWidth="0.7"/>
-          ))}
-          {[0,1,2,3].map(row => [0,1,2].map(col => (
-            <rect key={`aw${row}-${col}`}
-              x={462+col*86} y={166+row*64} width={48} height={38}
-              fill="rgba(10,7,4,0.8)" stroke="rgba(245,158,11,0.14)" strokeWidth="0.7" rx="2"/>
-          )))}
-
-          {/* Ground */}
-          <line x1="0" y1="492" x2="800" y2="492" stroke="rgba(245,158,11,0.22)" strokeWidth="1.2"/>
-          {/* Dimension arrows */}
-          <text x="195" y="507" fill="rgba(245,158,11,0.45)" fontSize="9" fontFamily="monospace" textAnchor="middle">18m × 6 floors</text>
-          <text x="595" y="507" fill="rgba(245,158,11,0.35)" fontSize="9" fontFamily="monospace" textAnchor="middle">ANNEXE</text>
-        </svg>
-
-        {/* Scan beam */}
-        {phase === "scan" && (
-          <div className="absolute left-0 right-0 pointer-events-none" style={{
-            top: `${scanY}%`, height: "3px",
-            background: "linear-gradient(90deg,transparent 0%,rgba(245,158,11,0.15) 15%,rgba(245,158,11,1) 50%,rgba(245,158,11,0.15) 85%,transparent 100%)",
-            boxShadow: "0 0 18px rgba(245,158,11,0.7),0 0 60px rgba(245,158,11,0.2)",
-            zIndex: 20,
-          }}/>
-        )}
-        {/* Scan trail */}
-        {phase === "scan" && scanY > 0 && (
-          <div className="absolute left-0 right-0 top-0 pointer-events-none" style={{
-            height: `${Math.max(0, scanY)}%`,
-            background: "linear-gradient(180deg,rgba(245,158,11,0.04) 0%,transparent 100%)",
-            zIndex: 5,
-          }}/>
-        )}
-
-        {/* Defect overlays */}
-        <AnimatePresence>
-          {DEFECTS.map(d => visible.includes(d.id) && (
-            <motion.div
-              key={d.id}
-              initial={{ opacity: 0, scale: 0.75 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="absolute"
-              style={{
-                left: `${d.x}%`, top: `${d.y}%`,
-                width: `${d.w}%`, height: `${d.h}%`,
-                border: `1.5px solid ${SEV_COLORS[d.sev]}`,
-                boxShadow: `0 0 12px ${SEV_COLORS[d.sev]}40`,
-                zIndex: 15,
-              }}
-            >
-              <div className="absolute -top-5 left-0 text-[8px] font-mono font-bold px-1.5 py-0.5 rounded-sm whitespace-nowrap"
-                style={{ background: `${SEV_COLORS[d.sev]}dd`, color: "#fff" }}>
-                {d.label} {d.conf}%
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
-
-      {/* Status row */}
-      <div className="grid grid-cols-4 border-t border-[rgba(255,255,255,0.05)]">
-        {[
-          { label: "DEFECTS", value: found.toString(), color: found > 0 ? "#ef4444" : "#22c55e" },
-          { label: "CRITICAL", value: critical.toString(), color: critical > 0 ? "#ef4444" : "#22c55e" },
-          { label: "MODEL", value: "YOLOv8", color: "#f59e0b" },
-          { label: "STATUS", value: phase === "scan" ? "LIVE" : phase === "hold" ? "COMPLETE" : "READY", color: "#22c55e" },
-        ].map((s, i) => (
-          <div key={i} className="py-2 px-2 border-r border-[rgba(255,255,255,0.05)] last:border-0 text-center">
-            <div className="text-[8px] font-mono text-[#7c7268] uppercase tracking-wider mb-0.5">{s.label}</div>
-            <div className="text-[10px] font-mono font-bold" style={{ color: s.color }}>{s.value}</div>
+    <Tilt className="w-full">
+      <div className="w-full rounded-2xl overflow-hidden border border-[rgba(245,158,11,0.25)] bg-[#080603] shadow-[0_0_80px_rgba(245,158,11,0.1)]">
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-2.5 border-b border-[rgba(255,255,255,0.05)] bg-[#0c0905]">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute h-full w-full rounded-full bg-[#f59e0b] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#f59e0b]" />
+            </span>
+            <span className="text-[10px] font-mono font-bold text-[#f59e0b] uppercase tracking-widest">ARGUS · YOLOv8 · best.pt</span>
           </div>
-        ))}
+          <span className="text-[9px] font-mono text-[#7c7268]">
+            {phase === "scan" ? "SCANNING..." : phase === "hold" ? `${found} DEFECTS FOUND` : "RELOADING..."}
+          </span>
+        </div>
+
+        {/* Viewport */}
+        <div className="relative" style={{ aspectRatio: "16/10" }}>
+          <div className="absolute inset-0 pointer-events-none" style={{
+            backgroundImage: `linear-gradient(rgba(96,165,250,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(96,165,250,0.05) 1px,transparent 1px)`,
+            backgroundSize: "28px 28px",
+          }} />
+
+          <svg viewBox="0 0 800 500" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet" aria-hidden>
+            <rect x="30" y="60" width="330" height="430" fill="rgba(20,12,5,0.7)" stroke="rgba(245,158,11,0.25)" strokeWidth="1.5"/>
+            {[0,1,2,3,4,5].map(i => (
+              <line key={`fl-${i}`} x1="30" y1={140+i*58} x2="360" y2={140+i*58} stroke="rgba(245,158,11,0.12)" strokeWidth="0.8"/>
+            ))}
+            {[0,1,2,3,4].map(row => [0,1,2].map(col => (
+              <rect key={`w${row}-${col}`}
+                x={55+col*90} y={78+row*58} width={52} height={38}
+                fill="rgba(10,7,4,0.8)" stroke="rgba(245,158,11,0.18)" strokeWidth="0.8" rx="2"/>
+            )))}
+            <rect x="165" y="430" width="60" height="60" fill="rgba(10,7,4,0.9)" stroke="rgba(245,158,11,0.3)" strokeWidth="1"/>
+
+            <rect x="440" y="150" width="310" height="340" fill="rgba(20,12,5,0.6)" stroke="rgba(245,158,11,0.18)" strokeWidth="1.2"/>
+            {[0,1,2,3].map(i => (
+              <line key={`af-${i}`} x1="440" y1={230+i*64} x2="750" y2={230+i*64} stroke="rgba(245,158,11,0.1)" strokeWidth="0.7"/>
+            ))}
+            {[0,1,2,3].map(row => [0,1,2].map(col => (
+              <rect key={`aw${row}-${col}`}
+                x={462+col*86} y={166+row*64} width={48} height={38}
+                fill="rgba(10,7,4,0.8)" stroke="rgba(245,158,11,0.14)" strokeWidth="0.7" rx="2"/>
+            )))}
+
+            <line x1="0" y1="492" x2="800" y2="492" stroke="rgba(245,158,11,0.22)" strokeWidth="1.2"/>
+            <text x="195" y="507" fill="rgba(245,158,11,0.45)" fontSize="9" fontFamily="monospace" textAnchor="middle">18m × 6 floors</text>
+            <text x="595" y="507" fill="rgba(245,158,11,0.35)" fontSize="9" fontFamily="monospace" textAnchor="middle">ANNEXE</text>
+          </svg>
+
+          {phase === "scan" && (
+            <div className="absolute left-0 right-0 pointer-events-none" style={{
+              top: `${scanY}%`, height: "3px",
+              background: "linear-gradient(90deg,transparent 0%,rgba(245,158,11,0.15) 15%,rgba(245,158,11,1) 50%,rgba(245,158,11,0.15) 85%,transparent 100%)",
+              boxShadow: "0 0 18px rgba(245,158,11,0.7),0 0 60px rgba(245,158,11,0.2)",
+              zIndex: 20,
+            }}/>
+          )}
+
+          <AnimatePresence>
+            {DEFECTS.map(d => visible.includes(d.id) && (
+              <motion.div
+                key={d.id}
+                initial={{ opacity: 0, scale: 0.75 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="absolute"
+                style={{
+                  left: `${d.x}%`, top: `${d.y}%`,
+                  width: `${d.w}%`, height: `${d.h}%`,
+                  border: `1.5px solid ${SEV_COLORS[d.sev]}`,
+                  boxShadow: `0 0 12px ${SEV_COLORS[d.sev]}40`,
+                  zIndex: 15,
+                }}
+              >
+                <div className="absolute -top-5 left-0 text-[8px] font-mono font-bold px-1.5 py-0.5 rounded-sm whitespace-nowrap"
+                  style={{ background: `${SEV_COLORS[d.sev]}dd`, color: "#fff" }}>
+                  {d.label} {d.conf}%
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+
+        {/* Status row */}
+        <div className="grid grid-cols-4 border-t border-[rgba(255,255,255,0.05)] bg-[#0c0905]">
+          {[
+            { label: "DEFECTS", value: found.toString(), color: found > 0 ? "#ef4444" : "#22c55e" },
+            { label: "CRITICAL", value: critical.toString(), color: critical > 0 ? "#ef4444" : "#22c55e" },
+            { label: "MODEL", value: "YOLOv8", color: "#f59e0b" },
+            { label: "STATUS", value: phase === "scan" ? "LIVE" : phase === "hold" ? "COMPLETE" : "READY", color: "#22c55e" },
+          ].map((s, i) => (
+            <div key={i} className="py-2 px-2 border-r border-[rgba(255,255,255,0.05)] last:border-0 text-center">
+              <div className="text-[8px] font-mono text-[#7c7268] uppercase tracking-wider mb-0.5">{s.label}</div>
+              <div className="text-[10px] font-mono font-bold" style={{ color: s.color }}>{s.value}</div>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </Tilt>
   );
 }
 
@@ -213,24 +201,16 @@ export default function Home() {
 
   return (
     <>
+      <CustomCursor />
       <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
       <Navbar />
 
-      {/* ────────────────────────────────────────────────────
-          HERO  –  Split layout: text ← | → live scanner
-      ──────────────────────────────────────────────────── */}
+      {/* HERO */}
       <header className="relative min-h-screen flex items-center overflow-hidden bg-[#060503] pt-[var(--nav-h)]">
+        <StarCanvas />
         <div className="blueprint-grid" />
 
-        {/* Ambient orbs */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full bg-[#f59e0b]/6 blur-[140px]" />
-          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-[#ef4444]/4 blur-[120px]" />
-        </div>
-
         <div className="relative z-10 w-full max-w-[var(--maxw)] mx-auto px-6 md:px-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-          {/* LEFT */}
           <div className="flex flex-col gap-7">
             <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }}>
               <span className="eyebrow">
@@ -248,9 +228,9 @@ export default function Home() {
               transition={{ duration:0.7, delay:0.08, ease:[0.22,1,0.36,1] }}
               className="text-4xl sm:text-5xl xl:text-[4.25rem] font-black leading-[1.04] tracking-tighter text-white"
             >
-              Site defects,<br/>
+              <TextScramble text="Site defects," /><br/>
               spotted before<br/>
-              <span className="grad">they become claims.</span>
+              <span className="grad"><TextScramble text="they become claims." /></span>
             </motion.h1>
 
             <motion.p
@@ -280,7 +260,6 @@ export default function Home() {
               </a>
             </motion.div>
 
-            {/* Social proof chips */}
             <motion.div
               initial={{ opacity:0 }}
               animate={{ opacity:1 }}
@@ -295,7 +274,6 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* RIGHT: animated scanner */}
           <motion.div
             initial={{ opacity:0, x:40 }}
             animate={{ opacity:1, x:0 }}
@@ -310,9 +288,7 @@ export default function Home() {
         </a>
       </header>
 
-      {/* ────────────────────────────────────────────────────
-          STATS BAND
-      ──────────────────────────────────────────────────── */}
+      {/* STATS BAND */}
       <section id="stats" className="bg-[#0d0a06] border-y border-white/[0.05]">
         <div className="max-w-[var(--maxw)] mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-white/[0.05]">
           {[
@@ -329,9 +305,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ────────────────────────────────────────────────────
-          FEATURES (3-col grid)
-      ──────────────────────────────────────────────────── */}
+      {/* FEATURES */}
       <section className="max-w-[var(--maxw)] mx-auto py-24 px-6 md:px-12" id="features">
         <RevealOnScroll>
           <div className="text-center mb-14">
@@ -352,76 +326,30 @@ export default function Home() {
             { icon: Zap,         color:"#f59e0b", badge:"Open",        title:"BYOK — Free Forever",      desc:"Bring your own Gemini or OpenAI API key and run unlimited AI scans, estimates, and reports at zero cost." },
           ].map(({ icon: Icon, color, badge, title, desc }, i) => (
             <RevealOnScroll key={i} delay={i * 0.06}>
-              <GlowCard className="glow-card bg-[#0d0a06] border border-white/5 rounded-2xl p-6 h-full flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-11 h-11 rounded-xl grid place-items-center flex-shrink-0"
-                    style={{ background:`${color}14`, color }}>
-                    <Icon className="h-5 w-5" />
+              <Tilt className="h-full">
+                <GlowCard className="glow-card bg-[#0d0a06] border border-white/5 rounded-2xl p-6 h-full flex flex-col gap-4">
+                  <div className="flex items-center justify-between">
+                    <div className="w-11 h-11 rounded-xl grid place-items-center flex-shrink-0"
+                      style={{ background:`${color}14`, color }}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <span className="text-[9px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
+                      style={{ background:`${color}12`, color }}>
+                      {badge}
+                    </span>
                   </div>
-                  <span className="text-[9px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
-                    style={{ background:`${color}12`, color }}>
-                    {badge}
-                  </span>
-                </div>
-                <div>
-                  <h3 className="text-[15px] font-bold text-white mb-1.5">{title}</h3>
-                  <p className="text-sm text-[#c8c0b8] leading-relaxed">{desc}</p>
-                </div>
-              </GlowCard>
+                  <div>
+                    <h3 className="text-[15px] font-bold text-white mb-1.5">{title}</h3>
+                    <p className="text-sm text-[#c8c0b8] leading-relaxed">{desc}</p>
+                  </div>
+                </GlowCard>
+              </Tilt>
             </RevealOnScroll>
           ))}
         </div>
       </section>
 
-      {/* ────────────────────────────────────────────────────
-          ABOUT / ARGUS BIO
-      ──────────────────────────────────────────────────── */}
-      <section className="max-w-[var(--maxw)] mx-auto py-20 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center" id="about">
-        <RevealOnScroll className="lg:col-span-7 flex flex-col gap-5">
-          <span className="eyebrow">EST. 2026 · BREAKDOWN FACTOR</span>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">
-            We build spaces that stand the test of time.
-          </h2>
-          <p className="text-sm md:text-base text-[#c8c0b8] leading-relaxed">
-            Breakdown Factor works in synergy with <strong className="text-white">AVP University (AVPU)</strong>, 
-            building student accommodation and lab spaces with structural diagnostics built into the process — 
-            not bolted on after handover.
-          </p>
-          <p className="text-sm md:text-base text-[#c8c0b8] leading-relaxed">
-            Argus, our inspection AI, scans site photos for structural cracks, wall damage, and MEP issues in 
-            real-time. The same portal handles AI-driven budgeting, safety checklists, and timeline scheduling.
-          </p>
-        </RevealOnScroll>
-
-        <RevealOnScroll delay={0.1} className="lg:col-span-5">
-          <GlowCard className="glow-card bg-[#0d0a06] border border-white/[0.07] rounded-2xl p-7">
-            <div className="flex items-center gap-4 mb-6 pb-5 border-b border-white/5">
-              <ArgusAvatar size={52} />
-              <div>
-                <h3 className="text-lg font-bold text-white">Argus</h3>
-                <span className="text-[10px] font-mono text-[#f59e0b] uppercase tracking-wider">Site Inspection Agent · v1</span>
-              </div>
-            </div>
-            <dl className="flex flex-col gap-4 text-sm">
-              {[
-                { dt:"Detects",    dd:"10 defect classes — wall cracks, tile, switches, radiators, pipes, appliances, glass, wood, structural" },
-                { dt:"References", dd:"IS 456, IS 800, and NBC 2016 in every remediation report" },
-                { dt:"Also runs",  dd:"BOQ cost estimates, 90-day Gantt schedules, and safety risk checklists" },
-                { dt:"Offline",    dd:"Falls back to built-in estimator if no LLM key — never goes silent" },
-              ].map(({ dt, dd }, i) => (
-                <div key={i} className="flex flex-col gap-1 pb-3 border-b border-white/5 last:border-0 last:pb-0">
-                  <dt className="text-[9px] font-mono uppercase tracking-wider text-[#7c7268]">{dt}</dt>
-                  <dd className="text-[#c8c0b8] leading-relaxed text-sm">{dd}</dd>
-                </div>
-              ))}
-            </dl>
-          </GlowCard>
-        </RevealOnScroll>
-      </section>
-
-      {/* ────────────────────────────────────────────────────
-          AI DEMO WIDGET
-      ──────────────────────────────────────────────────── */}
+      {/* AI DEMO WIDGET */}
       <section className="bg-[#0d0a06] py-20 px-6 md:px-12" id="tools">
         <div className="max-w-[var(--maxw)] mx-auto">
           <RevealOnScroll>
@@ -439,9 +367,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ────────────────────────────────────────────────────
-          TESTIMONIALS
-      ──────────────────────────────────────────────────── */}
+      {/* TESTIMONIALS */}
       <section className="max-w-[var(--maxw)] mx-auto py-20 px-6 md:px-12" id="testimonials">
         <RevealOnScroll>
           <div className="text-center mb-12">
@@ -456,31 +382,31 @@ export default function Home() {
             { t:"We use their automated tender reports for state bidding. Clean PDFs, perfectly structured, extremely fast.", a:"Director", c:"Gujarat Infrastructure" },
           ].map(({ t, a, c }, i) => (
             <RevealOnScroll key={i} delay={i * 0.07}>
-              <GlowCard className="glow-card tcard h-full flex flex-col gap-4">
-                <figure className="h-full flex flex-col gap-4">
-                  <div className="flex gap-1">
-                    {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-[#f59e0b] text-[#f59e0b]" />)}
-                  </div>
-                  <blockquote className="text-sm text-[#c8c0b8] italic flex-1 leading-relaxed">"{t}"</blockquote>
-                  <figcaption className="flex items-center gap-3 border-t border-white/5 pt-4">
-                    <div className="w-9 h-9 rounded-full bg-[#14100b] border border-white/10 flex items-center justify-center font-bold text-[#fef3c7] text-xs">
-                      {a[0]}
+              <Tilt className="h-full">
+                <GlowCard className="glow-card tcard h-full flex flex-col gap-4">
+                  <figure className="h-full flex flex-col gap-4">
+                    <div className="flex gap-1">
+                      {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-[#f59e0b] text-[#f59e0b]" />)}
                     </div>
-                    <div className="text-xs">
-                      <strong className="block text-white">{a}</strong>
-                      <span className="text-[#7c7268]">{c}</span>
-                    </div>
-                  </figcaption>
-                </figure>
-              </GlowCard>
+                    <blockquote className="text-sm text-[#c8c0b8] italic flex-1 leading-relaxed">"{t}"</blockquote>
+                    <figcaption className="flex items-center gap-3 border-t border-white/5 pt-4">
+                      <div className="w-9 h-9 rounded-full bg-[#14100b] border border-white/10 flex items-center justify-center font-bold text-[#fef3c7] text-xs">
+                        {a[0]}
+                      </div>
+                      <div className="text-xs">
+                        <strong className="block text-white">{a}</strong>
+                        <span className="text-[#7c7268]">{c}</span>
+                      </div>
+                    </figcaption>
+                  </figure>
+                </GlowCard>
+              </Tilt>
             </RevealOnScroll>
           ))}
         </div>
       </section>
 
-      {/* ────────────────────────────────────────────────────
-          FAQ
-      ──────────────────────────────────────────────────── */}
+      {/* FAQ */}
       <section className="max-w-[var(--maxw)] mx-auto py-16 px-6 md:px-12" id="faq">
         <RevealOnScroll>
           <div className="text-center mb-10">
@@ -506,9 +432,7 @@ export default function Home() {
         </RevealOnScroll>
       </section>
 
-      {/* ────────────────────────────────────────────────────
-          CONTACT CTA
-      ──────────────────────────────────────────────────── */}
+      {/* CONTACT CTA */}
       <section className="max-w-[var(--maxw)] mx-auto py-16 px-6 md:px-12" id="contact">
         <RevealOnScroll>
           <GlowCard className="glow-card bg-[#0d0a06] border border-white/5 rounded-2xl p-10 relative overflow-hidden">
