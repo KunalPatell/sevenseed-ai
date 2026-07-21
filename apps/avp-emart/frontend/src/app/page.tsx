@@ -55,7 +55,7 @@ function PriceComparisonVisual() {
   const [productIdx, setProductIdx] = useState(0);
   const [phase, setPhase] = useState<"loading"|"comparing"|"result">("loading");
   const [revealCount, setRevealCount] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const product = PRODUCTS[productIdx];
 
