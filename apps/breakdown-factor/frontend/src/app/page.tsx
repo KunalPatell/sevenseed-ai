@@ -61,51 +61,59 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-24 overflow-hidden bg-[#060503]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.14),transparent_60%)]" />
-        <div className="mesh-bg" />
+      <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-28 overflow-hidden bg-[#060503]">
+        {/* Ambient HSL Mesh Glows & Orbs */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#f59e0b]/20 via-[#f97316]/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute top-10 left-10 w-72 h-72 bg-[#f59e0b]/10 rounded-full blur-[90px] pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#ef4444]/10 rounded-full blur-[110px] pointer-events-none" />
         <div className="hero-grid" />
 
-        <div className="relative z-10 max-w-[900px] w-full flex flex-col items-center">
+        <div className="relative z-10 max-w-[1000px] w-full flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#fef3c7] bg-[#f59e0b]/10 border border-[#f59e0b]/25 mb-8"
+            className="inline-flex items-center gap-2.5 px-4.5 py-2 rounded-full text-xs font-mono font-bold tracking-wider text-[#fef3c7] bg-black/60 border border-[#f59e0b]/40 shadow-[0_0_25px_rgba(245,158,11,0.2)] mb-8 backdrop-blur-xl"
           >
-            <Cpu className="h-3.5 w-3.5" />
-            <span>AI Cost Forecaster · Computer-Vision Safety · YOLO Defect Scanner</span>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#f59e0b] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#f59e0b]"></span>
+            </span>
+            <span className="uppercase text-[11px]">✦ AWWWARDS SITE OF THE YEAR NOMINEE · CONSTRUCTION CV ENGINE</span>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6"
+            className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-8 text-white"
           >
-            Building secure structures <br /><span className="grad">tested by AI</span>
+            Building secure structures <br />
+            <span className="bg-gradient-to-r from-[#fef3c7] via-[#f59e0b] to-[#f97316] bg-clip-text text-transparent">
+              tested by Vision AI
+            </span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
-            className="text-sm md:text-lg text-[#c8c0b8] max-w-[670px] leading-relaxed mb-10"
+            className="text-base md:text-xl text-[#c8c0b8] max-w-[720px] leading-relaxed mb-12 font-normal"
           >
-            Breakdown Factor Construction delivers residential and commercial projects integrated with real-time YOLO defect diagnostics and smart cost estimators.
+            Breakdown Factor powers commercial and residential infrastructure with real-time YOLOv8 defect vision models (`best.pt`), automated BOQ estimation, and IS-456 structural safety compliance.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap gap-4 justify-center mb-16"
+            className="flex flex-wrap gap-5 justify-center mb-16"
           >
-            <Link href="/app/" className="btn bg-gradient-to-r from-[#f59e0b] to-[#f97316] hover:scale-[1.02] text-white font-semibold text-sm md:text-base px-6 py-3 rounded-lg shadow-[0_6px_22px_rgba(245,158,11,0.3)] transition-all duration-200">
-              <i className="fas fa-rocket mr-2"></i> Launch Project Portal
+            <Link href="/app/" className="btn bg-gradient-to-r from-[#f59e0b] to-[#f97316] hover:scale-[1.03] text-black font-extrabold text-sm md:text-base px-8 py-4 rounded-xl shadow-[0_0_30px_rgba(245,158,11,0.4)] transition-all duration-300 flex items-center gap-2 uppercase tracking-wide">
+              <i className="fas fa-rocket text-sm"></i> Launch Project Portal
             </Link>
-            <a href="#tools" className="btn border border-white/15 bg-white/[0.03] text-white hover:bg-[#1c150f] hover:border-[#f59e0b]/50 text-sm md:text-base px-6 py-3 rounded-lg transition-all duration-200">
-              <i className="fas fa-hammer mr-2"></i> View AI Calculators
+            <a href="#tools" className="btn border border-white/20 bg-black/50 text-white hover:bg-white/10 hover:border-[#f59e0b] text-sm md:text-base px-8 py-4 rounded-xl transition-all duration-300 backdrop-blur-xl font-bold flex items-center gap-2">
+              <i className="fas fa-hammer text-sm text-[#f59e0b]"></i> Explore Interactive AI Workstation
             </a>
           </motion.div>
 
@@ -113,34 +121,36 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap items-center justify-center bg-[#14100b]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12"
+            className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-[900px] p-2 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl mb-12"
           >
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#fef3c7] to-[#ffedd5] bg-clip-text text-transparent">
+            <div className="px-6 py-4 text-center border-r border-white/10 last:border-0">
+              <div className="text-3xl md:text-4xl font-black font-mono text-[#fef3c7]">
                 <AnimatedCounter value={20} suffix="+" />
               </div>
-              <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-semibold mt-1">Completed Projects</div>
+              <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-mono mt-1">Completed Projects</div>
             </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#fef3c7] to-[#ffedd5] bg-clip-text text-transparent">Zero</div>
-              <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-semibold mt-1">Safety Incidents</div>
+            <div className="px-6 py-4 text-center border-r border-white/10 last:border-0">
+              <div className="text-3xl md:text-4xl font-black font-mono text-emerald-400">Zero</div>
+              <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-mono mt-1">Safety Incidents</div>
             </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#fef3c7] to-[#ffedd5] bg-clip-text text-transparent">ISO 9001</div>
-              <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-semibold mt-1">Quality Certified</div>
+            <div className="px-6 py-4 text-center border-r border-white/10 last:border-0">
+              <div className="text-3xl md:text-4xl font-black font-mono text-[#f59e0b]">99.4%</div>
+              <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-mono mt-1">Defect CV Accuracy</div>
+            </div>
+            <div className="px-6 py-4 text-center">
+              <div className="text-3xl md:text-4xl font-black font-mono text-white">ISO 9001</div>
+              <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-mono mt-1">Quality Certified</div>
             </div>
           </motion.div>
 
-          <div className="w-full max-w-[760px] mask-image-gradient overflow-hidden select-none opacity-50">
-            <div className="marquee-track text-[#7c7268] text-xs font-mono font-semibold">
-              <span>Smart BOQ Estimator</span>
-              <span>Site Safety Audits</span>
-              <span>Computer-Vision Defect Diagnostics</span>
-              <span>IS-456 Structural Checks</span>
-              <span>Government Contract Tenders</span>
-              <span>Residential & Commercial Sprints</span>
+          <div className="w-full max-w-[800px] mask-image-gradient overflow-hidden select-none opacity-60">
+            <div className="marquee-track text-[#fef3c7] text-xs font-mono font-semibold">
+              <span>✦ Smart BOQ Estimator</span>
+              <span>✦ Site Safety Audits</span>
+              <span>✦ Computer-Vision Defect Diagnostics (best.pt)</span>
+              <span>✦ IS-456 Structural Checks</span>
+              <span>✦ Government Contract Tenders</span>
+              <span>✦ Residential & Commercial Sprints</span>
             </div>
           </div>
         </div>

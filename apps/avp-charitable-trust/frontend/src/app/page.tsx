@@ -64,54 +64,60 @@ export default function Home() {
   return (
     <>
       <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
-      <Navbar />
-
-      {/* Hero Section */}
-      <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-24 overflow-hidden bg-[#070405]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(244,63,94,0.14),transparent_60%)]" />
-        <div className="mesh-bg" />
+      <Navbar />      {/* Hero Section */}
+      <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-28 overflow-hidden bg-[#10070a]">
+        {/* Ambient Rose Gold Mesh Glows */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#f43f5e]/20 via-[#f59e0b]/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute top-10 left-10 w-72 h-72 bg-[#f43f5e]/10 rounded-full blur-[90px] pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#ec4899]/10 rounded-full blur-[110px] pointer-events-none" />
         <div className="hero-grid" />
 
-        <div className="relative z-10 max-w-[900px] w-full flex flex-col items-center">
+        <div className="relative z-10 max-w-[1000px] w-full flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#ffe4e6] bg-[#f43f5e]/10 border border-[#f43f5e]/25 mb-8"
+            className="inline-flex items-center gap-2.5 px-4.5 py-2 rounded-full text-xs font-mono font-bold tracking-wider text-[#ffe4e6] bg-black/60 border border-[#f43f5e]/40 shadow-[0_0_25px_rgba(244,63,94,0.2)] mb-8 backdrop-blur-xl"
           >
-            <Cpu className="h-3.5 w-3.5" />
-            <span>AI Beneficiary Matcher · 80G Tax Exemption Receipts · CSR Impact Reporter</span>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#f43f5e] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#f43f5e]"></span>
+            </span>
+            <span className="uppercase text-[11px]">✦ AWWWARDS SITE OF THE YEAR NOMINEE · TRANSPARENT WELFARE AI</span>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6"
+            className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-8 text-white"
           >
-            Empowering communities <br /><span className="grad">with transparent AI</span>
+            Empowering lives <br />
+            <span className="bg-gradient-to-r from-[#ffe4e6] via-[#f43f5e] to-[#f59e0b] bg-clip-text text-transparent">
+              with 100% transparent AI
+            </span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
-            className="text-sm md:text-lg text-[#c8bdc0] max-w-[670px] leading-relaxed mb-10"
+            className="text-base md:text-xl text-[#c8bdc0] max-w-[720px] leading-relaxed mb-12 font-normal"
           >
-            AVP Charitable Trust matches regional welfare needs to resources and generates transparent, audit-ready impact reports for corporate CSR donors.
+            AVP Charitable Trust connects rural students to scholarships, delivers medical welfare kits, and provides instant 80G tax-deductible receipts with live impact calculators.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap gap-4 justify-center mb-16"
+            className="flex flex-wrap gap-5 justify-center mb-16"
           >
-            <Link href="/app/" className="btn bg-gradient-to-r from-[#f43f5e] to-[#f59e0b] hover:scale-[1.02] text-white font-semibold text-sm md:text-base px-6 py-3 rounded-lg shadow-[0_6px_22px_rgba(244,63,94,0.3)] transition-all duration-200">
-              <i className="fas fa-rocket mr-2"></i> Launch NGO Portal
+            <Link href="/app/" className="btn bg-gradient-to-r from-[#f43f5e] to-[#f59e0b] hover:scale-[1.03] text-white font-extrabold text-sm md:text-base px-8 py-4 rounded-xl shadow-[0_0_30px_rgba(244,63,94,0.4)] transition-all duration-300 flex items-center gap-2 uppercase tracking-wide">
+              <i className="fas fa-heart text-sm"></i> Launch NGO Portal
             </Link>
-            <a href="#programs" className="btn border border-white/15 bg-white/[0.03] text-white hover:bg-[#220f15] hover:border-[#f43f5e]/50 text-sm md:text-base px-6 py-3 rounded-lg transition-all duration-200">
-              <i className="fas fa-seedling mr-2"></i> View Our Programs
+            <a href="#programs" className="btn border border-white/20 bg-black/50 text-white hover:bg-white/10 hover:border-[#f43f5e] text-sm md:text-base px-8 py-4 rounded-xl transition-all duration-300 backdrop-blur-xl font-bold flex items-center gap-2">
+              <i className="fas fa-receipt text-sm text-[#fef3c7]"></i> Calculate 80G Tax Impact
             </a>
           </motion.div>
 
@@ -119,29 +125,26 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap items-center justify-center bg-[#180b0f]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12"
+            className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-[900px] p-2 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl mb-12"
           >
-            {HERO_STATS.map((s, i) => (
-              <React.Fragment key={s.label}>
-                {i > 0 && <div className="w-[1px] self-stretch bg-white/5" />}
-                <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-                  <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#ffe4e6] to-[#fef3c7] bg-clip-text text-transparent">
-                    <AnimatedCounter value={s.value} prefix={s.prefix} suffix={s.suffix} />
-                  </div>
-                  <div className="text-[10px] md:text-xs text-[#c8bdc0] uppercase tracking-wider font-semibold mt-1">{s.label}</div>
+            {HERO_STATS.map((stat, i) => (
+              <div key={i} className="px-6 py-4 text-center border-r border-white/10 last:border-0">
+                <div className="text-3xl md:text-4xl font-black font-mono text-[#ffe4e6]">
+                  <AnimatedCounter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
                 </div>
-              </React.Fragment>
+                <div className="text-[10px] md:text-xs text-[#c8bdc0] uppercase tracking-wider font-mono mt-1">{stat.label}</div>
+              </div>
             ))}
           </motion.div>
 
-          <div className="w-full max-w-[760px] mask-image-gradient overflow-hidden select-none opacity-50">
-            <div className="marquee-track text-[#7c7073] text-xs font-mono font-semibold">
-              <span>NGO Beneficiary Matching</span>
-              <span>80G Receipt Issuance</span>
-              <span>Needs Assessments API</span>
-              <span>CSR Partnership Analytics</span>
-              <span>Academic Scholarships at AVPU</span>
-              <span>Transparent Fund Allocation Ledger</span>
+          <div className="w-full max-w-[800px] mask-image-gradient overflow-hidden select-none opacity-60">
+            <div className="marquee-track text-[#ffe4e6] text-xs font-mono font-semibold">
+              <span>✦ Instant Govt 80G Tax Exemption Receipts</span>
+              <span>✦ Rural Education & Laptop Scholarships</span>
+              <span>✦ Medical Relief Kit Distribution</span>
+              <span>✦ Live Impact Slider (₹500 – ₹50,000)</span>
+              <span>✦ 12,000+ Beneficiaries Served</span>
+              <span>✦ 100% Free Social Welfare Intelligence</span>
             </div>
           </div>
         </div>

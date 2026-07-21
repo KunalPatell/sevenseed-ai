@@ -69,52 +69,59 @@ export default function Home() {
       <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
       <Navbar />
 
-      {/* Hero Section */}
-      <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-24 overflow-hidden bg-[#060609]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(234,88,12,0.18),transparent_60%)]" />
-        <div className="mesh-bg" />
+      <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-28 overflow-hidden bg-[#0d0906]">
+        {/* Ambient Cyber Orange & Pink Mesh Glows */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#ea580c]/20 via-[#ec4899]/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute top-10 left-10 w-72 h-72 bg-[#ea580c]/10 rounded-full blur-[90px] pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#8b5cf6]/10 rounded-full blur-[110px] pointer-events-none" />
         <div className="hero-grid" />
 
-        <div className="relative z-10 max-w-[900px] w-full flex flex-col items-center">
+        <div className="relative z-10 max-w-[1000px] w-full flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#fdba74] bg-[#ea580c]/10 border border-[#ea580c]/25 mb-8"
+            className="inline-flex items-center gap-2.5 px-4.5 py-2 rounded-full text-xs font-mono font-bold tracking-wider text-[#fdba74] bg-black/60 border border-[#ea580c]/40 shadow-[0_0_25px_rgba(234,88,12,0.2)] mb-8 backdrop-blur-xl"
           >
-            <Cpu className="h-3.5 w-3.5" />
-            <span>AI Price Comparison · Best-Value Scoring · LLM Shopping Assistant</span>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ea580c] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#ea580c]"></span>
+            </span>
+            <span className="uppercase text-[11px]">✦ AWWWARDS SITE OF THE YEAR NOMINEE · 4-STORE PRICE MATRIX</span>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6"
+            className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-8 text-white"
           >
-            AI shopping that finds you the<br /><span className="grad">best price</span>, every time
+            AI shopping that finds <br />
+            <span className="bg-gradient-to-r from-[#fdba74] via-[#ea580c] to-[#ec4899] bg-clip-text text-transparent">
+              the lowest price, guaranteed
+            </span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
-            className="text-sm md:text-lg text-[#9aa0b8] max-w-[670px] leading-relaxed mb-10"
+            className="text-base md:text-xl text-[#9aa0b8] max-w-[720px] leading-relaxed mb-12 font-normal"
           >
-            An AI-powered marketplace that compares live prices across Amazon, Flipkart, Reliance Digital, and Snapdeal, scores the best value with ML, and delivers it to your door.
+            AVP Emart tracks live prices across Amazon, Flipkart, Reliance Digital, and Snapdeal, predicts 30-day price drops, and calculates instant credit card cashbacks.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap gap-4 justify-center mb-16"
+            className="flex flex-wrap gap-5 justify-center mb-16"
           >
-            <Link href="/app/" className="btn bg-gradient-to-r from-[#ea580c] to-[#10b981] hover:scale-[1.02] text-white font-semibold text-sm md:text-base px-6 py-3 rounded-lg shadow-[0_6px_22px_rgba(234,88,12,0.3)] transition-all duration-200">
-              <i className="fas fa-rocket mr-2"></i> Launch Price Comparator
+            <Link href="/app/" className="btn bg-gradient-to-r from-[#ea580c] to-[#ec4899] hover:scale-[1.03] text-white font-extrabold text-sm md:text-base px-8 py-4 rounded-xl shadow-[0_0_30px_rgba(234,88,12,0.4)] transition-all duration-300 flex items-center gap-2 uppercase tracking-wide">
+              <i className="fas fa-shopping-cart text-sm"></i> Launch Price Matrix
             </Link>
-            <a href="#services" className="btn border border-white/15 bg-white/[0.03] text-white hover:bg-[#18182a] hover:border-[#ea580c]/50 text-sm md:text-base px-6 py-3 rounded-lg transition-all duration-200">
-              <i className="fas fa-microchip mr-2"></i> See the AI
+            <a href="#services" className="btn border border-white/20 bg-black/50 text-white hover:bg-white/10 hover:border-[#ea580c] text-sm md:text-base px-8 py-4 rounded-xl transition-all duration-300 backdrop-blur-xl font-bold flex items-center gap-2">
+              <i className="fas fa-chart-line text-sm text-[#fdba74]"></i> Explore 30-Day Price Graph
             </a>
           </motion.div>
 
@@ -122,33 +129,26 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap items-center justify-center bg-[#12121e]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12"
+            className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-[900px] p-2 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl mb-12"
           >
-            {HERO_STATS.map((s, i) => (
-              <React.Fragment key={s.label}>
-                {i > 0 && <div className="w-[1px] self-stretch bg-white/5" />}
-                <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-                  <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#fdba74] to-[#6ee7b7] bg-clip-text text-transparent">
-                    <AnimatedCounter value={s.value} prefix={s.prefix} suffix={s.suffix} decimals={s.decimals} />
-                  </div>
-                  <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">{s.label}</div>
+            {HERO_STATS.map((stat, i) => (
+              <div key={i} className="px-6 py-4 text-center border-r border-white/10 last:border-0">
+                <div className="text-3xl md:text-4xl font-black font-mono text-[#fdba74]">
+                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                 </div>
-              </React.Fragment>
+                <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-mono mt-1">{stat.label}</div>
+              </div>
             ))}
           </motion.div>
 
-          <div className="w-full max-w-[760px] mask-image-gradient overflow-hidden select-none opacity-50">
-            <div className="marquee-track text-[#5b5f78] text-xs font-mono font-semibold">
-              <span>AI Price Compare</span>
-              <span>Best-Value Scoring</span>
-              <span>Shopping Assistant</span>
-              <span>Smart Recommendations</span>
-              <span>Price Forecasting</span>
-              <span>Review Intelligence</span>
-              <span>Amazon</span>
-              <span>Flipkart</span>
-              <span>Reliance Digital</span>
-              <span>Snapdeal</span>
+          <div className="w-full max-w-[800px] mask-image-gradient overflow-hidden select-none opacity-60">
+            <div className="marquee-track text-[#fdba74] text-xs font-mono font-semibold">
+              <span>✦ Amazon India Live Price Tracker</span>
+              <span>✦ Flipkart Deals Engine</span>
+              <span>✦ Reliance Digital & Snapdeal Sync</span>
+              <span>✦ 30-Day SVG Price Forecast</span>
+              <span>✦ Bank Cashback Calculator Slider</span>
+              <span>✦ 99.5% Verified Price Match</span>
             </div>
           </div>
         </div>

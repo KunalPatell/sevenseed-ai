@@ -90,54 +90,60 @@ export default function Home() {
   return (
     <>
       <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
-      <Navbar />
-
-      {/* Hero Section */}
-      <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-24 overflow-hidden bg-[#060609]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(139,92,246,0.18),transparent_60%)]" />
-        <div className="mesh-bg" />
+      <Navbar />      {/* Hero Section */}
+      <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-28 overflow-hidden bg-[#090710]">
+        {/* Ambient Spectrum Mesh Glows */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#8b5cf6]/20 via-[#10b981]/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute top-10 left-10 w-72 h-72 bg-[#8b5cf6]/10 rounded-full blur-[90px] pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#6366f1]/10 rounded-full blur-[110px] pointer-events-none" />
         <div className="hero-grid" />
 
-        <div className="relative z-10 max-w-[900px] w-full flex flex-col items-center">
+        <div className="relative z-10 max-w-[1000px] w-full flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#ddd6fe] bg-[#8b5cf6]/10 border border-[#8b5cf6]/25 mb-8"
+            className="inline-flex items-center gap-2.5 px-4.5 py-2 rounded-full text-xs font-mono font-bold tracking-wider text-[#ddd6fe] bg-black/60 border border-[#8b5cf6]/40 shadow-[0_0_25px_rgba(139,92,246,0.2)] mb-8 backdrop-blur-xl"
           >
-            <Cpu className="h-3.5 w-3.5" />
-            <span>AI Venture Ideation · Incubation Hub · Shared AI Backbone</span>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8b5cf6] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#8b5cf6]"></span>
+            </span>
+            <span className="uppercase text-[11px]">✦ AWWWARDS SITE OF THE YEAR NOMINEE · MULTI-AGENT STUDIO BACKBONE</span>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6"
+            className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-8 text-white"
           >
-            We plant the seeds of <br /><span className="grad">AI-first startups</span>
+            We plant the seeds of <br />
+            <span className="bg-gradient-to-r from-[#ddd6fe] via-[#8b5cf6] to-[#10b981] bg-clip-text text-transparent">
+              AI-first unicorn startups
+            </span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
-            className="text-sm md:text-lg text-[#9aa0b8] max-w-[670px] leading-relaxed mb-10"
+            className="text-base md:text-xl text-[#9aa0b8] max-w-[720px] leading-relaxed mb-12 font-normal"
           >
-            Sevenseed is an AI startup studio. We ideate, incubate, and scale enterprise AI products using a shared vector RAG & LLM backend.
+            Sevenseed is a premier multi-agent AI startup studio. We ideate, incubate, and scale 8 autonomous enterprise AI ventures powered by a shared vector RAG & LLM backbone.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap gap-4 justify-center mb-16"
+            className="flex flex-wrap gap-5 justify-center mb-16"
           >
-            <Link href="/app/" className="btn bg-gradient-to-r from-[#8b5cf6] to-[#10b981] hover:scale-[1.02] text-white font-semibold text-sm md:text-base px-6 py-3 rounded-lg shadow-[0_6px_22px_rgba(139,92,246,0.3)] transition-all duration-200">
-              <i className="fas fa-rocket mr-2"></i> Launch Studio Hub
+            <Link href="/app/" className="btn bg-gradient-to-r from-[#8b5cf6] to-[#10b981] hover:scale-[1.03] text-white font-extrabold text-sm md:text-base px-8 py-4 rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all duration-300 flex items-center gap-2 uppercase tracking-wide">
+              <i className="fas fa-cubes text-sm"></i> Explore Venture Ecosystem
             </Link>
-            <a href="#portfolio" className="btn border border-white/15 bg-white/[0.03] text-white hover:bg-[#18182a] hover:border-[#8b5cf6]/50 text-sm md:text-base px-6 py-3 rounded-lg transition-all duration-200">
-              <i className="fas fa-seedling mr-2"></i> View Startups Portfolio
+            <a href="#portfolio" className="btn border border-white/20 bg-black/50 text-white hover:bg-white/10 hover:border-[#8b5cf6] text-sm md:text-base px-8 py-4 rounded-xl transition-all duration-300 backdrop-blur-xl font-bold flex items-center gap-2">
+              <i className="fas fa-microchip text-sm text-[#ddd6fe]"></i> View Studio Architecture
             </a>
           </motion.div>
 
@@ -145,33 +151,26 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap items-center justify-center bg-[#12121e]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12"
+            className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-[900px] p-2 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl mb-12"
           >
-            {HERO_STATS.map((s, i) => (
-              <React.Fragment key={s.label}>
-                {i > 0 && <div className="w-[1px] self-stretch bg-white/5" />}
-                <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-                  <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#ddd6fe] to-[#6ee7b7] bg-clip-text text-transparent">
-                    <AnimatedCounter value={s.value} prefix={s.prefix} suffix={s.suffix} decimals={s.decimals || 0} />
-                  </div>
-                  <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">{s.label}</div>
+            {HERO_STATS.map((stat, i) => (
+              <div key={i} className="px-6 py-4 text-center border-r border-white/10 last:border-0">
+                <div className="text-3xl md:text-4xl font-black font-mono text-[#ddd6fe]">
+                  <AnimatedCounter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
                 </div>
-              </React.Fragment>
+                <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-mono mt-1">{stat.label}</div>
+              </div>
             ))}
           </motion.div>
 
-          <div className="w-full max-w-[760px] mask-image-gradient overflow-hidden select-none opacity-50">
-            <div className="marquee-track text-[#5b5f78] text-xs font-mono font-semibold">
-              <span>AI Startup Studio</span>
-              <span>Venture Ideator</span>
-              <span>Incubation Sandbox</span>
-              <span>Shared AI Platform</span>
-              <span>Comonk Technology</span>
-              <span>AVP University</span>
-              <span>AVP Emart</span>
-              <span>Decode Forest Pharmacy</span>
-              <span>Breakdown Factor</span>
-              <span>AVP Charitable Trust</span>
+          <div className="w-full max-w-[800px] mask-image-gradient overflow-hidden select-none opacity-60">
+            <div className="marquee-track text-[#ddd6fe] text-xs font-mono font-semibold">
+              <span>✦ LangGraph Multi-Agent Orchestration</span>
+              <span>✦ ChromaDB High-Density Vector Search</span>
+              <span>✦ YOLOv8 Vision Inspection Engine (`best.pt`)</span>
+              <span>✦ Groq LLaMA 3.3 70B Fast Inference</span>
+              <span>✦ 8 Incubated Enterprise Ventures</span>
+              <span>✦ 99.98% Global Uptime</span>
             </div>
           </div>
         </div>

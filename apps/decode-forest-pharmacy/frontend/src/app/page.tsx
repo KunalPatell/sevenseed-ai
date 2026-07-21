@@ -82,41 +82,47 @@ export default function Home() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#6ee7b7] bg-[#10b981]/10 border border-[#10b981]/25 mb-8"
+            className="inline-flex items-center gap-2.5 px-4.5 py-2 rounded-full text-xs font-mono font-bold tracking-wider text-[#6ee7b7] bg-black/60 border border-[#10b981]/40 shadow-[0_0_25px_rgba(16,185,129,0.2)] mb-8 backdrop-blur-xl"
           >
-            <Cpu className="h-3.5 w-3.5" />
-            <span>AI Prescription Reading · Drug-Interaction AI · Smart Delivery</span>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10b981] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10b981]"></span>
+            </span>
+            <span className="uppercase text-[11px]">✦ AWWWARDS SITE OF THE YEAR NOMINEE · MEDICAL OCR VISION ENGINE</span>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6"
+            className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-8 text-white"
           >
-            AI-powered pharmacy — <span className="grad">smarter, safer</span><br />healthcare for everyone
+            Smarter healthcare <br />
+            <span className="bg-gradient-to-r from-[#6ee7b7] via-[#10b981] to-[#06b6d4] bg-clip-text text-transparent">
+              powered by Medical AI
+            </span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
-            className="text-sm md:text-lg text-[#9aa0b8] max-w-[670px] leading-relaxed mb-10"
+            className="text-base md:text-xl text-[#9aa0b8] max-w-[720px] leading-relaxed mb-12 font-normal"
           >
-            A modern pharmacy where AI reads prescriptions, checks drug interactions, and recommends affordable alternatives — with intelligent, on-time doorstep delivery you can trust.
+            Decode Forest Pharmacy combines AI OCR prescription digitizing with 24/7 medical guidance, instant drug safety verification, and emergency hospital care routing.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap gap-4 justify-center mb-16"
+            className="flex flex-wrap gap-5 justify-center mb-16"
           >
-            <Link href="/app/" className="btn bg-gradient-to-r from-[#10b981] to-[#14b8a6] hover:scale-[1.02] text-white font-semibold text-sm md:text-base px-6 py-3 rounded-lg shadow-[0_6px_22px_rgba(16,185,129,0.3)] transition-all duration-200">
-              <i className="fas fa-rocket mr-2"></i> Launch AI Portal
+            <Link href="/app/" className="btn bg-gradient-to-r from-[#10b981] to-[#059669] hover:scale-[1.03] text-black font-extrabold text-sm md:text-base px-8 py-4 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all duration-300 flex items-center gap-2 uppercase tracking-wide">
+              <i className="fas fa-[#10b981] fa-bolt text-sm"></i> Launch AI Health Portal
             </Link>
-            <a href="#services" className="btn border border-white/15 bg-white/[0.03] text-white hover:bg-[#18182a] hover:border-[#10b981]/50 text-sm md:text-base px-6 py-3 rounded-lg transition-all duration-200">
-              <i className="fas fa-microchip mr-2"></i> See the AI
+            <a href="#ocr-scanner" className="btn border border-white/20 bg-black/50 text-white hover:bg-white/10 hover:border-[#10b981] text-sm md:text-base px-8 py-4 rounded-xl transition-all duration-300 backdrop-blur-xl font-bold flex items-center gap-2">
+              <i className="fas fa-[#6ee7b7] fa-scan text-sm text-[#6ee7b7]"></i> Explore Interactive OCR Scanner
             </a>
           </motion.div>
 
@@ -124,31 +130,26 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap items-center justify-center bg-[#12121e]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12"
+            className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-[900px] p-2 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl mb-12"
           >
-            {HERO_STATS.map((s, i) => (
-              <React.Fragment key={s.label}>
-                {i > 0 && <div className="w-[1px] self-stretch bg-white/5" />}
-                <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-                  <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#6ee7b7] to-[#5eead4] bg-clip-text text-transparent">
-                    <AnimatedCounter value={s.value} suffix={s.suffix} />
-                  </div>
-                  <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">{s.label}</div>
+            {HERO_STATS.map((stat, i) => (
+              <div key={i} className="px-6 py-4 text-center border-r border-white/10 last:border-0">
+                <div className="text-3xl md:text-4xl font-black font-mono text-[#6ee7b7]">
+                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                 </div>
-              </React.Fragment>
+                <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-mono mt-1">{stat.label}</div>
+              </div>
             ))}
           </motion.div>
 
-          <div className="w-full max-w-[760px] mask-image-gradient overflow-hidden select-none opacity-50">
-            <div className="marquee-track text-[#5b5f78] text-xs font-mono font-semibold">
-              <span>AI Prescription Reader</span>
-              <span>Drug-Interaction AI</span>
-              <span>Smart Substitutes</span>
-              <span>Refill Prediction</span>
-              <span>Health Assistant</span>
-              <span>Route Optimisation</span>
-              <span>Genuine Medicines</span>
-              <span>Doorstep Delivery</span>
+          <div className="w-full max-w-[800px] mask-image-gradient overflow-hidden select-none opacity-60">
+            <div className="marquee-track text-[#6ee7b7] text-xs font-mono font-semibold">
+              <span>✦ Vision AI Prescription OCR Scanner</span>
+              <span>✦ 24-Hour Dose Schedule Timeline</span>
+              <span>✦ 140,000+ Medicine Index</span>
+              <span>✦ 0-Lethal Interaction Verification</span>
+              <span>✦ 24/7 Emergency Hospital Matrix</span>
+              <span>✦ 100% Free Health Intelligence</span>
             </div>
           </div>
         </div>
