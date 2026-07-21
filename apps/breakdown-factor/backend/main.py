@@ -9,7 +9,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path: 
     sys.path.insert(0, _HERE)
 
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -17,6 +17,7 @@ from pydantic import BaseModel
 
 import agents, rag
 from app import config, db
+from app.ratelimit import check_rate_limit
 
 try: 
     from dotenv import load_dotenv; load_dotenv()
@@ -64,8 +65,13 @@ class MaterialReq(BaseModel):
 class SafetyReq(BaseModel): 
     description: str
 
-class DefectReq(BaseModel): 
+class DefectReq(BaseModel):
     description: str
+
+class CostDemoReq(BaseModel):
+    project_type: str
+    area_sqft: float
+    location: str = "Ahmedabad"
 
 
 # ── AI API Endpoints ──────────────────────────────────────────────────────────
@@ -94,8 +100,23 @@ def copilot(req: CopilotReq):
     return result
 
 @app.post("/api/cost")
-def cost(req: CostReq): 
+def cost(req: CostReq):
     return agents.estimate_cost(req.project_type, req.area_sqft, req.floors, req.quality, req.location, req.extra)
+
+@app.post("/api/cost/demo")
+def cost_demo(req: CostDemoReq, request: Request):
+    # Public, unauthenticated teaser widget on the landing page — stricter limits,
+    # cheaper/faster model, and deliberately stateless (never written to the
+    # project/session history that backs the real Project Portal). Never honors
+    # BYOK headers — see agents._get_llm_demo.
+    check_rate_limit(request, bucket="cost_demo", limit=5, window_s=3600, global_limit=200)
+    if not req.project_type.strip():
+        raise HTTPException(status_code=400, detail="Project type is required.")
+    if len(req.project_type) > 80 or len(req.location) > 60:
+        raise HTTPException(status_code=400, detail="Input too long.")
+    if req.area_sqft <= 0 or req.area_sqft > 100000:
+        raise HTTPException(status_code=400, detail="Enter a realistic area between 1 and 100,000 sqft.")
+    return agents.estimate_cost_demo(req.project_type, req.area_sqft, req.location)
 
 @app.post("/api/materials")
 def materials(req: MaterialReq): 

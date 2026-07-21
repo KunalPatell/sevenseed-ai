@@ -10,13 +10,14 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-from fastapi import FastAPI, HTTPException, File, UploadFile
+from fastapi import FastAPI, HTTPException, File, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from app import config, db
+from app.ratelimit import check_rate_limit
 import agents
 import rag
 
@@ -51,6 +52,9 @@ db.init()
 class AssistantReq(BaseModel):
     message: str
     session_id: str | None = None
+
+class AssistantDemoReq(BaseModel):
+    message: str
 
 class PrescriptionReq(BaseModel):
     text: str
@@ -117,6 +121,21 @@ def assistant(req: AssistantReq):
     result = agents.run_assistant(req.message, sid)
     result["session_id"] = sid
     return result
+
+@app.post("/api/assistant/demo")
+def assistant_demo(req: AssistantDemoReq, request: Request):
+    # Public, unauthenticated landing-page widget — deliberately separate from
+    # /api/assistant: stricter per-IP + global rate limits, a cheaper/faster
+    # model, a general-wellness-only system prompt (never prescription reading
+    # or drug-interaction checking — those stay behind the real AI Portal), and
+    # ignores BYOK headers. Stateless: never written to the prescription/
+    # interaction history that backs the app.
+    check_rate_limit(request, bucket="assistant_demo", limit=5, window_s=3600, global_limit=200)
+    if not req.message.strip():
+        raise HTTPException(status_code=400, detail="Please enter a question.")
+    if len(req.message) > 300:
+        raise HTTPException(status_code=400, detail="Question is too long — please keep it under 300 characters.")
+    return agents.run_assistant_demo(req.message)
 
 @app.post("/api/prescription")
 def prescription(req: PrescriptionReq):

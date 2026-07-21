@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "AVP Charitable Trust — AI for Social Impact & Welfare",
   description: "AVP Charitable Trust is a registered non-profit organization in Gujarat, India, delivering transparent education, healthcare, and community welfare programs.",
+  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({

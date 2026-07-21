@@ -11,13 +11,14 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from app import config, db
+from app.ratelimit import check_rate_limit
 import agents
 import rag
 from avpu_data import PROGRAMS
@@ -61,6 +62,9 @@ class TutorReq(BaseModel):
     message: str
     session_id: str | None = None
     subject: str | None = ""
+
+class TutorDemoReq(BaseModel):
+    question: str
 
 class PlacementReq(BaseModel):
     skills: list[str] = []
@@ -121,6 +125,18 @@ def tutor(req: TutorReq):
     
     db.save_session(sid, req.subject or "AI Tutor Chat", msgs)
     return result
+
+@app.post("/api/tutor/demo")
+def tutor_demo(req: TutorDemoReq, request: Request):
+    # Public, unauthenticated teaser widget on the landing page — stricter limits,
+    # cheaper/faster model, and deliberately stateless (never written to the
+    # sessions table that backs the Student Portal's real tutor history).
+    check_rate_limit(request, bucket="tutor_demo", limit=5, window_s=3600, global_limit=200)
+    if not req.question.strip():
+        raise HTTPException(status_code=400, detail="Question is required.")
+    if len(req.question) > 300:
+        raise HTTPException(status_code=400, detail="Question is too long.")
+    return agents.tutor_demo(req.question)
 
 @app.post("/api/placement")
 def placement(req: PlacementReq):

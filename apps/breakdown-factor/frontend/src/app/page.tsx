@@ -2,16 +2,21 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { 
-  HardHat, 
-  Layers, 
-  Lightbulb, 
-  Rocket, 
-  Cpu, 
-  ChevronDown, 
-  Search, 
+import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
+import { GlowCard } from "@/components/GlowCard";
+import { AIDemoWidget } from "@/components/AIDemoWidget";
+import {
+  HardHat,
+  Layers,
+  Lightbulb,
+  Rocket,
+  Cpu,
+  ChevronDown,
+  Search,
   Star,
   Activity,
   Briefcase,
@@ -58,34 +63,62 @@ export default function Home() {
       {/* Hero Section */}
       <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-24 overflow-hidden bg-[#060503]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.14),transparent_60%)]" />
+        <div className="mesh-bg" />
         <div className="hero-grid" />
-        
+
         <div className="relative z-10 max-w-[900px] w-full flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#fef3c7] bg-[#f59e0b]/10 border border-[#f59e0b]/25 mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#fef3c7] bg-[#f59e0b]/10 border border-[#f59e0b]/25 mb-8"
+          >
             <Cpu className="h-3.5 w-3.5" />
             <span>AI Cost Forecaster · Computer-Vision Safety · YOLO Defect Scanner</span>
-          </div>
+          </motion.div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6"
+          >
             Building secure structures <br /><span className="grad">tested by AI</span>
-          </h1>
+          </motion.h1>
 
-          <p className="text-sm md:text-lg text-[#c8c0b8] max-w-[670px] leading-relaxed mb-10">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+            className="text-sm md:text-lg text-[#c8c0b8] max-w-[670px] leading-relaxed mb-10"
+          >
             Breakdown Factor Construction delivers residential and commercial projects integrated with real-time YOLO defect diagnostics and smart cost estimators.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-wrap gap-4 justify-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-wrap gap-4 justify-center mb-16"
+          >
             <Link href="/app/" className="btn bg-gradient-to-r from-[#f59e0b] to-[#f97316] hover:scale-[1.02] text-white font-semibold text-sm md:text-base px-6 py-3 rounded-lg shadow-[0_6px_22px_rgba(245,158,11,0.3)] transition-all duration-200">
               <i className="fas fa-rocket mr-2"></i> Launch Project Portal
             </Link>
             <a href="#tools" className="btn border border-white/15 bg-white/[0.03] text-white hover:bg-[#1c150f] hover:border-[#f59e0b]/50 text-sm md:text-base px-6 py-3 rounded-lg transition-all duration-200">
               <i className="fas fa-hammer mr-2"></i> View AI Calculators
             </a>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-wrap items-center justify-center bg-[#14100b]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-wrap items-center justify-center bg-[#14100b]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12"
+          >
             <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#fef3c7] to-[#ffedd5] bg-clip-text text-transparent">20+</div>
+              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#fef3c7] to-[#ffedd5] bg-clip-text text-transparent">
+                <AnimatedCounter value={20} suffix="+" />
+              </div>
               <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-semibold mt-1">Completed Projects</div>
             </div>
             <div className="w-[1px] self-stretch bg-white/5" />
@@ -98,7 +131,7 @@ export default function Home() {
               <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#fef3c7] to-[#ffedd5] bg-clip-text text-transparent">ISO 9001</div>
               <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-semibold mt-1">Quality Certified</div>
             </div>
-          </div>
+          </motion.div>
 
           <div className="w-full max-w-[760px] mask-image-gradient overflow-hidden select-none opacity-50">
             <div className="marquee-track text-[#7c7268] text-xs font-mono font-semibold">
@@ -115,7 +148,7 @@ export default function Home() {
 
       {/* Pillars Band */}
       <section className="bg-[#0e0a07] border-y border-white/5 py-8 px-6 md:px-12">
-        <div className="max-w-[1180px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <RevealOnScroll className="max-w-[1180px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="flex gap-4 items-center">
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#f59e0b]/15 text-[#fef3c7] shrink-0">
               <Layers className="h-5 w-5" />
@@ -152,12 +185,12 @@ export default function Home() {
               <p className="text-xs text-[#c8c0b8] mt-0.5">AI drafts custom tenders in minutes.</p>
             </div>
           </div>
-        </div>
+        </RevealOnScroll>
       </section>
 
       {/* About Section */}
       <section className="max-w-[1180px] mx-auto py-24 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center" id="about">
-        <div className="lg:col-span-7 flex flex-col gap-4">
+        <RevealOnScroll className="lg:col-span-7 flex flex-col gap-4">
           <span className="eyebrow">Est. 2026 · Breakdown Factor</span>
           <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">We build spaces that stand the test of time.</h2>
           <p className="text-sm md:text-base text-[#c8c0b8] leading-relaxed mt-2">
@@ -166,8 +199,9 @@ export default function Home() {
           <p className="text-sm md:text-base text-[#c8c0b8] leading-relaxed">
             By deploying computer-vision cameras and custom YOLO diagnostic models, our construction sites track structural cracks, wall damage, and MEP system issues instantly. Use our portal to test AI-driven budgeting, safety checklists, and timeline schedulers.
           </p>
-        </div>
-        <div className="lg:col-span-5 glow-card bg-gradient-to-br from-[#14100b] to-[#0e0a07] border border-white/5 rounded-2xl p-8">
+        </RevealOnScroll>
+        <RevealOnScroll delay={0.1} className="lg:col-span-5">
+        <GlowCard className="glow-card bg-gradient-to-br from-[#14100b] to-[#0e0a07] border border-white/5 rounded-2xl p-8">
           <div className="w-14 h-14 rounded-xl grid place-items-center text-white bg-gradient-to-br from-[#f59e0b] to-[#f97316] shadow-[0_8px_24px_rgba(245,158,11,0.3)] mb-6">
             <HardHat className="h-6 w-6" />
           </div>
@@ -190,44 +224,61 @@ export default function Home() {
               <span>Integrated client billing database logs</span>
             </li>
           </ul>
-        </div>
+        </GlowCard>
+        </RevealOnScroll>
       </section>
 
       {/* Tools Section */}
       <section className="bg-[#0e0a07] py-20 px-6 md:px-12" id="tools">
         <div className="max-w-[1180px] mx-auto">
+          <RevealOnScroll>
           <span className="eyebrow center block">AI CAPABILITIES</span>
           <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Smart building operations</h2>
-          
+          </RevealOnScroll>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#14100b] border border-white/5 rounded-2xl p-6 relative">
+            <RevealOnScroll delay={0.02}>
+            <GlowCard className="bg-[#14100b] border border-white/5 rounded-2xl p-6 relative h-full">
               <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">01</div>
               <h4 className="text-base font-bold text-white mb-2">Cost & BOQ Estimate</h4>
               <p className="text-xs md:text-sm text-[#c8c0b8] leading-relaxed">Calculate exact material quantities (cement, steel, tiles) customized by quality and floors.</p>
-            </div>
+            </GlowCard>
+            </RevealOnScroll>
 
-            <div className="bg-[#14100b] border border-white/5 rounded-2xl p-6 relative">
+            <RevealOnScroll delay={0.06}>
+            <GlowCard className="bg-[#14100b] border border-white/5 rounded-2xl p-6 relative h-full">
               <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">02</div>
               <h4 className="text-base font-bold text-white mb-2">Defect Recognition</h4>
               <p className="text-xs md:text-sm text-[#c8c0b8] leading-relaxed">Upload concrete photos to check cracks, broken glass, or CPVC leakages with cost breakdowns.</p>
-            </div>
+            </GlowCard>
+            </RevealOnScroll>
 
-            <div className="bg-[#14100b] border border-white/5 rounded-2xl p-6 relative">
+            <RevealOnScroll delay={0.1}>
+            <GlowCard className="bg-[#14100b] border border-white/5 rounded-2xl p-6 relative h-full">
               <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">03</div>
               <h4 className="text-base font-bold text-white mb-2">Schedule Sprints</h4>
               <p className="text-xs md:text-sm text-[#c8c0b8] leading-relaxed">Produces step-by-step 90-day structural Gantt timelines to deliver projects on target.</p>
-            </div>
+            </GlowCard>
+            </RevealOnScroll>
           </div>
+
+          <RevealOnScroll delay={0.15}>
+            <AIDemoWidget />
+          </RevealOnScroll>
         </div>
       </section>
 
       {/* Testimonials */}
       <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="testimonials">
+        <RevealOnScroll>
         <span className="eyebrow center block">REVIEWS</span>
         <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">What our clients say</h2>
-        
+        </RevealOnScroll>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <figure className="tcard flex flex-col gap-4">
+          <RevealOnScroll delay={0.02}>
+          <GlowCard className="tcard flex flex-col gap-4 h-full">
+            <figure className="flex flex-col gap-4 h-full">
             <div className="text-[#f59e0b] flex gap-1"><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /></div>
             <blockquote className="text-sm text-[#c8c0b8] italic flex-1 leading-relaxed">
               &ldquo;Breakdown Factor constructed our new campus wings. Their AI cost estimators and safety checklists kept the crew secure.&rdquo;
@@ -239,9 +290,13 @@ export default function Home() {
                 <span className="text-[#7c7268]">Ahmedabad</span>
               </div>
             </figcaption>
-          </figure>
+            </figure>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <figure className="tcard flex flex-col gap-4">
+          <RevealOnScroll delay={0.06}>
+          <GlowCard className="tcard flex flex-col gap-4 h-full">
+            <figure className="flex flex-col gap-4 h-full">
             <div className="text-[#f59e0b] flex gap-1"><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /></div>
             <blockquote className="text-sm text-[#c8c0b8] italic flex-1 leading-relaxed">
               &ldquo;Uploading site images to the defect scanner immediately returns step-by-step polymer mortar grouting specifications. Amazing.&rdquo;
@@ -253,9 +308,13 @@ export default function Home() {
                 <span className="text-[#7c7268]">Sanand Site</span>
               </div>
             </figcaption>
-          </figure>
+            </figure>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <figure className="tcard flex flex-col gap-4">
+          <RevealOnScroll delay={0.1}>
+          <GlowCard className="tcard flex flex-col gap-4 h-full">
+            <figure className="flex flex-col gap-4 h-full">
             <div className="text-[#f59e0b] flex gap-1"><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /><Star className="h-4 w-4 fill-current" /></div>
             <blockquote className="text-sm text-[#c8c0b8] italic flex-1 leading-relaxed">
               &ldquo;We use their automated tender reports for state bidding. The PDF reports are clean, structured, and extremely fast.&rdquo;
@@ -267,16 +326,20 @@ export default function Home() {
                 <span className="text-[#7c7268]">Ahmedabad</span>
               </div>
             </figcaption>
-          </figure>
+            </figure>
+          </GlowCard>
+          </RevealOnScroll>
         </div>
       </section>
 
       {/* FAQ */}
       <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="faq">
+        <RevealOnScroll>
         <span className="eyebrow center block">FAQ</span>
         <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Building questions, answered</h2>
-        
-        <div className="max-w-[760px] mx-auto faq-list">
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={0.1} className="max-w-[760px] mx-auto faq-list">
           <details>
             <summary className="faq-summary">Which structural codes do you follow? <ChevronDown className="h-4 w-4 text-[#fef3c7]" /></summary>
             <p className="text-xs md:text-sm text-[#c8c0b8] mt-3 leading-relaxed">
@@ -297,14 +360,15 @@ export default function Home() {
               Yes, our project workspace supports downloading full structural timelines, checklists, and BOQ estimates as print-ready PDF reports.
             </p>
           </details>
-        </div>
+        </RevealOnScroll>
       </section>
 
       {/* Contact Section */}
       <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="contact">
-        <div className="bg-[#14100b] border border-white/5 rounded-2xl p-8 relative overflow-hidden flex flex-col items-center">
+        <RevealOnScroll>
+        <GlowCard className="bg-[#14100b] border border-white/5 rounded-2xl p-8 relative overflow-hidden flex flex-col items-center">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(245,158,11,0.06),transparent_60%)] pointer-events-none" />
-          
+
           <div className="relative z-10 max-w-[640px] w-full text-center flex flex-col items-center">
             <span className="eyebrow">GET IN TOUCH</span>
             <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Let&apos;s build together securely.</h2>
@@ -348,7 +412,8 @@ export default function Home() {
               {feedbackMsg && <p className="text-xs text-[#f59e0b] font-semibold mt-2">{feedbackMsg}</p>}
             </form>
           </div>
-        </div>
+        </GlowCard>
+        </RevealOnScroll>
       </section>
 
       <Footer />

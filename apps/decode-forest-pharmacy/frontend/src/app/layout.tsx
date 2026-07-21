@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Decode Forest Pharmacy — AI-Powered Pharmacy & Healthcare",
   description: "A modern pharmacy where AI reads prescriptions, checks drug interactions, and recommends affordable alternatives — with intelligent, on-time doorstep delivery you can trust.",
+  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({

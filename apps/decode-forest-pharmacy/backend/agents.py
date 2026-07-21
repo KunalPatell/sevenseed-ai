@@ -220,6 +220,89 @@ def run_assistant(message: str, session_id: str = "", language: str = "English")
     return {"reply": state["final_response"], "source": "fallback"}
 
 
+# ── Public demo tier (unauthenticated landing-page widget) ─────────────────────
+# Deliberately reads server-side env vars ONLY — bypasses _groq_key()/_gemini_key()/
+# _openai_key() above, which honor the x-*-api-key BYOK headers set by
+# api_key_override_middleware. The public demo must never be usable as a free
+# proxy for someone else's LLM key. Also uses a cheap/fast model and a short
+# output cap, and scopes the system prompt to general wellness Q&A only —
+# explicitly NOT prescription reading or drug-interaction checking, which stay
+# behind the app's own dashboard.
+def _get_llm_demo(temperature: float = 0.4):
+    groq_key = os.environ.get("GROQ_API_KEY", "").strip()
+    if groq_key:
+        try:
+            from langchain_groq import ChatGroq
+            return ChatGroq(api_key=groq_key,
+                            model=os.environ.get("GROQ_DEMO_MODEL", "llama-3.1-8b-instant"),
+                            temperature=temperature, max_tokens=300)
+        except Exception:
+            pass
+    gemini_key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if gemini_key:
+        try:
+            from langchain_google_genai import ChatGoogleGenerativeAI
+            return ChatGoogleGenerativeAI(google_api_key=gemini_key,
+                                          model="gemini-1.5-flash", temperature=temperature,
+                                          max_output_tokens=300)
+        except Exception:
+            pass
+    openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
+    if openai_key:
+        try:
+            from langchain_openai import ChatOpenAI
+            return ChatOpenAI(api_key=openai_key, model="gpt-4o-mini",
+                              temperature=temperature, max_tokens=300)
+        except Exception:
+            pass
+    return None
+
+
+_SYSTEM_ASSISTANT_DEMO = """You are the public demo of the Decode Forest Pharmacy AI Health Assistant.
+This is a free, unauthenticated preview widget on the marketing site — answer ONLY general wellness,
+OTC-medicine, and pharmacy-service questions in plain, friendly language.
+
+STRICT RULES:
+- This is general information only — never a diagnosis, and never a personal treatment plan.
+- You cannot see any images or uploaded prescriptions in this demo — never pretend to read one.
+- Do not give a dose tied to a specific person's condition; speak only in general, common-knowledge terms.
+- For anything urgent, severe, or an emergency, say clearly: "Please consult a doctor or call 108 (India) immediately."
+- Keep the answer under 120 words. Use ** bold ** for medicine or key terms.
+- Always end with exactly: "⚕️ General information only — not a substitute for professional medical advice."
+"""
+
+
+def run_assistant_demo(message: str) -> dict:
+    message = message.strip()[:300]
+    llm_answer = None
+    llm = _get_llm_demo()
+    if llm:
+        try:
+            from langchain_core.messages import SystemMessage, HumanMessage
+            resp = llm.invoke([SystemMessage(content=_SYSTEM_ASSISTANT_DEMO), HumanMessage(content=message)])
+            llm_answer = resp.content
+        except Exception as e:
+            print(f"[LLM demo] error: {e}")
+    if llm_answer:
+        return {"reply": llm_answer, "source": "llm"}
+
+    # ── Offline fallback ─────────────────────────────────────────────────────
+    hits = rag.search_symptoms(message, 1) + rag.search_health(message, 1) + rag.search_medicines(message, 1)
+    if hits:
+        h = hits[0]
+        title = h.get("symptom") or h.get("title") or h.get("name") or "General wellness"
+        body = h.get("otc") or h.get("body") or h.get("use") or ""
+        reply = f"**{title}**\n\n{body}"
+    else:
+        reply = (
+            "I can share general wellness information — for example, about common OTC medicines, "
+            "mild symptoms, or how our AI pharmacy tools work. Ask something like "
+            "\"What's a safe way to reduce a mild fever at home?\""
+        )
+    reply += "\n\n⚕️ General information only — not a substitute for professional medical advice."
+    return {"reply": reply, "source": "offline"}
+
+
 # ── Prescription Reader ───────────────────────────────────────────────────────
 _SYSTEM_RX = """You are an expert clinical pharmacist.
 Given a typed/pasted prescription or drug list, you will:

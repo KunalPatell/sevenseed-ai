@@ -41,7 +41,7 @@
   <div class="nav-links" id="navLinks">
     <a href="#about">About</a>
     <a href="#services">AI Tools</a>
-    
+    <a href="#try-maya">Live Demo</a>
     <a href="#process">Process</a>
     <a href="#testimonials">Reviews</a>
     <a href="#faq">FAQ</a>
@@ -125,6 +125,30 @@
         <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-microphone-lines"></i></div><h4>Echo — Meeting Assistant</h4><p>Turns any transcript into a clean summary, decisions, and owner-tagged action items.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Agency AI</span></article>
         <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-user-tie"></i></div><h4>Scout — AI Recruiter</h4><p>Screens resumes, generates interview questions, and scores answers on seven dimensions.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Agency AI</span></article>
         <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-chart-column"></i></div><h4>Sage — Data Analyst</h4><p>Answers questions about your data in plain English with a safe, instant NL-to-SQL engine.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Agency AI</span></article>
+  </div>
+</section>
+
+<section class="section ai-demo-sec" id="try-maya">
+  <div class="eyebrow center">LIVE DEMO · NO SIGNUP</div>
+  <h2 class="sec-title">Watch Maya write, right now</h2>
+  <div class="demo-card glow reveal" data-tilt>
+    <div class="demo-badge"><i class="fas fa-bolt"></i> Real AI · Instant · Free</div>
+    <p class="demo-lead">Give Maya — Sevenforce's Content &amp; SEO employee — a blog topic, and she'll draft a real, SEO-ready opening paragraph live, using the same AI engine that powers the full Content Studio.</p>
+    <div class="demo-chips" id="demoChips">
+      <button type="button" class="demo-chip" data-topic="5 ways AI saves small businesses time">&ldquo;5 ways AI saves small businesses time&rdquo;</button>
+      <button type="button" class="demo-chip" data-topic="Why WhatsApp is the new storefront for D2C brands">&ldquo;Why WhatsApp is the new storefront for D2C brands&rdquo;</button>
+      <button type="button" class="demo-chip" data-topic="A beginner's guide to NL-to-SQL">&ldquo;A beginner's guide to NL-to-SQL&rdquo;</button>
+    </div>
+    <form class="demo-form" id="demoForm">
+      <input type="text" id="demoTopic" class="demo-input" placeholder="Enter a blog topic…" maxlength="120" autocomplete="off" required>
+      <button type="submit" class="btn btn-primary" id="demoBtn"><i class="fas fa-wand-magic-sparkles"></i> <span id="demoBtnLbl">Generate with Maya</span></button>
+    </form>
+    <p class="demo-error" id="demoError" role="status"></p>
+    <div class="demo-result" id="demoResult" style="display:none;">
+      <div class="demo-result-badge"><i class="fas fa-robot"></i> AI Generated · Maya</div>
+      <div class="demo-result-body" id="demoResultBody"></div>
+      <a href="app.html" class="demo-cta">Unlock the full Content Studio <i class="fas fa-arrow-right"></i></a>
+    </div>
   </div>
 </section>
 
@@ -339,5 +363,6 @@
 </script>
 
 <script src="app.js?v=1.0.3"></script>
+<script src="ai-demo.js?v=1.0.0"></script>
 </body>
 </html>

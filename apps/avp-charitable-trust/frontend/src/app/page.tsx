@@ -2,21 +2,32 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { 
-  Heart, 
-  Layers, 
-  Lightbulb, 
-  Rocket, 
-  Cpu, 
-  ChevronDown, 
-  Search, 
+import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
+import { GlowCard } from "@/components/GlowCard";
+import { AIDemoWidget } from "@/components/AIDemoWidget";
+import {
+  Heart,
+  Layers,
+  Lightbulb,
+  Rocket,
+  Cpu,
+  ChevronDown,
+  Search,
   Star,
   Activity,
   Briefcase,
   ExternalLink
 } from "lucide-react";
+
+const HERO_STATS = [
+  { value: 25, prefix: "₹", suffix: "L+", label: "Donations Disbursed" },
+  { value: 100, suffix: "%", label: "Audit Compliance" },
+  { value: 80, suffix: "G", label: "Tax-Exempt Approved" },
+];
 
 export default function Home() {
   const [scrollPct, setScrollPct] = useState(0);
@@ -58,47 +69,70 @@ export default function Home() {
       {/* Hero Section */}
       <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-24 overflow-hidden bg-[#070405]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(244,63,94,0.14),transparent_60%)]" />
+        <div className="mesh-bg" />
         <div className="hero-grid" />
-        
+
         <div className="relative z-10 max-w-[900px] w-full flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#ffe4e6] bg-[#f43f5e]/10 border border-[#f43f5e]/25 mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#ffe4e6] bg-[#f43f5e]/10 border border-[#f43f5e]/25 mb-8"
+          >
             <Cpu className="h-3.5 w-3.5" />
             <span>AI Beneficiary Matcher · 80G Tax Exemption Receipts · CSR Impact Reporter</span>
-          </div>
+          </motion.div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6"
+          >
             Empowering communities <br /><span className="grad">with transparent AI</span>
-          </h1>
+          </motion.h1>
 
-          <p className="text-sm md:text-lg text-[#c8bdc0] max-w-[670px] leading-relaxed mb-10">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+            className="text-sm md:text-lg text-[#c8bdc0] max-w-[670px] leading-relaxed mb-10"
+          >
             AVP Charitable Trust matches regional welfare needs to resources and generates transparent, audit-ready impact reports for corporate CSR donors.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-wrap gap-4 justify-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-wrap gap-4 justify-center mb-16"
+          >
             <Link href="/app/" className="btn bg-gradient-to-r from-[#f43f5e] to-[#f59e0b] hover:scale-[1.02] text-white font-semibold text-sm md:text-base px-6 py-3 rounded-lg shadow-[0_6px_22px_rgba(244,63,94,0.3)] transition-all duration-200">
               <i className="fas fa-rocket mr-2"></i> Launch NGO Portal
             </Link>
             <a href="#programs" className="btn border border-white/15 bg-white/[0.03] text-white hover:bg-[#220f15] hover:border-[#f43f5e]/50 text-sm md:text-base px-6 py-3 rounded-lg transition-all duration-200">
               <i className="fas fa-seedling mr-2"></i> View Our Programs
             </a>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-wrap items-center justify-center bg-[#180b0f]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12">
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#ffe4e6] to-[#fef3c7] bg-clip-text text-transparent">₹25L+</div>
-              <div className="text-[10px] md:text-xs text-[#c8bdc0] uppercase tracking-wider font-semibold mt-1">Donations Disbursed</div>
-            </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#ffe4e6] to-[#fef3c7] bg-clip-text text-transparent">100%</div>
-              <div className="text-[10px] md:text-xs text-[#c8bdc0] uppercase tracking-wider font-semibold mt-1">Audit Compliance</div>
-            </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#ffe4e6] to-[#fef3c7] bg-clip-text text-transparent">80G</div>
-              <div className="text-[10px] md:text-xs text-[#c8bdc0] uppercase tracking-wider font-semibold mt-1">Tax-Exempt Approved</div>
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-wrap items-center justify-center bg-[#180b0f]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12"
+          >
+            {HERO_STATS.map((s, i) => (
+              <React.Fragment key={s.label}>
+                {i > 0 && <div className="w-[1px] self-stretch bg-white/5" />}
+                <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
+                  <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#ffe4e6] to-[#fef3c7] bg-clip-text text-transparent">
+                    <AnimatedCounter value={s.value} prefix={s.prefix} suffix={s.suffix} />
+                  </div>
+                  <div className="text-[10px] md:text-xs text-[#c8bdc0] uppercase tracking-wider font-semibold mt-1">{s.label}</div>
+                </div>
+              </React.Fragment>
+            ))}
+          </motion.div>
 
           <div className="w-full max-w-[760px] mask-image-gradient overflow-hidden select-none opacity-50">
             <div className="marquee-track text-[#7c7073] text-xs font-mono font-semibold">
@@ -115,7 +149,7 @@ export default function Home() {
 
       {/* Pillars Band */}
       <section className="bg-[#10080a] border-y border-white/5 py-8 px-6 md:px-12">
-        <div className="max-w-[1180px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <RevealOnScroll className="max-w-[1180px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="flex gap-4 items-center">
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#f43f5e]/15 text-[#ffe4e6] shrink-0">
               <Layers className="h-5 w-5" />
@@ -152,12 +186,12 @@ export default function Home() {
               <p className="text-xs text-[#c8bdc0] mt-0.5">Exports quarterly utilization logs to PDF.</p>
             </div>
           </div>
-        </div>
+        </RevealOnScroll>
       </section>
 
       {/* About Section */}
       <section className="max-w-[1180px] mx-auto py-24 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center" id="about">
-        <div className="lg:col-span-7 flex flex-col gap-4">
+        <RevealOnScroll className="lg:col-span-7 flex flex-col gap-4">
           <span className="eyebrow">Est. 2026 · AVP Charitable Trust</span>
           <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">Serving communities with absolute transparency.</h2>
           <p className="text-sm md:text-base text-[#c8bdc0] leading-relaxed mt-2">
@@ -166,8 +200,9 @@ export default function Home() {
           <p className="text-sm md:text-base text-[#c8bdc0] leading-relaxed">
             By deploying AI needs calculators and transparent funding ledgers, we ensure that every single rupee donated directly feeds the community or matches a student&apos;s need. Check our active programs or register as an NGO volunteer.
           </p>
-        </div>
-        <div className="lg:col-span-5 glow-card bg-gradient-to-br from-[#180b0f] to-[#10080a] border border-white/5 rounded-2xl p-8">
+        </RevealOnScroll>
+        <RevealOnScroll delay={0.1} className="lg:col-span-5">
+        <GlowCard className="glow-card bg-gradient-to-br from-[#180b0f] to-[#10080a] border border-white/5 rounded-2xl p-8">
           <div className="w-14 h-14 rounded-xl grid place-items-center text-white bg-gradient-to-br from-[#f43f5e] to-[#f59e0b] shadow-[0_8px_24px_rgba(244,63,94,0.3)] mb-6">
             <Heart className="h-6 w-6 fill-current" />
           </div>
@@ -190,33 +225,42 @@ export default function Home() {
               <span>Scholarships linked to AVPU campus registries</span>
             </li>
           </ul>
-        </div>
+        </GlowCard>
+        </RevealOnScroll>
       </section>
 
       {/* Programs Section */}
       <section className="bg-[#10080a] py-20 px-6 md:px-12" id="programs">
         <div className="max-w-[1180px] mx-auto">
-          <span className="eyebrow center block">OUR PROGRAMS</span>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Active welfare divisions</h2>
-          
+          <RevealOnScroll>
+            <span className="eyebrow center block">OUR PROGRAMS</span>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Active welfare divisions</h2>
+          </RevealOnScroll>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#180b0f] border border-white/5 rounded-2xl p-6 relative">
+            <RevealOnScroll delay={0.02}>
+            <GlowCard className="bg-[#180b0f] border border-white/5 rounded-2xl p-6 relative h-full">
               <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">01</div>
               <h4 className="text-base font-bold text-white mb-2">Gyan Sarovar (Education)</h4>
               <p className="text-xs md:text-sm text-[#c8bdc0] leading-relaxed">Providing computer labs, free textbooks, and scholarships for AVPU campus studies.</p>
-            </div>
+            </GlowCard>
+            </RevealOnScroll>
 
-            <div className="bg-[#180b0f] border border-white/5 rounded-2xl p-6 relative">
+            <RevealOnScroll delay={0.06}>
+            <GlowCard className="bg-[#180b0f] border border-white/5 rounded-2xl p-6 relative h-full">
               <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">02</div>
               <h4 className="text-base font-bold text-white mb-2">Arogya Path (Healthcare)</h4>
               <p className="text-xs md:text-sm text-[#c8bdc0] leading-relaxed">Mobile clinics in rural Ahmedabad, generic drug camps, and primary emergency care.</p>
-            </div>
+            </GlowCard>
+            </RevealOnScroll>
 
-            <div className="bg-[#180b0f] border border-white/5 rounded-2xl p-6 relative">
+            <RevealOnScroll delay={0.1}>
+            <GlowCard className="bg-[#180b0f] border border-white/5 rounded-2xl p-6 relative h-full">
               <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">03</div>
               <h4 className="text-base font-bold text-white mb-2">Gram Uday (Rural Growth)</h4>
               <p className="text-xs md:text-sm text-[#c8bdc0] leading-relaxed">Rainwater harvesting structure logs, vocational training, and self-help group setups.</p>
-            </div>
+            </GlowCard>
+            </RevealOnScroll>
           </div>
         </div>
       </section>

@@ -2,22 +2,34 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { 
-  FileText, 
-  ShieldCheck, 
-  IndianRupee, 
-  Truck, 
-  Cpu, 
-  Bot, 
-  CalendarCheck, 
-  Eye, 
+import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
+import { GlowCard } from "@/components/GlowCard";
+import { AIDemoWidget } from "@/components/AIDemoWidget";
+import {
+  FileText,
+  ShieldCheck,
+  IndianRupee,
+  Truck,
+  Cpu,
+  Bot,
+  CalendarCheck,
+  Eye,
   MessageSquare,
   Search,
   ChevronDown,
   Activity
 } from "lucide-react";
+
+const HERO_STATS = [
+  { value: 10, suffix: "k+", label: "Products" },
+  { value: 24, suffix: "/7", label: "AI Assistant" },
+  { value: 100, suffix: "%", label: "AI-Verified" },
+  { value: 60, suffix: "min", label: "Delivery" },
+];
 
 export default function Home() {
   const [scrollPct, setScrollPct] = useState(0);
@@ -62,52 +74,70 @@ export default function Home() {
       {/* Hero Section */}
       <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-24 overflow-hidden bg-[#060609]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.2),transparent_60%)]" />
+        <div className="mesh-bg" />
         <div className="hero-grid" />
-        
+
         <div className="relative z-10 max-w-[900px] w-full flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#6ee7b7] bg-[#10b981]/10 border border-[#10b981]/25 mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#6ee7b7] bg-[#10b981]/10 border border-[#10b981]/25 mb-8"
+          >
             <Cpu className="h-3.5 w-3.5" />
             <span>AI Prescription Reading · Drug-Interaction AI · Smart Delivery</span>
-          </div>
+          </motion.div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6"
+          >
             AI-powered pharmacy — <span className="grad">smarter, safer</span><br />healthcare for everyone
-          </h1>
+          </motion.h1>
 
-          <p className="text-sm md:text-lg text-[#9aa0b8] max-w-[670px] leading-relaxed mb-10">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+            className="text-sm md:text-lg text-[#9aa0b8] max-w-[670px] leading-relaxed mb-10"
+          >
             A modern pharmacy where AI reads prescriptions, checks drug interactions, and recommends affordable alternatives — with intelligent, on-time doorstep delivery you can trust.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-wrap gap-4 justify-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-wrap gap-4 justify-center mb-16"
+          >
             <Link href="/app/" className="btn bg-gradient-to-r from-[#10b981] to-[#14b8a6] hover:scale-[1.02] text-white font-semibold text-sm md:text-base px-6 py-3 rounded-lg shadow-[0_6px_22px_rgba(16,185,129,0.3)] transition-all duration-200">
               <i className="fas fa-rocket mr-2"></i> Launch AI Portal
             </Link>
             <a href="#services" className="btn border border-white/15 bg-white/[0.03] text-white hover:bg-[#18182a] hover:border-[#10b981]/50 text-sm md:text-base px-6 py-3 rounded-lg transition-all duration-200">
               <i className="fas fa-microchip mr-2"></i> See the AI
             </a>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-wrap items-center justify-center bg-[#12121e]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12">
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#6ee7b7] to-[#5eead4] bg-clip-text text-transparent">10k+</div>
-              <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">Products</div>
-            </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#6ee7b7] to-[#5eead4] bg-clip-text text-transparent">24/7</div>
-              <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">AI Assistant</div>
-            </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#6ee7b7] to-[#5eead4] bg-clip-text text-transparent">100%</div>
-              <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">AI-Verified</div>
-            </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#6ee7b7] to-[#5eead4] bg-clip-text text-transparent">60min</div>
-              <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">Delivery</div>
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-wrap items-center justify-center bg-[#12121e]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12"
+          >
+            {HERO_STATS.map((s, i) => (
+              <React.Fragment key={s.label}>
+                {i > 0 && <div className="w-[1px] self-stretch bg-white/5" />}
+                <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
+                  <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#6ee7b7] to-[#5eead4] bg-clip-text text-transparent">
+                    <AnimatedCounter value={s.value} suffix={s.suffix} />
+                  </div>
+                  <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">{s.label}</div>
+                </div>
+              </React.Fragment>
+            ))}
+          </motion.div>
 
           <div className="w-full max-w-[760px] mask-image-gradient overflow-hidden select-none opacity-50">
             <div className="marquee-track text-[#5b5f78] text-xs font-mono font-semibold">
@@ -126,7 +156,7 @@ export default function Home() {
 
       {/* Pillars Band */}
       <section className="bg-[#0b0b12] border-y border-white/5 py-8 px-6 md:px-12">
-        <div className="max-w-[1180px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <RevealOnScroll className="max-w-[1180px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="flex gap-4 items-center">
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#10b981]/15 text-[#6ee7b7] shrink-0">
               <FileText className="h-5 w-5" />
@@ -163,7 +193,7 @@ export default function Home() {
               <p className="text-xs text-[#9aa0b8] mt-0.5">Route-optimised, often under 60 min.</p>
             </div>
           </div>
-        </div>
+        </RevealOnScroll>
       </section>
 
       {/* AI Stack Strip */}
@@ -182,7 +212,7 @@ export default function Home() {
 
       {/* About Section */}
       <section className="max-w-[1180px] mx-auto py-24 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center" id="about">
-        <div className="lg:col-span-7 flex flex-col gap-4">
+        <RevealOnScroll className="lg:col-span-7 flex flex-col gap-4">
           <span className="eyebrow">Est. 2026 · AI-Powered Pharmacy & Healthcare</span>
           <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">Healthcare made smarter with AI.</h2>
           <p className="text-sm md:text-base text-[#9aa0b8] leading-relaxed mt-2">
@@ -191,8 +221,9 @@ export default function Home() {
           <p className="text-sm md:text-base text-[#9aa0b8] leading-relaxed">
             With an AI health assistant, refill prediction, and route-optimised delivery, staying healthy has never been more convenient. Every product is 100% genuine and sourced from licensed distributors.
           </p>
-        </div>
-        <div className="lg:col-span-5 glow-card bg-gradient-to-br from-[#12121e] to-[#0d0d16] border border-white/5 rounded-2xl p-8">
+        </RevealOnScroll>
+        <RevealOnScroll delay={0.1} className="lg:col-span-5">
+        <GlowCard className="glow-card bg-gradient-to-br from-[#12121e] to-[#0d0d16] border border-white/5 rounded-2xl p-8">
           <div className="w-14 h-14 rounded-xl grid place-items-center text-white bg-gradient-to-br from-[#10b981] to-[#14b8a6] shadow-[0_8px_24px_rgba(16,185,129,0.3)] mb-6">
             <Activity className="h-6 w-6" />
           </div>
@@ -215,16 +246,20 @@ export default function Home() {
               <span>Route-optimised doorstep delivery within Anand/Nadiad</span>
             </li>
           </ul>
-        </div>
+        </GlowCard>
+        </RevealOnScroll>
       </section>
 
       {/* AI Capabilities / Services */}
       <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="services">
+        <RevealOnScroll>
         <span className="eyebrow center block">AI CAPABILITIES</span>
         <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Intelligent tools for your health</h2>
-        
+        </RevealOnScroll>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <article className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col">
+          <RevealOnScroll delay={0.02}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col h-full">
             <div className="w-12 h-12 rounded-xl grid place-items-center bg-[#10b981]/10 text-[#6ee7b7] mb-4">
               <FileText className="h-5 w-5" />
             </div>
@@ -235,9 +270,11 @@ export default function Home() {
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[#6ee7b7] bg-[#10b981]/10 px-2.5 py-1 rounded-full w-fit">
               <Cpu className="h-3 w-3" /> OCR + Vision
             </span>
-          </article>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <article className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col">
+          <RevealOnScroll delay={0.06}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col h-full">
             <div className="w-12 h-12 rounded-xl grid place-items-center bg-[#14b8a6]/10 text-[#5eead4] mb-4">
               <ShieldCheck className="h-5 w-5" />
             </div>
@@ -248,9 +285,11 @@ export default function Home() {
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[#5eead4] bg-[#14b8a6]/10 px-2.5 py-1 rounded-full w-fit">
               <Cpu className="h-3 w-3" /> LLM Safety
             </span>
-          </article>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <article className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col">
+          <RevealOnScroll delay={0.1}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col h-full">
             <div className="w-12 h-12 rounded-xl grid place-items-center bg-[#10b981]/10 text-[#6ee7b7] mb-4">
               <IndianRupee className="h-5 w-5" />
             </div>
@@ -261,9 +300,11 @@ export default function Home() {
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[#6ee7b7] bg-[#10b981]/10 px-2.5 py-1 rounded-full w-fit">
               <Cpu className="h-3 w-3" /> Recommender
             </span>
-          </article>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <article className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col">
+          <RevealOnScroll delay={0.02}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col h-full">
             <div className="w-12 h-12 rounded-xl grid place-items-center bg-[#14b8a6]/10 text-[#5eead4] mb-4">
               <Bot className="h-5 w-5" />
             </div>
@@ -274,9 +315,11 @@ export default function Home() {
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[#5eead4] bg-[#14b8a6]/10 px-2.5 py-1 rounded-full w-fit">
               <Cpu className="h-3 w-3" /> Groq LLaMA 3.3
             </span>
-          </article>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <article className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col">
+          <RevealOnScroll delay={0.06}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col h-full">
             <div className="w-12 h-12 rounded-xl grid place-items-center bg-[#10b981]/10 text-[#6ee7b7] mb-4">
               <CalendarCheck className="h-5 w-5" />
             </div>
@@ -287,9 +330,11 @@ export default function Home() {
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[#6ee7b7] bg-[#10b981]/10 px-2.5 py-1 rounded-full w-fit">
               <Cpu className="h-3 w-3" /> ML Forecasting
             </span>
-          </article>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <article className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col">
+          <RevealOnScroll delay={0.1}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col h-full">
             <div className="w-12 h-12 rounded-xl grid place-items-center bg-[#14b8a6]/10 text-[#5eead4] mb-4">
               <Truck className="h-5 w-5" />
             </div>
@@ -300,51 +345,66 @@ export default function Home() {
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[#5eead4] bg-[#14b8a6]/10 px-2.5 py-1 rounded-full w-fit">
               <Cpu className="h-3 w-3" /> Optimisation
             </span>
-          </article>
+          </GlowCard>
+          </RevealOnScroll>
         </div>
+
+        <RevealOnScroll delay={0.15}>
+          <AIDemoWidget />
+        </RevealOnScroll>
       </section>
 
       {/* Process Section */}
       <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="process">
+        <RevealOnScroll>
         <span className="eyebrow center block">THE PROCESS</span>
         <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Get your medicines the smart way</h2>
-        
+        </RevealOnScroll>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative">
+          <RevealOnScroll delay={0.02}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative h-full">
             <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">01</div>
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#10b981]/10 text-[#6ee7b7] mb-4">
               <i className="fas fa-file-arrow-up text-lg"></i>
             </div>
             <h4 className="text-sm font-bold text-white mb-2">Upload Prescription</h4>
             <p className="text-xs text-[#9aa0b8] leading-relaxed">Snap a photo — AI reads and extracts your medicines in seconds.</p>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative">
+          <RevealOnScroll delay={0.06}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative h-full">
             <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">02</div>
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#14b8a6]/10 text-[#5eead4] mb-4">
               <ShieldCheck className="h-5 w-5" />
             </div>
             <h4 className="text-sm font-bold text-white mb-2">AI Safety Check</h4>
             <p className="text-xs text-[#9aa0b8] leading-relaxed">Our AI verifies interactions and suggests affordable generic options.</p>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative">
+          <RevealOnScroll delay={0.1}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative h-full">
             <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">03</div>
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#10b981]/10 text-[#6ee7b7] mb-4">
               <i className="fas fa-box text-lg"></i>
             </div>
             <h4 className="text-sm font-bold text-white mb-2">Pack & Dispatch</h4>
             <p className="text-xs text-[#9aa0b8] leading-relaxed">Licensed pharmacists package and double-check your order.</p>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative">
+          <RevealOnScroll delay={0.14}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative h-full">
             <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">04</div>
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#14b8a6]/10 text-[#5eead4] mb-4">
               <Truck className="h-5 w-5" />
             </div>
             <h4 className="text-sm font-bold text-white mb-2">Smart Delivery</h4>
             <p className="text-xs text-[#9aa0b8] leading-relaxed">Route-optimised delivery brings it directly to your doorstep.</p>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
         </div>
       </section>
 

@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "AVP Emart — AI-Powered E-Commerce & Smart Shopping",
   description: "An AI-powered marketplace that compares live prices across Amazon, Flipkart, Reliance Digital, and Snapdeal, scores the best value with ML, and delivers it to your door.",
+  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({

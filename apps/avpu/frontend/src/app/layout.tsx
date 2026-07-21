@@ -4,6 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "AVP University (AVPU) — AI-Powered Digital Learning Hub",
   description: "Experience the next generation of education. AVPU leverages AI tutoring agents, automatic placements matchers, admissions recommendations, and custom study plans.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

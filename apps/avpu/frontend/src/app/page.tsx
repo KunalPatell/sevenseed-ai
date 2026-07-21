@@ -2,20 +2,32 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { 
-  GraduationCap, 
-  BookOpen, 
-  Map, 
-  Award, 
-  Cpu, 
-  ChevronDown, 
-  Search, 
+import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
+import { GlowCard } from "@/components/GlowCard";
+import { AIDemoWidget } from "@/components/AIDemoWidget";
+import {
+  GraduationCap,
+  BookOpen,
+  Map,
+  Award,
+  Cpu,
+  ChevronDown,
+  Search,
   Star,
   Activity,
   Briefcase
 } from "lucide-react";
+
+const HERO_STATS = [
+  { value: 12, suffix: "+", label: "AI Agents" },
+  { value: 98, suffix: "%", label: "Accuracy" },
+  { value: 24, suffix: "/7", label: "AI Tutor" },
+  { value: 50, suffix: "+", label: "Corporate Partners" },
+];
 
 export default function Home() {
   const [scrollPct, setScrollPct] = useState(0);
@@ -59,52 +71,70 @@ export default function Home() {
       {/* Hero Section */}
       <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-24 overflow-hidden bg-[#060609]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(99,102,241,0.18),transparent_60%)]" />
+        <div className="mesh-bg" />
         <div className="hero-grid" />
-        
+
         <div className="relative z-10 max-w-[900px] w-full flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#c7d2fe] bg-[#6366f1]/10 border border-[#6366f1]/25 mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold text-[#c7d2fe] bg-[#6366f1]/10 border border-[#6366f1]/25 mb-8"
+          >
             <Cpu className="h-3.5 w-3.5" />
             <span>AI Tutoring · Placement Matching · Career Roadmaps · Adaptive Assessments</span>
-          </div>
+          </motion.div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="text-4xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6"
+          >
             The future of learning powered by <br /><span className="grad">adaptive AI</span>
-          </h1>
+          </motion.h1>
 
-          <p className="text-sm md:text-lg text-[#9aa0b8] max-w-[670px] leading-relaxed mb-10">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+            className="text-sm md:text-lg text-[#9aa0b8] max-w-[670px] leading-relaxed mb-10"
+          >
             AVP University (AVPU) integrates clinical cognitive RAG, real-time code execution matching, and automated career counseling agents to deliver tailored academic success.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-wrap gap-4 justify-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-wrap gap-4 justify-center mb-16"
+          >
             <Link href="/app/" className="btn bg-gradient-to-r from-[#6366f1] to-[#3b82f6] hover:scale-[1.02] text-white font-semibold text-sm md:text-base px-6 py-3 rounded-lg shadow-[0_6px_22px_rgba(99,102,241,0.3)] transition-all duration-200">
               <i className="fas fa-rocket mr-2"></i> Access Student Portal
             </Link>
             <a href="#services" className="btn border border-white/15 bg-white/[0.03] text-white hover:bg-[#18182a] hover:border-[#6366f1]/50 text-sm md:text-base px-6 py-3 rounded-lg transition-all duration-200">
               <i className="fas fa-microchip mr-2"></i> Explore AI Agents
             </a>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-wrap items-center justify-center bg-[#12121e]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12">
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#c7d2fe] to-[#93c5fd] bg-clip-text text-transparent">12+</div>
-              <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">AI Agents</div>
-            </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#c7d2fe] to-[#93c5fd] bg-clip-text text-transparent">98%</div>
-              <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">Accuracy</div>
-            </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#c7d2fe] to-[#93c5fd] bg-clip-text text-transparent">24/7</div>
-              <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">AI Tutor</div>
-            </div>
-            <div className="w-[1px] self-stretch bg-white/5" />
-            <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
-              <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#c7d2fe] to-[#93c5fd] bg-clip-text text-transparent">50+</div>
-              <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">Corporate Partners</div>
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-wrap items-center justify-center bg-[#12121e]/60 border border-white/5 rounded-2xl overflow-hidden backdrop-blur-md mb-12"
+          >
+            {HERO_STATS.map((s, i) => (
+              <React.Fragment key={s.label}>
+                {i > 0 && <div className="w-[1px] self-stretch bg-white/5" />}
+                <div className="px-6 md:px-8 py-5 text-center min-w-[120px]">
+                  <div className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-[#c7d2fe] to-[#93c5fd] bg-clip-text text-transparent">
+                    <AnimatedCounter value={s.value} suffix={s.suffix} />
+                  </div>
+                  <div className="text-[10px] md:text-xs text-[#9aa0b8] uppercase tracking-wider font-semibold mt-1">{s.label}</div>
+                </div>
+              </React.Fragment>
+            ))}
+          </motion.div>
 
           <div className="w-full max-w-[760px] mask-image-gradient overflow-hidden select-none opacity-50">
             <div className="marquee-track text-[#5b5f78] text-xs font-mono font-semibold">
@@ -125,7 +155,7 @@ export default function Home() {
 
       {/* Pillars Band */}
       <section className="bg-[#0b0b12] border-y border-white/5 py-8 px-6 md:px-12">
-        <div className="max-w-[1180px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <RevealOnScroll className="max-w-[1180px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="flex gap-4 items-center">
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#6366f1]/15 text-[#c7d2fe] shrink-0">
               <BookOpen className="h-5 w-5" />
@@ -162,7 +192,7 @@ export default function Home() {
               <p className="text-xs text-[#9aa0b8] mt-0.5">Evaluates and scores student answers.</p>
             </div>
           </div>
-        </div>
+        </RevealOnScroll>
       </section>
 
       {/* AI Stack Strip */}
@@ -181,7 +211,7 @@ export default function Home() {
 
       {/* About Section */}
       <section className="max-w-[1180px] mx-auto py-24 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center" id="about">
-        <div className="lg:col-span-7 flex flex-col gap-4">
+        <RevealOnScroll className="lg:col-span-7 flex flex-col gap-4">
           <span className="eyebrow">Est. 2026 · AI-Powered Higher Education Hub</span>
           <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">Learn at your own pace. Supported by clinical AI.</h2>
           <p className="text-sm md:text-base text-[#9aa0b8] leading-relaxed mt-2">
@@ -190,8 +220,9 @@ export default function Home() {
           <p className="text-sm md:text-base text-[#9aa0b8] leading-relaxed">
             By keeping complete logs of learning chats, generated weekly study paths, and test scores in a local database, AVPU offers students a continuous, personalized workspace.
           </p>
-        </div>
-        <div className="lg:col-span-5 glow-card bg-gradient-to-br from-[#12121e] to-[#0d0d16] border border-white/5 rounded-2xl p-8">
+        </RevealOnScroll>
+        <RevealOnScroll delay={0.1} className="lg:col-span-5">
+        <GlowCard className="glow-card bg-gradient-to-br from-[#12121e] to-[#0d0d16] border border-white/5 rounded-2xl p-8">
           <div className="w-14 h-14 rounded-xl grid place-items-center text-white bg-gradient-to-br from-[#6366f1] to-[#3b82f6] shadow-[0_8px_24px_rgba(99,102,241,0.3)] mb-6">
             <GraduationCap className="h-6 w-6" />
           </div>
@@ -214,16 +245,20 @@ export default function Home() {
               <span>Admissions agent recommending matching university branches</span>
             </li>
           </ul>
-        </div>
+        </GlowCard>
+        </RevealOnScroll>
       </section>
 
       {/* AI Capabilities / Services */}
       <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="services">
+        <RevealOnScroll>
         <span className="eyebrow center block">AI CAPABILITIES</span>
         <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Academic tools that power your journey</h2>
-        
+        </RevealOnScroll>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <article className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col">
+          <RevealOnScroll delay={0.02}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#6366f1]/50 transition-all flex flex-col h-full">
             <div className="w-12 h-12 rounded-xl grid place-items-center bg-[#6366f1]/10 text-[#c7d2fe] mb-4">
               <BookOpen className="h-5 w-5" />
             </div>
@@ -234,9 +269,11 @@ export default function Home() {
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[#c7d2fe] bg-[#6366f1]/10 px-2.5 py-1 rounded-full w-fit">
               <Cpu className="h-3 w-3" /> LangGraph Tutor
             </span>
-          </article>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <article className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col">
+          <RevealOnScroll delay={0.06}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#6366f1]/50 transition-all flex flex-col h-full">
             <div className="w-12 h-12 rounded-xl grid place-items-center bg-[#3b82f6]/10 text-[#93c5fd] mb-4">
               <Briefcase className="h-5 w-5" />
             </div>
@@ -247,9 +284,11 @@ export default function Home() {
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[#93c5fd] bg-[#3b82f6]/10 px-2.5 py-1 rounded-full w-fit">
               <Cpu className="h-3 w-3" /> Career Agent
             </span>
-          </article>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <article className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col">
+          <RevealOnScroll delay={0.1}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#6366f1]/50 transition-all flex flex-col h-full">
             <div className="w-12 h-12 rounded-xl grid place-items-center bg-[#6366f1]/10 text-[#c7d2fe] mb-4">
               <Map className="h-5 w-5" />
             </div>
@@ -260,9 +299,11 @@ export default function Home() {
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[#c7d2fe] bg-[#6366f1]/10 px-2.5 py-1 rounded-full w-fit">
               <Cpu className="h-3 w-3" /> Roadmapping Agent
             </span>
-          </article>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <article className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col">
+          <RevealOnScroll delay={0.02}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#6366f1]/50 transition-all flex flex-col h-full">
             <div className="w-12 h-12 rounded-xl grid place-items-center bg-[#3b82f6]/10 text-[#93c5fd] mb-4">
               <Award className="h-5 w-5" />
             </div>
@@ -273,9 +314,11 @@ export default function Home() {
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[#93c5fd] bg-[#3b82f6]/10 px-2.5 py-1 rounded-full w-fit">
               <Cpu className="h-3 w-3" /> Grading Agent
             </span>
-          </article>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <article className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col">
+          <RevealOnScroll delay={0.06}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#6366f1]/50 transition-all flex flex-col h-full">
             <div className="w-12 h-12 rounded-xl grid place-items-center bg-[#6366f1]/10 text-[#c7d2fe] mb-4">
               <Search className="h-5 w-5" />
             </div>
@@ -286,9 +329,11 @@ export default function Home() {
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[#c7d2fe] bg-[#6366f1]/10 px-2.5 py-1 rounded-full w-fit">
               <Cpu className="h-3 w-3" /> Admissions Agent
             </span>
-          </article>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <article className="bg-[#12121e] border border-white/5 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-lg flex flex-col">
+          <RevealOnScroll delay={0.1}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 hover:border-[#6366f1]/50 transition-all flex flex-col h-full">
             <div className="w-12 h-12 rounded-xl grid place-items-center bg-[#3b82f6]/10 text-[#93c5fd] mb-4">
               <Activity className="h-5 w-5" />
             </div>
@@ -299,51 +344,66 @@ export default function Home() {
             <span className="inline-flex items-center gap-1.5 font-mono text-[10px] text-[#93c5fd] bg-[#3b82f6]/10 px-2.5 py-1 rounded-full w-fit">
               <Cpu className="h-3 w-3" /> Summarizer Agent
             </span>
-          </article>
+          </GlowCard>
+          </RevealOnScroll>
         </div>
+
+        <RevealOnScroll delay={0.15}>
+          <AIDemoWidget />
+        </RevealOnScroll>
       </section>
 
       {/* Process Section */}
       <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="process">
+        <RevealOnScroll>
         <span className="eyebrow center block">THE PROCESS</span>
         <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Learn smarter in four simple steps</h2>
-        
+        </RevealOnScroll>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative">
+          <RevealOnScroll delay={0.02}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative h-full">
             <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">01</div>
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#6366f1]/10 text-[#c7d2fe] mb-4">
               <Search className="h-5 w-5" />
             </div>
             <h4 className="text-sm font-bold text-white mb-2">Consult Admission</h4>
             <p className="text-xs text-[#9aa0b8] leading-relaxed">Let AI match your educational background to target university degrees.</p>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative">
+          <RevealOnScroll delay={0.06}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative h-full">
             <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">02</div>
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#3b82f6]/10 text-[#93c5fd] mb-4">
               <Map className="h-5 w-5" />
             </div>
             <h4 className="text-sm font-bold text-white mb-2">Build Roadmap</h4>
             <p className="text-xs text-[#9aa0b8] leading-relaxed">Enter your syllabus goal to generate structured weekly study blocks.</p>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative">
+          <RevealOnScroll delay={0.1}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative h-full">
             <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">03</div>
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#6366f1]/10 text-[#c7d2fe] mb-4">
               <BookOpen className="h-5 w-5" />
             </div>
             <h4 className="text-sm font-bold text-white mb-2">Tutoring & Quiz</h4>
             <p className="text-xs text-[#9aa0b8] leading-relaxed">Converse with the RAG tutor and evaluate your learning with assessments.</p>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
 
-          <div className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative">
+          <RevealOnScroll delay={0.14}>
+          <GlowCard className="bg-[#12121e] border border-white/5 rounded-2xl p-6 relative h-full">
             <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">04</div>
             <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#3b82f6]/10 text-[#93c5fd] mb-4">
               <Briefcase className="h-5 w-5" />
             </div>
             <h4 className="text-sm font-bold text-white mb-2">Get Placed</h4>
             <p className="text-xs text-[#9aa0b8] leading-relaxed">Match resume skills to hiring corporate partners in our database.</p>
-          </div>
+          </GlowCard>
+          </RevealOnScroll>
         </div>
       </section>
 

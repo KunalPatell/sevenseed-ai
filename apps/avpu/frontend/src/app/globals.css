@@ -132,6 +132,31 @@ body {
   display: none;
 }
 
+/* Hero mesh-gradient background */
+@keyframes meshDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-3%, 2%) scale(1.05); }
+}
+.mesh-bg {
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(var(--primary-rgb), 0.25), transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(var(--secondary-rgb), 0.18), transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(var(--primary-rgb), 0.15), transparent 40%);
+  filter: blur(60px);
+  animation: meshDrift 18s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mesh-bg,
+  .marquee-track {
+    animation: none;
+  }
+}
+
 /* ── Enterprise dashboard tool-panel helpers ───────────────────────── */
 @keyframes fade {
   from { opacity: 0; transform: translateY(6px); }

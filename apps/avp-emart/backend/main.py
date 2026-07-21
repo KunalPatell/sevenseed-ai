@@ -10,13 +10,14 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from app import config, db
+from app.ratelimit import check_rate_limit
 import comparator
 import agents
 
@@ -53,6 +54,9 @@ class CompareReq(BaseModel):
     n: int | None = 6
 
 class AssistantReq(BaseModel):
+    message: str
+
+class AssistantDemoReq(BaseModel):
     message: str
 
 class ReviewReq(BaseModel):
@@ -117,6 +121,18 @@ def compare(req: CompareReq):
 @app.post("/api/assistant")
 def assistant(req: AssistantReq):
     return agents.assistant(req.message)
+
+@app.post("/api/assistant/demo")
+def assistant_demo(req: AssistantDemoReq, request: Request):
+    # Public, unauthenticated teaser widget on the landing page — stricter limits,
+    # cheaper/faster model, no BYOK headers honored (see agents._demo_llm), and
+    # deliberately stateless: never touches wishlist/alerts/search history.
+    check_rate_limit(request, bucket="assistant_demo", limit=5, window_s=3600, global_limit=200)
+    if not req.message.strip():
+        raise HTTPException(status_code=400, detail="Please enter a product or question.")
+    if len(req.message) > 200:
+        raise HTTPException(status_code=400, detail="Input too long.")
+    return agents.assistant_demo(req.message)
 
 @app.post("/api/reviews")
 def reviews(req: ReviewReq):
