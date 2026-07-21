@@ -10,10 +10,10 @@
 | `sevenseed.onrender.com/avpu` | ✅ Live | ✅ Live | Cold start ~60s |
 | `sevenseed.onrender.com/breakdown` | ✅ Live | ✅ Live | Cold start ~60s |
 | `sevenseed.onrender.com/sevenforce` | ✅ Live | ✅ Live | Cold start ~60s |
-| `sevenseed.onrender.com/trust` | 🔄 Building | 🔄 Building | |
-| `sevenseed.onrender.com/pharmacy` | 🔄 Building | 🔄 Building | |
-| `sevenseed.onrender.com/comonk-ai` | 🔄 Deploying | 🔄 Deploying | New child process |
-| `comonk-ai.onrender.com` | ✅ Live | ✅ Live | Old separate service, keep |
+| `sevenseed.onrender.com/trust` | ✅ Live | ✅ Live | Cold start ~60s |
+| `sevenseed.onrender.com/pharmacy` | ✅ Live | ✅ Live | Cold start ~60s |
+| `sevenseed.onrender.com/comonk-ai` | ✅ Live | ✅ Live | Embedded iframe |
+| `comonk-ai.onrender.com` | ✅ Live | ✅ Live | Standalone service |
 
 ---
 
