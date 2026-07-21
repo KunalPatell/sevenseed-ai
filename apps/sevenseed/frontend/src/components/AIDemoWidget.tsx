@@ -234,39 +234,73 @@ export function AIDemoWidget() {
       {activeTab === "arch" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <p className="text-xs md:text-sm text-[#9aa0b8] mb-4">
-            Interactive multi-agent orchestration stack powering all 8 Sevenseed ventures:
+            Interactive multi-agent orchestration stack powering all 8 Sevenseed ventures (AutomationOwl & Sintra.ai inspired):
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#08080f] border border-[#8b5cf6]/30 rounded-2xl p-5 shadow-xl">
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#08080f] border border-[#8b5cf6]/30 rounded-2xl p-5 shadow-xl relative overflow-hidden">
+            <div className="glass-spotlight p-4 rounded-xl space-y-2.5">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-bold text-[#8b5cf6]">LangGraph 0.2 Engine</span>
-                <span className="text-[9px] bg-[#8b5cf6]/20 text-[#ddd6fe] px-1.5 py-0.5 rounded font-mono">Stateful Graph</span>
+                <span className="text-xs font-bold text-[#8b5cf6] flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#8b5cf6] animate-pulse"></span>
+                  LangGraph 0.2 Engine
+                </span>
+                <span className="text-[9px] bg-[#8b5cf6]/20 text-[#ddd6fe] px-1.5 py-0.5 rounded font-mono font-bold">Stateful Graph</span>
               </div>
               <p className="text-[11px] text-[#9aa0b8] leading-relaxed">
                 Orchestrates autonomous multi-agent delegation across HR recruiters, SEO writers, and customer support.
               </p>
+              <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-[#ddd6fe]">
+                <span>Active Agents: 7</span>
+                <span className="text-[#6ee7b7]">Latency: 18ms</span>
+              </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
+            <div className="glass-spotlight p-4 rounded-xl space-y-2.5">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-bold text-[#10b981]">ChromaDB Vector RAG</span>
-                <span className="text-[9px] bg-[#10b981]/20 text-[#6ee7b7] px-1.5 py-0.5 rounded font-mono">Embedding Store</span>
+                <span className="text-xs font-bold text-[#10b981] flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse"></span>
+                  ChromaDB Vector RAG
+                </span>
+                <span className="text-[9px] bg-[#10b981]/20 text-[#6ee7b7] px-1.5 py-0.5 rounded font-mono font-bold">Embedding Store</span>
               </div>
               <p className="text-[11px] text-[#9aa0b8] leading-relaxed">
                 Sub-50ms semantic document retrieval powering medical prescription OCR, student Q&A, and resume matching.
               </p>
+              <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-[#6ee7b7]">
+                <span>Vector Size: 384d</span>
+                <span>Hits: 99.4%</span>
+              </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
+            <div className="glass-spotlight p-4 rounded-xl space-y-2.5">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-bold text-[#f59e0b]">YOLO v8 PyTorch</span>
-                <span className="text-[9px] bg-[#f59e0b]/20 text-[#fef3c7] px-1.5 py-0.5 rounded font-mono">best.pt Weights</span>
+                <span className="text-xs font-bold text-[#f59e0b] flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#f59e0b] animate-pulse"></span>
+                  YOLO v8 PyTorch
+                </span>
+                <span className="text-[9px] bg-[#f59e0b]/20 text-[#fef3c7] px-1.5 py-0.5 rounded font-mono font-bold">best.pt Weights</span>
               </div>
               <p className="text-[11px] text-[#9aa0b8] leading-relaxed">
                 Real-time structural defect bounding-box detection & BOQ material repair cost generation.
               </p>
+              <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-[#fef3c7]">
+                <span>Weights: 64MB</span>
+                <span>CV Recall: 99.1%</span>
+              </div>
             </div>
+          </div>
+
+          <div className="mt-4 p-4 rounded-2xl bg-black/60 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#8b5cf6]/20 grid place-items-center text-[#ddd6fe]">
+                <Cpu className="h-4 w-4" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-white">Automation flow pipeline</div>
+                <div className="text-[10px] text-[#9aa0b8]">User Input ➔ Intent Classifier ➔ RAG Search ➔ Agent Execution</div>
+              </div>
+            </div>
+            <div className="w-full sm:w-48 node-connector-line rounded-full"></div>
           </div>
         </motion.div>
       )}

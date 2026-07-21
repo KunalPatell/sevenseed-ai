@@ -156,3 +156,65 @@ body {
     animation: none;
   }
 }
+
+/* Pro-Level Spotlight Mouse Glass Card (Inspired by AutomationOwl & Sintra.ai) */
+.glass-spotlight {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: rgba(18, 18, 30, 0.75);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+
+.glass-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(139, 92, 246, 0.18),
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-spotlight:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.glass-spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Connected Workflow Node Lines (Inspired by AutomationOwl) */
+.node-connector-line {
+  height: 2px;
+  background: linear-gradient(90deg, #8b5cf6, #10b981);
+  position: relative;
+  overflow: hidden;
+}
+
+.node-connector-line::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #ffffff, transparent);
+  animation: nodeFlow 2s linear infinite;
+}
+
+@keyframes nodeFlow {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
