@@ -126,24 +126,24 @@ export function AIDemoWidget() {
         <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
           <span className="text-xs">⚡</span>
           <div>
-            <div className="text-[10px] uppercase font-mono text-[#999]">Scan Speed</div>
-            <div className="text-xs font-bold text-[#6ee7b7] font-mono">24ms Latency</div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Live Tool</div>
+            <div className="text-xs font-bold text-[#6ee7b7] font-mono">AI Health Assistant</div>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
           <span className="text-xs">💊</span>
           <div>
-            <div className="text-[10px] uppercase font-mono text-[#999]">Rx Database</div>
-            <div className="text-xs font-bold text-white font-mono">140,000+ Indexed</div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Full Portal</div>
+            <div className="text-xs font-bold text-white font-mono">OCR + Interactions</div>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5 px-3">
           <span className="text-xs">🛡️</span>
           <div>
-            <div className="text-[10px] uppercase font-mono text-[#999]">Safety Score</div>
-            <div className="text-xs font-bold text-emerald-400 font-mono">99.8% Verified</div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Public Rate Limit</div>
+            <div className="text-xs font-bold text-emerald-400 font-mono">5 / hour</div>
           </div>
         </div>
       </div>
@@ -165,7 +165,7 @@ export function AIDemoWidget() {
               activeTab === "ocr" ? "bg-[#10b981] text-black shadow-[0_0_20px_rgba(16,185,129,0.5)] scale-[1.02]" : "text-[#9aa0b8] hover:text-white"
             }`}
           >
-            <FileText className="h-3.5 w-3.5" /> OCR Prescription Reader
+            <FileText className="h-3.5 w-3.5" /> OCR Reader (Example)
           </button>
           <button
             onClick={() => setActiveTab("assistant")}
@@ -190,7 +190,9 @@ export function AIDemoWidget() {
       {activeTab === "ocr" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <p className="text-xs md:text-sm text-[#9aa0b8] mb-4">
-            Select a sample medical prescription to test OCR extraction & drug compatibility analysis:
+            Real prescription scanning needs a signed-in session (medical output isn&apos;t something we hand to anonymous
+            visitors) — but here are two <strong className="text-white">fixed examples</strong> of what the AI Health Portal&apos;s
+            OCR + drug-safety engine actually produces once you&apos;re signed in:
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
@@ -205,15 +207,15 @@ export function AIDemoWidget() {
                 }`}
               >
                 <div className="text-xs font-bold text-white mb-1">{rx.doctor}</div>
-                <div className="text-[11px] text-[#6ee7b7] font-mono">{rx.medicines.length} Prescribed Medicines</div>
+                <div className="text-[11px] text-[#6ee7b7] font-mono">{rx.medicines.length} Prescribed Medicines · Example {rx.id === "rx1" ? "1" : "2"}</div>
               </button>
             ))}
           </div>
 
           <div className="bg-[#09090f] border border-[#10b981]/30 rounded-xl p-5">
             <div className="text-xs font-bold text-[#6ee7b7] uppercase tracking-wider mb-2 flex justify-between items-center">
-              <span>📄 OCR Extracted Items ({selectedRx.doctor})</span>
-              <span className="text-[10px] bg-[#10b981]/20 text-[#6ee7b7] px-2 py-0.5 rounded">Accuracy 98.2%</span>
+              <span>📄 Example Output ({selectedRx.doctor})</span>
+              <span className="text-[10px] bg-white/10 text-[#9aa0b8] px-2 py-0.5 rounded">Fixed Example</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">

@@ -13,20 +13,7 @@ const EXAMPLES = [
   "What documents do I need for admission?",
 ];
 
-const ROADMAPS = [
-  {
-    role: "AI / Machine Learning Engineer",
-    duration: "6 Months Intensive",
-    modules: ["Python & Math Foundations", "Deep Learning & PyTorch", "LLMs, LangChain & RAG Pipelines", "Model Deployment & FastAPI"],
-    salary: "₹12 – ₹24 LPA"
-  },
-  {
-    role: "Full-Stack Data Scientist",
-    duration: "5 Months",
-    modules: ["SQL & Feature Engineering", "Supervised/Unsupervised ML", "Computer Vision (OpenCV/YOLO)", "Interactive Streamlit Dashboards"],
-    salary: "₹10 – ₹18 LPA"
-  }
-];
+const ROADMAP_EXAMPLES = ["AI / Machine Learning Engineer", "Full-Stack Data Scientist", "Cloud DevOps Engineer"];
 
 function renderReply(text: string) {
   return text.split("\n").map((line, i) => (
@@ -54,7 +41,52 @@ export function AIDemoWidget() {
   const [result, setResult] = useState("");
 
   // Roadmap State
-  const [selectedRole, setSelectedRole] = useState(ROADMAPS[0]);
+  const [goal, setGoal] = useState("");
+  const [roadmapLoading, setRoadmapLoading] = useState(false);
+  const [roadmapError, setRoadmapError] = useState("");
+  const [roadmapPlan, setRoadmapPlan] = useState<string[]>([]);
+
+  // Placement State — real, adjustable, client-side computed (no AI claim, just honest math)
+  const [skills, setSkills] = useState({
+    python: 60,
+    deepLearning: 50,
+    langchain: 40,
+    fastapi: 50,
+  });
+  const readinessScore = Math.round(
+    (skills.python + skills.deepLearning + skills.langchain + skills.fastapi) / 4
+  );
+
+  async function runRoadmapDemo(e?: React.FormEvent) {
+    e?.preventDefault();
+    if (!goal.trim() || roadmapLoading) return;
+    setRoadmapLoading(true);
+    setRoadmapError("");
+    setRoadmapPlan([]);
+    try {
+      const res = await fetch(`${API_BASE}/api/roadmap/demo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ goal: goal.slice(0, 100) }),
+      });
+      if (res.status === 429) {
+        const data = await res.json().catch(() => null);
+        setRoadmapError(data?.detail || "This demo is popular right now — please try again in a moment.");
+        return;
+      }
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setRoadmapError(data?.detail || "Something went wrong. Please try again.");
+        return;
+      }
+      const data = await res.json();
+      setRoadmapPlan(data.plan || []);
+    } catch {
+      setRoadmapError("Couldn't reach the AI right now. Please try again shortly.");
+    } finally {
+      setRoadmapLoading(false);
+    }
+  }
 
   async function runDemo(e?: React.FormEvent) {
     e?.preventDefault();
@@ -109,24 +141,24 @@ export function AIDemoWidget() {
         <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
           <span className="text-xs">⚡</span>
           <div>
-            <div className="text-[10px] uppercase font-mono text-[#999]">Tutor Response</div>
-            <div className="text-xs font-bold text-[#93c5fd] font-mono">16ms Latency</div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Tutor Mode</div>
+            <div className="text-xs font-bold text-[#93c5fd] font-mono">RAG-Grounded</div>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
           <span className="text-xs">🎓</span>
           <div>
-            <div className="text-[10px] uppercase font-mono text-[#999]">AI Curriculum</div>
-            <div className="text-xs font-bold text-white font-mono">6 Months Adaptive</div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Demo Tools</div>
+            <div className="text-xs font-bold text-white font-mono">3 Live Widgets</div>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5 px-3">
           <span className="text-xs">🏆</span>
           <div>
-            <div className="text-[10px] uppercase font-mono text-[#999]">Placement Match</div>
-            <div className="text-xs font-bold text-emerald-400 font-mono">94.2% Tier-1</div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Public Rate Limit</div>
+            <div className="text-xs font-bold text-emerald-400 font-mono">5 / hour</div>
           </div>
         </div>
       </div>
@@ -229,45 +261,67 @@ export function AIDemoWidget() {
       {activeTab === "roadmap" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <p className="text-xs md:text-sm text-[#9aa0b8] mb-4">
-            Select a target AI career path to generate an adaptive curriculum roadmap:
+            Type a target career goal — our AI coach will draft a real 4-week starter roadmap, live.
           </p>
 
-          <div className="flex gap-2 mb-5">
-            {ROADMAPS.map((rm) => (
+          <div className="flex flex-wrap gap-2 mb-5">
+            {ROADMAP_EXAMPLES.map((ex) => (
               <button
-                key={rm.role}
-                onClick={() => setSelectedRole(rm)}
-                className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${
-                  selectedRole.role === rm.role
-                    ? "bg-[#6366f1]/20 border-[#6366f1] text-white shadow-md"
-                    : "bg-[#08080f] border-white/10 text-[#9aa0b8] hover:border-white/30"
-                }`}
+                key={ex}
+                type="button"
+                onClick={() => setGoal(ex)}
+                className="text-[11px] px-3 py-1.5 rounded-full border border-white/10 text-[#9aa0b8] hover:text-white hover:border-[#6366f1]/50 hover:bg-[#6366f1]/10 transition-all"
               >
-                {rm.role}
+                &ldquo;{ex}&rdquo;
               </button>
             ))}
           </div>
 
-          <div className="bg-[#08080f] border border-[#6366f1]/30 rounded-xl p-5">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-3">
-              <div>
-                <div className="text-sm font-bold text-white">{selectedRole.role} Roadmap</div>
-                <div className="text-xs text-[#93c5fd] font-mono mt-0.5">Duration: {selectedRole.duration}</div>
-              </div>
-              <span className="text-xs font-mono font-bold text-[#c7d2fe]">Target: {selectedRole.salary}</span>
-            </div>
+          <form onSubmit={runRoadmapDemo} className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              value={goal}
+              onChange={(e) => setGoal(e.target.value)}
+              placeholder="e.g. AI / Machine Learning Engineer"
+              maxLength={100}
+              required
+              className="flex-1 w-full px-4 py-3 bg-[#0d0d16] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#6366f1]"
+            />
+            <button
+              type="submit"
+              disabled={roadmapLoading || !goal.trim()}
+              className="btn w-full sm:w-fit px-6 py-3 rounded-lg bg-gradient-to-r from-[#6366f1] to-[#3b82f6] text-white font-semibold text-sm hover:scale-[1.02] transition-all disabled:opacity-50 flex items-center gap-2"
+            >
+              {roadmapLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Generate Roadmap"}
+            </button>
+          </form>
 
-            <div className="space-y-2">
-              {selectedRole.modules.map((m, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-2.5 rounded-lg bg-[#0d0d16] border border-white/5 text-xs text-white/90">
-                  <span className="w-5 h-5 rounded-full bg-[#6366f1]/20 border border-[#6366f1]/40 text-[#93c5fd] flex items-center justify-center font-bold text-[10px]">
-                    {idx + 1}
-                  </span>
-                  <span>{m}</span>
+          {roadmapError && <p className="text-xs text-[#fca5a5] font-medium mt-4 text-center">{roadmapError}</p>}
+
+          <AnimatePresence>
+            {roadmapPlan.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6 bg-[#08080f] border border-[#6366f1]/30 rounded-xl p-5"
+              >
+                <div className="text-[10px] font-bold tracking-wider text-[#93c5fd] uppercase mb-3">AI Generated · 4-Week Starter Plan</div>
+                <div className="space-y-2">
+                  {roadmapPlan.map((line, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-2.5 rounded-lg bg-[#0d0d16] border border-white/5 text-xs text-white/90">
+                      <span className="w-5 h-5 rounded-full bg-[#6366f1]/20 border border-[#6366f1]/40 text-[#93c5fd] flex items-center justify-center font-bold text-[10px] shrink-0">
+                        {idx + 1}
+                      </span>
+                      <span>{line}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+                <a href="/app/" className="inline-flex items-center gap-1.5 text-xs text-[#93c5fd] font-semibold mt-4 hover:underline">
+                  Get a full personalized multi-month roadmap in the Student Portal <ArrowRight className="h-3 w-3" />
+                </a>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       )}
 
@@ -275,83 +329,51 @@ export function AIDemoWidget() {
       {activeTab === "placement" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <p className="text-xs md:text-sm text-[#9aa0b8] mb-4">
-            Adjust your proficiency sliders to compute your instant AI Placement Readiness Score:
+            Drag the sliders to your real proficiency — the readiness score below is a live average, computed as you move them:
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#08080f] border border-[#6366f1]/30 rounded-2xl p-5 md:p-6 shadow-xl">
-            {/* Left: Skill Sliders */}
-            <div className="space-y-3">
-              <div>
-                <div className="flex justify-between text-xs text-white mb-1 font-mono">
-                  <span>Python & Data Pipelines</span>
-                  <span className="text-[#93c5fd]">90%</span>
+            {/* Left: Real, adjustable skill sliders */}
+            <div className="space-y-4">
+              {([
+                ["Python & Data Pipelines", "python"],
+                ["Deep Learning (PyTorch)", "deepLearning"],
+                ["LangChain & RAG Agents", "langchain"],
+                ["FastAPI & Vector DBs", "fastapi"],
+              ] as const).map(([label, key]) => (
+                <div key={key}>
+                  <div className="flex justify-between text-xs text-white mb-1 font-mono">
+                    <span>{label}</span>
+                    <span className="text-[#93c5fd]">{skills[key]}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={skills[key]}
+                    onChange={(e) => setSkills((s) => ({ ...s, [key]: Number(e.target.value) }))}
+                    className="w-full accent-[#6366f1]"
+                  />
                 </div>
-                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                  <div className="bg-gradient-to-r from-[#6366f1] to-[#3b82f6] h-full w-[90%]"></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-xs text-white mb-1 font-mono">
-                  <span>Deep Learning (PyTorch)</span>
-                  <span className="text-[#93c5fd]">85%</span>
-                </div>
-                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                  <div className="bg-gradient-to-r from-[#6366f1] to-[#3b82f6] h-full w-[85%]"></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-xs text-white mb-1 font-mono">
-                  <span>LangChain & RAG Agents</span>
-                  <span className="text-[#93c5fd]">92%</span>
-                </div>
-                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                  <div className="bg-gradient-to-r from-[#6366f1] to-[#3b82f6] h-full w-[92%]"></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-xs text-white mb-1 font-mono">
-                  <span>FastAPI & Vector DBs</span>
-                  <span className="text-[#93c5fd]">88%</span>
-                </div>
-                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                  <div className="bg-gradient-to-r from-[#6366f1] to-[#3b82f6] h-full w-[88%]"></div>
-                </div>
-              </div>
+              ))}
             </div>
 
-            {/* Right: Circular Score Gauge & Placement Matches */}
-            <div className="flex flex-col justify-between">
+            {/* Right: Live-computed score (honest client-side average, not AI-claimed) */}
+            <div className="flex flex-col justify-center">
               <div className="bg-[#0d0d16] border border-white/10 rounded-xl p-4 text-center">
                 <span className="text-[10px] font-mono text-[#93c5fd] font-bold uppercase tracking-wider block mb-1">
-                  AI PLACEMENT READINESS SCORE
+                  YOUR SELF-RATED READINESS AVERAGE
                 </span>
                 <div className="text-3xl font-black font-mono text-white my-1">
-                  88.75<span className="text-[#6366f1] text-lg">%</span>
+                  {readinessScore}<span className="text-[#6366f1] text-lg">%</span>
                 </div>
-                <span className="text-[11px] text-[#6ee7b7] font-semibold bg-[#10b981]/20 px-2.5 py-0.5 rounded-full inline-block">
-                  READY FOR TIER-1 AI ROLES
+                <span className="text-[11px] text-[#93c5fd]/80 block mt-2">
+                  Simple average of the 4 sliders above — a self-assessment, not an AI-computed score.
                 </span>
               </div>
-
-              <div className="mt-3 space-y-2 text-xs">
-                <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
-                  <div>
-                    <div className="font-bold text-white">Capermint Tech</div>
-                    <div className="text-[10px] text-[#93c5fd]">AI-ML Gaming Engineer</div>
-                  </div>
-                  <span className="text-xs font-mono font-bold text-[#6ee7b7]">94% Match</span>
-                </div>
-                <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
-                  <div>
-                    <div className="font-bold text-white">Elite Workforces</div>
-                    <div className="text-[10px] text-[#93c5fd]">AI Automation Lead</div>
-                  </div>
-                  <span className="text-xs font-mono font-bold text-[#6ee7b7]">91% Match</span>
-                </div>
-              </div>
+              <a href="/app/" className="inline-flex items-center justify-center gap-1.5 text-xs text-[#93c5fd] font-semibold mt-4 hover:underline">
+                Get a real AI skill assessment & placement matching in the Student Portal <ArrowRight className="h-3 w-3" />
+              </a>
             </div>
           </div>
         </motion.div>

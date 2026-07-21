@@ -88,6 +88,9 @@ class RoadmapReq(BaseModel):
     level: str | None = "beginner"
     weeks: int | None = 8
 
+class RoadmapDemoReq(BaseModel):
+    goal: str
+
 
 # ── Core AI Endpoints ─────────────────────────────────────────────────────────
 @app.get("/api/health")
@@ -161,6 +164,18 @@ def roadmap(req: RoadmapReq):
     result = agents.roadmap(req.goal, req.level or "beginner", req.weeks or 8)
     db.save_roadmap(req.goal, req.level or "beginner", req.weeks or 8, result)
     return result
+
+@app.post("/api/roadmap/demo")
+def roadmap_demo(req: RoadmapDemoReq, request: Request):
+    # Public, unauthenticated teaser — stricter limits, cheaper model, fixed at
+    # 4 weeks, stateless (never written to the roadmaps history table that
+    # backs the Student Portal's real roadmap generator).
+    check_rate_limit(request, bucket="roadmap_demo", limit=5, window_s=3600, global_limit=200)
+    if not req.goal.strip():
+        raise HTTPException(status_code=400, detail="A target goal is required.")
+    if len(req.goal) > 100:
+        raise HTTPException(status_code=400, detail="Goal is too long.")
+    return agents.roadmap_demo(req.goal)
 
 
 # ── Student Database History API ──────────────────────────────────────────────

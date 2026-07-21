@@ -14,14 +14,12 @@ const SCHOLARSHIPS = [
   {
     name: "AVP Merit-Cum-Means Higher Education Grant",
     grant: "₹50,000 / year",
-    eligibility: "Students pursuing B.Tech / MSc AI with annual family income < ₹3 Lakhs.",
-    match: "98% Match"
+    eligibility: "Students pursuing B.Tech / MSc AI with annual family income < ₹3 Lakhs."
   },
   {
     name: "Rural Digital Skills & Device Subsidy",
     grant: "Free Laptop + WiFi Pass",
-    eligibility: "Rural Gujarat students in Class 10-12 with > 75% score.",
-    match: "95% Match"
+    eligibility: "Rural Gujarat students in Class 10-12 with > 75% score."
   }
 ];
 
@@ -114,8 +112,8 @@ export function AIDemoWidget() {
         <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
           <span className="text-xs">⚡</span>
           <div>
-            <div className="text-[10px] uppercase font-mono text-[#999]">Response Speed</div>
-            <div className="text-xs font-bold text-[#fef3c7] font-mono">14ms Latency</div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Live Tool</div>
+            <div className="text-xs font-bold text-[#fef3c7] font-mono">AI Donor Bot</div>
           </div>
         </div>
 
@@ -130,8 +128,8 @@ export function AIDemoWidget() {
         <div className="flex items-center gap-2.5 px-3">
           <span className="text-xs">❤️</span>
           <div>
-            <div className="text-[10px] uppercase font-mono text-[#999]">Lives Impacted</div>
-            <div className="text-xs font-bold text-[#6ee7b7] font-mono">12,000+ Helped</div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Open Programs</div>
+            <div className="text-xs font-bold text-[#6ee7b7] font-mono">{SCHOLARSHIPS.length} Scholarships</div>
           </div>
         </div>
       </div>
@@ -169,7 +167,7 @@ export function AIDemoWidget() {
               activeTab === "scholarship" ? "bg-[#f43f5e] text-white shadow-[0_0_20px_rgba(244,63,94,0.5)] scale-[1.02]" : "text-[#c8bdc0] hover:text-white"
             }`}
           >
-            <HandHeart className="h-3.5 w-3.5" /> Scholarship Matcher
+            <HandHeart className="h-3.5 w-3.5" /> Scholarship Programs
           </button>
         </div>
       </div>
@@ -234,7 +232,7 @@ export function AIDemoWidget() {
       {activeTab === "scholarship" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <p className="text-xs md:text-sm text-[#c8bdc0] mb-4">
-            AI-matched welfare scholarships & community support programs:
+            Currently open welfare scholarships & community support programs — ask the AI Donor Bot if you want help figuring out which one fits you:
           </p>
 
           <div className="flex gap-2 mb-5">
@@ -259,7 +257,7 @@ export function AIDemoWidget() {
                 <div className="text-sm font-bold text-white">{selectedGrant.name}</div>
                 <div className="text-xs text-[#fef3c7] font-mono mt-0.5">Grant: {selectedGrant.grant}</div>
               </div>
-              <span className="px-2.5 py-1 rounded bg-[#f43f5e]/20 text-[#f43f5e] font-mono font-bold text-xs">{selectedGrant.match}</span>
+              <span className="px-2.5 py-1 rounded bg-white/10 text-[#c8bdc0] font-mono font-bold text-[10px]">Open Program</span>
             </div>
             <p className="text-xs text-[#c8bdc0]"><strong className="text-white">Eligibility Criteria:</strong> {selectedGrant.eligibility}</p>
           </div>
