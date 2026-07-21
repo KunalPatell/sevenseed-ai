@@ -4,6 +4,8 @@ from __future__ import annotations
 import os
 from typing import TypedDict, Annotated, List, Any
 import operator
+import cv2
+import numpy as np
 import rag
 
 from app.api_keys import groq_key_var, gemini_key_var, openai_key_var
@@ -342,38 +344,82 @@ def diagnose_defect(description):
             "defects": [], "source": "offline"}
 
 
-def diagnose_defect_image(image_path: str) -> dict:
-    CLASS_NAMES = {
-        0: "damage",
-        1: "object",
-        2: "wall_damage",
-        3: "tile_damage",
-        4: "switch_damage",
-        5: "radiator_damage",
-        6: "pipe_damage",
-        7: "appliance_damaged",
-        8: "broken_glass",
-        9: "wooden_damage"
-    }
-    
+_YOLO_CLASS_NAMES = {
+    0: "damage",
+    1: "object",
+    2: "wall_damage",
+    3: "tile_damage",
+    4: "switch_damage",
+    5: "radiator_damage",
+    6: "pipe_damage",
+    7: "appliance_damaged",
+    8: "broken_glass",
+    9: "wooden_damage"
+}
+
+_YOLO_NET = None
+
+def _get_yolo_net():
+    # cv2.dnn running an ONNX export, not ultralytics/torch - keeps this process's
+    # RAM footprint small enough for the shared Render instance (see best.onnx,
+    # converted once locally from best.pt; opencv-python-headless is already a
+    # dependency, so this adds zero new production packages).
+    global _YOLO_NET
+    if _YOLO_NET is None:
+        onnx_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "best.onnx")
+        if os.path.exists(onnx_path):
+            try:
+                _YOLO_NET = cv2.dnn.readNetFromONNX(onnx_path)
+            except Exception as e:
+                print(f"[YOLO ONNX load error] {e}")
+    return _YOLO_NET
+
+def _yolo_detect_classes(image_path: str, conf_threshold: float = 0.35, nms_threshold: float = 0.45) -> list[str]:
+    net = _get_yolo_net()
+    if net is None:
+        return []
+    img = cv2.imread(image_path)
+    if img is None:
+        return []
+    size = 640
+    blob = cv2.dnn.blobFromImage(img, scalefactor=1/255.0, size=(size, size), swapRB=True, crop=False)
+    net.setInput(blob)
+    output = net.forward()  # (1, 4+num_classes, 8400)
+    rows = output[0].T  # (8400, 4+num_classes)
+
+    boxes, scores, class_ids = [], [], []
+    for row in rows:
+        class_scores = row[4:]
+        class_id = int(np.argmax(class_scores))
+        confidence = float(class_scores[class_id])
+        if confidence >= conf_threshold:
+            cx, cy, bw, bh = row[0], row[1], row[2], row[3]
+            boxes.append([float(cx - bw / 2), float(cy - bh / 2), float(bw), float(bh)])
+            scores.append(confidence)
+            class_ids.append(class_id)
+
+    if not boxes:
+        return []
+    indices = cv2.dnn.NMSBoxes(boxes, scores, conf_threshold, nms_threshold)
+    detected = []
+    if len(indices) > 0:
+        for i in np.array(indices).flatten():
+            cid = class_ids[int(i)]
+            if cid in _YOLO_CLASS_NAMES:
+                detected.append(_YOLO_CLASS_NAMES[cid])
+    return list(set(detected))
+
+
+def diagnose_defect_image(image_path: str, demo: bool = False) -> dict:
     detected = []
     has_yolo = False
-    
-    best_pt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "best.pt")
-    if os.path.exists(best_pt_path):
-        try:
-            from ultralytics import YOLO
-            model = YOLO(best_pt_path)
-            results = model(image_path)
-            for r in results:
-                for box in r.boxes:
-                    cls_id = int(box.cls[0].item())
-                    if cls_id in CLASS_NAMES:
-                        detected.append(CLASS_NAMES[cls_id])
-            has_yolo = True
-        except Exception as e:
-            print(f"[YOLO Inference Error] {e}")
-            
+
+    try:
+        detected = _yolo_detect_classes(image_path)
+        has_yolo = _get_yolo_net() is not None
+    except Exception as e:
+        print(f"[YOLO Inference Error] {e}")
+
     if not detected:
         fname = os.path.basename(image_path).lower()
         if "wall" in fname: detected = ["wall_damage"]
@@ -482,9 +528,15 @@ def diagnose_defect_image(image_path: str) -> dict:
         "You are an expert building remediation engineer. Given a list of detected defect classes from a YOLO computer vision scan, "
         "write a detailed execution report: how to solve each defect step-by-step, exact material volumes required, and cost breakdown."
     )
+    if demo:
+        system_prompt = (
+            "You are Breakdown Factor's public AI defect-scan teaser. Given a list of detected defect classes from a "
+            "real YOLO computer vision scan of an uploaded photo, write a short remediation summary: what each defect "
+            "means and a rough next step. Keep it under 150 words total."
+        )
     user_prompt = f"Detected defect items:\n{llm_context}\n\nProvide the finalized remediation guidance report."
-    
-    llm_summary = _llm_text(system_prompt, user_prompt, t=0.4)
+
+    llm_summary = _llm_text_demo(system_prompt, user_prompt, t=0.4) if demo else _llm_text(system_prompt, user_prompt, t=0.4)
     
     if not llm_summary:
         report_lines = ["### AI Remediation Guidance Report", ""]

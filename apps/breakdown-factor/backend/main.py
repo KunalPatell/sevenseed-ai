@@ -153,6 +153,28 @@ async def scan_defect(file: UploadFile = File(...)):
             pass
     return res
 
+@app.post("/api/defect/scan/demo")
+async def scan_defect_demo(request: Request, file: UploadFile = File(...)):
+    # Public, unauthenticated teaser widget on the landing page - runs the same
+    # real YOLO model (via cv2.dnn/ONNX, not ultralytics/torch) but with a
+    # cheaper LLM summary, no persistence, and a hard file-size cap.
+    check_rate_limit(request, bucket="defect_scan_demo", limit=5, window_s=3600, global_limit=200)
+    content = await file.read()
+    if len(content) > 5 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="Image too large (max 5MB).")
+    import tempfile
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
+        tmp.write(content)
+        tmp_path = tmp.name
+    try:
+        res = agents.diagnose_defect_image(tmp_path, demo=True)
+    finally:
+        try:
+            os.unlink(tmp_path)
+        except:
+            pass
+    return res
+
 @app.get("/api/cost-items")
 def cost_items():
     from breakdown_data import COST_ITEMS

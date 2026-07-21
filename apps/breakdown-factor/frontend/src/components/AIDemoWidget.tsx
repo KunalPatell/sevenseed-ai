@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Loader2, Sparkles, HardHat, ArrowRight, Scan, ShieldAlert, Calculator, Upload, CheckCircle2, FileSpreadsheet, Activity, Cpu, Layers, ShieldCheck, Zap } from "lucide-react";
+import { Loader2, Sparkles, HardHat, ArrowRight, Scan, ShieldAlert, Calculator, Upload, FileSpreadsheet, Cpu, ShieldCheck, Zap } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 
 const EXAMPLES = [
@@ -11,56 +11,14 @@ const EXAMPLES = [
   { type: "Commercial Tech Office Fit-Out", area: 1500, location: "Gandhinagar" },
 ];
 
-const SAMPLE_DEFECTS = [
-  {
-    id: "wall",
-    name: "Structural Shear Crack",
-    class: "wall_structural_crack",
-    confidence: "96.4% YOLO Match",
-    severity: "CRITICAL HIGH",
-    color: "#ef4444",
-    bbox: { x: 30, y: 40, width: 140, height: 90 },
-    cost: "₹3,500 – ₹8,500",
-    solve: "Chisel loose plaster down to brick masonry, clean debris, pressure inject epoxy resin grout, install stainless steel stitching staples, and re-plaster with fiber-reinforced mortar.",
-    materials: ["15kg Non-shrink Epoxy Grout", "Stitching Staples (6-inch x 10 pcs)", "Fiber Mortar 25kg", "Bonding Agent 1L"]
-  },
-  {
-    id: "tile",
-    name: "Tile Lippage & Void Hollow",
-    class: "tile_hollow_debond",
-    confidence: "91.8% YOLO Match",
-    severity: "MEDIUM RISK",
-    color: "#f59e0b",
-    bbox: { x: 50, y: 30, width: 110, height: 110 },
-    cost: "₹2,200 – ₹5,000",
-    solve: "Remove damaged vitrified tile without breaking perimeter joint, clean mortar bed, apply Polymer Modified C2 Tile Adhesive, reset tile with levelling clips.",
-    materials: ["Vitrified Tile (600x600mm)", "C2 Tile Adhesive 20kg", "Epoxy Tile Grout 2kg", "Levelling Spacers"]
-  },
-  {
-    id: "pipe",
-    name: "CPVC Joint Micro-Leak",
-    class: "cpvc_pipe_leakage",
-    confidence: "94.2% YOLO Match",
-    severity: "HIGH URGENCY",
-    color: "#f97316",
-    bbox: { x: 70, y: 20, width: 80, height: 120 },
-    cost: "₹1,500 – ₹3,800",
-    solve: "Isolate main supply valve, cut damaged pipe elbow section, clean pipe ends with solvent primer, weld heavy-duty CPVC coupling, and perform 6 bar hydro pressure test.",
-    materials: ["1-inch CPVC Pipe (3 ft)", "Couplings & Elbows (2 pcs)", "CPVC Heavy Duty Solvent 100ml"]
-  },
-  {
-    id: "glass",
-    name: "Shattered Glazing Pane",
-    class: "broken_glass_pane",
-    confidence: "98.1% YOLO Match",
-    severity: "HIGH HAZARD",
-    color: "#ef4444",
-    bbox: { x: 20, y: 20, width: 160, height: 140 },
-    cost: "₹2,800 – ₹6,500",
-    solve: "Carefully remove broken glass fragments with suction pads, scrape old sealant bead, measure frame, install 6mm toughened glass with structural weather-proof silicone.",
-    materials: ["6mm Toughened Glass (Custom Cut)", "Structural Silicone Sealant", "Glazing Rubber Gaskets"]
-  }
-];
+type DefectScanResult = {
+  success: boolean;
+  yolo_active: boolean;
+  detected_classes: string[];
+  results: { name: string; solve: string; materials: string; cost_min: number; cost_max: number }[];
+  cost_range: string;
+  guidance: string;
+};
 
 function renderEstimate(text: string) {
   return text.split("\n").map((line, i) => (
@@ -89,8 +47,54 @@ export function AIDemoWidget() {
   const [error, setError] = useState("");
   const [result, setResult] = useState("");
 
-  // YOLO state
-  const [selectedDefect, setSelectedDefect] = useState<typeof SAMPLE_DEFECTS[0]>(SAMPLE_DEFECTS[0]);
+  // YOLO scan state
+  const [scanFile, setScanFile] = useState<File | null>(null);
+  const [scanPreview, setScanPreview] = useState<string>("");
+  const [scanLoading, setScanLoading] = useState(false);
+  const [scanError, setScanError] = useState("");
+  const [scanResult, setScanResult] = useState<DefectScanResult | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handleFileSelect(f: File | null) {
+    setScanFile(f);
+    setScanResult(null);
+    setScanError("");
+    if (f) setScanPreview(URL.createObjectURL(f));
+    else setScanPreview("");
+  }
+
+  async function runScan(e?: React.FormEvent) {
+    e?.preventDefault();
+    if (!scanFile || scanLoading) return;
+    if (scanFile.size > 5 * 1024 * 1024) {
+      setScanError("Image too large (max 5MB).");
+      return;
+    }
+    setScanLoading(true);
+    setScanError("");
+    setScanResult(null);
+    try {
+      const form = new FormData();
+      form.append("file", scanFile);
+      const res = await apiFetch("/api/defect/scan/demo", { method: "POST", body: form });
+      if (res.status === 429) {
+        const data = await res.json().catch(() => null);
+        setScanError(data?.detail || "This demo is popular right now — please try again in a moment.");
+        return;
+      }
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setScanError(data?.detail || "Something went wrong. Please try again.");
+        return;
+      }
+      const data = await res.json();
+      setScanResult(data);
+    } catch {
+      setScanError("Couldn't reach the AI right now. Please try again shortly.");
+    } finally {
+      setScanLoading(false);
+    }
+  }
 
   // Safety state
   const [safetyInput, setSafetyInput] = useState("");
@@ -186,7 +190,7 @@ export function AIDemoWidget() {
           <Cpu className="h-4 w-4 text-[#f97316]" />
           <div>
             <div className="text-[10px] uppercase font-mono text-[#999]">Model Weights</div>
-            <div className="text-xs font-bold text-white font-mono">best.pt (64MB)</div>
+            <div className="text-xs font-bold text-white font-mono">best.onnx (43MB)</div>
           </div>
         </div>
 
@@ -241,94 +245,93 @@ export function AIDemoWidget() {
       {activeTab === "yolo" && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
           <p className="text-xs md:text-sm text-[#c8c0b8] mb-5">
-            Select a structural defect class below to test live YOLOv8 model inference (`best.pt`) & material BOQ generator:
+            Upload a real photo of a site defect — cracks, tile damage, pipe leaks, broken glass — and our YOLO model
+            will detect it live, right here, no signup.
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-            {SAMPLE_DEFECTS.map((def) => (
-              <button
-                key={def.id}
-                onClick={() => setSelectedDefect(def)}
-                className={`p-4 rounded-2xl border text-left transition-all duration-300 relative overflow-hidden ${
-                  selectedDefect.id === def.id
-                    ? "bg-[#f59e0b]/20 border-[#f59e0b] text-white shadow-[0_0_25px_rgba(245,158,11,0.25)] scale-[1.02]"
-                    : "bg-white/[0.02] border-white/10 text-[#c8c0b8] hover:border-white/30 hover:bg-white/[0.05]"
-                }`}
-              >
-                <div className="text-xs font-bold text-white mb-1">{def.name}</div>
-                <div className="text-[10px] text-[#f59e0b] font-mono font-semibold">{def.confidence}</div>
-              </button>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-black/50 border border-[#f59e0b]/30 rounded-3xl p-6 md:p-8 shadow-2xl backdrop-blur-xl">
-            {/* Visualizer Frame */}
-            <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#0c0906] min-h-[240px] p-5 flex flex-col justify-between">
-              <div className="flex justify-between items-center text-[10px] font-mono text-[#999]">
+          <form onSubmit={runScan} className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-black/50 border border-[#f59e0b]/30 rounded-3xl p-6 md:p-8 shadow-2xl backdrop-blur-xl">
+            {/* Upload / Preview Frame */}
+            <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#0c0906] min-h-[240px] p-5 flex flex-col">
+              <div className="flex justify-between items-center text-[10px] font-mono text-[#999] mb-3">
                 <span>YOLOv8 Res: 640x640</span>
-                <span className="text-[#f59e0b] font-bold">Model: best.pt</span>
+                <span className="text-[#f59e0b] font-bold">Model: best.onnx</span>
               </div>
 
-              {/* Bounding Box Visual Overlay */}
-              <div className="relative w-full h-[160px] my-auto bg-[#050302] border border-white/5 rounded-xl overflow-hidden flex items-center justify-center">
-                <div
-                  className="absolute border-2 rounded transition-all duration-300 flex flex-col justify-between p-1.5 shadow-[0_0_15px_rgba(245,158,11,0.3)]"
-                  style={{
-                    borderColor: selectedDefect.color,
-                    backgroundColor: `${selectedDefect.color}25`,
-                    left: `${selectedDefect.bbox.x}px`,
-                    top: `${selectedDefect.bbox.y}px`,
-                    width: `${selectedDefect.bbox.width}px`,
-                    height: `${selectedDefect.bbox.height}px`
-                  }}
-                >
-                  <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded text-black font-mono self-start" style={{ backgroundColor: selectedDefect.color }}>
-                    {selectedDefect.class}
-                  </span>
-                  <span className="text-[9px] font-mono font-bold text-white self-end bg-black/80 px-1.5 py-0.5 rounded border border-white/20">
-                    {selectedDefect.confidence}
-                  </span>
-                </div>
-              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
+              />
+
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex-1 rounded-xl border-2 border-dashed border-white/15 hover:border-[#f59e0b]/60 transition-all flex items-center justify-center overflow-hidden bg-[#050302]"
+              >
+                {scanPreview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={scanPreview} alt="Selected defect photo" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="flex flex-col items-center gap-2 text-[#c8c0b8] py-10">
+                    <Upload className="h-6 w-6" />
+                    <span className="text-xs font-semibold">Click to upload a photo</span>
+                    <span className="text-[10px] text-[#7c7268]">JPG/PNG, up to 5MB</span>
+                  </div>
+                )}
+              </button>
+
+              <button
+                type="submit"
+                disabled={!scanFile || scanLoading}
+                className="mt-4 w-full px-6 py-3 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#f97316] text-black font-bold text-sm hover:scale-[1.02] transition-all disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2"
+              >
+                {scanLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" /> Scanning...
+                  </>
+                ) : (
+                  <>
+                    <Scan className="h-4 w-4" /> Scan for Defects
+                  </>
+                )}
+              </button>
+              {scanError && <p className="text-xs text-[#fca5a5] font-medium mt-3 text-center">{scanError}</p>}
             </div>
 
-            {/* Inspection Results & Material BOQ */}
+            {/* Inspection Results */}
             <div className="flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
-                  <div>
-                    <h5 className="text-lg font-extrabold text-white">{selectedDefect.name}</h5>
-                    <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-red-500/20 border border-red-500/40 text-red-400 mt-1.5 inline-block">
-                      {selectedDefect.severity}
-                    </span>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xs text-[#999] font-mono">Estimated Repair</div>
-                    <div className="text-lg font-extrabold font-mono text-[#f59e0b]">{selectedDefect.cost}</div>
-                  </div>
+              {!scanResult && !scanLoading && (
+                <div className="flex-1 flex items-center justify-center text-center text-xs text-[#7c7268] italic px-6">
+                  Upload a photo and hit &ldquo;Scan for Defects&rdquo; to see real detection results here.
                 </div>
-
-                <div className="space-y-4 text-xs">
-                  <div>
-                    <span className="text-[#fef3c7] font-bold block mb-1">🛠 Remediation Action:</span>
-                    <p className="text-[#c8c0b8] leading-relaxed">{selectedDefect.solve}</p>
-                  </div>
-
-                  <div>
-                    <span className="text-[#fef3c7] font-bold block mb-2">📦 Required Bill of Quantities (BOQ):</span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {selectedDefect.materials.map((mat, idx) => (
-                        <div key={idx} className="flex items-center gap-2 text-[#c8c0b8] bg-white/5 border border-white/10 px-3 py-2 rounded-xl text-[11px]">
-                          <CheckCircle2 className="h-3.5 w-3.5 text-[#f59e0b] shrink-0" />
-                          <span>{mat}</span>
-                        </div>
-                      ))}
+              )}
+              {scanResult && (
+                <div>
+                  <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+                    <div>
+                      <h5 className="text-lg font-extrabold text-white">
+                        {scanResult.detected_classes.length > 0
+                          ? scanResult.detected_classes.join(", ").replace(/_/g, " ")
+                          : "No defects detected"}
+                      </h5>
+                      <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 mt-1.5 inline-block">
+                        {scanResult.yolo_active ? "Real YOLO Inference" : "Fallback Heuristic"}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs text-[#999] font-mono">Estimated Repair</div>
+                      <div className="text-lg font-extrabold font-mono text-[#f59e0b]">{scanResult.cost_range}</div>
                     </div>
                   </div>
+                  <div className="text-xs text-[#c8c0b8] leading-relaxed max-h-[220px] overflow-y-auto pr-1">
+                    {renderEstimate(scanResult.guidance)}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
-          </div>
+          </form>
         </motion.div>
       )}
 

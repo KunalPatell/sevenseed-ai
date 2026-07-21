@@ -1,6 +1,6 @@
 1:"$Sreact.fragment"
-2:I[97367,["/avpu/_next/static/chunks/05-c3ty_6dwfk.js","/avpu/_next/static/chunks/14mrh2-p_w84d.js"],"ViewportBoundary"]
-3:I[97367,["/avpu/_next/static/chunks/05-c3ty_6dwfk.js","/avpu/_next/static/chunks/14mrh2-p_w84d.js"],"MetadataBoundary"]
+2:I[484,[],"ViewportBoundary"]
+3:I[484,[],"MetadataBoundary"]
 4:"$Sreact.suspense"
-5:I[27201,["/avpu/_next/static/chunks/05-c3ty_6dwfk.js","/avpu/_next/static/chunks/14mrh2-p_w84d.js"],"IconMark"]
-0:{"rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"AVP University (AVPU) — AI-Powered Digital Learning Hub"}],["$","meta","1",{"name":"description","content":"AVPU's AI Tutor, Gyan, answers syllabus questions with a RAG-grounded LangGraph pipeline, builds week-by-week study roadmaps, matches skills to placement partners, and grades assessments — all free to try."}],["$","link","2",{"rel":"icon","href":"/favicon.ico"}],["$","$L5","3",{}]]}]}]}],null]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"jzQWJGnuf_eiU0qnuKt9P"}
+5:I[6869,[],"IconMark"]
+0:{"rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"AVP University (AVPU) — AI-Powered Digital Learning Hub"}],["$","meta","1",{"name":"description","content":"AVPU's AI Tutor, Gyan, answers syllabus questions with a RAG-grounded LangGraph pipeline, builds week-by-week study roadmaps, matches skills to placement partners, and grades assessments — all free to try."}],["$","link","2",{"rel":"icon","href":"/favicon.ico"}],["$","$L5","3",{}]]}]}]}],null]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"-fFLw6zUQocFoDwzQRro3"}
