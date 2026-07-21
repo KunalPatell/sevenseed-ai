@@ -188,25 +188,42 @@ export function AIDemoWidget() {
         </motion.div>
       )}
 
-      {/* Tab 2: Agent Architecture */}
+      {/* Tab 2: Interactive Multi-Agent Architecture Graph */}
       {activeTab === "arch" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <p className="text-xs md:text-sm text-[#9aa0b8] mb-4">
-            Sevenseed shared multi-agent orchestration stack:
+            Interactive multi-agent orchestration stack powering all 8 Sevenseed ventures:
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="p-4 rounded-xl bg-[#08080f] border border-white/10">
-              <div className="text-xs font-bold text-[#8b5cf6] mb-1">LangGraph & LLaMA 3.3 70B</div>
-              <div className="text-[11px] text-[#9aa0b8]">Multi-agent stateful workflow graphs, tool calling & autonomous delegation.</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#08080f] border border-[#8b5cf6]/30 rounded-2xl p-5 shadow-xl">
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-[#8b5cf6]">LangGraph 0.2 Engine</span>
+                <span className="text-[9px] bg-[#8b5cf6]/20 text-[#ddd6fe] px-1.5 py-0.5 rounded font-mono">Stateful Graph</span>
+              </div>
+              <p className="text-[11px] text-[#9aa0b8] leading-relaxed">
+                Orchestrates autonomous multi-agent delegation across HR recruiters, SEO writers, and customer support.
+              </p>
             </div>
-            <div className="p-4 rounded-xl bg-[#08080f] border border-white/10">
-              <div className="text-xs font-bold text-[#10b981] mb-1">ChromaDB RAG Engine</div>
-              <div className="text-[11px] text-[#9aa0b8]">Vector search over company datasets, medical notes, and academic papers.</div>
+
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-[#10b981]">ChromaDB Vector RAG</span>
+                <span className="text-[9px] bg-[#10b981]/20 text-[#6ee7b7] px-1.5 py-0.5 rounded font-mono">Embedding Store</span>
+              </div>
+              <p className="text-[11px] text-[#9aa0b8] leading-relaxed">
+                Sub-50ms semantic document retrieval powering medical prescription OCR, student Q&A, and resume matching.
+              </p>
             </div>
-            <div className="p-4 rounded-xl bg-[#08080f] border border-white/10">
-              <div className="text-xs font-bold text-[#6366f1] mb-1">YOLO v8 Computer Vision</div>
-              <div className="text-[11px] text-[#9aa0b8]">Custom trained property defect detection model (`best.pt`) for construction auditing.</div>
+
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-[#f59e0b]">YOLO v8 PyTorch</span>
+                <span className="text-[9px] bg-[#f59e0b]/20 text-[#fef3c7] px-1.5 py-0.5 rounded font-mono">best.pt Weights</span>
+              </div>
+              <p className="text-[11px] text-[#9aa0b8] leading-relaxed">
+                Real-time structural defect bounding-box detection & BOQ material repair cost generation.
+              </p>
             </div>
           </div>
         </motion.div>

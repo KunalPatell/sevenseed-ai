@@ -42,7 +42,7 @@ function renderReply(text: string) {
 }
 
 export function AIDemoWidget() {
-  const [activeTab, setActiveTab] = useState<"donor" | "scholarship" | "impact">("donor");
+  const [activeTab, setActiveTab] = useState<"donor" | "scholarship" | "impact">("impact");
 
   // Donor State
   const [question, setQuestion] = useState("");
@@ -52,6 +52,14 @@ export function AIDemoWidget() {
 
   // Scholarship State
   const [selectedGrant, setSelectedGrant] = useState(SCHOLARSHIPS[0]);
+
+  // Impact Slider State
+  const [donationAmount, setDonationAmount] = useState(5000);
+
+  const studentsEducated = Math.floor(donationAmount / 1500);
+  const medicalKits = Math.floor(donationAmount / 500);
+  const mealsServed = Math.floor(donationAmount / 50);
+  const taxSavings = Math.round(donationAmount * 0.5 * 0.3);
 
   async function runDemo(e?: React.FormEvent) {
     e?.preventDefault();
@@ -216,25 +224,69 @@ export function AIDemoWidget() {
         </motion.div>
       )}
 
-      {/* Tab 3: Impact Tracker */}
+      {/* Tab 3: Interactive Impact Slider & 80G Receipt Preview */}
       {activeTab === "impact" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <p className="text-xs md:text-sm text-[#c8bdc0] mb-4">
-            Transparent breakdown of fund utilization (Audited AI Anomaly Detection):
+            Drag the slider to see your contribution&apos;s real-world tangible impact & 80G tax savings:
           </p>
 
-          <div className="grid grid-cols-3 gap-3">
-            <div className="p-4 rounded-xl bg-[#0a0507] border border-white/10 text-center">
-              <div className="text-xl font-extrabold text-[#f43f5e]">85%</div>
-              <div className="text-[10px] text-[#c8bdc0] font-mono uppercase mt-1">Direct Student Grants</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#0a0507] border border-[#f43f5e]/30 rounded-2xl p-5 md:p-6 shadow-xl">
+            {/* Left: Donation Amount Slider */}
+            <div>
+              <div className="flex justify-between items-center text-xs font-mono text-white mb-2">
+                <span>Contribution Amount:</span>
+                <span className="text-[#f43f5e] font-extrabold text-base">₹{donationAmount.toLocaleString("en-IN")}</span>
+              </div>
+              <input
+                type="range"
+                min={500}
+                max={50000}
+                step={500}
+                value={donationAmount}
+                onChange={(e) => setDonationAmount(Number(e.target.value))}
+                className="w-full accent-[#f43f5e] cursor-pointer mb-5"
+              />
+
+              <div className="space-y-2 text-xs">
+                <span className="text-[#fef3c7] font-bold block mb-1">🎁 Your Tangible Impact:</span>
+                <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
+                  <span className="text-[#c8bdc0]">🎓 Rural Students Educated:</span>
+                  <span className="font-bold text-white font-mono">{studentsEducated} Students (1 Year)</span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
+                  <span className="text-[#c8bdc0]">🩺 Free Medical Kits Delivered:</span>
+                  <span className="font-bold text-white font-mono">{medicalKits} Emergency Kits</span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
+                  <span className="text-[#c8bdc0]">🍲 Nutritious Meals Provided:</span>
+                  <span className="font-bold text-white font-mono">{mealsServed} Meals</span>
+                </div>
+              </div>
             </div>
-            <div className="p-4 rounded-xl bg-[#0a0507] border border-white/10 text-center">
-              <div className="text-xl font-extrabold text-[#f59e0b]">10%</div>
-              <div className="text-[10px] text-[#c8bdc0] font-mono uppercase mt-1">Healthcare Clinics</div>
-            </div>
-            <div className="p-4 rounded-xl bg-[#0a0507] border border-white/10 text-center">
-              <div className="text-xl font-extrabold text-[#6ee7b7]">5%</div>
-              <div className="text-[10px] text-[#c8bdc0] font-mono uppercase mt-1">Audit & Ops</div>
+
+            {/* Right: Instant 80G Tax Exemption Certificate Card */}
+            <div className="flex flex-col justify-between">
+              <div className="p-4 rounded-xl bg-[#14080b] border border-[#f43f5e]/40 space-y-2 text-xs">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                  <span className="text-[10px] font-mono text-[#f43f5e] font-bold uppercase tracking-wider">
+                    80G CERTIFICATE PREVIEW
+                  </span>
+                  <span className="text-[9px] bg-[#6ee7b7]/20 text-[#6ee7b7] px-2 py-0.5 rounded font-bold">
+                    Govt Recognized NGO
+                  </span>
+                </div>
+
+                <div className="text-white font-bold text-sm">AVP Charitable Trust (80G Exemption)</div>
+                <p className="text-[11px] text-[#c8bdc0] leading-relaxed">
+                  Under Section 80G of Income Tax Act, 50% of your donation (<strong>₹{(donationAmount * 0.5).toLocaleString("en-IN")}</strong>) is directly tax-deductible from taxable income.
+                </p>
+
+                <div className="pt-2 border-t border-white/10 flex justify-between items-center text-[11px] font-mono text-[#fef3c7]">
+                  <span>Estimated Tax Saved:</span>
+                  <span className="font-bold text-[#6ee7b7]">₹{taxSavings.toLocaleString("en-IN")} (at 30% slab)</span>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>

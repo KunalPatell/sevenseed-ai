@@ -17,16 +17,25 @@ const SAMPLE_PRESCRIPTIONS = [
   {
     id: "rx1",
     doctor: "Dr. A. K. Sharma (M.D. General Medicine)",
-    medicines: ["Amoxicillin 500mg (1-0-1 after food)", "Paracetamol 650mg (SOS for fever)", "Pantoprazole 40mg (1-0-0 before breakfast)"],
-    advice: "Drink plenty of water, complete 5-day antibiotic course.",
+    medicines: [
+      { name: "Amoxicillin 500mg", schedule: "1-0-1 (After Food)", risk: "Safe", icon: "💊" },
+      { name: "Paracetamol 650mg", schedule: "SOS (Fever > 100°F)", risk: "Safe", icon: "🌡️" },
+      { name: "Pantoprazole 40mg", schedule: "1-0-0 (Before Breakfast)", risk: "Safe", icon: "☕" }
+    ],
+    schedule: { morning: "Pantoprazole 40mg + Amoxicillin", afternoon: "Rest & Hydrate", evening: "Amoxicillin 500mg" },
+    advice: "Drink 3L water daily, complete 5-day antibiotic course.",
     safety: "No major drug-drug interactions detected between prescribed items."
   },
   {
     id: "rx2",
     doctor: "Dr. Meera Patel (Pediatrics)",
-    medicines: ["Cetirizine Syrup 5ml (0-0-1 at bedtime)", "Salbutamol Inhaler (2 puffs as needed)"],
-    advice: "Keep away from cold air & dust allergy triggers.",
-    safety: "Mild drowsiness expected with Cetirizine."
+    medicines: [
+      { name: "Cetirizine Syrup 5ml", schedule: "0-0-1 (Bedtime)", risk: "Mild Drowsiness", icon: "🌙" },
+      { name: "Salbutamol Inhaler", schedule: "2 Puffs (As Needed)", risk: "Monitor Pulse", icon: "🫁" }
+    ],
+    schedule: { morning: "Salbutamol Inhaler (if wheezing)", afternoon: "Avoid Cold Drinks", evening: "Cetirizine Syrup 5ml at bedtime" },
+    advice: "Keep child away from cold air & dust allergy triggers.",
+    safety: "Mild drowsiness expected with Cetirizine. Do not drive or operate machinery."
   }
 ];
 
@@ -53,7 +62,7 @@ function renderReply(text: string) {
 }
 
 export function AIDemoWidget() {
-  const [activeTab, setActiveTab] = useState<"assistant" | "ocr" | "emergency">("assistant");
+  const [activeTab, setActiveTab] = useState<"ocr" | "assistant" | "emergency">("ocr");
   
   // Assistant State
   const [question, setQuestion] = useState("");
@@ -109,20 +118,20 @@ export function AIDemoWidget() {
 
         <div className="flex gap-2 p-1 bg-[#09090f] rounded-xl border border-white/10">
           <button
-            onClick={() => setActiveTab("assistant")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-              activeTab === "assistant" ? "bg-[#10b981] text-white shadow-md" : "text-[#9aa0b8] hover:text-white"
-            }`}
-          >
-            <Stethoscope className="h-3.5 w-3.5" /> AI Health Assistant
-          </button>
-          <button
             onClick={() => setActiveTab("ocr")}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
               activeTab === "ocr" ? "bg-[#10b981] text-white shadow-md" : "text-[#9aa0b8] hover:text-white"
             }`}
           >
             <FileText className="h-3.5 w-3.5" /> OCR Prescription Reader
+          </button>
+          <button
+            onClick={() => setActiveTab("assistant")}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              activeTab === "assistant" ? "bg-[#10b981] text-white shadow-md" : "text-[#9aa0b8] hover:text-white"
+            }`}
+          >
+            <Stethoscope className="h-3.5 w-3.5" /> AI Health Assistant
           </button>
           <button
             onClick={() => setActiveTab("emergency")}
@@ -135,63 +144,7 @@ export function AIDemoWidget() {
         </div>
       </div>
 
-      {/* Tab 1: AI Health Assistant */}
-      {activeTab === "assistant" && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <p className="text-xs md:text-sm text-[#9aa0b8] mb-3">
-            Ask general health, wellness & medicine questions live:
-          </p>
-
-          <div className="flex flex-wrap gap-2 mb-5">
-            {EXAMPLES.map((ex) => (
-              <button
-                key={ex}
-                type="button"
-                onClick={() => setQuestion(ex)}
-                className="text-[11px] px-3 py-1.5 rounded-full border border-white/10 text-[#9aa0b8] hover:text-white hover:border-[#10b981]/50 hover:bg-[#10b981]/10 transition-all"
-              >
-                &ldquo;{ex}&rdquo;
-              </button>
-            ))}
-          </div>
-
-          <form onSubmit={runDemo} className="flex flex-col sm:flex-row gap-3">
-            <input
-              type="text"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ask a general health or medicine question..."
-              maxLength={300}
-              required
-              className="flex-1 w-full px-4 py-3 bg-[#0d0d16] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#10b981]"
-            />
-            <button
-              type="submit"
-              disabled={loading || !question.trim()}
-              className="btn w-full sm:w-fit px-6 py-3 rounded-lg bg-gradient-to-r from-[#10b981] to-[#14b8a6] text-white font-semibold text-sm hover:scale-[1.02] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Ask AI"}
-            </button>
-          </form>
-
-          {error && <p className="text-xs text-[#fca5a5] font-medium mt-4 text-center">{error}</p>}
-
-          <AnimatePresence>
-            {reply && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-6 bg-[#0d0d16] border border-[#10b981]/25 rounded-xl p-5"
-              >
-                <div className="text-[10px] font-bold tracking-wider text-[#6ee7b7] uppercase mb-3">AI Response</div>
-                <div className="text-sm text-[#eeeef8] leading-relaxed">{renderReply(reply)}</div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      )}
-
-      {/* Tab 2: OCR Prescription Reader */}
+      {/* Tab 1: OCR Prescription Reader */}
       {activeTab === "ocr" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <p className="text-xs md:text-sm text-[#9aa0b8] mb-4">
@@ -216,17 +169,23 @@ export function AIDemoWidget() {
           </div>
 
           <div className="bg-[#09090f] border border-[#10b981]/30 rounded-xl p-5">
-            <div className="text-xs font-bold text-[#6ee7b7] uppercase tracking-wider mb-2">
-              📄 OCR Extracted Items ({selectedRx.doctor})
+            <div className="text-xs font-bold text-[#6ee7b7] uppercase tracking-wider mb-2 flex justify-between items-center">
+              <span>📄 OCR Extracted Items ({selectedRx.doctor})</span>
+              <span className="text-[10px] bg-[#10b981]/20 text-[#6ee7b7] px-2 py-0.5 rounded">Accuracy 98.2%</span>
             </div>
-            <ul className="space-y-1.5 text-xs text-white/90 mb-4 list-disc list-inside">
-              {selectedRx.medicines.map((med, idx) => (
-                <li key={idx}>{med}</li>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
+              {selectedRx.medicines.map((m, idx) => (
+                <div key={idx} className="p-2.5 rounded-lg bg-white/5 border border-white/10 text-xs">
+                  <div className="font-bold text-white">{m.icon} {m.name}</div>
+                  <div className="text-[11px] text-[#6ee7b7] font-mono mt-0.5">{m.schedule}</div>
+                </div>
               ))}
-            </ul>
-            <div className="border-t border-white/10 pt-3 text-xs text-[#9aa0b8]">
+            </div>
+
+            <div className="border-t border-white/10 pt-3 text-xs text-[#9aa0b8] space-y-1.5">
               <p><strong className="text-white">Dosage Advice:</strong> {selectedRx.advice}</p>
-              <p className="mt-1"><strong className="text-[#6ee7b7]">Safety Check:</strong> {selectedRx.safety}</p>
+              <p><strong className="text-[#6ee7b7]">Safety & Drug Interaction:</strong> {selectedRx.safety}</p>
             </div>
           </div>
         </motion.div>

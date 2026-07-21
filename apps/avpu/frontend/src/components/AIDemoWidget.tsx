@@ -229,23 +229,87 @@ export function AIDemoWidget() {
         </motion.div>
       )}
 
-      {/* Tab 3: Placement Matcher */}
+      {/* Tab 3: Placement Readiness Dial & Skill Audit */}
       {activeTab === "placement" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <p className="text-xs md:text-sm text-[#9aa0b8] mb-4">
-            Semantic placement & hiring partner score card:
+            Adjust your proficiency sliders to compute your instant AI Placement Readiness Score:
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="p-4 rounded-xl bg-[#08080f] border border-white/10">
-              <div className="text-xs font-bold text-white mb-1">Capermint Technology</div>
-              <div className="text-xs text-[#93c5fd] font-mono mb-2">Role: AI-ML Gaming Engineer</div>
-              <div className="text-[11px] text-[#9aa0b8]">Match Score: <strong className="text-[#6366f1]">94% Match</strong> (Python, OpenCV, Reinforcement AI)</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#08080f] border border-[#6366f1]/30 rounded-2xl p-5 md:p-6 shadow-xl">
+            {/* Left: Skill Sliders */}
+            <div className="space-y-3">
+              <div>
+                <div className="flex justify-between text-xs text-white mb-1 font-mono">
+                  <span>Python & Data Pipelines</span>
+                  <span className="text-[#93c5fd]">90%</span>
+                </div>
+                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                  <div className="bg-gradient-to-r from-[#6366f1] to-[#3b82f6] h-full w-[90%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-xs text-white mb-1 font-mono">
+                  <span>Deep Learning (PyTorch)</span>
+                  <span className="text-[#93c5fd]">85%</span>
+                </div>
+                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                  <div className="bg-gradient-to-r from-[#6366f1] to-[#3b82f6] h-full w-[85%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-xs text-white mb-1 font-mono">
+                  <span>LangChain & RAG Agents</span>
+                  <span className="text-[#93c5fd]">92%</span>
+                </div>
+                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                  <div className="bg-gradient-to-r from-[#6366f1] to-[#3b82f6] h-full w-[92%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-xs text-white mb-1 font-mono">
+                  <span>FastAPI & Vector DBs</span>
+                  <span className="text-[#93c5fd]">88%</span>
+                </div>
+                <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                  <div className="bg-gradient-to-r from-[#6366f1] to-[#3b82f6] h-full w-[88%]"></div>
+                </div>
+              </div>
             </div>
-            <div className="p-4 rounded-xl bg-[#08080f] border border-white/10">
-              <div className="text-xs font-bold text-white mb-1">Elite Workforces Services</div>
-              <div className="text-xs text-[#93c5fd] font-mono mb-2">Role: AI Automation Engineer</div>
-              <div className="text-[11px] text-[#9aa0b8]">Match Score: <strong className="text-[#6366f1]">91% Match</strong> (n8n, LangChain, FastAPI)</div>
+
+            {/* Right: Circular Score Gauge & Placement Matches */}
+            <div className="flex flex-col justify-between">
+              <div className="bg-[#0d0d16] border border-white/10 rounded-xl p-4 text-center">
+                <span className="text-[10px] font-mono text-[#93c5fd] font-bold uppercase tracking-wider block mb-1">
+                  AI PLACEMENT READINESS SCORE
+                </span>
+                <div className="text-3xl font-black font-mono text-white my-1">
+                  88.75<span className="text-[#6366f1] text-lg">%</span>
+                </div>
+                <span className="text-[11px] text-[#6ee7b7] font-semibold bg-[#10b981]/20 px-2.5 py-0.5 rounded-full inline-block">
+                  READY FOR TIER-1 AI ROLES
+                </span>
+              </div>
+
+              <div className="mt-3 space-y-2 text-xs">
+                <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-white">Capermint Tech</div>
+                    <div className="text-[10px] text-[#93c5fd]">AI-ML Gaming Engineer</div>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-[#6ee7b7]">94% Match</span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-white">Elite Workforces</div>
+                    <div className="text-[10px] text-[#93c5fd]">AI Automation Lead</div>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-[#6ee7b7]">91% Match</span>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>

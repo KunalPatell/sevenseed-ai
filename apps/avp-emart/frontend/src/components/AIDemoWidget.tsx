@@ -15,23 +15,29 @@ const EXAMPLES = [
 const MATRIX_PRODUCTS = [
   {
     name: "Apple iPhone 15 (128GB)",
+    history: [69900, 68500, 67990, 66490, 64999, 64999, 63999],
+    dates: ["30d ago", "20d ago", "15d ago", "10d ago", "5d ago", "2d ago", "Today"],
     stores: [
-      { store: "Amazon", price: 65999, rating: 4.6, best: false },
-      { store: "Flipkart", price: 64999, rating: 4.7, best: true },
-      { store: "Reliance Digital", price: 66490, rating: 4.5, best: false },
-      { store: "Snapdeal", price: 67200, rating: 4.3, best: false },
+      { store: "Amazon", price: 65999, rating: 4.6, best: false, stock: "In Stock" },
+      { store: "Flipkart", price: 63999, rating: 4.7, best: true, stock: "3 Left!" },
+      { store: "Reliance Digital", price: 66490, rating: 4.5, best: false, stock: "In Stock" },
+      { store: "Snapdeal", price: 67200, rating: 4.3, best: false, stock: "In Stock" },
     ],
-    recommendation: "Buy on Flipkart for ₹64,999 + extra ₹1,500 bank discount."
+    bankOffer: "HDFC Card ₹3,000 Instant Cashback + No Cost EMI",
+    recommendation: "Buy on Flipkart for ₹63,999 — Lowest price in 30 days!"
   },
   {
     name: "Samsung Galaxy S24 FE 5G",
+    history: [59999, 58490, 57500, 56999, 55490, 54999, 53999],
+    dates: ["30d ago", "20d ago", "15d ago", "10d ago", "5d ago", "2d ago", "Today"],
     stores: [
-      { store: "Amazon", price: 54999, rating: 4.5, best: true },
-      { store: "Flipkart", price: 55490, rating: 4.4, best: false },
-      { store: "Reliance Digital", price: 56999, rating: 4.6, best: false },
-      { store: "Snapdeal", price: 57500, rating: 4.1, best: false },
+      { store: "Amazon", price: 53999, rating: 4.6, best: true, stock: "In Stock" },
+      { store: "Flipkart", price: 55490, rating: 4.4, best: false, stock: "In Stock" },
+      { store: "Reliance Digital", price: 56999, rating: 4.6, best: false, stock: "Limited" },
+      { store: "Snapdeal", price: 57500, rating: 4.1, best: false, stock: "In Stock" },
     ],
-    recommendation: "Amazon has lowest price ₹54,999 with free exchange bonus."
+    bankOffer: "ICICI Credit Card ₹2,500 Instant Cashback",
+    recommendation: "Amazon has lowest price ₹53,999 with free ₹4,000 exchange bonus."
   }
 ];
 
