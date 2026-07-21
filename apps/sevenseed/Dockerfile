@@ -89,13 +89,14 @@ COPY --chown=user apps/decode-forest-pharmacy/backend/ $HOME/app/apps/decode-for
 COPY --chown=user apps/sevenforce/backend/ $HOME/app/apps/sevenforce/backend/
 
 # Unified static tree the hub serves directly (prefixes match child_processes.CHILDREN)
-COPY --chown=user --from=sevenseed-frontend /app/sevenseed/out $HOME/app/apps/sevenseed/backend/static
-COPY --chown=user --from=emart-frontend /app/emart/out $HOME/app/apps/sevenseed/backend/static/avp-emart
-COPY --chown=user --from=avpu-frontend /app/avpu/out $HOME/app/apps/sevenseed/backend/static/avpu
-COPY --chown=user --from=breakdown-frontend /app/breakdown/out $HOME/app/apps/sevenseed/backend/static/breakdown
-COPY --chown=user --from=trust-frontend /app/trust/out $HOME/app/apps/sevenseed/backend/static/trust
-COPY --chown=user --from=pharmacy-frontend /app/pharmacy/out $HOME/app/apps/sevenseed/backend/static/pharmacy
+COPY --chown=user --from=sevenseed-frontend /app/sevenseed/out/ $HOME/app/apps/sevenseed/backend/static/
+COPY --chown=user --from=emart-frontend /app/emart/out/ $HOME/app/apps/sevenseed/backend/static/avp-emart/
+COPY --chown=user --from=avpu-frontend /app/avpu/out/ $HOME/app/apps/sevenseed/backend/static/avpu/
+COPY --chown=user --from=breakdown-frontend /app/breakdown/out/ $HOME/app/apps/sevenseed/backend/static/breakdown/
+COPY --chown=user --from=trust-frontend /app/trust/out/ $HOME/app/apps/sevenseed/backend/static/trust/
+COPY --chown=user --from=pharmacy-frontend /app/pharmacy/out/ $HOME/app/apps/sevenseed/backend/static/pharmacy/
 COPY --chown=user apps/sevenforce/backend/static/ $HOME/app/apps/sevenseed/backend/static/sevenforce/
+COPY --chown=user apps/comonk/frontend/ $HOME/app/apps/sevenseed/backend/static/comonk-ai/
 
 WORKDIR $HOME/app/apps/sevenseed/backend
 RUN chown -R user:user $HOME/app
