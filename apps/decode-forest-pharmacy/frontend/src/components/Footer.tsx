@@ -42,12 +42,14 @@ export function Footer() {
         <div className="flex flex-col gap-4">
           <h5 className="font-semibold text-sm text-white uppercase tracking-wider">The AI Group</h5>
           <ul className="flex flex-col gap-2.5 text-sm text-[#9aa0b8]">
-            <li><a href="https://comonk-ai.onrender.com" target="_blank" className="hover:text-[#eeeef8] transition-all">Comonk Technology</a></li>
-            <li><a href="https://sevenseed-ai.onrender.com" target="_blank" className="hover:text-[#eeeef8] transition-all">Sevenseed Studio</a></li>
-            <li><a href="https://avpu-ai.onrender.com" target="_blank" className="hover:text-[#eeeef8] transition-all">AVP University</a></li>
-            <li><span className="text-[#6ee7b7] font-semibold">Decode Forest Pharmacy</span></li>
-            <li><a href="https://breakdown-factor-ai.onrender.com" target="_blank" className="hover:text-[#eeeef8] transition-all">Breakdown Factor</a></li>
-            <li><a href="https://avp-trust-ai.onrender.com" target="_blank" className="hover:text-[#eeeef8] transition-all">AVP Charitable Trust</a></li>
+            <li><a href="/comonk-ai/" className="hover:text-[#eeeef8] transition-all">Comonk Technology</a></li>
+            <li><a href="/" className="hover:text-[#eeeef8] transition-all">Sevenseed Studio</a></li>
+            <li><a href="/avp-emart/" className="hover:text-[#eeeef8] transition-all">AVP Emart</a></li>
+            <li><a href="/pharmacy/" className="hover:text-[#eeeef8] transition-all">Decode Forest Pharmacy</a></li>
+            <li><a href="/breakdown/" className="hover:text-[#eeeef8] transition-all">Breakdown Factor</a></li>
+            <li><a href="/trust/" className="hover:text-[#eeeef8] transition-all">AVP Charitable Trust</a></li>
+            <li><a href="/avpu/" className="hover:text-[#eeeef8] transition-all">AVP University</a></li>
+            <li><a href="/sevenforce/" className="hover:text-[#eeeef8] transition-all">Sevenforce</a></li>
           </ul>
         </div>
 
