@@ -1,50 +1,113 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  AVP Emart — Smart Price Comparison Marketplace
+  Theme: Deep Space + Electric Indigo + Cyan + Gold
+  Aesthetic: Premium intelligence platform, not just a price tracker
+*/
 
 :root {
-  --bg: #060609;
-  --bg-1: #0d0d16;
-  --bg-2: #12121e;
-  --bg-3: #18182a;
-  --border: rgba(255, 255, 255, 0.07);
-  --border-hi: rgba(255, 255, 255, 0.14);
-  --text: #eeeef8;
-  --text-2: #9aa0b8;
-  --text-3: #5b5f78;
-  --primary: #ea580c;
-  --primary-l: #fdba74;
-  --secondary: #10b981;
-  --secondary-l: #6ee7b7;
-  --primary-rgb: 234, 88, 12;
-  --secondary-rgb: 16, 185, 129;
+  --bg: #04040c;
+  --bg-1: #08081a;
+  --bg-2: #0d0d24;
+  --indigo: #6366f1;
+  --indigo-l: #c7d2fe;
+  --indigo-d: #4f46e5;
+  --indigo-rgb: 99, 102, 241;
+  --cyan: #22d3ee;
+  --cyan-rgb: 34, 211, 238;
+  --pink: #ec4899;
+  --pink-rgb: 236, 72, 153;
+  --gold: #f59e0b;
+  --gold-rgb: 245, 158, 11;
+  --text: #eef2ff;
+  --text-2: #a5b4fc;
+  --text-3: #6471c4;
+  --border: rgba(99, 102, 241, 0.12);
+  --border-hi: rgba(99, 102, 241, 0.35);
+  --maxw: 1200px;
+  --nav-h: 68px;
   --radius: 16px;
   --radius-sm: 10px;
-  --shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.6);
-  --maxw: 1180px;
-  --nav-h: 66px;
-  --t: 0.25s ease;
+  --t: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom visual utilities from the Comonk/Sevenseed design system */
+/* ── Star field bg ──────────────────────────────────────── */
+.star-field {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(34,211,238,0.04) 0%, transparent 40%),
+    radial-gradient(circle at 20% 70%, rgba(236,72,153,0.04) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Grid overlay ─────────────────────────────────────────── */
+.space-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black, transparent 80%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Gradient text ─────────────────────────────────────────── */
 .grad {
-  background: linear-gradient(115deg, var(--primary-l), var(--secondary-l));
+  background: linear-gradient(115deg, var(--indigo-l) 0%, var(--cyan) 50%, var(--indigo) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.grad-gold {
+  background: linear-gradient(115deg, #fef3c7 0%, var(--gold) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Glow effects */
+/* ── Eyebrow ────────────────────────────────────────────── */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(var(--indigo-rgb), 0.1);
+  border: 1px solid rgba(var(--indigo-rgb), 0.3);
+  color: var(--indigo-l);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-family: monospace;
+}
+.eyebrow.center { display: flex; justify-content: center; }
+
+/* ── Glow Card ──────────────────────────────────────────── */
 .glow-card {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.3s ease;
 }
 .glow-card::before {
   content: "";
@@ -52,75 +115,103 @@ body {
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.25), rgba(var(--secondary-rgb), 0.1));
+  background: linear-gradient(135deg,
+    rgba(var(--indigo-rgb), 0.4) 0%,
+    rgba(var(--cyan-rgb), 0.1) 50%,
+    transparent 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
+  opacity: 0.35;
+  transition: opacity 0.3s;
 }
+.glow-card:hover { transform: translateY(-2px); }
+.glow-card:hover::before { opacity: 1; }
 
-/* Scroll progress indicator */
+/* ── Scroll progress ────────────────────────────────────── */
 .scroll-progress {
   position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--indigo), var(--cyan));
   z-index: 1000;
-  width: 0%;
-  transition: width 0.1s ease;
+  transition: width 0.1s linear;
 }
 
-/* Background grid */
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  background-image: 
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 50px 50px;
-  background-position: center;
-  mask-image: radial-gradient(circle at center, black, transparent 80%);
-  z-index: 0;
-  pointer-events: none;
+/* ── Buttons ────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 28px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-d) 100%);
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 0 30px rgba(var(--indigo-rgb), 0.4);
+  transition: all var(--t);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  border: none;
+}
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 0 50px rgba(var(--indigo-rgb), 0.6);
 }
 
-/* Scramble effect keyframes */
-@keyframes marquee {
-  to { transform: translateX(-50%); }
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 28px;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--indigo-rgb), 0.25);
+  background: rgba(var(--indigo-rgb), 0.05);
+  color: var(--indigo-l);
+  font-weight: 700;
+  font-size: 13px;
+  backdrop-filter: blur(10px);
+  transition: all var(--t);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-ghost:hover {
+  border-color: rgba(var(--indigo-rgb), 0.5);
+  background: rgba(var(--indigo-rgb), 0.12);
+  transform: translateY(-2px);
 }
 
-.marquee-track {
-  display: flex;
-  gap: 28px;
-  width: max-content;
-  animation: marquee 35s linear infinite;
-}
-
-/* Interactive custom elements */
+/* ── Card ───────────────────────────────────────────────── */
 .tcard {
   background: var(--bg-2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 24px;
-  box-shadow: var(--shadow);
 }
 
+/* ── FAQ ────────────────────────────────────────────────── */
 .faq-list details {
   background: var(--bg-1);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 16px 20px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   cursor: pointer;
   transition: all var(--t);
 }
 .faq-list details[open] {
-  border-color: rgba(var(--primary-rgb), 0.3);
+  border-color: rgba(var(--indigo-rgb), 0.35);
   background: var(--bg-2);
 }
-
 .faq-summary {
   display: flex;
   align-items: center;
@@ -128,113 +219,39 @@ body {
   font-weight: 600;
   list-style: none;
 }
-.faq-summary::-webkit-details-marker {
-  display: none;
-}
+.faq-summary::-webkit-details-marker { display: none; }
 
-/* Hero mesh-gradient background */
-@keyframes meshDrift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50%      { transform: translate(-3%, 2%) scale(1.05); }
-}
-.mesh-bg {
-  position: absolute;
-  inset: -10%;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(var(--primary-rgb), 0.25), transparent 40%),
-    radial-gradient(circle at 80% 30%, rgba(var(--secondary-rgb), 0.18), transparent 45%),
-    radial-gradient(circle at 50% 80%, rgba(var(--primary-rgb), 0.15), transparent 40%);
-  filter: blur(60px);
-  animation: meshDrift 18s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mesh-bg,
-  .marquee-track {
-    animation: none;
-  }
-}
-
-/* ── Val — AI value-scout persona orb (hero + AI capabilities section) ────── */
-.val-orb-blob {
-  position: relative;
-  width: 100%;
-  height: 100%;
+/* ── Marquee ────────────────────────────────────────────── */
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee-track {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 42% 58% 63% 37% / 45% 41% 59% 55%;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  box-shadow: 0 10px 34px rgba(var(--primary-rgb), 0.35);
-  animation: valBlobMorph 9s ease-in-out infinite;
+  gap: 32px;
+  width: max-content;
+  animation: marquee 32s linear infinite;
 }
 
-@keyframes valBlobMorph {
-  0%, 100% { border-radius: 42% 58% 63% 37% / 45% 41% 59% 55%; }
-  33%      { border-radius: 63% 37% 41% 59% / 55% 62% 38% 45%; }
-  66%      { border-radius: 50% 50% 34% 66% / 40% 60% 40% 60%; }
+/* ── Float ──────────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
 }
+.float-anim { animation: float 4s ease-in-out infinite; }
 
-.val-orb-orbit {
-  position: absolute;
-  inset: 0;
-  animation: valOrbit 16s linear infinite;
+/* ── Score bar animation ───────────────────────────────── */
+@keyframes scoreGrow {
+  from { width: 0%; }
 }
+.score-bar { animation: scoreGrow 1.2s ease-out forwards; }
 
-@keyframes valOrbit {
-  to { transform: rotate(360deg); }
+/* ── Val Orb compat ─────────────────────────────────────── */
+@keyframes valSpin { to { transform: rotate(360deg); } }
+.val-ring { transform-box: fill-box; transform-origin: center; animation: valSpin 20s linear infinite; }
+@keyframes valPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.04); }
 }
-
-.val-orb-dot {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 6px;
-  height: 6px;
-  margin: -3px 0 0 -3px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.55);
-}
-.val-orb-dot-1 { transform: rotate(20deg) translateX(var(--orbit-r, 60px)); }
-.val-orb-dot-2 { transform: rotate(110deg) translateX(var(--orbit-r, 60px)); }
-.val-orb-dot-3 { transform: rotate(200deg) translateX(var(--orbit-r, 60px)); }
-.val-orb-dot-4 { transform: rotate(290deg) translateX(var(--orbit-r, 60px)); }
-.val-orb-dot-best {
-  width: 8px;
-  height: 8px;
-  margin: -4px 0 0 -4px;
-  background: var(--secondary-l);
-  box-shadow: 0 0 10px 2px rgba(var(--secondary-rgb), 0.7);
-  animation: valDotPulse 2.4s ease-in-out infinite;
-}
-@keyframes valDotPulse {
-  0%, 100% { opacity: 0.7; transform: rotate(290deg) translateX(var(--orbit-r, 60px)) scale(1); }
-  50%      { opacity: 1; transform: rotate(290deg) translateX(var(--orbit-r, 60px)) scale(1.35); }
-}
-
-.val-orb-sweep {
-  animation: valSweep 4s linear infinite;
-}
-@keyframes valSweep {
-  to { transform: rotate(360deg); }
-}
-
-.val-orb-check {
-  animation: valCheckPulse 4s ease-in-out infinite;
-}
-@keyframes valCheckPulse {
-  0%, 70%, 100% { opacity: 0.35; }
-  80%, 95%      { opacity: 1; }
-}
+.val-core { transform-box: fill-box; transform-origin: center; animation: valPulse 3s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .val-orb-blob,
-  .val-orb-orbit,
-  .val-orb-dot-best,
-  .val-orb-sweep,
-  .val-orb-check {
-    animation: none;
-  }
+  .val-ring, .val-core, .marquee-track, .float-anim { animation: none; }
 }

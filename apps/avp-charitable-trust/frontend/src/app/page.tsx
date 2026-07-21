@@ -1,24 +1,109 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { GlowCard } from "@/components/GlowCard";
 import { AIDemoWidget } from "@/components/AIDemoWidget";
-import { AshaAvatar } from "@/components/AshaAvatar";
-import { ImpactFlowDiagram } from "@/components/ImpactFlowDiagram";
+import { TrustOrb } from "@/components/TrustOrb";
 import {
-  Heart,
-  Layers,
-  Lightbulb,
-  Rocket,
-  ChevronDown,
-  Star,
+  Heart, Shield, Receipt, Users, Award, BookOpen,
+  ChevronDown, Star, ArrowRight, CheckCircle2, FileCheck,
+  Building2, Sparkles, HandHeart, Scale,
 } from "lucide-react";
 
+// ════════════════════════════════════════════════════════════
+//  LIVE 80G TAX RECEIPT & IMPACT VISUAL
+// ════════════════════════════════════════════════════════════
+function ImpactGeneratorVisual() {
+  const [donationAmt, setDonationAmt] = useState(10000);
+  const taxExemption = Math.round(donationAmt * 0.5); // 50% under 80G
+  const mealsProvided = Math.round(donationAmt / 40);
+  const healthCheckups = Math.round(donationAmt / 500);
+
+  return (
+    <div className="w-full rounded-2xl overflow-hidden border border-[rgba(245,158,11,0.25)] bg-[#120c06] shadow-[0_0_80px_rgba(245,158,11,0.08)]">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 bg-[#181109] border-b border-[rgba(245,158,11,0.12)]">
+        <div className="flex items-center gap-2">
+          <Heart className="h-4 w-4 text-[#f59e0b] fill-[#f59e0b]" />
+          <span className="text-[10px] font-mono font-bold text-[#f59e0b] uppercase tracking-widest">
+            AVP TRUST · 80G TAX & IMPACT CALCULATOR
+          </span>
+        </div>
+        <span className="text-[9px] font-mono text-[#22c55e]">VERIFIED 80G APPROVED</span>
+      </div>
+
+      {/* Interactive Slider */}
+      <div className="p-5 flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-semibold text-[#a3957f]">Select Donation Amount:</span>
+          <span className="text-xl font-black text-white font-mono">₹{donationAmt.toLocaleString()}</span>
+        </div>
+
+        <input
+          type="range"
+          min="1000"
+          max="100000"
+          step="1000"
+          value={donationAmt}
+          onChange={e => setDonationAmt(Number(e.target.value))}
+          className="w-full h-2 bg-[#20170d] rounded-lg appearance-none cursor-pointer accent-[#f59e0b]"
+        />
+
+        <div className="flex justify-between text-[10px] font-mono text-[#a3957f]">
+          <span>₹1,000</span>
+          <span>₹50,000</span>
+          <span>₹1,00,000</span>
+        </div>
+
+        {/* Impact Output Cards */}
+        <div className="grid grid-cols-2 gap-3 mt-1">
+          <div className="rounded-xl p-3 bg-[#1a120a] border border-[rgba(245,158,11,0.15)]">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#22c55e] mb-1">
+              <Receipt className="h-3.5 w-3.5" /> 80G TAX DEDUCTION
+            </div>
+            <div className="text-lg font-black text-white font-mono">₹{taxExemption.toLocaleString()}</div>
+            <div className="text-[9px] text-[#a3957f]">50% Tax Exemption Benefit</div>
+          </div>
+
+          <div className="rounded-xl p-3 bg-[#1a120a] border border-[rgba(245,158,11,0.15)]">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#f59e0b] mb-1">
+              <HandHeart className="h-3.5 w-3.5" /> COMMUNITY IMPACT
+            </div>
+            <div className="text-lg font-black text-white font-mono">{mealsProvided} Meals</div>
+            <div className="text-[9px] text-[#a3957f]">or {healthCheckups} Free Health Audits</div>
+          </div>
+        </div>
+
+        {/* Mock Tax Receipt Badge */}
+        <div className="rounded-xl p-3 bg-[#181109] border border-dashed border-[rgba(245,158,11,0.3)] flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <FileCheck className="h-4 w-4 text-[#f59e0b]" />
+            <div>
+              <div className="font-bold text-white text-[11px]">Instant 80G Certificate PDF</div>
+              <div className="text-[9px] text-[#a3957f]">Govt Reg: AABTA1234F20261</div>
+            </div>
+          </div>
+          <span className="text-[10px] font-mono font-bold text-[#f59e0b] bg-[rgba(245,158,11,0.1)] px-2 py-1 rounded">AUTO-GENERATE</span>
+        </div>
+      </div>
+
+      {/* Trust Footer */}
+      <div className="px-4 py-2.5 bg-[#181109] border-t border-[rgba(245,158,11,0.12)] flex items-center justify-between text-[9px] font-mono text-[#a3957f]">
+        <span>100% TRANSPARENT PUBLIC LEDGER</span>
+        <span>0% ADMINISTRATIVE CUT</span>
+      </div>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════════════════════════
+//  MAIN PAGE
+// ════════════════════════════════════════════════════════════
 export default function Home() {
   const [scrollPct, setScrollPct] = useState(0);
   const [contactName, setContactName] = useState("");
@@ -27,339 +112,257 @@ export default function Home() {
   const [feedbackMsg, setFeedbackMsg] = useState("");
 
   useEffect(() => {
-    const handleScroll = () => {
-      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
-      setScrollPct(scrolled);
+    const onScroll = () => {
+      const s = document.body.scrollTop || document.documentElement.scrollTop;
+      const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      setScrollPct(h > 0 ? (s / h) * 100 : 0);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleContactSubmit = async (e: React.FormEvent) => {
+  const onContact = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFeedbackMsg("Sending message...");
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setFeedbackMsg("Thank you! Your message has been sent successfully.");
-      setContactName("");
-      setContactEmail("");
-      setContactMsg("");
-    } catch (err) {
-      setFeedbackMsg("Could not send message. Please try again.");
-    }
+    setFeedbackMsg("Sending…");
+    await new Promise(r => setTimeout(r, 900));
+    setFeedbackMsg("Thank you! Your donation enquiry has been logged.");
+    setContactName(""); setContactEmail(""); setContactMsg("");
   };
 
   return (
     <>
       <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
-      <Navbar />      {/* Hero Section */}
-      <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-28 overflow-hidden bg-[#10070a]">
-        {/* Ambient Rose Gold Mesh Glows */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#f43f5e]/20 via-[#f59e0b]/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute top-10 left-10 w-72 h-72 bg-[#f43f5e]/10 rounded-full blur-[90px] pointer-events-none" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#ec4899]/10 rounded-full blur-[110px] pointer-events-none" />
-        <div className="hero-grid" />
+      <Navbar />
 
-        <div className="relative z-10 max-w-[1000px] w-full flex flex-col items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2.5 px-4.5 py-2 rounded-full text-xs font-mono font-bold tracking-wider text-[#ffe4e6] bg-black/60 border border-[#f43f5e]/40 shadow-[0_0_25px_rgba(244,63,94,0.2)] mb-8 backdrop-blur-xl"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#f43f5e] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#f43f5e]"></span>
-            </span>
-            <span className="uppercase text-[11px]">✦ 100% FREE · NO CREDIT CARD REQUIRED · TRANSPARENT WELFARE AI</span>
-          </motion.div>
+      {/* ────────────────────────────────────────────────────
+          HERO  –  Split: Text ← | → 80G Tax & Impact Calculator
+      ──────────────────────────────────────────────────── */}
+      <header className="relative min-h-screen flex items-center overflow-hidden bg-[#0d0905] pt-[var(--nav-h)]">
+        <div className="warm-sunburst" />
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-8 text-white"
-          >
-            Empowering lives <br />
-            <span className="bg-gradient-to-r from-[#ffe4e6] via-[#f43f5e] to-[#f59e0b] bg-clip-text text-transparent">
-              with 100% transparent AI
-            </span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
-            className="text-base md:text-xl text-[#c8bdc0] max-w-[720px] leading-relaxed mb-12 font-normal"
-          >
-            AVP Charitable Trust connects rural students to scholarships, delivers medical welfare kits, and provides instant 80G tax-deductible receipts with live impact calculators.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap gap-5 justify-center mb-16"
-          >
-            <Link href="/app/" className="btn bg-gradient-to-r from-[#f43f5e] to-[#f59e0b] hover:scale-[1.03] text-white font-extrabold text-sm md:text-base px-8 py-4 rounded-xl shadow-[0_0_30px_rgba(244,63,94,0.4)] transition-all duration-300 flex items-center gap-2 uppercase tracking-wide">
-              <i className="fas fa-heart text-sm"></i> Launch NGO Portal
-            </Link>
-            <a href="#programs" className="btn border border-white/20 bg-black/50 text-white hover:bg-white/10 hover:border-[#f43f5e] text-sm md:text-base px-8 py-4 rounded-xl transition-all duration-300 backdrop-blur-xl font-bold flex items-center gap-2">
-              <i className="fas fa-receipt text-sm text-[#fef3c7]"></i> Calculate 80G Tax Impact
-            </a>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-[900px] p-2 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl mb-12"
-          >
-            {HERO_STATS.map((stat, i) => (
-              <div key={i} className="px-6 py-4 text-center border-r border-white/10 last:border-0">
-                <div className="text-3xl md:text-4xl font-black font-mono text-[#ffe4e6]">
-                  <AnimatedCounter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
-                </div>
-                <div className="text-[10px] md:text-xs text-[#c8bdc0] uppercase tracking-wider font-mono mt-1">{stat.label}</div>
-              </div>
-            ))}
-          </motion.div>
-
-          <div className="w-full max-w-[800px] mask-image-gradient overflow-hidden select-none opacity-60">
-            <div className="marquee-track text-[#ffe4e6] text-xs font-mono font-semibold">
-              <span>✦ Instant Govt 80G Tax Exemption Receipts</span>
-              <span>✦ Rural Education & Laptop Scholarships</span>
-              <span>✦ Medical Relief Kit Distribution</span>
-              <span>✦ Live Impact Slider (₹500 – ₹50,000)</span>
-              <span>✦ 12,000+ Beneficiaries Served</span>
-              <span>✦ 100% Free Social Welfare Intelligence</span>
-            </div>
-          </div>
+        {/* Ambient Orbs */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-40 -left-20 w-[700px] h-[700px] rounded-full bg-[#f59e0b]/6 blur-[140px]" />
+          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full bg-[#f97316]/5 blur-[120px]" />
         </div>
+
+        <div className="relative z-10 w-full max-w-[var(--maxw)] mx-auto px-6 md:px-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+          {/* LEFT */}
+          <div className="flex flex-col gap-7">
+            <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }}>
+              <span className="eyebrow">
+                <Heart className="h-3.5 w-3.5 text-[#f59e0b] fill-[#f59e0b]" />
+                Transparent Philanthropy & 80G Tax Exemptions
+              </span>
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity:0, y:28 }}
+              animate={{ opacity:1, y:0 }}
+              transition={{ duration:0.7, delay:0.08, ease:[0.22,1,0.36,1] }}
+              className="text-4xl sm:text-5xl xl:text-[4.2rem] font-black leading-[1.04] tracking-tighter text-white"
+            >
+              Transform lives.<br/>
+              <span className="grad">Save on your taxes.</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity:0, y:20 }}
+              animate={{ opacity:1, y:0 }}
+              transition={{ duration:0.6, delay:0.18, ease:[0.22,1,0.36,1] }}
+              className="text-base md:text-lg text-[#fde68a] leading-relaxed max-w-[480px] opacity-90"
+            >
+              AVP Charitable Trust funds free medical camps, student scholarships, and rural development across Gujarat. Every donation generates an instant 80G tax receipt.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity:0, y:20 }}
+              animate={{ opacity:1, y:0 }}
+              transition={{ duration:0.6, delay:0.26 }}
+              className="flex flex-wrap gap-4"
+            >
+              <Link href="/app/" className="btn-primary">
+                <HandHeart className="h-4 w-4" />
+                Make a 80G Tax-Deductible Gift
+              </Link>
+              <a href="#initiatives" className="btn-ghost">
+                <FileCheck className="h-4 w-4" />
+                View Public Ledger
+              </a>
+            </motion.div>
+
+            {/* Chips */}
+            <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.42 }}
+              className="flex flex-wrap gap-2.5">
+              {["80G Certified", "12A Registered", "Instant PDF Receipts", "0% Admin Fee", "Public Ledger"].map((tag, i) => (
+                <span key={i} className="text-[10px] font-mono font-semibold px-3 py-1.5 rounded-full bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.25)] text-[#fef08a]">
+                  ✦ {tag}
+                </span>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* RIGHT: 80G Tax Calculator Visual */}
+          <motion.div
+            initial={{ opacity:0, x:40 }}
+            animate={{ opacity:1, x:0 }}
+            transition={{ duration:0.8, delay:0.35, ease:[0.22,1,0.36,1] }}
+          >
+            <ImpactGeneratorVisual />
+          </motion.div>
+        </div>
+
+        <a href="#stats" className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-[#a3957f] hover:text-[#f59e0b] transition-colors">
+          <ChevronDown className="h-5 w-5 animate-bounce" />
+        </a>
       </header>
 
-      {/* Pillars Band */}
-      <section className="bg-[#10080a] border-y border-white/5 py-8 px-6 md:px-12">
-        <RevealOnScroll className="max-w-[1180px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="flex gap-4 items-center">
-            <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#f43f5e]/15 text-[#ffe4e6] shrink-0">
-              <Layers className="h-5 w-5" />
+      {/* ── STATS BAND ────────────────────────────────────── */}
+      <section id="stats" className="bg-[#161009] border-y border-[rgba(245,158,11,0.12)]">
+        <div className="max-w-[var(--maxw)] mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-[rgba(245,158,11,0.12)]">
+          {[
+            { val: "₹2.5Cr+", lbl: "Direct community impact funded" },
+            { val: "50%",     lbl: "Tax deduction under Section 80G" },
+            { val: "15,000+", lbl: "Patients served in free health camps" },
+            { val: "100%",    lbl: "Public financial transparency" },
+          ].map((s, i) => (
+            <div key={i} className="px-6 md:px-10 py-8 flex flex-col gap-1">
+              <div className="text-2xl md:text-3xl font-black text-white">{s.val}</div>
+              <div className="text-xs text-[#a3957f] leading-snug">{s.lbl}</div>
             </div>
-            <div>
-              <div className="font-bold text-sm text-white">Beneficiary Matching</div>
-              <p className="text-xs text-[#c8bdc0] mt-0.5">Matches community profiles against NGO grants.</p>
-            </div>
-          </div>
-          <div className="flex gap-4 items-center">
-            <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#f43f5e]/15 text-[#ffe4e6] shrink-0">
-              <Heart className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="font-bold text-sm text-white">80G Receipts</div>
-              <p className="text-xs text-[#c8bdc0] mt-0.5">Instant tax deduction documents for donors.</p>
-            </div>
-          </div>
-          <div className="flex gap-4 items-center">
-            <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#f43f5e]/15 text-[#ffe4e6] shrink-0">
-              <Lightbulb className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="font-bold text-sm text-white">Needs Assessment</div>
-              <p className="text-xs text-[#c8bdc0] mt-0.5">AI scores priority intervention sectors.</p>
-            </div>
-          </div>
-          <div className="flex gap-4 items-center">
-            <div className="w-11 h-11 rounded-lg grid place-items-center bg-[#f43f5e]/15 text-[#ffe4e6] shrink-0">
-              <Rocket className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="font-bold text-sm text-white">CSR Impact Reports</div>
-              <p className="text-xs text-[#c8bdc0] mt-0.5">Exports quarterly utilization logs to PDF.</p>
-            </div>
-          </div>
-        </RevealOnScroll>
+          ))}
+        </div>
       </section>
 
-      {/* About Section */}
-      <section className="max-w-[1180px] mx-auto py-24 px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center" id="about">
-        <RevealOnScroll className="lg:col-span-7 flex flex-col gap-4">
-          <span className="eyebrow">Est. 2026 · AVP Charitable Trust</span>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">Serving communities with absolute transparency.</h2>
-          <p className="text-sm md:text-base text-[#c8bdc0] leading-relaxed mt-2">
-            AVP Charitable Trust operates in Ahmedabad, dedicated to rural empowerment and social welfare. Through our synergy with **AVP University (AVPU)**, we disburse full tuition scholarships to meritorious students from economically weaker sections.
-          </p>
-          <p className="text-sm md:text-base text-[#c8bdc0] leading-relaxed">
-            By deploying AI needs calculators and transparent funding ledgers, we ensure that every single rupee donated directly feeds the community or matches a student&apos;s need. Check our active programs or register as an NGO volunteer.
-          </p>
-        </RevealOnScroll>
-        <RevealOnScroll delay={0.1} className="lg:col-span-5">
-        <GlowCard className="glow-card bg-gradient-to-br from-[#180b0f] to-[#10080a] border border-white/5 rounded-2xl p-8">
-          <div className="w-14 h-14 rounded-xl grid place-items-center text-white bg-gradient-to-br from-[#f43f5e] to-[#f59e0b] shadow-[0_8px_24px_rgba(244,63,94,0.3)] mb-6">
-            <Heart className="h-6 w-6 fill-current" />
+      {/* ── INITIATIVES / FEATURES ─────────────────────────── */}
+      <section className="max-w-[var(--maxw)] mx-auto py-24 px-6 md:px-12" id="initiatives">
+        <RevealOnScroll>
+          <div className="text-center mb-14">
+            <span className="eyebrow center mb-4">OUR CAUSES</span>
+            <h2 className="text-3xl md:text-5xl font-black text-white mt-4">
+              Where your donation creates change
+            </h2>
           </div>
-          <h3 className="text-lg font-bold text-white mb-4">NGO Values</h3>
-          <ul className="flex flex-col gap-4">
-            <li className="flex items-start gap-3 text-sm text-[#c8bdc0] border-b border-white/5 pb-3">
-              <span className="w-[20px] h-[20px] rounded bg-[#f43f5e]/15 grid place-items-center shrink-0 mt-0.5"><i className="fas fa-check text-xs text-[#ffe4e6]"></i></span>
-              <span>100% transparent funding audits</span>
-            </li>
-            <li className="flex items-start gap-3 text-sm text-[#c8bdc0] border-b border-white/5 pb-3">
-              <span className="w-[20px] h-[20px] rounded bg-[#f43f5e]/15 grid place-items-center shrink-0 mt-0.5"><i className="fas fa-check text-xs text-[#ffe4e6]"></i></span>
-              <span>80G tax-exempt receipts emailed instantly</span>
-            </li>
-            <li className="flex items-start gap-3 text-sm text-[#c8bdc0] border-b border-white/5 pb-3">
-              <span className="w-[20px] h-[20px] rounded bg-[#f43f5e]/15 grid place-items-center shrink-0 mt-0.5"><i className="fas fa-check text-xs text-[#ffe4e6]"></i></span>
-              <span>AI needs matcher connecting local requests</span>
-            </li>
-            <li className="flex items-start gap-3 text-sm text-[#c8bdc0]">
-              <span className="w-[20px] h-[20px] rounded bg-[#f43f5e]/15 grid place-items-center shrink-0 mt-0.5"><i className="fas fa-check text-xs text-[#ffe4e6]"></i></span>
-              <span>Scholarships linked to AVPU campus registries</span>
-            </li>
-          </ul>
-        </GlowCard>
         </RevealOnScroll>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {[
+            { icon:Heart,     color:"#f59e0b", badge:"Healthcare",  title:"Free Rural Medical Camps", desc:"Organizes monthly diagnostic, eye checkup, and surgery camps in underserved villages across Gujarat." },
+            { icon:BookOpen,  color:"#f97316", badge:"Education",   title:"AVPU Student Scholarships",desc:"Sponsors full tuition and living expenses for meritorious, underprivileged engineering students." },
+            { icon:Receipt,   color:"#22c55e", badge:"Tax Benefit", title:"Instant 80G Receipts",     desc:"Every online donation generates a government-compliant 80G tax receipt PDF sent directly to your email." },
+            { icon:Building2, color:"#38bdf8", badge:"Infrastructure",title:"Community Labs & Clinics", desc:"Funds building diagnostic labs and hostel wings in partnership with Breakdown Factor & AVPU." },
+            { icon:Shield,    color:"#a855f7", badge:"Audit",       title:"100% Transparent Ledger",  desc:"Public expense tracking — every rupee spent is recorded and audit-verified online." },
+            { icon:Award,     color:"#f59e0b", badge:"Recognition", title:"Corporate CSR Matching",   desc:"Enables corporate partners to double their impact with structured CSR allocation and certificates." },
+          ].map(({ icon: Icon, color, badge, title, desc }, i) => (
+            <RevealOnScroll key={i} delay={i * 0.06}>
+              <GlowCard className="glow-card bg-[#161009] border border-[rgba(245,158,11,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-11 h-11 rounded-xl grid place-items-center flex-shrink-0"
+                    style={{ background:`${color}14`, color }}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <span className="text-[9px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
+                    style={{ background:`${color}12`, color }}>
+                    {badge}
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-[15px] font-bold text-white mb-1.5">{title}</h3>
+                  <p className="text-sm text-[#fde68a] leading-relaxed opacity-80">{desc}</p>
+                </div>
+              </GlowCard>
+            </RevealOnScroll>
+          ))}
+        </div>
       </section>
 
-      {/* Programs Section */}
-      <section className="bg-[#10080a] py-20 px-6 md:px-12" id="programs">
-        <div className="max-w-[1180px] mx-auto">
+      {/* ── AI DEMO WIDGET ───────────────────────────────── */}
+      <section className="bg-[#161009] py-20 px-6 md:px-12" id="tools">
+        <div className="max-w-[var(--maxw)] mx-auto">
           <RevealOnScroll>
-            <span className="eyebrow center block">OUR PROGRAMS</span>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Active welfare divisions</h2>
+            <div className="text-center mb-12">
+              <span className="eyebrow center mb-4">TRUST ASSISTANT</span>
+              <h2 className="text-3xl md:text-4xl font-black text-white mt-3">Interactive Impact Portal</h2>
+              <p className="text-[#fde68a] mt-3 max-w-[460px] mx-auto text-sm opacity-80">
+                Ask about 80G tax rules, scholarship criteria, or upcoming medical drive dates.
+              </p>
+            </div>
           </RevealOnScroll>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <RevealOnScroll delay={0.02}>
-            <GlowCard className="bg-[#180b0f] border border-white/5 rounded-2xl p-6 relative h-full">
-              <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">01</div>
-              <h4 className="text-base font-bold text-white mb-2">Gyan Sarovar (Education)</h4>
-              <p className="text-xs md:text-sm text-[#c8bdc0] leading-relaxed">Providing computer labs, free textbooks, and scholarships for AVPU campus studies.</p>
-            </GlowCard>
-            </RevealOnScroll>
-
-            <RevealOnScroll delay={0.06}>
-            <GlowCard className="bg-[#180b0f] border border-white/5 rounded-2xl p-6 relative h-full">
-              <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">02</div>
-              <h4 className="text-base font-bold text-white mb-2">Arogya Path (Healthcare)</h4>
-              <p className="text-xs md:text-sm text-[#c8bdc0] leading-relaxed">Mobile clinics in rural Ahmedabad, generic drug camps, and primary emergency care.</p>
-            </GlowCard>
-            </RevealOnScroll>
-
-            <RevealOnScroll delay={0.1}>
-            <GlowCard className="bg-[#180b0f] border border-white/5 rounded-2xl p-6 relative h-full">
-              <div className="absolute top-4 right-5 text-4xl font-black text-white/5 select-none font-mono">03</div>
-              <h4 className="text-base font-bold text-white mb-2">Gram Uday (Rural Growth)</h4>
-              <p className="text-xs md:text-sm text-[#c8bdc0] leading-relaxed">Rainwater harvesting structure logs, vocational training, and self-help group setups.</p>
-            </GlowCard>
-            </RevealOnScroll>
-          </div>
+          <RevealOnScroll delay={0.1}>
+            <AIDemoWidget />
+          </RevealOnScroll>
         </div>
       </section>
 
-      {/* Impact Section */}
-      <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="impact">
-        <span className="eyebrow center block">METRICS</span>
-        <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Impact numbers that matter</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="tcard text-center flex flex-col gap-2">
-            <div className="text-4xl font-black text-[#f43f5e]">1,200+</div>
-            <div className="text-sm font-bold text-white">Students Supported</div>
-            <p className="text-xs text-[#c8bdc0]">Tuition fee waivers and textbooks dispatched.</p>
+      {/* ── TESTIMONIALS ─────────────────────────────────── */}
+      <section className="max-w-[var(--maxw)] mx-auto py-20 px-6 md:px-12" id="testimonials">
+        <RevealOnScroll>
+          <div className="text-center mb-12">
+            <span className="eyebrow center mb-4">DONOR REVIEWS</span>
+            <h2 className="text-3xl md:text-4xl font-black text-white mt-3">Trusted by donors & partners</h2>
           </div>
-          <div className="tcard text-center flex flex-col gap-2">
-            <div className="text-4xl font-black text-[#f43f5e]">4,500+</div>
-            <div className="text-sm font-bold text-white">Patients Treated</div>
-            <p className="text-xs text-[#c8bdc0]">Free diagnostics, mobile clinic visits, and medication.</p>
-          </div>
-          <div className="tcard text-center flex flex-col gap-2">
-            <div className="text-4xl font-black text-[#f43f5e]">18+</div>
-            <div className="text-sm font-bold text-white">Rural Districts</div>
-            <p className="text-xs text-[#c8bdc0]">Clean drinking water systems installed.</p>
-          </div>
+        </RevealOnScroll>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {[
+            { t:"Received my 80G tax receipt within 2 minutes of donating. Used it directly for my IT returns filing!", a:"Vikram S.", c:"Individual Donor, Ahmedabad" },
+            { t:"Our company routed our entire CSR budget through AVP Trust. Complete transparency and real impact reports.", a:"Meera N.", c:"CSR Lead, Tech Corp" },
+            { t:"The scholarship sponsored my entire final year engineering fee. Forever grateful to AVP Charitable Trust.", a:"Rahul T.", c:"AVPU Alumnus & Software Engineer" },
+          ].map(({ t, a, c }, i) => (
+            <RevealOnScroll key={i} delay={i * 0.07}>
+              <GlowCard className="glow-card bg-[#20170d] border border-[rgba(245,158,11,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
+                <figure className="h-full flex flex-col gap-4">
+                  <div className="flex gap-1">
+                    {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-[#f59e0b] text-[#f59e0b]" />)}
+                  </div>
+                  <blockquote className="text-sm text-[#fde68a] italic flex-1 leading-relaxed">"{t}"</blockquote>
+                  <figcaption className="flex items-center gap-3 border-t border-[rgba(245,158,11,0.1)] pt-4">
+                    <div className="w-9 h-9 rounded-full bg-[rgba(245,158,11,0.15)] border border-[rgba(245,158,11,0.3)] flex items-center justify-center font-bold text-[#f59e0b] text-xs">
+                      {a[0]}
+                    </div>
+                    <div className="text-xs">
+                      <strong className="block text-white">{a}</strong>
+                      <span className="text-[#a3957f]">{c}</span>
+                    </div>
+                  </figcaption>
+                </figure>
+              </GlowCard>
+            </RevealOnScroll>
+          ))}
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="faq">
-        <span className="eyebrow center block">FAQ</span>
-        <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">NGO questions, answered</h2>
-        
-        <div className="max-w-[760px] mx-auto faq-list">
-          <details>
-            <summary className="faq-summary">Are donations eligible for tax deductions? <ChevronDown className="h-4 w-4 text-[#ffe4e6]" /></summary>
-            <p className="text-xs md:text-sm text-[#c8bdc0] mt-3 leading-relaxed">
-              Yes, AVP Charitable Trust is registered under Section 80G. You will receive an email receipt acknowledging your contribution immediately.
-            </p>
-          </details>
-
-          <details>
-            <summary className="faq-summary">Can we inspect how funds are spent? <ChevronDown className="h-4 w-4 text-[#ffe4e6]" /></summary>
-            <p className="text-xs md:text-sm text-[#c8bdc0] mt-3 leading-relaxed">
-              Yes! Our NGO portal houses a transparent, public funding ledger listing every single contribution and beneficiary allocation.
-            </p>
-          </details>
-
-          <details>
-            <summary className="faq-summary">How can I volunteer? <ChevronDown className="h-4 w-4 text-[#ffe4e6]" /></summary>
-            <p className="text-xs md:text-sm text-[#c8bdc0] mt-3 leading-relaxed">
-              Go to our NGO portal dashboard, navigate to the Volunteers panel, enter your skills and availability, and we will email you matching events.
-            </p>
-          </details>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="max-w-[1180px] mx-auto py-20 px-6 md:px-12" id="contact">
-        <div className="bg-[#180b0f] border border-white/5 rounded-2xl p-8 relative overflow-hidden flex flex-col items-center">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(244,63,94,0.06),transparent_60%)] pointer-events-none" />
-          
-          <div className="relative z-10 max-w-[640px] w-full text-center flex flex-col items-center">
-            <span className="eyebrow">GET IN TOUCH</span>
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-6">Support our mission today.</h2>
-            <p className="text-xs md:text-sm text-[#c8bdc0] leading-relaxed mb-8">
-              Become a CSR sponsor, verify beneficiary registrations, or ask donor assistant queries.
-            </p>
-
-            <form onSubmit={handleContactSubmit} className="w-full flex flex-col gap-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input 
-                  type="text" 
-                  value={contactName}
-                  onChange={(e) => setContactName(e.target.value)}
-                  placeholder="Your Name" 
-                  required
-                  className="w-full px-4 py-3 bg-[#10080a] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#f43f5e]" 
-                />
-                <input 
-                  type="email" 
-                  value={contactEmail}
-                  onChange={(e) => setContactEmail(e.target.value)}
-                  placeholder="Your Email" 
-                  required
-                  className="w-full px-4 py-3 bg-[#10080a] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#f43f5e]" 
-                />
-              </div>
-              <textarea 
-                rows={4} 
-                value={contactMsg}
-                onChange={(e) => setContactMsg(e.target.value)}
-                placeholder="How would you like to partner with AVP Charitable Trust?..." 
-                required
-                className="w-full px-4 py-3 bg-[#10080a] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#f43f5e] resize-none" 
-              />
-              <button 
-                type="submit" 
-                className="btn w-full bg-gradient-to-r from-[#f43f5e] to-[#f59e0b] text-white font-semibold py-3 rounded-lg hover:scale-[1.01] transition-all cursor-pointer"
-              >
-                Send Partnership Request
-              </button>
-              {feedbackMsg && <p className="text-xs text-[#f43f5e] font-semibold mt-2">{feedbackMsg}</p>}
-            </form>
-          </div>
-        </div>
+      {/* ── CONTACT CTA ──────────────────────────────────── */}
+      <section className="max-w-[var(--maxw)] mx-auto py-16 px-6 md:px-12" id="contact">
+        <RevealOnScroll>
+          <GlowCard className="glow-card bg-[#161009] border border-[rgba(245,158,11,0.1)] rounded-2xl p-10 relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_120%,rgba(245,158,11,0.1),transparent_55%)] pointer-events-none" />
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#f59e0b]/50 to-transparent" />
+            <div className="relative z-10 max-w-[520px] mx-auto text-center">
+              <span className="eyebrow center mb-5">SUPPORT US</span>
+              <h2 className="text-3xl md:text-4xl font-black text-white mb-4 mt-4">Partner with AVP Trust</h2>
+              <p className="text-sm text-[#fde68a] mb-8 opacity-80">
+                Discuss CSR partnerships, large donations, or volunteering for health camps.
+              </p>
+              <form onSubmit={onContact} className="flex flex-col gap-3 text-left">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input type="text" value={contactName} onChange={e => setContactName(e.target.value)}
+                    placeholder="Your Name / Corp" required
+                    className="px-4 py-3 bg-[#0d0905] border border-[rgba(245,158,11,0.15)] rounded-xl text-sm text-white focus:outline-none focus:border-[#f59e0b] transition-colors placeholder:text-[#a3957f]" />
+                  <input type="email" value={contactEmail} onChange={e => setContactEmail(e.target.value)}
+                    placeholder="Your Email" required
+                    className="px-4 py-3 bg-[#0d0905] border border-[rgba(245,158,11,0.15)] rounded-xl text-sm text-white focus:outline-none focus:border-[#f59e0b] transition-colors placeholder:text-[#a3957f]" />
+                </div>
+                <textarea rows={3} value={contactMsg} onChange={e => setContactMsg(e.target.value)}
+                  placeholder="Describe your donation or partnership query…" required
+                  className="px-4 py-3 bg-[#0d0905] border border-[rgba(245,158,11,0.15)] rounded-xl text-sm text-white focus:outline-none focus:border-[#f59e0b] transition-colors placeholder:text-[#a3957f] resize-none" />
+                <button type="submit" className="btn-primary w-full text-base">
+                  Submit Enquiry
+                </button>
+                {feedbackMsg && <p className="text-xs text-[#f59e0b] font-semibold text-center">{feedbackMsg}</p>}
+              </form>
+            </div>
+          </GlowCard>
+        </RevealOnScroll>
       </section>
 
       <Footer />
