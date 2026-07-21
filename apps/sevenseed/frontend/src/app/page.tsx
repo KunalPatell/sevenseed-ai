@@ -11,6 +11,7 @@ import { GlowCard } from "@/components/GlowCard";
 import { AIDemoWidget } from "@/components/AIDemoWidget";
 import { Testimonials } from "@/components/Testimonials";
 import { apiFetch } from "@/lib/api";
+import { CustomCursor } from "@/components/CustomCursor";
 import {
   Leaf,
   Layers,
@@ -89,6 +90,7 @@ export default function Home() {
 
   return (
     <>
+      <CustomCursor />
       <div className="scroll-progress" style={{ width: `${scrollPct}%` }} />
       <Navbar />      {/* Hero Section */}
       <header className="relative min-h-screen flex items-center justify-center text-center px-6 py-28 overflow-hidden bg-[#090710]">
