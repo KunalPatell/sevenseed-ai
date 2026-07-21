@@ -6,21 +6,17 @@ import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
-import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { GlowCard } from "@/components/GlowCard";
 import { AIDemoWidget } from "@/components/AIDemoWidget";
+import { ArgusAvatar } from "@/components/ArgusAvatar";
+import { InspectionHUD } from "@/components/InspectionHUD";
 import {
   HardHat,
   Layers,
   Lightbulb,
   Rocket,
-  Cpu,
   ChevronDown,
-  Search,
   Star,
-  Activity,
-  Briefcase,
-  ExternalLink
 } from "lucide-react";
 
 export default function Home() {
@@ -79,18 +75,18 @@ export default function Home() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#f59e0b] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#f59e0b]"></span>
             </span>
-            <span className="uppercase text-[11px]">✦ AWWWARDS SITE OF THE YEAR NOMINEE · CONSTRUCTION CV ENGINE</span>
+            <span className="uppercase text-[11px]">✦ 100% FREE · NO CREDIT CARD REQUIRED · CONSTRUCTION CV ENGINE</span>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-8 text-white"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-8 text-white"
           >
-            Building secure structures <br />
+            Site defects, spotted by Argus <br />
             <span className="bg-gradient-to-r from-[#fef3c7] via-[#f59e0b] to-[#f97316] bg-clip-text text-transparent">
-              tested by Vision AI
+              before they become claims.
             </span>
           </motion.h1>
 
@@ -100,7 +96,10 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
             className="text-base md:text-xl text-[#c8c0b8] max-w-[720px] leading-relaxed mb-12 font-normal"
           >
-            Breakdown Factor powers commercial and residential infrastructure with real-time YOLOv8 defect vision models (`best.pt`), automated BOQ estimation, and IS-456 structural safety compliance.
+            Argus is Breakdown Factor&apos;s on-site inspection agent. Upload a photo and it flags cracks, tile
+            damage, pipe leaks, and 7 other defect classes with a YOLOv8 model (<code>best.pt</code>), prices the
+            repair, and checks the result against IS 456, IS 800, and NBC 2016. The same engine drafts BOQ
+            estimates and site schedules.
           </motion.p>
 
           <motion.div
@@ -113,35 +112,11 @@ export default function Home() {
               <i className="fas fa-rocket text-sm"></i> Launch Project Portal
             </Link>
             <a href="#tools" className="btn border border-white/20 bg-black/50 text-white hover:bg-white/10 hover:border-[#f59e0b] text-sm md:text-base px-8 py-4 rounded-xl transition-all duration-300 backdrop-blur-xl font-bold flex items-center gap-2">
-              <i className="fas fa-hammer text-sm text-[#f59e0b]"></i> Explore Interactive AI Workstation
+              <i className="fas fa-satellite-dish text-sm text-[#f59e0b]"></i> Watch Argus scan a defect
             </a>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-[900px] p-2 bg-black/40 border border-white/10 rounded-2xl backdrop-blur-xl mb-12"
-          >
-            <div className="px-6 py-4 text-center border-r border-white/10 last:border-0">
-              <div className="text-3xl md:text-4xl font-black font-mono text-[#fef3c7]">
-                <AnimatedCounter value={20} suffix="+" />
-              </div>
-              <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-mono mt-1">Completed Projects</div>
-            </div>
-            <div className="px-6 py-4 text-center border-r border-white/10 last:border-0">
-              <div className="text-3xl md:text-4xl font-black font-mono text-emerald-400">Zero</div>
-              <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-mono mt-1">Safety Incidents</div>
-            </div>
-            <div className="px-6 py-4 text-center border-r border-white/10 last:border-0">
-              <div className="text-3xl md:text-4xl font-black font-mono text-[#f59e0b]">99.4%</div>
-              <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-mono mt-1">Defect CV Accuracy</div>
-            </div>
-            <div className="px-6 py-4 text-center">
-              <div className="text-3xl md:text-4xl font-black font-mono text-white">ISO 9001</div>
-              <div className="text-[10px] md:text-xs text-[#c8c0b8] uppercase tracking-wider font-mono mt-1">Quality Certified</div>
-            </div>
-          </motion.div>
+          <InspectionHUD />
 
           <div className="w-full max-w-[800px] mask-image-gradient overflow-hidden select-none opacity-60">
             <div className="marquee-track text-[#fef3c7] text-xs font-mono font-semibold">
@@ -204,36 +179,45 @@ export default function Home() {
           <span className="eyebrow">Est. 2026 · Breakdown Factor</span>
           <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">We build spaces that stand the test of time.</h2>
           <p className="text-sm md:text-base text-[#c8c0b8] leading-relaxed mt-2">
-            Breakdown Factor is a leading construction brand. In synergy with **AVP University (AVPU)**, we construct durable student accommodations and laboratories designed with structural diagnostics.
+            Breakdown Factor is a construction brand working in synergy with <strong className="text-white font-semibold">AVP University (AVPU)</strong>,
+            building student accommodation and laboratory spaces with structural diagnostics built into the process, not bolted on after handover.
           </p>
           <p className="text-sm md:text-base text-[#c8c0b8] leading-relaxed">
-            By deploying computer-vision cameras and custom YOLO diagnostic models, our construction sites track structural cracks, wall damage, and MEP system issues instantly. Use our portal to test AI-driven budgeting, safety checklists, and timeline schedulers.
+            Argus, our inspection agent, is what does that diagnostic work: site photos get scanned for structural cracks, wall damage, and MEP
+            (mechanical, electrical, plumbing) issues as they happen. The same portal runs AI-driven budgeting, safety checklists, and timeline
+            scheduling on the same project.
           </p>
         </RevealOnScroll>
         <RevealOnScroll delay={0.1} className="lg:col-span-5">
-        <GlowCard className="glow-card bg-gradient-to-br from-[#14100b] to-[#0e0a07] border border-white/5 rounded-2xl p-8">
-          <div className="w-14 h-14 rounded-xl grid place-items-center text-white bg-gradient-to-br from-[#f59e0b] to-[#f97316] shadow-[0_8px_24px_rgba(245,158,11,0.3)] mb-6">
-            <HardHat className="h-6 w-6" />
+        <GlowCard className="glow-card bg-gradient-to-br from-[#14100b] to-[#0e0a07] border border-white/5 rounded-2xl p-7 sm:p-8">
+          <div className="flex items-center gap-4 mb-6 pb-6 border-b border-white/5">
+            <ArgusAvatar size={56} />
+            <div>
+              <h3 className="text-lg font-bold text-white leading-tight">Argus</h3>
+              <span className="text-[11px] font-mono text-[#f59e0b] uppercase tracking-wider">Site Inspection Agent · v1</span>
+            </div>
           </div>
-          <h3 className="text-lg font-bold text-white mb-4">Construction Moats</h3>
-          <ul className="flex flex-col gap-4">
-            <li className="flex items-start gap-3 text-sm text-[#c8c0b8] border-b border-white/5 pb-3">
-              <span className="w-[20px] h-[20px] rounded bg-[#f59e0b]/15 grid place-items-center shrink-0 mt-0.5"><i className="fas fa-check text-xs text-[#fef3c7]"></i></span>
-              <span>100% compliance with Indian Standard (IS) codes</span>
-            </li>
-            <li className="flex items-start gap-3 text-sm text-[#c8c0b8] border-b border-white/5 pb-3">
-              <span className="w-[20px] h-[20px] rounded bg-[#f59e0b]/15 grid place-items-center shrink-0 mt-0.5"><i className="fas fa-check text-xs text-[#fef3c7]"></i></span>
-              <span>Real-time image scans detailing repair materials</span>
-            </li>
-            <li className="flex items-start gap-3 text-sm text-[#c8c0b8] border-b border-white/5 pb-3">
-              <span className="w-[20px] h-[20px] rounded bg-[#f59e0b]/15 grid place-items-center shrink-0 mt-0.5"><i className="fas fa-check text-xs text-[#fef3c7]"></i></span>
-              <span>PDF-exported bidding summaries and checklists</span>
-            </li>
-            <li className="flex items-start gap-3 text-sm text-[#c8c0b8]">
-              <span className="w-[20px] h-[20px] rounded bg-[#f59e0b]/15 grid place-items-center shrink-0 mt-0.5"><i className="fas fa-check text-xs text-[#fef3c7]"></i></span>
-              <span>Integrated client billing database logs</span>
-            </li>
-          </ul>
+          <dl className="flex flex-col gap-4 text-sm">
+            <div className="flex flex-col gap-1 border-b border-white/5 pb-3">
+              <dt className="text-[10px] font-mono uppercase tracking-wider text-[#7c7268]">Detects</dt>
+              <dd className="text-[#c8c0b8] leading-relaxed">10 defect classes — wall cracks, tile, switches, radiators, pipes, appliances, glass, wood, and general structural damage</dd>
+            </div>
+            <div className="flex flex-col gap-1 border-b border-white/5 pb-3">
+              <dt className="text-[10px] font-mono uppercase tracking-wider text-[#7c7268]">References</dt>
+              <dd className="text-[#c8c0b8] leading-relaxed">IS 456, IS 800, and NBC 2016 while it writes the remediation report</dd>
+            </div>
+            <div className="flex flex-col gap-1 border-b border-white/5 pb-3">
+              <dt className="text-[10px] font-mono uppercase tracking-wider text-[#7c7268]">Also runs</dt>
+              <dd className="text-[#c8c0b8] leading-relaxed">BOQ cost estimates, 90-day site schedules, and safety risk checklists</dd>
+            </div>
+            <div className="flex flex-col gap-1">
+              <dt className="text-[10px] font-mono uppercase tracking-wider text-[#7c7268]">Stays up</dt>
+              <dd className="text-[#c8c0b8] leading-relaxed">Falls back to an offline estimator if no LLM key is configured, so it never goes silent</dd>
+            </div>
+          </dl>
+          <a href="#tools" className="inline-flex items-center gap-2 mt-6 text-xs font-bold text-[#fef3c7] hover:underline">
+            Try Argus in the workstation below <i className="fas fa-arrow-down text-[10px]"></i>
+          </a>
         </GlowCard>
         </RevealOnScroll>
       </section>
@@ -242,8 +226,8 @@ export default function Home() {
       <section className="bg-[#0e0a07] py-20 px-6 md:px-12" id="tools">
         <div className="max-w-[1180px] mx-auto">
           <RevealOnScroll>
-          <span className="eyebrow center block">AI CAPABILITIES</span>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Smart building operations</h2>
+          <span className="eyebrow center block">ARGUS AT WORK</span>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-12">Run the same tools Argus uses on-site</h2>
           </RevealOnScroll>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

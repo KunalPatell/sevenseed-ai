@@ -152,7 +152,43 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .mesh-bg,
-  .marquee-track {
+  .marquee-track,
+  .scanline-sweep {
     animation: none;
   }
+}
+
+/* Small uppercase label used above section headings — replaces the old
+   badge-pill pattern shared by every sibling site in this portfolio. */
+.eyebrow {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--primary-l);
+}
+.eyebrow.center {
+  text-align: center;
+}
+.eyebrow.block {
+  display: block;
+}
+
+/* Edge-fade mask for horizontally scrolling tickers (health-camp marquee). */
+.mask-image-gradient {
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+
+/* Scan-line sweep used in the "how the prescription scan works" visual. */
+@keyframes scanlineSweep {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateY(320%); opacity: 0; }
+}
+.scanline-sweep {
+  animation: scanlineSweep 2.8s ease-in-out infinite;
 }

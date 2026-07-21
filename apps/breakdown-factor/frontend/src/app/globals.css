@@ -92,9 +92,105 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .mesh-bg,
-  .marquee-track {
+  .marquee-track,
+  .argus-ring,
+  .argus-eye,
+  .argus-scan,
+  .hud-sweep::after {
     animation: none;
   }
+}
+
+/* ── Argus persona (site inspection agent) ───────────────────────────── */
+@keyframes argusSpin {
+  to { transform: rotate(360deg); }
+}
+.argus-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: argusSpin 16s linear infinite;
+}
+
+@keyframes argusBlink {
+  0%, 88%, 100% { transform: scaleY(1); }
+  92% { transform: scaleY(0.15); }
+}
+.argus-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: argusBlink 4.5s ease-in-out infinite;
+}
+
+@keyframes argusScan {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(27px); }
+}
+.argus-scan {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: argusScan 2.4s ease-in-out infinite;
+}
+
+/* ── Inspection HUD panel (hero readout, replaces generic stat grid) ──── */
+.hud-panel {
+  position: relative;
+  background: rgba(10, 7, 5, 0.72);
+  border: 1px solid rgba(var(--primary-rgb), 0.3);
+  border-radius: var(--radius);
+  overflow: hidden;
+  backdrop-filter: blur(14px);
+}
+.hud-panel::before,
+.hud-panel::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(var(--primary-rgb), 0.55);
+  pointer-events: none;
+  z-index: 1;
+}
+.hud-panel::before {
+  top: 7px;
+  left: 7px;
+  border-right: 0;
+  border-bottom: 0;
+  border-top-left-radius: 6px;
+}
+.hud-panel::after {
+  bottom: 7px;
+  right: 7px;
+  border-left: 0;
+  border-top: 0;
+  border-bottom-right-radius: 6px;
+}
+.hud-sweep {
+  position: relative;
+  height: 2px;
+  background: rgba(var(--primary-rgb), 0.1);
+  overflow: hidden;
+}
+.hud-sweep::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  animation: hudSweepMove 3.2s ease-in-out infinite;
+}
+@keyframes hudSweepMove {
+  0% { left: -30%; }
+  100% { left: 100%; }
+}
+.hud-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #34d399;
+  display: inline-block;
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.8);
 }
 
 .hero-grid {

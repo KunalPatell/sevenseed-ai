@@ -156,3 +156,85 @@ body {
     animation: none;
   }
 }
+
+/* ── Val — AI value-scout persona orb (hero + AI capabilities section) ────── */
+.val-orb-blob {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 42% 58% 63% 37% / 45% 41% 59% 55%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow: 0 10px 34px rgba(var(--primary-rgb), 0.35);
+  animation: valBlobMorph 9s ease-in-out infinite;
+}
+
+@keyframes valBlobMorph {
+  0%, 100% { border-radius: 42% 58% 63% 37% / 45% 41% 59% 55%; }
+  33%      { border-radius: 63% 37% 41% 59% / 55% 62% 38% 45%; }
+  66%      { border-radius: 50% 50% 34% 66% / 40% 60% 40% 60%; }
+}
+
+.val-orb-orbit {
+  position: absolute;
+  inset: 0;
+  animation: valOrbit 16s linear infinite;
+}
+
+@keyframes valOrbit {
+  to { transform: rotate(360deg); }
+}
+
+.val-orb-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+}
+.val-orb-dot-1 { transform: rotate(20deg) translateX(var(--orbit-r, 60px)); }
+.val-orb-dot-2 { transform: rotate(110deg) translateX(var(--orbit-r, 60px)); }
+.val-orb-dot-3 { transform: rotate(200deg) translateX(var(--orbit-r, 60px)); }
+.val-orb-dot-4 { transform: rotate(290deg) translateX(var(--orbit-r, 60px)); }
+.val-orb-dot-best {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: var(--secondary-l);
+  box-shadow: 0 0 10px 2px rgba(var(--secondary-rgb), 0.7);
+  animation: valDotPulse 2.4s ease-in-out infinite;
+}
+@keyframes valDotPulse {
+  0%, 100% { opacity: 0.7; transform: rotate(290deg) translateX(var(--orbit-r, 60px)) scale(1); }
+  50%      { opacity: 1; transform: rotate(290deg) translateX(var(--orbit-r, 60px)) scale(1.35); }
+}
+
+.val-orb-sweep {
+  animation: valSweep 4s linear infinite;
+}
+@keyframes valSweep {
+  to { transform: rotate(360deg); }
+}
+
+.val-orb-check {
+  animation: valCheckPulse 4s ease-in-out infinite;
+}
+@keyframes valCheckPulse {
+  0%, 70%, 100% { opacity: 0.35; }
+  80%, 95%      { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .val-orb-blob,
+  .val-orb-orbit,
+  .val-orb-dot-best,
+  .val-orb-sweep,
+  .val-orb-check {
+    animation: none;
+  }
+}

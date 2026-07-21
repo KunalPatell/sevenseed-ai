@@ -6,28 +6,18 @@ import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
-import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { GlowCard } from "@/components/GlowCard";
 import { AIDemoWidget } from "@/components/AIDemoWidget";
+import { AshaAvatar } from "@/components/AshaAvatar";
+import { ImpactFlowDiagram } from "@/components/ImpactFlowDiagram";
 import {
   Heart,
   Layers,
   Lightbulb,
   Rocket,
-  Cpu,
   ChevronDown,
-  Search,
   Star,
-  Activity,
-  Briefcase,
-  ExternalLink
 } from "lucide-react";
-
-const HERO_STATS = [
-  { value: 25, prefix: "₹", suffix: "L+", label: "Donations Disbursed" },
-  { value: 100, suffix: "%", label: "Audit Compliance" },
-  { value: 80, suffix: "G", label: "Tax-Exempt Approved" },
-];
 
 export default function Home() {
   const [scrollPct, setScrollPct] = useState(0);
@@ -83,7 +73,7 @@ export default function Home() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#f43f5e] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#f43f5e]"></span>
             </span>
-            <span className="uppercase text-[11px]">✦ AWWWARDS SITE OF THE YEAR NOMINEE · TRANSPARENT WELFARE AI</span>
+            <span className="uppercase text-[11px]">✦ 100% FREE · NO CREDIT CARD REQUIRED · TRANSPARENT WELFARE AI</span>
           </motion.div>
 
           <motion.h1

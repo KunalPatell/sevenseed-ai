@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "AVP University (AVPU) — AI-Powered Digital Learning Hub",
-  description: "Experience the next generation of education. AVPU leverages AI tutoring agents, automatic placements matchers, admissions recommendations, and custom study plans.",
+  description: "AVPU's AI Tutor, Gyan, answers syllabus questions with a RAG-grounded LangGraph pipeline, builds week-by-week study roadmaps, matches skills to placement partners, and grades assessments — all free to try.",
   icons: {
     icon: "/favicon.ico",
   },

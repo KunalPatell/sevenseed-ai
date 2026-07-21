@@ -201,3 +201,45 @@ body {
   border: 1px solid rgba(var(--primary-rgb), 0.25);
   flex-shrink: 0;
 }
+
+/* ── Gyan — AI tutor persona orb (hero + capabilities section) ────────────── */
+.gyan-orb-blob {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 38% 62% 55% 45% / 50% 46% 54% 50%;
+  background: linear-gradient(140deg, var(--primary), var(--secondary));
+  box-shadow: 0 10px 34px rgba(var(--primary-rgb), 0.35);
+  animation: gyanBlobMorph 10s ease-in-out infinite;
+}
+
+@keyframes gyanBlobMorph {
+  0%, 100% { border-radius: 38% 62% 55% 45% / 50% 46% 54% 50%; }
+  40%      { border-radius: 58% 42% 40% 60% / 44% 58% 42% 56%; }
+  70%      { border-radius: 46% 54% 62% 38% / 60% 40% 60% 40%; }
+}
+
+@keyframes gyanFlow {
+  0%   { transform: translate(0, 0); opacity: 1; }
+  28%  { transform: translate(0, 0); opacity: 1; }
+  33%  { transform: translate(26px, 48px); opacity: 1; }
+  61%  { transform: translate(26px, 48px); opacity: 1; }
+  66%  { transform: translate(-26px, 48px); opacity: 1; }
+  94%  { transform: translate(-26px, 48px); opacity: 1; }
+  100% { transform: translate(0, 0); opacity: 1; }
+}
+
+.gyan-orb-pulse {
+  animation: gyanFlow 4.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gyan-orb-blob,
+  .gyan-orb-pulse {
+    animation: none;
+  }
+}

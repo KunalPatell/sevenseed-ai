@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Loader2, Sparkles, ArrowRight, Lightbulb, Cpu, Grid } from "lucide-react";
+import { Loader2, ArrowRight, Lightbulb, Cpu, Grid } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { RootOrb } from "@/components/RootOrb";
 
 const EXAMPLES = [
   { domain: "Rural healthcare", problem: "Clinics lose patients to missed follow-up appointments" },
@@ -12,14 +13,14 @@ const EXAMPLES = [
 ];
 
 const VENTURES = [
-  { name: "Breakdown Factor", tag: "AI Construction & Damage CV", status: "Active (YOLO v8)", port: "8001" },
-  { name: "Decode Forest Pharmacy", tag: "AI HealthTech & Rx Reader", status: "Active (OCR RAG)", port: "8002" },
-  { name: "AVP Emart", tag: "AI E-Commerce & Matrix", status: "Active (4-Store)", port: "8003" },
-  { name: "AVP University", tag: "AI EdTech & Tutor", status: "Active (LangGraph)", port: "8004" },
-  { name: "AVP Charitable Trust", tag: "AI Social Impact", status: "Active (80G)", port: "8005" },
-  { name: "Sevenforce", tag: "AI Workforce Automation", status: "Active (7 Agents)", port: "8006" },
-  { name: "Comonk Technology", tag: "AI Career Platform", status: "Active (ATS)", port: "8007" },
-  { name: "Sevenseed Hub", tag: "AI Venture Incubator Studio", status: "Active (Core)", port: "8000" },
+  { name: "Breakdown Factor", tag: "AI Construction & Damage CV", status: "Building (YOLOv8)", live: false, port: "8001" },
+  { name: "Decode Forest Pharmacy", tag: "AI HealthTech & Rx Reader", status: "Building (OCR RAG)", live: false, port: "8002" },
+  { name: "AVP Emart", tag: "AI E-Commerce & Matrix", status: "Live (4-Store)", live: true, port: "8003" },
+  { name: "AVP University", tag: "AI EdTech & Tutor", status: "Building (LangGraph)", live: false, port: "8004" },
+  { name: "AVP Charitable Trust", tag: "AI Social Impact", status: "Building", live: false, port: "8005" },
+  { name: "Sevenforce", tag: "AI Workforce Automation", status: "Building", live: false, port: "8006" },
+  { name: "Comonk Technology", tag: "AI Career Platform", status: "Live (ATS)", live: true, port: "8007" },
+  { name: "Sevenseed Hub", tag: "AI Venture Incubator Studio", status: "Live (Core)", live: true, port: "8000" },
 ];
 
 function renderIdea(text: string) {
@@ -85,7 +86,7 @@ export function AIDemoWidget() {
       <div className="absolute -top-32 -right-32 w-80 h-80 bg-[#8b5cf6]/15 rounded-full blur-[100px] pointer-events-none"></div>
       <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-[#10b981]/15 rounded-full blur-[100px] pointer-events-none"></div>
 
-      {/* Live Enterprise Performance Stats Bar */}
+      {/* Studio facts bar — real, structural counts, not invented uptime/latency numbers */}
       <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 bg-black/40 border border-white/10 rounded-2xl mb-8 backdrop-blur-xl">
         <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
           <span className="relative flex h-2.5 w-2.5">
@@ -102,23 +103,23 @@ export function AIDemoWidget() {
           <span className="text-xs">⚡</span>
           <div>
             <div className="text-[10px] uppercase font-mono text-[#999]">Orchestration</div>
-            <div className="text-xs font-bold text-[#ddd6fe] font-mono">LangGraph 0.2</div>
+            <div className="text-xs font-bold text-[#ddd6fe] font-mono">LangGraph Agents</div>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5 px-3 border-r border-white/10">
           <span className="text-xs">🚀</span>
           <div>
-            <div className="text-[10px] uppercase font-mono text-[#999]">Ventures Active</div>
-            <div className="text-xs font-bold text-white font-mono">8 Startup Apps</div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Sectors Covered</div>
+            <div className="text-xs font-bold text-white font-mono">7 Industries</div>
           </div>
         </div>
 
         <div className="flex items-center gap-2.5 px-3">
-          <span className="text-xs">🛡️</span>
+          <span className="text-xs">📚</span>
           <div>
-            <div className="text-[10px] uppercase font-mono text-[#999]">Global Uptime</div>
-            <div className="text-xs font-bold text-emerald-400 font-mono">99.98% Online</div>
+            <div className="text-[10px] uppercase font-mono text-[#999]">Playbook Index</div>
+            <div className="text-xs font-bold text-emerald-400 font-mono">8 Docs</div>
           </div>
         </div>
       </div>
@@ -127,8 +128,8 @@ export function AIDemoWidget() {
       <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 mb-8 border-b border-white/10 pb-6">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Sparkles className="h-4 w-4 text-[#ddd6fe]" />
-            <span className="text-xs font-bold tracking-wider text-[#ddd6fe] uppercase">AI Venture Incubator Studio</span>
+            <RootOrb size="sm" />
+            <span className="text-xs font-bold tracking-wider text-[#ddd6fe] uppercase">Root · Studio AI</span>
           </div>
           <h4 className="text-2xl font-black text-white tracking-tight">Sevenseed Multi-Agent Studio Architecture</h4>
         </div>
@@ -234,7 +235,7 @@ export function AIDemoWidget() {
       {activeTab === "arch" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <p className="text-xs md:text-sm text-[#9aa0b8] mb-4">
-            Interactive multi-agent orchestration stack powering all 8 Sevenseed ventures (AutomationOwl & Sintra.ai inspired):
+            The multi-agent orchestration stack powering all 8 Sevenseed apps — the hub included:
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[#08080f] border border-[#8b5cf6]/30 rounded-2xl p-5 shadow-xl relative overflow-hidden">
@@ -242,16 +243,16 @@ export function AIDemoWidget() {
               <div className="flex justify-between items-center">
                 <span className="text-xs font-bold text-[#8b5cf6] flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-[#8b5cf6] animate-pulse"></span>
-                  LangGraph 0.2 Engine
+                  LangGraph Engine
                 </span>
                 <span className="text-[9px] bg-[#8b5cf6]/20 text-[#ddd6fe] px-1.5 py-0.5 rounded font-mono font-bold">Stateful Graph</span>
               </div>
               <p className="text-[11px] text-[#9aa0b8] leading-relaxed">
-                Orchestrates autonomous multi-agent delegation across HR recruiters, SEO writers, and customer support.
+                Orchestrates multi-step agent delegation — the same graph runtime every venture&apos;s workflows are built on.
               </p>
               <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-[#ddd6fe]">
-                <span>Active Agents: 7</span>
-                <span className="text-[#6ee7b7]">Latency: 18ms</span>
+                <span>Powers: 7 Ventures</span>
+                <span className="text-[#6ee7b7]">Model: llama-3.3-70b</span>
               </div>
             </div>
 
@@ -259,16 +260,16 @@ export function AIDemoWidget() {
               <div className="flex justify-between items-center">
                 <span className="text-xs font-bold text-[#10b981] flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse"></span>
-                  ChromaDB Vector RAG
+                  Vector RAG Index
                 </span>
                 <span className="text-[9px] bg-[#10b981]/20 text-[#6ee7b7] px-1.5 py-0.5 rounded font-mono font-bold">Embedding Store</span>
               </div>
               <p className="text-[11px] text-[#9aa0b8] leading-relaxed">
-                Sub-50ms semantic document retrieval powering medical prescription OCR, student Q&A, and resume matching.
+                Semantic document retrieval powering prescription OCR lookups, student Q&amp;A, and resume matching.
               </p>
               <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-[#6ee7b7]">
                 <span>Vector Size: 384d</span>
-                <span>Hits: 99.4%</span>
+                <span>Docs Indexed: 8</span>
               </div>
             </div>
 
@@ -276,16 +277,16 @@ export function AIDemoWidget() {
               <div className="flex justify-between items-center">
                 <span className="text-xs font-bold text-[#f59e0b] flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-[#f59e0b] animate-pulse"></span>
-                  YOLO v8 PyTorch
+                  YOLOv8 Vision
                 </span>
                 <span className="text-[9px] bg-[#f59e0b]/20 text-[#fef3c7] px-1.5 py-0.5 rounded font-mono font-bold">best.pt Weights</span>
               </div>
               <p className="text-[11px] text-[#9aa0b8] leading-relaxed">
-                Real-time structural defect bounding-box detection & BOQ material repair cost generation.
+                Structural defect bounding-box detection, built for Breakdown Factor&apos;s site-safety monitoring.
               </p>
               <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-[#fef3c7]">
                 <span>Weights: 64MB</span>
-                <span>CV Recall: 99.1%</span>
+                <span>Used In: Breakdown Factor</span>
               </div>
             </div>
           </div>

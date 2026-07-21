@@ -147,7 +147,84 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .mesh-bg,
-  .marquee-track {
+  .marquee-track,
+  .asha-breathe,
+  .asha-eye,
+  .asha-spark,
+  .flow-dot {
     animation: none;
   }
+}
+
+/* ── Asha persona (donor & welfare assistant) ────────────────────────── */
+@keyframes ashaBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+.asha-breathe {
+  animation: ashaBreathe 4.5s ease-in-out infinite;
+}
+
+@keyframes ashaBlink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.15); }
+}
+.asha-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ashaBlink 5s ease-in-out infinite;
+}
+
+@keyframes ashaTwinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+.asha-spark {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ashaTwinkle 2.6s ease-in-out infinite;
+}
+
+/* ── Impact flow (donations → programs → community) ──────────────────── */
+.flow-node {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  /* border-radius intentionally left to the Tailwind rounded-* utility
+     applied at each call site, so cascade order with Tailwind never matters. */
+}
+.flow-connector {
+  position: relative;
+  background: linear-gradient(90deg, rgba(var(--primary-rgb), 0.35), rgba(var(--secondary-rgb), 0.35));
+}
+.flow-connector.vertical {
+  background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.35), rgba(var(--secondary-rgb), 0.35));
+}
+@keyframes flowDotMoveX {
+  0% { left: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+@keyframes flowDotMoveY {
+  0% { top: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+.flow-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--secondary-l);
+  box-shadow: 0 0 8px rgba(var(--secondary-rgb), 0.9);
+  top: 50%;
+  transform: translateY(-50%);
+  animation: flowDotMoveX 2.6s linear infinite;
+}
+.flow-connector.vertical .flow-dot {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: flowDotMoveY 2.6s linear infinite;
 }
