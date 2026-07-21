@@ -25,11 +25,8 @@ tsconfig.tsbuildinfo
 _run_log.txt
 
 # ── Built frontend copied into the backend at build time ─────────────────────
-# The six Next.js apps generate backend/static/ locally from frontend/out/; none
-# of them tracked it before and the Dockerfile rebuilds it, so it stays ignored.
-# Sevenforce is the exception: its backend/static/ is a hand-written dashboard
-# (real source, 4 files) and WAS tracked — keep committing that one.
-apps/*/backend/static/
+# Ensure backend/static is tracked so Render serves the compiled Next.js single-page applications
+# apps/*/backend/static/
 !apps/sevenforce/backend/static/
 
 # ── Migration leftovers ──────────────────────────────────────────────────────
