@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+const API_BASE = "/sevenforce";
+
+  // Setup demo token if not present
+  if (!localStorage.getItem('sevenforce_token')) {
+    localStorage.setItem('sevenforce_token', 'demo_token');
+    localStorage.setItem('sevenforce_offline_mode', '1');
+    localStorage.setItem('sevenforce_offline_username', 'Demo User');
+  }
+</script>
+<title>Sevenforce — Enterprise AI Workforce Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --cy: #06b6d4; --vi: #8b5cf6; --em: #f59e0b;
+  --bg: #030712; --panel: rgba(13, 20, 39, 0.6); --panel-hi: rgba(22, 33, 62, 0.8);
+  --line: rgba(255, 255, 255, 0.08); --line-focus: rgba(6, 182, 212, 0.4);
+  --tx: #f3f4f6; --mut: #9ca3af; --danger: #f87171; --success: #10b981;
+  --grd1: linear-gradient(135deg, #06b6d4, #8b5cf6);
+  --grd2: linear-gradient(135deg, #8b5cf6, #f59e0b);
+  --grd-btn: linear-gradient(135deg, #06b6d4, #8b5cf6);
+  --shadow: 0 20px 50px rgba(0,0,0,0.5);
+  --sidebar-w: 260px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+  background-color: var(--bg);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%), 
+    radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px), 
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 24px 24px, 24px 24px;
+  color:var(--tx);
+  display:flex;flex-direction:column;
+}
+a{color:var(--cy);text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit;outline:none}
+
+/* ── TOP BAR ─────────────────────────────────────── */
+.topbar{
+  display:flex;align-items:center;gap:14px;
+  padding:0 24px;height:64px;
+  background:rgba(3, 7, 18, 0.85);
+  border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(16px);flex-shrink:0;
+}
+.logo-mark{
+  width:38px;height:38px;border-radius:11px;
+  background:var(--grd1);
+  display:grid;place-items:center;font-size:20px;
+  box-shadow:0 0 20px rgba(6,182,212,0.35);flex-shrink:0;
+}
+.topbar-brand{font-weight:900;font-size:17px;letter-spacing:-.5px;background:var(--grd1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.topbar-sub{font-size:11px;color:var(--mut);margin-top:1px}
+.topbar-spacer{flex:1}
+.prov-badge{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(255,255,255,0.02);border:1px solid var(--line);
+  padding:6px 14px;border-radius:20px;font-size:12px;color:var(--mut);
+}
+.prov-dot{width:8px;height:8px;border-radius:50%;background:var(--cy);box-shadow:0 0 10px var(--cy);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(0.8)}}
+.prov-badge b{color:var(--cy);font-size:11.5px}
+.topbar-btn{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.03);border:1px solid var(--line);
+  color:var(--tx);padding:8px 16px;border-radius:10px;
+  font-size:12.5px;font-weight:600;transition:.2s;
+}
+.topbar-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--cy);box-shadow:0 0 15px rgba(6,182,212,0.15)}
+.topbar-btn i{font-size:13px;color:var(--cy)}
+.user-badge{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,0.03);border:1px solid var(--line);
+  padding:6px 14px;border-radius:20px;font-size:12.5px;cursor:pointer;transition:.2s;
+}
+.user-badge:hover{background:rgba(255,255,255,0.08);border-color:var(--vi)}
+.user-ava{
+  width:26px;height:26px;border-radius:50%;
+  background:var(--grd1);display:grid;place-items:center;
+  font-size:12px;font-weight:800;color:#fff;
+}
+
+/* ── LAYOUT ──────────────────────────────────────── */
+.layout{display:flex;flex:1;overflow:hidden}
+
+/* ── SIDEBAR ─────────────────────────────────────── */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  border-right:1px solid var(--line);
+  background:rgba(3, 7, 18, 0.4);
+  overflow-y:auto;padding:16px 10px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.sidebar-group{
+  font-size:10px;text-transform:uppercase;
+  letter-spacing:.15em;color:var(--mut);
+  padding:14px 12px 6px;font-weight:800;
+}
+.sidebar-item{
+  display:flex;align-items:center;gap:12px;width:100%;
+  text-align:left;color:var(--mut);
+  padding:10px 12px;border-radius:12px;font-size:13.5px;
+  font-weight:600;transition:.2s;
+}
+.sidebar-item:hover{background:rgba(255, 255, 255, 0.04);color:var(--tx)}
+.sidebar-item.active{
+  background:linear-gradient(135deg,rgba(6,182,212,0.12),rgba(139,92,246,0.12));
+  color:var(--tx);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.08);
+  border-left:3px solid var(--cy);
+  padding-left:9px;
+}
+.sidebar-em{font-size:17px;width:24px;text-align:center}
+.sidebar-info{flex:1;min-width:0}
+.sidebar-name{font-size:13.5px;font-weight:800}
+.sidebar-role{font-size:11px;color:var(--mut);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-item.active .sidebar-role{color:var(--cy)}
+
+/* ── MAIN CONTENT ────────────────────────────────── */
+.main{flex:1;overflow-y:auto;padding:28px 32px;max-width:100%}
+.main::-webkit-scrollbar{width:5px}
+.main::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+
+/* ── AGENT HEADER ────────────────────────────────── */
+.agent-header{
+  display:flex;align-items:flex-start;gap:18px;
+  margin-bottom:28px;
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:20px;padding:24px;
+  backdrop-filter:blur(20px);
+  position:relative;overflow:hidden;
+}
+.agent-header::before{
+  content:'';position:absolute;
+  top:-60px;right:-60px;width:220px;height:220px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(6,182,212,0.18),transparent 70%);
+  pointer-events:none;
+}
+.agent-em-big{
+  font-size:44px;line-height:1;
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--line);
+  width:64px;height:64px;border-radius:16px;
+  display:grid;place-items:center;
+}
+.agent-hinfo{flex:1}
+.agent-htitle{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.agent-htitle h2{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.agent-role-badge{
+  background:linear-gradient(135deg,rgba(6,182,212,0.15),rgba(139,92,246,0.15));
+  border:1px solid rgba(6,182,212,0.3);
+  color:var(--cy);font-size:11px;font-weight:800;
+  padding:4px 12px;border-radius:20px;letter-spacing:.2px;
+}
+.agent-hdesc{color:var(--mut);font-size:14px;line-height:1.65;max-width:640px}
+
+/* ── SPLIT INTERFACE (ENTERPRISE STYLE) ──────────── */
+.split-container{
+  display:grid;grid-template-columns:1fr 1.1fr;gap:24px;
+  align-items:start;
+}
+
+/* ── TOOL CARD & INPUTS ──────────────────────────── */
+.tool-card{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:20px;padding:24px;
+  backdrop-filter:blur(20px);
+  box-shadow:var(--shadow);
+}
+.tool-header{display:flex;align-items:center;justify-content:between;margin-bottom:16px}
+.tool-title{font-size:15px;font-weight:800;letter-spacing:-.2px;display:flex;align-items:center;gap:8px}
+.tool-title i{color:var(--cy)}
+.tool-ep{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--mut);
+  background:rgba(255,255,255,0.02);border:1px solid var(--line);
+  padding:4px 10px;border-radius:8px;margin-top:6px;display:inline-block;
+}
+.input-group{margin-bottom:16px}
+.input-label{display:block;font-size:11.5px;font-weight:700;color:var(--mut);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.input-wrapper{position:relative;display:flex;align-items:center}
+.input-wrapper i{position:absolute;left:14px;color:var(--mut);font-size:14px}
+.input-wrapper input,
+.input-wrapper textarea,
+.input-wrapper select{
+  width:100%;background:rgba(255,255,255,0.02);border:1px solid var(--line);
+  border-radius:12px;color:var(--tx);padding:11px 14px 11px 38px;
+  font-size:13.5px;font-family:inherit;transition:.2s;outline:none;
+}
+.input-wrapper textarea{padding-left:14px;min-height:90px;resize:vertical}
+.input-wrapper input:focus,
+.input-wrapper textarea:focus,
+.input-wrapper select:focus{
+  border-color:var(--cy);box-shadow:0 0 15px rgba(6,182,212,0.15);background:rgba(255,255,255,0.04);
+}
+.row-inputs{display:flex;gap:12px;flex-wrap:wrap}
+.row-inputs>div{flex:1;min-width:140px}
+
+.run-btn{
+  width:100%;margin-top:8px;
+  background:var(--grd-btn);color:#030712;
+  border:0;padding:12px 24px;border-radius:12px;
+  font-weight:900;font-size:14px;cursor:pointer;
+  transition:.3s;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 8px 24px rgba(6,182,212,0.25);
+}
+.run-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 12px 30px rgba(6,182,212,0.45);
+}
+.run-btn:disabled{opacity:.55;cursor:wait;transform:none}
+
+/* ── CONSOLE PANELS (SINTRA / OWL STYLE) ────────── */
+.console-card{
+  background:rgba(3, 7, 18, 0.4);border:1px solid var(--line);
+  border-radius:20px;padding:24px;min-height:450px;
+  display:flex;flex-direction:column;
+  box-shadow:var(--shadow);position:relative;
+}
+.console-header{
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:16px;
+}
+.console-brand{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--mut);display:flex;align-items:center;gap:6px}
+.console-brand i{color:var(--vi)}
+.console-status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mut)}
+.console-status-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2)}
+.console-status-dot.active{background:var(--success);box-shadow:0 0 8px var(--success);animation:pulse 2s infinite}
+
+.console-body{flex:1;display:flex;flex-direction:column;justify-content:center}
+.console-placeholder{
+  text-align:center;color:var(--mut);padding:40px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.console-placeholder i{font-size:36px;color:rgba(255,255,255,0.05)}
+.console-placeholder p{font-size:13px;max-width:240px;line-height:1.6}
+
+/* Result Styles */
+.console-result{display:none}
+.console-result.show{display:block}
+.result-section{margin-bottom:16px}
+.result-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--mut);margin-bottom:6px}
+.result-box{
+  background:rgba(255,255,255,0.015);border:1px solid var(--line);
+  border-radius:12px;padding:16px;font-size:13.5px;line-height:1.65;
+  white-space:pre-wrap;word-break:break-word;
+}
+.result-box pre{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;color:#e5e7eb}
+.pill{
+  display:inline-block;background:rgba(255,255,255,0.04);
+  border:1px solid var(--line);border-radius:20px;
+  padding:4px 12px;font-size:11.5px;margin:2px 4px 0 0;color:var(--tx);font-weight:600;
+}
+.score-badge{
+  font-size:44px;font-weight:900;
+  background:var(--grd1);-webkit-background-clip:text;background-clip:text;color:transparent;
+  line-height:1;margin-bottom:4px;
+}
+table{border-collapse:collapse;width:100%;font-size:12.5px;margin-top:8px}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+th{background:rgba(255,255,255,0.02);font-weight:700;color:var(--mut)}
+
+/* ── SETTINGS & AUTH MODALS ──────────────────────── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(3, 7, 18, 0.7);backdrop-filter:blur(8px);
+  z-index:200;display:none;align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:rgba(13, 20, 39, 0.85);border:1px solid var(--line);
+  border-radius:24px;padding:32px;width:480px;max-width:96vw;
+  box-shadow:var(--shadow);position:relative;backdrop-filter:blur(24px);
+}
+.modal h3{font-size:18px;font-weight:900;margin-bottom:6px;letter-spacing:-.3px}
+.modal .sub{font-size:13px;color:var(--mut);margin-bottom:20px;line-height:1.5}
+.modal-close{
+  position:absolute;top:16px;right:16px;
+  background:rgba(255,255,255,0.03);border:1px solid var(--line);
+  color:var(--mut);width:32px;height:32px;
+  border-radius:10px;font-size:13px;
+  display:grid;place-items:center;cursor:pointer;transition:.15s;
+}
+.modal-close:hover{background:rgba(255,255,255,0.08);color:var(--tx)}
+.modal-tabs{display:flex;gap:6px;margin-bottom:20px}
+.modal-tab{
+  flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);
+  background:rgba(255,255,255,0.01);color:var(--mut);font-size:13px;font-weight:700;
+  transition:.2s;
+}
+.modal-tab.active{background:var(--grd1);color:#030712;border-color:transparent;box-shadow:0 4px 15px rgba(6,182,212,0.25)}
+.modal-submit{
+  width:100%;background:var(--grd-btn);color:#030712;border:0;
+  padding:12px;border-radius:12px;font-weight:900;font-size:14px;
+  margin-top:12px;transition:.2s;box-shadow:0 8px 24px rgba(6,182,212,0.25);
+}
+.modal-submit:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(6,182,212,0.45)}
+
+/* Key items */
+.key-row{margin-bottom:14px}
+.key-row label{display:block;font-size:11.5px;font-weight:700;color:var(--mut);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
+.key-field{display:flex;gap:10px;align-items:center}
+.key-field input{
+  flex:1;background:rgba(255,255,255,0.02);border:1px solid var(--line);
+  border-radius:10px;color:var(--tx);padding:9px 12px;font-size:13px;outline:none;
+}
+.key-field input:focus{border-color:var(--cy)}
+.key-badge{
+  font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;
+  border:1px solid rgba(16,185,129,0.3);color:var(--success);background:rgba(16,185,129,0.1);
+  white-space:nowrap;
+}
+.key-badge.warn{border-color:rgba(248,113,113,0.3);color:var(--danger);background:rgba(248,113,113,0.1)}
+.key-link{font-size:11px;color:var(--cy);margin-top:4px;display:inline-block}
+
+/* ── BANNER / GATE ────────────────────────────────── */
+.demo-banner{
+  background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(139,92,246,0.12));
+  border:1px solid rgba(245,158,11,0.25);
+  border-radius:16px;padding:16px 20px;
+  display:flex;align-items:center;gap:16px;margin-bottom:24px;
+}
+.demo-banner i{font-size:20px;color:var(--em)}
+.demo-banner-txt{flex:1;font-size:13.5px;line-height:1.5;color:var(--mut)}
+.demo-banner-txt strong{color:var(--em)}
+.demo-banner-btn{
+  background:var(--grd2);color:#030712;border:0;
+  padding:9px 18px;border-radius:10px;font-weight:900;font-size:13px;
+  white-space:nowrap;box-shadow:0 6px 15px rgba(245,158,11,0.25);
+}
+
+/* ── OVERVIEW / STATS ────────────────────────────── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:16px;padding:20px;backdrop-filter:blur(20px);
+}
+.stat-val{font-size:32px;font-weight:900;background:var(--grd1);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.stat-lab{font-size:12px;color:var(--mut);font-weight:700;margin-top:6px;text-transform:uppercase;letter-spacing:.3px}
+
+.agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.agent-card{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:16px;padding:20px;cursor:pointer;transition:.25s;
+  backdrop-filter:blur(20px);
+}
+.agent-card:hover{
+  border-color:var(--cy);transform:translateY(-2px);
+  box-shadow:0 12px 30px rgba(6,182,212,0.15);
+}
+.agent-em{font-size:32px;margin-bottom:12px}
+.agent-name{font-weight:900;font-size:15px}
+.agent-role{font-size:12px;color:var(--mut);margin:2px 0 8px}
+.agent-tools{font-size:11.5px;color:var(--cy);font-weight:700;display:flex;align-items:center;gap:6px}
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media(max-width:1024px){
+  .split-container{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .sidebar{width:64px}
+  .sidebar-name,.sidebar-role,.sidebar-group{display:none}
+  .sidebar-item{padding:12px;justify-content:center}
+  .sidebar-em{width:auto}
+  .main{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ──────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <div class="logo-mark">🤖</div>
+  <div>
+    <div class="topbar-brand">Sevenforce</div>
+    <div class="topbar-sub">Your AI Workforce</div>
+  </div>
+  <div class="topbar-spacer"></div>
+  <div class="prov-badge">
+    <div class="prov-dot"></div>
+    provider: <b id="prov-name">loading…</b>
+  </div>
+  <button class="topbar-btn" onclick="openSettingsModal()">
+    <i class="fas fa-key"></i> Keys
+  </button>
+  <div class="user-badge" onclick="handleAuthAction()" id="user-badge">
+    <div class="user-ava" id="user-ava">?</div>
+    <span id="user-name">Sign In</span>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- ── SIDEBAR ────────────────────────────────────────────────────────── -->
+  <nav class="sidebar" id="sidebar"></nav>
+
+  <!-- ── MAIN ──────────────────────────────────────────────────────────── -->
+  <main class="main" id="main"></main>
+</div>
+
+<!-- ── AUTH MODAL ──────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
+    <h3>🔐 Enterprise AI Authentication</h3>
+    <p class="sub">Sign in or register a developer account to configure custom model weights and run pipelines.</p>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+      <button class="modal-tab" id="tab-signup" onclick="switchTab('signup')">Register</button>
+    </div>
+    <div id="auth-alert" style="display:none" class="key-badge warn" style="margin-bottom:12px;width:100%;text-align:center"></div>
+    <div id="auth-form-login">
+      <div class="input-group">
+        <label class="input-label">Email</label>
+        <div class="input-wrapper"><i class="fas fa-envelope"></i><input id="login-email" type="email" placeholder="you@example.com" style="padding-left:38px"></div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Password</label>
+        <div class="input-wrapper"><i class="fas fa-lock"></i><input id="login-pw" type="password" placeholder="Your account password" style="padding-left:38px"></div>
+      </div>
+      <button class="modal-submit" onclick="doLogin()">Sign In</button>
+    </div>
+    <div id="auth-form-signup" style="display:none">
+      <div class="input-group">
+        <label class="input-label">Name</label>
+        <div class="input-wrapper"><i class="fas fa-user"></i><input id="signup-name" placeholder="Your name" style="padding-left:38px"></div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Email</label>
+        <div class="input-wrapper"><i class="fas fa-envelope"></i><input id="signup-email" type="email" placeholder="you@example.com" style="padding-left:38px"></div>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Password</label>
+        <div class="input-wrapper"><i class="fas fa-lock"></i><input id="signup-pw" type="password" placeholder="Min 6 characters" style="padding-left:38px"></div>
+      </div>
+      <button class="modal-submit" onclick="doSignup()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── SETTINGS MODAL ────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal" style="width:520px">
+    <button class="modal-close" onclick="closeSettingsModal()"><i class="fas fa-times"></i></button>
+    <h3>⚙️ Bring Your Own Key (BYOK)</h3>
+    <p class="sub">These keys remain entirely local in your browser's localStorage and are injected client-side to make direct endpoint connections.</p>
+
+    <div class="key-row">
+      <label>Groq API Key <span style="color:var(--cy);font-size:10px">(FREE — Highly Recommended)</span></label>
+      <div class="key-field">
+        <input id="k-groq" type="password" placeholder="gsk_…">
+        <span class="key-badge" id="groq-status">Not set</span>
+      </div>
+      <a href="https://console.groq.com/keys" target="_blank" class="key-link">→ Get free Groq key (console.groq.com)</a>
+    </div>
+
+    <div class="key-row">
+      <label>Google Gemini API Key <span style="color:var(--mut);font-size:10px">(FREE fallback)</span></label>
+      <div class="key-field">
+        <input id="k-gemini" type="password" placeholder="AIza…">
+        <span class="key-badge" id="gemini-status">Not set</span>
+      </div>
+      <a href="https://aistudio.google.com/app/apikey" target="_blank" class="key-link">→ Get free Gemini key (aistudio.google.com)</a>
+    </div>
+
+    <div class="key-row">
+      <label>OpenAI API Key</label>
+      <div class="key-field">
+        <input id="k-openai" type="password" placeholder="sk-…">
+        <span class="key-badge" id="openai-status">Not set</span>
+      </div>
+    </div>
+
+    <div class="key-row">
+      <label>SerpAPI Key <span style="color:var(--mut);font-size:10px">(for live search engines)</span></label>
+      <div class="key-field">
+        <input id="k-serpapi" type="password" placeholder="serpapi_…">
+        <span class="key-badge" id="serpapi-status">Not set</span>
+      </div>
+    </div>
+
+    <div class="key-row">
+      <label>Mistral API Key</label>
+      <div class="key-field">
+        <input id="k-mistral" type="password" placeholder="…">
+        <span class="key-badge" id="mistral-status">Not set</span>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:20px">
+      <button class="modal-submit" style="flex:2;margin:0" onclick="saveSettings()">Save Keys</button>
+      <button onclick="clearSettings()" style="flex:1;background:rgba(255,255,255,0.03);border:1px solid var(--line);color:var(--mut);border-radius:12px;padding:12px;font-weight:800;font-size:13.5px">Clear</button>
+    </div>
+    <div id="settings-msg" style="margin-top:10px;font-size:12.5px;color:var(--success);display:none;text-align:center">✅ Keys saved successfully!</div>
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const AGENTS = [
+  {
+    id:"dashboard", suite:"Overview", em:"🏠", name:"Workspace Overview", role:"System Administrator",
+    desc:"Manage 7 autonomous AI employees wired into your enterprise workspace.",
+    tools:[]
+  },
+  {
+    id:"owl", suite:"Orchestrator", em:"🦉", name:"Owl", role:"AI Chief of Staff",
+    desc:"State any multi-part goal. Owl orchestrates workflows, distributes tasks to Maya, Vibe, and Wave, and summarizes the delivery lifecycle.",
+    tools:[
+      {t:"Ask Owl to Orchestrate Workflows", ep:"/api/agent/run", icon:"fa-network-wired", f:[
+        {k:"message",l:"What workflow do you need orchestrated? (e.g. 'Draft a blog post about LLM RAG safety and create 3 LinkedIn promotional captions')",type:"textarea",icon:"fa-keyboard"}
+      ]}
+    ]
+  },
+  {
+    id:"maya", suite:"Growth AI", em:"🖊️", name:"Maya", role:"Content & SEO Director",
+    desc:"Autonomous brand analysis, web scrapers, keyword targeting, and SEO article generators.",
+    tools:[
+      {t:"Extract Brand Profile", ep:"/api/tools/brand-profile", icon:"fa-globe", f:[{k:"url",l:"Website URL",icon:"fa-link"}]},
+      {t:"Scrape Site Content", ep:"/api/tools/site-scrape", icon:"fa-spider", f:[{k:"url",l:"Target Scraping URL",icon:"fa-link"}]},
+      {t:"Generate SEO Content Topics", ep:"/api/tools/content-topics", icon:"fa-lightbulb", f:[
+        {k:"name",l:"Brand Name",icon:"fa-font"},
+        {k:"industry",l:"Industry Sector",icon:"fa-briefcase"},
+        {k:"audience",l:"Target Audience Persona",icon:"fa-users"},
+        {k:"tone",l:"Tone of Voice",icon:"fa-comment-dots"},
+        {k:"n",l:"Number of Ideas",type:"number",def:5,icon:"fa-list-ol"}
+      ]},
+      {t:"Draft Long-form SEO Article", ep:"/api/tools/content-blog", icon:"fa-pen-fancy", f:[
+        {k:"name",l:"Brand Name",icon:"fa-font"},
+        {k:"industry",l:"Industry",icon:"fa-briefcase"},
+        {k:"audience",l:"Audience",icon:"fa-users"},
+        {k:"tone",l:"Tone",icon:"fa-comment-dots"},
+        {k:"title",l:"Blog Title Target",icon:"fa-heading"},
+        {k:"angle",l:"Content Brief & Guidelines",type:"textarea",icon:"fa-keyboard"}
+      ]},
+    ]
+  },
+  {
+    id:"vibe", suite:"Growth AI", em:"📱", name:"Vibe", role:"Social Media Lead",
+    desc:"Tailors viral copy and platform-optimized posts for Twitter/X, LinkedIn, and Instagram.",
+    tools:[
+      {t:"Generate Multi-Platform Social Captions", ep:"/api/tools/social-captions", icon:"fa-hashtag", f:[
+        {k:"topic",l:"Campaign Topic / Product Release Details",type:"textarea",icon:"fa-keyboard"},
+        {k:"brand",l:"Brand Name Context",icon:"fa-font"},
+        {k:"platforms",l:"Target Channels (comma-separated)",type:"text",def:"instagram, linkedin, x",icon:"fa-share-nodes"}
+      ]}
+    ]
+  },
+  {
+    id:"wave", suite:"Growth AI", em:"💬", name:"Wave", role:"Sales & CRM Agent",
+    desc:"Autonomous lead pipeline, outreach automation, contact validation, and WhatsApp triggers.",
+    tools:[
+      {t:"Map Ideal Customer Profiles (ICP)", ep:"/api/tools/icp", icon:"fa-bullseye", f:[
+        {k:"product",l:"Product / Value Proposition Detail",type:"textarea",icon:"fa-keyboard"},
+        {k:"market",l:"Target Industry / Geolocation",icon:"fa-map-marker-alt"}
+      ]},
+      {t:"Score & Qualify Incoming Leads", ep:"/api/tools/lead-score", icon:"fa-award", f:[
+        {k:"lead",l:"Raw Lead Data (Paste email/notes/bio)",type:"textarea",icon:"fa-keyboard"},
+        {k:"offer",l:"Proposed Solution/Offer",icon:"fa-gift"}
+      ]},
+      {t:"Generate Multi-Step Outreach Campaigns", ep:"/api/tools/outreach-sequence", icon:"fa-paper-plane", f:[
+        {k:"persona",l:"Target Contact Persona",type:"textarea",icon:"fa-user-tie"},
+        {k:"offer",l:"Campaign Message / Core Value Pitch",icon:"fa-gift"},
+        {k:"channel",l:"Outreach Channel",type:"select",opts:["email","linkedin","whatsapp"],icon:"fa-route"},
+        {k:"steps",l:"Total Campaign Steps",type:"number",def:3,icon:"fa-list-ol"}
+      ]},
+      {t:"Verify Raw Outbound Email List", ep:"/api/tools/validate-emails", icon:"fa-envelope-circle-check", f:[
+        {k:"emails",l:"Emails to audit (one per line)",type:"lines",icon:"fa-list"}
+      ]},
+      {t:"Deliver Direct WhatsApp Trigger", ep:"/api/notify/whatsapp", icon:"fa-comments", f:[
+        {k:"to",l:"Destination Mobile (with country code)",icon:"fa-phone"},
+        {k:"body",l:"Message Template Body",type:"textarea",icon:"fa-keyboard"}
+      ]},
+      {t:"Execute Bulk Email Campaign", ep:"/api/campaigns/send", icon:"fa-paper-plane", f:[
+        {k:"subject",l:"Email Subject Line",icon:"fa-heading"},
+        {k:"body",l:"Campaign Email Body (supports {name} token)",type:"textarea",icon:"fa-keyboard"},
+        {k:"recipients",l:"Recipients (one per line: email,Name)",type:"recipients",icon:"fa-list"}
+      ]},
+    ]
+  },
+  {
+    id:"nova", suite:"Agency AI", em:"📝", name:"Nova", role:"Lead Business Analyst",
+    desc:"Generates discovery matrices, exports requirements to professional Word (.docx) files, and writes test suites.",
+    tools:[
+      {t:"Generate Discovery & Scoping Questions", ep:"/api/tools/doc-questions", icon:"fa-question-circle", f:[
+        {k:"doc_type",l:"Scoping Document Target Type",type:"select",opts:["BRD","SRS","FRS","PRD","CHARTER","BUSINESS_PLAN","SOW"],icon:"fa-file-signature"},
+        {k:"requirements",l:"Raw Requirement Notes / Rough Brief",type:"textarea",icon:"fa-keyboard"}
+      ]},
+      {t:"Draft Document Draft (Markdown)", ep:"/api/tools/doc-generate", icon:"fa-file-word", f:[
+        {k:"doc_type",l:"Document Type",type:"select",opts:["BRD","SRS","FRS","PRD","CHARTER","BUSINESS_PLAN","SOW"],icon:"fa-file-signature"},
+        {k:"project_name",l:"Project Name Indicator",icon:"fa-font"},
+        {k:"requirements",l:"Raw Requirement Notes",type:"textarea",icon:"fa-keyboard"},
+        {k:"extra",l:"Compliance / SLA Constraints",type:"textarea",icon:"fa-shield-halved"}
+      ]},
+      {t:"Export & Download Document as Word (.docx)", ep:"/api/download/docx", download:true, icon:"fa-download", f:[
+        {k:"doc_type",l:"Document Type",icon:"fa-file-signature"},
+        {k:"project_name",l:"Project Name",icon:"fa-font"},
+        {k:"markdown",l:"Markdown Raw Text to Export",type:"textarea",icon:"fa-keyboard"}
+      ]},
+      {t:"Generate Test Cases & Acceptance Criteria", ep:"/api/tools/test-cases", icon:"fa-bug", f:[
+        {k:"feature",l:"Feature Description / User Story",type:"textarea",icon:"fa-keyboard"},
+        {k:"context",l:"Existing Tech Stack Constraints",icon:"fa-cube"}
+      ]},
+      {t:"Audit Figma Web Design Link", ep:"/api/tools/figma-analyze", icon:"fa-figma", f:[
+        {k:"url",l:"Figma Design URL",icon:"fa-link"},
+        {k:"token",l:"Figma Developer Token (Optional)",icon:"fa-key"},
+        {k:"gemini_key",l:"Custom Gemini Key Override (Optional)",icon:"fa-key"}
+      ]},
+    ]
+  },
+  {
+    id:"echo", suite:"Agency AI", em:"🎙️", name:"Echo", role:"Meeting Assistant",
+    desc:"Transforms raw speech-to-text transcripts into clean summaries, decisions, and action plans.",
+    tools:[
+      {t:"Extract Transcript Deliverables", ep:"/api/tools/summarize-transcript", icon:"fa-audio-description", f:[
+        {k:"transcript",l:"Paste Meeting Transcript",type:"textarea",icon:"fa-keyboard"},
+        {k:"context",l:"Context / Key Participants List",icon:"fa-circle-info"}
+      ]}
+    ]
+  },
+  {
+    id:"scout", suite:"Agency AI", em:"🧑‍💼", name:"Scout", role:"AI Talent Acquisition",
+    desc:"Generates specialized interview questions, runs 7-dimension scoring audits, and maps CV profiles against JDs.",
+    tools:[
+      {t:"Create Target Interview Questionnaire", ep:"/api/tools/interview-generate", icon:"fa-comments-question", f:[
+        {k:"role",l:"Target Role Title",icon:"fa-user-tie"},
+        {k:"level",l:"Seniority Level",type:"select",opts:["junior","mid","senior","lead"],icon:"fa-layer-group"},
+        {k:"n",l:"Number of Questions",type:"number",def:10,icon:"fa-list-ol"},
+        {k:"jd",l:"Job Description Text",type:"textarea",icon:"fa-keyboard"},
+        {k:"resume",l:"Candidate Resume Bio (Optional)",type:"textarea",icon:"fa-address-card"}
+      ]},
+      {t:"Evaluate & Score Candidate Answers", ep:"/api/tools/interview-evaluate", icon:"fa-star-half-stroke", f:[
+        {k:"role",l:"Target Role",icon:"fa-user-tie"},
+        {k:"level",l:"Target Level",type:"select",opts:["junior","mid","senior","lead"],icon:"fa-layer-group"},
+        {k:"jd",l:"Job Description Text",type:"textarea",icon:"fa-keyboard"},
+        {k:"transcript",l:"Interview Transcript (Answers)",type:"textarea",icon:"fa-keyboard"}
+      ]},
+      {t:"Run Resume vs JD Alignment Audit", ep:"/api/tools/resume-analyze", icon:"fa-chart-pie", f:[
+        {k:"resume",l:"Candidate Resume Raw Text",type:"textarea",icon:"fa-address-card"},
+        {k:"jd",l:"Job Description Text (Optional)",type:"textarea",icon:"fa-keyboard"}
+      ]},
+    ]
+  },
+  {
+    id:"sage", suite:"Agency AI", em:"📊", name:"Sage", role:"Strategic SQL Analyst",
+    desc:"Connects databases to high-speed NL-to-SQL logic paths to retrieve schema trends using raw English prompts.",
+    tools:[
+      {t:"Query Workspace Databases", ep:"/api/tools/ask-data", icon:"fa-database", f:[
+        {k:"question",l:"Ask about database trends (e.g. 'Show the total registrations from Surat last week')",type:"textarea",icon:"fa-question-circle"}
+      ]}
+    ]
+  },
+  {
+    id:"atlas", suite:"Game Dev AI", em:"🎮", name:"Atlas, Pixel & Forge", role:"Game Development Trio",
+    desc:"Atlas designs mechanics and systems, Pixel generates real concept art via Stable Diffusion, and Forge specs 3D assets for your engine.",
+    tools:[
+      {t:"Atlas — Game Design Brief", ep:"/api/tools/game-design-brief", icon:"fa-gamepad", f:[
+        {k:"concept",l:"Game Concept (e.g. 'roguelike deckbuilder set in a flooded city')",type:"textarea",icon:"fa-lightbulb"},
+        {k:"genre",l:"Genre (optional)",icon:"fa-dice-d20"}
+      ]},
+      {t:"Pixel — Generate Concept Art", ep:"/api/tools/concept-art", icon:"fa-palette", f:[
+        {k:"description",l:"Asset / Character / UI Description",type:"textarea",icon:"fa-keyboard"},
+        {k:"style",l:"Art Style",def:"digital painting, game concept art",icon:"fa-brush"}
+      ]},
+      {t:"Forge — 3D Asset Spec & Greybox Plan", ep:"/api/tools/3d-asset-brief", icon:"fa-cube", f:[
+        {k:"description",l:"3D Asset Description",type:"textarea",icon:"fa-keyboard"},
+        {k:"engine",l:"Target Engine",def:"Unreal Engine",icon:"fa-gear"}
+      ]}
+    ]
+  },
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+const $ = (s, r = document) => r.querySelector(s);
+let current = "dashboard";
+let userInfo = null;
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  buildSidebar();
+  renderPanel();
+  loadUserState();
+  fetchHealth();
+  loadKeys();
+});
+
+function loadUserState() {
+  const token = localStorage.getItem("sevenforce_token");
+  const offline = localStorage.getItem("sevenforce_offline_mode") === "1";
+  const name = localStorage.getItem("sevenforce_offline_username") || "User";
+  if (token && !offline) {
+    fetch(API_BASE + "/api/auth/me", {headers:{"Authorization":`Bearer ${token}`}})
+      .then(r => r.json()).then(d => {
+        if (d.user) { userInfo = d.user; updateUserBadge(d.user.name); }
+        else { clearAuth(); }
+      }).catch(() => { updateUserBadge(name + " (offline)"); });
+  } else if (offline) {
+    updateUserBadge("Demo User");
+  } else {
+    updateUserBadge("Sign In");
+  }
+}
+
+function updateUserBadge(name) {
+  const nb = $("#user-name"), na = $("#user-ava");
+  nb.textContent = name;
+  na.textContent = name.charAt(0).toUpperCase();
+}
+
+async function fetchHealth() {
+  try {
+    const r = await fetch(API_BASE + "/api/health");
+    if (r.ok) {
+      const d = await r.json();
+      $("#prov-name").textContent = d.provider || "offline";
+    }
+  } catch(e) {
+    $("#prov-name").textContent = "backend offline";
+  }
+}
+
+function loadKeys() {
+  const keys = {
+    "k-groq": "user_groq_key", "k-gemini": "user_gemini_key",
+    "k-openai": "user_openai_key", "k-serpapi": "user_serpapi_key",
+    "k-mistral": "user_mistral_key"
+  };
+  for (const [id, lsKey] of Object.entries(keys)) {
+    const val = localStorage.getItem(lsKey) || "";
+    const el = $(`#${id}`);
+    if (el) el.value = val;
+    const statusId = id.replace("k-", "") + "-status";
+    const statusEl = $(`#${statusId}`);
+    if (statusEl) {
+      statusEl.textContent = val ? "✓ Set" : "Not set";
+      statusEl.className = val ? "key-badge" : "key-badge warn";
+    }
+  }
+}
+
+// ── SIDEBAR ──────────────────────────────────────────────────────────────────
+function buildSidebar() {
+  const nav = $("#sidebar");
+  let html = "";
+  let suite = "";
+  for (const a of AGENTS) {
+    if (a.suite !== suite) {
+      suite = a.suite;
+      html += `<div class="sidebar-group">${suite}</div>`;
+    }
+    html += `<button class="sidebar-item ${a.id === current ? 'active' : ''}" data-id="${a.id}">
+      <span class="sidebar-em">${a.em}</span>
+      <div class="sidebar-info">
+        <div class="sidebar-name">${a.name}</div>
+        <div class="sidebar-role">${a.role}</div>
+      </div>
+    </button>`;
+  }
+  nav.innerHTML = html;
+  nav.querySelectorAll(".sidebar-item").forEach(b => {
+    b.onclick = () => { current = b.dataset.id; buildSidebar(); renderPanel(); };
+  });
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderPanel() {
+  if (current === "dashboard") { renderDashboard(); return; }
+  const a = AGENTS.find(x => x.id === current);
+  if (!a) return;
+
+  const isDemo = localStorage.getItem("sevenforce_token") === "demo_token";
+  const banner = isDemo ? `<div class="demo-banner">
+    <i class="fas fa-exclamation-triangle"></i>
+    <div class="demo-banner-txt"><strong>Demo Simulation Mode</strong> — All tools run on fast static mocked paths. Configure your personal Groq / Gemini key in settings to connect live.</div>
+    <button class="demo-banner-btn" onclick="openAuthModal()">Setup Free Account →</button>
+  </div>` : "";
+
+  let toolsHtml = a.tools.map((tool, i) => {
+    const flds = tool.f.map(f => buildField(f)).join("");
+    return `<div class="tool-card" data-tool-idx="${i}" style="margin-bottom:20px">
+      <div class="tool-header">
+        <div class="tool-title"><i class="fas ${tool.icon || 'fa-bolt'}"></i> ${tool.t}</div>
+      </div>
+      <div class="tool-ep">POST ${tool.ep}</div>
+      <div style="margin-top:16px">${flds}</div>
+      <button class="run-btn"><i class="fas fa-play"></i> Trigger Agent Workflow</button>
+    </div>`;
+  }).join("");
+
+  $("#main").innerHTML = `
+    <div class="agent-header">
+      <div class="agent-em-big">${a.em}</div>
+      <div class="agent-hinfo">
+        <div class="agent-htitle">
+          <h2>${a.name}</h2>
+          <span class="agent-role-badge">${a.role}</span>
+        </div>
+        <p class="agent-hdesc">${a.desc}</p>
+      </div>
+    </div>
+    ${banner}
+    <div class="split-container">
+      <div class="forms-pane">
+        ${toolsHtml}
+      </div>
+      <div class="console-pane">
+        <div class="console-card">
+          <div class="console-header">
+            <div class="console-brand"><i class="fas fa-terminal"></i> ${a.name} Execution Console</div>
+            <div class="console-status">
+              <div class="console-status-dot active"></div>
+              <span>Agent Status: Online</span>
+            </div>
+          </div>
+          <div class="console-body" id="console-output">
+            <div class="console-placeholder">
+              <i class="fas fa-circle-nodes"></i>
+              <p>Configure parameters on the left and click "Trigger Agent Workflow" to observe autonomous generation pipelines.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Wire run buttons
+  $("#main").querySelectorAll(".tool-card").forEach((card, i) => {
+    card.querySelector(".run-btn").onclick = () => runTool(a.tools[i], card);
+  });
+}
+
+function renderDashboard() {
+  const ovCards = [
+    {val:"7", lab:"Active AI Specialists"},
+    {val:"28+", lab:"Pre-Wired Workflows"},
+    {val:"FREE", lab:"Bring-Your-Own-Key"},
+    {val:"SQLite", lab:"Local Data Store"},
+  ];
+  const ov = ovCards.map(c => `<div class="stat-card"><div class="stat-val">${c.val}</div><div class="stat-lab">${c.lab}</div></div>`).join("");
+  const agents = AGENTS.filter(a => a.id !== "dashboard");
+  const ag = agents.map(a => `<div class="agent-card" onclick="(function(){current='${a.id}';buildSidebar();renderPanel();})()">
+    <div class="agent-em">${a.em}</div>
+    <div class="agent-name">${a.name}</div>
+    <div class="agent-role">${a.role}</div>
+    <div class="agent-tools"><i class="fas fa-bolt"></i> ${a.tools.length} automated pipeline${a.tools.length !== 1 ? "s" : ""}</div>
+  </div>`).join("");
+
+  const isDemo = localStorage.getItem("sevenforce_token") === "demo_token";
+  const hero = isDemo ? `<div class="demo-banner" style="margin-bottom:24px">
+    <i class="fas fa-rocket"></i>
+    <div class="demo-banner-txt"><strong>Simulation Mode Active</strong> — Create a free account or add your personal API keys in the settings modal to unlock live production pipelines.</div>
+    <button class="demo-banner-btn" onclick="openAuthModal()">Create Portal Account →</button>
+  </div>` : `<div class="demo-banner" style="margin-bottom:24px;background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(6,182,212,0.1));border-color:rgba(16,185,129,0.25)">
+    <i class="fas fa-check-circle" style="color:var(--success)"></i>
+    <div class="demo-banner-txt"><strong style="color:var(--success)">Connected & Live</strong> — Your local browser keys are active and routed to backend model endpoints.</div>
+    <button class="demo-banner-btn" onclick="openSettingsModal()" style="background:var(--grd1)">Manage API Keys</button>
+  </div>`;
+
+  $("#main").innerHTML = `
+    <div style="margin-bottom:24px">
+      <h2 style="font-size:24px;font-weight:900;margin-bottom:4px;letter-spacing:-.5px">🤖 Autonomous AI Workforce Hub</h2>
+      <p style="color:var(--mut);font-size:14px">Your team of specialized AI employees. Run marketing, SEO, document formatting, and analytics pipelines instantly.</p>
+    </div>
+    ${hero}
+    <div class="stats-grid">${ov}</div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.15em;font-weight:800;color:var(--mut);margin-bottom:14px">Select an AI Employee to Start</div>
+    <div class="agents-grid">${ag}</div>
+  `;
+}
+
+// ── FIELD BUILDER ─────────────────────────────────────────────────────────────
+function buildField(f) {
+  const id = `fld_${f.k}`;
+  const lab = `<label class="input-label" for="${id}">${f.l || (f.k[0].toUpperCase() + f.k.slice(1).replace(/_/g, ' '))}</label>`;
+  let wrapper = "";
+  
+  if (f.type === "textarea" || f.type === "lines" || f.type === "recipients") {
+    wrapper = `<div class="input-wrapper"><textarea id="${id}" data-k="${f.k}" data-t="${f.type}" placeholder="Enter values…"></textarea></div>`;
+  } else if (f.type === "select") {
+    const opts = (f.opts || []).map(o => `<option>${o}</option>`).join("");
+    wrapper = `<div class="input-wrapper"><i class="fas ${f.icon || 'fa-chevron-down'}"></i><select id="${id}" data-k="${f.k}">${opts}</select></div>`;
+  } else if (f.type === "number") {
+    wrapper = `<div class="input-wrapper"><i class="fas ${f.icon || 'fa-calculator'}"></i><input id="${id}" data-k="${f.k}" data-t="number" type="number" value="${f.def ?? ''}"></div>`;
+  } else {
+    wrapper = `<div class="input-wrapper"><i class="fas ${f.icon || 'fa-keyboard'}"></i><input id="${id}" data-k="${f.k}" data-t="${f.type || 'text'}" value="${f.def ?? ''}" placeholder="Enter text…"></div>`;
+  }
+  
+  return `<div class="input-group">${lab}${wrapper}</div>`;
+}
+
+// ── COLLECT ───────────────────────────────────────────────────────────────────
+function collect(card) {
+  const body = {};
+  card.querySelectorAll("[data-k]").forEach(el => {
+    const k = el.dataset.k, t = el.dataset.t, v = el.value.trim();
+    if (t === "number") { if (v !== "") body[k] = parseFloat(v); }
+    else if (t === "csv") { body[k] = v ? v.split(",").map(x => x.trim()).filter(Boolean) : []; }
+    else if (t === "lines") { body[k] = v ? v.split(/\n+/).map(x => x.trim()).filter(Boolean) : []; }
+    else if (t === "recipients") { body[k] = v ? v.split(/\n+/).map(x => { const p = x.split(","); return {email:(p[0]||"").trim(), name:(p[1]||"").trim()}; }).filter(r => r.email) : []; }
+    else if (v !== "") body[k] = v;
+  });
+  return body;
+}
+
+// ── RUN TOOL ──────────────────────────────────────────────────────────────────
+async function runTool(tool, card) {
+  const btn = card.querySelector(".run-btn");
+  const consoleOutput = $("#console-output");
+  const token = localStorage.getItem("sevenforce_token");
+
+  // Gate: must sign in
+  if (token === "demo_token") {
+    openAuthModal();
+    return;
+  }
+
+  // Gate: must have API key
+  const hasKey = localStorage.getItem("user_groq_key") || localStorage.getItem("user_gemini_key") || localStorage.getItem("user_openai_key");
+  if (!hasKey) {
+    openSettingsModal();
+    return;
+  }
+
+  const payload = collect(card);
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Triggering…';
+  
+  // Show active running terminal mockup
+  consoleOutput.innerHTML = `
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;color:var(--cy)">
+      <div><span style="color:var(--vi)">[system]</span> Initializing target pipeline: ${tool.ep}</div>
+      <div style="margin-top:4px"><span style="color:var(--vi)">[system]</span> Payload validated. Injecting authorized BYOK headers.</div>
+      <div style="margin-top:4px;color:var(--mut)"><i class="fas fa-spinner fa-spin"></i> Awaiting model callback...</div>
+    </div>
+  `;
+
+  const headers = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  const groq = localStorage.getItem("user_groq_key"); if (groq) headers["X-Groq-API-Key"] = groq;
+  const gemini = localStorage.getItem("user_gemini_key"); if (gemini) headers["X-Gemini-API-Key"] = gemini;
+  const openai = localStorage.getItem("user_openai_key"); if (openai) headers["X-OpenAI-API-Key"] = openai;
+  const serpapi = localStorage.getItem("user_serpapi_key"); if (serpapi) headers["X-SerpAPI-Key"] = serpapi;
+  const mistral = localStorage.getItem("user_mistral_key"); if (mistral) headers["X-Mistral-API-Key"] = mistral;
+
+  try {
+    const res = await fetch(API_BASE + tool.ep, { method: "POST", headers, body: JSON.stringify(payload) });
+    if (tool.download) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const fn = (payload.project_name || "document") + "_" + (payload.doc_type || "doc") + ".docx";
+      consoleOutput.innerHTML = `
+        <div class="result-section">
+          <div class="result-lbl"><i class="fas fa-check-circle" style="color:var(--success)"></i> Pipeline Execution Complete</div>
+          <div class="result-box" style="text-align:center;padding:32px 16px">
+            <i class="fas fa-file-word" style="font-size:48px;color:#2b579a;margin-bottom:14px;display:block"></i>
+            <a class="run-btn" style="text-decoration:none;display:inline-flex;width:auto;margin:0" href="${url}" download="${fn.replace(/[^A-Za-z0-9_.]/g, '_')}">
+              <i class="fas fa-download"></i> Download Exported Word Document (.docx)
+            </a>
+          </div>
+        </div>
+      `;
+    } else {
+      const data = await res.json();
+      consoleOutput.innerHTML = `
+        <div class="result-section animate-[fade_0.3s_ease]">
+          <div class="result-lbl"><i class="fas fa-check-circle" style="color:var(--success)"></i> Response Console Output</div>
+          <div class="result-box">${render(data)}</div>
+        </div>
+      `;
+    }
+  } catch(e) {
+    consoleOutput.innerHTML = `
+      <div class="err" style="font-family:'JetBrains Mono',monospace;font-size:12.5px;padding:12px;background:rgba(248,113,113,0.05);border:1px solid rgba(248,113,113,0.2);border-radius:12px">
+        <i class="fas fa-exclamation-triangle"></i> Execution Exception: ${esc(e.message)}<br>
+        <span style="color:var(--mut);margin-top:6px;display:block">Ensure the FastAPI local server process is online.</span>
+      </div>
+    `;
+  }
+  btn.disabled = false; btn.innerHTML = '<i class="fas fa-play"></i> Trigger Agent Workflow';
+}
+
+// ── RENDER OUTPUT ─────────────────────────────────────────────────────────────
+function esc(s) { return String(s ?? "").replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+function render(d) {
+  if (d == null) return "<pre>(no response)</pre>";
+  if (d.error) return `<div class="err"><i class="fas fa-times-circle"></i> ${esc(d.error)}</div>` + (d.attempted_sql ? `<pre>${esc(d.attempted_sql)}</pre>` : "");
+  let h = "";
+  
+  if (d.reply && d.agent) {
+    let o = `<div class="kv" style="border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:10px">
+      <b>🦉 Owl → routed to ${esc(d.agent)}</b> 
+      <span class="pill" style="color:var(--cy)">${esc(d.tool || '')}</span> 
+      <span class="pill">${esc(d.engine || '')} engine</span>
+    </div>
+    <div style="font-size:13.5px;line-height:1.7;white-space:pre-wrap">${esc(d.reply)}</div>`;
+    if (d.result) o += `<div style="margin-top:14px;border-top:1px dashed var(--line);padding-top:14px">${render(d.result)}</div>`;
+    return o;
+  }
+  if (d.captions && typeof d.captions === "object") {
+    for (const [k, v] of Object.entries(d.captions)) h += `<div class="result-lbl" style="margin-top:12px">${esc(k)}</div><pre class="result-box" style="background:rgba(255,255,255,0.01)">${esc(v)}</pre>`;
+    return h;
+  }
+  if (Array.isArray(d.questions)) {
+    d.questions.forEach((q, i) => { h += `<div class="kv" style="margin-bottom:12px"><b>Q${i+1}</b> <span class="pill" style="color:var(--cy)">${esc(q.type||'')}</span> <span class="pill">${esc(q.difficulty||'')}</span><br><span style="display:inline-block;margin-top:4px">${esc(q.question||q)}</span>${q.tip ? `<br><span class="note">💡 Tip: ${esc(q.tip)}</span>` : ""}</div>`; });
+    return h;
+  }
+  if (d.scores) {
+    h += `<div class="score-badge">${d.overall_score ?? '-'}<span style="font-size:20px;color:var(--mut)">/100</span></div>`;
+    h += Object.entries(d.scores).map(([k,v]) => `<span class="pill">${esc(k)}: <b style="color:var(--cy)">${esc(v)}</b></span>`).join("");
+    if (d.overall_recommendation) h += `<div class="kv" style="margin-top:12px"><b>Verdict:</b> ${esc(d.overall_recommendation)}</div>`;
+    if (d.strengths) h += `<div class="kv"><b>✅ Strengths:</b> ${d.strengths.map(esc).join("; ")}</div>`;
+    if (d.areas_for_improvement) h += `<div class="kv"><b>🔧 Refinements Needed:</b> ${d.areas_for_improvement.map(esc).join("; ")}</div>`;
+    return h;
+  }
+  if (d.jd_match) {
+    h += `<div class="kv"><b>Target Seniority:</b> ${esc(d.seniority_level||'')} · <b>Exp Matched:</b> ${esc(d.experience_years||'')}</div>`;
+    if (d.skills) h += `<div style="margin:8px 0">${(d.skills||[]).slice(0,20).map(s => `<span class="pill">${esc(s)}</span>`).join("")}</div>`;
+    if (d.jd_match) h += `<div class="kv" style="margin-top:10px"><b>JD Match Score:</b> ${esc(d.jd_match.score)}/100 <br><b>Missing Requirements:</b> ${(d.jd_match.missing_skills||[]).map(esc).join(", ")||'None'}</div>`;
+    return h;
+  }
+  if (Array.isArray(d.rows)) {
+    if (d.summary) h += `<div class="kv"><b>Data Verdict:</b> ${esc(d.summary)}</div>`;
+    if (d.sql) h += `<div class="note" style="font-family:'JetBrains Mono',monospace;margin:8px 0">SQL Query: ${esc(d.sql)}</div>`;
+    if (d.rows.length) { const cols = Object.keys(d.rows[0]); h += `<table><tr>${cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr>` + d.rows.slice(0,25).map(r => `<tr>${cols.map(c => `<td>${esc(r[c])}</td>`).join("")}</tr>`).join("") + "</table>"; }
+    return h || `<pre>${esc(JSON.stringify(d,null,2))}</pre>`;
+  }
+  if (Array.isArray(d.topics)) { d.topics.forEach(t => h += `<div class="kv" style="margin-bottom:10px"><b>${esc(t.title||'')}</b><br><span class="note">${esc(t.description||'')}</span></div>`); return h; }
+  if (Array.isArray(d.sequence)) { d.sequence.forEach(s => h += `<div class="kv" style="border-left:3px solid var(--vi);padding-left:12px;margin-bottom:12px"><b>Step ${esc(s.step)}</b> (wait ${esc(s.wait_days??0)}d)${s.subject?` · <i>${esc(s.subject)}</i>`:''}<br><span style="display:inline-block;margin-top:4px">${esc(s.message||'')}</span></div>`); return h; }
+  if (d.tier) { h += `<div class="score-badge">${d.score ?? '-'}</div><span class="pill" style="color:var(--cy)">${esc(d.tier)}</span>`; if (d.next_action) h += `<div class="kv" style="margin-top:10px"><b>Next Operations Step:</b> ${esc(d.next_action)} <span class="pill">${esc(d.suggested_channel||'')}</span></div>`; return h; }
+  if (d.markdown) return `<pre style="font-family:'JetBrains Mono',monospace;white-space:pre-wrap;font-size:12.5px">${esc(d.markdown)}</pre>`;
+  if (d.html) return `<pre style="font-family:'JetBrains Mono',monospace;white-space:pre-wrap;font-size:12.5px">${esc(d.html)}</pre>` + (d.meta_description ? `<div class="note">meta: ${esc(d.meta_description)}</div>` : "");
+  if (d.summary) {
+    h += `<div class="kv">${esc(d.summary)}</div>`;
+    ["key_points","decisions","risks"].forEach(k => { if (d[k]&&d[k].length) h += `<div class="kv" style="margin-top:8px"><b>${k.replace('_',' ').toUpperCase()}:</b><ul style="padding-left:16px;margin-top:4px">${d[k].map(x => `<li>${esc(typeof x==='object'?JSON.stringify(x):x)}</li>`).join("")}</ul></div>`; });
+    if (d.action_items?.length) h += `<div class="kv" style="margin-top:8px"><b>ACTIONS:</b><ul style="padding-left:16px;margin-top:4px">${d.action_items.map(a => `<li>${esc(a.task||a)}${a.owner?` — ${esc(a.owner)}`:''}</li>`).join("")}</ul></div>`;
+    return h;
+  }
+  if ("sent" in d) return `<div class="kv"><b>${d.sent?'✅ Trigger Successful':'⚠️ Dispatch Failed'}</b> ${esc(d.error||'')}</div>` + (d.preview?`<pre class="result-box" style="margin-top:10px">${esc(d.preview)}</pre>`:"");
+  if ("total" in d && d.results) {
+    h += `<div class="kv"><b>${d.sent??d.counts?.valid??0}</b> successfully verified / <b>${d.total}</b> total emails</div>`;
+    h += d.results.map(r => `<div class="kv" style="font-family:'JetBrains Mono',monospace">${esc(r.email)} <span class="pill" style="color:${r.valid?'var(--success)':'var(--danger)'}">${r.valid?'Valid':'Invalid'}</span><span class="pill">Score: ${esc(r.score)}</span></div>`).join("");
+    return h;
+  }
+  // Pixel (concept art): show the generated image itself, not a base64 blob.
+  if ("image" in d || d.style_brief) {
+    if (d.agent) h += `<div class="kv" style="margin-bottom:10px"><b>${esc(d.agent)}</b> <span class="pill">${esc(d.provider||'')}</span></div>`;
+    if (typeof d.image === "string" && d.image.startsWith("data:image/")) {
+      h += `<img src="${d.image}" alt="Generated concept art" style="max-width:100%;border-radius:12px;border:1px solid var(--line);margin-bottom:12px">`;
+    } else if (d.image_error) {
+      h += `<div class="note" style="margin-bottom:10px">No image generated (${esc(d.image_error)}) — style brief below is still real.</div>`;
+    } else {
+      h += `<div class="note" style="margin-bottom:10px">No image key configured — style brief below is still real.</div>`;
+    }
+    if (d.style_brief) h += `<div class="result-lbl">Style Brief</div><pre class="result-box" style="white-space:pre-wrap">${esc(d.style_brief)}</pre>`;
+    if (d.prompt_used) h += `<div class="note" style="margin-top:8px">Prompt used: ${esc(d.prompt_used)}</div>`;
+    return h;
+  }
+  // Atlas / Forge briefs
+  if (d.brief) {
+    if (d.agent) h += `<div class="kv" style="margin-bottom:10px"><b>${esc(d.agent)}</b> <span class="pill">${esc(d.provider||'')}</span></div>`;
+    h += `<pre style="font-family:'JetBrains Mono',monospace;white-space:pre-wrap;font-size:12.5px">${esc(d.brief)}</pre>`;
+    return h;
+  }
+  if (d.reply) return `<div class="kv" style="white-space:pre-wrap">${esc(d.reply)}</div>`;
+  if (d.answer) return `<div class="kv">${esc(d.answer)}</div>`;
+  if (d.result && typeof d.result === "string") {
+    // Sandbox notices (e.g. Figma without a token) must stay visible, not be
+    // silently passed off as a real read of the user's file.
+    if (d.notice) h += `<div class="note" style="margin-bottom:10px"><i class="fas fa-triangle-exclamation"></i> ${esc(d.notice)}</div>`;
+    if (d.file_name) h += `<div class="kv" style="margin-bottom:8px"><b>File:</b> ${esc(d.file_name)}</div>`;
+    if (Array.isArray(d.frames) && d.frames.length) h += `<div style="margin-bottom:10px">${d.frames.slice(0,20).map(fr => `<span class="pill">${esc(fr)}</span>`).join("")}</div>`;
+    if (d.title) h += `<div class="kv" style="margin-bottom:8px"><b>${esc(d.title)}</b>${d.url?` <span class="note">${esc(d.url)}</span>`:''}</div>`;
+    return h + `<pre style="font-family:'JetBrains Mono',monospace;white-space:pre-wrap;font-size:12.5px">${esc(d.result)}</pre>`;
+  }
+  return `<pre style="font-family:'JetBrains Mono',monospace;white-space:pre-wrap;font-size:12.5px">${esc(JSON.stringify(d,null,2))}</pre>`;
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+function openAuthModal() { $("#auth-modal").classList.add("open"); }
+function closeAuthModal() { $("#auth-modal").classList.remove("open"); }
+function openSettingsModal() { loadKeys(); $("#settings-modal").classList.add("open"); }
+function closeSettingsModal() { $("#settings-modal").classList.remove("open"); }
+
+function switchTab(t) {
+  $("#tab-login").classList.toggle("active", t === "login");
+  $("#tab-signup").classList.toggle("active", t === "signup");
+  $("#auth-form-login").style.display = t === "login" ? "" : "none";
+  $("#auth-form-signup").style.display = t === "signup" ? "" : "none";
+  hideAuthAlert();
+}
+
+function showAuthAlert(msg) {
+  const el = $("#auth-alert");
+  el.textContent = msg;
+  el.style.display = "";
+}
+function hideAuthAlert() { $("#auth-alert").style.display = "none"; }
+
+async function doLogin() {
+  const email = $("#login-email").value.trim();
+  const pw = $("#login-pw").value;
+  if (!email || !pw) { showAuthAlert("Please fill in all fields."); return; }
+  try {
+    const res = await fetch(API_BASE + "/api/auth/login", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password:pw})});
+    const d = await res.json();
+    if (d.error) { showAuthAlert(d.error); return; }
+    localStorage.setItem("sevenforce_token", d.token);
+    localStorage.removeItem("sevenforce_offline_mode");
+    userInfo = d.user;
+    updateUserBadge(d.user.name);
+    closeAuthModal();
+    renderPanel();
+  } catch(e) { showAuthAlert("Server offline. Try again later."); }
+}
+
+async function doSignup() {
+  const name = $("#signup-name").value.trim();
+  const email = $("#signup-email").value.trim();
+  const pw = $("#signup-pw").value;
+  if (!name || !email || !pw) { showAuthAlert("Please fill in all fields."); return; }
+  try {
+    const res = await fetch(API_BASE + "/api/auth/signup", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,email,password:pw})});
+    const d = await res.json();
+    if (d.error) { showAuthAlert(d.error); return; }
+    localStorage.setItem("sevenforce_token", d.token);
+    localStorage.removeItem("sevenforce_offline_mode");
+    userInfo = d.user;
+    updateUserBadge(d.user.name);
+    closeAuthModal();
+    renderPanel();
+  } catch(e) { showAuthAlert("Server offline. Try again later."); }
+}
+
+function clearAuth() {
+  localStorage.removeItem("sevenforce_token");
+  localStorage.setItem("sevenforce_offline_mode", "1");
+  userInfo = null;
+  updateUserBadge("Sign In");
+}
+
+function handleAuthAction() {
+  const token = localStorage.getItem("sevenforce_token");
+  const offline = localStorage.getItem("sevenforce_offline_mode") === "1";
+  if (!token || offline || token === "demo_token") {
+    openAuthModal();
+  } else {
+    if (confirm("Sign out of your portal session?")) { clearAuth(); renderPanel(); }
+  }
+}
+
+// ── SETTINGS ──────────────────────────────────────────────────────────────────
+function saveSettings() {
+  const map = {
+    "k-groq": "user_groq_key", "k-gemini": "user_gemini_key",
+    "k-openai": "user_openai_key", "k-serpapi": "user_serpapi_key",
+    "k-mistral": "user_mistral_key"
+  };
+  for (const [id, lsKey] of Object.entries(map)) {
+    const val = ($(`#${id}`)?.value || "").trim();
+    if (val) localStorage.setItem(lsKey, val);
+    else localStorage.removeItem(lsKey);
+  }
+  const msg = $("#settings-msg");
+  msg.style.display = "";
+  setTimeout(() => msg.style.display = "none", 2500);
+  loadKeys();
+  fetchHealth();
+}
+
+function clearSettings() {
+  const keys = ["user_groq_key","user_gemini_key","user_openai_key","user_serpapi_key","user_mistral_key"];
+  keys.forEach(k => localStorage.removeItem(k));
+  loadKeys();
+}
+
+// ── CLOSE MODALS ON BACKDROP ──────────────────────────────────────────────────
+["auth-modal","settings-modal"].forEach(id => {
+  $(`#${id}`).addEventListener("click", e => { if (e.target === e.currentTarget) e.currentTarget.classList.remove("open"); });
+});
+</script>
+</body>
+</html>
