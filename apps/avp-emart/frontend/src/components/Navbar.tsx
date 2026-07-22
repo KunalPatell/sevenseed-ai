@@ -24,10 +24,10 @@ export function Navbar() {
         <span className="w-[36px] h-[36px] rounded-[11px] grid place-items-center text-white bg-gradient-to-br from-[#ea580c] to-[#10b981] shadow-[0_6px_16px_rgba(234,88,12,0.3)]">
           <ShoppingCart className="h-[18px] w-[18px]" />
         </span>
-        <span className="text-white">AVP <span className="text-[#fdba74]">Emart</span></span>
+        <span className="text-white whitespace-nowrap">AVP <span className="text-[#fdba74]">Emart</span></span>
       </Link>
 
-      <div className={`absolute top-[66px] left-0 right-0 bg-[#0d0d16]/95 border-b border-white/5 p-6 flex flex-col gap-4 md:static md:flex md:flex-row md:bg-transparent md:border-none md:p-0 md:gap-1 transition-all duration-300 ${
+      <div className={`absolute top-[66px] left-0 right-0 bg-[#0d0d16] backdrop-blur-xl shadow-2xl border-b border-white/5 p-6 flex flex-col gap-4 md:static md:flex md:flex-row md:bg-transparent md:border-none md:p-0 md:gap-1 transition-all duration-300 ${
         menuOpen ? "block" : "hidden md:flex"
       }`}>
         <a href="#about" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">About</a>
@@ -36,10 +36,11 @@ export function Navbar() {
         <a href="#testimonials" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">Reviews</a>
         <a href="#faq" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">FAQ</a>
         <a href="#contact" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">Contact</a>
+        <Link href="/app/" onClick={() => setMenuOpen(false)} className="md:hidden px-4 py-2 text-sm font-semibold text-white bg-white/[0.06] border border-white/10 rounded-lg text-center">Launch AI Comparator</Link>
       </div>
 
       <div className="flex items-center gap-3">
-        <Link href="/app/" className="btn bg-gradient-to-r from-[#ea580c] to-[#10b981] hover:scale-[1.02] text-white text-xs md:text-sm font-semibold px-4 py-2.5 rounded-lg transition-all duration-200 shadow-[0_6px_18px_rgba(234,88,12,0.25)]">
+        <Link href="/app/" className="hidden md:inline-flex btn bg-gradient-to-r from-[#ea580c] to-[#10b981] hover:scale-[1.02] text-white text-xs md:text-sm font-semibold px-4 py-2.5 rounded-lg transition-all duration-200 shadow-[0_6px_18px_rgba(234,88,12,0.25)]">
           <i className="fas fa-rocket mr-1.5"></i> Launch AI Comparator
         </Link>
         <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden w-[40px] h-[40px] rounded-lg bg-[#12121e] border border-white/10 flex items-center justify-center text-white cursor-pointer" aria-label="Toggle menu">
