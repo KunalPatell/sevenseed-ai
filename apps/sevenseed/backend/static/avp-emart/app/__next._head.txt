@@ -1,6 +1,0 @@
-1:"$Sreact.fragment"
-2:I[484,[],"ViewportBoundary"]
-3:I[484,[],"MetadataBoundary"]
-4:"$Sreact.suspense"
-5:I[6869,[],"IconMark"]
-0:{"rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"AVP Emart — AI-Powered E-Commerce & Smart Shopping"}],["$","meta","1",{"name":"description","content":"An AI-powered marketplace that compares live prices across Amazon, Flipkart, Reliance Digital, and Snapdeal, scores the best value with ML, and delivers it to your door."}],["$","link","2",{"rel":"icon","href":"/favicon.ico"}],["$","$L5","3",{}]]}]}]}],null]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"tVMdb4MZMzWc_021TlLgV"}

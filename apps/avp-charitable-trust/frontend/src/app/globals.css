@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /*
   AVP Charitable Trust — Transparent Philanthropy & 80G Tax Impact
