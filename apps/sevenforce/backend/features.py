@@ -1166,6 +1166,68 @@ class Asset3DReq(BaseModel):
     description: str
     engine: str = "Unreal Engine"
 
+class SiteScrapeReq(BaseModel):
+    url: str
+
+class FigmaAnalyzeReq(BaseModel):
+    url: str
+    token: str = ""
+    gemini_key: str = ""
+
+
+@router.post("/api/tools/site-scrape")
+def site_scrape(r: SiteScrapeReq):
+    """Maya — pulls readable page text from a URL (headings, paragraphs, list items)."""
+    url = (r.url or "").strip()
+    if not url:
+        return {"error": "Provide a URL to scrape."}
+    try:
+        from app.site_scraper import scrape_url_content
+    except Exception as e:
+        return {"error": f"Scraper unavailable: {e}"}
+    try:
+        res = scrape_url_content(url)
+    except Exception as e:
+        return {"error": f"Scrape failed: {e}"}
+    if not res.get("success"):
+        return {"error": res.get("error") or "Could not scrape that URL."}
+    return {
+        "title": res.get("title", ""),
+        "url": res.get("url", url),
+        "result": res.get("extracted_text", ""),
+    }
+
+
+@router.post("/api/tools/figma-analyze")
+def figma_analyze(r: FigmaAnalyzeReq):
+    """Nova — reads a Figma file's frames and drafts flow analysis, user stories and QA cases."""
+    url = (r.url or "").strip()
+    if not url:
+        return {"error": "Provide a Figma design URL."}
+    try:
+        from app.figma_analyzer import analyze_figma_design
+    except Exception as e:
+        return {"error": f"Figma analyzer unavailable: {e}"}
+    try:
+        res = analyze_figma_design(url, (r.token or "").strip(), (r.gemini_key or "").strip() or _gemini_key())
+    except Exception as e:
+        return {"error": f"Figma analysis failed: {e}"}
+    if not res.get("success"):
+        return {"error": res.get("error") or "Could not analyze that Figma file."}
+    out = {
+        "file_name": res.get("file_name", ""),
+        "frames": res.get("frames", []),
+        "result": res.get("analysis", ""),
+    }
+    # Surfaced so the UI can label sandbox output honestly rather than passing
+    # a generic example off as a real read of the user's file.
+    if res.get("sandbox_mode"):
+        out["sandbox_mode"] = True
+        out["notice"] = ("Sandbox mode - no valid Figma token, so this is a generic example report, "
+                         "not an analysis of your actual file. Add a Figma token for a real read.")
+    return out
+
+
 @router.post("/api/tools/game-design-brief")
 def game_design_brief(r: GameDesignReq):
     """Atlas — Game Designer. Mechanic ideation, level structure, balance systems."""
@@ -1185,20 +1247,32 @@ def concept_art(r: ConceptArtReq):
     hf_key = os.environ.get("HUGGINGFACE_API_KEY", "").strip()
     image_data_uri = None
     error = None
-    if hf_key:
+    if not hf_key:
+        error = "No HUGGINGFACE_API_KEY configured, so no image was generated."
+    else:
         try:
             import requests, base64
+            # api-inference.huggingface.co was retired (its DNS no longer resolves);
+            # the current path is the router host. Model overridable via env.
+            model = os.environ.get("HF_IMAGE_MODEL", "stabilityai/stable-diffusion-xl-base-1.0")
             resp = requests.post(
-                "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
+                f"https://router.huggingface.co/hf-inference/models/{model}",
                 headers={"Authorization": f"Bearer {hf_key}"},
-                json={"inputs": prompt}, timeout=25)
-            if resp.status_code == 200 and resp.headers.get("content-type", "").startswith("image/"):
+                json={"inputs": prompt}, timeout=45)
+            ctype = resp.headers.get("content-type", "")
+            if resp.status_code == 200 and ctype.startswith("image/"):
                 b64 = base64.b64encode(resp.content).decode("utf-8")
-                image_data_uri = f"data:{resp.headers['content-type']};base64,{b64}"
+                image_data_uri = f"data:{ctype};base64,{b64}"
+            elif resp.status_code in (401, 403):
+                error = ("Hugging Face rejected the API key (HTTP %d) - it looks expired or lacks "
+                         "Inference permission. Generate a new token with 'Make calls to Inference "
+                         "Providers' enabled and set HUGGINGFACE_API_KEY." % resp.status_code)
+            elif resp.status_code == 503:
+                error = "The image model is warming up on Hugging Face - try again in ~30s."
             else:
-                error = f"HF inference returned {resp.status_code}"
+                error = f"Hugging Face returned HTTP {resp.status_code}: {resp.text[:180]}"
         except Exception as e:
-            error = str(e)
+            error = f"Could not reach Hugging Face: {e}"
     brief = _llm(
         "You are Pixel, an expert 2D game artist. Given an asset/character/UI description, write a concise visual "
         "style brief: color palette, silhouette/shape language, key visual details, and reference genre. Under 150 words.",
