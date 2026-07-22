@@ -327,7 +327,13 @@ app.include_router(_feat_router)
 
 @app.get("/app")
 def _sf_dashboard():
-    return FileResponse(str(config.STATIC_DIR / "app.html"))
+    # The portal is a Next.js route now (exported to app/index.html), not the
+    # old hand-written app.html. Fall back to the legacy filename so this keeps
+    # working against an older static bundle.
+    for candidate in (config.STATIC_DIR / "app" / "index.html", config.STATIC_DIR / "app.html"):
+        if candidate.exists():
+            return FileResponse(str(candidate))
+    raise HTTPException(status_code=404, detail="Portal not built")
 
 if config.STATIC_DIR.exists():
     app.mount("/", StaticFiles(directory=str(config.STATIC_DIR), html=True), name="frontend")
