@@ -94,12 +94,34 @@ def _get_llm_demo(t=0.6):
         except Exception: pass
     return None
 
+def _mistral_demo(system, user, t=0.6):
+    """Last-resort fallback for the public demo path when Groq/Gemini/OpenAI are
+    all unset or fail. Same stdlib-urllib approach as _llm's Mistral fallback,
+    kept as a separate function since the demo path deliberately never shares
+    state/config with the authenticated _llm path (see module comment above)."""
+    key = os.environ.get("MISTRAL_API_KEY", "").strip()
+    if not key:
+        return None
+    try:
+        import json as _j, urllib.request as _u
+        body = _j.dumps({"model": os.environ.get("MISTRAL_MODEL", "mistral-small-latest"),
+                         "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+                         "temperature": t, "max_tokens": 220}).encode()
+        req = _u.Request("https://api.mistral.ai/v1/chat/completions", data=body,
+                         headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"})
+        with _u.urlopen(req, timeout=20) as resp:
+            return _j.loads(resp.read())["choices"][0]["message"]["content"]
+    except Exception as e:
+        print(f"[llm-demo] mistral: {e}")
+        return None
+
 def _llm_demo(system, user, t=0.6):
     from langchain_core.messages import SystemMessage, HumanMessage
     m = _get_llm_demo(t)
-    if not m: return None
-    try: return m.invoke([SystemMessage(content=system), HumanMessage(content=user)]).content
-    except Exception as e: print(f"[llm-demo] {e}"); return None
+    if m:
+        try: return m.invoke([SystemMessage(content=system), HumanMessage(content=user)]).content
+        except Exception as e: print(f"[llm-demo] primary: {e}")
+    return _mistral_demo(system, user, t)
 
 def _active_provider_demo():
     # Server-keys-only status string for demo responses — deliberately never
