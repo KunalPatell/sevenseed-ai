@@ -521,7 +521,7 @@ def drug_info(r: DrugInfoReq):
     }
 
 
-# â”€â”€ Signature data: drug-interaction network graph (for SVG viz) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Signature data: drug-interaction network graph (for SVG viz) ──────────────
 class InteractionGraphReq(BaseModel): drugs: list[str] = []
 
 def _find_interaction(a, b):
@@ -552,7 +552,7 @@ def interaction_graph(r: InteractionGraphReq):
                               "severity": it.get("severity", "moderate"),
                               "effect": (it.get("effect") or it.get("advice") or "")[:160]})
     return {"nodes": nodes, "edges": edges, "has_interactions": bool(edges),
-            "summary": (f"{len(edges)} interaction(s) found â€” review with a pharmacist." if edges
+            "summary": (f"{len(edges)} interaction(s) found — review with a pharmacist." if edges
                         else "No known interactions among these medicines.")}
 
 

@@ -568,7 +568,7 @@ def email_receipt(r: ReceiptEmailReq):
     return {"receipt_no": rc, "emailed": sent.get("sent", False), "email_result": sent}
 
 
-# â”€â”€ Signature: biometric beneficiary verification (fraud prevention) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Signature: biometric beneficiary verification (fraud prevention) ──────────
 from fastapi import UploadFile as _UploadFile, File as _FileF, Form as _FormF
 import faceauth as _faceauth
 
@@ -586,7 +586,7 @@ def face_status():
 
 
 
-# â”€â”€ Signature data: Sankey fund-flow ledger (for SVG viz) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Signature data: Sankey fund-flow ledger (for SVG viz) ─────────────────────
 @router.get("/api/ledger/sankey")
 def ledger_sankey():
     with _c() as c:
@@ -600,7 +600,7 @@ def ledger_sankey():
             links.append({"source": "All Donations", "target": x["p"], "value": x["s"]})
             links.append({"source": x["p"], "target": "Community Impact", "value": round(x["s"] * 0.92)})
     return {"nodes": nodes, "links": links, "total_raised": total,
-            "note": "Transparent fund flow â€” from donations to community programs."}
+            "note": "Transparent fund flow — from donations to community programs."}
 
 
 

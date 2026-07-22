@@ -498,7 +498,7 @@ def notify_email(r: EmailReq):
     return _brevo_email(r.to, r.subject, r.body, r.name)
 
 
-# â”€â”€ Signature: biometric quiz integrity + upload-notes RAG tutor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Signature: biometric quiz integrity + upload-notes RAG tutor ──────────────
 from fastapi import UploadFile as _UploadFile, File as _FileF, Form as _FormF
 import io as _io2, re as _re2
 import faceauth as _faceauth
@@ -545,12 +545,12 @@ async def doc_tutor(question: str = _FormF(...), file: _UploadFile = _FileF(...)
     from agents import _llm_text, active_provider
     text = _extract_text(file.filename, await file.read())
     if not text.strip():
-        return {"answer": "I couldn't read that document â€” please upload a text-based PDF or .txt file.", "provider": active_provider()}
+        return {"answer": "I couldn't read that document — please upload a text-based PDF or .txt file.", "provider": active_provider()}
     ctx = "\n\n".join(_top_chunks(text, question, 4))[:4500]
     ans = _llm_text("You are the AVPU tutor. Answer the student's question using ONLY the provided notes. "
                     "If the notes don't cover it, say so briefly and add general guidance.",
                     f"Question: {question}\n\nStudent's notes:\n{ctx}", 0.3)
-    return {"answer": ans or (ctx[:600] + "â€¦"), "grounded_in": file.filename,
+    return {"answer": ans or (ctx[:600] + "…"), "grounded_in": file.filename,
             "chars_indexed": len(text), "provider": active_provider()}
 
 

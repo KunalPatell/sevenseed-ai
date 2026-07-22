@@ -477,7 +477,7 @@ def evaluate(r: EvaluateReq):
             "provider": active_provider()}
 
 
-# â”€â”€ Signature data: pitch-deck slides (for SVG slide preview) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# ── Signature data: pitch-deck slides (for SVG slide preview) ─────────────────
 class SlidesReq(BaseModel): idea: str; sector: str = ""
 
 @router.post("/api/tools/pitch-slides")

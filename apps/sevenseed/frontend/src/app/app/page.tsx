@@ -173,7 +173,7 @@ export default function StudioHub() {
   // AI Ideator state (Tool 2)
   const [ideateDomain, setIdeateDomain] = useState("Healthcare Logistics");
   const [ideateProblem, setIdeateProblem] = useState("Cold chain delivery delays for vaccines");
-  const [ideateMarket, setIdeateMarket] = useState("â‚¹500 Cr Indian clinical vaccine logistics");
+  const [ideateMarket, setIdeateMarket] = useState("₹500 Cr Indian clinical vaccine logistics");
   const [ideateResult, setIdeateResult] = useState("");
   const [ideateLoading, setIdeateLoading] = useState(false);
 
@@ -181,7 +181,7 @@ export default function StudioHub() {
   const [activeSessionId, setActiveSessionId] = useState<string>("");
   const [chatInput, setChatInput] = useState("");
   const [chatMessages, setChatMessages] = useState<{ role: "user" | "ai"; text: string }[]>([
-    { role: "ai", text: "ðŸŒ± Welcome to Sevenseed Founder AI! I can advise you on: business models, GTM strategy, product moats, or AI stack design." }
+    { role: "ai", text: "🌱 Welcome to Sevenseed Founder AI! I can advise you on: business models, GTM strategy, product moats, or AI stack design." }
   ]);
   const [chatLoading, setChatLoading] = useState(false);
   const chatScrollRef = useRef<HTMLDivElement>(null);
@@ -327,7 +327,7 @@ export default function StudioHub() {
   const handleNewFounderChat = () => {
     setActiveSessionId("");
     setChatMessages([
-      { role: "ai", text: "ðŸŒ± Welcome to Sevenseed Founder AI! Ask me about: business models, raising capital, GTM strategy, or our shared portfolio stack." }
+      { role: "ai", text: "🌱 Welcome to Sevenseed Founder AI! Ask me about: business models, raising capital, GTM strategy, or our shared portfolio stack." }
     ]);
     setActivePanel("founder");
   };
@@ -630,7 +630,7 @@ export default function StudioHub() {
           <div className="ml-auto hidden md:block shrink-0">
             <span className="prov-chip font-mono text-[11px] font-semibold text-[var(--secondary-l)] bg-[#10b981]/10 border border-[#10b981]/25 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
               <Cpu className="h-3 w-3" />
-              {llmEnabled ? providerName : "Offline AI Engine"} Â· {ragBackend.split(" ")[0]} RAG
+              {llmEnabled ? providerName : "Offline AI Engine"} · {ragBackend.split(" ")[0]} RAG
             </span>
           </div>
         </header>
@@ -728,7 +728,7 @@ export default function StudioHub() {
                   </div>
                 </div>
               ) : (
-                <EmptyState icon={Layers} text="No incubated ventures yet â€” ideate a startup in the AI Sandbox to see it here." />
+                <EmptyState icon={Layers} text="No incubated ventures yet — ideate a startup in the AI Sandbox to see it here." />
               )}
             </div>
           )}
@@ -785,7 +785,7 @@ export default function StudioHub() {
                   </div>
                   <div className="min-w-0">
                     <span className="text-xs font-bold text-white uppercase tracking-wider block">Founder Advisory Session</span>
-                    <span className="text-[10px] text-[#5b5f78]">Business models Â· GTM Â· moats Â· AI stack</span>
+                    <span className="text-[10px] text-[#5b5f78]">Business models · GTM · moats · AI stack</span>
                   </div>
                 </div>
                 <button onClick={handleNewFounderChat} className="btn bg-white/5 border border-white/10 text-xs text-white px-3 py-1.5 rounded-lg hover:bg-[var(--bg-3)] cursor-pointer shrink-0">
@@ -808,7 +808,7 @@ export default function StudioHub() {
                           : "bg-white/[0.02] border-white/10 text-[#9aa0b8] hover:text-white hover:border-white/20"
                       }`}
                     >
-                      {(s.messages?.[0]?.text || "Session").slice(0, 24)}{(s.messages?.[0]?.text?.length ?? 0) > 24 ? "â€¦" : ""}
+                      {(s.messages?.[0]?.text || "Session").slice(0, 24)}{(s.messages?.[0]?.text?.length ?? 0) > 24 ? "…" : ""}
                     </button>
                   ))}
                 </div>
@@ -1143,7 +1143,7 @@ export default function StudioHub() {
                             <span className="font-bold text-white block capitalize mb-2 text-xs tracking-wide">{k}</span>
                             <ul className="flex flex-col gap-1.5 text-xs text-[#9aa0b8]">
                               {Array.isArray(v) && v.map((item: string, i: number) => (
-                                <li key={i} className="flex items-start gap-2"><span className="mt-0.5 text-[9px] shrink-0">â–¸</span><span>{item}</span></li>
+                                <li key={i} className="flex items-start gap-2"><span className="mt-0.5 text-[9px] shrink-0">▸</span><span>{item}</span></li>
                               ))}
                             </ul>
                           </div>
