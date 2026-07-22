@@ -1250,27 +1250,43 @@ def concept_art(r: ConceptArtReq):
     if not hf_key:
         error = "No HUGGINGFACE_API_KEY configured, so no image was generated."
     else:
+        # api-inference.huggingface.co was retired (DNS no longer resolves) and the
+        # hf-inference provider dropped text-to-image entirely, so image models now
+        # go through third-party Inference Providers behind the router's
+        # OpenAI-compatible /v1/images/generations path. Verified live on nscale and
+        # together; fal-ai does not serve this model. Both overridable via env.
+        model = os.environ.get("HF_IMAGE_MODEL", "black-forest-labs/FLUX.1-schnell")
+        providers = [p.strip() for p in os.environ.get("HF_IMAGE_PROVIDERS", "nscale,together").split(",") if p.strip()]
         try:
-            import requests, base64
-            # api-inference.huggingface.co was retired (its DNS no longer resolves);
-            # the current path is the router host. Model overridable via env.
-            model = os.environ.get("HF_IMAGE_MODEL", "stabilityai/stable-diffusion-xl-base-1.0")
-            resp = requests.post(
-                f"https://router.huggingface.co/hf-inference/models/{model}",
-                headers={"Authorization": f"Bearer {hf_key}"},
-                json={"inputs": prompt}, timeout=45)
-            ctype = resp.headers.get("content-type", "")
-            if resp.status_code == 200 and ctype.startswith("image/"):
-                b64 = base64.b64encode(resp.content).decode("utf-8")
-                image_data_uri = f"data:{ctype};base64,{b64}"
-            elif resp.status_code in (401, 403):
-                error = ("Hugging Face rejected the API key (HTTP %d) - it looks expired or lacks "
-                         "Inference permission. Generate a new token with 'Make calls to Inference "
-                         "Providers' enabled and set HUGGINGFACE_API_KEY." % resp.status_code)
-            elif resp.status_code == 503:
-                error = "The image model is warming up on Hugging Face - try again in ~30s."
-            else:
-                error = f"Hugging Face returned HTTP {resp.status_code}: {resp.text[:180]}"
+            import requests
+            last = None
+            for prov in providers:
+                try:
+                    resp = requests.post(
+                        f"https://router.huggingface.co/{prov}/v1/images/generations",
+                        headers={"Authorization": f"Bearer {hf_key}"},
+                        json={"model": model, "prompt": prompt, "response_format": "b64_json"},
+                        timeout=90)
+                except Exception as e:
+                    last = f"{prov}: {e}"
+                    continue
+                if resp.status_code == 200:
+                    try:
+                        b64 = (resp.json().get("data") or [{}])[0].get("b64_json")
+                    except Exception:
+                        b64 = None
+                    if b64:
+                        image_data_uri = f"data:image/png;base64,{b64}"
+                        break
+                    last = f"{prov}: 200 but no image payload"
+                elif resp.status_code in (401, 403):
+                    last = (f"{prov}: HTTP {resp.status_code} - the Hugging Face token was rejected. It needs "
+                            "'Make calls to Inference Providers' permission.")
+                    break  # a bad token will fail on every provider too
+                else:
+                    last = f"{prov}: HTTP {resp.status_code} {resp.text[:140]}"
+            if not image_data_uri:
+                error = last or "No image provider returned an image."
         except Exception as e:
             error = f"Could not reach Hugging Face: {e}"
     brief = _llm(
