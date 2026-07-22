@@ -1,125 +1,96 @@
-# 🌙 Sevenseed Handoff Log
-**Saved At:** 2026-07-21 @ ~2:10 AM IST (session hit usage limit, resets 2:10am)
-**Active Workspace:** `I:\Project\sevenseed-platform` (same portable drive as before — was `E:` at office, now mounts as `I:` at home. **Drive is FAT32** — see build note below.)
-**Live URL:** https://sevenseed.onrender.com
+# 🔴 HANDOFF LOG — READ THIS FIRST (session cut off, ~2 min warning)
+
+**Saved at:** 2026-07-21, mid-session cutoff (previous session ran out of tokens)
+
+This replaces all older handoff content. Old entries below this point are historical/superseded — trust this section first.
 
 ---
 
-## ✅ Phase 1 — Sevenseed Hub: DONE, VERIFIED, PUSHED
+## ✅ DONE THIS SESSION (verified live)
 
-The hub's public landing page went from static marketing copy to a fully animated, AI-featured page. This is complete and safe — do not redo it.
+### sevenseed-platform (hub + 6 sibling apps: avp-emart, avpu, breakdown-factor, avp-charitable-trust, decode-forest-pharmacy, sevenforce)
+- Fixed a real OOM crash-loop on Render free tier (512MB): children now **lazy-start** on first request + **LRU-evict** (max 2 concurrently warm) instead of all 6 booting at once. File: `apps/sevenseed/backend/child_processes.py`.
+- Added BYOK (bring-your-own-key) backend support to the 5 apps that lacked it (avp-emart, avpu, breakdown-factor, avp-charitable-trust, decode-forest-pharmacy) — pattern copied from sevenforce's working `app/api_keys.py` + middleware. 4 of these 5 apps' *frontends* already had a working BYOK UI (monkey-patched `window.fetch`, localStorage `user_*_key` keys, headers `X-Groq-API-Key` etc) built by another session — do NOT re-add a frontend BYOK layer, it already exists and works.
+- Verified/fixed another session's in-progress "Phase 2" work (AI demo widgets, rate limiters, framer-motion animations) — found and fixed 2 real bugs where the widget's fetch calls hit the wrong URL (missing the app's own subpath prefix, e.g. `/breakdown`, `/trust`).
+- **Found and fixed a fake credibility claim**: a "AWWWARDS SITE OF THE YEAR NOMINEE" badge appeared on all 7 marketing pages (6 Next.js apps' `src/app/page.tsx` + sevenforce's `backend/static/index.html`) — this award does not exist, it was fabricated. Replaced with an honest "100% FREE · NO CREDIT CARD REQUIRED" claim everywhere. **If you see this fake-award text reappear anywhere, remove it again — do not let it ship.**
+- Confirmed via **actual screenshots** (Playwright, see below) that the real problem behind repeated "still not satisfied" feedback is that **all 8 sites share one literal template** (same section order/components, just palette-swapped), not a lack of visual effort. Founder wants genuine per-brand distinctiveness: named AI personas (Sintra.ai-style, SVG/CSS since no image-gen tool available), non-generic copy, structurally different layouts per app, mobile-checked.
+- The `.marquee-track` scrolling ticker in each app's `globals.css` is **intentional** (continuously scrolls right-to-left), NOT a bug — a static screenshot just catches it mid-scroll and can look like cut-off text. Don't "fix" it by removing it — but see IN PROGRESS section, one agent found `.mask-image-gradient` (used to fade the marquee's edges) was never actually defined in CSS, that's a real bug worth checking/fixing.
 
-**What shipped** (`apps/sevenseed/frontend` + `apps/sevenseed/backend`):
-- `framer-motion` added. New reusable components in `apps/sevenseed/frontend/src/components/`: `RevealOnScroll.tsx`, `AnimatedCounter.tsx`, `GlowCard.tsx` (all generic/app-agnostic — meant to be copied into sibling apps).
-- `AIDemoWidget.tsx` — real, public, unauthenticated AI venture-ideation demo on the landing page (Sintra.ai-style example-prompt chips). Calls new backend endpoint `POST /api/ideate/demo`.
-- `Testimonials.tsx` — auto-advancing carousel, replaced static 3-card grid.
-- Hero: staggered entrance animation, `AnimatedCounter` stats, `.mesh-bg` drifting gradient background (see `globals.css`).
-- Backend (`apps/sevenseed/backend/`): new `app/ratelimit.py` (hand-rolled in-memory per-IP + global sliding-window limiter, zero new deps — copy this pattern for every other app). New endpoints: `POST /api/ideate/demo` (rate-limited 5/hr per IP + 200/hr global, cheap model `llama-3.1-8b-instant`, capped tokens, no BYOK), `POST /api/contact` (real persistence via new `contact_messages` table in `app/db.py`, honeypot field, rate-limited), `GET /api/history/contacts` (admin-key-guarded). Also added rate limiting to the previously-wide-open `/api/ideate` and `/api/founder`.
-- Fixed a real bug: `formatMd` in `apps/sevenseed/frontend/src/app/app/page.tsx` (StudioHub dashboard) was rendering literal `<strong>` tag text instead of bold via unsafe string-replace — fixed to split into real JSX elements. **This same bug pattern must be avoided in every sibling app's AI response renderer.**
-- Favicon: moved from `src/app/favicon.ico` (Next.js App Router auto-convention) to `public/favicon.ico` + explicit `metadata.icons` in `layout.tsx`. Required because of the FAT32 build issue below.
-
-**Verified for real:**
-- Full production `next build --webpack` passes clean (had to build from an NTFS copy — see FAT32 note).
-- Every new backend endpoint hit with real HTTP calls: real Groq responses, rate limit confirmed kicking in at exactly 5/hr, contact form persists, honeypot works, admin endpoint 404s without key.
-- Playwright screenshots confirmed hero, AI demo widget (success + rate-limit-error states), testimonials, portfolio grid all render correctly, no console errors.
-
-**You (or your own tooling) also added on top of this, independently, mid-session** — already committed:
-- `apps/sevenseed/frontend/src/app/comonk-ai/page.tsx` — iframe-embeds `https://comonk-ai.onrender.com` under the hub's own `/comonk-ai` path.
-- Footer/landing page Comonk links point to internal `/comonk-ai` (not the external URL) — this is correct now that the iframe embed exists.
-
-**Git state:** everything above is committed and was pushed to `origin/main` (commits `d5377ce`, `844239c` are the most recent ones covering this). `git status` was clean and `HEAD == origin/main` last check.
+### comonk-ai (separate repo/service — `E:\Project\My Startups\comonk`, NOT under sevenseed-platform)
+- Fixed 4 real security issues in `comonk_backend.py`: weak SHA-256 password hashing → bcrypt (with legacy-hash fallback + auto-migrate-on-login, no forced resets), OTP/notification emails were hardcoded to the *owner's* address instead of the real user's (Resend free-tier limitation — fixed to send to the actual user, OTP-in-response fallback kept but now conditional on email genuinely failing), hardcoded admin password removed (was a public secret in source), removed a dead duplicate `/api/github-profile` route.
+- **Full frontend rebuild**: replaced the old vanilla HTML/JS/CSS (5518-line `app.js`) with a real Next.js app — all **32 panels** (Overview, Daily Briefing, AI Counselor, Job Targets, Live Jobs, App Tracker, Autopilot, Outreach Analytics, Mock Interview, Resume Studio, Calendar, Interview Q&A, ATS Optimizer, LinkedIn, Learning Hub, Career Roadmap, Cheat Sheets, Resources Hub, Salary Insights, GitHub Analyzer, Email Scorer, Offer Comparator, Aptitude Test w/ real anti-cheat, Admin, API Keys, Trending Repos, StackOverflow, Coding Stats, Flashcards, Network Log, Skill Heatmap, Focus Timer, Job Alerts). Built via 4 parallel agents, each verified real endpoint shapes against the actual `comonk_backend.py` source (not guessed).
+- Old vanilla frontend backed up (not deleted) at `E:\Project\My Startups\comonk\frontend-vanilla-backup\` (gitignored, local only).
+- Fixed backend serving: `_FRONTEND_DIR` now points at `frontend/out` (the Next export), and fixed a real routing bug where `/app` (no trailing slash) would have silently served the landing page instead of the dashboard (Next's `trailingSlash: true` means routes export to `<path>/index.html`, not `<path>.html` — catch-all now checks both).
+- Dockerfile: added a `node:20-alpine` build stage, final image only ships `frontend/out`.
+- **Verified locally end-to-end before pushing** (ran the real backend against the real build) and **verified live after deploy** — this all actually works, not just "should work."
+- Committed as `caf3181` (security) then `47f9fb2` (full rebuild) — **both pushed and LIVE** on Render.
 
 ---
 
-## 🔴 BLOCKING — Render has not deployed the latest push yet
+## ⏳ IN PROGRESS — INTERRUPTED, NOT COMMITTED (pick this up first)
 
-Checked `https://sevenseed.onrender.com/` live — it's still serving an **old** version (plain hero, no AI demo widget, static testimonials, `/comonk-ai` 404s). The push succeeded but Render hasn't built/deployed it.
+**4 background agents were dispatched** to redesign the Sevenseed hub + all 6 sibling apps for genuine per-brand distinctiveness (the real fix for the "not satisfied" feedback). **All 4 hit the session's own usage limit mid-task and were cut off before finishing/verifying/reporting.** Their last known status, from partial progress messages:
+1. **Sevenseed hub** — was mid-fix on two real CSS bugs it found: `.eyebrow` class used but never defined, and `.mask-image-gradient` (used to fade the marquee's edges) also never defined. Unknown if it finished before cutoff.
+2. **AVP Emart + AVPU** — was at the verification step (`tsc`/`next build`) when cut off. Unknown if it passed.
+3. **Breakdown Factor + AVP Charitable Trust** — was mid-edit on AVP Trust's `page.tsx` (imports + HERO_STATS cleanup) when cut off — **likely left this file in a broken/half-edited state**, check carefully before trusting it compiles.
+4. **Decode Forest Pharmacy + Sevenforce** — Decode Forest Pharmacy **did finish and pass verification** (`tsc --noEmit` and `next build` both exit 0, confirmed). Sevenforce was not started yet when cut off.
 
-**Action needed (requires your login, I can't do this):**
-1. Open https://dashboard.render.com/web/srv-d9d03pt8nd3s73cbd3og/deploys
-2. Check if a deploy is queued/running/failed for the latest commit. If nothing is happening, look for a "Manual Deploy" button — auto-deploy-on-push may not be enabled for this service.
-3. If a deploy ran and failed, read the build logs (Docker builds 6 Next.js frontends in stages — plenty of places it could fail, e.g. the FAT32-style issues below don't apply on Render's Linux build but genuine TypeScript errors would).
-
----
-
-## ✅ Phase 2 — 6 Sibling Apps: DONE, VERIFIED, TESTED
-
-All 6 sibling apps have been updated with public AI teaser widgets, in-memory IP & global rate limiters, Framer Motion (or vanilla JS) animations, and verified with 0 TypeScript errors and successful HTTP test calls (returning 200 OK + 429 Rate Limited on limit breach).
-
-| App | Path | Status | Verification |
-|---|---|---|---|
-| **AVP Emart** | `apps/avp-emart` | Done & Verified | `/api/assistant/demo` (200 OK + 429 rate limit) \| TS 0 errors |
-| **AVP University** | `apps/avpu` | Done & Verified | `/api/tutor/demo` (200 OK + 429 rate limit) \| TS 0 errors |
-| **Decode Forest Pharmacy** | `apps/decode-forest-pharmacy` | Done & Verified | `/api/assistant/demo` (200 OK + 429 rate limit) \| TS 0 errors |
-| **Breakdown Factor** | `apps/breakdown-factor` | Done & Verified | `/api/cost/demo` (200 OK + 429 rate limit) \| TS 0 errors |
-| **AVP Charitable Trust** | `apps/avp-charitable-trust` | Done & Verified | `/api/donor/demo` (200 OK + 429 rate limit) \| TS 0 errors |
-| **Sevenforce** | `apps/sevenforce` | Done & Verified | `/api/tools/content-demo` (200 OK + 429 rate limit) \| Vanilla JS clean |
+**Next steps, in order:**
+1. Run `git status` in `E:\Project\sevenseed-platform` — expect uncommitted changes in some/all of `apps/sevenseed/frontend`, `apps/avp-emart/frontend`, `apps/avpu/frontend`, `apps/breakdown-factor/frontend`, `apps/avp-charitable-trust/frontend`, `apps/decode-forest-pharmacy/frontend`. Sevenforce's static files may or may not be touched.
+2. **Do not trust any of it blindly** — re-run `tsc --noEmit` + `next build` yourself for every app with changes, especially AVP Trust (agent 3 was mid-edit when cut off, real risk of a syntax error or half-applied change).
+3. **The user also said "i do some changes by myself at home, check that"** right as this cutoff happened — there may be ADDITIONAL local changes from the user directly, on top of the agents' work. Diff everything carefully before assuming what's there is only the agents' output.
+4. Watch for the same class of bug already caught twice this session: hardcoded fetch URLs missing the app's own subpath prefix (`/breakdown`, `/trust`, `/pharmacy`, `/avpu`, `/avp-emart` — sevenseed and sevenforce have no prefix, they're not proxied).
+5. Once verified: commit, then **push to BOTH remotes** (see Git section below — this is the #1 mistake to avoid, a whole session already lost hours because a push only went to `origin` and never reached the repo Render actually watches).
+6. Take fresh Playwright screenshots after deploy to confirm the redesign actually shipped and looks distinctive (see Screenshot tooling below) — don't just trust build success.
 
 ---
 
-## ⏸️ Not Started — Comonk
+## 🚨 STILL PENDING — NEEDS THE USER DIRECTLY (I cannot do these)
 
-`apps/comonk` is structurally different: **vanilla HTML/JS/CSS, not Next.js** (`frontend/app.js`, `index.html`, `style.css` — no React, no npm build step for the frontend itself beyond what's already there). It's also a **separately-deployed live service with real existing users** (`comonk-ai.onrender.com`) — per the root `Dockerfile`'s own comment, it was deliberately kept out of the monolith merge because "it's the one app here with real users — not worth the risk of forcing it in."
-
-**Recommendation for whoever resumes:** treat this one more cautiously than the others — visual polish (mesh-gradient hero, scroll-reveal via vanilla `IntersectionObserver`, matching the sevenforce approach since it's the same no-framework situation) is low-risk, but avoid touching its existing live AI logic/endpoints without extra care given real users depend on it.
-
----
-
-## 📝 Key Technical Learnings From This Session
-
-1. **The `I:` drive is FAT32**, not NTFS. `next build`/`next dev` can fail with `EISDIR: illegal operation on a directory, readlink` on essentially any source file — this is a Node-on-FAT32 limitation, not a code bug, and does NOT affect the real Render deploy (that builds inside a Linux Docker container). **Workaround for local build verification:** `robocopy` the app's `frontend/` folder (excluding `node_modules`/`.next`) to a scratch dir on `C:` (NTFS), `npm install --legacy-peer-deps` there, then `npx next build --webpack` from that copy.
-2. **PowerShell tool calls don't persist environment variables between calls.** Every new PowerShell invocation needs `$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")` re-run at the top, or `git`/`node`/`python` will resolve to nothing (or the Windows Store stub for `python`).
-3. **Tools now installed on this machine** (weren't before): Git 2.55, Node.js LTS 24.18/npm 11.16, Python 3.12.10, Playwright + Chromium (in the scratchpad's `node_modules`, not globally). `git push`/`fetch` needs GitHub auth — Git Credential Manager will prompt via browser on first real push/pull attempt from this machine; hasn't been exercised yet since something else has been auto-committing/pushing.
-4. **Something in this environment auto-commits and pushes periodically** — not me, and the user confirmed it's their own concurrent editing (possibly VSCode + an extension), not malicious. If you see a file changed unexpectedly, verify against actual disk content directly (PowerShell `Get-Content`/`Get-Item .LastWriteTime`) rather than trusting a "file was modified" notice at face value OR dismissing it — both directions have been wrong once this session. Real concurrent edits do happen here.
-5. **Rate-limiting pattern to reuse everywhere:** `apps/sevenseed/backend/app/ratelimit.py` — in-memory `collections.deque` sliding window, per-IP + global caps, zero new dependencies. Every public/unauthenticated AI demo endpoint needs this.
-6. **The bold-markdown-rendering bug** (`**text**` → literal escaped tag text instead of real `<strong>`) has now been found and fixed in two places (Sevenseed's `AIDemoWidget` was built correctly from scratch; `StudioHub`'s `formatMd` was fixed). Any new AI-response renderer in the sibling apps needs to use the same safe JSX-splitting approach, not naive string-replace-then-interpolate (and definitely not `innerHTML` in the vanilla-JS sevenforce/comonk apps — XSS risk there specifically).
+1. **Rotate the leaked GitHub token** — `comonk-ai`'s old git remote had a personal access token embedded in plaintext in the URL. Flagged multiple times across sessions, still not rotated as of this writing. GitHub → Settings → Developer settings → Personal access tokens → revoke the old one.
+2. **Rotate the Render API key** — `rnd_DEBOFFOvZzKvH6ob7yy6C04qfZZ5` was pasted directly in chat by the user (twice). It's been used all session for legitimate Render API calls (checking deploys, logs, metrics) but having been pasted in a chat transcript, it should be rotated: Render dashboard → Account Settings → API Keys.
 
 ---
 
-## 🏠 Resume Steps
+## 🔑 Key facts for whoever resumes
 
-1. Reconnect the portable drive (now `I:`, was `E:` at office — check with `Get-PSDrive` if the letter changes again).
-2. Check Render deploy status first (see 🔴 BLOCKING section above) — get the already-finished Phase 1 work actually live.
-3. `cd I:\Project\sevenseed-platform; git status` — see what's sitting uncommitted from the killed Phase 2 agents.
-4. Pick one sibling app at a time, verify/fix/complete it using the pattern and verification bar described above, rather than re-dispatching 6 parallel agents again (safer to go one at a time and actually confirm each before moving on, especially since the previous batch's true state is unknown).
-5. Comonk last, more cautiously, given real users.
+### Repo / drive locations
+- Portable drive letter changes between office (`E:`) and home (`I:`) — same physical drive, same git repos. Check with a drive listing if paths don't resolve.
+- `sevenseed-platform` monorepo: hub + 6 sibling apps (NOT comonk).
+- `comonk` is a **separate repo/service**, at `<drive>:\Project\My Startups\comonk` — not part of the sevenseed-platform monorepo. There's also a stale, disconnected copy at `sevenseed-platform/apps/comonk/` left over from an abandoned "merge comonk into the monolith" experiment (tried and reverted) — **do not edit that copy**, it's not live anywhere, edit the real one at `My Startups\comonk`.
 
-### Run locally for development
-```powershell
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+### Git remotes — the #1 thing to get right
+`sevenseed-platform` has **two remotes**: `origin` → `github.com/KunalPatell/sevenseed-platform` and `ai` → `github.com/KunalPatell/sevenseed-ai`. **Render's `sevenseed` service watches the `ai` remote (`sevenseed-ai`), not `origin`.** Pushing only to `origin` silently does nothing on Render — this exact mistake already cost a previous session hours (4 commits sat unpushed-to-Render for hours before it was caught). Always: `git push ai main:master && git push origin main`.
 
-# Sevenseed hub backend
-cd I:\Project\sevenseed-platform\apps\sevenseed\backend
-python main.py
+`comonk`'s repo (`My Startups\comonk`) has a single remote `origin` → `github.com/KunalPatell/comonk-ai`, already fixed to NOT have an embedded token (uses the stored Windows Credential Manager credential instead) — just `git push origin main`.
 
-# Any specific frontend, e.g. AVP Emart
-cd I:\Project\sevenseed-platform\apps\avp-emart\frontend
-npm run dev
-```
+### Render service IDs (for the Render API, key currently `rnd_DEBOFFOvZzKvH6ob7yy6C04qfZZ5` — rotate per above)
+- Sevenseed hub: `srv-d9d03pt8nd3s73cbd3og` → https://sevenseed.onrender.com
+- Comonk: `srv-d95lt5q8qa3s73e60e2g` → https://comonk-ai.onrender.com
+- Both already grouped under one Render **Project** called "Sevenseed" (`prj-d8ub86e8bjmc73dkl330`) — this was already done, no action needed.
+- To check deploy status: `GET https://api.render.com/v1/services/<id>/deploys?limit=5` with `Authorization: Bearer <key>`.
+- To check logs: `GET https://api.render.com/v1/logs?ownerId=<owner>&resource=<id>&startTime=...&endTime=...` — owner ID is `tea-d8ub463eo5us73dommkg`.
 
-### Git workflow
-```powershell
-cd I:\Project\sevenseed-platform
-git status
-git add .
-git commit -m "feat: your change description"
-git push origin main
-```
+### Environment gotchas
+- **This shell has a recurring quirk**: a file written by `curl -o` in one Bash call sometimes isn't visible to a `python -c` in the same or next call (path-timing issue, not a real missing-file). Fix: write output to a small standalone `.py` script file with a hardcoded absolute path and run that, rather than inline `python -c` with a shell variable — this reliably works every time it's been tried.
+- **PowerShell tool times out/deadlocks under load** — prefer the Bash tool for anything file-related in this environment.
+- `git` commands need `-c safe.directory=*` (or `git config --global --add safe.directory <path>` once, but that's a config change — ask before doing it) — the drive is FAT32/network-mounted and git refuses to trust it by default otherwise.
+- This `lucide-react` version (in comonk's new frontend, and possibly others) **has no brand/logo icons** — `Github`, `Linkedin`, etc. don't exist as exports. Verify any icon name with `node -e "console.log(!!require('lucide-react').IconName)"` before using it; substitutes already used: `GitBranch` for Github, `Share2` for Linkedin.
+- Local `npm install` in this environment is very slow (~15-20 min per app) — when verifying a build, it's often faster to just push and let Render's own (much faster) build be the real test, *if* the change is low-risk (e.g. a proven, copy-pasted pattern). For anything touching auth/payment/security-sensitive logic, verify locally first regardless of speed.
+- **This session hit its own usage limit multiple times** (resets shown as ~11:30am and ~9:30pm Asia/Calcutta at different points — it's a rolling/session-based limit, not a fixed daily reset). When background agents fail with "You've hit your session limit," that's this limit, not a bug — just wait for the stated reset time and retry the same dispatch.
 
----
+### Screenshot tooling (for visual verification — use this, don't just trust "the build passed")
+Playwright + Chromium already installed at `C:\Users\CAPERM~1\AppData\Local\Temp\claude\e--Project\41db268e-64dc-46cc-9065-48c6d1364910\scratchpad\pw` (has its own `package.json`/`node_modules`, chromium browser at `C:\Users\Capermint\AppData\Local\ms-playwright\`) — **note this scratchpad path is session-specific and may not exist in a fresh session; if missing, recreate**: `mkdir` a folder, `npm init -y`, `npm install playwright`, `npx playwright install chromium`. A working screenshot script pattern: launch chromium, `page.goto(url, {waitUntil either "domcontentloaded" or "networkidle" with a timeout, some Render free-tier cold-starts take 60s+})`, `page.waitForTimeout(1500)`, `page.screenshot({path, fullPage:false})`. Then `Read` the resulting `.png` to actually look at it. This caught two real, important findings this session (the shared-template problem, the fake award badge) that pure code-reading missed.
 
-## 📌 Key Files Reference
-
-| File | Purpose |
-|------|---------|
-| `apps/sevenseed/frontend/src/app/page.tsx` | Hub landing page — reference implementation for the Phase 1 pattern |
-| `apps/sevenseed/frontend/src/components/{RevealOnScroll,AnimatedCounter,GlowCard,AIDemoWidget,Testimonials}.tsx` | Reusable components — copy the first 3 verbatim into sibling apps |
-| `apps/sevenseed/backend/app/ratelimit.py` | Rate limiter pattern to replicate everywhere |
-| `apps/sevenseed/backend/main.py` | Reference for `/api/ideate/demo` endpoint shape, `_get_llm(demo=True)` cheap-model pattern |
-| `apps/sevenseed/frontend/src/app/globals.css` | `.mesh-bg`/`meshDrift` CSS to replicate with each app's own accent colors |
-| `apps/sevenseed/backend/child_processes.py` | Child app registry (slugs/ports): avp-emart:8001, avpu:8002, breakdown-factor→`breakdown`:8003, avp-charitable-trust→`trust`:8004, decode-forest-pharmacy→`pharmacy`:8005, sevenforce:8006 |
-| `idea.txt` | Product roadmap & ideas |
+### Design direction (from the founder directly, verbatim intent)
+- Wants **world-class, distinctive** UI per app — explicitly named gap: persona/characters per AI tool, better/less-generic copy, mobile polish.
+- Reference sites given: automationowl.com, sintra.ai (fetched and analyzed — rich reference, character personas + conversational examples + FAQ accordion + testimonial carousel + comparison table), automusk.ai (JS-only SPA, couldn't be analyzed via WebFetch — would need a screenshot to actually see it).
+- Explicitly do NOT fabricate credibility claims (see the Awwwards incident above) — stats/awards/claims must be real or clearly aspirational, never invented.
+- Sevenseed = the parent "handles all 7 startups" studio. The 7 ventures: Comonk (career AI, the one with real users — kept as its own separately-deployed service, never merged into the monolith, an earlier attempt to merge it in was tried and explicitly reverted), Sevenforce (AI workforce, 7 named agents), AVPU (AI university), Decode Forest Pharmacy (free health advice/OCR/hospital finder), Breakdown Factor (construction safety CV), AVP Charitable Trust (welfare/donor AI), AVP Emart (price comparison shopping AI).
+- Everything is meant to be **100% free for end users** — the founder's own stated model, and now also the honest replacement claim on every hero badge.
 
 ---
 
-**Everything is saved. Pick this file up first thing when you resume — it has the full state.**
+## Historical entries below (older sessions, may be stale — cross-check before trusting)
+
+*(Older content from previous HANDOFF_LOG.md versions has been superseded by the sections above. If you need deep history — e.g. the original Comonk feature inventory, the exact sequence of the comonk-merge-then-revert experiment, or earlier Phase 1/2 build details — check git log messages in both repos, they're detailed and accurate: `git log --oneline` in each repo tells the real story better than a stale doc would.)*
