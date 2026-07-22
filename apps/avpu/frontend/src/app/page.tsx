@@ -9,6 +9,7 @@ import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { GlowCard } from "@/components/GlowCard";
 import { AIDemoWidget } from "@/components/AIDemoWidget";
 import { GyanOrb } from "@/components/GyanOrb";
+import { PersonaAvatar } from "@/components/PersonaAvatar";
 import { CustomCursor } from "@/components/CustomCursor";
 import { TextScramble } from "@/components/TextScramble";
 import { Tilt } from "@/components/Tilt";
@@ -210,7 +211,15 @@ export default function Home() {
             initial={{ opacity:0, x:40 }}
             animate={{ opacity:1, x:0 }}
             transition={{ duration:0.8, delay:0.35, ease:[0.22,1,0.36,1] }}
+            className="flex flex-col items-center gap-7"
           >
+            <div className="relative flex items-center gap-4">
+              <PersonaAvatar size={210} primary="#38bdf8" secondary="#7dd3fc" accessory="cap" name="Gyan" role="AI Tutor" />
+              <div className="hidden xl:block relative rounded-2xl rounded-bl-none border border-[rgba(56,189,248,0.25)] bg-[rgba(6,11,36,0.85)] px-4 py-3 text-sm text-[#cbd5e1] max-w-[190px] backdrop-blur">
+                <span className="text-[#7dd3fc] font-semibold">Hi, I&apos;m Gyan 👋</span><br />
+                Ask me anything from your AVPU syllabus.
+              </div>
+            </div>
             <GyanNodeVisual />
           </motion.div>
         </div>

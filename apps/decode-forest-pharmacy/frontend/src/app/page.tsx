@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { PersonaAvatar } from "@/components/PersonaAvatar";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
@@ -257,7 +258,15 @@ export default function Home() {
             initial={{ opacity:0, x:40 }}
             animate={{ opacity:1, x:0 }}
             transition={{ duration:0.8, delay:0.35, ease:[0.22,1,0.36,1] }}
+            className="flex flex-col items-center gap-7"
           >
+            <div className="relative flex items-center gap-4">
+              <PersonaAvatar size={210} primary="#10b981" secondary="#6ee7b7" accessory="cross" name="Sanjeevani" role="Health Guardian" />
+              <div className="hidden xl:block relative rounded-2xl rounded-bl-none border border-[rgba(16,185,129,0.3)] bg-[rgba(9,9,20,0.85)] px-4 py-3 text-sm text-[#cbd5e1] max-w-[200px] backdrop-blur">
+                <span className="text-[#6ee7b7] font-semibold">Hi, I&apos;m Sanjeevani 👋</span><br />
+                Upload a prescription — I&apos;ll check it for free.
+              </div>
+            </div>
             <ECGMonitor />
           </motion.div>
         </div>

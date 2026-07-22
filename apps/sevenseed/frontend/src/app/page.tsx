@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { PersonaAvatar } from "@/components/PersonaAvatar";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
@@ -222,7 +223,15 @@ export default function Home() {
             initial={{ opacity:0, x:40 }}
             animate={{ opacity:1, x:0 }}
             transition={{ duration:0.8, delay:0.35, ease:[0.22,1,0.36,1] }}
+            className="flex flex-col items-center gap-7"
           >
+            <div className="relative flex items-center gap-4">
+              <PersonaAvatar size={200} primary="#f59e0b" secondary="#06b6d4" accessory="seed" name="Sena" role="Studio Orchestrator" />
+              <div className="hidden xl:block relative rounded-2xl rounded-bl-none border border-[rgba(245,158,11,0.28)] bg-[rgba(9,9,20,0.85)] px-4 py-3 text-sm text-[#cbd5e1] max-w-[205px] backdrop-blur">
+                <span className="text-[#fef08a] font-semibold">Hi, I&apos;m Sena 👋</span><br />
+                I run the shared AI backbone behind all 8 ventures.
+              </div>
+            </div>
             <StartupOrbitVisual />
           </motion.div>
         </div>

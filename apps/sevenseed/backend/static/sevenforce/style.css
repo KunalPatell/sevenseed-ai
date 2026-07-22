@@ -504,3 +504,19 @@ body.js .reveal.in{opacity:1;transform:none}
   .demo-form{flex-direction:column}
   .demo-form .btn{width:100%;justify-content:center}
 }
+
+/* ── Hero persona character (Maya) ─────────────────────────── */
+.persona{position:relative;width:200px;height:200px;margin:0 auto 22px}
+.persona-aura{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 45%,rgba(var(--primary-rgb),.34) 0%,rgba(var(--primary-rgb),.10) 38%,transparent 68%);filter:blur(4px);animation:personaPulse 4.2s ease-in-out infinite}
+.persona-ring{position:absolute;inset:6%;border-radius:50%;border:1px dashed rgba(var(--primary-rgb),.28);animation:personaSpin 24s linear infinite}
+.persona-sat{position:absolute;left:50%;top:-3px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--primary-l);box-shadow:0 0 10px var(--primary-l)}
+.persona-bot{position:absolute;inset:0;display:grid;place-items:center;animation:personaFloat 5s ease-in-out infinite}
+.persona-eyes{transform-box:fill-box;transform-origin:center;animation:personaBlink 4.5s ease-in-out infinite}
+.persona-tag{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);white-space:nowrap;display:inline-flex;align-items:center;gap:6px;padding:4px 13px;border-radius:30px;font-size:11.5px;font-weight:600;color:var(--primary-l);background:rgba(6,8,16,.75);border:1px solid rgba(var(--primary-rgb),.4);backdrop-filter:blur(6px)}
+.persona-tag b{color:#fff;font-weight:800}
+.persona-tag span{color:var(--primary)}
+@keyframes personaFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes personaPulse{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.06);opacity:1}}
+@keyframes personaSpin{to{transform:rotate(360deg)}}
+@keyframes personaBlink{0%,60%,72%,100%{transform:scaleY(1)}66%{transform:scaleY(.1)}}
+@media (prefers-reduced-motion:reduce){.persona-aura,.persona-ring,.persona-bot,.persona-eyes{animation:none}}
