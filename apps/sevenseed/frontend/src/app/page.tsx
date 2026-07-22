@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -20,15 +19,20 @@ import {
 } from "lucide-react";
 
 // Live 8-Startup Orbit Visual
+// link = the real path each venture is actually served at by the FastAPI
+// orchestrator. Children live at their own prefixes (/breakdown/, /avpu/, ...),
+// NOT under /app/<folder>/ (those 404). Comonk is the externally-deployed app
+// embedded at /comonk-ai/; "Sevenseed Engine" is the hub's own Studio dashboard
+// at /app/.
 const STARTUPS = [
-  { name: "Breakdown Factor", tag: "Construction AI", icon: HardHat,       color: "#f59e0b", link: "/app/breakdown-factor" },
-  { name: "Decode Pharmacy",  tag: "Free Healthcare",  icon: HeartPulse,    color: "#10b981", link: "/app/decode-forest-pharmacy" },
-  { name: "AVP Emart",        tag: "Price Matrix",     icon: ShoppingCart,  color: "#6366f1", link: "/app/avp-emart" },
-  { name: "AVPU",             tag: "AI University",    icon: GraduationCap, color: "#38bdf8", link: "/app/avpu" },
-  { name: "AVP Trust",        tag: "80G Philanthropy", icon: Heart,         color: "#f97316", link: "/app/avp-charitable-trust" },
-  { name: "Sevenforce",       tag: "7 AI Employees",   icon: Cpu,           color: "#a855f7", link: "/app/sevenforce" },
-  { name: "Comonk",           tag: "HR & Resume AI",   icon: FileText,      color: "#06b6d4", link: "/app/comonk" },
-  { name: "Sevenseed Engine", tag: "Venture Backbone",icon: Server,        color: "#eab308", link: "/app/sevenseed" },
+  { name: "Breakdown Factor", tag: "Construction AI", icon: HardHat,       color: "#f59e0b", link: "/breakdown/" },
+  { name: "Decode Pharmacy",  tag: "Free Healthcare",  icon: HeartPulse,    color: "#10b981", link: "/pharmacy/" },
+  { name: "AVP Emart",        tag: "Price Matrix",     icon: ShoppingCart,  color: "#6366f1", link: "/avp-emart/" },
+  { name: "AVPU",             tag: "AI University",    icon: GraduationCap, color: "#38bdf8", link: "/avpu/" },
+  { name: "AVP Trust",        tag: "80G Philanthropy", icon: Heart,         color: "#f97316", link: "/trust/" },
+  { name: "Sevenforce",       tag: "7 AI Employees",   icon: Cpu,           color: "#a855f7", link: "/sevenforce/" },
+  { name: "Comonk",           tag: "HR & Resume AI",   icon: FileText,      color: "#06b6d4", link: "/comonk-ai/" },
+  { name: "Sevenseed Engine", tag: "Venture Backbone",icon: Server,        color: "#eab308", link: "/app/" },
 ];
 
 function StartupOrbitVisual() {
@@ -105,12 +109,12 @@ function StartupOrbitVisual() {
                 </div>
               </div>
 
-              <Link
+              <a
                 href={activeStartup.link}
                 className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#fef08a] hover:underline bg-black/40 border border-white/10 px-3 py-1.5 rounded-lg"
               >
                 Launch Site <ExternalLink className="h-3 w-3" />
-              </Link>
+              </a>
             </motion.div>
           </AnimatePresence>
         </div>
@@ -272,12 +276,12 @@ export default function Home() {
                         {s.tag}
                       </span>
                     </div>
-                    <Link
+                    <a
                       href={s.link}
                       className="inline-flex items-center justify-between text-xs font-mono font-bold text-white hover:text-[#f59e0b] border-t border-white/5 pt-3 transition-colors"
                     >
                       Open Platform <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
+                    </a>
                   </GlowCard>
                 </Tilt>
               </RevealOnScroll>
