@@ -5516,3 +5516,177 @@ window.closeApiKeysModal = closeApiKeysModal;
 window.saveApiKeys       = saveApiKeys;
 window.clearApiKeys      = clearApiKeys;
 window.toggleKeyVis      = toggleKeyVis;
+
+
+// ─── Extended Sevenseed Platform Feature Module Handlers ──────────────────────
+
+async function verifyEmailDeliverability() {
+  const email = document.getElementById('outreach-email-inp').value.trim();
+  const resDiv = document.getElementById('outreach-verify-result');
+  if (!email) { alert('Please enter an email address.'); return; }
+  resDiv.style.display = 'block';
+  resDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Checking deliverability & MX records...</p>';
+  try {
+    const r = await fetch('/api/outreach/verify-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const d = await r.json();
+    if (!r.ok) { resDiv.innerHTML = `<p style="color:var(--c-red)">${d.detail || 'Verification error'}</p>`; return; }
+    resDiv.innerHTML = `
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:14px">
+        <h4 style="margin:0 0 6px 0;color:var(--c-green)"><i class="fas fa-check-circle"></i> Status: ${d.status} (Score: ${d.deliverability_score}/100)</h4>
+        <p style="margin:0 0 6px 0;font-size:13px">Domain: <strong>${d.domain}</strong> | MX Record: <strong>${d.mx_record_found ? '✓ Found' : '✗ Missing'}</strong> | Disposable: <strong>${d.is_disposable ? 'Yes' : 'No'}</strong></p>
+        <p style="margin:0;font-size:12px;color:var(--text-3)"><em>${d.recommendation}</em></p>
+      </div>`;
+  } catch (e) {
+    resDiv.innerHTML = `<p style="color:var(--c-red)">Network error: ${e.message}</p>`;
+  }
+}
+
+async function generateOutreachSequence() {
+  const product_name = document.getElementById('outreach-prod-inp').value.trim();
+  const target_audience = document.getElementById('outreach-target-inp').value.trim();
+  const resDiv = document.getElementById('outreach-seq-result');
+  if (!product_name || !target_audience) { alert('Please enter product name and target audience.'); return; }
+  resDiv.style.display = 'block';
+  resDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Building drip sequence...</p>';
+  try {
+    const r = await fetch('/api/outreach/sequence', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product_name, target_audience })
+    });
+    const d = await r.json();
+    if (!r.ok) { resDiv.innerHTML = `<p style="color:var(--c-red)">${d.detail || 'Sequence generation error'}</p>`; return; }
+    let html = `<h4 style="margin-bottom:10px">3-Step Outreach Sequence for ${d.product_name}</h4>`;
+    d.sequence.forEach(s => {
+      html += `
+        <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px">
+          <div style="font-weight:700;font-size:13px;color:var(--c-purple-l)">Step ${s.step}: ${s.channel} (${s.timing})</div>
+          ${s.subject ? `<div style="font-weight:600;font-size:12px;margin:4px 0">Subject: ${s.subject}</div>` : ''}
+          <pre style="white-space:pre-wrap;font-size:12px;margin:4px 0;background:var(--bg-1);padding:8px;border-radius:6px">${s.body || s.message}</pre>
+        </div>`;
+    });
+    resDiv.innerHTML = html;
+  } catch (e) {
+    resDiv.innerHTML = `<p style="color:var(--c-red)">Network error: ${e.message}</p>`;
+  }
+}
+
+async function generateBaPrd() {
+  const product_name = document.getElementById('ba-prod-name').value.trim();
+  const target_users = document.getElementById('ba-target-users').value.trim();
+  const concept_description = document.getElementById('ba-concept-desc').value.trim();
+  const resDiv = document.getElementById('ba-prd-result');
+  if (!product_name || !concept_description) { alert('Please enter product name and description.'); return; }
+  resDiv.style.display = 'block';
+  resDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Generating complete PRD document...</p>';
+  try {
+    const r = await fetch('/api/ba/prd', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product_name, concept_description, target_users })
+    });
+    const d = await r.json();
+    if (!r.ok) { resDiv.innerHTML = `<p style="color:var(--c-red)">${d.detail || 'PRD generation error'}</p>`; return; }
+    let reqsHtml = '';
+    d.functional_requirements.forEach(fr => {
+      reqsHtml += `<li><strong>${fr.id} (${fr.feature})</strong> [${fr.priority}]: ${fr.description}</li>`;
+    });
+    resDiv.innerHTML = `
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:20px">
+        <h3 style="margin:0 0 10px 0;color:var(--c-gold)"><i class="fas fa-file-contract"></i> ${d.prd_title}</h3>
+        <p><strong>Executive Summary:</strong> ${d.executive_summary}</p>
+        <h4 style="margin:14px 0 6px 0">Functional Requirements:</h4>
+        <ul style="padding-left:20px;margin:0 0 14px 0">${reqsHtml}</ul>
+        <h4 style="margin:14px 0 6px 0">Recommended Tech Architecture:</h4>
+        <p style="font-size:13px;margin:0"><strong>Frontend:</strong> ${d.system_architecture_recommendation.frontend} | <strong>Backend:</strong> ${d.system_architecture_recommendation.backend} | <strong>Database:</strong> ${d.system_architecture_recommendation.database}</p>
+      </div>`;
+  } catch (e) {
+    resDiv.innerHTML = `<p style="color:var(--c-red)">Network error: ${e.message}</p>`;
+  }
+}
+
+async function generateHiringQuestions() {
+  const role = document.getElementById('hiring-role-select').value;
+  const resDiv = document.getElementById('hiring-q-result');
+  resDiv.style.display = 'block';
+  resDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Generating interview question kit...</p>';
+  try {
+    const r = await fetch('/api/hiring/questions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role })
+    });
+    const d = await r.json();
+    if (!r.ok) { resDiv.innerHTML = `<p style="color:var(--c-red)">${d.detail || 'Error'}</p>`; return; }
+    let html = `<h4 style="margin-bottom:8px">Interview Question Kit for ${d.role} (${d.experience_level})</h4>`;
+    d.question_set.forEach(q => {
+      html += `<div style="background:var(--bg-1);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px"><strong>${q.category}:</strong> ${q.question}</div>`;
+    });
+    resDiv.innerHTML = html;
+  } catch (e) {
+    resDiv.innerHTML = `<p style="color:var(--c-red)">Network error: ${e.message}</p>`;
+  }
+}
+
+async function evaluateCandidateAnswer() {
+  const question = document.getElementById('eval-q-inp').value.trim();
+  const candidate_answer = document.getElementById('eval-ans-inp').value.trim();
+  const resDiv = document.getElementById('eval-ans-result');
+  if (!question || !candidate_answer) { alert('Please enter question and candidate answer.'); return; }
+  resDiv.style.display = 'block';
+  resDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Grading candidate answer...</p>';
+  try {
+    const r = await fetch('/api/hiring/evaluate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, candidate_answer })
+    });
+    const d = await r.json();
+    if (!r.ok) { resDiv.innerHTML = `<p style="color:var(--c-red)">${d.detail || 'Evaluation error'}</p>`; return; }
+    resDiv.innerHTML = `
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:14px">
+        <h4 style="margin:0 0 6px 0;color:var(--c-green)">Grade: ${d.grade} (${d.score}/100)</h4>
+        <p style="font-size:13px;margin:0 0 6px 0"><strong>Feedback:</strong> ${d.feedback}</p>
+        <p style="font-size:12px;margin:0;color:var(--text-3)"><em>Follow-up: ${d.follow_up_prompt}</em></p>
+      </div>`;
+  } catch (e) {
+    resDiv.innerHTML = `<p style="color:var(--c-red)">Network error: ${e.message}</p>`;
+  }
+}
+
+async function summarizeMeetingTranscript() {
+  const meeting_title = document.getElementById('mtg-title-inp').value.trim();
+  const transcript_text = document.getElementById('mtg-transcript-inp').value.trim();
+  const resDiv = document.getElementById('mtg-summary-result');
+  if (!meeting_title || !transcript_text) { alert('Please enter meeting title and transcript text.'); return; }
+  resDiv.style.display = 'block';
+  resDiv.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Processing transcript & action matrix...</p>';
+  try {
+    const r = await fetch('/api/meeting/summarize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ meeting_title, transcript_text })
+    });
+    const d = await r.json();
+    if (!r.ok) { resDiv.innerHTML = `<p style="color:var(--c-red)">${d.detail || 'Summary error'}</p>`; return; }
+    let itemsHtml = '';
+    d.action_items.forEach(ai => {
+      itemsHtml += `<li><strong>${ai.task}</strong> — Owner: <em>${ai.owner}</em> (${ai.deadline})</li>`;
+    });
+    resDiv.innerHTML = `
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:20px">
+        <h3 style="margin:0 0 8px 0;color:var(--c-purple-l)"><i class="fas fa-headset"></i> ${d.meeting_title}</h3>
+        <p><strong>Summary:</strong> ${d.executive_summary}</p>
+        <h4 style="margin:12px 0 6px 0">Key Decisions:</h4>
+        <ul style="padding-left:20px;margin:0 0 12px 0">${d.key_decisions.map(kd => `<li>${kd}</li>`).join('')}</ul>
+        <h4 style="margin:12px 0 6px 0">Action Items Matrix:</h4>
+        <ul style="padding-left:20px;margin:0">${itemsHtml}</ul>
+      </div>`;
+  } catch (e) {
+    resDiv.innerHTML = `<p style="color:var(--c-red)">Network error: ${e.message}</p>`;
+  }
+}

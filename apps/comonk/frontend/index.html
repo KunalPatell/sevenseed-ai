@@ -310,6 +310,10 @@
       <button class="sb-item" data-panel="github"><i class="fab fa-github"></i><span>GitHub Analyzer</span></button>
       <button class="sb-item" data-panel="emailscorer"><i class="fas fa-envelope-circle-check"></i><span>Email Scorer</span><span class="sb-badge new">NEW</span></button>
       <button class="sb-item" data-panel="offers"><i class="fas fa-scale-balanced"></i><span>Offer Comparator</span><span class="sb-badge new">NEW</span></button>
+      <button class="sb-item" data-panel="outreachengine"><i class="fas fa-paper-plane"></i><span>Growth Outreach</span><span class="sb-badge new">NEW</span></button>
+      <button class="sb-item" data-panel="baprd"><i class="fas fa-file-contract"></i><span>AI BA PRD Suite</span><span class="sb-badge new">NEW</span></button>
+      <button class="sb-item" data-panel="hiring"><i class="fas fa-user-check"></i><span>AI Candidate Screener</span><span class="sb-badge new">NEW</span></button>
+      <button class="sb-item" data-panel="meeting"><i class="fas fa-headset"></i><span>AI Meeting Notetaker</span><span class="sb-badge new">NEW</span></button>
 
       <div class="sb-nav-label" style="margin-top:20px">ACCOUNT</div>
       <button class="sb-item" data-panel="test" id="sb-test-btn"><i class="fas fa-graduation-cap"></i><span>Take Aptitude Test</span><span class="badge purple" id="sb-verified-badge" style="display:none;margin-left:auto;font-size:9px">✓</span></button>
@@ -1615,6 +1619,103 @@
     <div id="offers-ai-result" style="margin-top:18px;display:none"></div>
     <div style="margin-top:14px;text-align:center">
       <button class="btn-primary" onclick="compareOffers()" id="compare-btn" style="display:none"><i class="fas fa-scale-balanced"></i> Compare & Get AI Pick</button>
+    </div>
+  </div>
+
+  <!-- ── Panel: Growth Outreach & Deliverability Engine ────────────────── -->
+  <div id="panel-outreachengine" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2 class="panel-title"><i class="fas fa-paper-plane" style="color:var(--c-purple-l)"></i> Growth Outreach Engine</h2>
+        <p class="panel-sub">Cold Email MX/SMTP Deliverability Checker & Multi-Channel Drip Campaign Generator</p>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <!-- Email Verifier -->
+      <div class="card">
+        <div class="card-hdr"><h4><i class="fas fa-shield-halved" style="color:var(--c-green)"></i> Email Deliverability Checker</h4></div>
+        <div class="fg"><label>Target Email Address</label><input type="email" id="outreach-email-inp" class="inp" placeholder="founder@targetstartup.com"></div>
+        <button class="btn-primary" onclick="verifyEmailDeliverability()"><i class="fas fa-search"></i> Check Deliverability</button>
+        <div id="outreach-verify-result" style="margin-top:14px;display:none"></div>
+      </div>
+      <!-- Drip Sequence Builder -->
+      <div class="card">
+        <div class="card-hdr"><h4><i class="fas fa-chart-line" style="color:var(--c-blue-l)"></i> Multi-Channel Drip Builder</h4></div>
+        <div class="fg"><label>Product / Startup Name</label><input type="text" id="outreach-prod-inp" class="inp" placeholder="Sevenseed Platform"></div>
+        <div class="fg"><label>Target Audience</label><input type="text" id="outreach-target-inp" class="inp" placeholder="SaaS Founders & Tech Leads"></div>
+        <button class="btn-primary" onclick="generateOutreachSequence()"><i class="fas fa-magic"></i> Generate Drip Sequence</button>
+        <div id="outreach-seq-result" style="margin-top:14px;display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Panel: AI Business Analyst & PRD Suite ────────────────────────── -->
+  <div id="panel-baprd" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2 class="panel-title"><i class="fas fa-file-contract" style="color:var(--c-gold)"></i> AI Business Analyst & PRD Generator</h2>
+        <p class="panel-sub">Convert raw product concepts into full PRD, User Personas, System Architecture, & Backlog</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="form-row-2">
+        <div class="fg"><label>Product Name</label><input type="text" id="ba-prod-name" class="inp" placeholder="Automated Hiring Screener"></div>
+        <div class="fg"><label>Target Users</label><input type="text" id="ba-target-users" class="inp" placeholder="Early-Stage Startup Founders"></div>
+      </div>
+      <div class="fg"><label>Concept & Product Description</label><textarea id="ba-concept-desc" class="inp" rows="3" placeholder="AI platform that conducts automated voice/video interviews for candidates..."></textarea></div>
+      <button class="btn-primary" onclick="generateBaPrd()"><i class="fas fa-wand-magic-sparkles"></i> Generate Complete PRD Document</button>
+      <div id="ba-prd-result" style="margin-top:18px;display:none"></div>
+    </div>
+  </div>
+
+  <!-- ── Panel: AI Hiring & Candidate Screener ─────────────────────────── -->
+  <div id="panel-hiring" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2 class="panel-title"><i class="fas fa-user-check" style="color:var(--c-green)"></i> AI Candidate Screener</h2>
+        <p class="panel-sub">Role-Specific Interview Question Generator & Candidate Answer Evaluator</p>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <!-- Question Set Generator -->
+      <div class="card">
+        <div class="card-hdr"><h4><i class="fas fa-list-check"></i> Generate Role Questions</h4></div>
+        <div class="fg"><label>Candidate Role</label>
+          <select id="hiring-role-select" class="inp">
+            <option>Backend Engineer</option>
+            <option>Frontend Developer</option>
+            <option>AI / Machine Learning Engineer</option>
+            <option>Product Manager</option>
+            <option>Growth Marketer</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="generateHiringQuestions()"><i class="fas fa-plus-circle"></i> Create Interview Kit</button>
+        <div id="hiring-q-result" style="margin-top:14px;display:none"></div>
+      </div>
+      <!-- Answer Evaluator -->
+      <div class="card">
+        <div class="card-hdr"><h4><i class="fas fa-award"></i> Grade Candidate Answer</h4></div>
+        <div class="fg"><label>Question Asked</label><input type="text" id="eval-q-inp" class="inp" placeholder="How do you handle database indexing?"></div>
+        <div class="fg"><label>Candidate's Answer</label><textarea id="eval-ans-inp" class="inp" rows="3" placeholder="Paste candidate response..."></textarea></div>
+        <button class="btn-primary" onclick="evaluateCandidateAnswer()"><i class="fas fa-chart-line"></i> Evaluate & Grade Answer</button>
+        <div id="eval-ans-result" style="margin-top:14px;display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Panel: AI Meeting Notetaker & Summary Bot ─────────────────────── -->
+  <div id="panel-meeting" class="panel">
+    <div class="panel-header">
+      <div>
+        <h2 class="panel-title"><i class="fas fa-headset" style="color:var(--c-purple-l)"></i> AI Meeting Notetaker & Summary Bot</h2>
+        <p class="panel-sub">Instant Executive Summaries, Key Decisions, & Action Items Matrix</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="fg"><label>Meeting Title / Topic</label><input type="text" id="mtg-title-inp" class="inp" placeholder="Investor Pitch Sync & Product Review"></div>
+      <div class="fg"><label>Raw Transcript / Conversation Log</label><textarea id="mtg-transcript-inp" class="inp" rows="5" placeholder="Founder: We built 7 free apps.\nInvestor: Great model, let us proceed..."></textarea></div>
+      <button class="btn-primary" onclick="summarizeMeetingTranscript()"><i class="fas fa-brain"></i> Generate Executive Summary & Action Matrix</button>
+      <div id="mtg-summary-result" style="margin-top:18px;display:none"></div>
     </div>
   </div>
 
