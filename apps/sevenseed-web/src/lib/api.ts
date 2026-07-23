@@ -135,4 +135,38 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
+
+  // Auditec CRM Pipeline
+  createCrmLead: (payload: { contact_name: string; email: string; company_name?: string; deal_value?: number }) =>
+    fetchApi<{ lead_id: string; contact_name: string; email: string; company: string; stage: string; lead_score: number; estimated_value: number }>('/api/crm/lead', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  listCrmPipeline: () =>
+    fetchApi<{ pipeline_stages: string[]; total_pipeline_value: number; active_deals_count: number }>('/api/crm/leads'),
+
+  // HR Attendance Portal
+  employeeCheckIn: (payload: { employee_id: string; location?: string }) =>
+    fetchApi<{ employee_id: string; check_in_time: string; location: string; status: string; attendance_score: number }>('/api/attendance/check-in', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  getAttendanceSummary: () =>
+    fetchApi<{ total_employees: number; present_today: number; remote_count: number; office_count: number; monthly_attendance_rate: number }>('/api/attendance/summary'),
+
+  // MeetAir AI Meeting Rooms
+  createMeetAirRoom: (payload: { room_name: string; max_participants?: number }) =>
+    fetchApi<{ room_id: string; room_name: string; webrtc_url: string; max_participants: number; ai_notetaker_active: boolean }>('/api/meetair/create-room', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // BrainWorld Quiz Engine
+  generateBrainQuiz: (payload: { topic: string; num_questions?: number }) =>
+    fetchApi<{ topic: string; quiz_set: Array<{ id: number; question: string; options: string[]; correct: string }> }>('/api/quiz/generate', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
 };

@@ -100,3 +100,35 @@ class TestMeetingNotetaker:
         data = r.json()
         assert data["meeting_title"] == "Investor Pitch Sync"
         assert len(data["action_items"]) > 0
+
+
+class TestBackupFeatures:
+    def test_create_crm_lead(self, client):
+        r = client.post('/api/crm/lead', json={'contact_name': 'Rahul Founder', 'email': 'rahul@startup.com'})
+        assert r.status_code == 200
+        assert r.json()['lead_score'] > 0
+
+    def test_list_crm_pipeline(self, client):
+        r = client.get('/api/crm/leads')
+        assert r.status_code == 200
+        assert 'pipeline_stages' in r.json()
+
+    def test_employee_check_in(self, client):
+        r = client.post('/api/attendance/check-in', json={'employee_id': 'EMP-101', 'location': 'Remote'})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Checked In'
+
+    def test_get_attendance_summary(self, client):
+        r = client.get('/api/attendance/summary')
+        assert r.status_code == 200
+        assert r.json()['total_employees'] == 42
+
+    def test_create_meetair_room(self, client):
+        r = client.post('/api/meetair/create-room', json={'room_name': 'Investor Sync'})
+        assert r.status_code == 200
+        assert 'webrtc_url' in r.json()
+
+    def test_generate_brain_quiz(self, client):
+        r = client.post('/api/quiz/generate', json={'topic': 'System Architecture', 'num_questions': 3})
+        assert r.status_code == 200
+        assert len(r.json()['quiz_set']) == 3

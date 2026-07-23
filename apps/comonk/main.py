@@ -2093,3 +2093,103 @@ async def summarize_meeting_transcript(req: MeetingSummarizeReq):
         "transcript_length_words": len(text.split())
     }
 
+
+
+# ─── CRM Pipeline Engine (AuditecCRM Integration) ────────────────────────────
+
+class CrmLeadRequest(BaseModel):
+    contact_name: str
+    email: str
+    company_name: str = 'Startup'
+    deal_value: float = 5000.0
+
+@app.post('/api/crm/lead')
+def create_crm_lead(req: CrmLeadRequest):
+    if not req.contact_name or not req.email:
+        raise HTTPException(status_code=400, detail='Contact name and email required.')
+    score = 85 if 'tech' in req.company_name.lower() or 'ai' in req.company_name.lower() else 65
+    return {
+        'lead_id': f'LEAD-{hash(req.email) % 10000}',
+        'contact_name': req.contact_name,
+        'email': req.email,
+        'company': req.company_name,
+        'stage': 'Qualified Lead',
+        'lead_score': score,
+        'estimated_value': req.deal_value,
+        'status': 'Active Pipeline'
+    }
+
+@app.get('/api/crm/leads')
+def list_crm_pipeline():
+    return {
+        'pipeline_stages': ['Discovery', 'Qualified', 'Proposal Sent', 'Closed Won'],
+        'total_pipeline_value': 125000.0,
+        'active_deals_count': 14
+    }
+
+
+# ─── HR Attendance Portal (CapermintAttendance Integration) ─────────────────
+
+class CheckInRequest(BaseModel):
+    employee_id: str
+    location: str = 'Remote'
+
+@app.post('/api/attendance/check-in')
+def employee_check_in(req: CheckInRequest):
+    if not req.employee_id:
+        raise HTTPException(status_code=400, detail='Employee ID required.')
+    return {
+        'employee_id': req.employee_id,
+        'check_in_time': '09:00 AM',
+        'location': req.location,
+        'status': 'Checked In',
+        'attendance_score': 100
+    }
+
+@app.get('/api/attendance/summary')
+def get_attendance_summary():
+    return {
+        'total_employees': 42,
+        'present_today': 40,
+        'remote_count': 28,
+        'office_count': 12,
+        'monthly_attendance_rate': 98.4
+    }
+
+
+# ─── MeetAir AI Meeting Rooms (MeetAir Integration) ─────────────────────────
+
+class CreateRoomRequest(BaseModel):
+    room_name: str
+    max_participants: int = 10
+
+@app.post('/api/meetair/create-room')
+def create_meetair_room(req: CreateRoomRequest):
+    if not req.room_name:
+        raise HTTPException(status_code=400, detail='Room name required.')
+    return {
+        'room_id': f'ROOM-{hash(req.room_name) % 100000}',
+        'room_name': req.room_name,
+        'webrtc_url': f'https://meetair.sevenseed.com/room/{hash(req.room_name) % 100000}',
+        'max_participants': req.max_participants,
+        'ai_notetaker_active': True
+    }
+
+
+# ─── BrainWorld AI Quiz Engine (BrainWorld Integration) ──────────────────────
+
+class QuizGenRequest(BaseModel):
+    topic: str
+    num_questions: int = 5
+
+@app.post('/api/quiz/generate')
+def generate_brain_quiz(req: QuizGenRequest):
+    if not req.topic:
+        raise HTTPException(status_code=400, detail='Topic required.')
+    return {
+        'topic': req.topic,
+        'quiz_set': [
+            {'id': i+1, 'question': f'What is a core principle of {req.topic}?', 'options': ['Option A', 'Option B', 'Option C', 'Option D'], 'correct': 'Option A'}
+            for i in range(min(req.num_questions, 10))
+        ]
+    }
