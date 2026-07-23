@@ -169,4 +169,32 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
+
+  // CapermintDesk Support Ticket System (Backup-2018)
+  createSupportTicket: (payload: { subject: string; category?: string; user_email: string; message: string }) =>
+    fetchApi<{ ticket_id: string; subject: string; category: string; user_email: string; status: string; priority: string; assigned_agent: string; estimated_resolution: string }>('/api/support/ticket', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  listSupportTickets: () =>
+    fetchApi<{ open_tickets_count: number; resolved_tickets_count: number; avg_resolution_time_minutes: number }>('/api/support/tickets'),
+
+  // PTEOnline AI Exam Prep (Backup-2018)
+  generateExamPractice: (payload: { exam_type?: string; section?: string }) =>
+    fetchApi<{ exam_type: string; section: string; prompt: string; target_speaking_rate: string; target_score_band: string }>('/api/exam/practice', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // SOS Urgent Job Matcher (Backup-2018)
+  matchUrgentJobs: (payload: { candidate_skills?: string[]; desired_role?: string }) =>
+    fetchApi<{ matched_jobs_count: number; top_matches: Array<{ title: string; company: string; match_score: number; location: string }> }>('/api/jobs/match', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // CompareCart Deal Radar (Backup-2018)
+  getDealRadar: () =>
+    fetchApi<{ active_deals_count: number; top_deals: Array<{ product: string; discount: string; coupon: string }> }>('/api/deals/radar'),
 };

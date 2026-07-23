@@ -132,3 +132,30 @@ class TestBackupFeatures:
         r = client.post('/api/quiz/generate', json={'topic': 'System Architecture', 'num_questions': 3})
         assert r.status_code == 200
         assert len(r.json()['quiz_set']) == 3
+
+
+class TestBackup2018Features:
+    def test_create_support_ticket(self, client):
+        r = client.post('/api/support/ticket', json={'subject': 'Login Issue', 'user_email': 'user@startup.com', 'message': 'Cannot login'})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Open'
+
+    def test_list_support_tickets(self, client):
+        r = client.get('/api/support/tickets')
+        assert r.status_code == 200
+        assert 'open_tickets_count' in r.json()
+
+    def test_generate_exam_practice(self, client):
+        r = client.post('/api/exam/practice', json={'exam_type': 'PTE', 'section': 'Speaking'})
+        assert r.status_code == 200
+        assert 'prompt' in r.json()
+
+    def test_match_urgent_jobs(self, client):
+        r = client.post('/api/jobs/match', json={'candidate_skills': ['Python'], 'desired_role': 'AI Developer'})
+        assert r.status_code == 200
+        assert len(r.json()['top_matches']) > 0
+
+    def test_get_deal_radar(self, client):
+        r = client.get('/api/deals/radar')
+        assert r.status_code == 200
+        assert len(r.json()['top_deals']) > 0

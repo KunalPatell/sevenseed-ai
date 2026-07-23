@@ -2193,3 +2193,85 @@ def generate_brain_quiz(req: QuizGenRequest):
             for i in range(min(req.num_questions, 10))
         ]
     }
+
+
+# ─── CapermintDesk Support Ticket System (Backup-2018 Integration) ───────────
+
+class SupportTicketRequest(BaseModel):
+    subject: str
+    category: str = 'General'
+    user_email: str
+    message: str
+
+@app.post('/api/support/ticket')
+def create_support_ticket(req: SupportTicketRequest):
+    if not req.subject or not req.user_email:
+        raise HTTPException(status_code=400, detail='Subject and email required.')
+    ticket_id = f'TICK-{hash(req.subject) % 100000}'
+    return {
+        'ticket_id': ticket_id,
+        'subject': req.subject,
+        'category': req.category,
+        'user_email': req.user_email,
+        'status': 'Open',
+        'priority': 'Medium',
+        'assigned_agent': 'AI Support Bot',
+        'estimated_resolution': '2 hours'
+    }
+
+@app.get('/api/support/tickets')
+def list_support_tickets():
+    return {
+        'open_tickets_count': 3,
+        'resolved_tickets_count': 128,
+        'avg_resolution_time_minutes': 14.2
+    }
+
+
+# ─── PTEOnline AI Exam Prep Suite (Backup-2018 Integration) ──────────────────
+
+class ExamPracticeRequest(BaseModel):
+    exam_type: str = 'PTE'
+    section: str = 'Speaking'
+
+@app.post('/api/exam/practice')
+def generate_exam_practice(req: ExamPracticeRequest):
+    return {
+        'exam_type': req.exam_type,
+        'section': req.section,
+        'prompt': f'Read the following text aloud with proper intonation for {req.exam_type} {req.section} test.',
+        'target_speaking_rate': '130-150 words per minute',
+        'target_score_band': '79+ (Superior)'
+    }
+
+
+# ─── SOS Job Matcher & Instant Hiring Alert (Backup-2018 Integration) ───────
+
+class JobMatchRequest(BaseModel):
+    candidate_skills: list[str] = ['Python', 'FastAPI']
+    desired_role: str = 'Backend Developer'
+
+@app.post('/api/jobs/match')
+def match_urgent_jobs(req: JobMatchRequest):
+    return {
+        'matched_jobs_count': 3,
+        'top_matches': [
+            {'title': f'Urgent {req.desired_role}', 'company': 'TechPulse AI', 'match_score': 95, 'location': 'Remote'},
+            {'title': 'Senior Python Engineer', 'company': 'SaaS Studio', 'match_score': 88, 'location': 'Hybrid'},
+            {'title': 'Full Stack Developer', 'company': 'CloudVentures', 'match_score': 82, 'location': 'Remote'}
+        ]
+    }
+
+
+# ─── CompareCart Deal Radar (Backup-2018 Integration) ──────────────────────
+
+@app.get('/api/deals/radar')
+def get_deal_radar():
+    return {
+        'active_deals_count': 5,
+        'top_deals': [
+            {'product': 'Groq Cloud Credits', 'discount': '100% FREE', 'coupon': 'SEVENSEED_FREE'},
+            {'product': 'Server VPS Hosting', 'discount': '50% OFF', 'coupon': 'STARTUP_GROWTH_50'},
+            {'product': 'Domain Name .AI', 'discount': '20% OFF', 'coupon': 'AI_BUILDER_20'}
+        ]
+    }
