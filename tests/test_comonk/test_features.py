@@ -223,3 +223,35 @@ class TestBackup2018ExtraFeatures:
         r = client.post('/api/donor/match', json={'blood_group': 'O+', 'city': 'Ahmedabad'})
         assert r.status_code == 200
         assert len(r.json()['donors']) > 0
+
+
+class TestBackup2020Features:
+    def test_book_taxi_ride(self, client):
+        r = client.post('/api/taxi/book', json={'passenger_name': 'Rohan Mehta', 'pickup_location': 'SG Highway'})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Driver Dispatched'
+
+    def test_get_taxi_fleet_status(self, client):
+        r = client.get('/api/taxi/status')
+        assert r.status_code == 200
+        assert r.json()['active_cabs'] > 0
+
+    def test_search_beverages(self, client):
+        r = client.post('/api/beverage/search', json={'category': 'Craft IPA', 'max_price': 500})
+        assert r.status_code == 200
+        assert len(r.json()['items']) > 0
+
+    def test_update_merchant_inventory(self, client):
+        r = client.post('/api/merchant/inventory', json={'store_id': 'STORE-101', 'item_name': 'Fresh Milk', 'quantity': 100})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Inventory Synchronized'
+
+    def test_list_local_merchants(self, client):
+        r = client.get('/api/merchant/stores')
+        assert r.status_code == 200
+        assert r.json()['total_merchants'] > 0
+
+    def test_create_game_lobby(self, client):
+        r = client.post('/api/lobby/create', json={'host_name': 'PlayerOne', 'max_players': 4})
+        assert r.status_code == 200
+        assert 'socket_room_token' in r.json()

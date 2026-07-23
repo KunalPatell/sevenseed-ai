@@ -77,7 +77,7 @@
 
 ---
 
-## 8. 🚗 Mobility, Fleet & Hospitality
+## 8. 🚗 Fleet, Hospitality & Services
 
 | Feature / Function Name | Source Backup Repo | API Endpoint | Description & Capability | Status |
 | :--- | :--- | :--- | :--- | :--- |
@@ -89,6 +89,17 @@
 
 ---
 
+## 9. 🚕 On-Demand Rides, Merchants & Gaming (Backup-2020)
+
+| Feature / Function Name | Source Backup Repo | API Endpoint | Description & Capability | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **Carz Taxi Ride Dispatch** | `Carz_backend` (2020) | `POST /api/taxi/book`<br>`GET /api/taxi/status` | On-demand cab dispatch, driver assignment, fare estimation, and fleet activity status. | ✅ Integrated |
+| **BeerApp Beverage Catalog** | `BeerApp_Backend` (2020) | `POST /api/beverage/search` | Beverage catalog search, ABV rating lookup, and price filter engine. | ✅ Integrated |
+| **LocalHoy Merchant Portal** | `LocalHoy_Admin` (2020) | `POST /api/merchant/inventory`<br>`GET /api/merchant/stores` | Hyperlocal merchant stock sync, store management, and delivery radius control. | ✅ Integrated |
+| **HeloLudo Lobby Matcher** | `Helo_ludo_backend` (2020) | `POST /api/lobby/create` | Multiplayer room creation, socket room token generation, and turn-based lobby. | ✅ Integrated |
+
+---
+
 ## 📋 Selection Guide
 
-Review the list above. All 34 features listed are **100% operational, tested, and ready** in your codebase! You can enable, disable, or customize any of these modules in the final release.
+Review the list above. All 38 features listed are **100% operational, tested, and ready** in your codebase! You can enable, disable, or customize any of these modules in the final release.

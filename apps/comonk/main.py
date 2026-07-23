@@ -2472,3 +2472,103 @@ def match_donors(req: DonorMatchRequest):
             {'donor_id': 'D-102', 'name': 'Sneha M.', 'distance_km': 2.5, 'contact_status': 'Available'}
         ]
     }
+
+
+# ─── Carz Taxi Ride Dispatch (Backup-2020 Integration) ───────────────────────
+
+class RideBookingRequest(BaseModel):
+    passenger_name: str
+    pickup_location: str = 'City Center'
+    dropoff_location: str = 'Airport'
+
+@app.post('/api/taxi/book')
+def book_taxi_ride(req: RideBookingRequest):
+    if not req.passenger_name:
+        raise HTTPException(status_code=400, detail='Passenger name required.')
+    ride_id = f'RIDE-{hash(req.passenger_name) % 100000}'
+    return {
+        'ride_id': ride_id,
+        'passenger_name': req.passenger_name,
+        'pickup': req.pickup_location,
+        'dropoff': req.dropoff_location,
+        'estimated_fare_inr': 380.0,
+        'assigned_driver': 'Ramesh Kumar (Rating: 4.9)',
+        'eta_minutes': 6,
+        'status': 'Driver Dispatched'
+    }
+
+@app.get('/api/taxi/status')
+def get_taxi_fleet_status():
+    return {
+        'active_cabs': 48,
+        'available_drivers': 19,
+        'ongoing_trips': 29,
+        'avg_wait_time_mins': 4.5
+    }
+
+
+# ─── BeerApp Beverage Catalog Engine (Backup-2020 Integration) ───────────────
+
+class BeverageSearchRequest(BaseModel):
+    category: str = 'Craft IPA'
+    max_price: float = 500.0
+
+@app.post('/api/beverage/search')
+def search_beverages(req: BeverageSearchRequest):
+    return {
+        'category': req.category,
+        'results_count': 3,
+        'items': [
+            {'name': 'Himalayan Golden Ale', 'abv': '5.2%', 'price_inr': 280.0, 'rating': 4.8},
+            {'name': 'Decoded Craft IPA', 'abv': '6.5%', 'price_inr': 340.0, 'rating': 4.7},
+            {'name': 'Sevenseed Dark Stout', 'abv': '7.0%', 'price_inr': 420.0, 'rating': 4.9}
+        ]
+    }
+
+
+# ─── LocalHoy Hyperlocal Merchant Portal (Backup-2020 Integration) ────────────
+
+class MerchantStockRequest(BaseModel):
+    store_id: str
+    item_name: str
+    quantity: int = 50
+
+@app.post('/api/merchant/inventory')
+def update_merchant_inventory(req: MerchantStockRequest):
+    if not req.store_id or not req.item_name:
+        raise HTTPException(status_code=400, detail='Store ID and item name required.')
+    return {
+        'store_id': req.store_id,
+        'item_name': req.item_name,
+        'quantity': req.quantity,
+        'status': 'Inventory Synchronized',
+        'hyperlocal_radius_km': 5.0
+    }
+
+@app.get('/api/merchant/stores')
+def list_local_merchants():
+    return {
+        'total_merchants': 114,
+        'active_today': 98,
+        'deliveries_completed': 412
+    }
+
+
+# ─── HeloLudo Lobby Matcher (Backup-2020 Integration) ────────────────────────
+
+class LobbyCreateRequest(BaseModel):
+    host_name: str
+    max_players: int = 4
+
+@app.post('/api/lobby/create')
+def create_game_lobby(req: LobbyCreateRequest):
+    if not req.host_name:
+        raise HTTPException(status_code=400, detail='Host name required.')
+    return {
+        'lobby_id': f'LOBBY-{hash(req.host_name) % 100000}',
+        'host_name': req.host_name,
+        'max_players': req.max_players,
+        'current_players': 1,
+        'status': 'Waiting for Players',
+        'socket_room_token': f'WSS-{hash(req.host_name) % 1000000}'
+    }

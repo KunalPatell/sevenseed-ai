@@ -265,4 +265,38 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
+
+  // Carz Taxi Ride Dispatch (Backup-2020)
+  bookTaxiRide: (payload: { passenger_name: string; pickup_location?: string; dropoff_location?: string }) =>
+    fetchApi<{ ride_id: string; passenger_name: string; pickup: string; dropoff: string; estimated_fare_inr: number; assigned_driver: string; eta_minutes: number; status: string }>('/api/taxi/book', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  getTaxiFleetStatus: () =>
+    fetchApi<{ active_cabs: number; available_drivers: number; ongoing_trips: number; avg_wait_time_mins: number }>('/api/taxi/status'),
+
+  // BeerApp Beverage Catalog (Backup-2020)
+  searchBeverages: (payload: { category?: string; max_price?: number }) =>
+    fetchApi<{ category: string; results_count: number; items: Array<{ name: string; abv: string; price_inr: number; rating: number }> }>('/api/beverage/search', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // LocalHoy Hyperlocal Merchant (Backup-2020)
+  updateMerchantInventory: (payload: { store_id: string; item_name: string; quantity?: number }) =>
+    fetchApi<{ store_id: string; item_name: string; quantity: number; status: string; hyperlocal_radius_km: number }>('/api/merchant/inventory', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  listLocalMerchants: () =>
+    fetchApi<{ total_merchants: number; active_today: number; deliveries_completed: number }>('/api/merchant/stores'),
+
+  // HeloLudo Lobby Matcher (Backup-2020)
+  createGameLobby: (payload: { host_name: string; max_players?: number }) =>
+    fetchApi<{ lobby_id: string; host_name: string; max_players: number; current_players: number; status: string; socket_room_token: string }>('/api/lobby/create', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
 };
