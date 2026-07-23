@@ -1,38 +1,25 @@
-# Sevenseed Monolith - 1 Render Service hosting the Sevenseed Hub + 6 Child Apps
-# (avp-emart, avpu, breakdown-factor, avp-charitable-trust, decode-forest-pharmacy,
-# sevenforce). Comonk is NOT included - it stays its own separately deployed,
-# already-live service; the hub only links out to it.
-#
-# Each child runs as its own subprocess inside this one container (see
-# apps/sevenseed/backend/child_processes.py) and is reverse-proxied at
-# /<slug>/api/*, so this is one Docker build + one Render service, but every
-# child keeps the same process isolation it has when deployed standalone.
-
 services:
+  # Python FastAPI Backend API Service
   - type: web
-    name: sevenseed
-    env: docker
-    dockerfilePath: apps/sevenseed/Dockerfile
-    plan: free
-    healthCheckPath: /api/health
+    name: sevenseed-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn apps.comonk.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PORT
-        value: 8000
+        value: 10000
       - key: GROQ_API_KEY
         sync: false
-      - key: GROQ_MODEL
-        value: llama-3.3-70b-versatile
       - key: GEMINI_API_KEY
         sync: false
-      - key: OPENAI_API_KEY
-        sync: false
-      - key: HUGGINGFACE_API_KEY
-        sync: false
-      - key: WHATSAPP_ACCESS_TOKEN
-        sync: false
-      - key: WHATSAPP_PHONE_NUMBER_ID
-        sync: false
-      - key: BREVO_API_KEY
-        sync: false
-      - key: BREVO_SENDER
-        sync: false
+
+  # Next.js 14 React Frontend Web App
+  - type: web
+    name: sevenseed-web
+    runtime: node
+    rootDir: apps/sevenseed-web
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://sevenseed-api.onrender.com
