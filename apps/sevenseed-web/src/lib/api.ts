@@ -234,4 +234,35 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
+
+  // AuraGym / GetFit Activity Tracker (Backup-2018)
+  logFitnessActivity: (payload: { user_id: string; activity_type?: string; duration_minutes?: number; calories_burned?: number }) =>
+    fetchApi<{ log_id: string; user_id: string; activity: string; duration_mins: number; calories_burned: number; status: string }>('/api/fitness/log', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  getFitnessSummary: (userId: string = 'USER-101') =>
+    fetchApi<{ user_id: string; total_workouts_this_week: number; total_calories_burned: number; fitness_score: number }>(`/api/fitness/summary?user_id=${userId}`),
+
+  // Busline Transit Dispatch (Backup-2018)
+  dispatchFleetRoute: (payload: { origin?: string; destination?: string }) =>
+    fetchApi<{ route_id: string; origin: string; destination: string; estimated_travel_minutes: number; active_vehicles: number; dispatch_status: string }>('/api/fleet/route', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // Hosty Hospitality Reservations (Backup-2018)
+  makeHotelReservation: (payload: { guest_name: string; hotel_name?: string; nights?: number }) =>
+    fetchApi<{ reservation_id: string; guest_name: string; hotel: string; nights: number; status: string; room_number: number }>('/api/hotel/reserve', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // DonnerApp Donor Matcher (Backup-2018)
+  matchDonors: (payload: { blood_group?: string; city?: string }) =>
+    fetchApi<{ blood_group: string; city: string; available_donors_count: number; donors: Array<{ donor_id: string; name: string; distance_km: number; contact_status: string }> }>('/api/donor/match', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
 };

@@ -196,3 +196,30 @@ class TestBackup2019Features:
         r = client.post('/api/food/order', json={'customer_name': 'Amit Shah', 'items': ['Coffee', 'Sandwich']})
         assert r.status_code == 200
         assert r.json()['status'] == 'Kitchen Preparing'
+
+
+class TestBackup2018ExtraFeatures:
+    def test_log_fitness_activity(self, client):
+        r = client.post('/api/fitness/log', json={'user_id': 'USR-101', 'activity_type': 'Running', 'duration_minutes': 30})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Logged'
+
+    def test_get_fitness_summary(self, client):
+        r = client.get('/api/fitness/summary?user_id=USR-101')
+        assert r.status_code == 200
+        assert r.json()['total_workouts_this_week'] > 0
+
+    def test_dispatch_fleet_route(self, client):
+        r = client.post('/api/fleet/route', json={'origin': 'Ahmedabad', 'destination': 'Surat'})
+        assert r.status_code == 200
+        assert r.json()['dispatch_status'] == 'En Route'
+
+    def test_make_hotel_reservation(self, client):
+        r = client.post('/api/hotel/reserve', json={'guest_name': 'Kunal Patel', 'hotel_name': 'Marriott', 'nights': 3})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Confirmed'
+
+    def test_match_donors(self, client):
+        r = client.post('/api/donor/match', json={'blood_group': 'O+', 'city': 'Ahmedabad'})
+        assert r.status_code == 200
+        assert len(r.json()['donors']) > 0

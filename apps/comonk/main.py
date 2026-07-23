@@ -2383,3 +2383,92 @@ def place_food_order(req: FoodOrderRequest):
         'status': 'Kitchen Preparing',
         'estimated_delivery': '25 mins'
     }
+
+
+# ─── AuraGym Fitness Activity Tracker (Backup-2018 Integration) ─────────────
+
+class FitnessLogRequest(BaseModel):
+    user_id: str
+    activity_type: str = 'Workout'
+    duration_minutes: int = 45
+    calories_burned: float = 320.0
+
+@app.post('/api/fitness/log')
+def log_fitness_activity(req: FitnessLogRequest):
+    if not req.user_id:
+        raise HTTPException(status_code=400, detail='User ID required.')
+    return {
+        'log_id': f'FIT-{hash(req.user_id) % 100000}',
+        'user_id': req.user_id,
+        'activity': req.activity_type,
+        'duration_mins': req.duration_minutes,
+        'calories_burned': req.calories_burned,
+        'status': 'Logged'
+    }
+
+@app.get('/api/fitness/summary')
+def get_fitness_summary(user_id: str = 'USER-101'):
+    return {
+        'user_id': user_id,
+        'total_workouts_this_week': 5,
+        'total_calories_burned': 1850.0,
+        'fitness_score': 92
+    }
+
+
+# ─── Busline Fleet & Transit Dispatch (Backup-2018 Integration) ─────────────
+
+class RouteRequest(BaseModel):
+    origin: str = 'Ahmedabad'
+    destination: str = 'Ghandinagar'
+
+@app.post('/api/fleet/route')
+def dispatch_fleet_route(req: RouteRequest):
+    return {
+        'route_id': f'RTE-{hash(req.origin + req.destination) % 10000}',
+        'origin': req.origin,
+        'destination': req.destination,
+        'estimated_travel_minutes': 35,
+        'active_vehicles': 8,
+        'dispatch_status': 'En Route'
+    }
+
+
+# ─── Hosty Hotel & Hospitality Reservations (Backup-2018 Integration) ────────
+
+class ReservationRequest(BaseModel):
+    guest_name: str
+    hotel_name: str = 'Grand Plaza'
+    nights: int = 2
+
+@app.post('/api/hotel/reserve')
+def make_hotel_reservation(req: ReservationRequest):
+    if not req.guest_name:
+        raise HTTPException(status_code=400, detail='Guest name required.')
+    return {
+        'reservation_id': f'RES-{hash(req.guest_name) % 100000}',
+        'guest_name': req.guest_name,
+        'hotel': req.hotel_name,
+        'nights': req.nights,
+        'status': 'Confirmed',
+        'room_number': 304
+    }
+
+
+# ─── DonnerApp Charity & Blood Donor Matcher (Backup-2018 Integration) ───────
+
+class DonorMatchRequest(BaseModel):
+    blood_group: str = 'O+'
+    city: str = 'Ahmedabad'
+
+@app.post('/api/donor/match')
+def match_donors(req: DonorMatchRequest):
+    return {
+        'blood_group': req.blood_group,
+        'city': req.city,
+        'available_donors_count': 12,
+        'donors': [
+            {'donor_id': 'D-101', 'name': 'Amit P.', 'distance_km': 1.2, 'contact_status': 'Available'},
+            {'donor_id': 'D-102', 'name': 'Sneha M.', 'distance_km': 2.5, 'contact_status': 'Available'}
+        ]
+    }
