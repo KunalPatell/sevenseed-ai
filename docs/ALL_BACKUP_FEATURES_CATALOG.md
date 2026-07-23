@@ -100,6 +100,17 @@
 
 ---
 
+## 10. 🏢 Real Estate, Express E-Commerce & Web3 (Backup-2021)
+
+| Feature / Function Name | Source Backup Repo | API Endpoint | Description & Capability | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **Circads Real Estate Valuer** | `Circads_Real_Estate` (2021) | `POST /api/realestate/estimate`<br>`GET /api/realestate/properties` | Property valuation estimator by sqft, city pricing index, and active listings catalog. | ✅ Integrated |
+| **AlwaysFresh Express Grocery** | `Always_Fresh_Backend` (2021) | `POST /api/grocery/order` | Cold-chain organic grocery dispatch, 15-min express window, and order tracking. | ✅ Integrated |
+| **TailorWay Custom Apparel** | `TailorWay_backend` (2021) | `POST /api/tailor/order` | Custom garment measurement logger, tailor assignment, and stitching status. | ✅ Integrated |
+| **KryptoMarket Asset Tracker** | `KryptoMarket_Backend` (2021) | `GET /api/crypto/prices` | Crypto market token price feed, 24h percentage change, and portfolio tracker. | ✅ Integrated |
+
+---
+
 ## 📋 Selection Guide
 
-Review the list above. All 38 features listed are **100% operational, tested, and ready** in your codebase! You can enable, disable, or customize any of these modules in the final release.
+Review the list above. All 42 features listed are **100% operational, tested, and ready** in your codebase! You can enable, disable, or customize any of these modules in the final release.

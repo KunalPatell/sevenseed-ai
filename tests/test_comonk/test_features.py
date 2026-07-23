@@ -255,3 +255,30 @@ class TestBackup2020Features:
         r = client.post('/api/lobby/create', json={'host_name': 'PlayerOne', 'max_players': 4})
         assert r.status_code == 200
         assert 'socket_room_token' in r.json()
+
+
+class TestBackup2021Features:
+    def test_estimate_property_value(self, client):
+        r = client.post('/api/realestate/estimate', json={'property_type': 'Apartment', 'area_sqft': 1000})
+        assert r.status_code == 200
+        assert r.json()['estimated_valuation_inr'] == 6500000.0
+
+    def test_list_featured_properties(self, client):
+        r = client.get('/api/realestate/properties')
+        assert r.status_code == 200
+        assert len(r.json()['featured']) > 0
+
+    def test_place_grocery_order(self, client):
+        r = client.post('/api/grocery/order', json={'customer_name': 'Kavita Patel', 'delivery_address': 'Bodakdev'})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Dispatched'
+
+    def test_place_tailor_order(self, client):
+        r = client.post('/api/tailor/order', json={'client_name': 'Sanjay Shah', 'garment_type': 'Blazer'})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Stitching In Progress'
+
+    def test_get_crypto_token_prices(self, client):
+        r = client.get('/api/crypto/prices')
+        assert r.status_code == 200
+        assert len(r.json()['tokens']) >= 4

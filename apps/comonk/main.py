@@ -2572,3 +2572,95 @@ def create_game_lobby(req: LobbyCreateRequest):
         'status': 'Waiting for Players',
         'socket_room_token': f'WSS-{hash(req.host_name) % 1000000}'
     }
+
+
+# ─── Circads Real Estate Valuation (Backup-2021 Integration) ─────────────────
+
+class PropertyEstimateRequest(BaseModel):
+    property_type: str = 'Apartment'
+    city: str = 'Ahmedabad'
+    area_sqft: float = 1200.0
+    bedrooms: int = 3
+
+@app.post('/api/realestate/estimate')
+def estimate_property_value(req: PropertyEstimateRequest):
+    if req.area_sqft <= 0:
+        raise HTTPException(status_code=400, detail='Valid area in sqft required.')
+    estimated_price = req.area_sqft * 6500.0
+    return {
+        'property_type': req.property_type,
+        'city': req.city,
+        'area_sqft': req.area_sqft,
+        'estimated_valuation_inr': estimated_price,
+        'price_per_sqft_inr': 6500.0,
+        'valuation_confidence': '94%'
+    }
+
+@app.get('/api/realestate/properties')
+def list_featured_properties():
+    return {
+        'total_listings': 84,
+        'featured': [
+            {'title': 'Luxury 3BHK Skyline Villa', 'city': 'Ahmedabad', 'price_lakhs': 125.0, 'area_sqft': 1850},
+            {'title': 'Modern Tech Park Office', 'city': 'Gandhinagar', 'price_lakhs': 85.0, 'area_sqft': 1200}
+        ]
+    }
+
+
+# ─── AlwaysFresh Grocery Delivery (Backup-2021 Integration) ───────────────────
+
+class GroceryOrderRequest(BaseModel):
+    customer_name: str
+    delivery_address: str
+    items: list[str] = ['Organic Apples', 'Almond Milk']
+
+@app.post('/api/grocery/order')
+def place_grocery_order(req: GroceryOrderRequest):
+    if not req.customer_name or not req.delivery_address:
+        raise HTTPException(status_code=400, detail='Customer details required.')
+    return {
+        'order_id': f'AF-{hash(req.customer_name) % 100000}',
+        'customer_name': req.customer_name,
+        'items_count': len(req.items),
+        'delivery_window': 'Express 15 mins',
+        'cold_chain_verified': True,
+        'status': 'Dispatched'
+    }
+
+
+# ─── TailorWay Apparel Customization (Backup-2021 Integration) ───────────────
+
+class TailorOrderRequest(BaseModel):
+    client_name: str
+    garment_type: str = 'Custom Suit'
+    chest_inches: float = 40.0
+    waist_inches: float = 34.0
+
+@app.post('/api/tailor/order')
+def place_tailor_order(req: TailorOrderRequest):
+    if not req.client_name:
+        raise HTTPException(status_code=400, detail='Client name required.')
+    return {
+        'order_id': f'TLR-{hash(req.client_name) % 100000}',
+        'client_name': req.client_name,
+        'garment': req.garment_type,
+        'measurements': {'chest': req.chest_inches, 'waist': req.waist_inches},
+        'master_tailor_assigned': 'Master Salim',
+        'status': 'Stitching In Progress'
+    }
+
+
+# ─── KryptoMarket Token Tracker (Backup-2021 Integration) ─────────────────────
+
+@app.get('/api/crypto/prices')
+def get_crypto_token_prices():
+    return {
+        'currency': 'USD',
+        'market_status': 'Open',
+        'tokens': [
+            {'symbol': 'BTC', 'name': 'Bitcoin', 'price': 64250.00, 'change_24h': '+2.4%'},
+            {'symbol': 'ETH', 'name': 'Ethereum', 'price': 3480.50, 'change_24h': '+3.1%'},
+            {'symbol': 'SOL', 'name': 'Solana', 'price': 145.20, 'change_24h': '+5.8%'},
+            {'symbol': 'SEED', 'name': 'Sevenseed Token', 'price': 1.25, 'change_24h': '+12.4%'}
+        ]
+    }

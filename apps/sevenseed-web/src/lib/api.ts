@@ -299,4 +299,32 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
+
+  // Circads Real Estate (Backup-2021)
+  estimatePropertyValue: (payload: { property_type?: string; city?: string; area_sqft: number; bedrooms?: number }) =>
+    fetchApi<{ property_type: string; city: string; area_sqft: number; estimated_valuation_inr: number; price_per_sqft_inr: number; valuation_confidence: string }>('/api/realestate/estimate', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  listFeaturedProperties: () =>
+    fetchApi<{ total_listings: number; featured: Array<{ title: string; city: string; price_lakhs: number; area_sqft: number }> }>('/api/realestate/properties'),
+
+  // AlwaysFresh Express Grocery (Backup-2021)
+  placeGroceryOrder: (payload: { customer_name: string; delivery_address: string; items?: string[] }) =>
+    fetchApi<{ order_id: string; customer_name: string; items_count: number; delivery_window: string; cold_chain_verified: boolean; status: string }>('/api/grocery/order', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // TailorWay Custom Apparel (Backup-2021)
+  placeTailorOrder: (payload: { client_name: string; garment_type?: string; chest_inches?: number; waist_inches?: number }) =>
+    fetchApi<{ order_id: string; client_name: string; garment: string; measurements: { chest: number; waist: number }; master_tailor_assigned: string; status: string }>('/api/tailor/order', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // KryptoMarket Asset Tracker (Backup-2021)
+  getCryptoTokenPrices: () =>
+    fetchApi<{ currency: string; market_status: string; tokens: Array<{ symbol: string; name: string; price: number; change_24h: string }> }>('/api/crypto/prices'),
 };
