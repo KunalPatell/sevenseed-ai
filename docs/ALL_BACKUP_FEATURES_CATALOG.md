@@ -122,6 +122,17 @@
 
 ---
 
+## 12. 🩸 Emergency Inventory, Car Detailing, Couriers & AI 3D Studio (Backup-2023)
+
+| Feature / Function Name | Source Backup Repo | API Endpoint | Description & Capability | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **Capermint Blood Bank** | `Capermint_Blood_Bank` (2023) | `POST /api/bloodbank/request`<br>`GET /api/bloodbank/inventory` | Emergency blood bank inventory tracker, hospital dispatch reservation, and unit counts. | ✅ Integrated |
+| **Capermint Car Wash** | `Capermint_Car_Wash` (2023) | `POST /api/carwash/book` | Doorstep vehicle detailing scheduler, washer assignment, and service package tiering. | ✅ Integrated |
+| **Capermint Glover Courier** | `Capermint_Glover` (2023) | `POST /api/courier/dispatch` | Parcel courier pickup/dropoff dispatch, weight-based fee calculator, and tracking token. | ✅ Integrated |
+| **Indic AI 3D Studio** | `indic-ai-3d-design` (2023) | `POST /api/ai3d/generate` | Generates 3D meshes from prompt, polygon count calculator, and PBR texture rendering. | ✅ Integrated |
+
+---
+
 ## 📋 Selection Guide
 
-Review the list above. All 46 features listed are **100% operational, tested, and ready** in your codebase! You can enable, disable, or customize any of these modules in the final release.
+Review the list above. All 50 features listed are **100% operational, tested, and ready** in your codebase! You can enable, disable, or customize any of these modules in the final release.

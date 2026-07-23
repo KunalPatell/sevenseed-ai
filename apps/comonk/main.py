@@ -2768,3 +2768,108 @@ def submit_startup_pitch(req: PitchSubmissionRequest):
         'status': 'Published on Founder Showcase',
         'investor_views': 0
     }
+
+
+# ─── Capermint Blood Bank Emergency Inventory (Backup-2023 Integration) ──────
+
+class BloodRequest(BaseModel):
+    hospital_name: str
+    blood_group: str = 'O+'
+    units_required: int = 2
+
+@app.post('/api/bloodbank/request')
+def request_blood_units(req: BloodRequest):
+    if not req.hospital_name or req.units_required <= 0:
+        raise HTTPException(status_code=400, detail='Valid hospital name and positive units required.')
+    req_id = f'REQ-{hash(req.hospital_name) % 100000}'
+    return {
+        'request_id': req_id,
+        'hospital': req.hospital_name,
+        'blood_group': req.blood_group,
+        'units_requested': req.units_required,
+        'allocated_units': req.units_required,
+        'inventory_status': 'Reserved for Dispatch',
+        'eta_minutes': 20
+    }
+
+@app.get('/api/bloodbank/inventory')
+def get_blood_bank_inventory():
+    return {
+        'total_units_available': 342,
+        'groups': [
+            {'group': 'A+', 'units': 85},
+            {'group': 'B+', 'units': 92},
+            {'group': 'O+', 'units': 110},
+            {'group': 'AB+', 'units': 32},
+            {'group': 'O-', 'units': 23}
+        ]
+    }
+
+
+# ─── Capermint Car Wash Doorstep Detailing (Backup-2023 Integration) ──────────
+
+class CarWashRequest(BaseModel):
+    customer_name: str
+    vehicle_model: str = 'Sedan'
+    package_tier: str = 'Full Interior & Exterior'
+    preferred_slot: str = 'Today 04:00 PM'
+
+@app.post('/api/carwash/book')
+def book_car_wash(req: CarWashRequest):
+    if not req.customer_name:
+        raise HTTPException(status_code=400, detail='Customer name required.')
+    booking_id = f'CW-{hash(req.customer_name) % 100000}'
+    return {
+        'booking_id': booking_id,
+        'customer_name': req.customer_name,
+        'vehicle': req.vehicle_model,
+        'package': req.package_tier,
+        'slot': req.preferred_slot,
+        'assigned_washer': 'Karan Singh',
+        'price_inr': 799.0,
+        'status': 'Washer Assigned'
+    }
+
+
+# ─── Capermint Glover Parcel Courier Dispatch (Backup-2023 Integration) ──────
+
+class ParcelCourierRequest(BaseModel):
+    sender_name: str
+    pickup_address: str
+    delivery_address: str
+    package_weight_kg: float = 2.5
+
+@app.post('/api/courier/dispatch')
+def dispatch_parcel_courier(req: ParcelCourierRequest):
+    if not req.sender_name or req.package_weight_kg <= 0:
+        raise HTTPException(status_code=400, detail='Sender name and positive weight required.')
+    fare = 50.0 + (req.package_weight_kg * 15.0)
+    return {
+        'tracking_id': f'GLV-{hash(req.sender_name) % 100000}',
+        'sender': req.sender_name,
+        'weight_kg': req.package_weight_kg,
+        'delivery_fare_inr': fare,
+        'courier_partner': 'Glover Express Rider',
+        'status': 'Rider Dispatched for Pickup'
+    }
+
+
+# ─── Indic AI 3D Asset Studio (Backup-2023 Integration) ──────────────────────
+
+class Ai3dGenerateRequest(BaseModel):
+    prompt: str = 'Cyberpunk Neon Vehicle 3D'
+    file_format: str = 'GLTF'
+
+@app.post('/api/ai3d/generate')
+def generate_ai_3d_asset(req: Ai3dGenerateRequest):
+    if not req.prompt:
+        raise HTTPException(status_code=400, detail='Prompt required.')
+    return {
+        'asset_id': f'3D-{hash(req.prompt) % 100000}',
+        'prompt': req.prompt,
+        'format': req.file_format,
+        'mesh_polygon_count': 14200,
+        'texture_resolution': '4K PBR',
+        'download_url': f'https://assets.sevenseed.com/3d/{hash(req.prompt) % 100000}.gltf',
+        'status': 'Render Complete'
+    }

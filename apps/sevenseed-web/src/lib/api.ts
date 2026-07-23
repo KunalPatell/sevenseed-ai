@@ -361,4 +361,35 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
+
+  // Capermint Blood Bank (Backup-2023)
+  requestBloodUnits: (payload: { hospital_name: string; blood_group?: string; units_required?: number }) =>
+    fetchApi<{ request_id: string; hospital: string; blood_group: string; units_requested: number; allocated_units: number; inventory_status: string; eta_minutes: number }>('/api/bloodbank/request', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  getBloodBankInventory: () =>
+    fetchApi<{ total_units_available: number; groups: Array<{ group: string; units: number }> }>('/api/bloodbank/inventory'),
+
+  // Capermint Car Wash (Backup-2023)
+  bookCarWash: (payload: { customer_name: string; vehicle_model?: string; package_tier?: string; preferred_slot?: string }) =>
+    fetchApi<{ booking_id: string; customer_name: string; vehicle: string; package: string; slot: string; assigned_washer: string; price_inr: number; status: string }>('/api/carwash/book', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // Capermint Glover Courier (Backup-2023)
+  dispatchParcelCourier: (payload: { sender_name: string; pickup_address: string; delivery_address: string; package_weight_kg?: number }) =>
+    fetchApi<{ tracking_id: string; sender: string; weight_kg: number; delivery_fare_inr: number; courier_partner: string; status: string }>('/api/courier/dispatch', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // Indic AI 3D Asset Studio (Backup-2023)
+  generateAi3dAsset: (payload: { prompt?: string; file_format?: string }) =>
+    fetchApi<{ asset_id: string; prompt: string; format: string; mesh_polygon_count: number; texture_resolution: string; download_url: string; status: string }>('/api/ai3d/generate', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
 };

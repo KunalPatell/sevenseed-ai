@@ -314,3 +314,30 @@ class TestBackup2022Features:
         r = client.post('/api/startup/pitch', json={'startup_name': 'Sevenseed AI', 'tagline': 'AI Venture Studio', 'founder_email': 'kunal@sevenseed.com'})
         assert r.status_code == 200
         assert r.json()['status'] == 'Published on Founder Showcase'
+
+
+class TestBackup2023Features:
+    def test_request_blood_units(self, client):
+        r = client.post('/api/bloodbank/request', json={'hospital_name': 'Apollo Hospital', 'blood_group': 'O+', 'units_required': 3})
+        assert r.status_code == 200
+        assert r.json()['inventory_status'] == 'Reserved for Dispatch'
+
+    def test_get_blood_bank_inventory(self, client):
+        r = client.get('/api/bloodbank/inventory')
+        assert r.status_code == 200
+        assert r.json()['total_units_available'] > 0
+
+    def test_book_car_wash(self, client):
+        r = client.post('/api/carwash/book', json={'customer_name': 'Vikram Rathore', 'vehicle_model': 'SUV'})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Washer Assigned'
+
+    def test_dispatch_parcel_courier(self, client):
+        r = client.post('/api/courier/dispatch', json={'sender_name': 'Rajesh Sharma', 'pickup_address': 'Navrangpura', 'delivery_address': 'SG Highway', 'package_weight_kg': 2.0})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Rider Dispatched for Pickup'
+
+    def test_generate_ai_3d_asset(self, client):
+        r = client.post('/api/ai3d/generate', json={'prompt': 'Futuristic Robot Arm', 'file_format': 'GLTF'})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Render Complete'
