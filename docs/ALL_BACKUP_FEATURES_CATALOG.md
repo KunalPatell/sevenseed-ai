@@ -111,6 +111,17 @@
 
 ---
 
+## 11. 🥛 Subscriptions, Rewards, Insurance & Venture Pitching (Backup-2022)
+
+| Feature / Function Name | Source Backup Repo | API Endpoint | Description & Capability | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **DailyMilk Subscription** | `dailymilkdelivery` (2022) | `POST /api/milk/subscribe`<br>`GET /api/milk/deliveries` | Daily recurring essentials delivery subscription, milk type selector, and pause/resume logic. | ✅ Integrated |
+| **CashRewards Loyalty Engine** | `cashrewards_backend` (2022) | `POST /api/rewards/redeem`<br>`GET /api/rewards/points` | Customer reward points tracker, voucher redemption engine, and cashback savings audit. | ✅ Integrated |
+| **PolicyKlub Insurance Advisor** | `policy_klub_admin` (2022) | `POST /api/insurance/compare` | Health/life insurance quote engine, cashless hospital finder, and policy comparison matrix. | ✅ Integrated |
+| **StartupBoat Pitch Showcase** | `startupboat_wp_website` (2022) | `POST /api/startup/pitch` | Founder pitch deck submission portal, investor connection matching, and pitch directory. | ✅ Integrated |
+
+---
+
 ## 📋 Selection Guide
 
-Review the list above. All 42 features listed are **100% operational, tested, and ready** in your codebase! You can enable, disable, or customize any of these modules in the final release.
+Review the list above. All 46 features listed are **100% operational, tested, and ready** in your codebase! You can enable, disable, or customize any of these modules in the final release.

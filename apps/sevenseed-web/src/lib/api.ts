@@ -327,4 +327,38 @@ export const api = {
   // KryptoMarket Asset Tracker (Backup-2021)
   getCryptoTokenPrices: () =>
     fetchApi<{ currency: string; market_status: string; tokens: Array<{ symbol: string; name: string; price: number; change_24h: string }> }>('/api/crypto/prices'),
+
+  // DailyMilk Subscription (Backup-2022)
+  createMilkSubscription: (payload: { customer_name: string; milk_type?: string; quantity_liters?: number; delivery_time?: string }) =>
+    fetchApi<{ subscription_id: string; customer_name: string; milk_type: string; daily_quantity_liters: number; delivery_time: string; monthly_cost_inr: number; status: string }>('/api/milk/subscribe', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  getDailyDeliveries: () =>
+    fetchApi<{ total_active_subscriptions: number; delivered_today: number; paused_today: number }>('/api/milk/deliveries'),
+
+  // CashRewards Loyalty (Backup-2022)
+  redeemRewardPoints: (payload: { user_id: string; points_to_redeem?: number }) =>
+    fetchApi<{ redemption_id: string; user_id: string; points_redeemed: number; voucher_code: string; cash_value_inr: number; status: string }>('/api/rewards/redeem', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  getUserPoints: (userId: string = 'USER-101') =>
+    fetchApi<{ user_id: string; total_points_balance: number; tier: string; lifetime_savings_inr: number }>(`/api/rewards/points?user_id=${userId}`),
+
+  // PolicyKlub Insurance Advisor (Backup-2022)
+  compareInsurancePolicies: (payload: { age?: number; coverage_amount_lakhs?: number; policy_type?: string }) =>
+    fetchApi<{ policy_type: string; applicant_age: number; coverage_lakhs: number; recommended_policies: Array<{ insurer: string; annual_premium_inr: number; cashless_hospitals: number }> }>('/api/insurance/compare', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  // StartupBoat Pitch Showcase (Backup-2022)
+  submitStartupPitch: (payload: { startup_name: string; tagline: string; target_ask_usd?: number; founder_email: string }) =>
+    fetchApi<{ pitch_id: string; startup_name: string; tagline: string; ask_usd: number; status: string; investor_views: number }>('/api/startup/pitch', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
 };

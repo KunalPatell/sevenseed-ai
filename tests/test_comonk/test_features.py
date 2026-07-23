@@ -282,3 +282,35 @@ class TestBackup2021Features:
         r = client.get('/api/crypto/prices')
         assert r.status_code == 200
         assert len(r.json()['tokens']) >= 4
+
+
+class TestBackup2022Features:
+    def test_create_milk_subscription(self, client):
+        r = client.post('/api/milk/subscribe', json={'customer_name': 'Meera Joshi', 'milk_type': 'Organic Milk'})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Active Daily Delivery'
+
+    def test_get_daily_deliveries(self, client):
+        r = client.get('/api/milk/deliveries')
+        assert r.status_code == 200
+        assert r.json()['total_active_subscriptions'] > 0
+
+    def test_redeem_reward_points(self, client):
+        r = client.post('/api/rewards/redeem', json={'user_id': 'USR-101', 'points_to_redeem': 500})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Redeemed'
+
+    def test_get_user_points(self, client):
+        r = client.get('/api/rewards/points?user_id=USR-101')
+        assert r.status_code == 200
+        assert r.json()['tier'] == 'Gold Member'
+
+    def test_compare_insurance_policies(self, client):
+        r = client.post('/api/insurance/compare', json={'age': 28, 'coverage_amount_lakhs': 15.0})
+        assert r.status_code == 200
+        assert len(r.json()['recommended_policies']) > 0
+
+    def test_submit_startup_pitch(self, client):
+        r = client.post('/api/startup/pitch', json={'startup_name': 'Sevenseed AI', 'tagline': 'AI Venture Studio', 'founder_email': 'kunal@sevenseed.com'})
+        assert r.status_code == 200
+        assert r.json()['status'] == 'Published on Founder Showcase'

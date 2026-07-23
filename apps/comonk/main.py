@@ -2664,3 +2664,107 @@ def get_crypto_token_prices():
             {'symbol': 'SEED', 'name': 'Sevenseed Token', 'price': 1.25, 'change_24h': '+12.4%'}
         ]
     }
+
+
+# ─── DailyMilk Subscription Engine (Backup-2022 Integration) ──────────────────
+
+class MilkSubscriptionRequest(BaseModel):
+    customer_name: str
+    milk_type: str = 'Cow Whole Milk'
+    quantity_liters: float = 1.0
+    delivery_time: str = '06:30 AM'
+
+@app.post('/api/milk/subscribe')
+def create_milk_subscription(req: MilkSubscriptionRequest):
+    if not req.customer_name:
+        raise HTTPException(status_code=400, detail='Customer name required.')
+    sub_id = f'SUB-{hash(req.customer_name) % 100000}'
+    return {
+        'subscription_id': sub_id,
+        'customer_name': req.customer_name,
+        'milk_type': req.milk_type,
+        'daily_quantity_liters': req.quantity_liters,
+        'delivery_time': req.delivery_time,
+        'monthly_cost_inr': req.quantity_liters * 30 * 65.0,
+        'status': 'Active Daily Delivery'
+    }
+
+@app.get('/api/milk/deliveries')
+def get_daily_deliveries():
+    return {
+        'total_active_subscriptions': 240,
+        'delivered_today': 238,
+        'paused_today': 2
+    }
+
+
+# ─── CashRewards Loyalty & Affiliate Points (Backup-2022 Integration) ────────
+
+class RewardRedeemRequest(BaseModel):
+    user_id: str
+    points_to_redeem: int = 500
+
+@app.post('/api/rewards/redeem')
+def redeem_reward_points(req: RewardRedeemRequest):
+    if not req.user_id or req.points_to_redeem <= 0:
+        raise HTTPException(status_code=400, detail='Valid user ID and points required.')
+    return {
+        'redemption_id': f'RED-{hash(req.user_id) % 100000}',
+        'user_id': req.user_id,
+        'points_redeemed': req.points_to_redeem,
+        'voucher_code': f'REWARD-VOUCHER-{req.points_to_redeem}',
+        'cash_value_inr': req.points_to_redeem * 0.5,
+        'status': 'Redeemed'
+    }
+
+@app.get('/api/rewards/points')
+def get_user_points(user_id: str = 'USER-101'):
+    return {
+        'user_id': user_id,
+        'total_points_balance': 1450,
+        'tier': 'Gold Member',
+        'lifetime_savings_inr': 2400.0
+    }
+
+
+# ─── PolicyKlub Insurance Advisor (Backup-2022 Integration) ──────────────────
+
+class PolicyCompareRequest(BaseModel):
+    age: int = 30
+    coverage_amount_lakhs: float = 10.0
+    policy_type: str = 'Health Insurance'
+
+@app.post('/api/insurance/compare')
+def compare_insurance_policies(req: PolicyCompareRequest):
+    annual_prem = req.age * 250.0 + (req.coverage_amount_lakhs * 400.0)
+    return {
+        'policy_type': req.policy_type,
+        'applicant_age': req.age,
+        'coverage_lakhs': req.coverage_amount_lakhs,
+        'recommended_policies': [
+            {'insurer': 'Star Health Premier', 'annual_premium_inr': annual_prem, 'cashless_hospitals': 14000},
+            {'insurer': 'HDFC ERGO Optima', 'annual_premium_inr': annual_prem * 1.05, 'cashless_hospitals': 12500}
+        ]
+    }
+
+
+# ─── StartupBoat Pitch Showcase Portal (Backup-2022 Integration) ─────────────
+
+class PitchSubmissionRequest(BaseModel):
+    startup_name: str
+    tagline: str
+    target_ask_usd: float = 250000.0
+    founder_email: str
+
+@app.post('/api/startup/pitch')
+def submit_startup_pitch(req: PitchSubmissionRequest):
+    if not req.startup_name or not req.founder_email:
+        raise HTTPException(status_code=400, detail='Startup name and founder email required.')
+    return {
+        'pitch_id': f'PITCH-{hash(req.startup_name) % 100000}',
+        'startup_name': req.startup_name,
+        'tagline': req.tagline,
+        'ask_usd': req.target_ask_usd,
+        'status': 'Published on Founder Showcase',
+        'investor_views': 0
+    }
