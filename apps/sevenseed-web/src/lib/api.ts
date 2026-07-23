@@ -197,4 +197,41 @@ export const api = {
   // CompareCart Deal Radar (Backup-2018)
   getDealRadar: () =>
     fetchApi<{ active_deals_count: number; top_deals: Array<{ product: string; discount: string; coupon: string }> }>('/api/deals/radar'),
+
+  // BeautyCloud Service Booking (Backup-2019)
+  bookAppointment: (payload: { client_name: string; service_name?: string; preferred_date?: string }) =>
+    fetchApi<{ booking_id: string; client_name: string; service_name: string; date: string; status: string; assigned_specialist: string }>('/api/beauty/book', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  listAppointments: () =>
+    fetchApi<{ total_bookings_today: number; completed_bookings: number; upcoming_bookings: number }>('/api/beauty/appointments'),
+
+  // HappiAds Campaign Engine (Backup-2019)
+  createAdCampaign: (payload: { campaign_name: string; budget_usd?: number; target_demographic?: string }) =>
+    fetchApi<{ campaign_id: string; campaign_name: string; budget_usd: number; estimated_impressions: number; status: string }>('/api/ads/campaign', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  getAdAnalytics: () =>
+    fetchApi<{ total_impressions: number; total_clicks: number; average_ctr: string; total_revenue_usd: number }>('/api/ads/analytics'),
+
+  // DigiPay Micro-Wallet (Backup-2019)
+  processWalletTransaction: (payload: { user_id: string; amount: number; transaction_type?: string }) =>
+    fetchApi<{ tx_id: string; user_id: string; amount: number; type: string; status: string; new_balance: number }>('/api/wallet/transact', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  getWalletBalance: (userId: string = 'USER-101') =>
+    fetchApi<{ user_id: string; currency: string; current_balance: number; wallet_status: string }>(`/api/wallet/balance?user_id=${userId}`),
+
+  // FoodMenu Kitchen Dispatch (Backup-2019)
+  placeFoodOrder: (payload: { customer_name: string; items: string[] }) =>
+    fetchApi<{ order_id: string; customer_name: string; items_count: number; status: string; estimated_delivery: string }>('/api/food/order', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
 };

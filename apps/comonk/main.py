@@ -2275,3 +2275,111 @@ def get_deal_radar():
             {'product': 'Domain Name .AI', 'discount': '20% OFF', 'coupon': 'AI_BUILDER_20'}
         ]
     }
+
+
+# ─── BeautyCloud Appointment Scheduler (Backup-2019 Integration) ─────────────
+
+class AppointmentRequest(BaseModel):
+    client_name: str
+    service_name: str = 'General Consultation'
+    preferred_date: str = 'Tomorrow 10:00 AM'
+
+@app.post('/api/beauty/book')
+def book_appointment(req: AppointmentRequest):
+    if not req.client_name:
+        raise HTTPException(status_code=400, detail='Client name required.')
+    booking_id = f'BOOK-{hash(req.client_name) % 100000}'
+    return {
+        'booking_id': booking_id,
+        'client_name': req.client_name,
+        'service_name': req.service_name,
+        'date': req.preferred_date,
+        'status': 'Confirmed',
+        'assigned_specialist': 'AI Specialist'
+    }
+
+@app.get('/api/beauty/appointments')
+def list_appointments():
+    return {
+        'total_bookings_today': 18,
+        'completed_bookings': 14,
+        'upcoming_bookings': 4
+    }
+
+
+# ─── HappiAds In-App Campaign Engine (Backup-2019 Integration) ───────────────
+
+class CampaignRequest(BaseModel):
+    campaign_name: str
+    budget_usd: float = 100.0
+    target_demographic: str = 'Developers & Founders'
+
+@app.post('/api/ads/campaign')
+def create_ad_campaign(req: CampaignRequest):
+    if not req.campaign_name:
+        raise HTTPException(status_code=400, detail='Campaign name required.')
+    return {
+        'campaign_id': f'CAMP-{hash(req.campaign_name) % 100000}',
+        'campaign_name': req.campaign_name,
+        'budget_usd': req.budget_usd,
+        'estimated_impressions': int(req.budget_usd * 1250),
+        'status': 'Active'
+    }
+
+@app.get('/api/ads/analytics')
+def get_ad_analytics():
+    return {
+        'total_impressions': 245000,
+        'total_clicks': 18400,
+        'average_ctr': '7.51%',
+        'total_revenue_usd': 3420.50
+    }
+
+
+# ─── DigiPay Micro-Wallet Engine (Backup-2019 Integration) ──────────────────
+
+class WalletTransactionRequest(BaseModel):
+    user_id: str
+    amount: float
+    transaction_type: str = 'Credit'
+
+@app.post('/api/wallet/transact')
+def process_wallet_transaction(req: WalletTransactionRequest):
+    if not req.user_id or req.amount <= 0:
+        raise HTTPException(status_code=400, detail='Valid user ID and positive amount required.')
+    return {
+        'tx_id': f'TX-{hash(req.user_id) % 1000000}',
+        'user_id': req.user_id,
+        'amount': req.amount,
+        'type': req.transaction_type,
+        'status': 'Success',
+        'new_balance': 1500.0 if req.transaction_type == 'Credit' else 500.0
+    }
+
+@app.get('/api/wallet/balance')
+def get_wallet_balance(user_id: str = 'USER-101'):
+    return {
+        'user_id': user_id,
+        'currency': 'INR',
+        'current_balance': 1250.0,
+        'wallet_status': 'Verified'
+    }
+
+
+# ─── FoodMenu Kitchen Dispatch System (Backup-2019 Integration) ──────────────
+
+class FoodOrderRequest(BaseModel):
+    customer_name: str
+    items: list[str] = ['Veggie Burger', 'Cold Coffee']
+
+@app.post('/api/food/order')
+def place_food_order(req: FoodOrderRequest):
+    if not req.customer_name or not req.items:
+        raise HTTPException(status_code=400, detail='Customer name and items required.')
+    return {
+        'order_id': f'ORD-{hash(req.customer_name) % 100000}',
+        'customer_name': req.customer_name,
+        'items_count': len(req.items),
+        'status': 'Kitchen Preparing',
+        'estimated_delivery': '25 mins'
+    }
