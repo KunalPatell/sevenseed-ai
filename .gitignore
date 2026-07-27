@@ -33,3 +33,6 @@ _run_log.txt
 # The eight original per-app .git directories, moved aside during the monorepo
 # migration. Kept on disk so nothing is lost, but not part of this repo.
 _old-git/
+
+# Local safety backup of the pre-React sevenforce site (old version is in git history already)
+apps/sevenforce/backend/static-vanilla-backup/

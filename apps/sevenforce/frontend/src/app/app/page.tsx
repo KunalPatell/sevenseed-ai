@@ -27,7 +27,7 @@ export default function Portal() {
   if (!authed) return <AuthGate onDone={() => setAuthed(true)} />;
 
   return (
-    <div className="split-container">
+    <div className="layout">
       <aside className={`sidebar${sidebarOpen ? " open" : ""}`}>
         <div className="console-brand">
           <span className="console-brand-em">🤖</span>
@@ -77,7 +77,7 @@ export default function Portal() {
           <span className="agent-em-big">{current.em}</span>
           <div className="agent-hinfo">
             <div className="agent-htitle">
-              <span className="agent-name">{current.name}</span>
+              <h2>{current.name}</h2>
               <span className="agent-role-badge">{current.role}</span>
             </div>
             <p className="agent-hdesc">{current.desc}</p>
@@ -87,7 +87,7 @@ export default function Portal() {
         {current.tools.length === 0 ? (
           <AgentsOverview onPick={setCurrentId} />
         ) : (
-          <div className="agent-tools">
+          <div className="tools-list">
             {current.tools.map((tool) => (
               <ToolCard key={tool.ep + tool.t} tool={tool} />
             ))}
@@ -179,43 +179,46 @@ function ToolCard({ tool }: { tool: AgentTool }) {
     }
   };
 
-  return (
-    <section className="console-card">
-      <header className="console-header">
-        <span className="console-title">
-          {tool.icon && <i className={`fas ${tool.icon}`} />} {tool.t}
-        </span>
-        <span className="console-status">
-          <span className="console-status-dot" /> {tool.ep}
-        </span>
-      </header>
+  const hasIcon = (type?: string) => type !== "textarea" && type !== "lines" && type !== "recipients";
 
-      <form className="console-body" onSubmit={run}>
+  return (
+    <section className="tool-card">
+      <div className="tool-header">
+        <div>
+          <span className="tool-title">
+            {tool.icon && <i className={`fas ${tool.icon}`} />} {tool.t}
+          </span>
+          <span className="tool-ep">{tool.ep}</span>
+        </div>
+      </div>
+
+      <form onSubmit={run}>
         {tool.f.map((f) => (
           <div className="input-group" key={f.k}>
-            <label>
-              {f.icon && <i className={`fas ${f.icon}`} />} {f.l}
-            </label>
-            {f.type === "select" ? (
-              <select
-                value={values[f.k]}
-                onChange={(e) => setValues((v) => ({ ...v, [f.k]: e.target.value }))}
-              >
-                {(f.opts ?? []).map((o) => <option key={o} value={o}>{o}</option>)}
-              </select>
-            ) : f.type === "textarea" || f.type === "lines" || f.type === "recipients" ? (
-              <textarea
-                rows={4}
-                value={values[f.k]}
-                onChange={(e) => setValues((v) => ({ ...v, [f.k]: e.target.value }))}
-              />
-            ) : (
-              <input
-                type={f.type === "number" ? "number" : "text"}
-                value={values[f.k]}
-                onChange={(e) => setValues((v) => ({ ...v, [f.k]: e.target.value }))}
-              />
-            )}
+            <label className="input-label">{f.l}</label>
+            <div className="input-wrapper">
+              {f.icon && hasIcon(f.type) && <i className={`fas ${f.icon}`} />}
+              {f.type === "select" ? (
+                <select
+                  value={values[f.k]}
+                  onChange={(e) => setValues((v) => ({ ...v, [f.k]: e.target.value }))}
+                >
+                  {(f.opts ?? []).map((o) => <option key={o} value={o}>{o}</option>)}
+                </select>
+              ) : f.type === "textarea" || f.type === "lines" || f.type === "recipients" ? (
+                <textarea
+                  rows={4}
+                  value={values[f.k]}
+                  onChange={(e) => setValues((v) => ({ ...v, [f.k]: e.target.value }))}
+                />
+              ) : (
+                <input
+                  type={f.type === "number" ? "number" : "text"}
+                  value={values[f.k]}
+                  onChange={(e) => setValues((v) => ({ ...v, [f.k]: e.target.value }))}
+                />
+              )}
+            </div>
           </div>
         ))}
 
@@ -226,14 +229,14 @@ function ToolCard({ tool }: { tool: AgentTool }) {
       </form>
 
       {(error || result || fileUrl) && (
-        <div className="console-result">
+        <div className="tool-result">
           {error && <div className="result-box result-error">{error}</div>}
           {fileUrl && (
-            <a className="run-btn" href={fileUrl} download="sevenforce-document.docx">
+            <a className="run-btn" href={fileUrl} download="sevenforce-document.docx" style={{ marginTop: 12 }}>
               <i className="fas fa-download" /> Download document (.docx)
             </a>
           )}
-          {result && <pre className="result-box">{result}</pre>}
+          {result && <div className="result-box"><pre>{result}</pre></div>}
         </div>
       )}
     </section>
@@ -272,8 +275,8 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay open" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose} aria-label="Close">
           <i className="fas fa-times" />
         </button>
@@ -285,14 +288,16 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
 
         {PROVIDERS.map((p) => (
           <div className="input-group" key={p.key}>
-            <label>{p.label} <span className="key-hint">{p.hint}</span></label>
-            <input
-              type="password"
-              autoComplete="off"
-              placeholder={`${p.label} API key`}
-              value={keys[p.key] ?? ""}
-              onChange={(e) => setKeys((k) => ({ ...k, [p.key]: e.target.value }))}
-            />
+            <label className="input-label">{p.label} <span className="key-hint">{p.hint}</span></label>
+            <div className="input-wrapper">
+              <input
+                type="password"
+                autoComplete="off"
+                placeholder={`${p.label} API key`}
+                value={keys[p.key] ?? ""}
+                onChange={(e) => setKeys((k) => ({ ...k, [p.key]: e.target.value }))}
+              />
+            </div>
           </div>
         ))}
 
@@ -332,8 +337,8 @@ function AuthGate({ onDone }: { onDone: () => void }) {
   };
 
   return (
-    <div className="modal-overlay auth-overlay">
-      <div className="modal-card">
+    <div className="modal-overlay open auth-overlay">
+      <div className="modal">
         <div className="console-brand" style={{ justifyContent: "center", marginBottom: 18 }}>
           <span className="console-brand-em">🤖</span>
           <span>Sevenforce</span>
@@ -353,20 +358,29 @@ function AuthGate({ onDone }: { onDone: () => void }) {
         <form onSubmit={submit}>
           {mode === "signup" && (
             <div className="input-group">
-              <label><i className="fas fa-user" /> Name</label>
-              <input value={name} onChange={(e) => setName(e.target.value)} required />
+              <label className="input-label">Name</label>
+              <div className="input-wrapper">
+                <i className="fas fa-user" />
+                <input value={name} onChange={(e) => setName(e.target.value)} required />
+              </div>
             </div>
           )}
           <div className="input-group">
-            <label><i className="fas fa-envelope" /> Email</label>
-            <input type="email" autoComplete="email" value={email}
-              onChange={(e) => setEmail(e.target.value)} required />
+            <label className="input-label">Email</label>
+            <div className="input-wrapper">
+              <i className="fas fa-envelope" />
+              <input type="email" autoComplete="email" value={email}
+                onChange={(e) => setEmail(e.target.value)} required />
+            </div>
           </div>
           <div className="input-group">
-            <label><i className="fas fa-lock" /> Password</label>
-            <input type="password"
-              autoComplete={mode === "login" ? "current-password" : "new-password"}
-              value={pw} onChange={(e) => setPw(e.target.value)} required />
+            <label className="input-label">Password</label>
+            <div className="input-wrapper">
+              <i className="fas fa-lock" />
+              <input type="password"
+                autoComplete={mode === "login" ? "current-password" : "new-password"}
+                value={pw} onChange={(e) => setPw(e.target.value)} required />
+            </div>
           </div>
 
           <button className="run-btn" type="submit" disabled={busy}>

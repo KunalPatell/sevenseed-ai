@@ -384,3 +384,15 @@ th{background:rgba(255,255,255,0.02);font-weight:700;color:var(--mut)}
   .sidebar.open{transform:translateX(0)}
   .sidebar-toggle{display:grid;place-items:center}
 }
+
+/* Portal fills the viewport; tool cards flow in a responsive grid. */
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif}
+.layout{height:100vh}
+.tools-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;align-items:start}
+.tool-result{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+.tool-card form{display:flex;flex-direction:column}
+/* When a wrapper has no leading icon, don't reserve icon space. */
+.input-wrapper > input:first-child,
+.input-wrapper > textarea:first-child,
+.input-wrapper > select:first-child{padding-left:14px}
