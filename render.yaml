@@ -1,25 +1,30 @@
+# Render blueprint.
+#
+# NOTE ON SCOPE: the eight live sites (sevenseed hub + avpu, avp-emart,
+# breakdown-factor, avp-charitable-trust, decode-forest-pharmacy, sevenforce-ai,
+# comonk-ai) are managed as individual services in the Render dashboard, not by
+# this file. This blueprint covers only the Super-Suite service below.
+#
+# The previous contents of this file described two services — "sevenseed-api"
+# and "sevenseed-web" — that never existed on Render, and both would have failed
+# if applied: the API build referenced a root requirements.txt that isn't there,
+# and the web service ran `next start`, which doesn't work against a static
+# export. It's rewritten here to match how the Super-Suite actually deploys.
 services:
-  # Python FastAPI Backend API Service
+  # Super-Suite: one service that serves BOTH the FastAPI endpoints and the
+  # static dashboard UI (see apps/comonk/Dockerfile — the built dashboard is
+  # copied to webui/ and mounted by main.py), so the UI and API are same-origin
+  # and no CORS or second service is needed.
   - type: web
-    name: sevenseed-api
-    runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn apps.comonk.main:app --host 0.0.0.0 --port $PORT
+    name: sevenseed-supersuite
+    runtime: docker
+    rootDir: apps/comonk
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/stats
     envVars:
-      - key: PORT
-        value: 10000
+      # Optional — the suite is BYOK, so visitors can supply their own keys and
+      # the service works without any of these set.
       - key: GROQ_API_KEY
         sync: false
       - key: GEMINI_API_KEY
         sync: false
-
-  # Next.js 14 React Frontend Web App
-  - type: web
-    name: sevenseed-web
-    runtime: node
-    rootDir: apps/sevenseed-web
-    buildCommand: npm install && npm run build
-    startCommand: npm run start
-    envVars:
-      - key: NEXT_PUBLIC_API_URL
-        value: https://sevenseed-api.onrender.com
