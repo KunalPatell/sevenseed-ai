@@ -7,9 +7,19 @@ RUN useradd -m -u 1000 user
 ENV HOME=/home/user PATH=/home/user/.local/bin:$PATH PYTHONUNBUFFERED=1
 WORKDIR $HOME/app
 
-# System build dependencies
+# System dependencies.
+#
+# The X11/GL libs are not optional: requirements.txt pins
+# opencv-python-headless, but insightface (used by avpu + avp-charitable-trust
+# face auth) hard-depends on the FULL opencv-python, so pip installs that too
+# and it's the one that ends up loaded. Without these, importing cv2 dies with
+# "ImportError: libxcb.so.1: cannot open shared object file" — which is exactly
+# what was killing the breakdown-factor child at startup (its YOLO defect
+# scanner imports cv2), leaving its API returning 503 while its page still
+# loaded fine.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    libxcb1 libgl1 libglib2.0-0 libsm6 libxext6 libxrender1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install unified Python requirements
