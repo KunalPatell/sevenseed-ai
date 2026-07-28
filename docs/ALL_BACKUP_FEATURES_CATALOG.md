@@ -1,6 +1,25 @@
 # 📚 SEVENSEED PLATFORM — ALL BACKUP FEATURES & FUNCTIONS CATALOG
 
-> **Purpose**: Master inventory of all features, functions, API endpoints, and architectural ideas extracted from `D:\Code-Commit-Backup` (2018, 2019, 2020, 2021, 2022, 2023, 2026). Use this catalog to select which modules to enable.
+> ## ✅ THIS ONE MATTERS — IT MAPS IDEAS TO CODE THAT STILL EXISTS
+>
+> Unlike `ALL_1466_PROJECTS_MASTER_CATALOG.md` (a bare name list that can restore
+> nothing), this file records which ideas were actually **rebuilt as working
+> code**, and where that code now lives.
+>
+> Every row marked **✅ Integrated** is a real, running endpoint in
+> `apps/comonk/main.py` — verified by calling all of them: each returns a normal
+> response or a validation error, none error out. That code is committed and
+> pushed, so it **survives even if `D:\Code-Commit-Backup` is gone for good**.
+>
+> What this file does *not* contain is the original projects' source code. It
+> holds the extracted feature, not the repo it came from.
+>
+> **If the backup drive is missing:** `D:` is an external disk — check whether it
+> is merely unplugged before assuming loss. The catalogued entries all end in
+> `.git`, meaning they were clones of bare repos, so the originals are most
+> likely still on whatever remote they came from.
+
+> **Purpose**: Inventory of the features, functions, API endpoints, and architectural ideas extracted from `D:\Code-Commit-Backup` (2018, 2019, 2020, 2021, 2022, 2023, 2026). Use this catalog to select which modules to enable.
 
 ---
 

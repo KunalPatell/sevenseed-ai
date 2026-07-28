@@ -1,8 +1,31 @@
 # 🌌 SEVENSEED PLATFORM — MASTER CATALOG OF ALL 1,466 BACKUP PROJECTS
 
-> **Complete Directory Analysis**: Every single project from D:\Code-Commit-Backup (2018–2026) categorized into domain modules.
+> ## ⚠️ THIS IS AN INDEX, NOT A BACKUP — IT CANNOT RESTORE ANY CODE
+>
+> Read this before relying on this file.
+>
+> This document lists **only the name and backup year** of each project. It holds
+> **no source code, no descriptions, no architecture, nothing recoverable**. The
+> "Project Type & Capability" column is a placeholder: all 1,466 rows say the
+> same generic *"Integrated Core Module"* — it was never filled in per project.
+>
+> If `D:\Code-Commit-Backup` is lost, **this file will not bring any project
+> back.** It can only tell you what used to exist.
+>
+> **Where the code may still be:**
+> 1. The drive may simply be **unplugged, not deleted** — `D:` is an external
+>    disk and is not mounted on this machine. Check it first.
+> 2. Every entry ends in `.git`, i.e. these were **clones of bare git repos**.
+>    The originals likely still live on whatever remote they were cloned from
+>    (company GitHub/Bitbucket/GitLab). That is the real backup.
+> 3. Whatever was already extracted into working code is safe regardless — see
+>    `ALL_BACKUP_FEATURES_CATALOG.md`, which maps each extracted feature to the
+>    live endpoint that now implements it.
 
-### 📊 Summary Statistics
+> **Scope**: a name-level directory listing of `D:\Code-Commit-Backup` (2018–2026),
+> grouped into domain buckets.
+
+## 📊 Summary Statistics
 - **Total Backup Archives**: 6 Years (2018–2026)
 - **Total Discovered Projects**: **1,466 Projects**
 - **Categorized Domains**: 11 Domain Portfolios
@@ -1549,6 +1572,3 @@
 | 23 | Backup-2020 | bminstituteofmentalhealth.com.git | Integrated Core Module |
 | 24 | Backup-2020 | he-health_backend.git | Integrated Core Module |
 | 25 | Backup-2023 | Capermint_Blood_Bank.git | Integrated Core Module |
-
----
-
