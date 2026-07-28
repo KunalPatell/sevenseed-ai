@@ -436,7 +436,7 @@ compiled_graph = workflow.compile()
 # FASTAPI ENDPOINTS
 # ═══════════════════════════════════════════════════════════════════════════════
 
-@app.get("/")
+@app.get("/api")
 def read_root():
     return {
         "status": "ok",
@@ -2873,3 +2873,15 @@ def generate_ai_3d_asset(req: Ai3dGenerateRequest):
         'download_url': f'https://assets.sevenseed.com/3d/{hash(req.prompt) % 100000}.gltf',
         'status': 'Render Complete'
     }
+
+
+# ── Serve the Super-Suite dashboard (static Next.js export) ───────────────────
+# The FastAPI app hosts BOTH the APIs (/api/*, /openapi.json) and the dashboard
+# UI itself, so it's one same-origin service — mounted LAST so it only catches
+# paths no API route already handled.
+import os as _os
+from fastapi.staticfiles import StaticFiles as _StaticFiles
+
+_WEBUI = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "webui")
+if _os.path.isdir(_WEBUI):
+    app.mount("/", _StaticFiles(directory=_WEBUI, html=True), name="webui")

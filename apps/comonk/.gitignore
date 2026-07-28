@@ -42,3 +42,7 @@ HR\ Mail\ List.xlsx
 scratch/
 out.txt
 new_num.txt
+
+# The company database ships with the deploy (892K) — the Super-Suite tools
+# read from it, so it must be present in the image.
+!comonk.db

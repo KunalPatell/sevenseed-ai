@@ -1,3 +1,6 @@
+# Trimmed to what main.py actually imports. chromadb / pandas / openpyxl were
+# listed but never referenced, and pulling them in (onnxruntime et al) made the
+# image slow and heavy enough to be a real risk on a small instance.
 fastapi
 uvicorn[standard]
 pydantic
@@ -5,11 +8,8 @@ python-dotenv
 python-multipart
 httpx
 requests
-pandas
-openpyxl
 pdfplumber
 openai
-chromadb
 langgraph
 langchain-core
 langchain-groq
