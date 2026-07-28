@@ -1,3 +1,9 @@
+# NOTE: Render does NOT build this file. Every service is configured with
+# dockerfilePath "./Dockerfile", i.e. the one at the REPO ROOT — this is a
+# duplicate of it, kept in sync by hand. Editing only this file changes nothing
+# in production (that mistake is how the breakdown-factor libxcb fix initially
+# appeared to do nothing). Change the root Dockerfile; mirror it here.
+#
 # Sevenseed hub - high-speed single stage Docker container.
 # Serves the pre-compiled Next.js production builds tracked in apps/sevenseed/backend/static/
 # Fast <30s build time, avoids Render 512MB RAM memory limits & 10min build timeouts.
