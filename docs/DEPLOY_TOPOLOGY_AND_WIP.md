@@ -38,6 +38,42 @@ The header claims in the super-suite ("50+ Backup Features Live", "56 Unit Tests
 Passed", "8 Full Web Apps") are **aspirational/inflated** — only ~6 modules are
 actually wired. Fix those before ever making it public.
 
+## Pushing a deploy: the `ai` remote uses `master`, not `main`
+
+`ai/HEAD -> ai/master`, and every Render service watches **`master`**. The local
+working branch is `main` (it tracks `origin/main`, a mirror). So:
+
+```sh
+git push ai HEAD:master                # correct — this deploys
+git push ai HEAD                       # WRONG — creates a stray ai/main, deploys nothing
+git ls-remote --heads ai               # confirm: master should be at your commit
+```
+
+The wrong form still prints a cheerful `* [new branch]` success. Nothing deploys.
+
+Live hub: <https://sevenseed.onrender.com> (free tier — the first request after
+an idle period can take a while to cold-start; a timeout is not an outage).
+
+Rebuilding a frontend: `next build` in `apps/<app>/frontend`, then
+`node scripts/fix-rsc-aliases.mjs <out>` and `node scripts/deploy-static.mjs <prefix>`.
+Never copy a hub export over `backend/static/` by hand — that directory also holds
+the six child sites, and commit `8ac663a` deleted all of them that way.
+
+## Known gap: contact messages do not survive a redeploy
+
+`POST /api/contact` persists to SQLite at `config.DB_PATH`, which defaults to a
+path **inside the container**. Render's filesystem is ephemeral, so every deploy
+or restart wipes the table — messages are collected, then lost. The forms are
+real now (they were fake until 2026-07-30), but the storage behind them is not
+durable. To fix, pick one:
+
+1. Attach a Render disk and point `DB_PATH` at it (needs a paid instance type).
+2. Forward each message to email/Slack on receipt, so the DB is only a cache.
+3. Point `DB_PATH` at an external Postgres.
+
+Read what has been collected so far with `GET /api/history/contacts`, which
+requires the `ADMIN_KEY` env var in an `X-Admin-Key` header.
+
 ## To finish + ship the super-suite (if/when wanted)
 1. Trim to only the modules that truly work; make the counts honest.
 2. Polish it to the other 8 sites' visual bar.
