@@ -13,6 +13,7 @@ import { ValOrb } from "@/components/ValOrb";
 import { CustomCursor } from "@/components/CustomCursor";
 import { TextScramble } from "@/components/TextScramble";
 import { Tilt } from "@/components/Tilt";
+import { submitContact, type ContactStatus } from "@/lib/contact";
 import {
   Scale, PiggyBank, Bot, Truck, Cpu,
   ChevronDown, Search, TrendingUp, Sparkles,
@@ -195,6 +196,8 @@ export default function Home() {
   const [contactEmail, setContactEmail] = useState("");
   const [contactMsg, setContactMsg] = useState("");
   const [feedbackMsg, setFeedbackMsg] = useState("");
+  const [contactStatus, setContactStatus] = useState<ContactStatus>("idle");
+  const [honeypot, setHoneypot] = useState("");
 
   useEffect(() => {
     const onScroll = () => {
@@ -208,10 +211,23 @@ export default function Home() {
 
   const onContact = async (e: React.FormEvent) => {
     e.preventDefault();
+    setContactStatus("sending");
     setFeedbackMsg("Sending…");
-    await new Promise(r => setTimeout(r, 900));
-    setFeedbackMsg("Message received! We'll be in touch.");
-    setContactName(""); setContactEmail(""); setContactMsg("");
+    try {
+      await submitContact({
+        name: contactName,
+        email: contactEmail,
+        subject: "AVP Emart enquiry",
+        message: contactMsg,
+        website: honeypot,
+      });
+      setContactStatus("sent");
+      setFeedbackMsg("Message received! We'll be in touch.");
+      setContactName(""); setContactEmail(""); setContactMsg("");
+    } catch (err) {
+      setContactStatus("error");
+      setFeedbackMsg(err instanceof Error ? err.message : "Something went wrong.");
+    }
   };
 
   return (
@@ -485,10 +501,30 @@ export default function Home() {
                 <textarea rows={3} value={contactMsg} onChange={e => setContactMsg(e.target.value)}
                   placeholder="Your message…" required
                   className="px-4 py-3 bg-[#04040c] border border-[rgba(99,102,241,0.15)] rounded-xl text-sm text-white focus:outline-none focus:border-[#6366f1] transition-colors placeholder:text-[#64748b] resize-none" />
-                <button type="submit" className="btn-primary w-full text-base">
-                  Send Message
+                {/* Honeypot — visually hidden, never focusable. Bots fill it, users don't. */}
+                <input
+                  type="text" tabIndex={-1} autoComplete="off" aria-hidden="true"
+                  value={honeypot} onChange={e => setHoneypot(e.target.value)}
+                  className="absolute -left-[9999px] h-0 w-0 opacity-0" />
+                <button
+                  type="submit"
+                  disabled={contactStatus === "sending"}
+                  className="btn-primary w-full text-base disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {contactStatus === "sending" ? "Sending…" : "Send Message"}
                 </button>
-                {feedbackMsg && <p className="text-xs text-[#6366f1] font-semibold text-center">{feedbackMsg}</p>}
+                {feedbackMsg && (
+                  <p
+                    role="status"
+                    className={`text-xs font-semibold text-center ${
+                      contactStatus === "error" ? "text-red-400"
+                        : contactStatus === "sent" ? "text-emerald-400"
+                        : "text-[#6366f1]"
+                    }`}
+                  >
+                    {feedbackMsg}
+                  </p>
+                )}
               </form>
             </div>
           </GlowCard>

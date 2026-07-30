@@ -117,7 +117,10 @@ body {
   text-transform: uppercase;
   font-family: monospace;
 }
-.eyebrow.center { display: flex; justify-content: center; }
+/* Must stay inline-flex so the pill hugs its text. `display:flex` made it a
+   block-level box that stretched into a full-width bar; the parent's
+   text-center already does the centering. */
+.eyebrow.center { display: inline-flex; }
 
 /* ── Glow Card ──────────────────────────────────────────── */
 .glow-card {

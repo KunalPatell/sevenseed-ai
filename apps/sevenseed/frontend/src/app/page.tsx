@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PersonaAvatar } from "@/components/PersonaAvatar";
 import { Navbar } from "@/components/Navbar";
@@ -12,6 +12,7 @@ import { CustomCursor } from "@/components/CustomCursor";
 import { StarCanvas } from "@/components/StarCanvas";
 import { TextScramble } from "@/components/TextScramble";
 import { Tilt } from "@/components/Tilt";
+import { submitContact, type ContactStatus } from "@/lib/contact";
 import {
   Rocket, Layers, Cpu,
   ChevronDown, ArrowRight, ExternalLink,
@@ -26,30 +27,49 @@ import {
 // embedded at /comonk-ai/; "Sevenseed Engine" is the hub's own Studio dashboard
 // at /app/.
 const STARTUPS = [
-  { name: "Breakdown Factor", tag: "Construction AI", icon: HardHat,       color: "#f59e0b", link: "/breakdown/" },
-  { name: "Decode Pharmacy",  tag: "Free Healthcare",  icon: HeartPulse,    color: "#10b981", link: "/pharmacy/" },
-  { name: "AVP Emart",        tag: "Price Matrix",     icon: ShoppingCart,  color: "#6366f1", link: "/avp-emart/" },
-  { name: "AVPU",             tag: "AI University",    icon: GraduationCap, color: "#38bdf8", link: "/avpu/" },
-  { name: "AVP Trust",        tag: "80G Philanthropy", icon: Heart,         color: "#f97316", link: "/trust/" },
-  { name: "Sevenforce",       tag: "7 AI Employees",   icon: Cpu,           color: "#a855f7", link: "/sevenforce/" },
-  { name: "Comonk",           tag: "HR & Resume AI",   icon: FileText,      color: "#06b6d4", link: "/comonk-ai/" },
-  { name: "Sevenseed Engine", tag: "Venture Backbone",icon: Server,        color: "#eab308", link: "/app/" },
+  { name: "Breakdown Factor", tag: "Construction AI", icon: HardHat,       color: "#f59e0b", link: "/breakdown/",
+    desc: "Scans site photos for structural defects and turns drawings into costed material breakdowns." },
+  { name: "Decode Pharmacy",  tag: "Free Healthcare",  icon: HeartPulse,    color: "#10b981", link: "/pharmacy/",
+    desc: "Reads handwritten prescriptions, explains each medicine in plain language, and finds free alternatives." },
+  { name: "AVP Emart",        tag: "Price Matrix",     icon: ShoppingCart,  color: "#6366f1", link: "/avp-emart/",
+    desc: "Compares the same product across sellers and shows the real landed price, not the sticker price." },
+  { name: "AVPU",             tag: "AI University",    icon: GraduationCap, color: "#38bdf8", link: "/avpu/",
+    desc: "Builds a personal syllabus, tutors over WhatsApp, and verifies attendance with face recognition." },
+  { name: "AVP Trust",        tag: "80G Philanthropy", icon: Heart,         color: "#f97316", link: "/trust/",
+    desc: "Runs donation campaigns end to end and issues 80G-compliant receipts automatically." },
+  { name: "Sevenforce",       tag: "7 AI Employees",   icon: Cpu,           color: "#a855f7", link: "/sevenforce/",
+    desc: "Ten agents covering sales, content, research and ops — 25 tools that produce finished work, not chat." },
+  { name: "Comonk",           tag: "HR & Resume AI",   icon: FileText,      color: "#06b6d4", link: "/comonk-ai/",
+    desc: "Screens résumés against a job description, scores fit, and drafts the interview kit." },
+  { name: "Sevenseed Engine", tag: "Venture Backbone",icon: Server,        color: "#eab308", link: "/app/",
+    desc: "The shared platform every venture runs on — BYOK keys, model routing, and one deployment." },
 ];
 
 function StartupOrbitVisual() {
   const [selectedIdx, setSelectedIdx] = useState(0);
+  // Auto-rotation stops for good once the visitor picks a tile themselves —
+  // otherwise the panel they just opened is swapped out from under them a
+  // couple of seconds later. Hovering pauses it too, so a tile can be read.
+  const [paused, setPaused] = useState(false);
+  const [userPicked, setUserPicked] = useState(false);
   const activeStartup = STARTUPS[selectedIdx];
 
   useEffect(() => {
+    if (paused || userPicked) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const timer = setInterval(() => {
       setSelectedIdx(i => (i + 1) % STARTUPS.length);
-    }, 3000);
+    }, 4500);
     return () => clearInterval(timer);
-  }, []);
+  }, [paused, userPicked]);
 
   return (
     <Tilt className="w-full">
-      <div className="w-full rounded-2xl overflow-hidden border border-[rgba(245,158,11,0.25)] bg-[#090914] shadow-[0_0_80px_rgba(245,158,11,0.1)]">
+      <div
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        className="w-full rounded-2xl overflow-hidden border border-[rgba(245,158,11,0.25)] bg-[#090914] shadow-[0_0_80px_rgba(245,158,11,0.1)]"
+      >
         <div className="flex items-center justify-between px-4 py-3 bg-[#0f0f22] border-b border-[rgba(245,158,11,0.12)]">
           <div className="flex items-center gap-2">
             <Rocket className="h-4 w-4 text-[#f59e0b]" />
@@ -68,8 +88,18 @@ function StartupOrbitVisual() {
               return (
                 <div
                   key={i}
-                  onClick={() => setSelectedIdx(i)}
-                  className={`cursor-pointer rounded-xl p-2.5 border transition-all duration-300 flex flex-col gap-1.5 ${
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={isSelected}
+                  onClick={() => { setSelectedIdx(i); setUserPicked(true); }}
+                  onKeyDown={e => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setSelectedIdx(i);
+                      setUserPicked(true);
+                    }
+                  }}
+                  className={`cursor-pointer rounded-xl p-2.5 border transition-all duration-300 flex flex-col gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] ${
                     isSelected
                       ? "bg-[#0f0f22] border-[#f59e0b] shadow-[0_0_15px_rgba(245,158,11,0.25)]"
                       : "bg-[#090914]/80 border-[rgba(255,255,255,0.06)] hover:border-[#f59e0b]/50"
@@ -106,7 +136,7 @@ function StartupOrbitVisual() {
                       {activeStartup.tag}
                     </span>
                   </div>
-                  <div className="text-[11px] text-[#cbd5e1] mt-0.5">Live subprocess product inside Sevenseed Venture Platform</div>
+                  <div className="text-[11px] text-[#94a3b8] mt-1 leading-relaxed max-w-[46ch]">{activeStartup.desc}</div>
                 </div>
               </div>
 
@@ -135,6 +165,8 @@ export default function Home() {
   const [contactEmail, setContactEmail] = useState("");
   const [contactMsg, setContactMsg] = useState("");
   const [feedbackMsg, setFeedbackMsg] = useState("");
+  const [contactStatus, setContactStatus] = useState<ContactStatus>("idle");
+  const [honeypot, setHoneypot] = useState("");
 
   useEffect(() => {
     const onScroll = () => {
@@ -148,10 +180,23 @@ export default function Home() {
 
   const onContact = async (e: React.FormEvent) => {
     e.preventDefault();
+    setContactStatus("sending");
     setFeedbackMsg("Sending…");
-    await new Promise(r => setTimeout(r, 900));
-    setFeedbackMsg("Thank you! Your venture inquiry has been submitted.");
-    setContactName(""); setContactEmail(""); setContactMsg("");
+    try {
+      await submitContact({
+        name: contactName,
+        email: contactEmail,
+        subject: "Venture proposal / partnership enquiry",
+        message: contactMsg,
+        website: honeypot,
+      });
+      setContactStatus("sent");
+      setFeedbackMsg("Thank you! Your venture inquiry has been received — we reply within 48 hours.");
+      setContactName(""); setContactEmail(""); setContactMsg("");
+    } catch (err) {
+      setContactStatus("error");
+      setFeedbackMsg(err instanceof Error ? err.message : "Something went wrong.");
+    }
   };
 
   return (
@@ -199,13 +244,15 @@ export default function Home() {
               transition={{ duration:0.6, delay:0.26 }}
               className="flex flex-wrap gap-4"
             >
+              {/* Labels kept short so the pair sits on one row — the left column is
+                  ~480px and longer text wrapped them into an awkward stack. */}
               <a href="#portfolio" className="btn-primary">
                 <Layers className="h-4 w-4" />
-                Explore Portfolio Companies
+                Explore Portfolio
               </a>
               <a href="#tools" className="btn-ghost">
                 <Cpu className="h-4 w-4" />
-                Launch AI Hub Portal
+                Try the AI Engine
               </a>
             </motion.div>
 
@@ -244,14 +291,16 @@ export default function Home() {
       {/* STATS BAND */}
       <section id="stats" className="bg-[#090914] border-y border-[rgba(245,158,11,0.12)]">
         <div className="max-w-[var(--maxw)] mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-[rgba(245,158,11,0.12)]">
+          {/* Every figure here is countable from the codebase — 87 is the number of
+              distinct /api routes across the seven backends. Keep it that way. */}
           {[
-            { val: "8",       lbl: "Vertical AI platforms built & live" },
-            { val: "100%",    lbl: "BYOK self-service token manager" },
-            { val: "< 10s",   lbl: "Average AI response latency" },
-            { val: "Render",  lbl: "Single container subprocess deployment" },
+            { val: "8",    lbl: "Live AI ventures, each with its own domain model" },
+            { val: "87",   lbl: "Production API endpoints across the portfolio" },
+            { val: "1",    lbl: "Container runs all of them, via subprocess orchestration" },
+            { val: "BYOK", lbl: "Your own API keys — never stored on our servers" },
           ].map((s, i) => (
-            <div key={i} className="px-6 md:px-10 py-8 flex flex-col gap-1">
-              <div className="text-2xl md:text-3xl font-black text-white">{s.val}</div>
+            <div key={i} className="px-6 md:px-10 py-9 flex flex-col gap-1.5">
+              <div className="text-3xl md:text-4xl font-black tracking-tight text-white">{s.val}</div>
               <div className="text-xs text-[#64748b] leading-snug">{s.lbl}</div>
             </div>
           ))}
@@ -259,7 +308,7 @@ export default function Home() {
       </section>
 
       {/* PORTFOLIO GRID */}
-      <section className="max-w-[var(--maxw)] mx-auto py-24 px-6 md:px-12" id="portfolio">
+      <section className="max-w-[var(--maxw)] mx-auto py-24 md:py-28 px-6 md:px-12" id="portfolio">
         <RevealOnScroll>
           <div className="text-center mb-14">
             <span className="eyebrow center mb-4">VENTURE PORTFOLIO</span>
@@ -275,15 +324,16 @@ export default function Home() {
             return (
               <RevealOnScroll key={i} delay={i * 0.05}>
                 <Tilt className="h-full">
-                  <GlowCard className="glow-card bg-[#090914] border border-[rgba(245,158,11,0.1)] rounded-2xl p-5 h-full flex flex-col justify-between gap-4">
+                  <GlowCard className="glow-card bg-[#090914] border border-[rgba(245,158,11,0.1)] rounded-2xl p-6 h-full flex flex-col justify-between gap-5">
                     <div>
-                      <div className="w-10 h-10 rounded-xl grid place-items-center mb-3" style={{ background: `${s.color}15`, color: s.color }}>
+                      <div className="w-11 h-11 rounded-xl grid place-items-center mb-4" style={{ background: `${s.color}15`, color: s.color }}>
                         <Icon className="h-5 w-5" />
                       </div>
-                      <h3 className="text-base font-bold text-white mb-1">{s.name}</h3>
+                      <h3 className="text-base font-bold text-white mb-2">{s.name}</h3>
                       <span className="text-[9px] font-mono font-semibold uppercase px-2 py-0.5 rounded-full" style={{ background: `${s.color}15`, color: s.color }}>
                         {s.tag}
                       </span>
+                      <p className="text-[13px] leading-relaxed text-[#94a3b8] mt-3.5">{s.desc}</p>
                     </div>
                     <a
                       href={s.link}
@@ -300,7 +350,7 @@ export default function Home() {
       </section>
 
       {/* AI DEMO WIDGET */}
-      <section className="bg-[#090914] py-20 px-6 md:px-12" id="tools">
+      <section className="bg-[#090914] py-24 md:py-28 px-6 md:px-12" id="tools">
         <div className="max-w-[var(--maxw)] mx-auto">
           <RevealOnScroll>
             <div className="text-center mb-12">
@@ -318,7 +368,7 @@ export default function Home() {
       </section>
 
       {/* CONTACT CTA */}
-      <section className="max-w-[var(--maxw)] mx-auto py-16 px-6 md:px-12" id="contact">
+      <section className="max-w-[var(--maxw)] mx-auto py-24 md:py-28 px-6 md:px-12" id="contact">
         <RevealOnScroll>
           <GlowCard className="glow-card bg-[#090914] border border-[rgba(245,158,11,0.1)] rounded-2xl p-10 relative overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_120%,rgba(245,158,11,0.1),transparent_55%)] pointer-events-none" />
@@ -341,10 +391,30 @@ export default function Home() {
                 <textarea rows={3} value={contactMsg} onChange={e => setContactMsg(e.target.value)}
                   placeholder="Tell us about your venture proposal or enquiry…" required
                   className="px-4 py-3 bg-[#030308] border border-[rgba(245,158,11,0.15)] rounded-xl text-sm text-white focus:outline-none focus:border-[#f59e0b] transition-colors placeholder:text-[#64748b] resize-none" />
-                <button type="submit" className="btn-primary w-full text-base">
-                  Submit Proposal
+                {/* Honeypot — visually hidden, never focusable. Bots fill it, users don't. */}
+                <input
+                  type="text" tabIndex={-1} autoComplete="off" aria-hidden="true"
+                  value={honeypot} onChange={e => setHoneypot(e.target.value)}
+                  className="absolute -left-[9999px] h-0 w-0 opacity-0" />
+                <button
+                  type="submit"
+                  disabled={contactStatus === "sending"}
+                  className="btn-primary w-full text-base disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {contactStatus === "sending" ? "Sending…" : "Submit Proposal"}
                 </button>
-                {feedbackMsg && <p className="text-xs text-[#f59e0b] font-semibold text-center">{feedbackMsg}</p>}
+                {feedbackMsg && (
+                  <p
+                    role="status"
+                    className={`text-xs font-semibold text-center ${
+                      contactStatus === "error" ? "text-red-400"
+                        : contactStatus === "sent" ? "text-emerald-400"
+                        : "text-[#f59e0b]"
+                    }`}
+                  >
+                    {feedbackMsg}
+                  </p>
+                )}
               </form>
             </div>
           </GlowCard>
