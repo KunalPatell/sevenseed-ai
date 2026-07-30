@@ -59,22 +59,54 @@ Rebuilding a frontend: `next build` in `apps/<app>/frontend`, then
 Never copy a hub export over `backend/static/` by hand — that directory also holds
 the six child sites, and commit `8ac663a` deleted all of them that way.
 
-## Known gap: contact messages do not survive a redeploy
+## Contact messages: SQLite here is not durable, so there are two other copies
 
 `POST /api/contact` persists to SQLite at `config.DB_PATH`, which defaults to a
-path **inside the container**. Render's filesystem is ephemeral, so every deploy
-or restart wipes the table — messages are collected, then lost. The forms are
-real now (they were fake until 2026-07-30), but the storage behind them is not
-durable. To fix, pick one:
+path **inside the container**. Render's filesystem is ephemeral: every deploy or
+restart wipes the table. The DB alone is therefore a cache, not storage.
 
-1. Attach a Render disk and point `DB_PATH` at it (needs a paid instance type).
-2. Forward each message to email/Slack on receipt, so the DB is only a cache.
-3. Point `DB_PATH` at an external Postgres.
+`app/notify.py` adds two delivery paths so a submission survives that:
 
-Read what has been collected so far with `GET /api/history/contacts`, which
-requires the `ADMIN_KEY` env var in an `X-Admin-Key` header.
+1. **Always on** — every submission is written to the application log at INFO
+   (`CONTACT_SUBMISSION | name=… | email=… | message=…`). Render retains logs
+   beyond the container, so this is the recoverable copy. Note it puts inbound
+   personal data in the logs by design.
+2. **Optional email forwarding** — set these and it turns on by itself:
+
+   | Variable | Notes |
+   |---|---|
+   | `SMTP_HOST` | e.g. `smtp.gmail.com` — required to enable |
+   | `SMTP_PORT` | default `587` (STARTTLS); `465` uses implicit TLS |
+   | `SMTP_USER` | login, and the From address unless `SMTP_FROM` is set |
+   | `SMTP_PASSWORD` | an app password, never the account password |
+   | `SMTP_FROM` | optional explicit From |
+   | `CONTACT_TO` | destination; defaults to `SMTP_USER` |
+
+   The startup log always states which mode is active, so "enquiries aren't
+   arriving" is diagnosable from the logs alone.
+
+Design rules worth keeping if you touch this: the email goes out as a FastAPI
+**background task** (SMTP can block for its whole timeout and the visitor must
+not wait), and both paths swallow their exceptions — a message that reached the
+database is a success even if forwarding fails.
+
+**Untested path:** real SMTP delivery has never been exercised, because that
+needs live credentials. What was verified is the disabled no-op, an unresolvable
+host, and a blackholed host that hangs: in every case the form returned 200 in
+~10ms, the row was written, and the failure was logged with a traceback. Send
+yourself one message after configuring it.
+
+Still worth doing if this data matters: attach a Render disk and point `DB_PATH`
+at it (paid instance types only), or move `DB_PATH` to an external Postgres.
+
+Read what is currently stored with `GET /api/history/contacts`, which requires
+the `ADMIN_KEY` env var passed in an `X-Admin-Key` header.
+
+Note that `LOG_LEVEL` (default `INFO`) controls the app's own logger; setting it
+above INFO turns off the durable copy described above.
 
 ## To finish + ship the super-suite (if/when wanted)
+
 1. Trim to only the modules that truly work; make the counts honest.
 2. Polish it to the other 8 sites' visual bar.
 3. Either give `output: "export"` + let `apps/comonk`'s FastAPI serve it (one
@@ -84,6 +116,7 @@ requires the `ADMIN_KEY` env var in an `X-Admin-Key` header.
    existing sites).
 
 ## Stale things worth cleaning later (not done here to avoid deleting your work)
+
 - `render.yaml` references a `sevenseed-web` service that doesn't exist.
 - `docs/HANDOFF_LOG.md` is from the pre-React era and points at old paths
   (`My Startups/apps/…`, `C:\Users\Capermint\Project\…`).

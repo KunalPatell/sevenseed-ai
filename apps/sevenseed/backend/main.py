@@ -14,13 +14,17 @@ if _HERE not in sys.path:
 
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Request, Header
+from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from app import config, db
+from app import config, db, logsetup, notify
+
+# Before anything logs: without this the app's INFO records are dropped entirely
+# (root logger defaults to WARNING and uvicorn configures only its own loggers).
+log = logsetup.setup()
 from app.ratelimit import check_rate_limit
 from child_processes import CHILDREN, proxy_to_child, start_children, stop_children
 
@@ -239,6 +243,9 @@ def portfolio_analysis():
 # ── FastAPI setup ─────────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
+    # Say out loud whether contact submissions can actually reach anyone. Without
+    # this the only signal that forwarding is off is enquiries quietly not arriving.
+    log.info("%s", notify.describe_config())
     start_children()
     yield
     stop_children()
@@ -336,7 +343,7 @@ def portfolio():
     return portfolio_analysis()
 
 @app.post("/api/contact")
-def contact(req:ContactReq, request:Request):
+def contact(req:ContactReq, request:Request, background:BackgroundTasks):
     if req.website:
         return {"success": True}  # honeypot tripped — pretend success, drop silently
     check_rate_limit(request, bucket="contact", limit=5, window_s=3600)
@@ -349,7 +356,16 @@ def contact(req:ContactReq, request:Request):
     if "@" not in req.email:
         raise HTTPException(status_code=400, detail="Enter a valid email.")
     ip = request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (request.client.host if request.client else "")
-    db.save_contact_message(req.name.strip(), req.email.strip(), req.subject.strip(), req.message.strip(), ip)
+    name, email, subject, message = (
+        req.name.strip(), req.email.strip(), req.subject.strip(), req.message.strip(),
+    )
+    db.save_contact_message(name, email, subject, message, ip)
+    # Log immediately (cheap, and SQLite here is wiped on every Render redeploy,
+    # so this is the durable copy). Send the email *after* the response: SMTP can
+    # block for as long as its timeout, and a visitor should not wait on it.
+    # Both paths swallow their own errors — a saved message is a success.
+    notify.log_submission(name, email, subject, message, ip)
+    background.add_task(notify.send_email, name, email, subject, message, ip)
     return {"success": True}
 
 
