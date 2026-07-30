@@ -36,11 +36,10 @@ const SCHEMES_PREVIEW = [
   { name: "Gujarat Free Diagnostic Services",     coverage: "Free labs, ECG, X-ray, ultrasound", elig: "Any government hospital visit" },
 ];
 
-const ER_HOSPITALS = [
-  { name: "Civil Hospital & Emergency Center", city: "Ahmedabad", ph: "+91 79 2268 3721" },
-  { name: "Apollo Emergency Care",              city: "Gandhinagar", ph: "+91 79 6670 1800" },
-  { name: "SVP Metropolitan Hospital",          city: "Ahmedabad", ph: "+91 79 2657 7621" },
-];
+// An ER_HOSPITALS list of named hospitals with unverified phone numbers used to
+// sit here. It was never rendered, and it is deliberately not being kept around
+// for someone to wire up later: unverified emergency contacts do not belong in
+// frontend literals. The Emergency tab in AIDemoWidget points at 108/112 instead.
 
 // ECG Monitor
 function ECGMonitor() {

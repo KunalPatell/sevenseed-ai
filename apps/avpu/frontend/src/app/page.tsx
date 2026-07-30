@@ -111,7 +111,9 @@ function GyanNodeVisual() {
           </div>
           <div>
             <div className="text-[8px] font-mono text-[#64748b] uppercase">HIRING PARTNERS</div>
-            <div className="text-sm font-mono font-bold text-[#22c55e]">120+ Companies</div>
+            {/* Matches backend/avpu_data.py ("20+ hiring partners"), which is what
+                the tutor tells students. Was 120+ here — the two disagreed. */}
+            <div className="text-sm font-mono font-bold text-[#22c55e]">20+ Companies</div>
           </div>
         </div>
       </div>
@@ -248,11 +250,22 @@ export default function Home() {
       {/* STATS BAND */}
       <section id="stats" className="bg-[#060b24] border-y border-[rgba(56,189,248,0.1)]">
         <div className="max-w-[var(--maxw)] mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-[rgba(56,189,248,0.1)]">
+          {/* Kept honest deliberately:
+              - "100% Syllabus-grounded" was an absolute accuracy claim about an
+                LLM, which no RAG pipeline can guarantee. The grounding is real;
+                the 100% was not.
+              - "120+ Corporate placement partners" contradicted the app's own
+                knowledge base, which tells students "20+ hiring partners"
+                (backend/avpu_data.py). Aligned to the backend, since that is
+                what the AI tutor actually quotes to students.
+              - "24/7 AI Tutor availability" cannot hold on Render's free tier,
+                which sleeps when idle. Replaced with the real demo allowance
+                (main.py: limit=5, window_s=3600). */}
           {[
-            { val: "100%",    lbl: "Syllabus-grounded answers" },
-            { val: "120+",   lbl: "Corporate placement partners" },
-            { val: "24/7",    lbl: "AI Tutor availability" },
-            { val: "BYOK",    lbl: "Free unlimited access with your key" },
+            { val: "RAG",   lbl: "Answers grounded in the AVPU syllabus" },
+            { val: "20+",   lbl: "Hiring partners via the placement cell" },
+            { val: "5/hr",  lbl: "Free tutor questions — no signup needed" },
+            { val: "BYOK",  lbl: "Add your own API key for full access" },
           ].map((s, i) => (
             <div key={i} className="px-6 md:px-10 py-8 flex flex-col gap-1">
               <div className="text-2xl md:text-3xl font-black text-white">{s.val}</div>

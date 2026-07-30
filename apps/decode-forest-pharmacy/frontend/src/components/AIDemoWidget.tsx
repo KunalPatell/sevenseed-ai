@@ -39,10 +39,28 @@ const SAMPLE_PRESCRIPTIONS = [
   }
 ];
 
-const HOSPITALS = [
-  { name: "Civil Hospital & Emergency Center", city: "Ahmedabad", status: "24/7 ICU & Trauma Available", contact: "+91 79 2268 3721" },
-  { name: "Apollo Emergency Care", city: "Gandhinagar", status: "Blood Bank & Oxygen Ready", contact: "+91 79 6670 1800" },
-  { name: "SVP Metropolitan Hospital", city: "Ahmedabad", status: "Pediatric & Cardiac ER Open", contact: "+91 79 2657 7621" }
+// REMOVED — and do not put anything like it back.
+//
+// This used to be a hardcoded list of three named hospitals with phone numbers
+// and live-sounding statuses ("24/7 ICU & Trauma Available", "Blood Bank &
+// Oxygen Ready"), rendered under the heading "Live 24/7 Emergency hospital &
+// blood bank availability matrix" with tap-to-dial "Call ER" buttons.
+//
+// Nothing about it was live: it was a fixed array, the statuses were invented,
+// and the numbers were never verified. Someone having a medical emergency could
+// dial a wrong number or travel to a hospital believing a bed was free.
+//
+// India's official emergency numbers (108 ambulance, 112 unified) are stable and
+// correct, so the panel now routes to those instead. If real hospital capacity is
+// ever wanted here it has to come from a live, authoritative feed — never a
+// literal in the frontend.
+// Only numbers that are nationally established belong here. A blood-bank
+// helpline was considered and left out because it could not be confirmed
+// against an official source — publishing an unverified emergency number is
+// the exact failure this block replaced.
+const EMERGENCY_NUMBERS = [
+  { label: "Ambulance", number: "108", desc: "Free medical emergency response, any time, anywhere in India." },
+  { label: "Unified emergency", number: "112", desc: "One number for police, fire and medical help." },
 ];
 
 function renderReply(text: string) {
@@ -181,7 +199,7 @@ export function AIDemoWidget() {
               activeTab === "emergency" ? "bg-[#10b981] text-black shadow-[0_0_20px_rgba(16,185,129,0.5)] scale-[1.02]" : "text-[#9aa0b8] hover:text-white"
             }`}
           >
-            <Building2 className="h-3.5 w-3.5" /> Emergency ER Finder
+            <Building2 className="h-3.5 w-3.5" /> Emergency Help
           </button>
         </div>
       </div>
@@ -238,23 +256,37 @@ export function AIDemoWidget() {
       {/* Tab 3: Emergency ER Finder */}
       {activeTab === "emergency" && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <p className="text-xs md:text-sm text-[#9aa0b8] mb-4">
-            Live 24/7 Emergency hospital & blood bank availability matrix:
-          </p>
+          <div className="p-4 rounded-xl bg-[#2a1215] border border-[#f87171]/40 mb-4">
+            <div className="text-sm font-bold text-[#fca5a5] mb-1">
+              If this is an emergency, call now — don&apos;t use this page.
+            </div>
+            <p className="text-xs text-[#e7b4b4] leading-relaxed">
+              Decode Pharmacy does not track hospital beds, ICU capacity or blood stock, and
+              nothing here is live. Call the national emergency line and they will route you.
+            </p>
+          </div>
 
           <div className="space-y-3">
-            {HOSPITALS.map((hosp, idx) => (
-              <div key={idx} className="p-4 rounded-xl bg-[#09090f] border border-white/10 flex items-center justify-between">
+            {EMERGENCY_NUMBERS.map((e) => (
+              <div key={e.number} className="p-4 rounded-xl bg-[#09090f] border border-white/10 flex items-center justify-between gap-3">
                 <div>
-                  <div className="text-sm font-bold text-white">{hosp.name}</div>
-                  <div className="text-xs text-[#6ee7b7] font-mono mt-0.5">{hosp.status} ({hosp.city})</div>
+                  <div className="text-sm font-bold text-white">{e.label}</div>
+                  <div className="text-xs text-[#9aa0b8] mt-0.5">{e.desc}</div>
                 </div>
-                <a href={`tel:${hosp.contact}`} className="px-3 py-1.5 rounded-lg bg-[#10b981]/20 border border-[#10b981]/40 text-[#6ee7b7] text-xs font-mono font-bold hover:bg-[#10b981]/30 transition-all">
-                  Call ER: {hosp.contact}
+                <a
+                  href={`tel:${e.number}`}
+                  className="shrink-0 px-4 py-2 rounded-lg bg-[#10b981]/20 border border-[#10b981]/40 text-[#6ee7b7] text-base font-mono font-bold hover:bg-[#10b981]/30 transition-all"
+                >
+                  {e.number}
                 </a>
               </div>
             ))}
           </div>
+
+          <p className="text-[11px] text-[#6b7280] mt-4 leading-relaxed">
+            To find a blood bank with verified stock, use the government&apos;s eRaktKosh portal
+            (eraktkosh.mohfw.gov.in) rather than any list on this site.
+          </p>
         </motion.div>
       )}
 

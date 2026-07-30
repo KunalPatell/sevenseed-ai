@@ -145,12 +145,16 @@ export default function Home() {
             <a className="btn btn-ghost lg" href="#services"><i className="fas fa-microchip" /> See the AI</a>
           </div>
 
+          {/* Keep these in step with METRICS above — the same figures were stated
+              twice and only one copy got corrected the first time. All countable
+              from src/lib/agents.ts; "24/7 Always On" was dropped because the
+              free Render tier sleeps when idle. */}
           <div className="stats-row">
             <div className="hs"><div className="hs-num">7</div><div className="hs-lbl">AI Employees</div></div>
             <div className="hs-sep" />
-            <div className="hs"><div className="hs-num">2</div><div className="hs-lbl">AI Suites</div></div>
+            <div className="hs"><div className="hs-num">4</div><div className="hs-lbl">AI Suites</div></div>
             <div className="hs-sep" />
-            <div className="hs"><div className="hs-num">24/7</div><div className="hs-lbl">Always On</div></div>
+            <div className="hs"><div className="hs-num">25</div><div className="hs-lbl">AI Tools</div></div>
             <div className="hs-sep" />
             <div className="hs"><div className="hs-num">1</div><div className="hs-lbl">Unified Dashboard</div></div>
           </div>
