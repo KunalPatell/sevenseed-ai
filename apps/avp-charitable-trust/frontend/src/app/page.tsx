@@ -15,7 +15,7 @@ import { Tilt } from "@/components/Tilt";
 import { submitContact, type ContactStatus } from "@/lib/contact";
 import {
   Heart, Shield, Receipt, Award, BookOpen,
-  ChevronDown, Star, FileCheck,
+  ChevronDown, FileCheck,
   Building2, HandHeart,
 } from "lucide-react";
 
@@ -304,38 +304,36 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="max-w-[var(--maxw)] mx-auto py-20 px-6 md:px-12" id="testimonials">
+      {/* HOW A DONATION IS HANDLED
+          This section replaced three invented donor testimonials — "Vikram S.,
+          Individual Donor", "Meera N., CSR Lead, Tech Corp" (a placeholder
+          company), "Rahul T., AVPU Alumnus". Fabricated third-party endorsement
+          is not acceptable on a site that collects donations and issues 80G
+          receipts. Restore testimonials only with real, attributable consent
+          from the actual donor. Each step below maps to a live endpoint. */}
+      <section className="max-w-[var(--maxw)] mx-auto py-20 px-6 md:px-12" id="how-it-works">
         <RevealOnScroll>
           <div className="text-center mb-12">
-            <span className="eyebrow center mb-4">DONOR REVIEWS</span>
-            <h2 className="text-3xl md:text-4xl font-black text-white mt-3">Trusted by donors & partners</h2>
+            <span className="eyebrow center mb-4">HOW IT WORKS</span>
+            <h2 className="text-3xl md:text-4xl font-black text-white mt-3">What happens after you give</h2>
           </div>
         </RevealOnScroll>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {[
-            { t:"Received my 80G tax receipt within 2 minutes of donating. Used it directly for my IT returns filing!", a:"Vikram S.", c:"Individual Donor, Ahmedabad" },
-            { t:"Our company routed our entire CSR budget through AVP Trust. Complete transparency and real impact reports.", a:"Meera N.", c:"CSR Lead, Tech Corp" },
-            { t:"The scholarship sponsored my entire final year engineering fee. Forever grateful to AVP Charitable Trust.", a:"Rahul T.", c:"AVPU Alumnus & Software Engineer" },
+            { t:"Choose an amount and a programme. Your details are recorded against that programme, not a general pool.", a:"01", c:"You donate" },
+            { t:"An 80G-compliant receipt is generated for the donation immediately, ready for your income-tax filing.", a:"02", c:"Receipt issued" },
+            { t:"Beneficiary needs are logged and matched to funded programmes, so the money is traceable to a purpose.", a:"03", c:"Funds allocated" },
           ].map(({ t, a, c }, i) => (
             <RevealOnScroll key={i} delay={i * 0.07}>
               <Tilt className="h-full">
                 <GlowCard className="glow-card bg-[#20170d] border border-[rgba(245,158,11,0.1)] rounded-2xl p-6 h-full flex flex-col gap-4">
-                  <figure className="h-full flex flex-col gap-4">
-                    <div className="flex gap-1">
-                      {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-[#f59e0b] text-[#f59e0b]" />)}
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-[rgba(245,158,11,0.15)] border border-[rgba(245,158,11,0.3)] flex items-center justify-center font-mono font-bold text-[#f59e0b] text-xs">
+                      {a}
                     </div>
-                    <blockquote className="text-sm text-[#fde68a] italic flex-1 leading-relaxed">"{t}"</blockquote>
-                    <figcaption className="flex items-center gap-3 border-t border-[rgba(245,158,11,0.1)] pt-4">
-                      <div className="w-9 h-9 rounded-full bg-[rgba(245,158,11,0.15)] border border-[rgba(245,158,11,0.3)] flex items-center justify-center font-bold text-[#f59e0b] text-xs">
-                        {a[0]}
-                      </div>
-                      <div className="text-xs">
-                        <strong className="block text-white">{a}</strong>
-                        <span className="text-[#a3957f]">{c}</span>
-                      </div>
-                    </figcaption>
-                  </figure>
+                    <strong className="text-sm text-white">{c}</strong>
+                  </div>
+                  <p className="text-sm text-[#e7d9bd] flex-1 leading-relaxed border-t border-[rgba(245,158,11,0.1)] pt-4">{t}</p>
                 </GlowCard>
               </Tilt>
             </RevealOnScroll>

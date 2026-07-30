@@ -38,22 +38,40 @@ const PROCESS = [
   { n: "04", icon: "fa-chart-line", title: "You scale", desc: "Ship more with a lean team and an AI workforce that never sleeps." },
 ];
 
+// Countable from src/lib/agents.ts — 25 tools across 10 agent workspaces in 4
+// suites. Do not round these up. The previous version claimed "2 AI Suites"
+// (there are 4) and "24/7 Always On — no downtime", which the free Render tier
+// cannot honour: it sleeps when idle and cold-starts on the next request.
 const METRICS = [
-  { num: "7", lbl: "AI Employees", sub: "Across two suites" },
-  { num: "2", lbl: "AI Suites", sub: "Growth AI + Agency AI" },
-  { num: "24/7", lbl: "Always On", sub: "Hours a day, no downtime" },
+  { num: "25", lbl: "AI Tools", sub: "Each returns finished work, not chat" },
+  { num: "4",  lbl: "Suites", sub: "Growth, Agency, Game Dev, Orchestrator" },
+  { num: "BYOK", lbl: "Your Own Keys", sub: "Never stored on our servers" },
 ];
 
-const REVIEWS = [
-  { avatar: "F", who: "Founder", org: "Growth-Stage SaaS", quote: "We replaced five disconnected tools with Sevenforce's AI team — and now move twice as fast." },
-  { avatar: "O", who: "Owner", org: "Digital Agency", quote: "Nova drafted our client proposal and Echo handled the meeting notes. Unreal." },
-  { avatar: "OL", who: "Operations Lead", org: "D2C Brand", quote: "Sage answers our data questions in plain English — no analyst required." },
+// This replaced three invented customer testimonials ("Founder, Growth-Stage
+// SaaS" and friends) that were written to look like real reviews of a product
+// that has no public users yet. Concrete outputs are more persuasive than
+// fabricated praise, and every item below maps to a real tool in
+// src/lib/agents.ts. Put testimonials back only when they are from real users.
+const DELIVERABLES = [
+  { icon: "fa-file-word", tag: "Nova", title: "A BRD or PRD as a Word file",
+    desc: "Give it a brief; get a structured document, user stories and test cases — downloadable as .docx." },
+  { icon: "fa-pen-nib", tag: "Maya", title: "A long-form SEO article",
+    desc: "Extracts a brand profile from your URL, proposes topics, then writes the full draft in your voice." },
+  { icon: "fa-list-check", tag: "Echo", title: "Meeting notes with owners attached",
+    desc: "Paste any transcript; get the summary, the decisions, and action items tagged to the person responsible." },
+  { icon: "fa-user-tie", tag: "Scout", title: "A résumé-vs-JD alignment audit",
+    desc: "Scores a candidate against the role, drafts the interview questionnaire, then grades their answers." },
+  { icon: "fa-chart-column", tag: "Sage", title: "An answer from your own database",
+    desc: "Ask in plain English. A guarded NL-to-SQL engine runs the query and returns the result — no analyst needed." },
+  { icon: "fa-paper-plane", tag: "Wave", title: "A multi-step outreach campaign",
+    desc: "Maps your ideal customer profile, scores inbound leads, verifies the email list, then sends the sequence." },
 ];
 
 const FAQS = [
   { q: "What is Sevenforce?", a: "An AI workforce platform — hire specialised AI employees for marketing, sales, hiring, meetings, documents and data, all from one dashboard." },
   { q: "What are the Growth AI and Agency AI suites?", a: "Growth AI covers content, social and campaigns (Maya, Vibe, Wave). Agency AI covers proposals & docs, meetings, hiring and data (Nova, Echo, Scout, Sage)." },
-  { q: "Do I have to hire all seven?", a: "No — start with the AI employees you need most and add more anytime. Each works on its own or together with the rest." },
+  { q: "Do I have to hire the whole team?", a: "No — start with the AI employees you need most and add more anytime. Each works on its own or together with the rest." },
   { q: "What powers Sevenforce?", a: "Sevenseed's shared AI backbone — LangGraph multi-agent orchestration, Groq LLaMA 3.3 70B, RAG, and a safe NL-to-SQL engine." },
 ];
 
@@ -259,23 +277,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ─────────────────────────────────────── */}
-      <section className="section" id="testimonials">
-        <div className="eyebrow center">WHAT PEOPLE SAY</div>
-        <h2 className="sec-title">Trusted by the people we serve</h2>
-        <div className="tgrid">
-          {REVIEWS.map((r, i) => (
-            <RevealOnScroll key={r.who} delay={i * 0.06}>
-              <figure className="tcard glow">
-                <div className="tstars">
-                  {Array.from({ length: 5 }).map((_, s) => <i className="fas fa-star" key={s} />)}
-                </div>
-                <blockquote>&ldquo;{r.quote}&rdquo;</blockquote>
-                <figcaption>
-                  <span className="tavatar">{r.avatar}</span>
-                  <span className="tmeta"><strong>{r.who}</strong><small>{r.org}</small></span>
-                </figcaption>
-              </figure>
+      {/* ── WHAT YOU GET ─────────────────────────────────────── */}
+      <section className="section" id="deliverables">
+        <div className="eyebrow center">WHAT YOU ACTUALLY GET</div>
+        <h2 className="sec-title">Finished work, not a chat window</h2>
+        <div className="svc-grid">
+          {DELIVERABLES.map((d, i) => (
+            <RevealOnScroll key={d.title} delay={i * 0.06}>
+              <article className="svc-card glow">
+                <div className={`svc-ic ${i % 2 === 0 ? "p" : "s"}`}><i className={`fas ${d.icon}`} /></div>
+                <h4>{d.title}</h4>
+                <p>{d.desc}</p>
+                <span className="svc-tag"><i className="fas fa-bolt" />{d.tag}</span>
+              </article>
             </RevealOnScroll>
           ))}
         </div>

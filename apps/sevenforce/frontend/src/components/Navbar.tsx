@@ -7,7 +7,7 @@ const LINKS = [
   { href: "#services", label: "AI Tools" },
   { href: "#try-maya", label: "Live Demo" },
   { href: "#process", label: "Process" },
-  { href: "#testimonials", label: "Reviews" },
+  { href: "#deliverables", label: "What You Get" },
   { href: "#faq", label: "FAQ" },
   { href: "#contact", label: "Contact" },
 ];

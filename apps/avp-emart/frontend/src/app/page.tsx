@@ -20,7 +20,11 @@ import {
   ShoppingCart, CheckCircle2, Zap, Star,
 } from "lucide-react";
 
-// Live Price Comparison Visual
+// Hero price-comparison animation. These are FIXED SAMPLE figures used to
+// demonstrate the scoring model — not a live scrape, and not real current
+// prices from the named retailers. The widget is labelled "Sample data" for
+// exactly that reason; if you ever wire it to the real comparator endpoint,
+// remove that badge, and until then do not present these numbers as live.
 const PRODUCTS = [
   {
     name: "Samsung 65\" Crystal 4K UHD TV",
@@ -97,6 +101,12 @@ function PriceComparisonVisual() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#6366f1]" />
             </span>
             <span className="text-[10px] font-mono font-bold text-[#a5b4fc] uppercase tracking-widest">VAL · PRICE INTELLIGENCE</span>
+            {/* The prices below are fixed sample figures, not a live scrape, and the
+                store names are real companies — so this has to say so plainly.
+                The pulsing dot and "FETCHING PRICES…" otherwise read as live data. */}
+            <span className="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[rgba(148,163,184,0.12)] border border-[rgba(148,163,184,0.25)] text-[#94a3b8]">
+              Sample data
+            </span>
           </div>
           <span className="text-[9px] font-mono text-[#6471c4]">
             {phase === "loading" ? "FETCHING PRICES..." : phase === "comparing" ? "ANALYZING..." : "WINNER FOUND ✓"}
