@@ -845,6 +845,40 @@ export default function AppPortal() {
           </button>
         </div>
 
+        {/* Deliberately no rupee figure here. Jan Aushadhi's own prices are not in
+            this app and there is no public API for them, so any "you save Rs X"
+            number would be invented — the same failure as the hospital list that
+            was removed from the emergency tab. What is stated below is the
+            published range with its source, and the official place to check a
+            real price. Replace this with actual numbers only when real PMBJP
+            price data is wired in. */}
+        <div className="bg-[#0d1512] border border-[#10b981]/25 rounded-2xl p-5">
+          <h4 className="text-sm font-bold text-white flex items-center gap-2">
+            <Pill className="h-4 w-4 text-[#6ee7b7]" /> Buying the generic at a Jan Aushadhi Kendra
+          </h4>
+          <p className="text-xs text-[#9aa0b8] mt-2 leading-relaxed">
+            Once you know the generic name, the government&apos;s Jan Aushadhi Kendras
+            stock it under the Pradhan Mantri Bhartiya Janaushadhi Pariyojana. Published
+            figures put those prices well below the branded equivalents, but this page
+            does not hold live prices, so check the current rate for your medicine on
+            the official portal rather than assuming a figure.
+          </p>
+          <div className="flex flex-wrap gap-2 mt-3">
+            <a
+              href="https://janaushadhi.gov.in/" target="_blank" rel="noopener noreferrer"
+              className="text-[11px] font-semibold px-3 py-1.5 rounded-lg bg-[#10b981]/15 border border-[#10b981]/30 text-[#6ee7b7] hover:bg-[#10b981]/25 transition-colors"
+            >
+              Official portal & price list ↗
+            </a>
+            <span className="text-[11px] px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 text-[#9aa0b8]">
+              Or use the “Jan Aushadhi Sugam” app to find your nearest Kendra
+            </span>
+          </div>
+          <p className="text-[10px] text-[#5b5f78] mt-3 leading-relaxed">
+            Always confirm a substitute with your doctor or pharmacist before switching.
+          </p>
+        </div>
+
         {!subResult && !subLoading && (
           <div className="flex flex-col items-center justify-center gap-3 py-14 text-[#5b5f78] border border-dashed border-white/10 rounded-2xl">
             <Pill className="h-8 w-8 opacity-30" />

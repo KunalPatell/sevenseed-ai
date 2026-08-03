@@ -847,25 +847,80 @@ export default function StudentPortal() {
               <span className="text-[11px] font-bold text-[#c7d2fe] bg-[#6366f1]/15 px-2.5 py-1 rounded-full border border-[#6366f1]/25">{placementResults.matches?.length || 0} matches</span>
             </div>
             <div className="p-6 flex flex-col gap-4">
+              {/* These read the fields the backend actually returns. They used to
+                  read match.company / match.role / match.location / match.salary_lpa
+                  / match.score — none of which exist in agents.match_placement, so
+                  every card rendered a blank company and "undefined%". The real
+                  keys are name / sector / city / roles / match, plus matched_skills
+                  and missing_skills, which were never shown at all.
+
+                  The missing skills lead now rather than the percentage: a number
+                  tells a student nothing they can act on, and labelling students
+                  with scores is the part of learning analytics that DPDP treats as
+                  profiling. The gap list is the useful half and it was already
+                  being computed. */}
               {placementResults.matches && placementResults.matches.map((match: any, idx: number) => (
-                <div key={idx} className="bg-[#0d0f0e] border border-white/5 rounded-xl p-4 flex justify-between items-center gap-4">
-                  <div className="flex items-start gap-3">
-                    <span className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center shrink-0 text-[#9aa0b8]">
-                      <Building2 className="h-4 w-4" />
-                    </span>
-                    <div>
-                      <h5 className="font-bold text-white text-sm">{match.company}</h5>
-                      <p className="text-xs text-[#9aa0b8] mt-1">Role: {match.role}</p>
-                      <p className="text-[10px] text-[#5b5f78] mt-1 flex items-center gap-1.5"><MapPin className="h-3 w-3" /> {match.location} · Package: {match.salary_lpa} LPA</p>
+                <div key={idx} className="bg-[#0d0f0e] border border-white/5 rounded-xl p-4 flex flex-col gap-3">
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="flex items-start gap-3">
+                      <span className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center shrink-0 text-[#9aa0b8]">
+                        <Building2 className="h-4 w-4" />
+                      </span>
+                      <div>
+                        <h5 className="font-bold text-white text-sm">{match.name}</h5>
+                        <p className="text-xs text-[#9aa0b8] mt-1">
+                          {Array.isArray(match.roles) ? match.roles.join(" · ") : match.roles}
+                        </p>
+                        <p className="text-[10px] text-[#5b5f78] mt-1 flex items-center gap-1.5">
+                          <MapPin className="h-3 w-3" /> {match.city}{match.sector ? ` · ${match.sector}` : ""}
+                        </p>
+                      </div>
                     </div>
+                    {typeof match.match === "number" && (
+                      <span className="shrink-0 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#6ee7b7] bg-[#10b981]/15 px-3 py-1 rounded-full border border-[#10b981]/25">
+                        <TrendingUp className="h-3 w-3" /> {match.match}% fit
+                      </span>
+                    )}
                   </div>
-                  <div className="text-right shrink-0">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#6ee7b7] bg-[#10b981]/15 px-3 py-1 rounded-full border border-[#10b981]/25">
-                      <TrendingUp className="h-3 w-3" /> {match.score}%
-                    </span>
-                  </div>
+
+                  {(match.missing_skills?.length > 0 || match.matched_skills?.length > 0) && (
+                    <div className="border-t border-white/5 pt-3 flex flex-col gap-2">
+                      {match.missing_skills?.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <span className="text-[10px] uppercase font-bold text-[#fca5a5] tracking-wider mr-1">To learn</span>
+                          {match.missing_skills.map((s: string) => (
+                            <span key={s} className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#f87171]/10 border border-[#f87171]/25 text-[#fca5a5]">{s}</span>
+                          ))}
+                        </div>
+                      )}
+                      {match.matched_skills?.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <span className="text-[10px] uppercase font-bold text-[#6ee7b7] tracking-wider mr-1">You have</span>
+                          {match.matched_skills.map((s: string) => (
+                            <span key={s} className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#10b981]/10 border border-[#10b981]/25 text-[#6ee7b7]">{s}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
+
+              {placementResults.skill_gaps?.length > 0 && (
+                <div className="bg-[#12121e] border border-[#6366f1]/25 rounded-xl p-4">
+                  <h5 className="font-bold text-xs text-white uppercase tracking-wider flex items-center gap-1.5">
+                    <TrendingUp className="h-3.5 w-3.5 text-[#6366f1]" /> Learn these first
+                  </h5>
+                  <p className="text-[11px] text-[#9aa0b8] mt-1.5">
+                    The skills asked for most often across the roles above.
+                  </p>
+                  <div className="flex flex-wrap gap-1.5 mt-2.5">
+                    {placementResults.skill_gaps.map((s: string) => (
+                      <span key={s} className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-[#6366f1]/12 border border-[#6366f1]/30 text-[#c7d2fe]">{s}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
               {placementResults.tips && (
                 <div className="bg-[#12121e] border border-white/5 rounded-xl p-4 mt-2">
                   <h5 className="font-bold text-xs text-white uppercase tracking-wider flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-[#6366f1]" /> AI Placement Prep Tips</h5>
