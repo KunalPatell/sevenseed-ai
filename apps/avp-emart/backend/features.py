@@ -230,7 +230,7 @@ def deal_finder(r: DealReq): return _deal_finder(r.category)
 def budget_shop(r: BudgetReq): return _budget_shop(r.budget, r.items)
 
 @router.get("/api/analytics/overview")
-def analytics(): return _overview()
+def analytics(_user: dict = Depends(require_user)): return _overview()
 
 @router.post("/api/export/report")
 def export_report(r: ReportReq): return HTMLResponse(_report_html(r.title, r.subtitle, r.sections))
@@ -244,7 +244,7 @@ def add_reminder(r: ReminderReq):
     except Exception as e: return {"saved": False, "error": str(e)}
     return {"saved": True}
 @router.get("/api/reminders")
-def list_reminders(email: str = ""):
+def list_reminders(email: str = "", _user: dict = Depends(require_user)):
     with _c() as c:
         q = "SELECT * FROM reminders" + (" WHERE email=?" if email else "") + " ORDER BY id DESC LIMIT 50"
         return {"reminders": [dict(x) for x in c.execute(q, (email,) if email else ()).fetchall()]}
@@ -297,7 +297,7 @@ def place_order(r: OrderReq):
     return {"order_id": oid, "status": "Placed", "flow": _ORDER_FLOW}
 
 @router.get("/api/orders")
-def list_orders(email: str = ""):
+def list_orders(email: str = "", _user: dict = Depends(require_user)):
     with _c() as c:
         q = "SELECT * FROM orders" + (" WHERE email=?" if email else "") + " ORDER BY id DESC LIMIT 50"
         return {"orders": [dict(x) for x in c.execute(q, (email,) if email else ()).fetchall()]}
@@ -346,7 +346,7 @@ def add_points(r: LoyaltyReq):
     return {"saved": True}
 
 @router.get("/api/loyalty")
-def loyalty_balance(email: str):
+def loyalty_balance(email: str, _user: dict = Depends(require_user)):
     with _c() as c:
         total = c.execute("SELECT COALESCE(SUM(points),0) FROM loyalty WHERE email=?", (email,)).fetchone()[0]
     return {"email": email, "points": total, "tier": _tier(total),
@@ -360,7 +360,7 @@ def subscribe(r: SubReq):
     return {"subscription_id": sid, "item": r.item, "frequency": r.frequency}
 
 @router.get("/api/subscriptions")
-def list_subs(email: str = ""):
+def list_subs(email: str = "", _user: dict = Depends(require_user)):
     with _c() as c:
         q = "SELECT * FROM subscriptions" + (" WHERE email=?" if email else "") + " ORDER BY id DESC LIMIT 50"
         return {"subscriptions": [dict(x) for x in c.execute(q, (email,) if email else ()).fetchall()]}

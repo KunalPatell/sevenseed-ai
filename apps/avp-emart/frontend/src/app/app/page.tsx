@@ -36,6 +36,7 @@ import {
 // Sevenseed hub (see apps/sevenseed/backend/child_processes.py); its own API
 // calls must go through that same prefix, not root-relative "/api/...".
 const API_BASE = "/avp-emart";
+const EMART_TOKEN_KEY = "emart_token";
 
 type PanelType = "dashboard" | "comparator" | "assistant" | "reviews" | "trends" | "wishlist" | "alerts";
 
@@ -118,6 +119,14 @@ export default function AppPortal() {
         if (huggingface) headers.set("X-HuggingFace-API-Key", huggingface);
         if (mistral) headers.set("X-Mistral-API-Key", mistral);
 
+        // Session token, attached in the same place as the BYOK keys. The
+        // endpoints returning a person's wishlist, alerts, searches and orders
+        // require it now — they used to be readable by anyone with the URL.
+        const session = localStorage.getItem(EMART_TOKEN_KEY);
+        if (session && !headers.has("Authorization")) {
+          headers.set("Authorization", `Bearer ${session}`);
+        }
+
         init = { ...init, headers };
       }
       return originalFetch(input, init);
@@ -128,6 +137,18 @@ export default function AppPortal() {
   }, []);
 
   const [activePanel, setActivePanel] = useState<PanelType>("dashboard");
+  // Sign-in state. The backend has always had /api/auth/signup, /login and /me;
+  // this portal never used them, which is why the endpoints returning a shopper's
+  // wishlist, alerts, searches and orders had to be left open. They are closed now.
+  const [authToken, setAuthToken] = useState("");
+  const [authUser, setAuthUser] = useState<{ name?: string; email?: string } | null>(null);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "signup">("login");
+  const [authName, setAuthName] = useState("");
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [authBusy, setAuthBusy] = useState(false);
+  const [authError, setAuthError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [llmEnabled, setLlmEnabled] = useState(false);
   const [providerName, setProviderName] = useState("Offline AI");
@@ -178,6 +199,67 @@ export default function AppPortal() {
       chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
     }
   }, [chatMessages]);
+
+  // Restore a session on load and confirm the token is still good.
+  useEffect(() => {
+    const saved = typeof window !== "undefined" ? localStorage.getItem(EMART_TOKEN_KEY) : null;
+    if (!saved) return;
+    setAuthToken(saved);
+    (async () => {
+      try {
+        const res = await fetch(API_BASE + "/api/auth/me", {
+          headers: { Authorization: `Bearer ${saved}` },
+        });
+        const d = await res.json();
+        if (d?.user) setAuthUser(d.user);
+        else handleSignOut();
+      } catch {
+        /* offline — keep the token and let the next call decide */
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleAuthSubmit = async () => {
+    setAuthError("");
+    if (!authEmail.trim() || !authPassword) {
+      setAuthError("Email and password are required.");
+      return;
+    }
+    setAuthBusy(true);
+    try {
+      const res = await fetch(API_BASE + `/api/auth/${authMode}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+          authMode === "signup"
+            ? { name: authName, email: authEmail, password: authPassword }
+            : { email: authEmail, password: authPassword },
+        ),
+      });
+      const d = await res.json();
+      if (d?.error || !d?.token) {
+        setAuthError(d?.error || "Could not sign in.");
+      } else {
+        localStorage.setItem(EMART_TOKEN_KEY, d.token);
+        setAuthToken(d.token);
+        setAuthUser(d.user || null);
+        setAuthOpen(false);
+        setAuthPassword("");
+        loadDbHistory();
+      }
+    } catch {
+      setAuthError("Could not reach the server.");
+    } finally {
+      setAuthBusy(false);
+    }
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem(EMART_TOKEN_KEY);
+    setAuthToken("");
+    setAuthUser(null);
+  };
 
   const loadHealthAndData = async () => {
     try {
@@ -1089,6 +1171,62 @@ export default function AppPortal() {
 
   return (
     <div className="app-shell flex min-h-screen">
+      {authOpen && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center p-5"
+          onClick={() => setAuthOpen(false)}
+        >
+          <div
+            className="w-full max-w-[400px] bg-[#0d0f0e] border border-white/10 rounded-2xl p-6 flex flex-col gap-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div>
+              <h3 className="text-base font-bold text-white">
+                {authMode === "login" ? "Sign in" : "Create an account"}
+              </h3>
+              <p className="text-xs text-[#8890aa] mt-1.5 leading-relaxed">
+                Your wishlist, price alerts and past searches are private to your account.
+                Comparing prices works without signing in.
+              </p>
+            </div>
+
+            {authMode === "signup" && (
+              <input
+                value={authName} onChange={(e) => setAuthName(e.target.value)}
+                placeholder="Your name" autoComplete="name"
+                className="w-full bg-[#12121e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#ea580c]/50"
+              />
+            )}
+            <input
+              type="email" value={authEmail} onChange={(e) => setAuthEmail(e.target.value)}
+              placeholder="Email" autoComplete="email"
+              className="w-full bg-[#12121e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#ea580c]/50"
+            />
+            <input
+              type="password" value={authPassword} onChange={(e) => setAuthPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAuthSubmit()}
+              placeholder="Password" autoComplete={authMode === "login" ? "current-password" : "new-password"}
+              className="w-full bg-[#12121e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#ea580c]/50"
+            />
+
+            {authError && <p role="alert" className="text-xs text-red-400">{authError}</p>}
+
+            <button
+              onClick={handleAuthSubmit} disabled={authBusy}
+              className="btn w-full bg-gradient-to-r from-[#ea580c] to-[#f97316] text-white font-semibold py-3 rounded-xl cursor-pointer disabled:opacity-60"
+            >
+              {authBusy ? "Please wait…" : authMode === "login" ? "Sign in" : "Create account"}
+            </button>
+
+            <button
+              onClick={() => { setAuthMode(authMode === "login" ? "signup" : "login"); setAuthError(""); }}
+              className="text-xs text-[#8890aa] hover:text-white transition-colors cursor-pointer"
+            >
+              {authMode === "login" ? "No account? Create one" : "Already have an account? Sign in"}
+            </button>
+          </div>
+        </div>
+      )}
       {/* Sidebar */}
       <aside className={`sidebar w-[255px] shrink-0 bg-[#0d0f0e] border-r border-white/5 flex flex-col p-[18px_14px] fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky ${
         sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
@@ -1152,7 +1290,24 @@ export default function AppPortal() {
             <h1 className="text-lg font-black text-white capitalize">{activePanel}</h1>
             <p className="text-xs text-[#9aa0b8] mt-0.5">AI Smart Shopping Portal</p>
           </div>
-          <div className="ml-auto hidden md:block">
+          <div className="ml-auto flex items-center gap-2">
+            {authUser ? (
+              <span className="flex items-center gap-2 text-[11px] text-[#8890aa]">
+                <span className="hidden sm:inline font-semibold text-white">{authUser.name || authUser.email}</span>
+                <button onClick={handleSignOut} className="px-2.5 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 text-[#8890aa] hover:text-white transition-colors cursor-pointer">
+                  Sign out
+                </button>
+              </span>
+            ) : (
+              <button
+                onClick={() => { setAuthOpen(true); setAuthError(""); }}
+                className="px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-[#ea580c]/15 border border-[#ea580c]/30 text-[#fdba74] hover:bg-[#ea580c]/25 transition-colors cursor-pointer"
+              >
+                Sign in for your lists
+              </button>
+            )}
+          </div>
+          <div className="hidden md:block">
             <span className="prov-chip font-mono text-[11px] font-semibold text-[#fdba74] bg-[#ea580c]/10 border border-[#ea580c]/25 px-3 py-1.5 rounded-full">
               <Cpu className="h-3 w-3 inline mr-1.5" />
               {llmEnabled ? providerName : "Offline AI Engine"} · 4 Platforms compared

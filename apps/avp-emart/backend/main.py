@@ -11,6 +11,9 @@ if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
 from fastapi import Depends, FastAPI, HTTPException, Header, Request
+# Above its first use: Depends(require_user) is evaluated at route declaration.
+from features import require_user  # noqa: E402
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -164,7 +167,7 @@ def trend(req: TrendReq):
 
 # ── Wishlist & Alerts History API ─────────────────────────────────────────────
 @app.get("/api/wishlist")
-def get_wishlist(limit: int = 50):
+def get_wishlist(limit: int = 50, _user: dict = Depends(require_user)):
     return {"wishlist": db.list_wishlist(limit)}
 
 @app.post("/api/wishlist")
@@ -180,7 +183,7 @@ def delete_wishlist(item_id: int):
     return {"success": True}
 
 @app.get("/api/alerts")
-def get_alerts(limit: int = 50):
+def get_alerts(limit: int = 50, _user: dict = Depends(require_user)):
     return {"alerts": db.list_price_alerts(limit)}
 
 @app.post("/api/alerts")
@@ -196,7 +199,7 @@ def delete_alert(alert_id: int):
     return {"success": True}
 
 @app.get("/api/searches")
-def get_searches(limit: int = 50):
+def get_searches(limit: int = 50, _user: dict = Depends(require_user)):
     return {"searches": db.list_searches(limit)}
 
 
