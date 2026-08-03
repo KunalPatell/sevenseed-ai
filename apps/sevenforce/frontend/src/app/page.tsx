@@ -73,6 +73,8 @@ const FAQS = [
   { q: "What are the Growth AI and Agency AI suites?", a: "Growth AI covers content, social and campaigns (Maya, Vibe, Wave). Agency AI covers proposals & docs, meetings, hiring and data (Nova, Echo, Scout, Sage)." },
   { q: "Do I have to hire the whole team?", a: "No — start with the AI employees you need most and add more anytime. Each works on its own or together with the rest." },
   { q: "What powers Sevenforce?", a: "Sevenseed's shared AI backbone — LangGraph multi-agent orchestration, Groq LLaMA 3.3 70B, RAG, and a safe NL-to-SQL engine." },
+  { q: "What does it cost? Are there credits?", a: "There are no credits and no monthly cap. You add your own Groq, Gemini or OpenAI key and pay that provider directly at their rates — we take no markup, because your usage never passes through our billing. The only limit anywhere is the free public demo on the homepage, capped at 5 runs an hour so it stays available to everyone." },
+  { q: "Where is my API key stored?", a: "In your browser. It is sent with each request, kept only for the length of that request, and never written to our disk or database. Removing it from the dashboard removes it entirely." },
 ];
 
 const MARQUEE = [
@@ -125,8 +127,15 @@ export default function Home() {
             />
           </div>
 
+          {/* The pricing model IS the pitch here. The closest competitor's worst
+              reviews are about a non-rolling credit cap that stops your agents
+              mid-month; Sevenforce structurally cannot do that, because it never
+              holds the key or the balance. Say so before anything else.
+              Kept precise: the platform is free, the model usage is not — the
+              user pays their provider directly. "100% FREE" alone implied
+              otherwise. */}
           <div className="hero-pill">
-            <i className="fas fa-microchip" /> ✦ 100% FREE · NO CREDIT CARD REQUIRED · TACTICAL COMMAND CENTER
+            <i className="fas fa-key" /> ✦ NO CREDITS · NO MONTHLY CAP · BRING YOUR OWN API KEY
           </div>
 
           <h1 className="hero-title">
@@ -278,6 +287,46 @@ export default function Home() {
               </RevealOnScroll>
             ))}
           </div>
+
+          {/* Every line below is checkable in this repo, and was checked before
+              being written: there is no credit system anywhere; the only rate
+              limit in the backend is on the public demo (features.py — bucket
+              "content_demo", 5/hour); and keys arrive as X-*-API-Key headers,
+              are held in a per-request contextvar (app/api_keys.py) and are
+              never written to disk. Do not add a claim here without the same. */}
+          <RevealOnScroll delay={0.24}>
+            <div className="about-card" style={{ marginTop: "34px" }}>
+              <h3>How the pricing actually works</h3>
+              <ul className="hl-list">
+                <li>
+                  <i className="fas fa-key" />
+                  <span><strong>You bring your own API key.</strong> Groq, Gemini or OpenAI — you
+                  add it once and it stays in your browser.</span>
+                </li>
+                <li>
+                  <i className="fas fa-infinity" />
+                  <span><strong>No credits, no monthly cap.</strong> There is no balance to run
+                  down and no plan tier that stops your agents halfway through the month.</span>
+                </li>
+                <li>
+                  <i className="fas fa-receipt" />
+                  <span><strong>You pay your provider directly.</strong> No markup from us,
+                  because the usage never passes through our billing.</span>
+                </li>
+                <li>
+                  <i className="fas fa-shield-halved" />
+                  <span><strong>Your key is never stored on our servers.</strong> It is sent with
+                  each request, held only for that request, and never written to disk.</span>
+                </li>
+                <li>
+                  <i className="fas fa-circle-info" />
+                  <span>The one exception: the free public demo on this page is capped at
+                  5 runs an hour, so it stays available to everyone. The tools in the
+                  dashboard are not.</span>
+                </li>
+              </ul>
+            </div>
+          </RevealOnScroll>
         </div>
       </section>
 
