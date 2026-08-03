@@ -11,9 +11,10 @@ import os
 import re
 import sys
 import time
+import logging
 import datetime
 from pathlib import Path
-from fastapi import FastAPI, Request, HTTPException, Query
+from fastapi import FastAPI, Request, HTTPException, Query, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -156,10 +157,17 @@ def chat_endpoint(req: ChatRequest):
 def generate_fir(req: FIRRequest):
     fir_id = f"FIR-{int(time.time())}"
     category = req.crime_category
-    legal_sections = BNS_LAWS.get(category, [
-        "BNS Section 303 — Theft",
-        "BNS Section 318 — Cheating / Fraud"
-    ])
+    # An unrecognised category used to fall back to theft and cheating sections
+    # regardless of what was actually reported, so a complaint about assault could
+    # be drafted citing BNS 303 (theft). Wrong sections on a police complaint are
+    # worse than none: they misdirect the officer reading it. Say nothing instead.
+    legal_sections = BNS_LAWS.get(category, [])
+    sections_note = (
+        "Suggested sections only — a duty officer must confirm them before filing."
+        if legal_sections
+        else "No sections suggested: this complaint type is not in our reference list. "
+             "The duty officer will determine the applicable sections."
+    )
     
     record = {
         "id": fir_id,
@@ -183,8 +191,24 @@ def generate_fir(req: FIRRequest):
         "message": f"FIR draft {fir_id} generated successfully with recommended BNS legal codes."
     }
 
+ADMIN_KEY = os.environ.get("ADMIN_KEY", "")
+
+
 @app.get("/api/fir/list")
-def list_firs():
+def list_firs(x_admin_key: str = Header(default="")):
+    """Every stored complaint. Admin only.
+
+    This was open. FIR_STORE holds the complainant's name, phone number, the
+    location and time of the incident and the full description of what happened —
+    so an unauthenticated GET handed out crime complaints with victim contact
+    details to anyone who knew the path. Nothing in the frontend calls it.
+
+    404 rather than 401, matching the hub's /api/history/contacts, so the
+    endpoint's existence is not advertised. There is no user login in this app;
+    if one is added, scope this to the complainant's own records instead.
+    """
+    if not ADMIN_KEY or x_admin_key != ADMIN_KEY:
+        raise HTTPException(status_code=404)
     return {"firs": FIR_STORE}
 
 # ---------------------------------------------------------------------------
@@ -221,16 +245,39 @@ def analyze_cybercrime(req: CybercrimeRequest):
 # ---------------------------------------------------------------------------
 @app.post("/api/sos")
 def trigger_sos(req: SOSRequest):
-    dispatch_id = f"SOS-{int(time.time())}"
+    """Record an SOS and hand back the real emergency numbers.
+
+    THIS ENDPOINT DOES NOT CONTACT ANYONE, and must never claim it does. It used
+    to return status "DISPATCHED", an assigned police control room, and an
+    "estimated_arrival" of "4 - 7 Minutes", with the message "Emergency units
+    notified. Remain in a safe area." None of that was real: there is no
+    integration with any control room, no SMS, no call — just this dictionary.
+
+    Someone in danger who is told a unit is seven minutes away may stop trying to
+    get help. That is why the wording here is blunt.
+
+    If real dispatch is ever added, it has to be an actual integration with an
+    emergency service, and the status must reflect what that integration returns —
+    never a hardcoded string.
+    """
+    logging.getLogger("rakshak").warning(
+        "SOS_TRIGGERED | type=%s | lat=%s | lon=%s | address=%s",
+        req.emergency_type, req.lat, req.lon, req.address,
+    )
     return {
-        "dispatch_id": dispatch_id,
-        "status": "DISPATCHED",
-        "priority": "RED_ALERT",
+        "recorded_id": f"SOS-{int(time.time())}",
+        "status": "NOT_DISPATCHED",
+        "dispatch_available": False,
         "user_coordinates": {"lat": req.lat, "lon": req.lon},
-        "assigned_station": "Ahmedabad Police Control Room (Control Room 100/112)",
-        "estimated_arrival": "4 - 7 Minutes",
-        "helpline_numbers": ["112 (National Emergency)", "1091 (Women Helpline)", "100 (Police)"],
-        "message": "Emergency units notified. Remain in a safe area."
+        "helpline_numbers": [
+            {"number": "112", "label": "National emergency"},
+            {"number": "100", "label": "Police"},
+            {"number": "1091", "label": "Women's helpline"},
+        ],
+        "message": (
+            "Rakshak cannot contact emergency services. Call 112 now. "
+            "This request has only been logged on this server."
+        ),
     }
 
 # ---------------------------------------------------------------------------

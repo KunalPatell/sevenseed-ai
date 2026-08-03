@@ -121,8 +121,14 @@ export default function Home() {
           ...prev,
           {
             sender: "bot",
-            text: "🚨 EMERGENCY DISPATCHED: Control Room 112 & nearest police patrol alerted to your geolocation! Stay safe.",
-            sos: True
+            // Was: "EMERGENCY DISPATCHED: Control Room 112 & nearest police patrol
+            // alerted to your geolocation!" Nothing is dispatched and nobody is
+            // alerted — /api/sos returns a hardcoded string. Telling someone in
+            // danger that help is coming, when it is not, can make them stop
+            // seeking it. This app cannot contact the police, so it says so and
+            // gives the number that can.
+            text: "This app cannot contact the police. Call 112 now (or 100 for police, 1091 women's helpline). Keep your phone on and move somewhere safe if you can.",
+            sos: true
           }
         ]);
         setSosSent(true);
@@ -202,9 +208,32 @@ export default function Home() {
             </button>
           </div>
 
+          {/* This panel used to read "EMERGENCY ALERT DISPATCHED! Patrol Car #104
+              assigned. Arrival: ~5 Mins." No patrol car exists, nothing is
+              dispatched, and there is no integration with any control room —
+              /api/sos returns a fixed string. A person in danger who believes a
+              car is five minutes away may stop calling for help. The button now
+              dials the real emergency line instead of pretending. */}
           {sosSent && (
-            <div className="w-full max-w-[840px] p-4 mb-8 rounded-xl bg-red-500/20 border border-red-500/50 text-red-200 text-xs font-mono text-center animate-bounce">
-              🚨 EMERGENCY ALERT DISPATCHED! Patrol Car #104 assigned. Location: SG Highway, Ahmedabad. Arrival: ~5 Mins.
+            <div className="w-full max-w-[840px] p-5 mb-8 rounded-xl bg-red-500/15 border border-red-500/50 text-left">
+              <p className="text-sm font-bold text-red-200">
+                This app cannot call the police for you.
+              </p>
+              <p className="text-xs text-red-100/80 mt-1.5 leading-relaxed">
+                Rakshak has no connection to any control room and cannot dispatch anyone.
+                If you are in danger, call now — these lines are free and work from any phone.
+              </p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <a href="tel:112" className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-black text-sm">
+                  Call 112 — Emergency
+                </a>
+                <a href="tel:100" className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white font-semibold text-sm hover:bg-white/15">
+                  100 — Police
+                </a>
+                <a href="tel:1091" className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white font-semibold text-sm hover:bg-white/15">
+                  1091 — Women&apos;s Helpline
+                </a>
+              </div>
             </div>
           )}
         </div>
