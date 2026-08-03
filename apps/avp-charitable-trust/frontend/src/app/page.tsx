@@ -83,7 +83,7 @@ function ImpactGeneratorVisual() {
             <div className="flex items-center gap-2">
               <FileCheck className="h-4 w-4 text-[#f59e0b]" />
               <div>
-                <div className="font-bold text-white text-[11px]">Instant 80G Certificate PDF</div>
+                <div className="font-bold text-white text-[11px]">Printable receipt, instantly</div>
                 <div className="text-[9px] text-[#a3957f]">Govt Reg: AABTA1234F20261</div>
               </div>
             </div>
@@ -196,7 +196,7 @@ export default function Home() {
 
             <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.42 }}
               className="flex flex-wrap gap-2.5">
-              {["80G Certified", "12A Registered", "Instant PDF Receipts", "0% Admin Fee", "Public Ledger"].map((tag, i) => (
+              {["80G Certified", "12A Registered", "Printable Receipts", "0% Admin Fee", "Public Ledger"].map((tag, i) => (
                 <span key={i} className="text-[10px] font-mono font-semibold px-3 py-1.5 rounded-full bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.25)] text-[#fef08a]">
                   ✦ {tag}
                 </span>
@@ -257,7 +257,11 @@ export default function Home() {
           {[
             { icon:Heart,     color:"#f59e0b", badge:"Healthcare",  title:"Free Rural Medical Camps", desc:"Organizes monthly diagnostic, eye checkup, and surgery camps in underserved villages across Gujarat." },
             { icon:BookOpen,  color:"#f97316", badge:"Education",   title:"AVPU Student Scholarships",desc:"Sponsors full tuition and living expenses for meritorious, underprivileged engineering students." },
-            { icon:Receipt,   color:"#22c55e", badge:"Tax Benefit", title:"Instant 80G Receipts",     desc:"Every online donation generates a government-compliant 80G tax receipt PDF sent directly to your email." },
+            // Was: "...receipt PDF sent directly to your email." Nothing emails a
+            // receipt — /api/export/receipt renders a printable page. And the
+            // deduction itself comes from Form 10BE after the trust files Form
+            // 10BD, not from this receipt.
+            { icon:Receipt,   color:"#22c55e", badge:"Tax Benefit", title:"80G Receipts & Form 10BE", desc:"Download your acknowledgement receipt the moment you give. Your Form 10BE — the certificate the Income Tax Department accepts for the deduction — follows once we file Form 10BD." },
             { icon:Building2, color:"#38bdf8", badge:"Infrastructure",title:"Community Labs & Clinics", desc:"Funds building diagnostic labs and hostel wings in partnership with Breakdown Factor & AVPU." },
             { icon:Shield,    color:"#a855f7", badge:"Audit",       title:"100% Transparent Ledger",  desc:"Public expense tracking — every rupee spent is recorded and audit-verified online." },
             { icon:Award,     color:"#f59e0b", badge:"Recognition", title:"Corporate CSR Matching",   desc:"Enables corporate partners to double their impact with structured CSR allocation and certificates." },
@@ -321,7 +325,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {[
             { t:"Choose an amount and a programme. Your details are recorded against that programme, not a general pool.", a:"01", c:"You donate" },
-            { t:"An 80G-compliant receipt is generated for the donation immediately, ready for your income-tax filing.", a:"02", c:"Receipt issued" },
+            { t:"You get an acknowledgement receipt straight away. Your actual 80G deduction comes from Form 10BE, which we issue after filing Form 10BD with the Income Tax Department — so we need your PAN.", a:"02", c:"Receipt & Form 10BE" },
             { t:"Beneficiary needs are logged and matched to funded programmes, so the money is traceable to a purpose.", a:"03", c:"Funds allocated" },
           ].map(({ t, a, c }, i) => (
             <RevealOnScroll key={i} delay={i * 0.07}>

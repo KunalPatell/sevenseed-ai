@@ -3,7 +3,7 @@
 from __future__ import annotations
 import os, json, datetime, hashlib, hmac, secrets, sqlite3, re, html as _html
 from itsdangerous import URLSafeTimedSerializer
-from fastapi import APIRouter, Header, Request
+from fastapi import APIRouter, Depends, HTTPException, Header, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
 
@@ -255,6 +255,25 @@ section div{{background:#f6f7fb;border-radius:10px;padding:14px 16px}}
 <div class="foot"><span>{BRAND['name']} · {BRAND['sub']}</span><span>{datetime.date.today().isoformat()}</span></div></body></html>"""
 
 router = APIRouter()
+
+def require_user(authorization: str = Header(None)):
+    """Reject anonymous callers on endpoints that return personal data.
+
+    Added 2026-08-03. These list endpoints were completely open: on
+    avp-charitable-trust, GET /api/donations returned every donor's name, email
+    and PAN number to an unauthenticated caller (confirmed by calling it), and
+    the same pattern exposed medical records, grades and order history in the
+    sibling apps. The auth system already existed here; it just was not applied
+    to anything except /api/auth/me.
+
+    Any new endpoint that returns data about an identifiable person must take
+    this dependency.
+    """
+    user = _verify(authorization.replace("Bearer ", "").strip() if authorization else None)
+    if not user:
+        raise HTTPException(status_code=401, detail="Sign in to view this data.")
+    return user
+
 _init()
 class SignupReq(BaseModel): name: str = ""; email: str; password: str
 class LoginReq(BaseModel): email: str; password: str
@@ -279,13 +298,13 @@ def add_idea(r: IdeaReq):
                   (datetime.datetime.utcnow().isoformat(), r.email, r.title, r.sector, r.notes))
     return {"saved": True}
 @router.get("/api/ideas")
-def list_ideas(email: str = ""):
+def list_ideas(email: str = "", _user: dict = Depends(require_user)):
     with _c() as c:
         q = "SELECT * FROM ideas" + (" WHERE email=?" if email else "") + " ORDER BY id DESC LIMIT 50"
         return {"ideas": [dict(x) for x in c.execute(q, (email,) if email else ()).fetchall()]}
 
 @router.get("/api/analytics/overview")
-def analytics(): return _overview()
+def analytics(_user: dict = Depends(require_user)): return _overview()
 @router.post("/api/export/report")
 def export_report(r: ReportReq): return HTMLResponse(_report_html(r.title, r.subtitle, r.sections))
 
@@ -320,7 +339,7 @@ def add_reminder(r: ReminderReq):
                   (datetime.datetime.utcnow().isoformat(), r.email, r.title, r.remind_at))
     return {"saved": True}
 @router.get("/api/reminders")
-def list_reminders(email: str = ""):
+def list_reminders(email: str = "", _user: dict = Depends(require_user)):
     with _c() as c:
         q = "SELECT * FROM reminders" + (" WHERE email=?" if email else "") + " ORDER BY id DESC LIMIT 50"
         return {"reminders": [dict(x) for x in c.execute(q, (email,) if email else ()).fetchall()]}

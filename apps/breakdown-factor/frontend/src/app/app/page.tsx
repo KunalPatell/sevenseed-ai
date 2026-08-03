@@ -265,7 +265,8 @@ export default function ConstructionPortal() {
         setProviderName(hData.provider);
         setRagBackend(hData.rag_backend || "Vector RAG");
       }
-      fetchProjects();
+      // Projects and reminders need a signed-in user now, and this runs on mount.
+      // The effect below fetches them once a token exists (restored, login or signup).
     } catch (e) {
       setDbStatus("offline");
     }
@@ -299,15 +300,24 @@ export default function ConstructionPortal() {
     } catch (e) {}
   };
 
-  const fetchProjects = async () => {
+  // /api/projects and /api/reminders now require a signed-in user. They used to
+  // be fetched with no headers, which meant anyone could read every project and
+  // reminder in the database by calling the URL directly.
+  useEffect(() => {
+    if (token) fetchProjects(token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  const fetchProjects = async (tok?: string) => {
+    const headers: HeadersInit = { Authorization: `Bearer ${tok ?? token}` };
     try {
-      const res = await fetch(API_BASE + "/api/projects");
+      const res = await fetch(API_BASE + "/api/projects", { headers });
       if (res.ok) {
         const d = await res.json();
         setProjectsList(d.projects || []);
       }
 
-      const rRes = await fetch(API_BASE + "/api/reminders");
+      const rRes = await fetch(API_BASE + "/api/reminders", { headers });
       if (rRes.ok) {
         const rd = await rRes.json();
         setRemindersList(rd.reminders || []);

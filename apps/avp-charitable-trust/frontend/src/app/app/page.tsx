@@ -296,7 +296,9 @@ export default function NGOStatusHub() {
         setProgramsList(pData.programs || []);
         setImpactMetrics(pData.metrics || []);
       }
-      fetchDonationsAndVolunteers();
+      // Donor and volunteer data is no longer fetched here: it needs a signed-in
+      // user now, and this runs on mount. The effect below fetches it as soon as
+      // a token exists, which covers a restored session, a login and a signup.
     } catch (e) {
       setDbStatus("offline");
     }
@@ -336,16 +338,28 @@ export default function NGOStatusHub() {
     } catch (e) {}
   };
 
-  const fetchDonationsAndVolunteers = async () => {
+  // These now require a signed-in user. They used to be fetched with no headers
+  // at all, which is why /api/donations was handing every donor's name, email and
+  // PAN to anyone who called it.
+  const authHeaders = (tok?: string): HeadersInit => ({
+    Authorization: `Bearer ${tok ?? token}`,
+  });
+
+  useEffect(() => {
+    if (token) fetchDonationsAndVolunteers(token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  const fetchDonationsAndVolunteers = async (tok?: string) => {
     try {
-      const dRes = await fetch(API_BASE + "/api/donations");
+      const dRes = await fetch(API_BASE + "/api/donations", { headers: authHeaders(tok) });
       if (dRes.ok) {
         const d = await dRes.json();
         setDonations(d.donations || []);
         setTotalRaised(d.total || 0);
       }
 
-      const vRes = await fetch(API_BASE + "/api/volunteers");
+      const vRes = await fetch(API_BASE + "/api/volunteers", { headers: authHeaders(tok) });
       if (vRes.ok) {
         const v = await vRes.json();
         setVolunteers(v.volunteers || []);

@@ -3,7 +3,7 @@
 from __future__ import annotations
 import os, datetime, hashlib, hmac, secrets, sqlite3, html as _html
 from itsdangerous import URLSafeTimedSerializer
-from fastapi import APIRouter, Header
+from fastapi import APIRouter, Depends, HTTPException, Header
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
 
@@ -165,6 +165,25 @@ section div{{background:#f6f7fb;border-radius:10px;padding:14px 16px}}
 <div class="foot"><span>{BRAND['name']} · {BRAND['sub']}</span><span>{datetime.date.today().isoformat()}</span></div></body></html>"""
 
 router = APIRouter()
+
+def require_user(authorization: str = Header(None)):
+    """Reject anonymous callers on endpoints that return personal data.
+
+    Added 2026-08-03. These list endpoints were completely open: on
+    avp-charitable-trust, GET /api/donations returned every donor's name, email
+    and PAN number to an unauthenticated caller (confirmed by calling it), and
+    the same pattern exposed medical records, grades and order history in the
+    sibling apps. The auth system already existed here; it just was not applied
+    to anything except /api/auth/me.
+
+    Any new endpoint that returns data about an identifiable person must take
+    this dependency.
+    """
+    user = _verify(authorization.replace("Bearer ", "").strip() if authorization else None)
+    if not user:
+        raise HTTPException(status_code=401, detail="Sign in to view this data.")
+    return user
+
 _init()
 class SignupReq(BaseModel): name: str = ""; email: str; password: str
 class LoginReq(BaseModel): email: str; password: str

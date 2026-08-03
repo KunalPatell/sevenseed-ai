@@ -16,7 +16,7 @@ import smtplib
 import sqlite3
 from email.mime.text import MIMEText
 
-from fastapi import APIRouter, Header
+from fastapi import APIRouter, Depends, HTTPException, Header
 from fastapi.responses import HTMLResponse, PlainTextResponse, JSONResponse
 from pydantic import BaseModel
 
@@ -24,6 +24,25 @@ from app import auth, analytics, config
 import tools_ai
 
 router = APIRouter()
+
+def require_user(authorization: str = Header(None)):
+    """Reject anonymous callers on endpoints that return personal data.
+
+    Added 2026-08-03. These list endpoints were completely open: on
+    avp-charitable-trust, GET /api/donations returned every donor's name, email
+    and PAN number to an unauthenticated caller (confirmed by calling it), and
+    the same pattern exposed medical records, grades and order history in the
+    sibling apps. The auth system already existed here; it just was not applied
+    to anything except /api/auth/me.
+
+    Any new endpoint that returns data about an identifiable person must take
+    this dependency.
+    """
+    user = auth.verify_token(_bearer(authorization))
+    if not user:
+        raise HTTPException(status_code=401, detail="Sign in to view this data.")
+    return user
+
 auth.init()
 
 
@@ -150,7 +169,7 @@ def essay_grade(r: EssayReq):
 
 # ── Analytics ────────────────────────────────────────────────────────────────
 @router.get("/api/analytics/overview")
-def analytics_overview():
+def analytics_overview(_user: dict = Depends(require_user)):
     return analytics.overview()
 
 
@@ -257,7 +276,7 @@ def add_reminder(r: ReminderReq):
 
 
 @router.get("/api/reminders")
-def list_reminders(email: str = ""):
+def list_reminders(email: str = "", _user: dict = Depends(require_user)):
     try:
         c = sqlite3.connect(config.DB_PATH); c.row_factory = sqlite3.Row
         q = "SELECT * FROM reminders" + (" WHERE email=?" if email else "") + " ORDER BY id DESC LIMIT 50"
@@ -345,7 +364,7 @@ def mark_attendance(r: AttendanceReq):
     return {"saved": True}
 
 @router.get("/api/attendance")
-def get_attendance(email: str = ""):
+def get_attendance(email: str = "", _user: dict = Depends(require_user)):
     c = sqlite3.connect(config.DB_PATH); c.row_factory = sqlite3.Row
     q = "SELECT * FROM attendance" + (" WHERE email=?" if email else "") + " ORDER BY id DESC LIMIT 100"
     rows = [dict(x) for x in c.execute(q, (email,) if email else ()).fetchall()]
@@ -395,7 +414,7 @@ def add_grade(r: GradeReq):
     return {"saved": True}
 
 @router.get("/api/grades")
-def list_grades(email: str = ""):
+def list_grades(email: str = "", _user: dict = Depends(require_user)):
     c = sqlite3.connect(config.DB_PATH); c.row_factory = sqlite3.Row
     q = "SELECT * FROM grades" + (" WHERE email=?" if email else "") + " ORDER BY id DESC LIMIT 100"
     rows = [dict(x) for x in c.execute(q, (email,) if email else ()).fetchall()]

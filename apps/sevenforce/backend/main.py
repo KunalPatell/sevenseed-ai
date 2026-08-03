@@ -13,7 +13,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path: 
     sys.path.insert(0, _HERE)
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -268,7 +268,10 @@ def get_ventures():
     return {"ventures":VENTURES,"count":len(VENTURES)}
 
 @app.get("/api/ideas")
-def get_ideas(): 
+def get_ideas():
+    # Deliberately public: VENTURE_IDEAS is a static list of sample ideas, not
+    # anybody's data. (features.py has its own /api/ideas over user-submitted
+    # rows — that one does require a signed-in user.)
     return {"ideas":VENTURE_IDEAS,"count":len(VENTURE_IDEAS)}
 
 @app.post("/api/founder")
@@ -322,7 +325,7 @@ def delete_pitch(item_id: int):
 
 # ── Static frontend mounting ──────────────────────────────────────────────────
 # Enterprise features: auth, AI tools, analytics, export, reminders
-from features import router as _feat_router
+from features import require_user, router as _feat_router
 app.include_router(_feat_router)
 
 @app.get("/app")

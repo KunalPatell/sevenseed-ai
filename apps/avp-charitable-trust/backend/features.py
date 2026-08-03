@@ -3,7 +3,7 @@
 from __future__ import annotations
 import os, datetime, hashlib, hmac, secrets, sqlite3, html as _html
 from itsdangerous import URLSafeTimedSerializer
-from fastapi import APIRouter, Header
+from fastapi import APIRouter, Depends, HTTPException, Header
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
 
@@ -190,6 +190,27 @@ section div{{background:#f6f7fb;border-radius:10px;padding:14px 16px}}
 
 
 router = APIRouter()
+
+
+def require_user(authorization: str = Header(None)):
+    """Reject anonymous callers.
+
+    These list endpoints were completely open. `GET /api/donations` returned every
+    donor's name, email, amount and **PAN number** to anyone who asked — verified by
+    calling it with no headers. PAN is financial identity data; under the DPDP Act
+    that is not something an open endpoint may hand out, and the same held for
+    /api/donors, /api/pledges and the ledger.
+
+    The auth system already existed (signup/login issue a signed token, _verify
+    checks it) — it simply was not applied to anything except /api/auth/me. This
+    dependency closes that gap. Any new endpoint returning donor or beneficiary
+    data must take it too.
+    """
+    token = authorization.replace("Bearer ", "").strip() if authorization else None
+    user = _verify(token)
+    if not user:
+        raise HTTPException(status_code=401, detail="Sign in to view this data.")
+    return user
 _init()
 class SignupReq(BaseModel): name: str = ""; email: str; password: str
 class LoginReq(BaseModel): email: str; password: str
@@ -220,7 +241,7 @@ def add_donation(r: DonationReq):
                         (datetime.datetime.utcnow().isoformat(), r.donor, r.email, r.amount, r.pan, r.purpose)).lastrowid
     return {"saved": True, "receipt_no": f"AVP-80G-{rid:05d}"}
 @router.get("/api/donations")
-def list_donations():
+def list_donations(_user: dict = Depends(require_user)):
     with _c() as c:
         rows = c.execute("SELECT * FROM donations ORDER BY id DESC LIMIT 100").fetchall()
         total = c.execute("SELECT COALESCE(SUM(amount),0) FROM donations").fetchone()[0]
@@ -239,12 +260,12 @@ def add_volunteer(r: VolunteerReq):
                   (datetime.datetime.utcnow().isoformat(), r.name, r.email, r.skills, r.availability))
     return {"saved": True, "message": "Thank you for volunteering! Our team will reach out."}
 @router.get("/api/volunteers")
-def list_volunteers():
+def list_volunteers(_user: dict = Depends(require_user)):
     with _c() as c:
         return {"volunteers": [dict(x) for x in c.execute("SELECT * FROM volunteers ORDER BY id DESC LIMIT 100").fetchall()]}
 
 @router.get("/api/analytics/overview")
-def analytics(): return _overview()
+def analytics(_user: dict = Depends(require_user)): return _overview()
 @router.post("/api/export/report")
 def export_report(r: ReportReq): return HTMLResponse(_report_html(r.title, r.subtitle, r.sections))
 @router.post("/api/reminders")
@@ -254,7 +275,7 @@ def add_reminder(r: ReminderReq):
                   (datetime.datetime.utcnow().isoformat(), r.email, r.title, r.remind_at))
     return {"saved": True}
 @router.get("/api/reminders")
-def list_reminders(email: str = ""):
+def list_reminders(email: str = "", _user: dict = Depends(require_user)):
     with _c() as c:
         q = "SELECT * FROM reminders" + (" WHERE email=?" if email else "") + " ORDER BY id DESC LIMIT 50"
         return {"reminders": [dict(x) for x in c.execute(q, (email,) if email else ()).fetchall()]}
@@ -307,7 +328,7 @@ def create_campaign(r: CampaignReq2):
     return {"campaign_id": cid, "title": r.title, "goal": r.goal}
 
 @router.get("/api/campaigns")
-def list_campaigns():
+def list_campaigns(_user: dict = Depends(require_user)):
     with _c() as c:
         rows = [dict(x) for x in c.execute("SELECT * FROM campaigns ORDER BY id DESC LIMIT 50").fetchall()]
     for x in rows:
@@ -322,7 +343,7 @@ def create_event(r: EventReq):
     return {"event_id": eid}
 
 @router.get("/api/events")
-def list_events():
+def list_events(_user: dict = Depends(require_user)):
     with _c() as c:
         return {"events": [dict(x) for x in c.execute("SELECT * FROM events ORDER BY id DESC LIMIT 50").fetchall()]}
 
@@ -351,7 +372,7 @@ def add_donor(r: DonorReq):
     return {"donor_id": did}
 
 @router.get("/api/donors")
-def list_donors():
+def list_donors(_user: dict = Depends(require_user)):
     with _c() as c:
         rows = [dict(x) for x in c.execute("SELECT * FROM donors ORDER BY total_given DESC LIMIT 100").fetchall()]
         total = c.execute("SELECT COALESCE(SUM(total_given),0) FROM donors").fetchone()[0]
@@ -366,7 +387,7 @@ def add_pledge(r: PledgeReq):
     return {"pledge_id": pid, "annual_value": round(annual)}
 
 @router.get("/api/pledges")
-def list_pledges():
+def list_pledges(_user: dict = Depends(require_user)):
     with _c() as c:
         return {"pledges": [dict(x) for x in c.execute("SELECT * FROM pledges ORDER BY id DESC LIMIT 100").fetchall()]}
 
@@ -542,7 +563,7 @@ def crm_push_lead(r: LeadReq):
 
 # ── Signature: public transparent ledger + auto-emailed 80G receipt ───────────
 @router.get("/api/ledger")
-def ledger():
+def ledger(_user: dict = Depends(require_user)):
     with _c() as c:
         rows = c.execute("SELECT id,created_at,donor,amount,purpose FROM donations ORDER BY id DESC LIMIT 200").fetchall()
         total = c.execute("SELECT COALESCE(SUM(amount),0) FROM donations").fetchone()[0]
@@ -588,7 +609,7 @@ def face_status():
 
 # ── Signature data: Sankey fund-flow ledger (for SVG viz) ─────────────────────
 @router.get("/api/ledger/sankey")
-def ledger_sankey():
+def ledger_sankey(_user: dict = Depends(require_user)):
     with _c() as c:
         rows = c.execute("SELECT COALESCE(NULLIF(purpose,''),'General Fund') AS p, COALESCE(SUM(amount),0) AS s FROM donations GROUP BY p").fetchall()
     total = sum(x["s"] for x in rows)
