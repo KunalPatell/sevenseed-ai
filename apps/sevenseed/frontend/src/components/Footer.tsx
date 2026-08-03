@@ -50,6 +50,7 @@ export function Footer() {
             <li><a href="/trust/" className="hover:text-[#eeeef8] transition-all">AVP Charitable Trust</a></li>
             <li><a href="/avpu/" className="hover:text-[#eeeef8] transition-all">AVP University</a></li>
             <li><a href="/sevenforce/" className="hover:text-[#eeeef8] transition-all">Sevenforce</a></li>
+            <li><a href="/rakshak-ai/" className="hover:text-[#eeeef8] transition-all">Rakshak AI</a></li>
           </ul>
         </div>
 
