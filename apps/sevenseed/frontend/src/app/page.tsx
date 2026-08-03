@@ -39,8 +39,15 @@ const STARTUPS = [
     desc: "Runs donation campaigns end to end and issues 80G-compliant receipts automatically." },
   { name: "Sevenforce",       tag: "7 AI Employees",   icon: Cpu,           color: "#a855f7", link: "/sevenforce/",
     desc: "Ten agents covering sales, content, research and ops — 25 tools that produce finished work, not chat." },
-  { name: "Comonk",           tag: "HR & Resume AI",   icon: FileText,      color: "#06b6d4", link: "/comonk-ai/",
-    desc: "Screens résumés against a job description, scores fit, and drafts the interview kit." },
+  // Corrected 2026-08-03. This card previously said Comonk "screens résumés
+  // against a job description, scores fit, and drafts the interview kit" — that
+  // describes an employer-side ATS, and Comonk is the opposite side of the market.
+  // Its endpoints are all candidate-facing: ATS-optimize, cover letter, LinkedIn
+  // optimize, mock interview, career roadmap, salary insights. The user IS the
+  // job seeker. The wrong description also sent a whole research pass down the
+  // wrong path, so keep this accurate.
+  { name: "Comonk",           tag: "Career Copilot",   icon: FileText,      color: "#06b6d4", link: "/comonk-ai/",
+    desc: "For job seekers: gets your résumé past the ATS, finds matching companies, and runs mock interviews." },
   { name: "Sevenseed Engine", tag: "Venture Backbone",icon: Server,        color: "#eab308", link: "/app/",
     desc: "The shared platform every venture runs on — BYOK keys, model routing, and one deployment." },
 ];

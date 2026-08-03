@@ -526,77 +526,115 @@ category where trust is the currency, **that cleanup is a marketing asset. Don't
 
 ---
 
-## 7. Comonk — HR & résumé AI
+## 7. Comonk — career copilot for job seekers
 
-**Today:** screens résumés against a JD, scores fit, drafts the interview kit.
+> **Corrected 2026-08-03.** The first version of this section was wrong, and wrong
+> in a way that would have wasted real work. It described Comonk as an
+> employer-side résumé screener and built the whole recommendation around the EU
+> AI Act's high-risk rules for recruitment, with a two-day deadline and a €15M
+> penalty. **None of that applies.**
+>
+> Comonk is the *other side* of the market. Its endpoints are `/api/ats-optimize`,
+> `/api/cover-letter`, `/api/linkedin-optimize`, `/api/mock-interview`,
+> `/api/career-roadmap`, `/api/salary-insights`, `/api/match` — and `/api/match`
+> matches a candidate's skills to *companies*, not candidates to a job. Its own
+> metadata reads "Free AI-powered career intelligence: resume parsing, company
+> matching, mock interviews, ATS optimization." **The user is the job seeker.**
+> Nobody is being screened.
+>
+> Where the error came from: the hub's portfolio card said Comonk "screens résumés
+> against a job description, scores fit, and drafts the interview kit" — a line
+> written earlier in the same session without checking the code. That card is now
+> corrected too. The lesson is the one this whole session keeps repeating: read the
+> endpoints, don't trust the description.
 
-### Timing
+**Today:** résumé parsing, ATS optimisation, company matching, cover letters,
+LinkedIn optimisation, mock interviews, career roadmaps, salary insights,
+GitHub analysis. All free, all candidate-facing. **Separate repo:**
+`github.com/KunalPatell/comonk-ai`, branch `main`.
 
-**The EU AI Act's high-risk obligations begin 2 August 2026** — two days after this research
-was done.
+### Does the EU AI Act still matter here?
 
-Recruitment is named explicitly. Annex III covers AI systems *"intended to be used for the
-recruitment or selection of natural persons"* — sourcing, screening, evaluating, ranking. That
-is exactly what Comonk does. The scope also reaches performance evaluation, promotion,
-task allocation and termination.
+Annex III covers systems "intended to be used for the recruitment or selection of
+natural persons" — that is, tools **employers** use to evaluate candidates. A tool
+that helps a candidate improve their own CV is not that, so the high-risk
+obligations and the €15M exposure do not apply to Comonk as it exists today.
 
-Required under Articles 9–17: risk assessment, technical documentation, bias testing, **human
-oversight**, transparency disclosures, continuous monitoring. Penalty: up to **€15,000,000 or
-3% of global annual turnover**, whichever is higher.
+What does still apply: candidate data is personal data under DPDP. Résumés are
+uploaded as PDFs and parsed. Retention, deletion and consent still matter.
 
-In the US, **NYC Local Law 144** has applied since 2023: an annual **independent bias audit**
-across protected characteristics (race/ethnicity, sex), a **published summary**, and notice to
-candidates **10 business days** before use. Non-compliance: **$1,500 per violation per day**.
+If Comonk ever adds an employer-facing side — screening applicants for a company —
+the earlier analysis becomes live and should be read again.
 
-India has no equivalent AI hiring law yet. But candidate data falls under DPDP, and **any Indian
-company serving EU or US clients will be asked these questions.**
+### What the market says
 
-### This is the opportunity, not the burden
+The category is crowded, and the leaders are differentiated by specificity:
 
-Most résumé screeners are **black boxes** — a score with no reasoning.
+- **Jobscan** is the standout because it tests against **named** applicant tracking
+  systems — Workday, Greenhouse, Taleo, iCIMS — and changes its advice depending on
+  which one the target company runs
+- **Teal** shows which keywords from a job description are missing and gives a match
+  score *before* you apply
+- **Rezi** is strict ATS-first; **VisualCV** is the general-purpose pick
 
-After 2 August, every HR buyer must ask *"is your tool auditable?"* Tools that cannot answer
-drop out of enterprise deals. For a newer product this is good news: Comonk can be **built
-audit-ready from the start**, while incumbents retrofit.
+And the important finding, because it cuts against what most tools in this category
+actually do:
+
+> "Modern ATS platforms leverage NLP and machine learning to analyze context,
+> relevance, and keyword density... a resume that mentions 'project management' 14
+> times when the job posting mentions it twice looks gamed, and once a recruiter
+> pulls your resume, **the human eye catches the stuffing in two seconds**."
+
+White text is detected too — extraction reads text regardless of colour, and some
+systems flag it explicitly. Recruiters "resent the implication that they're easily
+tricked", and it is "one of the quickest ways to burn a bridge".
+
+Concrete numbers worth building against: focus on the **10–15** most important
+keywords, each appearing **2–3 times** across different sections; **more than 4–5
+occurrences of the same term starts to look stuffed**.
 
 ### Recommended
 
 | # | Feature | Effort | Why |
 |---|---|---|---|
-| 1 | A reason attached to every score | **M** | Satisfies transparency, enables oversight, better product |
-| 2 | Never auto-reject — rank and recommend only | **S** | The Act's human-oversight requirement |
-| 3 | Export the data needed for a bias audit | **M** | Customers must commission one annually |
-| 4 | Blind screening (strip name, gender, age, photo, college) | **S** | Reduces bias and is sellable |
+| 1 | Warn when the résumé looks stuffed | **S** | Nobody else does this — see below |
+| 2 | Keyword coverage against a specific JD, with counts | **M** | Teal's core feature, and `/api/analyze-jd` already exists |
+| 3 | Name the ATS the target company uses | **L** | Jobscan's moat; needs a company→ATS dataset |
+| 4 | Résumé retention and delete controls | **S** | DPDP; PDFs are being uploaded and parsed |
 
-**1.** Not "72/100" but *"4 of 5 JD must-haves matched — Python ✓, AWS ✓, Kubernetes ✗. Wanted
-3 years, has 2."* **Highest value here.**
+**1. The anti-stuffing check.** Every tool in this category pushes *more keywords*.
+The research says that backfires — detectably, and in a way that annoys the human
+who eventually reads it. A tool that says *"you've used 'project management' 11
+times; the posting uses it twice; cut it to 3"* is giving advice the others won't,
+because it argues against the thing they are selling. **Cheapest item here and the
+most differentiated.**
 
-**2.** Same principle as Sevenforce's approval gates — except here the cost of an error is
-someone's job. Cheap to implement: it is mostly a product decision, not an engineering one.
+**2. Keyword coverage with counts,** not just a score: which terms from the JD are
+missing, which are present, and how many times each appears — measured against the
+2–3 guideline rather than "more is better".
 
-**3.** A tool that makes the annual audit easy gets bought for that reason.
+**3. Per-ATS advice** is the real moat but needs a dataset mapping employers to
+their ATS, which does not exist for the Indian market and would have to be built.
+Long haul, not a first move.
 
 ### The differentiated bet
 
-Competitors sell **speed** — "1,000 résumés in 5 minutes."
+The category sells *beating* the ATS. The evidence says the ATS mostly cannot be
+beaten any more, and that trying is visible to the recruiter.
 
-From 2 August the question changes. Not "how fast" but **"if a candidate challenges this in
-court, can you explain why?"** A tool that can answer sells to companies that cannot touch a
-black box. That is not a niche — it is the entire regulated market.
-
-**Honest caveat:** this is written without knowing where Comonk's customers are. If it is
-India-only domestic hiring, this is a six-month concern, not a two-day one. But if EU/US clients
-are on the roadmap, design for auditability now — retrofitting costs ten times more.
+Comonk is free and candidate-side, so it has no commercial reason to sell the
+fantasy. **"We'll tell you when you're overdoing it"** is a position no paid
+competitor can comfortably take, and it is the same honesty angle that works
+across this portfolio.
 
 ### Sources
 
-- [EU AI Act & hiring: 2026 compliance guide](https://www.hiretruffle.com/blog/eu-ai-act-hiring)
-- [What the EU AI Act means for staffing businesses](https://artificialintelligenceact.eu/what-the-act-means-for-staffing-businesses/)
-- [EU AI Act in HR: requirements & checklist](https://hr-on.com/eu-ai-act-for-hr-2026/)
-- [Deloitte: NYC Local Law 144 & algorithmic bias](https://www.deloitte.com/us/en/services/audit-assurance/articles/nyc-local-law-144-algorithmic-bias.html)
-- [DLA Piper: critical audit of NYC's AI hiring law](https://www.dlapiper.com/en-us/insights/publications/2026/01/critical-audit-of-nyc-ai-hiring-law-signals-increased-risk-for-employers)
+- [Jobscan: best AI resume builders (ATS tested)](https://www.jobscan.co/blog/best-ai-resume-builders/)
+- [VisualCV: best AI resume optimizer tools 2026](https://www.visualcv.com/blog/best-ai-resume-optimizer-tools/)
+- [Jobscan: are you guilty of resume keyword stuffing?](https://www.jobscan.co/blog/resume-keyword-stuffing/)
+- [How ATS systems combat keyword stuffing (FlyRank)](https://www.flyrank.com/blogs/seo-hub/how-ats-systems-combat-keyword-stuffing)
+- [Why keyword stuffing lowers ATS score (Hireflow)](https://hireflow.net/blog/why-keyword-stuffing-lowers-ats-score)
 
----
 
 ## 8. Sevenseed Engine / Hub
 
@@ -669,7 +707,6 @@ Running 8 products on a single 512MB service is a genuinely strong number.
 
 | Site | What | Exposure |
 |---|---|---|
-| **Comonk** | EU AI Act high-risk | Live 2 Aug 2026 · up to €15M or 3% turnover |
 | **AVP Trust** | Form 10BD / 10BE; CSR-1 | ₹200/day + ₹10k–₹1L; no CSR money without CSR-1 |
 | **AVPU** | DPDP + biometric | Face attendance is the largest liability |
 | **Breakdown Factor** | DSR traceability | Without it, no tender or government work |
@@ -678,7 +715,7 @@ Regulated markets are less crowded precisely because people avoid them.
 
 ### 2. Everywhere, the win comes from being *trustworthy*, not *fast*
 
-Confidence scores in Breakdown. Price history in Emart. Score reasoning in Comonk. Approval
+Confidence scores in Breakdown. Price history in Emart. Anti-stuffing warnings in Comonk. Approval
 gates in Sevenforce. Outcome measurement in AVPU.
 
 Four different industries, one answer. It is also the same work done on 2026-07-30 when the
@@ -711,7 +748,7 @@ Ordered by impact ÷ effort, across all eight sites:
 | 2 | **AVP Trust** | Fix the 80G line, capture PAN, notify on 10BE | **S** |
 | 3 | **Decode Pharmacy** | Rupee savings per prescription | **S** |
 | 4 | **AVPU** | QR/OTP attendance as default; gap reports not scores | **S** |
-| 5 | **Comonk** | Never auto-reject; add reasons to scores | **S–M** |
+| 5 | **Comonk** | Warn when a résumé looks keyword-stuffed | **S** |
 
 Every one of these is small. Four of them are mostly product decisions rather than engineering.
 The large builds (Owl orchestration, Emart's data pipeline, revision diff) should wait until
@@ -731,8 +768,9 @@ these are done and something is actually being used.
    - Trust: ₹2.5Cr+ funded · 15,000+ patients served · 100% financial transparency
    - AVPU: ₹4–8 LPA average package (in `backend/avpu_data.py`)
    For an 80G trust, unverified impact figures are a regulatory question, not a marketing one.
-4. **Comonk:** where are the customers — India only, or EU/US on the roadmap? Decides whether
-   §7 is urgent or a six-month concern.
+4. **Comonk:** ~~where are the customers~~ — **resolved 2026-08-03.** The question was
+   based on a wrong reading of the product. Comonk is candidate-facing, so the EU AI
+   Act's recruitment rules do not apply; see the correction note at the top of §7.
 5. **AVP Emart:** given the catalogue access problem, is this still worth pursuing as a full
    comparison engine — or should it narrow to a "true final price" calculator?
 6. **AVPU:** what is the current WhatsApp Business API arrangement and cost? The moat depends

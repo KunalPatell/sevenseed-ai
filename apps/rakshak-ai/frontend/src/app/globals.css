@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+/*
+  Rakshak AI — Vision Security & Workplace Safety Suite
+  Theme: Crimson Shield + Amber Radar + Obsidian Dark
+*/
+
+:root {
+  --bg: #070507;
+  --bg-1: #0e0a0d;
+  --bg-2: #160f14;
+  --crimson: #ef4444;
+  --crimson-l: #fca5a5;
+  --crimson-d: #dc2626;
+  --crimson-rgb: 239, 68, 68;
+  --amber: #f59e0b;
+  --amber-rgb: 245, 158, 11;
+  --emerald: #10b981;
+  --emerald-rgb: 16, 185, 129;
+  --text: #faf5f6;
+  --text-2: #d4c5c8;
+  --text-3: #7e6f73;
+  --border: rgba(239, 68, 68, 0.15);
+  --border-hi: rgba(239, 68, 68, 0.4);
+  --maxw: 1200px;
+  --nav-h: 68px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --t: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hud-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(239, 68, 68, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239, 68, 68, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(circle at 50% 30%, black 20%, transparent 80%);
+}
+
+.grad-text {
+  background: linear-gradient(135deg, #fef2f2 0%, var(--crimson) 50%, var(--amber) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glow-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all var(--t);
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-card:hover {
+  border-color: var(--border-hi);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.12);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--crimson-l);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-d) 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.35);
+  transition: all var(--t);
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 28px rgba(239, 68, 68, 0.5);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all var(--t);
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.animate-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}

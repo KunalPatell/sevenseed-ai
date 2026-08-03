@@ -55,6 +55,10 @@ VENTURES = [
      "ai_stack": "Live price aggregation, ML scoring, Groq LLaMA shopping assistant, NLP reviews",
      "url": "https://price-com-7.streamlit.app/",
      "description": "AI smart-shopping — compares live prices, ML best-value scoring, LLM assistant."},
+    {"name": "Rakshak AI", "sector": "AI Vision Security", "stage": "Live", "color": "crimson",
+     "ai_stack": "Computer Vision (Mask PPE, Face Matching, YOLO Occupancy), OpenCV, PyTorch, Groq LLaMA",
+     "url": "/rakshak-ai/",
+     "description": "AI-powered vision security suite — live mask PPE detection, facial attendance recognition, and YOLO chair occupancy monitoring."},
 ]
 
 STUDIO_KNOWLEDGE = [
