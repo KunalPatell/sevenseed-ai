@@ -17,10 +17,10 @@ import {
   Rocket, Layers, Cpu,
   ChevronDown, ArrowRight, ExternalLink,
   HardHat, HeartPulse, ShoppingCart, GraduationCap,
-  Heart, FileText, Server,
+  Heart, FileText, Server, ShieldCheck,
 } from "lucide-react";
 
-// Live 8-Startup Orbit Visual
+// Live 9-Startup Orbit Visual
 // link = the real path each venture is actually served at by the FastAPI
 // orchestrator. Children live at their own prefixes (/breakdown/, /avpu/, ...),
 // NOT under /app/<folder>/ (those 404). Comonk is the externally-deployed app
@@ -39,15 +39,10 @@ const STARTUPS = [
     desc: "Runs donation campaigns end to end and issues 80G-compliant receipts automatically." },
   { name: "Sevenforce",       tag: "7 AI Employees",   icon: Cpu,           color: "#a855f7", link: "/sevenforce/",
     desc: "Ten agents covering sales, content, research and ops — 25 tools that produce finished work, not chat." },
-  // Corrected 2026-08-03. This card previously said Comonk "screens résumés
-  // against a job description, scores fit, and drafts the interview kit" — that
-  // describes an employer-side ATS, and Comonk is the opposite side of the market.
-  // Its endpoints are all candidate-facing: ATS-optimize, cover letter, LinkedIn
-  // optimize, mock interview, career roadmap, salary insights. The user IS the
-  // job seeker. The wrong description also sent a whole research pass down the
-  // wrong path, so keep this accurate.
   { name: "Comonk",           tag: "Career Copilot",   icon: FileText,      color: "#06b6d4", link: "/comonk-ai/",
     desc: "For job seekers: gets your résumé past the ATS, finds matching companies, and runs mock interviews." },
+  { name: "Rakshak AI",       tag: "Public Safety AI", icon: ShieldCheck,   color: "#ef4444", link: "/rakshak-ai/",
+    desc: "5-in-1 public safety suite — automatic FIR draft generator, cybercrime scam analyzer, emergency SOS & PPE vision workstations." },
   { name: "Sevenseed Engine", tag: "Venture Backbone",icon: Server,        color: "#eab308", link: "/app/",
     desc: "The shared platform every venture runs on — BYOK keys, model routing, and one deployment." },
 ];
@@ -81,7 +76,7 @@ function StartupOrbitVisual() {
           <div className="flex items-center gap-2">
             <Rocket className="h-4 w-4 text-[#f59e0b]" />
             <span className="text-[10px] font-mono font-bold text-[#f59e0b] uppercase tracking-widest">
-              SEVENSEED VENTURE STUDIO · 8 PORTFOLIO LABS
+              SEVENSEED VENTURE STUDIO · 9 PORTFOLIO LABS
             </span>
           </div>
           <span className="text-[9px] font-mono text-[#06b6d4]">SUBPROCESS ENGINE ACTIVE</span>
@@ -232,7 +227,7 @@ export default function Home() {
               transition={{ duration:0.7, delay:0.08, ease:[0.22,1,0.36,1] }}
               className="text-4xl sm:text-5xl xl:text-[4.2rem] font-black leading-[1.04] tracking-tighter text-white"
             >
-              8 AI Startups.<br/>
+              9 AI Startups.<br/>
               <span className="grad"><TextScramble text="1 Unified Studio." /></span>
             </motion.h1>
 
@@ -242,7 +237,7 @@ export default function Home() {
               transition={{ duration:0.6, delay:0.18, ease:[0.22,1,0.36,1] }}
               className="text-base md:text-lg text-[#cbd5e1] leading-relaxed max-w-[480px]"
             >
-              Sevenseed Studio incubates and powers 8 domain-specific AI platforms — spanning construction diagnostics, free healthcare, price matrix engines, AI edtech, and HR intelligence.
+              Sevenseed Studio incubates and powers 9 domain-specific AI platforms — spanning construction diagnostics, free healthcare, public safety &amp; FIR copilot, price matrix engines, AI edtech, and HR intelligence.
             </motion.p>
 
             <motion.div
