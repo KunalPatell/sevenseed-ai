@@ -11,6 +11,10 @@ if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
 from fastapi import Depends, FastAPI, File, HTTPException, Header, Request, UploadFile
+# Imported here rather than with the router below: Depends(require_user) is
+# evaluated when the routes are declared, which happens earlier in this file.
+from features import require_user  # noqa: E402
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -202,15 +206,15 @@ def search(req: MedicineSearchReq):
 
 # ── Database History Endpoints ───────────────────────────────────────────────
 @app.get("/api/prescriptions")
-def get_prescriptions(limit: int = 50):
+def get_prescriptions(limit: int = 50, _user: dict = Depends(require_user)):
     return {"prescriptions": db.list_prescriptions(limit)}
 
 @app.get("/api/interactions-history")
-def get_interactions_history(limit: int = 50):
+def get_interactions_history(limit: int = 50, _user: dict = Depends(require_user)):
     return {"interactions": db.list_interactions(limit)}
 
 @app.get("/api/refills")
-def get_refills(limit: int = 50):
+def get_refills(limit: int = 50, _user: dict = Depends(require_user)):
     return {"refills": db.list_refills(limit)}
 
 @app.delete("/api/refills/{item_id}")
@@ -224,7 +228,7 @@ def remove_refill(item_id: int):
 # ── Static frontend ───────────────────────────────────────────────────────────
 # If the compiled frontend/out directory exists, mount it, else display error message
 # Enterprise features: auth, AI tools, analytics, export, reminders
-from features import router as _feat_router
+from features import router as _feat_router  # noqa: E402  (also see the earlier require_user import)
 app.include_router(_feat_router)
 
 if config.STATIC_DIR.exists():

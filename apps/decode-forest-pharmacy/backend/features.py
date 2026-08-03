@@ -249,13 +249,13 @@ def add_record(r: RecordReq):
                   (datetime.datetime.utcnow().isoformat(), r.email, r.condition, r.medicines, r.notes))
     return {"saved": True}
 @router.get("/api/records")
-def list_records(email: str = ""):
+def list_records(email: str = "", _user: dict = Depends(require_user)):
     with _c() as c:
         q = "SELECT * FROM health_records" + (" WHERE email=?" if email else "") + " ORDER BY id DESC LIMIT 50"
         return {"records": [dict(x) for x in c.execute(q, (email,) if email else ()).fetchall()]}
 
 @router.get("/api/analytics/overview")
-def analytics(): return _overview()
+def analytics(_user: dict = Depends(require_user)): return _overview()
 @router.post("/api/export/report")
 def export_report(r: ReportReq): return HTMLResponse(_report_html(r.title, r.subtitle, r.sections))
 @router.post("/api/reminders")
@@ -265,7 +265,7 @@ def add_reminder(r: ReminderReq):
                   (datetime.datetime.utcnow().isoformat(), r.email, r.title, r.remind_at))
     return {"saved": True}
 @router.get("/api/reminders")
-def list_reminders(email: str = ""):
+def list_reminders(email: str = "", _user: dict = Depends(require_user)):
     with _c() as c:
         q = "SELECT * FROM reminders" + (" WHERE email=?" if email else "") + " ORDER BY id DESC LIMIT 50"
         return {"reminders": [dict(x) for x in c.execute(q, (email,) if email else ()).fetchall()]}
@@ -315,7 +315,7 @@ def book_appt(r: ApptReq):
     return {"appointment_id": aid, "status": "Confirmed", "message": f"Teleconsult with {r.doctor} booked. We will share a video link before your slot."}
 
 @router.get("/api/appointments")
-def list_appts(email: str = ""):
+def list_appts(email: str = "", _user: dict = Depends(require_user)):
     with _c() as c:
         q = "SELECT * FROM appointments" + (" WHERE email=?" if email else "") + " ORDER BY id DESC LIMIT 50"
         return {"appointments": [dict(x) for x in c.execute(q, (email,) if email else ()).fetchall()]}
@@ -353,7 +353,7 @@ def create_rx(r: RxReq):
     return {"prescription_id": rid, "rx_no": f"DFP-RX-{rid:05d}"}
 
 @router.get("/api/prescriptions")
-def list_rx(patient: str = ""):
+def list_rx(patient: str = "", _user: dict = Depends(require_user)):
     with _c() as c:
         q = "SELECT * FROM eprescriptions" + (" WHERE patient=?" if patient else "") + " ORDER BY id DESC LIMIT 50"
         return {"prescriptions": [dict(x) for x in c.execute(q, (patient,) if patient else ()).fetchall()]}
