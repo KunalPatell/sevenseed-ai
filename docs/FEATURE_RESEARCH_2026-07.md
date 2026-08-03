@@ -3,11 +3,18 @@
 > Researched 2026-07-31. A working document: findings and recommendations, not
 > decisions. Nothing here has been built. Edit freely.
 >
-> Every claim is sourced. Where a number looked biased or unverifiable, that is
-> said so explicitly rather than quietly repeated — several of the headline
-> statistics in this space come from vendors selling the thing they measure.
+> Every claim is sourced. Where a number looked vendor-biased or unverifiable, that
+> is said so rather than quietly repeated — several headline statistics in this space
+> come from people selling the thing they measure.
+>
+> **Effort key:** **S** = days · **M** = 1–3 weeks · **L** = a month or more.
+> These are rough and assume one developer working with the existing codebase.
 
-**Open questions for Kunal are collected at the end.** Four of them block real work.
+**Open questions for Kunal are at the end.** Six of them block real work.
+
+**Read the "Feasibility" boxes.** Several recommendations that sound easy depend on
+data access that turns out to be gated, deprecated, or non-existent. Those boxes are
+where a plan dies quietly if nobody checks first.
 
 ---
 
@@ -33,28 +40,47 @@ India specifics that decide whether the product is usable at all:
 - Measurement follows **IS 1200**; billing runs on **RA (Running Account) bills**
 - Competing tools sit between ₹500/month (Vyapar) and ₹3,000/month (BuildNext, RDash)
 
+That price band matters: it caps what this can charge. A ₹3,000/month ceiling means the
+product has to be self-serve — there is no room for a sales team.
+
 ### Recommended
 
-1. **Confidence + provenance on every line item.** Show how sure the model is, and
-   highlight the region of the drawing the quantity came from. This is the exact
-   "opaque" problem blocking adoption. It changes the pitch from *fast* to *checkable*.
-2. **DSR-traceable rates.** A cost that cannot be traced to a DSR/SOR item cannot be
-   used on government or tender work. Show the DSR item number and the same four-part
-   buildup. In India this is an entry ticket, not a feature.
-3. **Drawing revision diff.** Rev A vs Rev C — what changed and *what it costs*. This
-   is where variation claims come from, and it is standard in the better tools now.
-4. **Excel / BOQ export in IS 1200 format.** In India, "integration" means Excel, not
-   an API. This is the real answer to workflow disruption.
+| # | Feature | Effort | Why |
+|---|---|---|---|
+| 1 | Confidence + provenance per line item | **M** | The exact "opaque" problem blocking adoption |
+| 2 | DSR-traceable rates | **M** | Entry ticket for any tender or government work |
+| 3 | Drawing revision diff (Rev A vs Rev C + cost delta) | **L** | Where variation claims come from |
+| 4 | Excel / BOQ export in IS 1200 format | **S** | In India "integration" means Excel, not an API |
+
+**1. Confidence + provenance.** Show how sure the model is per line, and highlight the
+region of the drawing the quantity came from. Changes the pitch from *fast* to *checkable*.
+Implementation note: the YOLO/vision pipeline already produces bounding boxes — surfacing
+them in the UI is mostly frontend work, which is why this is M and not L.
+
+**2. DSR-traceable rates.** A cost that cannot be traced to a DSR/SOR item cannot be used
+on government work. Show the DSR item number and the same four-part buildup.
+
+**3. Drawing revision diff.** Rev A vs Rev C — what changed and *what it costs*. Hardest
+item on the list because it needs document alignment across revisions, not just extraction.
+
+**4. Excel/BOQ export.** Cheapest item here and probably the one that removes the most
+friction. Do this first if you want a quick win.
+
+> **Feasibility — DSR data.** CPWD DSR is published, but it is a document, not an API.
+> Somebody has to digitise the ~13,000 rates once and maintain them through revisions.
+> Budget for that as its own task; it is the unglamorous core of item 2. State SORs
+> multiply the work — pick one state to start.
 
 ### The differentiated bet
 
-Breakdown Factor has **both** defect detection and cost estimation. Competitors have
-one or the other.
+Breakdown Factor has **both** defect detection and cost estimation. Competitors have one
+or the other.
 
-Connect them: **defect photo → costed rework estimate + material list.** "This crack
-will cost ₹X to fix, and here is the material." Nobody else can ship this easily
-because they are missing half the system. The other four items make it competitive;
-this one makes it different.
+Connect them: **defect photo → costed rework estimate + material list.** "This crack will
+cost ₹X to fix, and here is the material." Nobody else ships this easily because they are
+missing half the system. The other four items make it competitive; this one makes it different.
+
+Effort: **M**, assuming items 1 and 2 exist — it is mostly wiring two things that already work.
 
 ### Sources
 
@@ -75,49 +101,84 @@ finds cheaper/free alternatives.
 
 A gap in global apps:
 
-> "Medisafe's drug interaction checker flags potential conflicts in real time, which
-> is something **most apps completely ignore.**"
+> "Medisafe's drug interaction checker flags potential conflicts in real time, which is
+> something **most apps completely ignore.**"
 
 The real opportunity is Indian data, and it lands directly on the existing feature:
 
 - Jan Aushadhi medicines are **50–90% cheaper** than branded
-- **17,990 Kendras** operating; 2,110 medicines; ~1.5 million people daily
 - A chronic patient can save up to **₹66,000 a year**
 - Branded atorvastatin runs **2× to 25×** the Jan Aushadhi price
 
 Saying "a generic exists" and saying "you can save ₹1,240 a month" are different products.
 
+> **Caution — Kendra and product counts disagree across sources.** One source says 17,990
+> Kendras and 2,110 medicines as of 31 Dec 2025; another lists 7,942 stores and 1,451 drugs;
+> a Government news item said 13,800+ in Oct 2024. The network is growing, so third-party
+> databases go stale fast. **Do not put a Kendra count on the site without a dated official
+> source** — this is the same failure mode as the numbers cleaned up on 2026-07-30.
+
 ### Recommended
 
-1. **Rupee savings on every prescription.** After OCR: *"On this prescription you could
-   save ₹X per month, ₹Y per year."* The 2×–25× gap is not abstract to the person holding
-   the paper.
-2. **Nearest Jan Aushadhi Kendra.** Knowing a cheaper medicine exists is useless without
-   knowing where to buy it. This completes the chain: prescription → generic → savings →
-   where to go.
-3. **Drug interaction checking.** The prescription is already being parsed; conflicts are
-   the natural next step, and most apps skip it.
-4. **Reminders + missed-dose alerts to family.** Peer accountability raises adherence by
-   up to 26%. Heavier (accounts, notifications), hence fourth.
+| # | Feature | Effort | Why |
+|---|---|---|---|
+| 1 | Rupee savings per prescription | **S** | Turns an abstract benefit into a number |
+| 2 | Nearest Jan Aushadhi Kendra | **M** | Completes the chain; blocked on data, see below |
+| 3 | Drug interaction checking | **M–L** | Most apps skip it; data licensing decides the cost |
+| 4 | Reminders + missed-dose alerts to family | **L** | Peer accountability lifts adherence up to 26% |
+
+**1. Rupee savings.** After OCR: *"On this prescription you could save ₹X per month, ₹Y per
+year."* Cheapest high-impact item across all eight sites — the price data needed is a
+generic-vs-branded comparison the product already does.
+
+**2. Nearest Kendra.** Knowing a cheaper medicine exists is useless without knowing where
+to buy it.
+
+**3. Drug interactions.** The prescription is already parsed; conflicts are the natural
+next step.
+
+**4. Reminders.** Heavier — needs accounts and notifications — hence fourth.
+
+> **Feasibility — Kendra locations.** There is **no official public API.** What exists:
+> the official site `janaushadhi.gov.in`, the **Jan Aushadhi Sugam** app with a GPS store
+> locator, and published PDF lists. So the options are (a) request data from PMBI
+> directly — they are the sole managing agency and the right first email, (b) work from
+> the published lists and re-import periodically, or (c) link out to the Sugam app instead
+> of holding the data. **Option (c) is the honest quick win**: no stale data risk, ships
+> in a day, and still completes the chain for the user.
+
+> **Feasibility — drug interactions.** Three tiers:
+> - **openFDA** — free, but returns raw manufacturer prose, not structured pairs. Turning
+>   it into severity-scored interactions needs a normalisation + NLP pipeline. The
+>   engineering is the real price.
+> - **RxNav Interaction API** (NIH/NLM) — documented as needing no licence, sourced from
+>   ONCHigh and DrugBank. **Verify it is still live before designing around it** — this
+>   API's status has changed before, and the page found may be stale.
+> - **DrugBank commercial** — roughly **$25,000–$100,000/year**. Out of range for now.
+>
+> **The bigger problem is Indian brand names.** RxNorm and openFDA are US-centric.
+> An Indian prescription says "Crocin", not "acetaminophen". A brand → molecule
+> normalisation layer is required before any of these are usable, and that layer is the
+> actual work in item 3.
 
 ### Hard constraint — not advice, a requirement
 
-**Items 2 and 3 must not be LLM-generated.** Kendra locations must come from official
-PMBJP data; interaction checks from a real medical database. Not from a model's answer.
+**Items 2 and 3 must not be LLM-generated.** Kendra locations must come from official PMBJP
+data; interaction checks from a real medical database. Not from a model's answer.
 
 This is emphasised because of what was found on this exact site on 2026-07-30: an
 "Emergency ER Finder" tab listing three named hospitals with phone numbers and live-sounding
-statuses ("24/7 ICU & Trauma Available"), headed *"Live 24/7 Emergency hospital & blood
-bank availability matrix"*. All of it was a hardcoded array. None of it was verified.
-Someone mid-emergency could have acted on it. It now points at 108/112 instead.
+statuses ("24/7 ICU & Trauma Available"), headed *"Live 24/7 Emergency hospital & blood bank
+availability matrix"*. All of it was a hardcoded array. None of it was verified. Someone
+mid-emergency could have acted on it. It now points at 108/112 instead.
 
 In healthcare the cost of one wrong data point is not the same as on the other seven sites.
 Build the feature only when a real source sits behind it.
 
 ### The differentiated bet
 
-Other apps serve people who already know the medicine's name. This user is **holding a
-paper prescription they cannot read.**
+Other apps serve people who already know the medicine's name. This user is **holding a paper
+prescription they cannot read.**
 
 That whole chain — *read it → explain it → find the generic → count the saving → show the
 shop* — is not done well by anyone in India.
@@ -126,8 +187,11 @@ shop* — is not done well by anyone in India.
 
 - [Jan Aushadhi generic–branded price variation (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC12715599/)
 - [Generic vs branded: 90% savings](https://healthandfamily.in/generic-vs-branded-how-indias-jan-aushadhi-revolution-is-slashing-medical-bills-by-90/)
+- [janaushadhi.gov.in — official PMBJP site](http://janaushadhi.gov.in/)
+- [AltexSoft: free drug database APIs](https://www.altexsoft.com/techtalks/how-can-i-get-free-drug-database-apis/)
+- [RxNav Interaction APIs (NLM)](https://lhncbc.nlm.nih.gov/RxNav/APIs/InteractionAPIs.html)
+- [Drug interaction API pricing breakdown 2026](https://rxlabelguard.com/blog/drug-interaction-api-pricing-complete-breakdown-2026)
 - [Keragon: pharmacy app development 2026](https://www.keragon.com/blog/pharmacy-app-development)
-- [Medication adherence apps 2026](https://www.yougot.ai/blog/technology/app-comparisons/medication-adherence-app-2026)
 
 ---
 
@@ -141,8 +205,35 @@ Scoring: 40% price, 40% rating, 20% review volume.
 The price data is **not real yet**. The hero widget shows fixed numbers next to real
 retailer names (Amazon, Flipkart, Reliance); a "Sample data" badge was added on 2026-07-30.
 
-On the other seven sites, "features" means *what to add*. Here the first feature is
-**where real data comes from** — nothing below matters without it.
+On the other seven sites, "features" means *what to add*. Here the first feature is **where
+real data comes from** — nothing below matters without it.
+
+### Correction to earlier advice
+
+An earlier draft of this research said: *"start with affiliate APIs — works today, earns
+revenue."* **That was wrong.** Checking the actual access requirements changed the answer:
+
+- **Amazon PA-API is deprecated as of 15 May 2026** — successor is the Creators API
+- PA-API/Associates requires **3 qualifying sales within 180 days** to gain access, and
+  (since 15 Nov 2025) **10 qualifying orders in the past 30 days** to keep it
+- **Flipkart's affiliate programme no longer accepts direct signups** — access is via
+  third parties such as Cuelinks or Haulpack
+
+The sales requirement is a chicken-and-egg trap: you need sales to get the API, and the API
+to build the thing that generates sales. A brand-new comparison site cannot clear that gate
+on its own.
+
+**Of all eight ventures, this one has the hardest foundational problem.** That is worth
+saying plainly before any effort goes in.
+
+### The three routes, honestly
+
+| Route | Status | Verdict |
+|---|---|---|
+| **Affiliate aggregator** (Cuelinks, Haulpack) | Open; India-focused; covers Flipkart and others | **Most realistic start** — bypasses the direct-signup gate |
+| **ONDC** | Open protocol, public SDKs; but catalog indexing still "future scope" in its own roadmap | Right long-term bet, not a complete answer today |
+| **Amazon direct** | PA-API deprecated; Creators API + sales gate | Revisit only once there is real traffic |
+| **Scraping** | — | Not recommended: breaks, gets blocked, legal risk |
 
 ### What the market says
 
@@ -151,67 +242,62 @@ On the other seven sites, "features" means *what to add*. Here the first feature
 - Price history charts are the most-wanted feature — they answer "is this actually cheap?"
 - Good trackers cover 100,000+ retailers, not just Amazon
 
-### Three routes to real data
-
-**ONDC** is the cleanest. Government-backed open network, public protocol specs and
-buyer-app SDKs, and explicitly: *"buyer platforms can showcase products from any ONDC seller."*
-No scraping, no permission needed.
-
-*Honest caveat:* ONDC's own seller-app SDK roadmap still lists **catalog indexing as
-"future scope"**. The search/browse piece is immature. This is not a complete answer today.
-
-**Affiliate APIs** (Amazon PA-API, Flipkart) are the second route — real prices, legal,
-and they **pay**. This could be the business model.
-
-**Scraping** is the third and is not recommended: it breaks, it gets blocked, and it
-carries legal risk.
-
 ### Recommended
 
-1. **Wire a real data source.** Suggested: start with affiliate APIs (works today, earns
-   revenue), add ONDC as it matures.
-2. **Price history.** The most trustworthy answer to "is this cheap?" Especially relevant
-   in India, where MRP is often raised before a sale to manufacture a "70% off". A history
-   chart catches that. This is the trust feature, same role as confidence scores in
-   Breakdown Factor.
-3. **Bank offers + delivery = true final price.** The **biggest opportunity here.**
-   "Landed price" is already the claim, but in India the real variable is **bank card
-   offers** — ₹2,000 off on HDFC, 10% cashback on ICICI, delivery charges, coupons. No
-   comparison site models this; people do it by hand. A site that says *"this costs you
-   ₹51,200 with your HDFC card"* is answering the actual question.
-4. **Price drop alerts.** Standard, but only once the pipeline exists. Hence fourth.
+| # | Feature | Effort | Why |
+|---|---|---|---|
+| 0 | Wire a real data source via an affiliate aggregator | **M–L** | Everything depends on it |
+| 1 | Bank offers + delivery = true final price | **M** | The actual differentiator |
+| 2 | Price history | **M** | Catches inflated "70% off" before sales |
+| 3 | Price drop alerts | **S** | Standard — only once the pipeline exists |
+
+**1. Bank offers + delivery.** The **biggest opportunity here.** "Landed price" is already
+the claim, but in India the real variable is **bank card offers** — ₹2,000 off on HDFC, 10%
+cashback on ICICI, plus delivery and coupons. No comparison site models this; people do it by
+hand. A site that says *"this costs you ₹51,200 with your HDFC card"* answers the real question.
+
+Note this is the one feature here that does **not** depend on a product catalogue API — bank
+offer terms are published by the banks and the retailers. It could be built and be useful
+even before item 0 lands, as a standalone calculator.
+
+**2. Price history.** The most trustworthy answer to "is this cheap?" Especially relevant in
+India, where MRP is often raised before a sale to manufacture a "70% off". This is the trust
+feature — the same role confidence scores play in Breakdown Factor.
 
 ### The differentiated bet
 
 Everyone else compares sticker price. This site claims to compare **what you actually pay.**
-That claim is not yet true — but with bank offers, delivery and coupons modelled, it would
-be the one feature in India worth returning for, because it is the only number that matters.
+That claim is not yet true — but with bank offers, delivery and coupons modelled, it would be
+the one feature in India worth returning for, because it is the only number that matters.
+
+Given how hard the catalogue problem is, **there is a real case for narrowing this venture to
+just that**: a "true final price" calculator, rather than a full comparison engine.
 
 ### Sources
 
-- [ONDC official](https://www.ondc.org/)
-- [ONDC Protocol Specs (GitHub)](https://github.com/ONDC-Official/ONDC-Protocol-Specs)
-- [ONDC seller-app SDK roadmap](https://github.com/ONDC-Official/seller-app-sdk)
+- [ONDC official](https://www.ondc.org/) · [ONDC Protocol Specs](https://github.com/ONDC-Official/ONDC-Protocol-Specs) · [ONDC seller-app SDK roadmap](https://github.com/ONDC-Official/seller-app-sdk)
+- [Amazon PA-API 5.0 registration requirements](https://webservices.amazon.com/paapi5/documentation/register-for-pa-api.html)
+- [PA-API in 2026: restrictions and alternatives](https://dev.to/agenthustler/amazon-product-api-pa-api-in-2026-restrictions-alternatives-and-web-scraping-4l35)
+- [Flipkart affiliate programme](https://affiliate.flipkart.com/) · [Signing up via Cuelinks](https://www.cuelinks.com/blog/how-to-sign-up-for-the-flipkart-affiliate-program-successfully-on-cuelinks/)
 - [Karma: best price trackers 2026](https://www.karmanow.com/the-blog/top/the-best-price-trackers)
-- [Shopify: comparison shopping engines](https://www.shopify.com/blog/7068398-10-best-comparison-shopping-engines-to-increase-ecommerce-sales)
 
 ---
 
 ## 4. AVPU — AI university
 
-**Today:** personalised syllabus, WhatsApp tutor, face-recognition attendance,
-placement matching, assessment grading.
+**Today:** personalised syllabus, WhatsApp tutor, face-recognition attendance, placement
+matching, assessment grading.
 
 ### What the market says
 
 Large effect sizes circulate (54% higher test scores; RCT effect size 0.73–1.3 SD).
 **Treat these with suspicion** — most come from vendor blogs. The genuinely useful finding:
 
-> "**Most shipped products do not even measure their effect on learning outcomes**,
-> let alone improve them."
+> "**Most shipped products do not even measure their effect on learning outcomes**, let
+> alone improve them."
 
-And: the winners treat it as *"a pedagogy problem with an LLM-shaped tool"*, not
-*"an LLM looking for a pedagogy."*
+And: the winners treat it as *"a pedagogy problem with an LLM-shaped tool"*, not *"an LLM
+looking for a pedagogy."*
 
 ### Risk first — this precedes any feature
 
@@ -229,36 +315,49 @@ And directly relevant to the placement feature:
 > Learning analytics that label students as "low potential" or predict behavioural issues
 > without proper safeguards **may be treated as harmful profiling.**
 
-AVPU does placement scoring and assessment grading. If that attaches a label to a student,
-it is not only a design question.
+AVPU does placement scoring and assessment grading. If that attaches a label to a student, it
+is not only a design question.
 
-**Recommendation:** offer geofenced QR or OTP check-in instead. It does 95% of the job
-without the biometric exposure. Keep face recognition only where an institution
-specifically demands it, and then with a real parental-consent flow.
+**Recommendation:** offer geofenced QR or OTP check-in instead (**effort: S**). It does 95% of
+the job without the biometric exposure. Keep face recognition only where an institution
+specifically demands it, and then behind a real parental-consent flow.
+
+Note the code already carries this dependency: `insightface` is what forces the full OpenCV
+install and the X11 libraries in the Dockerfile. Dropping face auth as the default would also
+make the container smaller and the build faster.
 
 ### Recommended
 
-1. **Measure outcomes — and sell that.** Almost nobody does. Track pre/post scores,
-   topic-level weakness, completion. Telling an institution *"your students went from 61
-   to 74 average"* sells better than any feature list. **Biggest opportunity, because the
-   bar is on the floor.**
-2. **Placement gap reports, not scores.** Not "72/100" but *"3 skills missing, roughly N
-   weeks to close."* Legally safer and more useful to the student.
-3. **Deepen the WhatsApp tutor.** See below.
-4. **Adaptive pacing.** Personalisation works when it adapts pace and feedback tone, not
-   just difficulty (~42% better outcomes). Natural next step for the syllabus feature.
+| # | Feature | Effort | Why |
+|---|---|---|---|
+| 0 | QR / OTP attendance as the default | **S** | Removes the largest compliance exposure |
+| 1 | Measure learning outcomes — and sell that | **M** | Almost nobody does; the bar is on the floor |
+| 2 | Placement gap reports, not scores | **S** | Safer under DPDP and more useful to students |
+| 3 | Deepen the WhatsApp tutor | **M** | The real moat — see below |
+| 4 | Adaptive pacing | **L** | ~42% better outcomes when pace and tone adapt |
+
+**1. Measure outcomes.** Track pre/post scores, topic-level weakness, completion. Telling an
+institution *"your students went from 61 to 74 average"* sells better than any feature list.
+**Biggest opportunity, because the bar is so low.**
+
+**2. Gap reports.** Not "72/100" but *"3 skills missing, roughly N weeks to close."*
 
 ### The differentiated bet — WhatsApp
 
-Every other edtech product requires an app install, an account, and a decent phone.
-This tutor runs on **WhatsApp** — cheap phone, poor connectivity, nothing to install,
-nothing to learn.
+Every other edtech product requires an app install, an account, and a decent phone. This tutor
+runs on **WhatsApp** — cheap phone, poor connectivity, nothing to install, nothing to learn.
 
-In tier-2/3 India that is an accessibility decision, not a feature. It is also the thing
-a Byju's-type competitor cannot take away, because their whole model depends on the install.
+In tier-2/3 India that is an accessibility decision, not a feature. It is also the thing a
+Byju's-type competitor cannot take away, because their whole model depends on the install.
 
-Suggested direction: move syllabus and assessments onto WhatsApp too. Keep the website as
-the dashboard; **make WhatsApp the product.**
+Suggested direction: move syllabus and assessments onto WhatsApp too. Keep the website as the
+dashboard; **make WhatsApp the product.**
+
+> **Feasibility — WhatsApp.** The WhatsApp Business API is not free and not instant: it needs
+> a Meta Business account, a verified business, and a BSP (or Meta Cloud API direct), with
+> per-conversation pricing. Template messages must be pre-approved. **Confirm the current
+> India pricing and approval timeline before committing to item 3** — this is the one
+> dependency that could make the moat expensive.
 
 ### Sources
 
@@ -280,12 +379,12 @@ The "How it works" section written on 2026-07-30 says:
 > "An 80G-compliant receipt is generated for the donation immediately, **ready for your
 > income-tax filing.**"
 
-**This is wrong.** A receipt alone no longer gets the donor their deduction. Since
+**This is wrong.** A receipt alone no longer entitles the donor to the deduction. Since
 FY 2021-22:
 
 - The NGO must file **Form 10BD** by **31 May** each year, with donor PAN
 - **Form 10BE** becomes downloadable 24 hours after that filing
-- **Form 10BE** is what entitles the donor to the 80G deduction
+- **Form 10BE** is what the donor claims against
 
 **Action: fix that line.** (Small edit, not yet done.)
 
@@ -300,21 +399,28 @@ This is not an optional feature. Accepting donations creates the obligation.
 
 ### Corporate money — where the real funding is
 
-Under **Section 135**, large companies must spend **2% of average net profit** on CSR.
+Under **Section 135**, companies above the thresholds (net worth ₹500cr+, turnover ₹1,000cr+,
+or net profit ₹5cr+) must spend **2% of average net profit of the last three years** on CSR.
 
 But there is a gate: **since 1 April 2021, no NGO can receive CSR funds without CSR-1
-registration** with the MCA — regardless of how good its work is. CSR-1 requires 12A, 80G,
-and a **3-year track record** (tightened from 14 July 2025).
+registration** with the MCA — regardless of how good its work is. CSR-1 requires 12A, 80G, and
+a **3-year track record** (tightened from 14 July 2025 to require valid 12A or 10(23C)).
+Successful filing generates a unique CSR Registration Number, which is what corporates ask for.
+
+Activities must map to **Schedule VII** — healthcare, education, poverty alleviation,
+environmental sustainability, child welfare.
 
 ### Recommended
 
-1. **Capture PAN at donation time.** Without it, Form 10BD cannot be filed, so the donor
-   cannot claim. Everything depends on this, and it is the smallest change.
-2. **Form 10BD export.** Produce the year's donations in the 31 May filing format. This is
-   every NGO's most tedious annual chore and it costs ₹200/day when late.
-3. **Notify donors when Form 10BE is ready.** The loop closes at the certificate, not the receipt.
-4. **Corporate donor track.** CSR number, Schedule VII activity mapping, utilisation
-   reports — a different flow from retail donors.
+| # | Feature | Effort | Why |
+|---|---|---|---|
+| 0 | Fix the "ready for your income-tax filing" line | **S** | It is currently inaccurate |
+| 1 | Capture PAN at donation time | **S** | Without it, Form 10BD cannot be filed at all |
+| 2 | Form 10BD export | **M** | The annual chore; ₹200/day when late |
+| 3 | Notify donors when Form 10BE is ready | **S** | The loop closes at the certificate, not the receipt |
+| 4 | Corporate donor track (CSR number, Schedule VII, utilisation) | **M** | Different flow from retail donors |
+
+Items 0, 1 and 3 are all small. **This is the site where the least work buys the most.**
 
 ### The differentiated bet
 
@@ -323,9 +429,12 @@ Most Indian NGO donation pages are a payment gateway plus a PDF receipt, and sto
 Close the whole loop — PAN → 10BD → 10BE → CSR-1 → utilisation reporting — and this stops
 being a donation page and becomes **the thing every other 80G NGO would pay for.**
 
-This is the one venture in the portfolio where compliance *is* the product. Compliance
-markets are less crowded because the work is boring and people avoid it — but the penalty
-accrues daily, so the need is universal.
+This is the one venture in the portfolio where compliance *is* the product. Compliance markets
+are less crowded because the work is boring and people avoid it — but the penalty accrues
+daily, so the need is universal.
+
+Realistic pricing anchor: Indian NGO compliance/donation tools sit in the same ₹500–3,000/month
+band as the construction tools. Volume, not price, is the model.
 
 ### Sources
 
@@ -345,38 +454,55 @@ accrues daily, so the need is universal.
 
 - **88% of AI agent projects never reach production**
 - Gartner: **over 40% of agentic AI projects may be cancelled by 2027**
+- Adoption is ~80% of organisations; **production deployment is 10–15%**
 - The cause is **governance and undefined business value**, not model capability
-- > "Over-trusting LLM autonomy **without human-in-the-loop checkpoints** is the single
-  > most common cause of cascading failures."
+- > "Over-trusting LLM autonomy **without human-in-the-loop checkpoints** is the single most
+  > common cause of cascading failures."
 - The industry has an "**agent washing**" problem — chatbots relabelled as agents
 
 ### What the market says — part two, the direct competitor
 
 Sintra's Trustpilot complaints cluster on three things, and all three are openings:
 
-1. **Credit model** — 250 credits/month on every plan, no rollover, helpers stop when
-   they run out. A loud cluster of "bait-and-switch" and "money grabbing" reviews.
+1. **Credit model** — 250 credits/month on every plan, no rollover, helpers stop when they
+   run out. A loud cluster of "bait-and-switch" and "money grabbing" reviews.
 2. **Helpers don't hand work to each other** — the user does the coordination.
 3. **Marketing oversells autonomy** — *"creates the impression that the AI assistants are
    more autonomous and capable than they actually are."*
 
+Named alternatives people move to: **Marblism, Lindy, Relevance AI, Taskade, Gumloop, Zapier,
+Make, n8n.** Marblism is cited as the closest fit for leavers, on **flat pricing** — which
+confirms that the pricing model, not the feature list, is what moves people.
+
 ### Recommended
 
-1. **Lead with BYOK — it is already built and not being sold.** Sintra's biggest complaint
-   is credits. Sevenforce has BYOK: the user brings a key and pays the provider directly.
-   **No credits, no cap, no "you're out, buy more."** This belongs on the homepage:
-   *"No credits. No monthly cap. Your key, your cost, no middleman."*
-2. **Make Owl actually orchestrate.** The #2 complaint is that agents don't hand off.
-   Owl (AI Chief of Staff) already exists. If Owl can genuinely route work — Maya writes
-   the article → Vibe cuts it into social posts → Wave sends it — that is precisely what
-   people are leaving competitors over. **Highest ROI item here.**
-3. **Require approval before anything irreversible.** The clearest research finding is
-   that autonomy without a human checkpoint is the top failure cause. The dangerous tools
-   are Wave (bulk email, WhatsApp broadcast) and Vibe (social posting). **An agent that
-   sends 500 wrong emails loses those customers permanently.** Preview plus an Approve
-   button is not friction — it is the reason someone will trust it.
-4. **Run history.** Which agent did what, when, and what came out. Governance is the
-   failure mode, and it is the first question in any enterprise conversation.
+| # | Feature | Effort | Why |
+|---|---|---|---|
+| 1 | Lead with BYOK on the homepage | **S** | Already built; aims at the competitor's worst review |
+| 2 | Make Owl actually orchestrate | **L** | The #2 complaint across the category |
+| 3 | Approval gate before anything irreversible | **M** | The #1 documented cause of agent failure |
+| 4 | Run history / audit trail | **M** | Governance is the failure mode |
+
+**1. BYOK — already built and not being sold.** Sintra's biggest complaint is credits.
+Sevenforce has BYOK: the user brings a key and pays the provider directly. **No credits, no
+cap, no "you're out, buy more."** This belongs on the homepage: *"No credits. No monthly cap.
+Your key, your cost, no middleman."*
+
+**Zero code. Highest ratio of impact to effort anywhere in this document.**
+
+**2. Owl.** The #2 complaint is that agents don't hand off. Owl (AI Chief of Staff) already
+exists as a concept. If Owl can genuinely route work — Maya writes the article → Vibe cuts it
+into social posts → Wave sends it — that is precisely what people are leaving competitors over.
+Highest-value build item here, and the hardest.
+
+**3. Approval gates.** The clearest research finding is that autonomy without a human
+checkpoint is the top failure cause. The dangerous tools are **Wave** (bulk email, WhatsApp
+broadcast) and **Vibe** (social posting). **An agent that sends 500 wrong emails loses those
+customers permanently.** Preview plus an Approve button is not friction — it is the reason
+someone will trust it.
+
+**4. Run history.** Which agent did what, when, and what came out. First question in any
+enterprise conversation.
 
 ### The differentiated bet
 
@@ -386,18 +512,17 @@ complaints are that.
 Invert it: **unlimited usage (BYOK), full control (approval gates).**
 In one line: *"It doesn't ration you, and it doesn't act behind your back."*
 
-Note also that Sevenforce just escaped the third complaint — the "2 AI Suites" and
-"24/7 no downtime" claims were corrected and the invented testimonials removed on
-2026-07-30. In a category where trust is the currency, **that cleanup is a marketing
-asset. Don't hide it.**
+Note also that Sevenforce just escaped the third complaint — the "2 AI Suites" and "24/7 no
+downtime" claims were corrected and the invented testimonials removed on 2026-07-30. In a
+category where trust is the currency, **that cleanup is a marketing asset. Don't hide it.**
 
 ### Sources
 
 - [Forbes: why 40% of agentic AI projects may be canceled](https://www.forbes.com/sites/robertszczerba/2026/07/07/why-40-of-agentic-ai-projects-may-be-canceled-by-2027/)
 - [Gartner: Hype Cycle for Agentic AI](https://www.gartner.com/en/articles/hype-cycle-for-agentic-ai)
 - [AI agent adoption 2026: enterprise data points](https://www.digitalapplied.com/blog/ai-agent-adoption-2026-enterprise-data-points)
-- [eesel: Sintra AI review](https://www.eesel.ai/blog/sintra-ai-review)
-- [Sintra Trustpilot reviews](https://www.trustpilot.com/review/sintra.ai)
+- [eesel: Sintra AI review](https://www.eesel.ai/blog/sintra-ai-review) · [Sintra Trustpilot](https://www.trustpilot.com/review/sintra.ai)
+- [Sintra alternatives (Marblism)](https://www.marblism.com/blog/sintra-ai-alternatives)
 
 ---
 
@@ -407,56 +532,61 @@ asset. Don't hide it.**
 
 ### Timing
 
-**The EU AI Act's high-risk obligations begin 2 August 2026** — two days after this
-research was done.
+**The EU AI Act's high-risk obligations begin 2 August 2026** — two days after this research
+was done.
 
 Recruitment is named explicitly. Annex III covers AI systems *"intended to be used for the
-recruitment or selection of natural persons"* — sourcing, screening, evaluating, ranking.
-That is exactly what Comonk does.
+recruitment or selection of natural persons"* — sourcing, screening, evaluating, ranking. That
+is exactly what Comonk does. The scope also reaches performance evaluation, promotion,
+task allocation and termination.
 
-Required: risk assessment, technical documentation, bias testing, **human oversight**,
-transparency disclosures, continuous monitoring. Penalty: up to **€15,000,000 or 3% of
-global annual turnover**, whichever is higher.
+Required under Articles 9–17: risk assessment, technical documentation, bias testing, **human
+oversight**, transparency disclosures, continuous monitoring. Penalty: up to **€15,000,000 or
+3% of global annual turnover**, whichever is higher.
 
-In the US, **NYC Local Law 144** has applied since 2023: an annual **independent bias
-audit**, a published summary, and notice to candidates **10 business days** before use.
-Non-compliance: **$1,500 per violation per day**.
+In the US, **NYC Local Law 144** has applied since 2023: an annual **independent bias audit**
+across protected characteristics (race/ethnicity, sex), a **published summary**, and notice to
+candidates **10 business days** before use. Non-compliance: **$1,500 per violation per day**.
 
-India has no equivalent AI hiring law yet. But candidate data falls under DPDP, and **any
-Indian company serving EU or US clients will be asked these questions.**
+India has no equivalent AI hiring law yet. But candidate data falls under DPDP, and **any Indian
+company serving EU or US clients will be asked these questions.**
 
 ### This is the opportunity, not the burden
 
 Most résumé screeners are **black boxes** — a score with no reasoning.
 
-After 2 August, every HR buyer must ask *"is your tool auditable?"* Tools that cannot
-answer drop out of enterprise deals. For a newer product this is good news: Comonk can be
-**built audit-ready from the start**, while incumbents retrofit.
+After 2 August, every HR buyer must ask *"is your tool auditable?"* Tools that cannot answer
+drop out of enterprise deals. For a newer product this is good news: Comonk can be **built
+audit-ready from the start**, while incumbents retrofit.
 
 ### Recommended
 
-1. **A reason attached to every score.** Not "72/100" but *"4 of 5 JD must-haves matched —
-   Python ✓, AWS ✓, Kubernetes ✗. Wanted 3 years, has 2."* This single feature satisfies
-   transparency, enables human oversight, and is a better product. **Highest value here.**
-2. **Never auto-reject.** Rank and recommend; a human decides. This is the Act's human-oversight
-   requirement, and the same principle as Sevenforce's approval gates — except here the
-   cost of an error is someone's job.
-3. **Export the data needed for a bias audit.** Customers must commission an annual
-   independent audit (mandatory in NYC). A tool that makes that easy gets bought for that reason.
-4. **Blind screening.** Strip name, gender, age, photo and college for the first pass.
-   Reduces bias and is sellable.
+| # | Feature | Effort | Why |
+|---|---|---|---|
+| 1 | A reason attached to every score | **M** | Satisfies transparency, enables oversight, better product |
+| 2 | Never auto-reject — rank and recommend only | **S** | The Act's human-oversight requirement |
+| 3 | Export the data needed for a bias audit | **M** | Customers must commission one annually |
+| 4 | Blind screening (strip name, gender, age, photo, college) | **S** | Reduces bias and is sellable |
+
+**1.** Not "72/100" but *"4 of 5 JD must-haves matched — Python ✓, AWS ✓, Kubernetes ✗. Wanted
+3 years, has 2."* **Highest value here.**
+
+**2.** Same principle as Sevenforce's approval gates — except here the cost of an error is
+someone's job. Cheap to implement: it is mostly a product decision, not an engineering one.
+
+**3.** A tool that makes the annual audit easy gets bought for that reason.
 
 ### The differentiated bet
 
 Competitors sell **speed** — "1,000 résumés in 5 minutes."
 
-From 2 August the question changes. Not "how fast" but **"if a candidate challenges this
-in court, can you explain why?"** A tool that can answer sells to companies that cannot
-touch a black box. That is not a niche — it is the entire regulated market.
+From 2 August the question changes. Not "how fast" but **"if a candidate challenges this in
+court, can you explain why?"** A tool that can answer sells to companies that cannot touch a
+black box. That is not a niche — it is the entire regulated market.
 
 **Honest caveat:** this is written without knowing where Comonk's customers are. If it is
-India-only domestic hiring, this is a six-month concern, not a two-day one. But if EU/US
-clients are on the roadmap, design for auditability now — retrofitting costs ten times more.
+India-only domestic hiring, this is a six-month concern, not a two-day one. But if EU/US clients
+are on the roadmap, design for auditability now — retrofitting costs ten times more.
 
 ### Sources
 
@@ -470,56 +600,58 @@ clients are on the roadmap, design for auditability now — retrofitting costs t
 
 ## 8. Sevenseed Engine / Hub
 
-**Today:** the venture studio's public face, plus the shared backbone (BYOK, model
-routing, subprocess orchestration).
+**Today:** the venture studio's public face, plus the shared backbone (BYOK, model routing,
+subprocess orchestration).
 
 Two separate questions.
 
 ### Question 1: should the engine become a product? — No.
 
-The LLM gateway category is mature and crowded: **LiteLLM, Portkey, OpenRouter, Requesty**.
+The LLM gateway category is mature and crowded: **LiteLLM, Portkey, OpenRouter, Requesty.**
 
 - **LiteLLM and Portkey both offer self-hosting and BYOK with zero markup on provider costs**
 - Routing, fallback chains, load balancing and cost tracking are all standard
-- Portkey's product is observability — logs, traces, analytics
+- Portkey's product is observability — logs, traces, analytics, billed on recorded logs
+- Cost crossover point cited: below ~$10k/month spend all are viable; above it LiteLLM wins
 
 The engine is excellent infrastructure **for these 8 ventures**. Selling it separately means
-entering a market where free, open-source, more mature options already exist.
-**Recommendation: don't. Save the time.**
+entering a market where free, open-source, more mature options already exist, against teams
+whose whole company is that one product. **Recommendation: don't. Save the time.**
 
 ### Question 2: strengthening the studio's face
 
 Venture studio figures look strong — Series A in **25 months vs 56**, success rates
-**60% vs 25%**, net IRR **60% vs 33%**.
+**60% vs 25%**, net IRR **60% vs 33%**, 84% of studio startups raise a seed round.
 
 **Do not lean on these.** They come from sources promoting the studio model and the
 survivorship bias is obvious; one of the sources is titled *"The Fatal Flaws in the Venture
-Studio Model."* The useful finding from the same research is this:
+Studio Model."* The useful finding from the same research:
 
 > "The venture studio ecosystem remains **fragmented and inconsistent in its structure and
 > reporting**, and this absence of standardized benchmarks makes it **nearly impossible to
 > compare studios** on an apples-to-apples basis."
 
 **That is the opening.** When nobody can be compared, the studio publishing real, verifiable
-numbers stands out. This connects to the 2026-07-30 cleanup: the site now claims only what
-can be counted. Most studios write "10x innovation". Sevenseed can write figures.
+numbers stands out. This connects to the 2026-07-30 cleanup: the site now claims only what can
+be counted. Most studios write "10x innovation". Sevenseed can write figures.
 
 ### Recommended
 
-1. **Publish what investors actually look for — or say plainly that it doesn't exist yet.**
-   Investors want capital efficiency, follow-on success, time to next round, exit value.
-   The current numbers (87 endpoints, 1 container) are **technical**, not **traction**.
-   If users and revenue are zero, *"pre-revenue, 8 products live, X monthly visitors"* is
-   better than dressing technical stats as traction. Any competent investor spots the
-   difference in ten minutes, and being caught costs more than looking modest.
-2. **Tell the capital-efficiency story — because it is true.** 8 products, one container,
-   one deploy, a shared backbone, and BYOK so inference cost isn't being burned. Most studios
-   spend on separate teams and separate infra per venture. Running 8 products on a single
-   512MB service is a real investor metric and a genuinely strong number.
-3. **A traction number per venture.** The portfolio cards now say what each venture does.
-   Next: one real number each — users, submissions, whatever is true.
-4. **Track contact enquiries.** The form works now. Next is what happened to each enquiry —
-   who replied, what came of it. Right now it is only a log line.
+| # | Feature | Effort | Why |
+|---|---|---|---|
+| 1 | Publish real traction — or say plainly it doesn't exist yet | **S** | Investors spot dressed-up tech stats in minutes |
+| 2 | Tell the capital-efficiency story | **S** | It is true and it is a real investor metric |
+| 3 | A traction number per venture | **S** | Cards say what each does; add one real number |
+| 4 | Track what happened to each contact enquiry | **M** | The form works now; the follow-up doesn't exist |
+
+**1.** Investors want capital efficiency, follow-on success, time to next round, exit value.
+The current numbers (87 endpoints, 1 container) are **technical**, not **traction**. If users
+and revenue are zero, *"pre-revenue, 8 products live, X monthly visitors"* is better than
+dressing technical stats as traction. Being caught costs more than looking modest.
+
+**2.** 8 products, one container, one deploy, a shared backbone, and BYOK so inference cost
+isn't being burned. Most studios spend on separate teams and separate infra per venture.
+Running 8 products on a single 512MB service is a genuinely strong number.
 
 ### Sources
 
@@ -542,43 +674,66 @@ can be counted. Most studios write "10x innovation". Sevenseed can write figures
 | **AVPU** | DPDP + biometric | Face attendance is the largest liability |
 | **Breakdown Factor** | DSR traceability | Without it, no tender or government work |
 
-This looks boring. Regulated markets are less crowded precisely because people avoid them.
+Regulated markets are less crowded precisely because people avoid them.
 
 ### 2. Everywhere, the win comes from being *trustworthy*, not *fast*
 
-Confidence scores in Breakdown. Price history in Emart. Score reasoning in Comonk.
-Approval gates in Sevenforce. Outcome measurement in AVPU.
+Confidence scores in Breakdown. Price history in Emart. Score reasoning in Comonk. Approval
+gates in Sevenforce. Outcome measurement in AVPU.
 
-Four different industries, one answer. It is also the same work done on 2026-07-30 when
-the unbackable claims came off the sites — **that cleanup turned out to be product direction.**
+Four different industries, one answer. It is also the same work done on 2026-07-30 when the
+unbackable claims came off the sites — **that cleanup turned out to be product direction.**
 
 ### 3. Two genuine, hard-to-copy advantages already exist
 
 - **AVPU's WhatsApp tutor** — no install-dependent competitor can take this away
-- **Sevenforce's BYOK** — Sintra's single biggest complaint is its credit model, and
-  Sevenforce structurally does not have that problem
+- **Sevenforce's BYOK** — Sintra's single biggest complaint is its credit model, and Sevenforce
+  structurally does not have that problem
 
 Both are already built. Neither is being sold properly.
+
+### 4. Three ventures are gated on data access, not engineering
+
+Emart (product catalogue), Decode Pharmacy (Kendra locations, interaction database), and
+Breakdown Factor (DSR rates) all need a data source that must be obtained, licensed or
+digitised before the feature exists. **Check the Feasibility boxes before scheduling any of
+that work.** Emart's is the hardest and may justify narrowing the product.
+
+---
+
+## If you only do five things
+
+Ordered by impact ÷ effort, across all eight sites:
+
+| # | Site | Action | Effort |
+|---|---|---|---|
+| 1 | **Sevenforce** | Put BYOK / "no credits, no cap" on the homepage | **S** — no code |
+| 2 | **AVP Trust** | Fix the 80G line, capture PAN, notify on 10BE | **S** |
+| 3 | **Decode Pharmacy** | Rupee savings per prescription | **S** |
+| 4 | **AVPU** | QR/OTP attendance as default; gap reports not scores | **S** |
+| 5 | **Comonk** | Never auto-reject; add reasons to scores | **S–M** |
+
+Every one of these is small. Four of them are mostly product decisions rather than engineering.
+The large builds (Owl orchestration, Emart's data pipeline, revision diff) should wait until
+these are done and something is actually being used.
 
 ---
 
 ## Open questions — these block real work
 
-1. **AVP Trust:** fix the "ready for your income-tax filing" line? (Small edit; it is
-   currently inaccurate — see §5.)
-2. **AVP Trust:** is CSR-1 registration done? Without it the corporate donor track is
-   pointless to build.
-3. **AVP Trust / AVPU:** are these figures real? They were deliberately left untouched
-   during the 2026-07-30 cleanup because they may well be true, unlike the invented
-   testimonials that were removed:
+1. **AVP Trust:** fix the "ready for your income-tax filing" line? (Small edit; currently
+   inaccurate — see §5.)
+2. **AVP Trust:** is CSR-1 registration done? Without it the corporate donor track is pointless
+   to build.
+3. **AVP Trust / AVPU:** are these figures real? Deliberately left untouched during the
+   2026-07-30 cleanup because — unlike the invented testimonials that were removed — they may
+   well be true:
    - Trust: ₹2.5Cr+ funded · 15,000+ patients served · 100% financial transparency
    - AVPU: ₹4–8 LPA average package (in `backend/avpu_data.py`)
-   For an 80G trust, unverified impact figures are a regulatory question, not a
-   marketing one.
-4. **Comonk:** where are the customers — India only, or EU/US on the roadmap? This decides
-   whether §7 is urgent or a six-month concern.
-
-## Suggested starting point
-
-**Sevenforce's BYOK messaging.** No code required — only telling the truth on the homepage —
-and it aims straight at the biggest weakness of the closest competitor.
+   For an 80G trust, unverified impact figures are a regulatory question, not a marketing one.
+4. **Comonk:** where are the customers — India only, or EU/US on the roadmap? Decides whether
+   §7 is urgent or a six-month concern.
+5. **AVP Emart:** given the catalogue access problem, is this still worth pursuing as a full
+   comparison engine — or should it narrow to a "true final price" calculator?
+6. **AVPU:** what is the current WhatsApp Business API arrangement and cost? The moat depends
+   on it and it is not free.
