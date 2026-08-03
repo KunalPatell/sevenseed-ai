@@ -105,6 +105,34 @@ the `ADMIN_KEY` env var passed in an `X-Admin-Key` header.
 Note that `LOG_LEVEL` (default `INFO`) controls the app's own logger; setting it
 above INFO turns off the durable copy described above.
 
+## Known gap: the hub's history endpoints are still open
+
+Fixed 2026-08-03 across all six child backends: every endpoint returning personal
+data now requires a signed-in user. `GET /api/donations` on avp-charitable-trust
+had been returning donor names, emails and **PAN numbers** to anyone who called it.
+
+Four routes on the hub could not be fixed the same way and are **still open**:
+
+| Route | Holds |
+|---|---|
+| `GET /api/history/sessions` | what visitors typed into the ideation demo |
+| `DELETE /api/history/sessions/{id}` | destructive |
+| `GET /api/history/pitches` | generated pitches from the demo |
+| `DELETE /api/history/pitches/{id}` | destructive |
+
+Why not fixed: the Studio dashboard at `/app/` calls these and has **no login**,
+and unlike the child apps this backend has no signup/login to hook into — only
+`ADMIN_KEY`, which cannot go into frontend JavaScript without publishing it.
+Gating them would break a working dashboard with no way to sign in.
+
+The fix is a user login for the hub, matching the pattern now used by all six
+child apps (`require_user` in `features.py`, token in the portal). The genuinely
+sensitive endpoint, `/api/history/contacts`, **is** already gated by `ADMIN_KEY`.
+
+Two other apps had the same shape of problem and were fixed by building the
+missing login UI — `decode-forest-pharmacy` and `avp-emart` both had working
+auth backends their portals never used. The hub needs the backend half too.
+
 ## To finish + ship the super-suite (if/when wanted)
 
 1. Trim to only the modules that truly work; make the counts honest.

@@ -370,6 +370,22 @@ def contact(req:ContactReq, request:Request, background:BackgroundTasks):
 
 
 # ── SQLite database history endpoints ─────────────────────────────────────────
+#
+# KNOWN GAP, left open deliberately — see docs/DEPLOY_TOPOLOGY_AND_WIP.md.
+#
+# All four of these are unauthenticated: anyone who knows the path can read what
+# visitors typed into the public ideation and pitch demos, and the DELETE routes
+# can wipe it. Every sibling app had the same problem and it was fixed there by
+# requiring a signed-in user.
+#
+# It cannot be fixed the same way here. The hub's Studio dashboard at /app/ calls
+# these routes and has no login at all, and unlike the six child apps this backend
+# has no signup/login to hook into — only ADMIN_KEY, which cannot go in frontend
+# JavaScript without publishing it. Gating them would break a working dashboard
+# with no way to sign in.
+#
+# What is actually needed: a user login for the hub, matching the child apps. Note
+# the genuinely sensitive endpoint here, /api/history/contacts, IS gated below.
 @app.get("/api/history/sessions")
 def get_sessions(limit: int = 50):
     return {"sessions": db.list_sessions(limit)}
