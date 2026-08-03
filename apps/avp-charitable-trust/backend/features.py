@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """AVP Charitable Trust — enterprise feature router (auth, AI tools, analytics, 80G receipts, reminders)."""
 from __future__ import annotations
-import os, datetime, hashlib, hmac, secrets, sqlite3, html as _html
+import os, datetime, hashlib, hmac, re, secrets, sqlite3, html as _html
 from itsdangerous import URLSafeTimedSerializer
 from fastapi import APIRouter, Depends, HTTPException, Header
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -234,12 +234,97 @@ def me(authorization: str = Header(None)):
 @router.post("/api/tools/grant-writer")
 def grant_writer(r: GrantReq): return _grant_writer(r.program, r.funder, r.amount)
 
+# Income Tax Department PAN format: five letters, four digits, one letter.
+_PAN_RE = re.compile(r"^[A-Z]{5}[0-9]{4}[A-Z]$")
+
+
 @router.post("/api/donations")
-def add_donation(r: DonationReq):
+def add_donation(r: DonationReq, _user: dict = Depends(require_user)):
+    # PAN is validated server-side, not just in the form: Form 10BD is filed
+    # against these rows, and a donation stored without a real PAN cannot be
+    # reported — which means the donor never receives Form 10BE and cannot claim
+    # the deduction. The portal used to prefill the dummy PAN "ABCDE1234F", so
+    # the ledger already contains at least one row that would fail a filing.
+    pan = (r.pan or "").strip().upper()
+    if not _PAN_RE.match(pan):
+        raise HTTPException(
+            status_code=400,
+            detail="A valid PAN is required to report this donation in Form 10BD.",
+        )
+    if r.amount is None or r.amount <= 0:
+        raise HTTPException(status_code=400, detail="Donation amount must be greater than zero.")
     with _c() as c:
         rid = c.execute("INSERT INTO donations (created_at,donor,email,amount,pan,purpose) VALUES (?,?,?,?,?,?)",
-                        (datetime.datetime.utcnow().isoformat(), r.donor, r.email, r.amount, r.pan, r.purpose)).lastrowid
+                        (datetime.datetime.utcnow().isoformat(), r.donor, r.email, r.amount, pan, r.purpose)).lastrowid
     return {"saved": True, "receipt_no": f"AVP-80G-{rid:05d}"}
+@router.get("/api/export/form10bd")
+def export_form_10bd(financial_year: str = "", _user: dict = Depends(require_user)):
+    """Donations for a financial year, in the shape Form 10BD is filed in.
+
+    Every 80G-registered trust must file this statement of donations by 31 May,
+    per donor and per PAN. Late filing costs Rs 200 a day under s.234G; not filing
+    at all adds Rs 10,000-1,00,000 under s.271K. Only after it is filed can the
+    donor download Form 10BE, which is the certificate the Income Tax Department
+    actually accepts for the 80G deduction — the receipt this app prints does not
+    do that on its own.
+
+    `financial_year` is "2026-27" style; it defaults to the one that just ended,
+    since this is normally run in the April-May filing window. Rows without a
+    valid PAN are returned separately rather than silently dropped: they cannot be
+    filed, and the trust needs to know which donors to chase.
+    """
+    fy = (financial_year or "").strip()
+    if not fy:
+        today = datetime.date.today()
+        start_year = today.year - 1 if today.month <= 3 else today.year
+        fy = f"{start_year}-{str(start_year + 1)[-2:]}"
+    try:
+        y = int(fy.split("-")[0])
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Use a financial year like 2026-27.")
+    # Indian FY runs 1 April to 31 March.
+    start, end = f"{y}-04-01", f"{y + 1}-04-01"
+
+    with _c() as c:
+        rows = [dict(r) for r in c.execute(
+            "SELECT * FROM donations WHERE created_at >= ? AND created_at < ? ORDER BY created_at",
+            (start, end),
+        )]
+
+    filable, unfilable = [], []
+    for r in rows:
+        pan = (r.get("pan") or "").strip().upper()
+        entry = {
+            # Column names follow the Form 10BD schema so this maps onto the
+            # utility's template without renaming.
+            "donor_name": r.get("donor", ""),
+            "id_type": "PAN",
+            "id_number": pan,
+            "address": "",           # not collected yet — see the note below
+            "donation_type": "Cash",
+            "purpose": r.get("purpose", ""),
+            "amount": r.get("amount", 0),
+            "date": (r.get("created_at") or "")[:10],
+            "receipt_no": f"AVP-80G-{r['id']:05d}",
+        }
+        (filable if _PAN_RE.match(pan) else unfilable).append(entry)
+
+    return {
+        "financial_year": fy,
+        "due_date": f"{y + 1}-05-31",
+        "filable": filable,
+        "filable_count": len(filable),
+        "filable_total": round(sum(e["amount"] or 0 for e in filable), 2),
+        # These block the filing until fixed.
+        "missing_pan": unfilable,
+        "missing_pan_count": len(unfilable),
+        "note": (
+            "Form 10BD also asks for donor address, which this app does not collect yet. "
+            "Add it to the donation form before relying on this export for a real filing."
+        ),
+    }
+
+
 @router.get("/api/donations")
 def list_donations(_user: dict = Depends(require_user)):
     with _c() as c:

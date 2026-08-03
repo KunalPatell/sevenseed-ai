@@ -178,7 +178,11 @@ export default function NGOStatusHub() {
   const [donorName, setDonorName] = useState("");
   const [donorEmail, setDonorEmail] = useState("");
   const [donorAmount, setDonorAmount] = useState(25000);
-  const [donorPAN, setDonorPAN] = useState("ABCDE1234F");
+  // Was prefilled with "ABCDE1234F" — the standard dummy PAN — so every donation
+  // recorded without someone editing the field carried a fake PAN into the ledger,
+  // and there is one such row in the database to prove it. Form 10BD is filed
+  // against real donor PANs; a placeholder makes the filing wrong, not merely empty.
+  const [donorPAN, setDonorPAN] = useState("");
   const [donorPurpose, setDonorPurpose] = useState("Scholarships Fund");
   const [receiptFeedback, setReceiptFeedback] = useState("");
 
@@ -548,15 +552,25 @@ export default function NGOStatusHub() {
     } catch (e) {}
   };
 
+  // PAN format prescribed by the Income Tax Department: five letters, four digits,
+  // one letter. Checked here so a malformed entry is caught before it reaches the
+  // ledger and, eventually, the Form 10BD filing.
+  const PAN_RE = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+
   // Ledger donation
   const handleDonationSubmit = async () => {
     if (!donorName.trim() || !donorAmount) return;
+    const pan = donorPAN.trim().toUpperCase();
+    if (!PAN_RE.test(pan)) {
+      setReceiptFeedback("A valid PAN is required — it is what Form 10BD is filed against, and without it this donation cannot be claimed under 80G.");
+      return;
+    }
     setReceiptFeedback("Registering donation...");
     try {
       const res = await fetch(API_BASE + "/api/donations", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ donor: donorName, email: donorEmail, amount: donorAmount, pan: donorPAN, purpose: donorPurpose })
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ donor: donorName, email: donorEmail, amount: donorAmount, pan, purpose: donorPurpose })
       });
       if (res.ok) {
         const d = await res.json();
@@ -1057,8 +1071,19 @@ export default function NGOStatusHub() {
               <input type="number" value={donorAmount} onChange={(e) => setDonorAmount(Number(e.target.value))} className="w-full bg-[var(--bg-2)] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[var(--primary)]/50" />
             </div>
             <div>
-              <label className="text-[10px] uppercase font-bold text-[var(--text-2)] tracking-wider block mb-2">PAN (80G)</label>
-              <input value={donorPAN} onChange={(e) => setDonorPAN(e.target.value)} className="w-full bg-[var(--bg-2)] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[var(--primary)]/50" />
+              <label className="text-[10px] uppercase font-bold text-[var(--text-2)] tracking-wider block mb-2">PAN (required for 80G)</label>
+              <input
+                value={donorPAN}
+                onChange={(e) => setDonorPAN(e.target.value.toUpperCase())}
+                placeholder="ABCDE1234F"
+                maxLength={10}
+                required
+                aria-describedby="pan-help"
+                className="w-full bg-[var(--bg-2)] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white uppercase tracking-wider focus:outline-none focus:border-[var(--primary)]/50 placeholder:normal-case placeholder:tracking-normal placeholder:text-white/25"
+              />
+              <p id="pan-help" className="text-[9px] text-[var(--text-2)] mt-1.5 leading-relaxed">
+                Needed to file Form 10BD, which is what produces the donor&apos;s Form 10BE certificate.
+              </p>
             </div>
             <div>
               <label className="text-[10px] uppercase font-bold text-[var(--text-2)] tracking-wider block mb-2">Purpose</label>
