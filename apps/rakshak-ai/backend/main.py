@@ -11,7 +11,10 @@ import os
 import re
 import sys
 import time
+import base64
 import logging
+
+import faceauth
 import datetime
 from pathlib import Path
 from fastapi import FastAPI, Request, HTTPException, Query, Header
@@ -91,6 +94,15 @@ class SOSRequest(BaseModel):
 class ScanRequest(BaseModel):
     mode: str = "mask"
     image_b64: str | None = None
+    # Who the face is being matched against. Recognition is a 1:1 check against a
+    # registered embedding — without this there is nothing to compare to, which is
+    # how the old endpoint got away with always answering "Kunal Patel".
+    person_id: str | None = None
+
+# Face embeddings live in SQLite next to this file. Note Render's disk is
+# ephemeral, so registrations are lost on redeploy — same caveat as every other
+# app here; see docs/DEPLOY_TOPOLOGY_AND_WIP.md.
+DB_PATH = os.environ.get("DB_PATH", str(Path(__file__).parent / "db.sqlite3"))
 
 # --- In-Memory FIR Complaint Store ---
 FIR_STORE = []
@@ -297,34 +309,103 @@ def trigger_sos(req: SOSRequest):
 # ---------------------------------------------------------------------------
 @app.post("/api/scan-mask")
 def scan_mask(req: ScanRequest):
+    """NOT IMPLEMENTED on this deployment — and it must not pretend otherwise.
+
+    This returned status "COMPLIANT", mask_detected true, confidence 0.987 and
+    "Access granted" for every request, including ones carrying no image. Wired to
+    a door or a compliance log, it would pass everybody.
+
+    A trained model exists (E:/Project/face mask/mask_model_final.h5) but it needs
+    tensorflow-cpu + tf-keras, which are not in requirements.txt and will not fit:
+    Render's free tier gives the whole container 512MB, three warm children
+    already OOM-killed it once, and TensorFlow alone is several hundred MB.
+
+    To make it real: run it as its own service on a paid instance, or swap the
+    Keras model for a small ONNX one that can share the onnxruntime already here.
+    """
     return {
-        "status": "COMPLIANT",
-        "mask_detected": True,
-        "confidence": 0.987,
-        "ppe_type": "N95 / Medical Grade",
-        "message": "Safety Mask Detected. Compliance: 100%. Access granted.",
+        "status": "NOT_AVAILABLE",
+        "implemented": False,
+        "mask_detected": None,
+        "message": (
+            "Mask/PPE detection is not running on this deployment. "
+            "No image was analysed and no compliance decision was made."
+        ),
     }
+
 
 @app.post("/api/verify-face")
 def verify_face(req: ScanRequest):
+    """Match a submitted face against a registered person.
+
+    Real recognition, using the same InsightFace/ArcFace path already running in
+    this container for avpu and avp-charitable-trust. Previously this returned
+    "VERIFIED — Kunal Patel (KP-9482), Access: Granted" for anything at all, so
+    every visitor was Kunal Patel and everyone was let in.
+    """
+    if not faceauth.available():
+        return {
+            "status": "NOT_AVAILABLE",
+            "implemented": False,
+            "message": "Face recognition is not installed on this server.",
+        }
+    if not req.image_b64:
+        raise HTTPException(status_code=400, detail="An image is required (image_b64).")
+    if not req.person_id:
+        raise HTTPException(status_code=400, detail="person_id is required — who are we checking this against?")
+    try:
+        image_bytes = base64.b64decode(req.image_b64.split(",")[-1])
+    except Exception:
+        raise HTTPException(status_code=400, detail="image_b64 is not valid base64.")
+
+    result = faceauth.verify(DB_PATH, req.person_id, image_bytes)
+    matched = bool(result.get("match"))
     return {
-        "status": "VERIFIED",
-        "identity": "Kunal Patel (AI/ML Engineer)",
-        "emp_id": "KP-9482",
-        "confidence": 0.993,
-        "access": "Granted",
+        "status": "VERIFIED" if matched else "NO_MATCH",
+        "implemented": True,
+        "person_id": req.person_id,
+        "match": matched,
+        "similarity": result.get("similarity"),
+        "error": result.get("error"),
         "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
 
+
+@app.post("/api/register-face")
+def register_face(req: ScanRequest):
+    """Enrol a face so /api/verify-face has something to compare against."""
+    if not faceauth.available():
+        return {"registered": False, "error": "Face recognition is not installed on this server."}
+    if not req.image_b64 or not req.person_id:
+        raise HTTPException(status_code=400, detail="person_id and image_b64 are both required.")
+    try:
+        image_bytes = base64.b64decode(req.image_b64.split(",")[-1])
+    except Exception:
+        raise HTTPException(status_code=400, detail="image_b64 is not valid base64.")
+    return faceauth.register(DB_PATH, req.person_id, image_bytes)
+
 @app.post("/api/detect-occupancy")
 def detect_occupancy(req: ScanRequest):
+    """NOT IMPLEMENTED on this deployment.
+
+    This answered "20 seats, 12 occupied, 60.0%, Optimal Capacity" to every
+    request regardless of the image — numbers precise enough to be believed and
+    entirely invented. A capacity reading that is wrong is worse than absent if
+    anyone uses it for crowd or safety decisions.
+
+    Real occupancy needs YOLO (torch/ultralytics), which is not in
+    requirements.txt and does not fit in the 512MB the free tier gives the whole
+    container. Working code exists in E:/Project/local-face-recognition
+    (src/chair_monitor.py, test_chair_detect.py) and can be lifted once this runs
+    somewhere with room for it.
+    """
     return {
-        "status": "COMPLETED",
-        "total_seats": 20,
-        "occupied_seats": 12,
-        "empty_seats": 8,
-        "occupancy_rate": "60.0%",
-        "risk_level": "Optimal Capacity",
+        "status": "NOT_AVAILABLE",
+        "implemented": False,
+        "message": (
+            "Occupancy detection is not running on this deployment. "
+            "No image was analysed and no counts were produced."
+        ),
     }
 
 if STATIC_DIR.exists():

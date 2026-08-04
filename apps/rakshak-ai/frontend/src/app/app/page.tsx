@@ -12,39 +12,51 @@ export default function WorkstationApp() {
   const [scanning, setScanning] = useState(false);
   const [scanResult, setScanResult] = useState<any>(null);
 
-  const runScan = () => {
+  // This used to be a setTimeout with three hardcoded results and no network call
+  // at all: mask always "COMPLIANT / 98.7%", face always "VERIFIED — Kunal Patel
+  // (KP-9482) / 99.3%", occupancy always "12/20 seats, Optimal". Nothing was
+  // analysed, and the numbers were precise enough to be believed.
+  //
+  // It now calls the backend and shows whatever actually comes back — including
+  // "not available", which is the honest answer for mask and occupancy on this
+  // deployment (neither model fits in the free tier's 512MB).
+  const runScan = async () => {
     setScanning(true);
     setScanResult(null);
 
-    setTimeout(() => {
+    const endpoint =
+      activeTab === "mask" ? "/api/scan-mask"
+      : activeTab === "face" ? "/api/verify-face"
+      : "/api/detect-occupancy";
+
+    try {
+      const res = await fetch(`/rakshak-ai${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: activeTab }),
+      });
+      const data = await res.json();
+      setScanResult({
+        status: data.status ?? "ERROR",
+        implemented: data.implemented !== false,
+        message: data.message ?? data.detail ?? null,
+        identity: data.person_id ?? null,
+        confidence:
+          typeof data.similarity === "number"
+            ? `${(data.similarity * 100).toFixed(1)}%`
+            : null,
+        time: new Date().toLocaleTimeString(),
+      });
+    } catch {
+      setScanResult({
+        status: "ERROR",
+        implemented: false,
+        message: "Could not reach the Rakshak service.",
+        time: new Date().toLocaleTimeString(),
+      });
+    } finally {
       setScanning(false);
-      if (activeTab === "mask") {
-        setScanResult({
-          status: "COMPLIANT",
-          maskDetected: true,
-          confidence: "98.7%",
-          compliance: "Pass",
-          ppeType: "Surgical / N95 Respirator",
-        });
-      } else if (activeTab === "face") {
-        setScanResult({
-          status: "VERIFIED",
-          identity: "Kunal Patel (AI/ML Engineer)",
-          empId: "KP-9482",
-          matchScore: "99.3%",
-          time: new Date().toLocaleTimeString(),
-        });
-      } else {
-        setScanResult({
-          status: "COMPLETED",
-          totalSeats: 20,
-          occupiedSeats: 12,
-          emptySeats: 8,
-          capacityPercentage: "60.0%",
-          occupancyRisk: "Optimal",
-        });
-      }
-    }, 1200);
+    }
   };
 
   return (
@@ -159,32 +171,34 @@ export default function WorkstationApp() {
                 <div className="space-y-2 py-2">
                   <div className="flex justify-between">
                     <span className="text-[#7e6f73]">Status:</span>
-                    <span className="font-bold text-emerald-400">{scanResult.status}</span>
+                    <span className={`font-bold ${scanResult.implemented ? "text-emerald-400" : "text-amber-400"}`}>
+                      {scanResult.status}
+                    </span>
                   </div>
-                  {scanResult.confidence && (
-                    <div className="flex justify-between">
-                      <span className="text-[#7e6f73]">Confidence:</span>
-                      <span className="font-bold text-white">{scanResult.confidence}</span>
-                    </div>
-                  )}
                   {scanResult.identity && (
                     <div className="flex justify-between">
-                      <span className="text-[#7e6f73]">Identity:</span>
+                      <span className="text-[#7e6f73]">Checked against:</span>
                       <span className="font-bold text-white">{scanResult.identity}</span>
                     </div>
                   )}
-                  {scanResult.totalSeats && (
+                  {scanResult.confidence && (
                     <div className="flex justify-between">
-                      <span className="text-[#7e6f73]">Capacity:</span>
-                      <span className="font-bold text-white">{scanResult.occupiedSeats}/{scanResult.totalSeats} Seats</span>
+                      <span className="text-[#7e6f73]">Similarity:</span>
+                      <span className="font-bold text-white">{scanResult.confidence}</span>
                     </div>
+                  )}
+                  {scanResult.message && (
+                    <p className="text-[11px] text-[#c9b8bc] leading-relaxed pt-1">
+                      {scanResult.message}
+                    </p>
                   )}
                 </div>
               )}
 
+              {/* Was a fixed "Status: OK · Latency: 14ms" that never reflected
+                  anything. Shows the time of the actual call instead. */}
               <div className="pt-2 border-t border-white/10 flex justify-between text-[10px] text-[#7e6f73]">
-                <span>Status: OK</span>
-                <span>Latency: 14ms</span>
+                <span>{scanResult ? `Last run: ${scanResult.time}` : "No scan run yet"}</span>
               </div>
             </div>
           </div>

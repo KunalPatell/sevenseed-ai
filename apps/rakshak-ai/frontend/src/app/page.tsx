@@ -48,39 +48,49 @@ export default function Home() {
   ]);
   const [sosSent, setSosSent] = useState(false);
 
-  const runVisionScan = () => {
+  // Same fix as the portal: this was a setTimeout printing three fixed results
+  // with no network call — mask always "PASSED / 98.7% / 100% PPE Compliant",
+  // face always "MATCHED — Kunal Patel (KP-9482) / Authorized Access", occupancy
+  // always "12/20 chairs, Optimal Capacity". It now asks the backend and reports
+  // what it says, which for mask and occupancy is "not available on this
+  // deployment" because neither model fits in the free tier's 512MB.
+  const runVisionScan = async () => {
     setScanning(true);
     setScanResult(null);
 
-    setTimeout(() => {
+    const endpoint =
+      activeTab === "mask" ? "/api/scan-mask"
+      : activeTab === "face" ? "/api/verify-face"
+      : "/api/detect-occupancy";
+
+    try {
+      const res = await fetch(`/rakshak-ai${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: activeTab }),
+      });
+      const data = await res.json();
+      setScanResult({
+        status: data.status ?? "ERROR",
+        implemented: data.implemented !== false,
+        message: data.message ?? data.detail ?? null,
+        identity: data.person_id ?? null,
+        confidence:
+          typeof data.similarity === "number"
+            ? `${(data.similarity * 100).toFixed(1)}%`
+            : null,
+        timestamp: new Date().toLocaleTimeString(),
+      });
+    } catch {
+      setScanResult({
+        status: "ERROR",
+        implemented: false,
+        message: "Could not reach the Rakshak service.",
+        timestamp: new Date().toLocaleTimeString(),
+      });
+    } finally {
       setScanning(false);
-      if (activeTab === "mask") {
-        setScanResult({
-          status: "PASSED",
-          maskDetected: true,
-          confidence: "98.7%",
-          compliance: "100% PPE Compliant",
-          type: "N95 / Medical Respirator",
-        });
-      } else if (activeTab === "face") {
-        setScanResult({
-          status: "MATCHED",
-          identity: "Kunal Patel (Emp ID: KP-9482)",
-          confidence: "99.3%",
-          matchStatus: "Authorized Access",
-          timestamp: new Date().toLocaleTimeString(),
-        });
-      } else if (activeTab === "occupancy") {
-        setScanResult({
-          status: "ANALYZED",
-          totalChairs: 20,
-          occupiedChairs: 12,
-          emptyChairs: 8,
-          occupancyRate: "60.0%",
-          riskLevel: "Optimal Capacity",
-        });
-      }
-    }, 1200);
+    }
   };
 
   // Calls the real backend rather than deciding legal sections in the browser.
@@ -399,41 +409,34 @@ export default function Home() {
                       </div>
                     )}
 
+                    {/* Renders the backend's actual answer. The old panel had
+                        fields for PPE classification and a seat-count grid that
+                        only ever displayed the hardcoded example values; those
+                        keys no longer exist, so the blocks are gone rather than
+                        left to render nothing. */}
                     {scanResult && (
                       <div className="py-4 space-y-2.5">
-                        <div className="p-2 rounded bg-amber-500/10 border border-amber-500/30 text-amber-200 text-[11px] leading-relaxed">
-                          Example values — not produced by a model and not derived from any image.
-                        </div>
                         <div className="flex justify-between p-2 rounded bg-white/5 border border-white/10">
                           <span className="text-[#7e6f73]">Status:</span>
-                          <span className="font-bold text-emerald-400">{scanResult.status}</span>
+                          <span className={`font-bold ${scanResult.implemented ? "text-emerald-400" : "text-amber-400"}`}>
+                            {scanResult.status}
+                          </span>
                         </div>
-                        {scanResult.compliance && (
-                          <div className="flex justify-between p-2 rounded bg-white/5 border border-white/10">
-                            <span className="text-[#7e6f73]">PPE Classification:</span>
-                            <span className="font-bold text-white">{scanResult.type} ({scanResult.confidence})</span>
-                          </div>
-                        )}
                         {scanResult.identity && (
                           <div className="flex justify-between p-2 rounded bg-white/5 border border-white/10">
-                            <span className="text-[#7e6f73]">Verified User:</span>
+                            <span className="text-[#7e6f73]">Checked against:</span>
                             <span className="font-bold text-white">{scanResult.identity}</span>
                           </div>
                         )}
-                        {scanResult.totalChairs && (
-                          <div className="grid grid-cols-3 gap-2 text-center">
-                            <div className="p-2 rounded bg-white/5 border border-white/10">
-                              <span className="block text-[10px] text-[#7e6f73]">Capacity</span>
-                              <span className="font-bold text-white">{scanResult.totalChairs} Seats</span>
-                            </div>
-                            <div className="p-2 rounded bg-white/5 border border-white/10">
-                              <span className="block text-[10px] text-[#7e6f73]">Occupied</span>
-                              <span className="font-bold text-[#ef4444]">{scanResult.occupiedChairs}</span>
-                            </div>
-                            <div className="p-2 rounded bg-white/5 border border-white/10">
-                              <span className="block text-[10px] text-[#7e6f73]">Empty</span>
-                              <span className="font-bold text-emerald-400">{scanResult.emptyChairs}</span>
-                            </div>
+                        {scanResult.confidence && (
+                          <div className="flex justify-between p-2 rounded bg-white/5 border border-white/10">
+                            <span className="text-[#7e6f73]">Similarity:</span>
+                            <span className="font-bold text-white">{scanResult.confidence}</span>
+                          </div>
+                        )}
+                        {scanResult.message && (
+                          <div className="p-2 rounded bg-amber-500/10 border border-amber-500/30 text-amber-200 text-[11px] leading-relaxed">
+                            {scanResult.message}
                           </div>
                         )}
                       </div>
