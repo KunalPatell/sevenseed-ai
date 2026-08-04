@@ -137,7 +137,18 @@ def chat_endpoint(req: ChatRequest):
         return {
             "intent": "emergency",
             "priority": "HIGH_RISK",
-            "response": "🚨 **EMERGENCY DETECTED**: Immediate assistance dispatched! Calling Emergency Police Helpline **112** / Women Helpline **1091**. Stay in a safe place. Live location shared with nearest police station.",
+            # Was: "Immediate assistance dispatched! ... Live location shared with
+            # nearest police station." Neither happens — this app has no link to
+            # any control room and shares no location. The /api/sos endpoint and
+            # the SOS panel were corrected earlier; this reply was the third copy
+            # of the same false claim and was missed then. Telling someone help is
+            # already coming is the one thing that can stop them calling for it.
+            "response": (
+                "**Call 112 now** — police, fire and medical, from any phone. "
+                "Women's helpline **1091**. "
+                "Rakshak cannot contact the police for you and has not shared your location: "
+                "you have to make the call."
+            ),
             "sos_trigger": True
         }
     elif any(k in msg for k in ["fir", "complaint", "file", "register", "report", "शिकायत", "ફરિયાદ"]):
@@ -235,33 +246,114 @@ def list_firs(x_admin_key: str = Header(default="")):
         raise HTTPException(status_code=404)
     return {"firs": FIR_STORE}
 
+
+# Per-scam-type guidance, lifted from the original Rakshak project
+# (E:/Project/chatbot/ai_engine.py). The analyzer here previously computed
+# `scam = req.scam_type.lower()` and then never used it, so every scam type —
+# OTP fraud, UPI, fake loan, phishing — got byte-identical advice. The 1930
+# helpline and cybercrime.gov.in steps were right, but nothing was analysed.
+
+CYBER_SCAMS = {
+    "OTP Fraud": {
+        "keywords": ["otp", "one time password", "verification code"],
+        "actions": [
+            "Call 1930 immediately to report and freeze the transaction.",
+            "Inform your bank to block the card/account.",
+            "Never share OTP — banks/police never ask for it.",
+            "Change your net-banking & UPI PINs.",
+        ],
+        "evidence": ["Transaction SMS", "Caller's number", "Bank statement", "Screenshots"],
+    },
+    "UPI / Payment Scam": {
+        "keywords": ["upi", "gpay", "phonepe", "paytm", "qr", "scan", "payment", "money deducted"],
+        "actions": [
+            "Do NOT scan unknown QR codes to 'receive' money.",
+            "Call 1930 and report on cybercrime.gov.in.",
+            "Raise a dispute in your UPI app.",
+            "Block the UPI ID and inform your bank.",
+        ],
+        "evidence": ["UPI transaction ID", "Receiver VPA/UPI ID", "Chat screenshots"],
+    },
+    "Fake Loan / Investment": {
+        "keywords": ["loan", "investment", "scheme", "double money", "trading", "crypto", "lottery"],
+        "actions": [
+            "Stop all payments immediately.",
+            "Do not install any app they ask you to.",
+            "Report on cybercrime.gov.in and call 1930.",
+            "Verify any company on the SEBI/RBI portal.",
+        ],
+        "evidence": ["App name/link", "Payment proofs", "WhatsApp/Telegram chats"],
+    },
+    "Phishing / Account Hack": {
+        "keywords": ["phishing", "link", "hacked", "hack", "password", "email", "facebook", "instagram", "whatsapp"],
+        "actions": [
+            "Reset passwords and enable 2-Factor Authentication.",
+            "Do not click suspicious links.",
+            "Report the hacked account to the platform.",
+            "File a complaint on cybercrime.gov.in.",
+        ],
+        "evidence": ["Suspicious link/email", "Screenshots", "Login alerts"],
+    },
+}
+
 # ---------------------------------------------------------------------------
 # 3. CYBERCRIME SCAM ANALYZER & EVIDENCE CHECKLIST
 # ---------------------------------------------------------------------------
+def _match_scam(scam_type: str, summary: str) -> tuple[str, dict | None]:
+    """Pick the closest entry in CYBER_SCAMS from the type, falling back to the
+    incident text. Returns (matched_name, entry) or (given_name, None)."""
+    haystack = f"{scam_type} {summary}".lower()
+    for name, entry in CYBER_SCAMS.items():
+        if name.lower() in haystack:
+            return name, entry
+        if any(k in haystack for k in entry.get("keywords", [])):
+            return name, entry
+    return scam_type, None
+
+
 @app.post("/api/cybercrime/analyze")
 def analyze_cybercrime(req: CybercrimeRequest):
-    scam = req.scam_type.lower()
-    
-    checklist = [
-        "Screenshot of bank SMS showing debit/credit transaction",
-        "UPI Ref ID / Transaction Reference Number",
-        "Phone number or WhatsApp chat history of the fraudster",
-        "Bank account statement snippet for the day"
+    """Return the steps and evidence list for this kind of scam.
+
+    This used to compute `scam = req.scam_type.lower()` and then ignore it, so an
+    OTP fraud, a UPI scam, a fake loan and a phishing attack all received exactly
+    the same four-line checklist. The advice itself was correct — 1930 within 24
+    hours, cybercrime.gov.in — but nothing was analysed, and the generic answer
+    missed the steps that actually differ (don't scan unknown QR codes, don't
+    install the app they send you, verify the firm on SEBI/RBI).
+
+    CYBER_SCAMS carries per-type actions and evidence. Where the type is not
+    recognised, the general steps are returned and `matched` says so rather than
+    implying a specific diagnosis.
+    """
+    matched_name, entry = _match_scam(req.scam_type, req.incident_summary or "")
+
+    generic_actions = [
+        "Call 1930 immediately — the first 24 hours decide whether funds can be frozen.",
+        "File the complaint at https://cybercrime.gov.in under Financial Fraud.",
+        "Tell your bank's nodal officer and request a chargeback.",
     ]
-    
-    action_plan = [
-        "Immediately call 1930 Cyber Helpline to initiate financial freeze within 24 hours.",
-        "File complaint at https://cybercrime.gov.in selecting Financial Fraud category.",
-        "Notify your bank node officer to issue chargeback request."
+    generic_evidence = [
+        "Bank SMS showing the debit",
+        "UPI reference / transaction ID",
+        "The fraudster's number or chat history",
+        "Bank statement for that day",
     ]
-    
+
     return {
         "scam_type": req.scam_type,
+        "matched": matched_name if entry else None,
+        "recognised": entry is not None,
         "risk_level": "HIGH FINANCIAL RISK",
         "recommended_helpline": "1930",
-        "action_plan": action_plan,
-        "evidence_checklist": checklist,
-        "legal_code": "IT Act Section 66D & BNS Section 318(4)"
+        "action_plan": entry["actions"] if entry else generic_actions,
+        "evidence_checklist": entry["evidence"] if entry else generic_evidence,
+        "legal_code": "IT Act Section 66D & BNS Section 318(4)",
+        "note": (
+            None if entry else
+            "This scam type was not recognised, so these are the general steps. "
+            "The 1930 operator will guide you on specifics."
+        ),
     }
 
 # ---------------------------------------------------------------------------
