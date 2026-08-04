@@ -31,6 +31,7 @@ const CHILDREN = {
   trust: "avp-charitable-trust",
   pharmacy: "decode-forest-pharmacy",
   sevenforce: "sevenforce",
+  "rakshak-ai": "rakshak-ai",
 };
 
 const target = process.argv[2];

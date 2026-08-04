@@ -39,6 +39,7 @@ export default function Home() {
   const [incidentDetails, setIncidentDetails] = useState("");
   const [incidentLocation, setIncidentLocation] = useState("SG Highway, Ahmedabad");
   const [firResult, setFirResult] = useState<any>(null);
+  const [firError, setFirError] = useState("");
 
   // Chat states
   const [chatInput, setChatInput] = useState("");
@@ -82,28 +83,61 @@ export default function Home() {
     }, 1200);
   };
 
-  const handleGenerateFIR = (e: React.FormEvent) => {
+  // Calls the real backend rather than deciding legal sections in the browser.
+  // The previous version picked sections with a single ternary: "Vehicle Theft"
+  // got theft codes and EVERY other category — assault, harassment, burglary,
+  // cyber fraud — was labelled BNS 318(4) cheating plus BNS 317 stolen property.
+  // Citing the wrong sections on a police complaint misdirects whoever reads it.
+  // backend/main.py maps each category from its BNS table and, for anything it
+  // does not recognise, returns no sections with a note that the duty officer
+  // decides — which is the honest answer and cannot be produced here.
+  const handleGenerateFIR = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (scanning) return;
     setScanning(true);
-    setTimeout(() => {
-      setScanning(false);
-      const firId = `FIR-${Math.floor(100000 + Math.random() * 900000)}`;
-      setFirResult({
-        id: firId,
-        name: complainantName || "Citizen User",
-        phone: phone || "9876543210",
-        type: "Online Citizen Complaint Draft",
-        crimeCategory,
-        location: incidentLocation,
-        time: new Date().toLocaleString(),
-        summary: incidentDetails || "Theft incident reported near SG Highway.",
-        legalSections: [
-          crimeCategory === "Vehicle Theft" ? "BNS Section 303(2) — Theft of Motor Vehicle" : "BNS Section 318(4) — Cheating & Financial Fraud",
-          "BNS Section 317 — Possession of Stolen Property"
-        ],
-        status: "Draft Generated (Pending Verification)"
+    setFirError("");
+    setFirResult(null);
+    try {
+      const res = await fetch("/rakshak-ai/api/fir/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          complainant_name: complainantName,
+          phone,
+          crime_category: crimeCategory,
+          incident_details: incidentDetails,
+          incident_location: incidentLocation,
+          incident_time: new Date().toLocaleString(),
+        }),
       });
-    }, 1200);
+      if (!res.ok) {
+        setFirError(`Could not generate the draft (server returned ${res.status}). Please try again.`);
+        return;
+      }
+      const data = await res.json();
+      const fir = data?.fir;
+      if (!fir) {
+        setFirError("Could not generate the draft. Please try again.");
+        return;
+      }
+      setFirResult({
+        id: fir.id,
+        name: fir.name,
+        phone: fir.phone,
+        type: fir.type,
+        crimeCategory: fir.crime_type,
+        location: fir.location,
+        time: fir.created_at,
+        summary: fir.summary,
+        legalSections: fir.legal_sections || [],
+        sectionsNote: data.sections_note || fir.sections_note || "",
+        status: fir.status,
+      });
+    } catch {
+      setFirError("Could not reach the FIR service. Please try again shortly.");
+    } finally {
+      setScanning(false);
+    }
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -115,7 +149,10 @@ export default function Home() {
     setChatInput("");
 
     setTimeout(() => {
-      const lower = userText.lowerCase ? userText.lowerCase() : userText.toLowerCase();
+      // Was `userText.lowerCase ? userText.lowerCase() : userText.toLowerCase()`.
+      // `lowerCase` is not a string method, so the guard was always false and the
+      // ternary was dead — it only ever ran the fallback. It also broke tsc.
+      const lower = userText.toLowerCase();
       if (lower.includes("sos") || lower.includes("help") || lower.includes("danger") || lower.includes("attack")) {
         setChatLog((prev) => [
           ...prev,
@@ -196,15 +233,17 @@ export default function Home() {
                 <AlertTriangle className="h-5 w-5" />
               </div>
               <div>
-                <h4 className="font-bold text-white text-sm">One-Press Emergency Police SOS (112)</h4>
-                <p className="text-xs text-[#d4c5c8]">Instant geolocation dispatch to nearest control room</p>
+                <h4 className="font-bold text-white text-sm">Emergency helplines (112 · 100 · 1091)</h4>
+                {/* Was "Instant geolocation dispatch to nearest control room". Nothing
+                    is dispatched — the button reveals the real numbers to call. */}
+                <p className="text-xs text-[#d4c5c8]">Shows the numbers to call — this app cannot dispatch anyone</p>
               </div>
             </div>
             <button
               onClick={() => setSosSent(true)}
               className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-[0_0_20px_rgba(239,68,68,0.5)] cursor-pointer"
             >
-              <PhoneCall className="h-4 w-4" /> Trigger Emergency SOS
+              <PhoneCall className="h-4 w-4" /> Show emergency numbers
             </button>
           </div>
 
@@ -313,11 +352,21 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 <div className="lg:col-span-6 flex flex-col gap-4">
                   <div className="relative rounded-2xl border border-white/15 bg-[#070507] min-h-[260px] p-6 flex flex-col justify-center items-center text-center">
-                    <Scan className="h-12 w-12 text-[#ef4444] mb-3 animate-pulse" />
+                    <Scan className="h-12 w-12 text-[#ef4444] mb-3" />
                     <p className="text-xs md:text-sm text-[#d4c5c8] mb-1 font-semibold">
-                      {activeTab === "mask" && "Neural Mask PPE Compliance Engine"}
-                      {activeTab === "face" && "Sub-Second Facial Attendance Matcher"}
-                      {activeTab === "occupancy" && "YOLO Room Seating Occupancy Engine"}
+                      {activeTab === "mask" && "Mask PPE Compliance — sample output"}
+                      {activeTab === "face" && "Facial Attendance Matcher — sample output"}
+                      {activeTab === "occupancy" && "Room Seating Occupancy — sample output"}
+                    </p>
+                    {/* There is no image input here and no model call: the button
+                        fills in a fixed example so the console layout can be seen.
+                        The face tab in particular used to report a named person as
+                        VERIFIED with 99.3% confidence and "Access Granted" without
+                        ever receiving an image, which reads as a working identity
+                        check. Say plainly that it is an example instead. */}
+                    <p className="text-[11px] text-[#a89296] max-w-[300px] leading-relaxed mt-2">
+                      Preview of the console layout using a fixed example. No image is
+                      uploaded and no model runs — this tab does not perform detection.
                     </p>
                     <button
                       onClick={runVisionScan}
@@ -325,7 +374,7 @@ export default function Home() {
                       className="mt-6 btn-primary text-xs py-2.5 px-6 font-extrabold flex items-center gap-2 cursor-pointer"
                     >
                       {scanning ? <Zap className="h-4 w-4 animate-spin" /> : <Scan className="h-4 w-4" />}
-                      {scanning ? "Processing Neural Model..." : "Execute Neural Inspection"}
+                      {scanning ? "Loading example..." : "Show example output"}
                     </button>
                   </div>
                 </div>
@@ -334,24 +383,27 @@ export default function Home() {
                   <div className="rounded-2xl border border-white/10 bg-black/60 p-6 min-h-[260px] flex flex-col justify-between">
                     <div className="flex justify-between items-center text-[#7e6f73] pb-3 border-b border-white/10">
                       <span>CONSOLE OUTPUT</span>
-                      <span className="text-[#fca5a5]">MODEL: RAKSHAK-SENTINEL-v2</span>
+                      <span className="text-[#fca5a5]">EXAMPLE DATA · NO MODEL RUNNING</span>
                     </div>
 
                     {!scanning && !scanResult && (
                       <div className="py-12 text-center text-[#7e6f73] italic">
-                        Click "Execute Neural Inspection" to run model inference.
+                        Click &ldquo;Show example output&rdquo; to preview the console layout.
                       </div>
                     )}
 
                     {scanning && (
                       <div className="py-12 flex flex-col items-center justify-center gap-3 text-[#fca5a5]">
                         <Zap className="h-8 w-8 animate-spin" />
-                        <span>Calculating bounding boxes & neural feature vectors...</span>
+                        <span>Loading example...</span>
                       </div>
                     )}
 
                     {scanResult && (
                       <div className="py-4 space-y-2.5">
+                        <div className="p-2 rounded bg-amber-500/10 border border-amber-500/30 text-amber-200 text-[11px] leading-relaxed">
+                          Example values — not produced by a model and not derived from any image.
+                        </div>
                         <div className="flex justify-between p-2 rounded bg-white/5 border border-white/10">
                           <span className="text-[#7e6f73]">Status:</span>
                           <span className="font-bold text-emerald-400">{scanResult.status}</span>
@@ -460,9 +512,15 @@ export default function Home() {
                       <span className="text-[#fca5a5]">AHMEDABAD CITY POLICE</span>
                     </div>
 
-                    {!firResult && (
+                    {!firResult && !firError && (
                       <div className="py-16 text-center text-[#7e6f73] italic">
-                        Fill in details and click "Generate Structured FIR Draft".
+                        Fill in details and click &ldquo;Generate Structured FIR Draft&rdquo;.
+                      </div>
+                    )}
+
+                    {firError && (
+                      <div className="py-16 text-center text-red-300 not-italic">
+                        {firError}
                       </div>
                     )}
 
@@ -472,11 +530,25 @@ export default function Home() {
                         <div><span className="text-[#7e6f73]">Complainant:</span> {firResult.name} ({firResult.phone})</div>
                         <div><span className="text-[#7e6f73]">Category:</span> {firResult.crimeCategory}</div>
                         <div><span className="text-[#7e6f73]">Location:</span> {firResult.location}</div>
+                        {/* An unrecognised category returns an empty list on purpose —
+                            render the server's note rather than an empty red box that
+                            looks like sections failed to load. */}
                         <div className="p-2 rounded bg-red-950/40 border border-red-500/30 text-red-200 mt-2">
-                          <span className="block font-bold mb-1 text-white">BNS Legal Code Suggestions:</span>
-                          {firResult.legalSections.map((sec: string, idx: number) => (
-                            <div key={idx}>• {sec}</div>
-                          ))}
+                          <span className="block font-bold mb-1 text-white">
+                            {firResult.legalSections.length > 0 ? "BNS Legal Code Suggestions:" : "BNS Legal Codes:"}
+                          </span>
+                          {firResult.legalSections.length > 0 ? (
+                            firResult.legalSections.map((sec: string, idx: number) => (
+                              <div key={idx}>• {sec}</div>
+                            ))
+                          ) : (
+                            <div className="italic">None suggested for this category.</div>
+                          )}
+                          {firResult.sectionsNote && (
+                            <div className="mt-2 pt-2 border-t border-red-500/20 text-[11px] text-red-100/80 not-italic">
+                              {firResult.sectionsNote}
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}

@@ -24,6 +24,7 @@ PAGES = [
     ("pharmacy", "/pharmacy/"),
     ("trust", "/trust/"),
     ("sevenforce", "/sevenforce/"),
+    ("rakshak-ai", "/rakshak-ai/"),
 ]
 
 PHONE = {"width": 390, "height": 844}

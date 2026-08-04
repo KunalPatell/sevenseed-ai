@@ -184,11 +184,23 @@ def generate_fir(req: FIRRequest):
         "status": "Draft Generated (Pending Duty Officer Verification)"
     }
     
+    record["sections_note"] = sections_note
+
     FIR_STORE.append(record)
+    # sections_note was previously computed and then dropped on the floor — the
+    # response never carried it, so the "no sections suggested, the duty officer
+    # decides" case reached the caller as an empty list with no explanation. The
+    # message likewise announced "recommended BNS legal codes" even when none
+    # were found, which contradicted the empty list it shipped alongside.
     return {
         "success": True,
         "fir": record,
-        "message": f"FIR draft {fir_id} generated successfully with recommended BNS legal codes."
+        "sections_note": sections_note,
+        "message": (
+            f"FIR draft {fir_id} generated with suggested BNS sections."
+            if legal_sections
+            else f"FIR draft {fir_id} generated. No BNS sections suggested for this category."
+        ),
     }
 
 ADMIN_KEY = os.environ.get("ADMIN_KEY", "")
