@@ -557,7 +557,7 @@ export default function Home() {
               activeCategory === "vision" ? "bg-red-600 text-white shadow-lg shadow-red-600/30" : "text-[#d4c5c8] hover:text-white"
             }`}
           >
-            <Scan className="h-4 w-4" /> 5. Vision Security Sentinel (3)
+            <Scan className="h-4 w-4" /> 5. Vision Security Sentinel (2)
           </button>
         </div>
       </section>
@@ -609,7 +609,6 @@ export default function Home() {
             <>
               <button onClick={() => { setActiveTab("mask"); setScanResult(null); }} className={`px-3 py-2 rounded-lg border ${activeTab === "mask" ? "bg-red-600 border-red-500 text-white font-bold" : "bg-white/5 border-white/10 text-[#d4c5c8]"}`}>😷 Safety Mask PPE Scanner</button>
               <button onClick={() => { setActiveTab("face"); setScanResult(null); }} className={`px-3 py-2 rounded-lg border ${activeTab === "face" ? "bg-red-600 border-red-500 text-white font-bold" : "bg-white/5 border-white/10 text-[#d4c5c8]"}`}>👤 Facial Attendance System</button>
-              <button onClick={() => { setActiveTab("occupancy"); setScanResult(null); }} className={`px-3 py-2 rounded-lg border ${activeTab === "occupancy" ? "bg-red-600 border-red-500 text-white font-bold" : "bg-white/5 border-white/10 text-[#d4c5c8]"}`}>🪑 YOLO Occupancy Counter</button>
             </>
           )}
         </div>
