@@ -403,13 +403,34 @@ def get_police_stations():
 # ---------------------------------------------------------------------------
 @app.post("/api/scan-mask")
 def scan_mask(req: ScanRequest):
+    # Returned "COMPLIANT, mask_detected true, confidence 0.985" for every
+    # request, including ones carrying no image — so it passed everybody, and the
+    # confidence figure was decoration.
+    #
+    # Unlike the occupancy module there is no recorded output to show here, so
+    # this reports what is actually true: a trained Keras model exists
+    # (E:/Project/face mask/mask_model_final.h5, ~11MB) and cannot run on this
+    # deployment, because tensorflow-cpu + tf-keras are several hundred MB against
+    # a 512MB container that has already been OOM-killed once by three warm
+    # children. Naming the model and the constraint is more use to anyone
+    # assessing this work than a fabricated 0.985.
     return {
-        "status": "COMPLIANT",
-        "implemented": True,
-        "mask_detected": True,
-        "confidence": 0.985,
-        "workstation": "OpenCV & PyTorch Safety Mask Vision Engine",
-        "message": "Safety Mask Detected. Compliance Verification Passed."
+        "status": "NOT_RUNNING_HERE",
+        "implemented": False,
+        "live_inference": False,
+        "mask_detected": None,
+        "model": {
+            "file": "mask_model_final.h5",
+            "framework": "Keras / TensorFlow",
+            "size": "~11MB",
+            "blocker": "tensorflow-cpu + tf-keras exceed the 512MB free-tier container",
+        },
+        "message": (
+            "No image was analysed and no compliance decision was made. The trained "
+            "mask classifier is in the repo but cannot be loaded on this tier; it needs "
+            "either a paid instance or conversion to ONNX so it can share the "
+            "onnxruntime already installed for face recognition."
+        ),
     }
 
 @app.post("/api/verify-face")
@@ -423,7 +444,12 @@ def verify_face(req: ScanRequest):
     if not req.image_b64:
         raise HTTPException(status_code=400, detail="image_b64 is required.")
     if not req.person_id:
-        req.person_id = "Kunal Patel"
+        # Do not default this. Silently assuming "Kunal Patel" is a quieter form of
+        # the bug this endpoint used to have, where every face verified as him.
+        raise HTTPException(
+            status_code=400,
+            detail="person_id is required — recognition is a 1:1 check and needs someone to compare against.",
+        )
 
     try:
         image_bytes = base64.b64decode(req.image_b64.split(",")[-1])
@@ -456,13 +482,34 @@ def register_face(req: ScanRequest):
 
 @app.post("/api/detect-occupancy")
 def detect_occupancy(req: ScanRequest):
+    # This is a portfolio piece, so two answers are both wrong: inventing counts
+    # ("20 chairs, 12 occupied, YOLO Occupancy Monitoring Active" — nothing was
+    # analysed), and a bare "not available", which proves nothing to whoever is
+    # assessing the work.
+    #
+    # The honest third option is to show what the model genuinely produced. These
+    # are real annotated frames from the YOLO chair-occupancy pipeline in
+    # E:/Project/local-face-recognition — per-box confidences and a live count
+    # burned into the image — presented as a recorded run, which is what they are.
+    #
+    # Live inference needs torch, which does not fit in the 512MB this free tier
+    # gives the whole container.
     return {
-        "status": "OPTIMAL",
-        "implemented": True,
-        "total_chairs": 20,
-        "occupied_chairs": 12,
-        "occupancy_rate": "60.0%",
-        "message": "YOLO Occupancy Monitoring Active. Capacity within safe limits."
+        "status": "SAMPLE_OUTPUT",
+        "implemented": False,
+        "live_inference": False,
+        "sample": {
+            "image": "/rakshak-ai/demo/occupancy-sample.jpg",
+            "alt_image": "/rakshak-ai/demo/occupancy-sample-2.jpg",
+            "seated": 11,
+            "empty": 1,
+            "source": "YOLO chair-occupancy model — recorded run, not this request",
+        },
+        "message": (
+            "Real output from the YOLO occupancy model, produced offline. This is not "
+            "live inference on your image: the model needs torch, which does not fit "
+            "in the 512MB this deployment has for the whole container."
+        ),
     }
 
 
