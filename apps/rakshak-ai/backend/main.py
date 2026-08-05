@@ -201,7 +201,7 @@ def health():
 @app.post("/api/chat")
 def chat_endpoint(req: ChatRequest):
     lang = req.language or req.lang or "en"
-    result = ai_engine.chat_response(req.message, lang=lang)
+    result = ai_engine.generate_chat_response(req.message, lang=lang)
     
     store.log_telemetry(
         provider=result.get("provider", "Groq LLaMA 3.3 70B"),
@@ -252,7 +252,7 @@ def generate_fir(req: FIRRequest):
     
     complaint_id = fir_data.get("complaint_id", f"FIR-{int(time.time())}")
     
-    store.save_complaint(
+    store.add_complaint(
         complaint_id=complaint_id,
         name=name_str,
         phone=req.phone or "",
@@ -269,7 +269,7 @@ def generate_fir(req: FIRRequest):
     
     pdf_filename = f"{complaint_id}.pdf"
     pdf_filepath = PDF_DIR / pdf_filename
-    pdf_util.create_fir_pdf(fir_data, str(pdf_filepath))
+    pdf_util.build_fir_pdf(fir_data, str(pdf_filepath))
     
     return {
         "success": True,
@@ -299,7 +299,7 @@ def download_fir_pdf(complaint_id: str = "FIR-101"):
             "bns_sections": c["bns_sections"].split(", ") if c["bns_sections"] else ["BNS Section 303"],
             "created_at": c["created_at"]
         }
-        pdf_util.create_fir_pdf(fir_data, str(pdf_filepath))
+        pdf_util.build_fir_pdf(fir_data, str(pdf_filepath))
         return FileResponse(path=str(pdf_filepath), filename=f"{complaint_id}.pdf", media_type="application/pdf")
     
     # Generate backup sample PDF
@@ -313,7 +313,7 @@ def download_fir_pdf(complaint_id: str = "FIR-101"):
         "bns_sections": ["BNS Section 303(2) — Theft"],
         "created_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
-    pdf_util.create_fir_pdf(sample_fir, str(pdf_filepath))
+    pdf_util.build_fir_pdf(sample_fir, str(pdf_filepath))
     return FileResponse(path=str(pdf_filepath), filename=f"{complaint_id}.pdf", media_type="application/pdf")
 
 @app.post("/api/fir/email")
@@ -431,7 +431,7 @@ def track_subscribe(req: TrackRequest):
 @app.post("/api/internal/report")
 @app.post("/api/internal/generate_report")
 def generate_investigation_report(req: InvestigationReportRequest):
-    report = ai_engine.generate_investigation_report(req.text)
+    report = ai_engine.generate_case_report(req.text)
     store.add_audit_entry(action="INVESTIGATION_REPORT_CREATED", details=f"Complaint ID: {req.complaint_id}")
     return {"success": True, "report": report}
 
@@ -449,17 +449,17 @@ def analyze_evidence(req: EvidenceRequest):
 
 @app.post("/api/internal/match_resume")
 def match_officer_resume(req: ResumeMatchRequest):
-    result = ai_engine.match_resume(req.role, req.resume)
+    result = ai_engine.match_hr_resume(req.role, req.resume)
     return {"success": True, "match": result}
 
 @app.post("/api/analyze/sentiment")
 def analyze_sentiment(req: SentimentRequest):
-    result = ai_engine.analyze_sentiment(req.text)
+    result = ai_engine.detect_risk(req.text)
     return {"success": True, "sentiment": result}
 
 @app.post("/api/internal/generate_proposal")
 def generate_proposal(req: ProposalRequest):
-    proposal = ai_engine.generate_proposal(req.client_name or "Police Department", req.requirements)
+    proposal = ai_engine.generate_internal_report(req.client_name or "Police Department", req.requirements)
     return {"success": True, "proposal": proposal}
 
 
@@ -469,33 +469,33 @@ def generate_proposal(req: ProposalRequest):
 @app.post("/api/internal/legal-rag")
 @app.post("/api/internal/rag_search")
 def legal_rag_search(req: LegalRagRequest):
-    rag_result = ai_engine.search_legal_rag(req.query)
+    rag_result = ai_engine.search_bns_laws(req.query)
     return {"success": True, "query": req.query, "result": rag_result}
 
 @app.post("/api/internal/rag_search_custom")
 def custom_rag_search(req: LegalRagRequest):
-    rag_result = ai_engine.search_legal_rag(req.query)
+    rag_result = ai_engine.search_bns_laws(req.query)
     return {"success": True, "query": req.query, "custom_results": rag_result}
 
 @app.post("/api/internal/rag_upload")
 def upload_rag_document(req: RagUploadRequest):
-    store.add_rag_doc(filename=req.filename or "Doc.txt", content=req.text)
+    store.add_custom_chunk(filename=req.filename or "Doc.txt", content=req.text)
     return {"success": True, "message": f"Document '{req.filename}' indexed into BNS Legal Vector DB."}
 
 @app.post("/api/internal/agent")
 @app.post("/api/internal/deploy_agent")
 def run_agent_autopilot(req: InvestigationReportRequest):
-    agent_output = ai_engine.run_investigation_agent(req.text)
+    agent_output = ai_engine.run_agent_investigation(req.text)
     return {"success": True, "autopilot": agent_output}
 
 @app.post("/api/internal/nl_query")
 def natural_language_query(req: LegalRagRequest):
-    result = ai_engine.nl_query(req.query)
+    result = ai_engine.nl_query_analytics(req.query)
     return {"success": True, "query": req.query, "result": result}
 
 @app.post("/api/internal/prompt_playground")
 def prompt_playground(req: PromptPlaygroundRequest):
-    res = ai_engine.test_prompt(req.prompt, req.system_prompt or "Police AI Copilot", req.temperature or 0.7)
+    res = ai_engine.generate_chat_response(req.prompt, req.system_prompt or "Police AI Copilot", req.temperature or 0.7)
     return {"success": True, "response": res}
 
 
@@ -572,14 +572,14 @@ def detect_occupancy(req: ScanRequest):
 @app.get("/api/telemetry")
 @app.get("/api/internal/telemetry")
 def get_telemetry():
-    data = store.get_telemetry_stats()
+    data = store.get_telemetry()
     return {"success": True, "telemetry": data}
 
 @app.get("/api/audit-trail")
 @app.get("/api/internal/verify_audit")
 def get_audit_trail():
-    ledger = store.get_audit_ledger()
-    integrity = store.verify_audit_integrity()
+    ledger = store.verify_audit_trail()
+    integrity = store.verify_audit_trail()
     return {
         "success": True,
         "count": len(ledger),
