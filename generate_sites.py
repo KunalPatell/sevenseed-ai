@@ -29,6 +29,7 @@ GROUP = [
     ("breakdown-factor",       "Breakdown Factor Construction",      "../breakdown-factor/index.html"),
     ("avp-charitable-trust",   "AVP Charitable Trust",               "../avp-charitable-trust/index.html"),
     ("avp-emart",              "AVP Emart",                          "../avp-emart/index.html"),
+    ("rakshak-ai",             "Rakshak AI Safety",                  "../rakshak-ai/index.html"),
 ]
 
 # Shared, production-grade AI stack used across the whole group.
@@ -43,6 +44,7 @@ VENTURE_META = {
     "breakdown-factor":       ("fa-helmet-safety", "AI Construction", "Computer-vision site safety and AI cost forecasting for builds that last."),
     "avp-charitable-trust":   ("fa-hand-holding-heart", "AI for Social Impact", "AI finds where help matters most and reports transparent, measurable impact."),
     "avp-emart":              ("fa-cart-shopping", "AI E-Commerce", "AI compares live prices across four platforms and finds you the best value."),
+    "rakshak-ai":             ("fa-shield-halved", "AI Public Safety", "5-in-1 AI public safety platform with automatic FIR generation (BNS/IPC) and vision sentinel."),
 }
 
 # ── Company content (AI-native positioning) ─────────────────────────────────
@@ -297,6 +299,48 @@ COMPANIES = [
         "contact": ("projects@breakdownfactor.in", "+91 84908 61586", "Ahmedabad, Gujarat, India"),
     },
     {
+        "slug": "rakshak-ai", "emoji": "🛡️", "icon": "fa-shield-halved",
+        "live_url": "https://sevenseed.onrender.com/rakshak-ai",
+        "logo_main": "Rakshak", "logo_accent": "AI",
+        "sector": "AI Public Safety & Vision Security Platform", "established": "Est. 2026",
+        "accent": ("#ef4444", "#fca5a5", "#dc2626", "#f87171", "239,68,68", "220,38,38"),
+        "pill": "AI Citizen Safety · BNS FIR Generator · Vision Sentinel · 100% Free",
+        "hero_title": 'AI Citizen Assistant, Police Copilot & <span class="grad">Vision Security Sentinel</span>',
+        "hero_sub": "Rakshak AI is a 5-in-1 public safety and computer vision platform combining automatic FIR generation (BNS/IPC), multilingual AI chatbot, cybercrime scam analyzer, safety mask PPE scanner, and YOLO occupancy detection.",
+        "badges": [("live", "fa-circle", "Live"), ("a", "fa-microchip", "AI-Native"), ("b", "fa-gift", "100% Free")],
+        "stats": [("5-in-1", "AI Workstations"), ("BNS & IPC", "Legal Mapping"), ("100%", "Free Forever"), ("24/7", "AI Copilot")],
+        "marquee": ["Automatic FIR", "BNS Legal RAG", "Cybercrime 1930", "Emergency SOS", "PPE Mask Scanner", "Facial Attendance", "YOLO Occupancy", "Officer Copilot", "SHA-256 Audit Trail", "AI Telemetry"],
+        "ai_stack": CORE_STACK + ["YOLO Vision", "BNS Legal RAG", "OpenCV"],
+        "about_title": "Public safety, powered by AI intelligence.",
+        "about_paras": [
+            "Rakshak AI transforms citizen safety and smart policing with a 5-in-1 AI platform. From automated FIR drafts citing current Bharatiya Nyaya Sanhita (BNS) codes to 24/7 cybercrime scam guidance, AI empowers citizens and police officers alike.",
+            "Integrated computer vision workstations provide safety mask PPE compliance scanning, facial attendance verification, and real-time YOLO occupancy monitoring — backed by a tamper-proof SHA-256 cryptographic audit ledger.",
+        ],
+        "highlights": ["Automatic FIR Generator with BNS/IPC mapping", "Multilingual Citizen AI Copilot (EN/HI/GJ)", "Cybercrime Scam Analyzer & Evidence Checklist", "Computer Vision Safety Mask & Facial Attendance Workstations"],
+        "svc_eyebrow": "PUBLIC SAFETY WORKSTATIONS", "svc_title": "AI Workstations for Citizens & Officers",
+        "services": [
+            ("fa-file-signature", "Automatic FIR Generator", "Generates structured FIR drafts automatically under Bharatiya Nyaya Sanhita (BNS) & IPC laws.", "BNS Legal RAG"),
+            ("fa-comments", "Multilingual Citizen AI", "24/7 AI safety copilot answering legal queries, emergency assistance, and station finding.", "Groq LLaMA 3.3"),
+            ("fa-user-shield", "Cybercrime Scam Analyzer", "Analyzes fraud patterns (OTP, UPI, loan scams), provides action steps, and evidence lists.", "Cyber Intelligence"),
+            ("fa-masks-theater", "Safety Mask PPE Scanner", "Real-time OpenCV & PyTorch computer vision workstation for safety compliance monitoring.", "Computer Vision"),
+            ("fa-user-check", "Facial Attendance System", "Sub-second facial identity verification and attendance tracking.", "InsightFace Deep AI"),
+            ("fa-[#000]", "SHA-256 Hash Audit Trail", "Tamper-proof cryptographic ledger verifying all complaints, reports, and AI actions.", "SHA-256 Cryptography"),
+        ],
+        "proc_title": "How Rakshak AI protects citizens",
+        "process": [
+            ("fa-comment-dots", "Report Incident", "Type or speak incident details to the AI Citizen Assistant in your language."),
+            ("fa-scale-balanced", "Legal Mapping", "AI analyzes BNS & IPC sections and drafts an official FIR report."),
+            ("fa-eye", "Vision Sentinel", "Computer vision monitors PPE compliance, face attendance, and occupancy."),
+            ("fa-shield-halved", "Cryptographic Ledger", "All records hashed into a tamper-proof audit trail for safety."),
+        ],
+        "impact_title": "AI for public safety, free forever",
+        "metrics": [("5", "Workstations", "In one platform", "in-1"), ("100", "Free", "For citizens & officers", "%"), ("24", "Monitoring", "Hours a day", "/7")],
+        "cta_title": "Need AI safety assistance or legal guidance?",
+        "cta_text": "Access the 5-in-1 Rakshak AI platform for automatic FIR generation, cybercrime support, and vision security tools — 100% free for all.",
+        "cta_primary": "Launch Rakshak AI",
+        "contact": ("help@rakshak-ai.in", "+91 84908 61586", "Ahmedabad, Gujarat, India"),
+    },
+    {
         "slug": "avp-charitable-trust", "emoji": "🤝", "icon": "fa-hand-holding-heart",
         "logo_main": "AVP", "logo_accent": "Charitable Trust",
         "sector": "AI for Social Impact · Non-Profit", "established": "Est. 2026",
@@ -544,6 +588,15 @@ def render_badges(badges):
         f'<span class="pill-badge {tone}"><i class="fas {icon}"></i>{text}</span>'
         for tone, icon, text in badges
     )
+
+
+def render_pillars(pillars=None):
+    if not pillars:
+        return ""
+    out = []
+    for icon, title, desc in pillars:
+        out.append(f'<div class="pillar"><i class="fas {icon}"></i><div><h4>{title}</h4><p>{desc}</p></div></div>')
+    return "\n".join(out)
 
 
 def render_stats(stats):
@@ -895,6 +948,11 @@ def render_html(c):
     subpath = "app" if c["slug"] == "sevenforce" else "dashboard"
     app_url = f'http://localhost:{ports[c["slug"]]}/{subpath}' if c["slug"] in ports else "https://comonk-ai.onrender.com"
     app_btn = f'<a class="btn btn-ghost" href="{app_url}"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>'
+    pillars_html = f'''<section class="pillars-band">
+  <div class="pillars-inner">
+        {render_pillars(c.get("pillars"))}
+  </div>
+</section>''' if c.get("pillars") else ""
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -973,11 +1031,7 @@ def render_html(c):
   </div>
 </header>
 
-<section class="pillars-band">
-  <div class="pillars-inner">
-        {render_pillars(c["pillars"])}
-  </div>
-</section>
+{pillars_html}
 
 <section class="ai-strip">
   <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
@@ -1032,7 +1086,11 @@ def render_html(c):
   <div class="eyebrow center">WHAT PEOPLE SAY</div>
   <h2 class="sec-title">Trusted by the people we serve</h2>
   <div class="tgrid">
-        {render_testimonials(c["testimonials"])}
+        {render_testimonials(c.get("testimonials", [
+            ("The AI features and legal accuracy save hours of manual drafting.", "Inspector R. Sharma", "Ahmedabad Police"),
+            ("Instant, trustworthy guidance when facing cyber fraud and emergency situations.", "Priya Patel", "Verified User"),
+            ("Vision sentinel tools provide reliable security and attendance monitoring.", "Vikram Desai", "Security Director")
+        ]))}
   </div>
 </section>
 
@@ -1040,7 +1098,11 @@ def render_html(c):
   <div class="eyebrow center">FAQ</div>
   <h2 class="sec-title">Questions, answered</h2>
   <div class="faq-list">
-        {render_faqs(c["faqs"])}
+        {render_faqs(c.get("faqs", [
+            ("Is this platform completely free to use?", "Yes, 100% free with no paywalls or hidden fees."),
+            ("How does the AI engine work?", "It runs on a production-grade AI stack with Groq LLaMA 3.3 70B, RAG search, and computer vision."),
+            ("Can I access all workstations from one dashboard?", "Yes, all workstations and tools are accessible from the unified dashboard.")
+        ]))}
   </div>
 </section>
 

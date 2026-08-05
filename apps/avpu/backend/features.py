@@ -25,7 +25,12 @@ import tools_ai
 
 router = APIRouter()
 
-def require_user(authorization: str = Header(None)):
+def require_user(authorization: str | None = Header(default=None)):
+    # `str = Header(None)` types the header as a required str with a None
+    # default, so FastAPI rejects a missing header with 422 instead of
+    # reaching this function and returning 401. The platform's own test
+    # suite caught that — tests/test_avp_emart and tests/test_pharmacy
+    # asserted 200 on anonymous reads and got 422.
     """Reject anonymous callers on endpoints that return personal data.
 
     Added 2026-08-03. These list endpoints were completely open: on
