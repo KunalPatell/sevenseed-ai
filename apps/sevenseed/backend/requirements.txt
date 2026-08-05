@@ -26,3 +26,5 @@ numpy>=1.26.0
 insightface
 onnxruntime
 opencv-python-headless
+# Rakshak AI: FIR PDF export (apps/rakshak-ai/backend/pdf_util.py)
+fpdf2

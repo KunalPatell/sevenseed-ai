@@ -30,6 +30,7 @@ APPS = [
     ("breakdown-factor",       8005, "Breakdown Factor — AI Construction", "main.py"),
     ("avp-charitable-trust",   8006, "AVP Trust — AI for Social Impact", "main.py"),
     ("avp-emart",              8007, "AVP Emart — AI Shopping", "main.py"),
+    ("rakshak-ai",             8008, "Rakshak AI — Citizen Safety & Vision Sentinel", "main.py"),
 ]
 
 procs = []
