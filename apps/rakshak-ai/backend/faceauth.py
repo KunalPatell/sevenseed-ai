@@ -24,38 +24,45 @@ _model = None
 
 
 def available() -> bool:
+    """True when the ONNX face models can actually be loaded."""
     try:
-        import insightface  # noqa: F401
         import cv2  # noqa: F401
         import numpy  # noqa: F401
-        return True
+        import matcher_engine  # noqa: F401
+
+        # The classes below arrived in OpenCV 4.5.4; headless builds have them.
+        return hasattr(cv2, "FaceDetectorYN") and hasattr(cv2, "FaceRecognizerSF")
     except Exception:
         return False
 
 
-def _get_model():
-    global _model
-    if _model is None:
-        from insightface.app import FaceAnalysis
-        m = FaceAnalysis(name="buffalo_l", allowed_modules=["detection", "recognition"])
-        m.prepare(ctx_id=-1, det_size=(640, 640))  # ctx_id=-1 → CPU
-        _model = m
-    return _model
-
-
 def _embed(image_bytes: bytes):
-    """Return an L2-normalized ArcFace embedding for the largest face, or None."""
+    """Return an L2-normalized 128-d SFace embedding for the largest face, or None.
+
+    Switched from InsightFace buffalo_l to the OpenCV/ONNX pair shipped in
+    backend/models — YuNet for detection (227KB) and SFace for recognition
+    (37MB). buffalo_l downloads roughly 300MB of ONNX at first use, which is most
+    of what this 512MB container has for everything; these two are on disk and
+    run on the onnxruntime that is already installed.
+
+    matcher_engine.extract_primary_face does the work: it retries with contrast
+    enhancement, sharpening, upsampling and rotation before giving up, which
+    matters for phone photos.
+    """
     import cv2
     import numpy as np
+
+    import matcher_engine
+
     arr = np.frombuffer(image_bytes, np.uint8)
     img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
     if img is None:
         return None
-    faces = _get_model().get(img) or []
-    if not faces:
-        return None
-    face = max(faces, key=lambda f: (f.bbox[2] - f.bbox[0]) * (f.bbox[3] - f.bbox[1]))
-    emb = np.asarray(face.embedding, dtype=np.float32)
+    try:
+        emb, _box = matcher_engine.extract_primary_face(img)
+    except ValueError:
+        return None  # no detectable face
+    emb = np.asarray(emb, dtype=np.float32)
     n = np.linalg.norm(emb)
     return emb / n if n else emb
 

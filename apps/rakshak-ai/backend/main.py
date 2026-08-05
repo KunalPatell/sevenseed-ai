@@ -12,7 +12,7 @@ Complete Backend containing all 21 Workstation APIs from chatbot and rakshak-ai:
 - BNS Legal RAG Search & Custom Document Uploader
 - Autonomous Agent Autopilot & Prompt Playground
 - Emergency SOS Dispatcher & Geolocation Locator
-- Safety Mask PPE Scanner, Facial Attendance Matcher (faceauth), and YOLO Occupancy Counter
+- Safety Mask PPE Scanner and Facial Attendance Matcher
 - Telemetry & Cryptographic Hash-Chained Audit Trail Ledger
 """
 
@@ -199,7 +199,7 @@ def health():
             "18. Complaint Sentiment & Urgency Scorer",
             "19. BRD / Proposal Generator",
             "20. Cryptographic SHA-256 Hash Audit Ledger",
-            "21. Vision Security Sentinel (Mask PPE, Face Match, YOLO Occupancy)"
+            "21. Vision Security Sentinel (Mask PPE + Face Match)"
         ],
         "timestamp": time.time(),
     }
@@ -628,14 +628,18 @@ import mask_detector
 @app.post("/api/scan-mask")
 def scan_mask(req: ScanRequest):
     if not req.image_b64:
+        # Readiness, not a result. This branch used to answer mask_detected: true
+        # with confidence 0.985 and live_inference: true for a request carrying no
+        # image at all — the same claim that made the old hardcoded version pass
+        # everybody, just relocated. Nothing was analysed, so nothing is reported.
         return {
-            "status": "ACTIVE",
+            "status": "READY",
             "implemented": True,
-            "live_inference": True,
-            "mask_detected": True,
-            "confidence": 0.985,
+            "live_inference": False,
+            "mask_detected": None,
+            "confidence": None,
             "workstation": "OpenCV & ONNX Safety Mask Vision Engine",
-            "message": "Safety Mask PPE Vision Workstation Ready. Submit image_b64 for live inference."
+            "message": "No image submitted, so nothing was analysed. Send image_b64 to run detection.",
         }
     
     try:
@@ -660,15 +664,26 @@ def verify_face(req: ScanRequest):
             "message": "Face recognition engine is not installed on this server.",
         }
     if not req.image_b64:
+        # Readiness, not a result. This branch reported person_id "Kunal Patel"
+        # with similarity 0.94 for a request carrying no image — a verification
+        # that never happened, against an identity nobody asked for.
         return {
-            "status": "ACTIVE",
+            "status": "READY",
             "implemented": True,
-            "person_id": req.person_id or "Kunal Patel",
-            "similarity": 0.94,
-            "message": "Facial Attendance Matcher Ready. Submit image_b64 for verification."
+            "match": None,
+            "similarity": None,
+            "message": "No image submitted, so no verification ran. Send image_b64 and person_id.",
         }
 
-    person_id = req.person_id or "Kunal Patel"
+    # Do not default the identity. Recognition is a 1:1 check, and "or 'Kunal
+    # Patel'" is how this endpoint used to verify every face as one person. It
+    # has grown back five times; tests/test_rakshak now guards it.
+    if not req.person_id:
+        raise HTTPException(
+            status_code=400,
+            detail="person_id is required — recognition needs someone to compare against.",
+        )
+    person_id = req.person_id
     try:
         image_bytes = base64.b64decode(req.image_b64.split(",")[-1])
     except Exception:

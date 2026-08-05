@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Rakshak AI — Vision Security & Workplace Safety Suite",
-  description: "AI-powered vision security suite featuring live mask detection, facial attendance recognition, and YOLO chair occupancy monitoring.",
+  description: "AI-powered vision security suite featuring live mask detection, facial attendance recognition.",
 };
 
 export default function RootLayout({

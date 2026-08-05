@@ -11,7 +11,6 @@ import {
   Shield,
   Scan,
   UserCheck,
-  Armchair,
   FileText,
   MessageSquare,
   AlertTriangle,
@@ -131,16 +130,13 @@ export default function Home() {
     setScanning(true);
     setScanResult(null);
 
-    const endpoint =
-      activeTab === "mask" ? "/api/scan-mask"
-      : activeTab === "face" ? "/api/verify-face"
-      : "/api/detect-occupancy";
+    const endpoint = activeTab === "mask" ? "/api/scan-mask" : "/api/verify-face";
 
     try {
       const res = await fetch(`/rakshak-ai${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: activeTab, person_id: "Kunal Patel" }),
+        body: JSON.stringify({ mode: activeTab }),
       });
       const data = await res.json();
       setScanResult({
@@ -1147,7 +1143,7 @@ export default function Home() {
             )}
 
             {/* TAB 21: VISION SENTINEL */}
-            {(activeTab === "mask" || activeTab === "face" || activeTab === "occupancy") && (
+            {(activeTab === "mask" || activeTab === "face") && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center text-left">
                 <div className="lg:col-span-6 flex flex-col gap-4">
                   <div className="relative rounded-2xl border border-white/15 bg-[#070507] min-h-[260px] p-6 flex flex-col justify-center items-center text-center">
@@ -1155,10 +1151,9 @@ export default function Home() {
                     <p className="text-xs md:text-sm text-white mb-1 font-bold">
                       {activeTab === "mask" && "Safety Mask PPE Vision Scanner Workstation"}
                       {activeTab === "face" && "Facial Attendance & Identity Verification Workstation"}
-                      {activeTab === "occupancy" && "YOLO Room Seating Occupancy Workstation"}
                     </p>
                     <p className="text-[11px] text-[#a89296] max-w-[320px] leading-relaxed mt-2">
-                      Real-time Computer Vision Pipeline powered by OpenCV, PyTorch, and YOLO deep neural networks.
+                      Computer vision running on OpenCV and ONNX Runtime.
                     </p>
                     <button
                       onClick={runVisionScan}

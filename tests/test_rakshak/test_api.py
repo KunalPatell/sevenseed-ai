@@ -144,20 +144,23 @@ class TestCybercrime:
 
 
 class TestVision:
-    def test_mask_does_not_claim_a_result(self, client):
-        """The model cannot load on this tier; it must not answer COMPLIANT anyway."""
+    def test_mask_reports_nothing_when_given_nothing(self, client):
+        """No image means no verdict — whether or not a model is installed.
+
+        Rewritten: the detector is real now (mask_detector.py), so `implemented`
+        is legitimately True. What must never come back is a detection for a
+        request that carried no image. That claim has appeared twice — first as a
+        hardcoded "COMPLIANT / 0.985", then again in the no-image branch of the
+        real implementation, which answered mask_detected: true with the same
+        0.985 and live_inference: true.
+        """
         r = client.post("/api/scan-mask", json={})
         assert r.status_code == 200
         body = r.json()
-        assert body["implemented"] is False
-        assert body["mask_detected"] is None
+        assert body["mask_detected"] is None, "reported a detection without an image"
+        assert body.get("confidence") is None, "reported a confidence without an image"
+        assert body.get("live_inference") is False, "claimed live inference on no input"
 
-    def test_occupancy_is_labelled_as_recorded(self, client):
-        r = client.post("/api/detect-occupancy", json={})
-        assert r.status_code == 200
-        body = r.json()
-        assert body["live_inference"] is False
-        assert body["sample"]["image"]
 
     def test_face_verify_requires_a_person_to_compare_against(self, client):
         """Defaulting the identity is how every face used to verify as one person."""

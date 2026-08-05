@@ -5,29 +5,22 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { StarCanvas } from "@/components/StarCanvas";
 import { CustomCursor } from "@/components/CustomCursor";
-import { Shield, Scan, UserCheck, Armchair, Zap, CheckCircle, Lock } from "lucide-react";
+import { Shield, Scan, UserCheck, Zap, CheckCircle, Lock } from "lucide-react";
 
 export default function WorkstationApp() {
-  const [activeTab, setActiveTab] = useState<"mask" | "face" | "occupancy">("mask");
+  const [activeTab, setActiveTab] = useState<"mask" | "face">("mask");
   const [scanning, setScanning] = useState(false);
   const [scanResult, setScanResult] = useState<any>(null);
 
-  // This used to be a setTimeout with three hardcoded results and no network call
-  // at all: mask always "COMPLIANT / 98.7%", face always "VERIFIED — Kunal Patel
-  // (KP-9482) / 99.3%", occupancy always "12/20 seats, Optimal". Nothing was
-  // analysed, and the numbers were precise enough to be believed.
-  //
-  // It now calls the backend and shows whatever actually comes back — including
-  // "not available", which is the honest answer for mask and occupancy on this
-  // deployment (neither model fits in the free tier's 512MB).
+  // This used to be a setTimeout with hardcoded results and no network call at
+  // all: mask always "COMPLIANT / 98.7%", face always "VERIFIED — Kunal Patel
+  // (KP-9482) / 99.3%". Nothing was analysed, and the numbers were precise
+  // enough to be believed. It now calls the backend and shows what comes back.
   const runScan = async () => {
     setScanning(true);
     setScanResult(null);
 
-    const endpoint =
-      activeTab === "mask" ? "/api/scan-mask"
-      : activeTab === "face" ? "/api/verify-face"
-      : "/api/detect-occupancy";
+    const endpoint = activeTab === "mask" ? "/api/scan-mask" : "/api/verify-face";
 
     try {
       const res = await fetch(`/rakshak-ai${endpoint}`, {
@@ -45,7 +38,6 @@ export default function WorkstationApp() {
           typeof data.similarity === "number"
             ? `${(data.similarity * 100).toFixed(1)}%`
             : null,
-        sample: data.sample ?? null,
         time: new Date().toLocaleTimeString(),
       });
     } catch {
@@ -84,7 +76,7 @@ export default function WorkstationApp() {
         </div>
 
         {/* Tab Selection */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <button
             onClick={() => { setActiveTab("mask"); setScanResult(null); }}
             className={`p-5 rounded-2xl border text-left transition-all cursor-pointer ${
@@ -111,18 +103,6 @@ export default function WorkstationApp() {
             <p className="text-xs text-[#7e6f73] mt-1">Touchless attendance logging & identity check.</p>
           </button>
 
-          <button
-            onClick={() => { setActiveTab("occupancy"); setScanResult(null); }}
-            className={`p-5 rounded-2xl border text-left transition-all cursor-pointer ${
-              activeTab === "occupancy"
-                ? "bg-[#160f14] border-[#ef4444] shadow-[0_0_20px_rgba(239,68,68,0.25)]"
-                : "bg-black/40 border-white/10 hover:border-white/20"
-            }`}
-          >
-            <Armchair className="h-6 w-6 text-emerald-400 mb-2" />
-            <h3 className="font-bold text-white text-base">YOLO Chair Occupancy Counter</h3>
-            <p className="text-xs text-[#7e6f73] mt-1">Seating capacity & room utilization monitoring.</p>
-          </button>
         </div>
 
         {/* Console Box */}
@@ -131,7 +111,6 @@ export default function WorkstationApp() {
             <h3 className="text-lg font-bold text-white">
               {activeTab === "mask" && "Mask PPE Scanner Console"}
               {activeTab === "face" && "Facial Attendance Verification Console"}
-              {activeTab === "occupancy" && "YOLO Room Occupancy Analytics Console"}
             </h3>
             <button
               onClick={runScan}
@@ -192,25 +171,6 @@ export default function WorkstationApp() {
                     <p className="text-[11px] text-[#c9b8bc] leading-relaxed pt-1">
                       {scanResult.message}
                     </p>
-                  )}
-
-                  {/* A real annotated frame from the YOLO occupancy model, shown
-                      because "not available" demonstrates nothing and a made-up
-                      count demonstrates worse. The caption says what it is. */}
-                  {scanResult.sample?.image && (
-                    <figure className="pt-2">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={scanResult.sample.image}
-                        alt="Annotated frame from the YOLO chair-occupancy model, with per-box confidences"
-                        className="w-full rounded-lg border border-white/10"
-                        loading="lazy"
-                      />
-                      <figcaption className="text-[10px] text-[#7e6f73] mt-1.5 leading-relaxed">
-                        Recorded model output — {scanResult.sample.seated} seated,{" "}
-                        {scanResult.sample.empty} empty. Not live inference on this request.
-                      </figcaption>
-                    </figure>
                   )}
                 </div>
               )}
