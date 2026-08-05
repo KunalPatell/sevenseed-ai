@@ -201,24 +201,57 @@ def health():
 @app.post("/api/chat")
 def chat_endpoint(req: ChatRequest):
     lang = req.language or req.lang or "en"
-    result = ai_engine.generate_chat_response(req.message, lang=lang)
-    
-    store.log_telemetry(
-        provider=result.get("provider", "Groq LLaMA 3.3 70B"),
-        latency_ms=result.get("latency_ms", 140),
-        tokens=result.get("tokens", 65),
-        cost_usd=0.0001,
-        success=True
-    )
-    
+    started = time.perf_counter()
+
+    try:
+        # Positional: generate_chat_response(text, lang="en") — there is no `lang=`
+        # keyword on the real function.
+        result = ai_engine.generate_chat_response(req.message, lang)
+    except Exception:
+        logging.getLogger("rakshak").exception("ai_engine failed")
+        return {
+            "intent": "error",
+            "priority": "NORMAL",
+            "response": (
+                "The assistant is unavailable right now. For an emergency call **112** "
+                "(police **100**, women's helpline **1091**); for cyber fraud call **1930**."
+            ),
+            "sos_trigger": False,
+            "suggested_actions": [],
+            "engine": "fallback",
+        }
+
+    elapsed_ms = int((time.perf_counter() - started) * 1000)
+    risk = result.get("risk") or {}
+
+    # store exposes add_telemetry(action, provider, duration_ms, input_tokens,
+    # output_tokens, ...) — log_telemetry(provider=, latency_ms=, tokens=,
+    # cost_usd=, success=) does not exist, and its shape is different enough that
+    # renaming it would only move the failure to argument binding.
+    try:
+        store.add_telemetry(
+            action="chat",
+            provider="ai_engine (local)",
+            duration_ms=elapsed_ms,
+            input_tokens=len(req.message.split()),
+            output_tokens=len(str(result.get("reply", "")).split()),
+        )
+    except Exception:
+        logging.getLogger("rakshak").warning("telemetry write failed", exc_info=True)
+
+    # The engine returns reply / risk / suggestions — not response / priority /
+    # actions. The old defaults also advertised "Groq LLaMA 3.3 70B" and 140ms for
+    # a local rule-based engine that makes no Groq call; latency is measured now.
     return {
         "intent": result.get("intent", "general_info"),
-        "priority": result.get("priority", "NORMAL"),
-        "response": result.get("response", "How can I assist you today?"),
-        "sos_trigger": result.get("priority") == "HIGH_RISK",
-        "suggested_actions": result.get("actions", []),
-        "provider": result.get("provider", "Groq LLaMA 3.3 70B"),
-        "latency_ms": result.get("latency_ms", 140)
+        "priority": risk.get("level", "NORMAL"),
+        "response": result.get("reply", ""),
+        "sos_trigger": result.get("intent") == "emergency",
+        "suggested_actions": result.get("suggestions", []),
+        "confidence": result.get("confidence"),
+        "risk": risk,
+        "engine": "ai_engine (local rules)",
+        "latency_ms": elapsed_ms,
     }
 
 @app.post("/api/chat/stream")
@@ -243,24 +276,38 @@ def generate_fir(req: FIRRequest):
     details_text = req.incident_details or req.text or "Incident details reported by citizen."
     name_str = req.complainant_name or req.name or "Anonymous Citizen"
     
+    # generate_fir(text, name="", phone="") — no email parameter.
     fir_data = ai_engine.generate_fir(
         text=f"{details_text}. Category: {req.crime_category}. Location: {req.incident_location}. Time: {req.incident_time}",
         name=name_str,
         phone=req.phone or "Not provided",
-        email=req.email or ""
     )
-    
+
     complaint_id = fir_data.get("complaint_id", f"FIR-{int(time.time())}")
-    
-    store.add_complaint(
-        complaint_id=complaint_id,
-        name=name_str,
-        phone=req.phone or "",
-        email=req.email or "",
-        category=req.crime_category or "General",
-        details=details_text,
-        bns_sections=", ".join(fir_data.get("bns_sections", []))
-    )
+    # The engine returns `legal_sections`; there is no `bns_sections` key, so the
+    # old join produced an empty string on every filing.
+    legal_sections = fir_data.get("legal_sections", [])
+
+    # add_complaint(cid, ctype, summary, crime_type, location, time, name, phone,
+    # email, risk, fir_text, status, legal_sections, coordinates, subscribed) —
+    # it has no complaint_id / category / details / bns_sections parameters.
+    try:
+        store.add_complaint(
+            cid=complaint_id,
+            ctype="Online Citizen Complaint Draft",
+            summary=details_text,
+            crime_type=fir_data.get("crime_type", req.crime_category or "General"),
+            location=req.incident_location or "",
+            time=req.incident_time or "",
+            name=name_str,
+            phone=req.phone or "",
+            email=req.email or "",
+            fir_text=fir_data.get("fir_text", ""),
+            legal_sections=legal_sections,
+        )
+    except Exception:
+        # The citizen's draft is still worth returning if persistence fails.
+        logging.getLogger("rakshak").exception("could not persist complaint %s", complaint_id)
     
     store.add_audit_entry(
         action="FIR_GENERATED",
@@ -479,8 +526,13 @@ def custom_rag_search(req: LegalRagRequest):
 
 @app.post("/api/internal/rag_upload")
 def upload_rag_document(req: RagUploadRequest):
-    store.add_custom_chunk(filename=req.filename or "Doc.txt", content=req.text)
-    return {"success": True, "message": f"Document '{req.filename}' indexed into BNS Legal Vector DB."}
+    # add_custom_chunk(text, filename="") — the parameter is `text`, not `content`.
+    chunks = store.add_custom_chunk(req.text, filename=req.filename or "Doc.txt")
+    return {
+        "success": True,
+        "chunks_indexed": chunks,
+        "message": f"Indexed '{req.filename or 'Doc.txt'}' for BNS legal search.",
+    }
 
 @app.post("/api/internal/agent")
 @app.post("/api/internal/deploy_agent")
