@@ -33,6 +33,7 @@ ALL_BACKEND_PATHS = [
     app_backend("sevenforce"),
     app_backend("sevenseed"),
     app_backend("comonk"),
+    app_backend("rakshak-ai"),
 ]
 
 
@@ -51,7 +52,8 @@ def load_isolated_app(app_name: str):
         "app", "main", "features",
         "whatsapp_tutor", "avpu_data", "breakdown_data", "pharmacy_data",
         "prescription_ocr", "trust_data", "faceauth", "campaign_manager",
-        "site_ocr", "safety_detector", "face_auth", "analytics", "code_executor"
+        "site_ocr", "safety_detector", "face_auth", "analytics", "code_executor",
+        "ai_engine", "store", "pdf_util", "mock_data", "authdep"
     )
     for mod in list(sys.modules.keys()):
         if any(c in mod for c in ("numpy", "scipy", "cv2", "torch", "onnx", "insightface", "pypdf", "ultralytics")):

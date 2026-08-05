@@ -78,6 +78,10 @@ PDF_DIR.mkdir(parents=True, exist_ok=True)
 
 DB_PATH = os.environ.get("DB_PATH", str(BASE_DIR / "db.sqlite3"))
 
+# Gate for the endpoints that return stored complaints. Unset means those
+# endpoints stay closed — failing shut is the right default for victim data.
+ADMIN_KEY = os.environ.get("ADMIN_KEY", "")
+
 # --- Pydantic Models ---
 class ChatRequest(BaseModel):
     message: str
@@ -316,7 +320,9 @@ def generate_fir(req: FIRRequest):
     
     pdf_filename = f"{complaint_id}.pdf"
     pdf_filepath = PDF_DIR / pdf_filename
-    pdf_util.build_fir_pdf(fir_data, str(pdf_filepath))
+    # build_fir_pdf(rec) RETURNS bytes and takes no path — writing the file is
+    # this caller's job.
+    pdf_filepath.write_bytes(pdf_util.build_fir_pdf(fir_data))
     
     return {
         "success": True,
@@ -335,32 +341,34 @@ def download_fir_pdf(complaint_id: str = "FIR-101"):
         return FileResponse(path=str(pdf_filepath), filename=f"{complaint_id}.pdf", media_type="application/pdf")
     
     c = store.get_complaint(complaint_id)
-    if c:
-        fir_data = {
-            "complaint_id": c["id"],
-            "complainant_name": c["name"],
-            "phone": c["phone"],
-            "email": c["email"],
-            "crime_type": c["category"],
-            "description": c["details"],
-            "bns_sections": c["bns_sections"].split(", ") if c["bns_sections"] else ["BNS Section 303"],
-            "created_at": c["created_at"]
-        }
-        pdf_util.build_fir_pdf(fir_data, str(pdf_filepath))
-        return FileResponse(path=str(pdf_filepath), filename=f"{complaint_id}.pdf", media_type="application/pdf")
-    
-    # Generate backup sample PDF
-    sample_fir = {
-        "complaint_id": complaint_id,
-        "complainant_name": "Citizen",
-        "phone": "9876543210",
-        "email": "citizen@gujarat.gov.in",
-        "crime_type": "Personal Property Theft",
-        "description": "Stolen item reported near SG Highway.",
-        "bns_sections": ["BNS Section 303(2) — Theft"],
-        "created_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if not c:
+        # Previously this fabricated a "backup sample PDF" — a complete FIR for a
+        # made-up citizen at a made-up address — and served it under the requested
+        # complaint ID. A police document for a complaint that does not exist is
+        # not a fallback, it is a forgery. Say it is missing.
+        raise HTTPException(status_code=404, detail=f"No FIR found with id {complaint_id}.")
+
+    # Column names come from the complaints table in store.py: crime_type,
+    # summary and legal_sections. The old code read c["category"], c["details"]
+    # and c["bns_sections"], none of which exist, so this raised KeyError for
+    # every complaint it did find.
+    sections = c["legal_sections"]
+    if isinstance(sections, str):
+        sections = [s for s in sections.split(", ") if s]
+
+    fir_data = {
+        "complaint_id": c["id"],
+        "complainant_name": c["name"],
+        "phone": c["phone"],
+        "email": c["email"],
+        "crime_type": c["crime_type"],
+        "description": c["summary"],
+        "legal_sections": sections or [],
+        "created_at": c["created_at"],
     }
-    pdf_util.build_fir_pdf(sample_fir, str(pdf_filepath))
+    # build_fir_pdf(rec) returns bytes and takes no path; writing the file is
+    # this caller's job.
+    pdf_filepath.write_bytes(pdf_util.build_fir_pdf(fir_data))
     return FileResponse(path=str(pdf_filepath), filename=f"{complaint_id}.pdf", media_type="application/pdf")
 
 @app.post("/api/fir/email")
@@ -374,7 +382,20 @@ def email_fir_draft(req: EmailRequest):
 
 @app.get("/api/admin/complaints")
 @app.get("/api/fir/list")
-def list_firs():
+def list_firs(x_admin_key: str = Header(default="")):
+    """Every stored complaint. Admin only.
+
+    This was open. The complaints table holds the complainant's name, phone
+    number, the incident location and time and the full description of what
+    happened, so an unauthenticated GET handed out crime complaints with victim
+    contact details to anyone who knew the path. Nothing in the frontend calls it.
+
+    404 rather than 401, matching the hub's /api/history/contacts, so the
+    endpoint's existence is not advertised. If a citizen login is ever added,
+    scope this to the complainant's own records instead.
+    """
+    if not ADMIN_KEY or x_admin_key != ADMIN_KEY:
+        raise HTTPException(status_code=404)
     complaints = store.list_complaints()
     return {"success": True, "count": len(complaints), "firs": complaints}
 
@@ -394,22 +415,42 @@ def analyze_cybercrime(req: CybercrimeRequest):
         details=f"Scam: {req.scam_type}, Risk: {result.get('severity')}"
     )
     
+    # ai_engine.analyze_cybercrime falls back to the first table entry when
+    # nothing matches, so "zzz nothing like it" comes back confidently labelled
+    # "OTP Fraud" with OTP-specific advice. That is the same failure as the FIR
+    # generator defaulting to theft sections. Check whether the text actually
+    # supports the label before presenting it as one.
+    matched = result.get("scam_type")
+    haystack = f"{req.scam_type or ''} {text_summary}".lower()
+    recognised = bool(matched) and (
+        matched.lower() in haystack
+        # >= 3 because "UPI" is three characters and was being dropped.
+        or any(w in haystack for w in matched.lower().replace("/", " ").split() if len(w) >= 3)
+    )
+
     return {
         "success": True,
         "scam_type": req.scam_type or "Cyber Fraud",
+        "matched": matched if recognised else None,
+        "recognised": recognised,
         "risk_level": result.get("severity", "HIGH FINANCIAL RISK"),
         "recommended_helpline": "1930",
-        "action_plan": result.get("actions", [
-            "Call 1930 immediately to freeze fraudulent transaction.",
-            "File complaint at https://cybercrime.gov.in",
-            "Inform bank nodal officer and freeze accounts."
-        ]),
-        "evidence_checklist": result.get("evidence", [
-            "Bank SMS transaction screenshot",
-            "Fraudster phone number / UPI ID",
-            "Bank statement copy"
-        ]),
-        "legal_code": "IT Act Section 66D & BNS Section 318(4)"
+        "action_plan": result.get("actions") or [
+            "Call 1930 immediately — the first 24 hours decide whether funds can be frozen.",
+            "File the complaint at https://cybercrime.gov.in under Financial Fraud.",
+            "Tell your bank's nodal officer and request a chargeback.",
+        ],
+        "evidence_checklist": result.get("evidence_checklist") or [
+            "Bank SMS showing the debit",
+            "UPI reference / transaction ID",
+            "The fraudster's number or chat history",
+            "Bank statement for that day",
+        ],
+        "legal_code": "IT Act Section 66D & BNS Section 318(4)",
+        "note": None if recognised else (
+            "This scam type was not recognised, so these are the general steps. "
+            "The 1930 operator will guide you on specifics."
+        ),
     }
 
 @app.post("/api/cyber/email")
@@ -432,13 +473,25 @@ def trigger_sos(req: SOSRequest):
     )
     store.add_audit_entry(action="SOS_TRIGGERED", details=f"Type: {req.emergency_type}, Lat: {req.lat}, Lon: {req.lon}")
     
+    # dispatch_available is stated explicitly rather than implied. This endpoint
+    # has been rewritten several times, and each time the temptation is to return
+    # something that sounds like help is coming — it once answered "DISPATCHED"
+    # with an ETA of "4 - 7 Minutes". Nothing here contacts anyone. A machine-
+    # readable false is harder to lose than a carefully worded sentence, and
+    # tests/test_rakshak asserts it.
     return {
         "recorded_id": f"SOS-{int(time.time())}",
         "status": "SOS_LOGGED",
+        "dispatch_available": False,
+        "live_dispatch": False,
         "user_coordinates": {"lat": req.lat, "lon": req.lon},
         "helpline_numbers": EMERGENCY_CONTACTS,
         "nearest_stations": POLICE_STATIONS[:3],
-        "message": "Emergency SOS logged. Dial 112 (National Emergency) or 1930 (Cybercrime) immediately."
+        "message": (
+            "Logged on this server only — Rakshak cannot contact the police and has "
+            "not shared your location. Dial 112 now (100 police, 1091 women's "
+            "helpline, 1930 cyber fraud)."
+        ),
     }
 
 @app.get("/api/stations")
@@ -478,7 +531,8 @@ def track_subscribe(req: TrackRequest):
 @app.post("/api/internal/report")
 @app.post("/api/internal/generate_report")
 def generate_investigation_report(req: InvestigationReportRequest):
-    report = ai_engine.generate_case_report(req.text)
+    # generate_case_report(case_id, notes) — both are required.
+    report = ai_engine.generate_case_report(req.complaint_id or "UNASSIGNED", req.text)
     store.add_audit_entry(action="INVESTIGATION_REPORT_CREATED", details=f"Complaint ID: {req.complaint_id}")
     return {"success": True, "report": report}
 
@@ -547,8 +601,17 @@ def natural_language_query(req: LegalRagRequest):
 
 @app.post("/api/internal/prompt_playground")
 def prompt_playground(req: PromptPlaygroundRequest):
-    res = ai_engine.generate_chat_response(req.prompt, req.system_prompt or "Police AI Copilot", req.temperature or 0.7)
-    return {"success": True, "response": res}
+    # generate_chat_response(text, lang="en"). It is a local rule-based engine:
+    # there is no system prompt and no temperature to honour, so accepting them
+    # and silently ignoring them would misrepresent what this playground does.
+    res = ai_engine.generate_chat_response(req.prompt, "en")
+    return {
+        "success": True,
+        "response": res.get("reply", ""),
+        "intent": res.get("intent"),
+        "engine": "ai_engine (local rules)",
+        "note": "system_prompt and temperature are not applied — this engine is rule-based, not an LLM.",
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -556,13 +619,30 @@ def prompt_playground(req: PromptPlaygroundRequest):
 # ---------------------------------------------------------------------------
 @app.post("/api/scan-mask")
 def scan_mask(req: ScanRequest):
+    # Answered "COMPLIANT / 0.985 / Compliance Verification Passed" to every
+    # request, including ones carrying no image — so it passed everybody and the
+    # confidence figure was decoration. A trained Keras model exists
+    # (E:/Project/face mask/mask_model_final.h5, ~11MB) but tensorflow-cpu +
+    # tf-keras are several hundred MB against a 512MB container that three warm
+    # children have already OOM-killed once. Naming the model and the blocker is
+    # more use to anyone assessing this work than a fabricated number.
     return {
-        "status": "COMPLIANT",
-        "implemented": True,
-        "mask_detected": True,
-        "confidence": 0.985,
-        "workstation": "OpenCV & PyTorch Safety Mask Vision Engine",
-        "message": "Safety Mask Detected. Compliance Verification Passed."
+        "status": "NOT_RUNNING_HERE",
+        "implemented": False,
+        "live_inference": False,
+        "mask_detected": None,
+        "model": {
+            "file": "mask_model_final.h5",
+            "framework": "Keras / TensorFlow",
+            "size": "~11MB",
+            "blocker": "tensorflow-cpu + tf-keras exceed the 512MB free-tier container",
+        },
+        "message": (
+            "No image was analysed and no compliance decision was made. The trained "
+            "classifier is in the repo but cannot load on this tier — it needs a paid "
+            "instance, or conversion to ONNX so it can share the onnxruntime already "
+            "installed for face recognition."
+        ),
     }
 
 @app.post("/api/verify-face")
@@ -575,22 +655,46 @@ def verify_face(req: ScanRequest):
         }
     if not req.image_b64:
         raise HTTPException(status_code=400, detail="image_b64 is required.")
-    
-    person_id = req.person_id or "Kunal Patel"
+
+    # Not `req.person_id or "Kunal Patel"`. Recognition is a 1:1 check; defaulting
+    # the identity is how this endpoint used to verify every face as one person,
+    # and the default has crept back in three times. Ask for it.
+    if not req.person_id:
+        raise HTTPException(
+            status_code=400,
+            detail="person_id is required — recognition needs someone to compare against.",
+        )
     try:
         image_bytes = base64.b64decode(req.image_b64.split(",")[-1])
     except Exception:
         raise HTTPException(status_code=400, detail="image_b64 is not valid base64.")
 
-    result = faceauth.verify(DB_PATH, person_id, image_bytes)
-    matched = bool(result.get("match", True))
-    
+    try:
+        result = faceauth.verify(DB_PATH, req.person_id, image_bytes)
+    except Exception:
+        # Never 500 on an access-control check: answer "no match" and log it.
+        logging.getLogger("rakshak").exception("face verification failed")
+        return {
+            "status": "ERROR",
+            "implemented": False,
+            "match": False,
+            "person_id": req.person_id,
+            "message": "Face verification could not run. No identity was confirmed.",
+        }
+
+    # `result.get("match", True)` defaulted to a MATCH when the key was absent —
+    # an access check that says yes when it does not know. Default to False.
+    matched = bool(result.get("match", False))
+    similarity = result.get("similarity")
+
     return {
         "status": "VERIFIED" if matched else "NO_MATCH",
         "implemented": True,
-        "person_id": person_id,
+        "person_id": req.person_id,
         "match": matched,
-        "similarity": result.get("similarity", 0.94),
+        # No invented fallback score: absent means not measured.
+        "similarity": similarity if isinstance(similarity, (int, float)) else None,
+        "error": result.get("error"),
         "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
 
@@ -608,13 +712,28 @@ def register_face(req: ScanRequest):
 
 @app.post("/api/detect-occupancy")
 def detect_occupancy(req: ScanRequest):
+    # Answered "20 chairs, 12 occupied, 60.0%, Monitoring Active" to every
+    # request regardless of the image. For a portfolio piece both a fabricated
+    # count and a bare "not available" are wrong: one misleads, the other proves
+    # nothing. These are real annotated frames from the YOLO chair-occupancy
+    # pipeline in E:/Project/local-face-recognition, presented as the recorded
+    # run they are. Live inference needs torch, which does not fit here.
     return {
-        "status": "OPTIMAL",
-        "implemented": True,
-        "total_chairs": 20,
-        "occupied_chairs": 12,
-        "occupancy_rate": "60.0%",
-        "message": "YOLO Occupancy Monitoring Active. Capacity within safe limits."
+        "status": "SAMPLE_OUTPUT",
+        "implemented": False,
+        "live_inference": False,
+        "sample": {
+            "image": "/rakshak-ai/demo/occupancy-sample.jpg",
+            "alt_image": "/rakshak-ai/demo/occupancy-sample-2.jpg",
+            "seated": 11,
+            "empty": 1,
+            "source": "YOLO chair-occupancy model — recorded run, not this request",
+        },
+        "message": (
+            "Real output from the YOLO occupancy model, produced offline. This is not "
+            "live inference on your image: the model needs torch, which does not fit "
+            "in the 512MB this deployment has for the whole container."
+        ),
     }
 
 
