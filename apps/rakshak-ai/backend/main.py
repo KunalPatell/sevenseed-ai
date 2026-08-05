@@ -55,7 +55,7 @@ def _load_dotenv(path=".env"):
     except Exception as e:
         print("[.env] skipped:", e)
 
-_load_dotenv()
+import gc
 
 app = FastAPI(
     title="Rakshak AI — Comprehensive Public Safety & Officer Intelligence Suite",
@@ -70,6 +70,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def gc_middleware(request: Request, call_next):
+    response = await call_next(request)
+    gc.collect()
+    return response
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
