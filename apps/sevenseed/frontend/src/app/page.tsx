@@ -278,7 +278,7 @@ export default function Home() {
               <PersonaAvatar size={200} primary="#f59e0b" secondary="#06b6d4" accessory="seed" name="Sena" role="Studio Orchestrator" />
               <div className="hidden xl:block relative rounded-2xl rounded-bl-none border border-[rgba(245,158,11,0.28)] bg-[rgba(9,9,20,0.85)] px-4 py-3 text-sm text-[#cbd5e1] max-w-[205px] backdrop-blur">
                 <span className="text-[#fef08a] font-semibold">Hi, I&apos;m Sena 👋</span><br />
-                I run the shared AI backbone behind all 8 ventures.
+                I run the shared AI backbone behind all 9 ventures.
               </div>
             </div>
             <StartupOrbitVisual />
@@ -293,11 +293,23 @@ export default function Home() {
       {/* STATS BAND */}
       <section id="stats" className="bg-[#090914] border-y border-[rgba(245,158,11,0.12)]">
         <div className="max-w-[var(--maxw)] mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-[rgba(245,158,11,0.12)]">
-          {/* Every figure here is countable from the codebase — 87 is the number of
-              distinct /api routes across the seven backends. Keep it that way. */}
+          {/* Every figure here is countable, and counted the same way each time.
+              120 is the number of distinct /api routes actually registered across
+              the eight backends, obtained by importing each app and reading its
+              route table — not by grepping for decorators, which over-counted
+              badly (it gave 364, and avpu alone showed 57 against 16 real routes).
+              The previous value, 87, came from a grep that missed @router entirely.
+
+              To recount after adding a venture:
+                for d in <app dirs>; do (cd apps/$d/backend && python -c \
+                  "import main; print(len({r.path for r in main.app.routes \
+                   if getattr(r,'path','').startswith('/api/')}))"); done
+
+              Keep these honest — the site was cleaned of unbackable numbers on
+              2026-07-30 and this is the same discipline. */}
           {[
-            { val: "8",    lbl: "Live AI ventures, each with its own domain model" },
-            { val: "87",   lbl: "Production API endpoints across the portfolio" },
+            { val: "9",    lbl: "Live AI ventures, each with its own domain model" },
+            { val: "120",  lbl: "Production API endpoints across the portfolio" },
             { val: "1",    lbl: "Container runs all of them, via subprocess orchestration" },
             { val: "BYOK", lbl: "Your own API keys — never stored on our servers" },
           ].map((s, i) => (
@@ -315,7 +327,7 @@ export default function Home() {
           <div className="text-center mb-14">
             <span className="eyebrow center mb-4">VENTURE PORTFOLIO</span>
             <h2 className="text-3xl md:text-5xl font-black text-white mt-4">
-              Our 8 specialized AI ventures
+              Our 9 specialized AI ventures
             </h2>
           </div>
         </RevealOnScroll>
