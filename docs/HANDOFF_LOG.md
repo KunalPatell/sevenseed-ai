@@ -1,7 +1,20 @@
 # Sevenseed Group — Build Handoff Log
 
 > Purpose: a self-contained progress + continuation log so the work can be picked up by
-> the user or another AI if the session ends. Last updated: **2026-07-15**.
+> the user or another AI if the session ends. Last updated: **2026-08-05**.
+
+---
+
+## 🚀 **Latest Status Update (2026-08-05)**
+
+### 🛡️ **Rakshak AI (21 Workstations & Public Safety Suite)**
+- **Unified Public Safety & Officer Copilot**: Merged `chatbot`, `face mask`, and `local-face-recognition` into `apps/rakshak-ai`.
+- **49 REST API Endpoints**: All 21 tools and endpoints from `chatbot/app.py` are live on `apps/rakshak-ai/backend/main.py`.
+- **Option 2 ONNX Nano Local Vision Engine**: `mask_detector.py` (OpenCV & ONNX) and `faceauth.py` (InsightFace ONNX) run sub-second local vision inferences.
+- **512 MB Render Free-Tier Memory Optimization**: Added automatic `gc.collect()` garbage collection middleware and array deletion to maintain ~40-60 MB steady RAM and eliminate OOM crashes.
+- **Repository Cleanup**: Removed 949.67 MB of heavy redundant model weights (`yolo11x.pt`, `yolov8x.pt`, etc.) and unused chair detection scripts, retaining lightweight `yolov8n.pt` (6.5 MB).
+- **Frontend Dashboard**: `apps/rakshak-ai/frontend/src/app/page.tsx` updated with 5 category workstation tabs, type-checked with `npx tsc --noEmit` (0 errors).
+- **Live Render URL**: `https://sevenseed.onrender.com/rakshak-ai/`
 
 ---
 
