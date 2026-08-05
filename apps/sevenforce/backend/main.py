@@ -325,7 +325,8 @@ def delete_pitch(item_id: int):
 
 # ── Static frontend mounting ──────────────────────────────────────────────────
 # Enterprise features: auth, AI tools, analytics, export, reminders
-from features import require_user, router as _feat_router
+from authdep import require_user
+from features import router as _feat_router
 app.include_router(_feat_router)
 
 @app.get("/app")

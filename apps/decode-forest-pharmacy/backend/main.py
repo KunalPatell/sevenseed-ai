@@ -13,7 +13,7 @@ if _HERE not in sys.path:
 from fastapi import Depends, FastAPI, File, HTTPException, Header, Request, UploadFile
 # Imported here rather than with the router below: Depends(require_user) is
 # evaluated when the routes are declared, which happens earlier in this file.
-from features import require_user  # noqa: E402
+from authdep import require_user
 
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
