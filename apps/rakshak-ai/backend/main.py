@@ -709,7 +709,13 @@ def verify_face(req: ScanRequest):
         "implemented": True,
         "person_id": person_id,
         "match": matched,
-        "similarity": similarity if isinstance(similarity, (int, float)) else 0.94,
+        # None, not a number. When faceauth has nothing to compare against — the
+        # person is not registered, or no face was found in the image — it omits
+        # similarity entirely, and the fallback here turned that absence into
+        # "0.94". Production was answering `match: false, similarity: 0.94,
+        # error: "No registered face for this user."`: a score for a comparison
+        # that never ran. This is the sixth place that exact number has appeared.
+        "similarity": similarity if isinstance(similarity, (int, float)) else None,
         "error": result.get("error"),
         "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }

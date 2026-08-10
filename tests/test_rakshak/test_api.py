@@ -169,6 +169,28 @@ class TestVision:
         if r.status_code == 200:
             assert r.json().get("implemented") is False  # engine absent, degraded
 
+    def test_no_similarity_score_when_no_comparison_happened(self, client):
+        """An unregistered person yields no score, because nothing was compared.
+
+        Caught in production, not here: /api/verify-face was answering
+        `match: false, similarity: 0.94, error: "No registered face for this
+        user."` — a confident-looking score attached to a comparison that never
+        ran, because the response built `similarity` with `else 0.94` whenever
+        faceauth omitted the key.
+
+        0.94 is the sixth fabricated constant removed from this app. The others
+        were 98.7 and 99.3 in the frontend, 0.985 for mask, and a "Kunal Patel"
+        identity in two separate branches.
+        """
+        r = client.post("/api/verify-face", json={
+            "image_b64": "eHh4", "person_id": "nobody-registered-here"})
+        assert r.status_code in (200, 400)
+        if r.status_code == 200:
+            body = r.json()
+            assert body.get("match") is False
+            assert body.get("similarity") is None, (
+                f"scored a comparison that never happened: {body.get('similarity')}")
+
 
 class TestOfficerTools:
     @pytest.mark.parametrize("path,payload", [
