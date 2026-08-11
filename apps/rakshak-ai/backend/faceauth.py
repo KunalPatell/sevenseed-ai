@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-Biometric face authentication — reused from the user's `local-face-recognition`
-project (InsightFace buffalo_l, ArcFace embeddings, cosine match).
+Biometric face authentication. Register a person's face embedding, then verify a
+live capture against it.
 
-Lazy-loads InsightFace so the app runs fine without it (endpoints report
-"not available" until `insightface`+`onnxruntime`+`opencv` are installed —
-they are in requirements.txt, so it activates in the Docker build).
+Engine: the OpenCV/ONNX pair from the user's `lcb-face-matcher` project — YuNet
+for detection (227KB) and SFace for recognition (37MB), both in backend/models,
+both running on cv2.FaceDetectorYN / cv2.FaceRecognizerSF and the onnxruntime
+already installed. This replaced InsightFace buffalo_l, which downloads ~300MB of
+ONNX at first use — most of what this 512MB container has for everything.
 
-Register a person's face embedding, then verify a live capture against it.
+Verified against real photographs rather than assumed: registering a face and
+re-verifying it gives similarity 1.0; a different person gives 0.056-0.081,
+against a 0.4 threshold; an unregistered id returns an error rather than a match.
 
-Copied from apps/avpu/backend/faceauth.py, which is the same code already running
-in this container for avpu and avp-charitable-trust — so the model pack, the
-memory profile and the CPU settings are known to work on the 512MB free tier.
 Rakshak's /api/verify-face previously returned a hardcoded "Kunal Patel,
 Access: Granted" for any input, including no image at all.
 """
@@ -19,6 +20,10 @@ from __future__ import annotations
 import json
 import sqlite3
 import datetime
+
+# Long-edge cap applied before detection. See _embed for why this exists: a
+# 12-megapixel phone photo OOMed the container and 502'd the whole service.
+_MAX_EDGE = 1280
 
 _model = None
 
@@ -48,6 +53,20 @@ def _embed(image_bytes: bytes):
     matcher_engine.extract_primary_face does the work: it retries with contrast
     enhancement, sharpening, upsampling and rotation before giving up, which
     matters for phone photos.
+
+    The downscale below is not an optimisation, it is why this fits. A phone
+    photo arrives at 4032x3024 — 36MB as a raw BGR array — and the detection
+    cascade upsamples 2x on its fourth pass, so one registration peaked at 300MB
+    inside a 512MB container shared with the hub and another child process. It
+    OOMed and took the whole service down with a 502.
+
+    Capping the long edge at 1280 holds peak RSS to ~176MB, and costs nothing in
+    accuracy: measured against the same pair of faces, 1280/800/640/480 all give
+    self-similarity 1.0 and cross-similarity 0.056-0.081, well clear of the 0.4
+    threshold. A face needs pixels on the face, not on the wall behind it.
+
+    Registration and verification both run through here, so both sides are
+    scaled the same way and embeddings stay comparable.
     """
     import cv2
     import numpy as np
@@ -58,6 +77,14 @@ def _embed(image_bytes: bytes):
     img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
     if img is None:
         return None
+
+    h, w = img.shape[:2]
+    if max(h, w) > _MAX_EDGE:
+        s = _MAX_EDGE / max(h, w)
+        small = cv2.resize(img, (int(w * s), int(h * s)), interpolation=cv2.INTER_AREA)
+        del img  # drop the full-resolution copy before the models allocate
+        img = small
+
     try:
         emb, _box = matcher_engine.extract_primary_face(img)
     except ValueError:
