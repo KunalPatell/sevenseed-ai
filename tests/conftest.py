@@ -86,10 +86,37 @@ def in_memory_db():
 
 
 # ── env var helpers ────────────────────────────────────────────────────────────
+_LIVE_KEYS = ("GROQ_API_KEY", "GEMINI_API_KEY", "OPENAI_API_KEY", "SERPAPI_KEY")
+
+
+@pytest.fixture(autouse=True)
+def _no_live_api_keys(monkeypatch):
+    """Strip real API keys from every test. Autouse, deliberately.
+
+    apps/avp-emart/backend/.env holds a real SERPAPI_KEY, and that app's main.py
+    calls load_dotenv() at import. Any test that imported it therefore pushed the
+    key into os.environ for the rest of the session — and comparator.compare()
+    switches from sample data to live SerpAPI calls whenever SERPAPI_KEY is set.
+
+    So tests/test_avp_emart/test_comparator.py was quietly making paid network
+    requests, but only when it happened to run after test_api.py. That is what
+    the intermittent failures were: not a bug in the comparator, a live HTTP call
+    whose results vary. The suite went 928-pass / 4-fail / 1-fail across three
+    consecutive runs with no code change between them.
+
+    A test suite must not depend on the network or spend money. Tests that need a
+    key set their own fake one (see with_groq_key), which still works because
+    monkeypatch.setenv runs after this fixture.
+    """
+    for key in _LIVE_KEYS:
+        monkeypatch.delenv(key, raising=False)
+
+
 @pytest.fixture(autouse=False)
 def no_api_keys(monkeypatch):
-    """Strip all LLM API keys so agents fall back to offline mode."""
-    for key in ("GROQ_API_KEY", "GEMINI_API_KEY", "OPENAI_API_KEY", "SERPAPI_KEY"):
+    """Kept for tests that request it explicitly; the autouse fixture above now
+    covers every test, so this is a no-op in practice."""
+    for key in _LIVE_KEYS:
         monkeypatch.delenv(key, raising=False)
 
 
