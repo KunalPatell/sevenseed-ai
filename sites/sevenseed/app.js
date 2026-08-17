@@ -413,8 +413,9 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
     var nodes = RECIPES[id] || RECIPES['1'];
     var html = '<div class="recipe-nodes">';
     nodes.forEach(function(node, i){
+      var tagClass = node.tag.indexOf('TRIGGER') !== -1 ? 'trigger' : (node.tag.indexOf('AGENT') !== -1 ? 'agent' : 'action');
       html += '<div class="r-node glow">';
-      html += '<div class="r-node-tag"><i class="fas fa-circle-dot"></i> ' + node.tag + '</div>';
+      html += '<div class="r-node-tag ' + tagClass + '"><i class="fas fa-circle-dot"></i> ' + node.tag + '</div>';
       html += '<h5>' + node.title + '</h5>';
       html += '<p>' + node.desc + '</p>';
       html += '</div>';
