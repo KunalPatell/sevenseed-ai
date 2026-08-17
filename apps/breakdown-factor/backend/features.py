@@ -231,7 +231,7 @@ def timeline(r: TimelineReq): return _timeline(r.project_type, r.area)
 def tender(r: TenderReq): return _tender(r.scope, r.budget)
 
 @router.post("/api/projects")
-def add_project(r: ProjectReq):
+def add_project(r: ProjectReq, _user: dict = Depends(require_user)):
     with _c() as c:
         c.execute("INSERT INTO projects (created_at,email,name,ptype,area,status,notes) VALUES (?,?,?,?,?,?,?)",
                   (datetime.datetime.utcnow().isoformat(), r.email, r.name, r.ptype, r.area, r.status, r.notes))
@@ -247,7 +247,7 @@ def analytics(_user: dict = Depends(require_user)): return _overview()
 @router.post("/api/export/report")
 def export_report(r: ReportReq): return HTMLResponse(_report_html(r.title, r.subtitle, r.sections))
 @router.post("/api/reminders")
-def add_reminder(r: ReminderReq):
+def add_reminder(r: ReminderReq, _user: dict = Depends(require_user)):
     with _c() as c:
         c.execute("INSERT INTO reminders (created_at,email,title,remind_at) VALUES (?,?,?,?)",
                   (datetime.datetime.utcnow().isoformat(), r.email, r.title, r.remind_at))

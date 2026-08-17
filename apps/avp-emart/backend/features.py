@@ -241,7 +241,7 @@ def analytics(_user: dict = Depends(require_user)): return _overview()
 def export_report(r: ReportReq): return HTMLResponse(_report_html(r.title, r.subtitle, r.sections))
 
 @router.post("/api/reminders")
-def add_reminder(r: ReminderReq):
+def add_reminder(r: ReminderReq, _user: dict = Depends(require_user)):
     try:
         with _c() as c:
             c.execute("INSERT INTO reminders (created_at,email,title,remind_at) VALUES (?,?,?,?)",
@@ -295,7 +295,7 @@ class GiftReq(BaseModel): occasion: str; budget: float = 5000; recipient: str = 
 class NegotiateReq(BaseModel): item: str; quoted_price: float = 0
 
 @router.post("/api/orders")
-def place_order(r: OrderReq):
+def place_order(r: OrderReq, _user: dict = Depends(require_user)):
     with _c() as c:
         oid = c.execute("INSERT INTO orders (created_at,email,item,platform,price,status) VALUES (?,?,?,?,?,?)",
                         (datetime.datetime.utcnow().isoformat(), r.email, r.item, r.platform, r.price, "Placed")).lastrowid
@@ -345,7 +345,7 @@ class SubReq(BaseModel): email: str; item: str; frequency: str = "monthly"
 class CouponReq(BaseModel): cart_value: float = 0
 
 @router.post("/api/loyalty")
-def add_points(r: LoyaltyReq):
+def add_points(r: LoyaltyReq, _user: dict = Depends(require_user)):
     with _c() as c:
         c.execute("INSERT INTO loyalty (created_at,email,points) VALUES (?,?,?)", (datetime.datetime.utcnow().isoformat(), r.email, r.points))
     return {"saved": True}
@@ -358,7 +358,7 @@ def loyalty_balance(email: str, _user: dict = Depends(require_user)):
             "next_tier_at": {"Bronze": 500, "Silver": 2000, "Gold": 5000, "Platinum": None}[_tier(total)]}
 
 @router.post("/api/subscriptions")
-def subscribe(r: SubReq):
+def subscribe(r: SubReq, _user: dict = Depends(require_user)):
     with _c() as c:
         sid = c.execute("INSERT INTO subscriptions (created_at,email,item,frequency) VALUES (?,?,?,?)",
                         (datetime.datetime.utcnow().isoformat(), r.email, r.item, r.frequency)).lastrowid

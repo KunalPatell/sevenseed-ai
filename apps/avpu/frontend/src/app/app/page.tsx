@@ -33,7 +33,10 @@ import {
   Trophy,
   Clock,
   Target,
-  MapPin
+  MapPin,
+  QrCode,
+  UserCheck,
+  Timer
 } from "lucide-react";
 
 // This dashboard is served under the "/avpu" path when merged into the
@@ -41,7 +44,7 @@ import {
 // calls must go through that same prefix, not root-relative "/api/...".
 const API_BASE = "/avpu";
 
-type PanelType = "dashboard" | "tutor" | "roadmaps" | "assessments" | "placements" | "admissions" | "research" | "quiz";
+type PanelType = "dashboard" | "tutor" | "roadmaps" | "assessments" | "placements" | "admissions" | "research" | "quiz" | "attendance";
 
 interface StudyRoadmap {
   id: number;
@@ -184,6 +187,18 @@ export default function StudentPortal() {
   const [researchResult, setResearchResult] = useState("");
   const [researchLoading, setResearchLoading] = useState(false);
 
+  // Attendance — QR/OTP session check-in (faculty generates a code, students check in with it)
+  const [sessionSubject, setSessionSubject] = useState("Data Structures");
+  const [sessionDuration, setSessionDuration] = useState(5);
+  const [sessionLoading, setSessionLoading] = useState(false);
+  const [sessionCode, setSessionCode] = useState("");
+  const [sessionExpiresAt, setSessionExpiresAt] = useState<string>("");
+  const [sessionSecondsLeft, setSessionSecondsLeft] = useState(0);
+  const [checkinCode, setCheckinCode] = useState("");
+  const [checkinEmail, setCheckinEmail] = useState("");
+  const [checkinLoading, setCheckinLoading] = useState(false);
+  const [checkinResult, setCheckinResult] = useState<{ ok: boolean; message: string } | null>(null);
+
   // DB History lists
   const [historySessions, setHistorySessions] = useState<LearningSession[]>([]);
   const [historyRoadmaps, setHistoryRoadmaps] = useState<StudyRoadmap[]>([]);
@@ -199,6 +214,21 @@ export default function StudentPortal() {
       tutorScrollRef.current.scrollTop = tutorScrollRef.current.scrollHeight;
     }
   }, [tutorMessages]);
+
+  // Countdown for the active attendance session code
+  useEffect(() => {
+    if (!sessionExpiresAt) {
+      setSessionSecondsLeft(0);
+      return;
+    }
+    const tick = () => {
+      const left = Math.round((new Date(sessionExpiresAt + "Z").getTime() - Date.now()) / 1000);
+      setSessionSecondsLeft(Math.max(0, left));
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [sessionExpiresAt]);
 
   const loadHealthAndPrograms = async () => {
     try {
@@ -438,6 +468,52 @@ export default function StudentPortal() {
     }
   };
 
+  const handleGenerateSession = async () => {
+    if (!sessionSubject.trim() || sessionLoading) return;
+    setSessionLoading(true);
+    try {
+      const res = await fetch(API_BASE + "/api/attendance/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject: sessionSubject, duration_minutes: sessionDuration })
+      });
+      if (res.ok) {
+        const d = await res.json();
+        setSessionCode(d.code);
+        setSessionExpiresAt(d.expires_at);
+      }
+    } catch (e) {
+    } finally {
+      setSessionLoading(false);
+    }
+  };
+
+  const handleCheckin = async () => {
+    const code = checkinCode.trim();
+    const email = checkinEmail.trim();
+    if (!code || !email || checkinLoading) return;
+    setCheckinLoading(true);
+    setCheckinResult(null);
+    try {
+      const res = await fetch(API_BASE + "/api/attendance/checkin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, email })
+      });
+      const d = await res.json();
+      if (res.ok) {
+        setCheckinResult({ ok: true, message: `Checked in for ${d.subject}.` });
+        setCheckinCode("");
+      } else {
+        setCheckinResult({ ok: false, message: d.detail || "Check-in failed." });
+      }
+    } catch (e) {
+      setCheckinResult({ ok: false, message: "Server offline. Please try again." });
+    } finally {
+      setCheckinLoading(false);
+    }
+  };
+
   // Helper
   const strRandom = () => Math.random().toString(36).substring(2, 15);
 
@@ -510,7 +586,8 @@ export default function StudentPortal() {
               { key: "placements" as PanelType, label: "Placements", icon: Briefcase },
               { key: "admissions" as PanelType, label: "Admissions", icon: Search },
               { key: "research" as PanelType, label: "Research", icon: FileText },
-              { key: "quiz" as PanelType, label: "Quiz Yourself", icon: Layers }
+              { key: "quiz" as PanelType, label: "Quiz Yourself", icon: Layers },
+              { key: "attendance" as PanelType, label: "Attendance", icon: QrCode }
             ].map(({ key, label, icon: Icon }) => (
               <button
                 key={key}
@@ -1163,6 +1240,132 @@ export default function StudentPortal() {
           </div>
         )}
       </div>
+    ),
+    attendance: (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start animate-[fade_0.3s_ease]">
+        {/* Faculty side — generate a short-lived session code */}
+        <div className="flex flex-col gap-6">
+          <div className="flex items-start gap-4 bg-white/[0.02] border border-white/5 rounded-2xl p-5 backdrop-blur-md">
+            <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#6366f1]/25 to-[#3b82f6]/10 flex items-center justify-center shrink-0 border border-white/10">
+              <QrCode className="h-6 w-6 text-[#c7d2fe]" />
+            </span>
+            <div>
+              <h3 className="text-base font-black text-white font-mono">Attendance Session</h3>
+              <p className="text-xs text-[#9aa0b8] mt-1.5 leading-relaxed">
+                Generate a short-lived session code for your class. Students check in with the code — no biometric data collected.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-6 flex flex-col gap-5 shadow-2xl">
+            <div>
+              <label className="text-[10px] uppercase font-bold text-[#9aa0b8] tracking-wider block mb-2">Subject</label>
+              <input
+                type="text"
+                value={sessionSubject}
+                onChange={(e) => setSessionSubject(e.target.value)}
+                placeholder="e.g. Data Structures"
+                className="w-full bg-[#12121e] border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#6366f1]"
+              />
+            </div>
+            <div>
+              <label className="text-[10px] uppercase font-bold text-[#9aa0b8] tracking-wider block mb-2">Duration (Minutes)</label>
+              <input
+                type="number"
+                min={1}
+                max={60}
+                value={sessionDuration}
+                onChange={(e) => setSessionDuration(parseInt(e.target.value) || 5)}
+                className="w-full bg-[#12121e] border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#6366f1]"
+              />
+            </div>
+            <button onClick={handleGenerateSession} disabled={sessionLoading} className="btn w-full bg-gradient-to-r from-[#6366f1] to-[#3b82f6] text-white font-extrabold py-4 rounded-xl cursor-pointer disabled:opacity-60 inline-flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(99,102,241,0.3)]">
+              {sessionLoading ? <><Loader2 className="h-4 w-4 animate-spin" /> Generating code...</> : <><QrCode className="h-4 w-4" /> Generate Session Code</>}
+            </button>
+          </div>
+        </div>
+
+        <div className="console-panel bg-[#0d0f0e] border border-white/5 rounded-2xl p-6 min-h-[300px] flex flex-col shadow-2xl">
+          <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
+            <span className="text-xs font-bold text-[#9aa0b8] uppercase tracking-wider font-mono flex items-center gap-2"><Timer className="h-4 w-4 text-[#6366f1]" /> Active Session</span>
+            <div className="flex items-center gap-2">
+              <span className={`w-2.5 h-2.5 rounded-full ${sessionCode && sessionSecondsLeft > 0 ? "bg-[#10b981]" : "bg-[#5b5f78]"} shadow-lg`}></span>
+              <span className="text-[10px] uppercase text-[#5b5f78] font-bold">{sessionCode && sessionSecondsLeft > 0 ? "live" : "none"}</span>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col justify-center">
+            {sessionCode ? (
+              <div className="flex flex-col items-center gap-3 animate-[fade_0.3s_ease]">
+                <span className="text-[10px] uppercase font-bold text-[#9aa0b8] tracking-wider">{sessionSubject}</span>
+                <div className="text-5xl font-black tracking-[0.2em] text-white font-mono bg-[#6366f1]/10 border border-[#6366f1]/25 rounded-2xl px-8 py-5">
+                  {sessionCode}
+                </div>
+                {sessionSecondsLeft > 0 ? (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#6ee7b7] bg-[#10b981]/10 border border-[#10b981]/25 px-3 py-1.5 rounded-full">
+                    <Timer className="h-3.5 w-3.5" /> Expires in {Math.floor(sessionSecondsLeft / 60)}:{String(sessionSecondsLeft % 60).padStart(2, "0")}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-300 bg-rose-500/10 border border-rose-500/25 px-3 py-1.5 rounded-full">
+                    Expired — generate a new code
+                  </span>
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-3 text-[#5b5f78]">
+                <QrCode className="h-10 w-10 opacity-20" />
+                <p className="text-xs text-center max-w-[220px]">Generate a code above to open an attendance session.</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Student side — check in with the code */}
+        <div className="lg:col-span-2 form-card bg-[#0d0f0e] border border-white/5 rounded-2xl p-6 flex flex-col gap-4 max-w-[820px]">
+          <div className="flex items-center gap-3">
+            <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#6366f1]/25 to-[#3b82f6]/10 flex items-center justify-center shrink-0">
+              <UserCheck className="h-5 w-5 text-[#c7d2fe]" />
+            </span>
+            <div>
+              <h3 className="text-sm font-bold text-white">Student Check-in</h3>
+              <p className="text-xs text-[#9aa0b8] mt-1 leading-relaxed">Enter the session code shared by your instructor to mark yourself present.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-[11.5px] font-bold uppercase tracking-wider text-[#9aa0b8] block mb-1.5">Session Code</label>
+              <input
+                type="text"
+                value={checkinCode}
+                onChange={(e) => setCheckinCode(e.target.value.toUpperCase())}
+                placeholder="e.g. A1B2C3"
+                className="w-full bg-[#12121e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white font-mono tracking-widest focus:outline-none focus:border-[#6366f1]"
+              />
+            </div>
+            <div>
+              <label className="text-[11.5px] font-bold uppercase tracking-wider text-[#9aa0b8] block mb-1.5">Your Email</label>
+              <input
+                type="email"
+                value={checkinEmail}
+                onChange={(e) => setCheckinEmail(e.target.value)}
+                placeholder="you@avpu.edu.in"
+                className="w-full bg-[#12121e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#6366f1]"
+              />
+            </div>
+          </div>
+          <button onClick={handleCheckin} disabled={checkinLoading} className="btn w-full bg-gradient-to-r from-[#6366f1] to-[#3b82f6] text-white font-semibold py-3.5 rounded-xl cursor-pointer disabled:opacity-60 inline-flex items-center justify-center gap-2">
+            {checkinLoading ? <><Loader2 className="h-4 w-4 animate-spin" /> Checking in...</> : <><UserCheck className="h-4 w-4" /> Check In</>}
+          </button>
+          {checkinResult && (
+            <div className={`text-xs font-semibold rounded-xl px-4 py-3 border flex items-center gap-2 ${
+              checkinResult.ok ? "bg-[#10b981]/10 border-[#10b981]/25 text-[#6ee7b7]" : "bg-rose-500/10 border-rose-500/25 text-rose-300"
+            }`}>
+              {checkinResult.ok ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <XCircle className="h-4 w-4 shrink-0" />}
+              {checkinResult.message}
+            </div>
+          )}
+        </div>
+      </div>
     )
   };
 
@@ -1193,7 +1396,8 @@ export default function StudentPortal() {
             { key: "placements" as PanelType, label: "Placements Matcher", icon: Briefcase },
             { key: "admissions" as PanelType, label: "Admissions Counselor", icon: Search },
             { key: "research" as PanelType, label: "Research Abstract", icon: FileText },
-            { key: "quiz" as PanelType, label: "Quiz Yourself", icon: Layers }
+            { key: "quiz" as PanelType, label: "Quiz Yourself", icon: Layers },
+            { key: "attendance" as PanelType, label: "Attendance", icon: QrCode }
           ].map(({ key, label, icon: Icon }) => {
             const active = activePanel === key;
             return (

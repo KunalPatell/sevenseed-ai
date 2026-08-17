@@ -297,7 +297,7 @@ def me(authorization: str = Header(None)):
     return {"user": _verify(authorization.replace("Bearer ", "").strip() if authorization else None)}
 
 @router.post("/api/ideas")
-def add_idea(r: IdeaReq):
+def add_idea(r: IdeaReq, _user: dict = Depends(require_user)):
     with _c() as c:
         c.execute("INSERT INTO ideas (created_at,email,title,sector,notes) VALUES (?,?,?,?,?)",
                   (datetime.datetime.utcnow().isoformat(), r.email, r.title, r.sector, r.notes))
@@ -338,7 +338,7 @@ def export_docx(r: DocxExportReq):
         return JSONResponse({"error": f"Failed to build Word document: {e}"}, status_code=500)
 
 @router.post("/api/reminders")
-def add_reminder(r: ReminderReq):
+def add_reminder(r: ReminderReq, _user: dict = Depends(require_user)):
     with _c() as c:
         c.execute("INSERT INTO reminders (created_at,email,title,remind_at) VALUES (?,?,?,?)",
                   (datetime.datetime.utcnow().isoformat(), r.email, r.title, r.remind_at))

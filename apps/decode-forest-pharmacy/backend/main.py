@@ -142,14 +142,29 @@ def assistant_demo(req: AssistantDemoReq, request: Request):
     return agents.run_assistant_demo(req.message)
 
 @app.post("/api/prescription")
-def prescription(req: PrescriptionReq):
+def prescription(req: PrescriptionReq, _user: dict = Depends(require_user)):
     data = agents.read_prescription(req.text)
     db.save_prescription(req.text, data.get("result", ""))
     return data
 
+_MAX_SCAN_BYTES = 10 * 1024 * 1024  # 10 MB
+_SCAN_CONTENT_TYPES = {"image/jpeg", "image/jpg", "image/png"}
+
 @app.post("/api/prescription/scan")
-async def scan_prescription(file: UploadFile = File(...)):
+async def scan_prescription(request: Request, file: UploadFile = File(...)):
+    # Same bucket-based limiter as the other LLM-touching public endpoint
+    # (/api/assistant/demo) — this one also runs OCR + an LLM call per request.
+    check_rate_limit(request, bucket="prescription_scan", limit=5, window_s=3600, global_limit=200)
+
+    if file.content_type not in _SCAN_CONTENT_TYPES:
+        raise HTTPException(status_code=400, detail="Only JPEG or PNG prescription images are supported.")
+
     content = await file.read()
+    if len(content) > _MAX_SCAN_BYTES:
+        raise HTTPException(status_code=413, detail="Image is too large — please upload a file under 10 MB.")
+    if not content:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+
     import tempfile, json
     with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmp:
         tmp.write(content)
@@ -171,7 +186,7 @@ async def scan_prescription(file: UploadFile = File(...)):
             pass
 
 @app.post("/api/interactions")
-def interactions(req: InteractionReq):
+def interactions(req: InteractionReq, _user: dict = Depends(require_user)):
     data = agents.check_interactions(req.drugs)
     db.save_interaction(req.drugs, data.get("result", ""))
     return data
@@ -181,7 +196,7 @@ def substitutes(req: SubstituteReq):
     return agents.find_substitutes(req.medicine)
 
 @app.post("/api/refill")
-def refill(req: RefillReq):
+def refill(req: RefillReq, _user: dict = Depends(require_user)):
     data = agents.predict_refill(req.medicine, req.quantity, req.dose_per_day, req.start_date)
     if "refill_date" in data:
         db.save_refill(
@@ -218,7 +233,7 @@ def get_refills(limit: int = 50, _user: dict = Depends(require_user)):
     return {"refills": db.list_refills(limit)}
 
 @app.delete("/api/refills/{item_id}")
-def remove_refill(item_id: int):
+def remove_refill(item_id: int, _user: dict = Depends(require_user)):
     success = db.delete_refill(item_id)
     if not success:
         raise HTTPException(status_code=404, detail="Refill record not found")

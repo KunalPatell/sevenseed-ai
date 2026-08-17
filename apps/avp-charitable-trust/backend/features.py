@@ -6,6 +6,7 @@ from itsdangerous import URLSafeTimedSerializer
 from fastapi import APIRouter, Depends, HTTPException, Header
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
+import campaign_manager
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 try:
@@ -278,6 +279,19 @@ def export_form_10bd(financial_year: str = "", _user: dict = Depends(require_use
     valid PAN are returned separately rather than silently dropped: they cannot be
     filed, and the trust needs to know which donors to chase.
     """
+    return _form10bd_report(financial_year)
+
+
+def _form10bd_report(financial_year: str = ""):
+    """Shared donation lookup behind Form 10BD filing and Form 10BE donor notices.
+
+    Factored out of `export_form_10bd` so `/api/notify/form10be` can reuse the
+    exact same "which donations are filable this FY" logic instead of running a
+    second, possibly-diverging query. Each entry also carries the donor's email
+    (not part of the Form 10BD column schema, but needed to notify them) —
+    harmless to include since every caller of this helper is already
+    admin-gated.
+    """
     fy = (financial_year or "").strip()
     if not fy:
         today = datetime.date.today()
@@ -303,6 +317,7 @@ def export_form_10bd(financial_year: str = "", _user: dict = Depends(require_use
             # Column names follow the Form 10BD schema so this maps onto the
             # utility's template without renaming.
             "donor_name": r.get("donor", ""),
+            "email": r.get("email", ""),
             "id_type": "PAN",
             "id_number": pan,
             "address": "",           # not collected yet — see the note below
@@ -328,6 +343,43 @@ def export_form_10bd(financial_year: str = "", _user: dict = Depends(require_use
             "Add it to the donation form before relying on this export for a real filing."
         ),
     }
+
+
+class Form10beNotifyReq(BaseModel): financial_year: str = ""
+
+
+@router.post("/api/notify/form10be")
+def notify_form10be(r: Form10beNotifyReq, _user: dict = Depends(require_user)):
+    """Tell filable donors for a financial year that their Form 10BE is coming.
+
+    Reuses `_form10bd_report` — the same donation lookup `export_form_10bd` is
+    built on — so only donors whose row actually has a valid PAN (i.e. can be
+    filed at all) get notified. Each email is sent independently so one bad
+    address or a transient SMTP error doesn't abort the rest of the batch.
+    """
+    report = _form10bd_report(r.financial_year)
+    notified = 0
+    failed = []
+    for entry in report["filable"]:
+        to = (entry.get("email") or "").strip()
+        donor = entry.get("donor_name") or "Donor"
+        if not to:
+            failed.append({"email": "", "error": f"No email on file for {donor}."})
+            continue
+        body = (
+            f"<p>Dear {_html.escape(donor)},</p>"
+            f"<p>Form 10BD for FY {_html.escape(report['financial_year'])} has been filed with the Income Tax "
+            "Department, reporting your donation to AVP Charitable Trust for 80G purposes.</p>"
+            "<p>Your Form 10BE certificate — the document you'll need to actually claim the 80G deduction — will "
+            "be available for download once it is processed.</p>"
+            "<p>Thank you for your generosity. 💚<br>AVP Charitable Trust</p>"
+        )
+        try:
+            campaign_manager.send_donor_email(to, "Your Form 10BE is on its way", body)
+            notified += 1
+        except Exception as e:
+            failed.append({"email": to, "error": str(e)})
+    return {"financial_year": report["financial_year"], "notified": notified, "failed": failed}
 
 
 @router.get("/api/donations")
@@ -359,7 +411,7 @@ def analytics(_user: dict = Depends(require_user)): return _overview()
 @router.post("/api/export/report")
 def export_report(r: ReportReq): return HTMLResponse(_report_html(r.title, r.subtitle, r.sections))
 @router.post("/api/reminders")
-def add_reminder(r: ReminderReq):
+def add_reminder(r: ReminderReq, _user: dict = Depends(require_user)):
     with _c() as c:
         c.execute("INSERT INTO reminders (created_at,email,title,remind_at) VALUES (?,?,?,?)",
                   (datetime.datetime.utcnow().isoformat(), r.email, r.title, r.remind_at))
@@ -411,7 +463,7 @@ class EventReq(BaseModel): title: str; date: str = ""; location: str = ""; volun
 class ThankReq(BaseModel): donor: str; amount: float = 0
 
 @router.post("/api/campaigns")
-def create_campaign(r: CampaignReq2):
+def create_campaign(r: CampaignReq2, _user: dict = Depends(require_user)):
     with _c() as c:
         cid = c.execute("INSERT INTO campaigns (created_at,title,goal,raised,cause) VALUES (?,?,?,?,?)",
                         (datetime.datetime.utcnow().isoformat(), r.title, r.goal, 0, r.cause)).lastrowid
@@ -426,7 +478,7 @@ def list_campaigns(_user: dict = Depends(require_user)):
     return {"campaigns": rows}
 
 @router.post("/api/events")
-def create_event(r: EventReq):
+def create_event(r: EventReq, _user: dict = Depends(require_user)):
     with _c() as c:
         eid = c.execute("INSERT INTO events (created_at,title,date,location,volunteers_needed) VALUES (?,?,?,?,?)",
                         (datetime.datetime.utcnow().isoformat(), r.title, r.date, r.location, r.volunteers_needed)).lastrowid
@@ -455,7 +507,7 @@ class PledgeReq(BaseModel): donor: str; amount: float; frequency: str = "monthly
 class AppealReq(BaseModel): cause: str; donor: str = "Friend"
 
 @router.post("/api/donors")
-def add_donor(r: DonorReq):
+def add_donor(r: DonorReq, _user: dict = Depends(require_user)):
     with _c() as c:
         did = c.execute("INSERT INTO donors (created_at,name,email,phone,total_given) VALUES (?,?,?,?,?)",
                         (datetime.datetime.utcnow().isoformat(), r.name, r.email, r.phone, r.total_given)).lastrowid
@@ -469,7 +521,7 @@ def list_donors(_user: dict = Depends(require_user)):
     return {"donors": rows, "count": len(rows), "lifetime_total": total}
 
 @router.post("/api/pledges")
-def add_pledge(r: PledgeReq):
+def add_pledge(r: PledgeReq, _user: dict = Depends(require_user)):
     with _c() as c:
         pid = c.execute("INSERT INTO pledges (created_at,donor,amount,frequency) VALUES (?,?,?,?)",
                         (datetime.datetime.utcnow().isoformat(), r.donor, r.amount, r.frequency)).lastrowid

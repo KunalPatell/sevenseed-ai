@@ -268,7 +268,7 @@ def _send_email(to: str, subject: str, body: str) -> bool:
 
 
 @router.post("/api/reminders")
-def add_reminder(r: ReminderReq):
+def add_reminder(r: ReminderReq, _user: dict = Depends(require_user)):
     try:
         c = sqlite3.connect(config.DB_PATH)
         c.execute("INSERT INTO reminders (created_at, email, title, remind_at) VALUES (?,?,?,?)",
@@ -297,6 +297,7 @@ def _init3():
     try:
         c = sqlite3.connect(config.DB_PATH)
         c.execute("CREATE TABLE IF NOT EXISTS attendance (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT, email TEXT, subject TEXT, status TEXT)")
+        c.execute("CREATE TABLE IF NOT EXISTS attendance_sessions (id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT, subject TEXT, created_at TEXT, expires_at TEXT)")
         c.commit(); c.close()
     except Exception as e:
         print(f"[features] init3: {e}")
@@ -379,6 +380,60 @@ def get_attendance(email: str = "", _user: dict = Depends(require_user)):
     return {"attendance": rows, "present": present, "total": total, "percentage": round(present / total * 100, 1) if total else 0}
 
 
+# ── QR/OTP session-based attendance check-in ─────────────────────────────────
+# Added 2026-08-13. docs/FEATURE_RESEARCH_2026-07.md §4 flags biometric
+# (face-recognition) attendance as AVPU's single biggest DPDP compliance
+# liability. The face-auth system in faceauth.py exists but nothing calls it
+# for attendance today, so attendance is built the safe way instead: faculty
+# generates a short-lived session code, students check in with that code.
+# Unauthenticated by design (students may not have accounts), same as the
+# pre-existing mark_attendance endpoint below.
+class AttendanceSessionReq(BaseModel):
+    subject: str
+    duration_minutes: int = 5
+
+
+def _gen_session_code(n: int = 6) -> str:
+    import random
+    import string
+    return "".join(random.choices(string.ascii_uppercase + string.digits, k=n))
+
+
+@router.post("/api/attendance/session")
+def start_attendance_session(r: AttendanceSessionReq):
+    code = _gen_session_code()
+    now = datetime.datetime.utcnow()
+    expires_at = (now + datetime.timedelta(minutes=r.duration_minutes)).isoformat()
+    c = sqlite3.connect(config.DB_PATH)
+    c.execute("INSERT INTO attendance_sessions (code, subject, created_at, expires_at) VALUES (?,?,?,?)",
+              (code, r.subject, now.isoformat(), expires_at))
+    c.commit(); c.close()
+    return {"code": code, "subject": r.subject, "expires_at": expires_at}
+
+
+class AttendanceCheckinReq(BaseModel):
+    code: str
+    email: str
+
+
+@router.post("/api/attendance/checkin")
+def attendance_checkin(r: AttendanceCheckinReq):
+    code = (r.code or "").strip().upper()
+    c = sqlite3.connect(config.DB_PATH); c.row_factory = sqlite3.Row
+    row = c.execute("SELECT * FROM attendance_sessions WHERE code=? ORDER BY id DESC LIMIT 1", (code,)).fetchone()
+    if not row:
+        c.close()
+        raise HTTPException(status_code=400, detail="Invalid session code.")
+    if datetime.datetime.utcnow().isoformat() > row["expires_at"]:
+        c.close()
+        raise HTTPException(status_code=400, detail="This session code has expired.")
+    subject = row["subject"]
+    c.execute("INSERT INTO attendance (created_at,email,subject,status) VALUES (?,?,?,?)",
+              (datetime.datetime.utcnow().isoformat(), r.email, subject, "present"))
+    c.commit(); c.close()
+    return {"checked_in": True, "subject": subject}
+
+
 # ── Wave 4 (LMS / grades) ─────────────────────────────────────────────────────
 def _init4():
     try:
@@ -411,7 +466,7 @@ def _gpa(items):
     return round(sum(_GP.get(str(x.get("grade", "")).upper(), 0) * float(x.get("credits", 0)) for x in items) / tc, 2)
 
 @router.post("/api/grades")
-def add_grade(r: GradeReq):
+def add_grade(r: GradeReq, _user: dict = Depends(require_user)):
     c = sqlite3.connect(config.DB_PATH)
     c.execute("INSERT INTO grades (created_at,email,subject,grade,credits) VALUES (?,?,?,?,?)",
               (datetime.datetime.utcnow().isoformat(), r.email, r.subject, r.grade.upper(), r.credits))

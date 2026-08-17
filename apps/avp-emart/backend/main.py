@@ -171,12 +171,12 @@ def get_wishlist(limit: int = 50, _user: dict = Depends(require_user)):
     return {"wishlist": db.list_wishlist(limit)}
 
 @app.post("/api/wishlist")
-def add_wishlist(req: WishlistReq):
+def add_wishlist(req: WishlistReq, _user: dict = Depends(require_user)):
     item_id = db.add_to_wishlist(req.title, req.price, req.platform, req.url)
     return {"success": True, "id": item_id}
 
 @app.delete("/api/wishlist/{item_id}")
-def delete_wishlist(item_id: int):
+def delete_wishlist(item_id: int, _user: dict = Depends(require_user)):
     success = db.delete_wishlist_item(item_id)
     if not success:
         raise HTTPException(status_code=404, detail="Item not found")
@@ -187,12 +187,12 @@ def get_alerts(limit: int = 50, _user: dict = Depends(require_user)):
     return {"alerts": db.list_price_alerts(limit)}
 
 @app.post("/api/alerts")
-def add_alert(req: AlertReq):
+def add_alert(req: AlertReq, _user: dict = Depends(require_user)):
     alert_id = db.add_price_alert(req.title, req.target_price, req.current_price, req.platform)
     return {"success": True, "id": alert_id}
 
 @app.delete("/api/alerts/{alert_id}")
-def delete_alert(alert_id: int):
+def delete_alert(alert_id: int, _user: dict = Depends(require_user)):
     success = db.delete_price_alert(alert_id)
     if not success:
         raise HTTPException(status_code=404, detail="Alert not found")
