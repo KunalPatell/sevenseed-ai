@@ -40,6 +40,12 @@ COPY --chown=user apps/breakdown-factor/backend/ $HOME/app/apps/breakdown-factor
 COPY --chown=user apps/avp-charitable-trust/backend/ $HOME/app/apps/avp-charitable-trust/backend/
 COPY --chown=user apps/decode-forest-pharmacy/backend/ $HOME/app/apps/decode-forest-pharmacy/backend/
 COPY --chown=user apps/sevenforce/backend/ $HOME/app/apps/sevenforce/backend/
+COPY --chown=user apps/rakshak-ai/backend/ $HOME/app/apps/rakshak-ai/backend/
+# comonk-ai has a flat layout (no backend/ subdir - see child_processes.py's
+# CHILDREN entry, backend_subdir=""). Only the runtime .py files + data file
+# are needed here; its frontend is pre-built separately into
+# apps/sevenseed/backend/static/comonk-ai/, same as every other child.
+COPY --chown=user apps/comonk-ai/*.py apps/comonk-ai/*.xlsx $HOME/app/apps/comonk-ai/
 
 WORKDIR $HOME/app/apps/sevenseed/backend
 RUN chown -R user:user $HOME/app

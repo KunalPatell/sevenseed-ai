@@ -28,3 +28,5 @@ onnxruntime
 opencv-python-headless
 # Rakshak AI: FIR PDF export (apps/rakshak-ai/backend/pdf_util.py)
 fpdf2
+# Comonk AI: password hashing (apps/comonk-ai/comonk_backend.py)
+bcrypt>=4.0.0

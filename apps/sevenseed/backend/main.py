@@ -16,7 +16,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -423,36 +423,6 @@ def get_contacts(limit: int = 50, x_admin_key: str = Header(default="")):
 # Enterprise features: auth, AI tools, analytics, export, reminders
 from features import router as _feat_router
 app.include_router(_feat_router)
-
-# ── Comonk AI embedded route ─────────────────────────────────────────────────
-# Comonk is NOT a child process here (a subprocess-merge was tried and reverted
-# - see git history around "add comonk-ai as 7th child process" - its frontend
-# was never built for living under a subpath, and it's the one app with real
-# users). This just embeds the real, separately-deployed comonk-ai.onrender.com
-# under /comonk-ai via an iframe, so it appears part of the same site.
-@app.get("/comonk-ai", include_in_schema=False)
-@app.get("/comonk-ai/", include_in_schema=False)
-@app.get("/comonk-ai/{tail:path}", include_in_schema=False)
-def serve_comonk_ai(tail: str = ""):
-    c_page = config.STATIC_DIR / "comonk-ai" / "index.html"
-    if c_page.exists():
-        return FileResponse(c_page)
-    html_content = """<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Comonk AI — Enterprise Career Intelligence Platform</title>
-  <style>
-    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #060609; }
-    iframe { width: 100%; height: 100%; border: 0; }
-  </style>
-</head>
-<body>
-  <iframe src="https://comonk-ai.onrender.com" title="Comonk AI Platform"></iframe>
-</body>
-</html>"""
-    return HTMLResponse(content=html_content)
 
 # ── Child apps: each is its own isolated process (see child_processes.py for
 # why), reached here through a thin reverse proxy.

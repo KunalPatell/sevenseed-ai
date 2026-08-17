@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[97367,["/comonk-ai/_next/static/chunks/05-c3ty_6dwfk.js","/comonk-ai/_next/static/chunks/44p37290qsddb.js"],"ViewportBoundary"]
+3:I[97367,["/comonk-ai/_next/static/chunks/05-c3ty_6dwfk.js","/comonk-ai/_next/static/chunks/44p37290qsddb.js"],"MetadataBoundary"]
+4:"$Sreact.suspense"
+5:I[27201,["/comonk-ai/_next/static/chunks/05-c3ty_6dwfk.js","/comonk-ai/_next/static/chunks/44p37290qsddb.js"],"IconMark"]
+0:{"rsc":["$","$1","h",{"children":[["$","meta",null,{"name":"robots","content":"noindex"}],["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Comonk AI — Enterprise Career Intelligence Platform"}],["$","meta","1",{"name":"description","content":"Free AI-powered career intelligence: resume parsing, company matching, mock interviews, ATS optimization, and more — 100% free career tools."}],["$","link","2",{"rel":"icon","href":"/favicon.ico"}],["$","$L5","3",{}]]}]}]}],null]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"jmS1hYWd8kJCAnDSTsZjy"}

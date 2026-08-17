@@ -61,6 +61,7 @@ CHILDREN: Dict[str, Dict[str, object]] = {
     "pharmacy": {"folder": "decode-forest-pharmacy", "port": 8005},
     "sevenforce": {"folder": "sevenforce", "port": 8006},
     "rakshak-ai": {"folder": "rakshak-ai", "port": 8007},
+    "comonk-ai": {"folder": "comonk-ai", "port": 8008, "backend_subdir": "", "main_file": "comonk_backend.py"},
 }
 
 _HOP_BY_HOP = {"content-length", "transfer-encoding", "connection", "keep-alive"}
@@ -200,6 +201,18 @@ async def proxy_to_child(request: Request, prefix: str, tail: str) -> Response:
                 )
             except httpx.ConnectError as e:
                 last_error = e
+                proc = _procs.get(prefix)
+                if proc is not None and proc.poll() is not None:
+                    code = proc.poll()
+                    return Response(
+                        content=(
+                            f'{{"error":"child process crashed",'
+                            f'"detail":"child process \'{prefix}\' exited immediately '
+                            f'(exit code {code}) - check its logs"}}'
+                        ),
+                        status_code=503,
+                        media_type="application/json",
+                    )
                 await asyncio.sleep(2)
 
     return Response(
