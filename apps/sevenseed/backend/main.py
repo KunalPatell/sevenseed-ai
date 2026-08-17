@@ -439,6 +439,18 @@ if config.STATIC_DIR.exists():
         if static_sub.exists():
             app.mount(f"/{prefix}", StaticFiles(directory=str(static_sub), html=True), name=prefix)
 
+    # Alias mounts for long URL compatibility
+    aliases = {
+        "comonk": "comonk-ai",
+        "decode-forest-pharmacy": "pharmacy",
+        "breakdown-factor": "breakdown",
+        "avp-charitable-trust": "trust"
+    }
+    for alias_name, target_prefix in aliases.items():
+        target_sub = config.STATIC_DIR / target_prefix
+        if target_sub.exists():
+            app.mount(f"/{alias_name}", StaticFiles(directory=str(target_sub), html=True), name=f"alias_{alias_name}")
+
     # Mount root landing page last
     app.mount("/", StaticFiles(directory=str(config.STATIC_DIR), html=True), name="frontend")
 else:
