@@ -570,6 +570,9 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
   }
 
   if (openCmdBtn) openCmdBtn.addEventListener('click', openCmd);
+  var openCmdBtn2 = document.getElementById('openCmdBtn2');
+  if (openCmdBtn2) openCmdBtn2.addEventListener('click', openCmd);
+
   if (cmdPalette) {
     cmdPalette.addEventListener('click', function(e){
       if (e.target === cmdPalette) closeCmd();
@@ -582,6 +585,11 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
     });
   }
 
+  var pByokBtn = document.getElementById('pByokBtn');
+  if (pByokBtn) pByokBtn.addEventListener('click', openBYOK);
+  var openByokBtn2 = document.getElementById('openByokBtn2');
+  if (openByokBtn2) openByokBtn2.addEventListener('click', openBYOK);
+
   window.addEventListener('keydown', function(e){
     if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
       e.preventDefault();
@@ -593,4 +601,288 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
     }
   });
 })();
+
+// ==========================================================================
+// 4. WORLD-CLASS SAAS: LIVE AI AGENT WORKSPACE SIMULATOR
+// ==========================================================================
+(function(){
+  var agentList = document.getElementById('wsAgentList');
+  var agentName = document.getElementById('wsAgentName');
+  var agentAv = document.getElementById('wsAgentAv');
+  var chatBody = document.getElementById('wsChatBody');
+  var presetsBox = document.getElementById('wsPresets');
+  var wsInput = document.getElementById('wsInput');
+  var wsSendBtn = document.getElementById('wsSendBtn');
+  var wsClearBtn = document.getElementById('wsClearBtn');
+  var wsCopyBtn = document.getElementById('wsCopyBtn');
+  var wsLatency = document.getElementById('wsLatencyBadge');
+
+  if (!agentList || !chatBody) return;
+
+  var AGENTS_DATA = {
+    maya: {
+      name: 'Maya · Growth & SEO Lead',
+      icon: 'fa-chart-line',
+      gradient: 'linear-gradient(135deg,#a855f7,#ec4899)',
+      greeting: 'Hello! I am Maya, your AI Growth & SEO Specialist. I automate programmatic SEO pipelines, conduct conversion audits, and draft viral content clusters. Pick a prompt below or write your custom brief!',
+      presets: [
+        'Audit Technical SEO & Core Web Vitals',
+        'Generate Programmatic 100-Keyword Topic Cluster',
+        'Draft Viral LinkedIn & Twitter Growth Thread'
+      ],
+      responses: {
+        'default': "🎯 **Maya's Growth & SEO Blueprint:**\n\n1. **Programmatic Target:** Evaluated 14 high-intent long-tail keywords across Gujarat & Indian SaaS markets.\n2. **Conversion Architecture:** Recommended Sticky Hero CTA with sub-30ms client-side latency badge.\n3. **Content Pipeline:** Scheduled 3 automated pillar posts targeting 'Enterprise AI Automation' with Schema.org JSON-LD integration."
+      }
+    },
+    buddy: {
+      name: 'Buddy · B2B Sales Representative',
+      icon: 'fa-handshake',
+      gradient: 'linear-gradient(135deg,#3b82f6,#06b6d4)',
+      greeting: 'Hey there! I am Buddy, your autonomous B2B Sales Rep. I enrich outbound prospect lists, draft hyper-personalized cold emails, and qualify inbound leads 24/7.',
+      presets: [
+        'Draft 3-Step Cold Email Pitch to CTOs',
+        'Qualify Inbound Lead with BANT Framework',
+        'Generate Competitor Battlecard vs Traditional Agencies'
+      ],
+      responses: {
+        'default': "💼 **Buddy's B2B Outreach Strategy:**\n\n**Subject:** Cutting 70% of your operational workflow time with Sevenseed\n\nHi {{FirstName}},\n\nNoticed {{Company}} is scaling engineering operations. Traditional dev agencies take 6 months to deploy AI agents; Sevenseed ships production multi-agent pipelines in 14 days.\n\nWould 15 minutes this Thursday make sense to review your architecture?"
+      }
+    },
+    dexter: {
+      name: 'Dexter · Financial Analyst & BOQ Estimator',
+      icon: 'fa-calculator',
+      gradient: 'linear-gradient(135deg,#f59e0b,#eab308)',
+      greeting: 'Greetings! I am Dexter, your AI Financial & Civil Estimator. I compute IS 456 BOQ material quantities, forecast unit economics, and model venture cash-flows.',
+      presets: [
+        'Calculate IS 456 M25 Concrete BOQ Cost',
+        'Model 3-Year SaaS Breakeven & Gross Margins',
+        'Audit E-Commerce Supplier Bulk Arbitrage'
+      ],
+      responses: {
+        'default': "📊 **Dexter's Financial & BOQ Audit:**\n\n• **Concrete Grade:** M25 Mix (1 : 1.4 : 2.8 ratio)\n• **Cement Requirement:** 380 kg/m³ @ ₹360/bag = ₹2,736/m³\n• **Sand & Aggregate:** 0.45 m³ Sand + 0.88 m³ 20mm Crushed Stone\n• **Steel Reinforcement (1.2%):** 94.2 kg/m³ @ ₹62/kg = ₹5,840/m³\n• **Total Estimated Structural Rate:** **₹11,280 / m³** (including labor & batching)."
+      }
+    },
+    vance: {
+      name: 'Vance · Legal & Compliance Copilot',
+      icon: 'fa-scale-balanced',
+      gradient: 'linear-gradient(135deg,#8b5cf6,#6d28d9)',
+      greeting: 'Welcome. I am Vance, your AI Legal & Regulatory Advisor. I draft founder agreements, map Bharatiya Nyaya Sanhita (BNS 2023) / IPC clauses, and ensure 80G NGO compliance.',
+      presets: [
+        'Draft Founder Mutual Non-Disclosure Agreement',
+        'Map Cyber Fraud Incident to BNS 2023 Sections',
+        'Generate Section 80G NGO Donation Receipt Terms'
+      ],
+      responses: {
+        'default': "⚖️ **Vance's Legal Compliance Review:**\n\n1. **Statutory Mapping:** Incident categorized under **Section 318(4) BNS 2023** (Cheating & Dishonest Inducement) and **Section 66D IT Act 2000**.\n2. **Jurisdiction Desk:** Auto-routed to State Cyber Crime Police Station.\n3. **FIR Draft:** Verified with Digital Notary Hash and automated Section 65B Electronic Evidence Certificate."
+      }
+    },
+    cassie: {
+      name: 'Cassie · 24/7 Customer Support Specialist',
+      icon: 'fa-headset',
+      gradient: 'linear-gradient(135deg,#10b981,#14b8a6)',
+      greeting: 'Hi! I am Cassie, your 24/7 Customer Support & Triage Specialist. I resolve delivery inquiries, handle order returns, and maintain 99.4% customer satisfaction ratings.',
+      presets: [
+        'Handle Delayed Pharmacy Prescription Triage',
+        'Process Refund & Warranty Claim',
+        'Draft Empathetic Inbound Escalation Response'
+      ],
+      responses: {
+        'default': "🎧 **Cassie's Real-Time Support Resolution:**\n\n'Hello! I see your prescription delivery #DF-8821 was verified by our AI pharmacist 12 minutes ago. The delivery rider is currently en route (estimated arrival: 14 mins). Tracking link has been sent via SMS!'"
+      }
+    },
+    aura: {
+      name: 'Aura · UI/UX Product Designer',
+      icon: 'fa-palette',
+      gradient: 'linear-gradient(135deg,#ec4899,#8b5cf6)',
+      greeting: 'Hello! I am Aura, your AI Product & UX Designer. I generate design tokens, wireframe high-converting interfaces, and audit layout accessibility.',
+      presets: [
+        'Generate Modern Dark Glassmorphic Design Tokens',
+        'Audit Mobile Viewport Touch Targets & Contrast',
+        'Create High-Converting SaaS Landing Page Wireframe'
+      ],
+      responses: {
+        'default': "✨ **Aura's Design System Tokens:**\n\n```css\n:root {\n  --surface-glass: rgba(255, 255, 255, 0.035);\n  --border-glass: rgba(255, 255, 255, 0.08);\n  --glow-primary: rgba(99, 102, 241, 0.25);\n  --blur-glass: blur(16px);\n  --radius-saas: 16px;\n}\n```\n*Applied sub-pixel inner highlights and 60fps cubic-bezier transitions.*"
+      }
+    },
+    echo: {
+      name: 'Echo · Operations Orchestrator',
+      icon: 'fa-network-wired',
+      gradient: 'linear-gradient(135deg,#06b6d4,#10b981)',
+      greeting: 'System Online. I am Echo, the LangGraph Operations Orchestrator. I bridge API webhooks, sync cross-venture state, and manage multi-agent supervisor loops.',
+      presets: [
+        'Sync AVPU Student Graduation to Comonk Mock Interview',
+        'Trigger E-Commerce Low Stock Logistics Dispatch',
+        'Route Emergency SOS to Police Sentinel Desk'
+      ],
+      responses: {
+        'default': "⚡ **Echo's Cross-Venture Execution Pipeline:**\n\n```json\n{\n  \"pipeline_id\": \"pipe_avpu_comonk_992\",\n  \"trigger\": \"avpu.student.module_complete\",\n  \"agent_dispatched\": \"maya.portfolio_synthesis\",\n  \"downstream_action\": \"comonk.interview_scheduler\",\n  \"status\": \"EXECUTED_200_OK\",\n  \"latency_ms\": 34.2\n}\n```"
+      }
+    }
+  };
+
+  var currentAgentKey = 'maya';
+
+  function setAgent(key){
+    currentAgentKey = key;
+    var data = AGENTS_DATA[key];
+    if (!data) return;
+
+    // Update Sidebar Active
+    agentList.querySelectorAll('.ws-agent-btn').forEach(function(btn){
+      btn.classList.toggle('active', btn.getAttribute('data-agent') === key);
+    });
+
+    // Update Header
+    if (agentName) agentName.textContent = data.name;
+    if (agentAv) {
+      agentAv.style.background = data.gradient;
+      agentAv.innerHTML = '<i class="fas ' + data.icon + '"></i>';
+    }
+
+    // Update Presets
+    if (presetsBox) {
+      var pHtml = '';
+      data.presets.forEach(function(p){
+        pHtml += '<button class="ws-preset-btn">' + p + '</button>';
+      });
+      presetsBox.innerHTML = pHtml;
+
+      presetsBox.querySelectorAll('.ws-preset-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          executePrompt(btn.textContent);
+        });
+      });
+    }
+
+    // Reset Chat to Greeting
+    chatBody.innerHTML = '<div class="ws-msg assistant"><div class="ws-bubble">' + data.greeting + '</div></div>';
+  }
+
+  function executePrompt(promptText){
+    if (!promptText || !promptText.trim()) return;
+
+    // Append User Message
+    var userMsg = document.createElement('div');
+    userMsg.className = 'ws-msg user';
+    userMsg.innerHTML = '<div class="ws-bubble">' + promptText.trim() + '</div>';
+    chatBody.appendChild(userMsg);
+    if (wsInput) wsInput.value = '';
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    // Create Assistant Placeholder
+    var asstMsg = document.createElement('div');
+    asstMsg.className = 'ws-msg assistant';
+    var bubble = document.createElement('div');
+    bubble.className = 'ws-bubble';
+    bubble.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="color:var(--primary-l)"></i> Thinking...';
+    asstMsg.appendChild(bubble);
+    chatBody.appendChild(asstMsg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    var agent = AGENTS_DATA[currentAgentKey] || AGENTS_DATA['maya'];
+    var fullText = agent.responses['default'];
+
+    // Stream Output simulation
+    setTimeout(function(){
+      bubble.textContent = '';
+      var idx = 0;
+      var timer = setInterval(function(){
+        if (idx < fullText.length) {
+          bubble.textContent += fullText.charAt(idx);
+          idx++;
+          chatBody.scrollTop = chatBody.scrollHeight;
+        } else {
+          clearInterval(timer);
+        }
+      }, 12);
+    }, 350);
+  }
+
+  agentList.querySelectorAll('.ws-agent-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      setAgent(btn.getAttribute('data-agent'));
+    });
+  });
+
+  if (wsSendBtn) {
+    wsSendBtn.addEventListener('click', function(){
+      if (wsInput) executePrompt(wsInput.value);
+    });
+  }
+
+  if (wsInput) {
+    wsInput.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        executePrompt(wsInput.value);
+      }
+    });
+  }
+
+  if (wsClearBtn) {
+    wsClearBtn.addEventListener('click', function(){
+      setAgent(currentAgentKey);
+    });
+  }
+
+  if (wsCopyBtn) {
+    wsCopyBtn.addEventListener('click', function(){
+      navigator.clipboard.writeText(chatBody.innerText).then(function(){
+        var orig = wsCopyBtn.innerHTML;
+        wsCopyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(function(){ wsCopyBtn.innerHTML = orig; }, 1800);
+      });
+    });
+  }
+
+  setAgent('maya');
+})();
+
+// ==========================================================================
+// 5. WORLD-CLASS SAAS: PRICING MATRIX BILLING TOGGLE
+// ==========================================================================
+(function(){
+  var toggle = document.getElementById('pricingBillingToggle');
+  var proPrice = document.getElementById('pPricePro');
+  var proPeriod = document.getElementById('pPeriodPro');
+  var lblM = document.getElementById('lblMonthly');
+  var lblA = document.getElementById('lblAnnual');
+
+  if (!toggle) return;
+
+  toggle.addEventListener('change', function(){
+    if (toggle.checked) {
+      // Annual
+      if (proPrice) proPrice.textContent = '3,999';
+      if (proPeriod) proPeriod.textContent = '/ month (billed ₹47,988/yr)';
+      if (lblM) { lblM.style.fontWeight = '500'; lblM.style.color = 'var(--text-2)'; }
+      if (lblA) { lblA.style.fontWeight = '700'; lblA.style.color = '#fff'; }
+    } else {
+      // Monthly
+      if (proPrice) proPrice.textContent = '4,999';
+      if (proPeriod) proPeriod.textContent = '/ month';
+      if (lblM) { lblM.style.fontWeight = '700'; lblM.style.color = '#fff'; }
+      if (lblA) { lblA.style.fontWeight = '500'; lblA.style.color = 'var(--text-2)'; }
+    }
+  });
+})();
+
+// ==========================================================================
+// 6. WORLD-CLASS SAAS: LIVE TELEMETRY TICKER
+// ==========================================================================
+(function(){
+  var tokensEl = document.getElementById('telTokens');
+  var latencyEl = document.getElementById('telLatency');
+
+  var baseTokens = 4821940;
+  setInterval(function(){
+    baseTokens += Math.floor(Math.random() * 45) + 10;
+    if (tokensEl) tokensEl.textContent = baseTokens.toLocaleString('en-IN');
+    if (latencyEl && Math.random() > 0.6) {
+      var lat = (37 + Math.random() * 4).toFixed(1);
+      latencyEl.textContent = lat + ' ms';
+    }
+  }, 2200);
+})();
+
 

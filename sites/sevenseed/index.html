@@ -40,12 +40,12 @@
   </a>
   <div class="nav-links" id="navLinks">
     <a href="#about">About</a>
-    <a href="#services">AI Tools</a>
     <a href="#ventures">Ventures</a>
-    <a href="#workforce">AI Workforce</a>
+    <a href="#workforce">Workforce</a>
+    <a href="#workspace">Live AI</a>
     <a href="#workflows">Workflows</a>
-    <a href="#sandbox">Live Demo</a>
-    <a href="#process">Process</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#telemetry">Telemetry</a>
     <a href="#faq">FAQ</a>
     <a href="#contact">Contact</a>
   </div>
@@ -256,6 +256,59 @@
   </div>
 </section>
 
+<!-- 1.1 LIVE INTERACTIVE AI AGENT WORKSPACE -->
+<section class="section workspace-sec" id="workspace">
+  <div class="eyebrow center"><i class="fas fa-terminal"></i> LIVE AGENT WORKSPACE</div>
+  <h2 class="sec-title">Interact with AI Employees in Real-Time</h2>
+  <p class="section-sub center">Select an AI agent, choose an automated task preset, and experience zero-latency streaming execution.</p>
+
+  <div class="ws-wrapper glow reveal">
+    <div class="ws-sidebar">
+      <div class="ws-sidebar-title"><i class="fas fa-robot"></i> AI ROSTER</div>
+      <div class="ws-agent-list" id="wsAgentList">
+        <button class="ws-agent-btn active" data-agent="maya"><span class="ws-av-dot" style="background:#a855f7"></span> Maya <small>Growth & SEO</small></button>
+        <button class="ws-agent-btn" data-agent="buddy"><span class="ws-av-dot" style="background:#3b82f6"></span> Buddy <small>B2B Sales</small></button>
+        <button class="ws-agent-btn" data-agent="dexter"><span class="ws-av-dot" style="background:#f59e0b"></span> Dexter <small>Finance / BOQ</small></button>
+        <button class="ws-agent-btn" data-agent="vance"><span class="ws-av-dot" style="background:#8b5cf6"></span> Vance <small>Legal / BNS</small></button>
+        <button class="ws-agent-btn" data-agent="cassie"><span class="ws-av-dot" style="background:#10b981"></span> Cassie <small>24/7 Support</small></button>
+        <button class="ws-agent-btn" data-agent="aura"><span class="ws-av-dot" style="background:#ec4899"></span> Aura <small>UI/UX Design</small></button>
+        <button class="ws-agent-btn" data-agent="echo"><span class="ws-av-dot" style="background:#06b6d4"></span> Echo <small>Ops Dispatch</small></button>
+      </div>
+    </div>
+
+    <div class="ws-main">
+      <div class="ws-header">
+        <div class="ws-agent-info" id="wsAgentInfo">
+          <div class="wf-avatar" id="wsAgentAv" style="width:40px;height:40px;background:linear-gradient(135deg,#a855f7,#ec4899);font-size:16px;"><i class="fas fa-chart-line"></i></div>
+          <div>
+            <div class="ws-title" id="wsAgentName">Maya · Growth & SEO Lead</div>
+            <div class="ws-model-badge"><i class="fas fa-bolt"></i> Engine: Groq LLaMA 3.3 70B (<span id="wsLatencyBadge">38ms</span>)</div>
+          </div>
+        </div>
+        <div class="ws-actions">
+          <button class="btn btn-sm btn-ghost" id="wsClearBtn"><i class="fas fa-trash-can"></i> Clear</button>
+          <button class="btn btn-sm btn-primary" id="wsCopyBtn"><i class="fas fa-copy"></i> Copy Output</button>
+        </div>
+      </div>
+
+      <div class="ws-chat-body" id="wsChatBody">
+        <div class="ws-msg assistant">
+          <div class="ws-bubble" id="wsInitialMsg">Hello! I am Maya, your AI Growth & SEO Specialist. I automate programmatic SEO pipelines, conduct conversion audits, and draft viral content clusters. Pick a prompt below or write your custom brief!</div>
+        </div>
+      </div>
+
+      <div class="ws-presets" id="wsPresets">
+        <!-- Injected dynamic quick prompts -->
+      </div>
+
+      <div class="ws-input-wrap">
+        <input type="text" id="wsInput" placeholder="Message agent or test a venture instruction..." autocomplete="off">
+        <button id="wsSendBtn" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Execute</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- 2. AUTOMATIONOWL INSPIRATION: MULTI-AGENT WORKFLOW RECIPES -->
 <section class="section workflows-sec" id="workflows">
   <div class="eyebrow center"><i class="fas fa-diagram-project"></i> AUTOMATIONOWL ORCHESTRATOR</div>
@@ -272,6 +325,112 @@
 
     <div class="recipe-visualizer" id="recipeVisualizer">
       <!-- Injected dynamically by JavaScript -->
+    </div>
+  </div>
+</section>
+
+<!-- 3. ENTERPRISE SAAS PRICING MATRIX -->
+<section class="section pricing-sec" id="pricing">
+  <div class="eyebrow center"><i class="fas fa-gem"></i> SAAS PRICING TIERS</div>
+  <h2 class="sec-title">Transparent, Scalable AI Infrastructure</h2>
+  <p class="section-sub center">Start for free with client-side BYOK inference, or scale with enterprise multi-agent clusters.</p>
+
+  <div class="pricing-toggle-wrap">
+    <span class="p-toggle-lbl" id="lblMonthly" style="font-weight:700;color:#fff;">Monthly</span>
+    <label class="switch">
+      <input type="checkbox" id="pricingBillingToggle">
+      <span class="slider round"></span>
+    </label>
+    <span class="p-toggle-lbl" id="lblAnnual" style="color:var(--text-2);">Annual <span class="p-discount-badge">Save 20%</span></span>
+  </div>
+
+  <div class="pricing-grid">
+    <div class="p-card glow reveal">
+      <div class="p-tier">DEVELOPER / BYOK</div>
+      <div class="p-price"><span class="p-currency">₹</span><span class="p-amount" id="pPriceHobby">0</span> <span class="p-period">/ month</span></div>
+      <p class="p-desc">Ideal for developers testing personal Groq, OpenAI, or Gemini API keys with zero platform fee.</p>
+      <ul class="p-features">
+        <li><i class="fas fa-check"></i> Unlimited BYOK inference</li>
+        <li><i class="fas fa-check"></i> Access to all 8 Venture Tools</li>
+        <li><i class="fas fa-check"></i> Client-side LocalStorage encryption</li>
+        <li><i class="fas fa-check"></i> Command Palette (⌘K) access</li>
+        <li class="dim"><i class="fas fa-xmark"></i> Dedicated LangGraph Agent Worker</li>
+      </ul>
+      <button class="btn btn-ghost w-100" id="pByokBtn"><i class="fas fa-key"></i> Configure Keys</button>
+    </div>
+
+    <div class="p-card featured glow reveal">
+      <div class="p-popular-badge"><i class="fas fa-crown"></i> MOST POPULAR</div>
+      <div class="p-tier">FOUNDER PRO STUDIO</div>
+      <div class="p-price"><span class="p-currency">₹</span><span class="p-amount" id="pPricePro">4,999</span> <span class="p-period" id="pPeriodPro">/ month</span></div>
+      <p class="p-desc">For startup founders deploying the full 7 AI Employee workforce across active business ventures.</p>
+      <ul class="p-features">
+        <li><i class="fas fa-check"></i> <strong>All 7 AI Employees Included</strong></li>
+        <li><i class="fas fa-check"></i> <strong>250,000 Free Groq LLaMA 3.3 Tokens</strong>/mo</li>
+        <li><i class="fas fa-check"></i> Multi-Agent Cross-Venture Pipelines</li>
+        <li><i class="fas fa-check"></i> Automatic FIR & IS 456 BOQ PDF Exports</li>
+        <li><i class="fas fa-check"></i> Webhook & Zapier/Make API integrations</li>
+      </ul>
+      <a href="#contact" class="btn btn-primary w-100"><i class="fas fa-bolt"></i> Get Started Pro</a>
+    </div>
+
+    <div class="p-card glow reveal">
+      <div class="p-tier">ENTERPRISE SCALE</div>
+      <div class="p-price"><span class="p-amount">Custom</span></div>
+      <p class="p-desc">For high-volume enterprises needing dedicated cloud instances, custom fine-tuning, and 99.99% SLAs.</p>
+      <ul class="p-features">
+        <li><i class="fas fa-check"></i> Dedicated Private LangGraph Cluster</li>
+        <li><i class="fas fa-check"></i> Custom Fine-Tuned Domain Models</li>
+        <li><i class="fas fa-check"></i> On-premise SQLite / ChromaDB Vector Storage</li>
+        <li><i class="fas fa-check"></i> 99.99% Uptime SLA & Dedicated Engineer</li>
+        <li><i class="fas fa-check"></i> Custom BNS & Healthcare Compliance Guardrails</li>
+      </ul>
+      <a href="#contact" class="btn btn-ghost w-100"><i class="fas fa-handshake"></i> Contact Enterprise</a>
+    </div>
+  </div>
+</section>
+
+<!-- 4. LIVE TELEMETRY & AGENT INFRASTRUCTURE DASHBOARD -->
+<section class="section telemetry-sec" id="telemetry">
+  <div class="eyebrow center"><i class="fas fa-chart-line"></i> CLOUD INFRASTRUCTURE</div>
+  <h2 class="sec-title">Live Telemetry & Agent Health Monitor</h2>
+  <p class="section-sub center">Real-time status of Sevenseed's distributed multi-agent microservices and vector databases.</p>
+
+  <div class="tel-grid glow reveal">
+    <div class="tel-card">
+      <div class="tel-head">
+        <span class="tel-lbl">SYSTEM UPTIME</span>
+        <span class="tel-status online"><span class="status-pulse"></span> 99.98%</span>
+      </div>
+      <div class="tel-val">100.0% SLA</div>
+      <div class="tel-sub">Zero downtime recorded in last 90 days</div>
+    </div>
+
+    <div class="tel-card">
+      <div class="tel-head">
+        <span class="tel-lbl">INFERENCE LATENCY</span>
+        <span class="tel-status fast"><i class="fas fa-bolt"></i> SUB-50MS</span>
+      </div>
+      <div class="tel-val" id="telLatency">38.4 ms</div>
+      <div class="tel-sub">Groq LLaMA 3.3 70B Tensor Engine</div>
+    </div>
+
+    <div class="tel-card">
+      <div class="tel-head">
+        <span class="tel-lbl">ACTIVE AGENT THREADS</span>
+        <span class="tel-status active"><i class="fas fa-microchip"></i> 7 / 7</span>
+      </div>
+      <div class="tel-val">7 Autonomous Workers</div>
+      <div class="tel-sub">Supervised by LangGraph Orchestrator</div>
+    </div>
+
+    <div class="tel-card">
+      <div class="tel-head">
+        <span class="tel-lbl">TOTAL TOKENS PROCESSED</span>
+        <span class="tel-status tokens"><i class="fas fa-database"></i> STREAM</span>
+      </div>
+      <div class="tel-val" id="telTokens">4,821,940</div>
+      <div class="tel-sub">Live token throughput across 8 ventures</div>
     </div>
   </div>
 </section>
