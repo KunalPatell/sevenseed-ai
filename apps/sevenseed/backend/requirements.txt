@@ -30,3 +30,6 @@ opencv-python-headless
 fpdf2
 # Comonk AI: password hashing (apps/comonk-ai/comonk_backend.py)
 bcrypt>=4.0.0
+SQLAlchemy>=2.0.0
+PyJWT>=2.8.0
+cryptography>=42.0.0

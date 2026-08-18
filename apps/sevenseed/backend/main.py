@@ -27,6 +27,9 @@ from app import config, db, logsetup, notify
 log = logsetup.setup()
 from app.ratelimit import check_rate_limit
 from child_processes import CHILDREN, proxy_to_child, start_children, stop_children
+from db.db import init_db
+from auth.auth_router import router as auth_router
+from billing.billing_router import router as billing_router
 
 try: 
     from dotenv import load_dotenv; load_dotenv()
@@ -263,8 +266,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize SQLite database
+# Initialize SQLite & PostgreSQL SaaS database
 db.init()
+init_db()
+
+# Mount Auth & BYOK Key Vault Router + Billing Engine Router
+app.include_router(auth_router)
+app.include_router(billing_router)
 
 class FounderReq(BaseModel): 
     message:str

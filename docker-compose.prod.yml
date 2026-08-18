@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # 1. Sevenseed Hub & FastAPI Gateway Server
+  sevenseed-hub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sevenseed-supersuite
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - DATABASE_URL=postgresql://sevenseed_user:sevenseed_secure_pass_2026@postgres:5432/sevenseed_db
+      - REDIS_URL=redis://redis:6379/0
+      - JWT_SECRET=${JWT_SECRET:-sevenseed_super_secret_jwt_key_2026_change_in_prod}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-}
+      - RAZORPAY_WEBHOOK_SECRET=${RAZORPAY_WEBHOOK_SECRET:-}
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./sites:/home/user/app/sites
+
+  # 2. PostgreSQL 16 Relational Database Cluster
+  postgres:
+    image: postgres:16-alpine
+    container_name: sevenseed-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: sevenseed_user
+      POSTGRES_PASSWORD: sevenseed_secure_pass_2026
+      POSTGRES_DB: sevenseed_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # 3. Redis 7 Session & Rate Limiter Cache
+  redis:
+    image: redis:7-alpine
+    container_name: sevenseed-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # 4. Nginx Reverse Proxy & SSL Gateway
+  nginx:
+    image: nginx:alpine
+    container_name: sevenseed-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./sites:/usr/share/nginx/html:ro
+    depends_on:
+      - sevenseed-hub
+
+volumes:
+  postgres_data:
+  redis_data:
