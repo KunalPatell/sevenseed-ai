@@ -178,6 +178,43 @@ async def proxy_to_child(request: Request, prefix: str, tail: str) -> Response:
     body = await request.body()
     headers = {k: v for k, v in request.headers.items() if k.lower() != "host"}
 
+    # Smart SaaS Credential & BYOK Key Injection
+    auth_hdr = headers.get("authorization") or headers.get("Authorization")
+    if auth_hdr and auth_hdr.startswith("Bearer "):
+        token = auth_hdr.split(" ")[1]
+        try:
+            from db.db import SessionLocal
+            from db.models import Workspace
+            from auth.security import decode_access_token
+            from middleware.quota import resolve_ai_credentials
+
+            payload = decode_access_token(token)
+            if payload and "workspace_id" in payload:
+                db_session = SessionLocal()
+                try:
+                    ws = db_session.query(Workspace).filter(Workspace.id == payload["workspace_id"]).first()
+                    if ws:
+                        # Auto-inject Groq key if not present in request
+                        if "x-groq-api-key" not in [k.lower() for k in headers]:
+                            try:
+                                key, _ = resolve_ai_credentials(db_session, ws, "groq")
+                                if key:
+                                    headers["X-Groq-API-Key"] = key
+                            except Exception:
+                                pass
+                        # Auto-inject Gemini key if not present in request
+                        if "x-gemini-api-key" not in [k.lower() for k in headers]:
+                            try:
+                                key, _ = resolve_ai_credentials(db_session, ws, "gemini")
+                                if key:
+                                    headers["X-Gemini-API-Key"] = key
+                            except Exception:
+                                pass
+                finally:
+                    db_session.close()
+        except Exception as e:
+            print(f"[child_processes] Note: Credential injection skipped: {e}")
+
     last_error: Exception | None = None
     async with httpx.AsyncClient(timeout=60) as client:
         for attempt in range(45):
