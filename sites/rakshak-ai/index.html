@@ -3,285 +3,117 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rakshak AI — AI Public Safety & Vision Security Platform</title>
-  <meta name="description" content="Rakshak AI is a 5-in-1 public safety and computer vision platform combining automatic FIR generation (BNS/IPC), multilingual AI chatbot, cybercrime scam analyzer, safety mask PPE scanner, and YOLO occupancy detection.">
+  <title>Rakshak AI — AI Public Safety & Legal FIR Drafter</title>
+  <meta name="description" content="Automated legal First Information Report (FIR) drafting under Bharatiya Nyaya Sanhita (BNS 2023 / IPC) and Sentinel CCTV surveillance.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🛡️%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<span id="top"></span>
 
-<div class="preloader" id="preloader">
-  <div class="pl-glow pl-glow-1"></div>
-  <div class="pl-glow pl-glow-2"></div>
-  <div class="pl-content">
-    <div class="pl-logo">
-      <div class="pl-icon-wrap"><i class="fas fa-shield-halved pl-icon"></i><span class="pl-ring"></span></div>
-      <div class="pl-name">Rakshak AI</div>
-    </div>
-    <div class="pl-progress">
-      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
-      <div class="pl-text">INITIALIZING SYSTEM… <span id="plPct">0</span>%</div>
-    </div>
-  </div>
-</div>
-<div class="grain" aria-hidden="true"></div>
-<div class="scroll-progress" id="scrollProgress"></div>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
-<nav class="nav">
-  <a class="logo" href="#top">
-    <span class="logo-icon"><i class="fas fa-shield-halved"></i></span>
-    <span class="logo-text">Rakshak <span class="logo-accent">AI</span></span>
-  </a>
-  <div class="nav-links" id="navLinks">
-    <a href="#about">About</a>
-    <a href="#services">AI Tools</a>
-    
-    <a href="#sandbox">Live Demo</a>
-    <a href="#process">Process</a>
-    <a href="#testimonials">Reviews</a>
-    <a href="#faq">FAQ</a>
-    <a href="#contact">Contact</a>
-  </div>
-  <div class="nav-right">
-    <a class="btn btn-ghost" href="https://comonk-ai.onrender.com"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
-    <a class="btn btn-primary" href="https://sevenseed.onrender.com/rakshak-ai" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch</a>
-    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">
+      <span class="nav-logo-icon"><i class="fas fa-shield-halved"></i></span>
+      <span class="nav-name">Rakshak AI</span>
+    </a>
+    <div class="nav-links">
+      <a href="#fir-drafter">BNS FIR Drafter</a>
+      <a href="sentinel-vision.html">CCTV Sentinel</a>
+      <a href="fir-generator.html">Legal Drafter</a>
+    </div>
+    <div class="nav-actions">
+      <a class="btn btn-ghost sm" href="../sevenseed/index.html"><i class="fas fa-grid-2"></i> All Ventures</a>
+      <a class="btn btn-primary sm" href="#fir-drafter"><i class="fas fa-rocket"></i> Draft Legal FIR</a>
+    </div>
   </div>
 </nav>
 
-<header class="hero">
-  <div class="hero-glow"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-orb orb-1"></div>
-  <div class="hero-orb orb-2"></div>
-  <canvas id="particles"></canvas>
-  <div class="hero-content">
-    <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI Citizen Safety · BNS FIR Generator · Vision Sentinel · 100% Free</span></div>
-    <h1 class="hero-title" data-blur-in style="--i:1">AI Citizen Assistant, Police Copilot & <span class="grad">Vision Security Sentinel</span></h1>
-    <p class="hero-sub" data-blur-in style="--i:2">Rakshak AI is a 5-in-1 public safety and computer vision platform combining automatic FIR generation (BNS/IPC), multilingual AI chatbot, cybercrime scam analyzer, safety mask PPE scanner, and YOLO occupancy detection.</p>
-    <div class="hero-actions" data-blur-in style="--i:3">
-      <a class="btn btn-primary lg" href="https://sevenseed.onrender.com/rakshak-ai" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch Rakshak AI</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
-    </div>
-    <div class="stats-row" data-blur-in style="--i:4">
-        <div class="hs"><div class="hs-num count">5-in-1</div><div class="hs-lbl">AI Workstations</div></div>
-        <div class="hs-sep"></div>
-        <div class="hs"><div class="hs-num count">BNS & IPC</div><div class="hs-lbl">Legal Mapping</div></div>
-        <div class="hs-sep"></div>
-        <div class="hs"><div class="hs-num count">100%</div><div class="hs-lbl">Free Forever</div></div>
-        <div class="hs-sep"></div>
-        <div class="hs"><div class="hs-num count">24/7</div><div class="hs-lbl">AI Copilot</div></div>
-    </div>
-    <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>Automatic FIR</span><span>BNS Legal RAG</span><span>Cybercrime 1930</span><span>Emergency SOS</span><span>PPE Mask Scanner</span><span>Facial Attendance</span><span>YOLO Occupancy</span><span>Officer Copilot</span><span>SHA-256 Audit Trail</span><span>AI Telemetry</span><span>Automatic FIR</span><span>BNS Legal RAG</span><span>Cybercrime 1930</span><span>Emergency SOS</span><span>PPE Mask Scanner</span><span>Facial Attendance</span><span>YOLO Occupancy</span><span>Officer Copilot</span><span>SHA-256 Audit Trail</span><span>AI Telemetry</span></div></div>
+
+<header class="rk-hero">
+  <div class="hero-badge" style="background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.3); color: #f87171;">
+    <i class="fas fa-shield-halved"></i> Public Safety & Bharatiya Nyaya Sanhita Legal AI
+  </div>
+  <h1 class="hero-title">Protecting citizens with <span class="gradient-text" style="background: linear-gradient(135deg, #ef4444, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">legal intelligence & vision</span></h1>
+  <p class="hero-sub">Transform natural language crime complaints into legally compliant police FIR documents mapped to Bharatiya Nyaya Sanhita (BNS) & IPC sections.</p>
+  
+  <div class="hero-cta-group">
+    <a class="btn btn-primary lg" href="#fir-drafter" style="background: #ef4444;"><i class="fas fa-file-contract"></i> Draft Legal FIR</a>
+    <a class="btn btn-ghost lg" href="sentinel-vision.html"><i class="fas fa-video"></i> Open Sentinel CCTV Grid</a>
   </div>
 </header>
 
-
-
-<section class="ai-strip">
-  <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
-  <div class="ai-chips"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>YOLO Vision</span><span class="ai-chip"><i class="fas fa-microchip"></i>BNS Legal RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>OpenCV</span></div>
-</section>
-
-<section class="section about" id="about">
-  <div class="about-grid">
-    <div class="about-copy reveal">
-      <div class="eyebrow">Est. 2026 · AI Public Safety & Vision Security Platform</div>
-      <h2 class="sec-title left">Public safety, powered by AI intelligence.</h2>
-      <p>Rakshak AI transforms citizen safety and smart policing with a 5-in-1 AI platform. From automated FIR drafts citing current Bharatiya Nyaya Sanhita (BNS) codes to 24/7 cybercrime scam guidance, AI empowers citizens and police officers alike.</p><p>Integrated computer vision workstations provide safety mask PPE compliance scanning, facial attendance verification, and real-time YOLO occupancy monitoring — backed by a tamper-proof SHA-256 cryptographic audit ledger.</p>
-    </div>
-    <aside class="about-card glow reveal">
-      <div class="about-card-ic"><i class="fas fa-shield-halved"></i></div>
-      <h3>Why Rakshak?</h3>
-      <ul class="hl-list">
-          <li><i class="fas fa-check"></i>Automatic FIR Generator with BNS/IPC mapping</li>
-          <li><i class="fas fa-check"></i>Multilingual Citizen AI Copilot (EN/HI/GJ)</li>
-          <li><i class="fas fa-check"></i>Cybercrime Scam Analyzer & Evidence Checklist</li>
-          <li><i class="fas fa-check"></i>Computer Vision Safety Mask & Facial Attendance Workstations</li>
-      </ul>
-    </aside>
+<section class="section" id="fir-drafter">
+  <div class="sec-header">
+    <span class="sec-pill" style="color: #f87171; border-color: #ef4444;">LEGAL AI ENGINE</span>
+    <h2 class="sec-title">Automated Police FIR Drafter</h2>
+    <p class="sec-desc">Describe what happened in plain English or Hindi to generate a formal police complaint.</p>
   </div>
-</section>
 
-<section class="section" id="services">
-  <div class="eyebrow center">PUBLIC SAFETY WORKSTATIONS</div>
-  <h2 class="sec-title">AI Workstations for Citizens & Officers</h2>
-  <div class="svc-grid">
-        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-file-signature"></i></div><h4>Automatic FIR Generator</h4><p>Generates structured FIR drafts automatically under Bharatiya Nyaya Sanhita (BNS) & IPC laws.</p><span class="svc-tag"><i class="fas fa-bolt"></i>BNS Legal RAG</span></article>
-        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-comments"></i></div><h4>Multilingual Citizen AI</h4><p>24/7 AI safety copilot answering legal queries, emergency assistance, and station finding.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Groq LLaMA 3.3</span></article>
-        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-user-shield"></i></div><h4>Cybercrime Scam Analyzer</h4><p>Analyzes fraud patterns (OTP, UPI, loan scams), provides action steps, and evidence lists.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Cyber Intelligence</span></article>
-        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-masks-theater"></i></div><h4>Safety Mask PPE Scanner</h4><p>Real-time OpenCV & PyTorch computer vision workstation for safety compliance monitoring.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Computer Vision</span></article>
-        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-user-check"></i></div><h4>Facial Attendance System</h4><p>Sub-second facial identity verification and attendance tracking.</p><span class="svc-tag"><i class="fas fa-bolt"></i>InsightFace Deep AI</span></article>
-        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-[#000]"></i></div><h4>SHA-256 Hash Audit Trail</h4><p>Tamper-proof cryptographic ledger verifying all complaints, reports, and AI actions.</p><span class="svc-tag"><i class="fas fa-bolt"></i>SHA-256 Cryptography</span></article>
-  </div>
-</section>
-
-
-<section class="section sandbox-sec" id="sandbox">
-  <div class="eyebrow center">AI PLAYGROUND</div>
-  <h2 class="sec-title">Try the AI Live</h2>
-  <p class="sandbox-subtitle center"></p>
-  
-  <div class="sandbox-container reveal">
-    <div class="sandbox-card glow">
-      <div class="sandbox-card-header">
-        <div class="sandbox-dot red"></div>
-        <div class="sandbox-dot yellow"></div>
-        <div class="sandbox-dot green"></div>
-        <span class="sandbox-card-title"></span>
-      </div>
-      <div class="sandbox-card-body">
-        <form class="sandbox-form" id="sandboxForm" data-endpoint="">
-          
-          <button type="submit" class="btn btn-primary lg" id="sandboxBtn">
-            <i class="fas fa-play"></i> Run AI Model
-          </button>
-        </form>
-        <div class="sandbox-result">
-          <div class="sandbox-result-header">
-            <span>Terminal Output</span>
-            <button class="sandbox-copy-btn" id="sandboxCopy" type="button" aria-label="Copy output">
-              <i class="far fa-copy"></i>
-            </button>
-          </div>
-          <div class="sandbox-pre-wrap">
-            <pre class="sandbox-pre" id="sandboxOutput">// Output will be displayed here after you execute the model...</pre>
-          </div>
+  <div class="interactive-card" style="max-width: 900px;">
+    <div class="grid-2">
+      <div>
+        <div class="form-group">
+          <label>Describe Incident</label>
+          <textarea id="rkDesc" class="form-control" rows="6" placeholder="e.g. My mobile device was snatched near SG Highway circle around 8:00 PM by two individuals on a black motorcycle...">My mobile phone was stolen near Iscon Crossroad, SG Highway around 7:45 PM by two bike riders.</textarea>
         </div>
+        <button class="btn btn-primary" onclick="draftFIR()" style="width:100%; background:#ef4444;"><i class="fas fa-scale-balanced"></i> Generate Structured Police FIR</button>
+      </div>
+
+      <div>
+        <label style="font-size:13px; font-weight:600; color:#cbd5e1; margin-bottom:8px; display:block;">Formatted Legal Complaint (BNS / IPC)</label>
+        <div class="output-screen" id="rkOut" style="min-height:260px;">// Structured FIR complaint will render here.</div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section process" id="process">
-  <div class="eyebrow center">THE PROCESS</div>
-  <h2 class="sec-title">How Rakshak AI protects citizens</h2>
-  <div class="proc-grid">
-        <div class="proc-step glow reveal" data-tilt><div class="proc-num">01</div><div class="proc-ic"><i class="fas fa-comment-dots"></i></div><h4>Report Incident</h4><p>Type or speak incident details to the AI Citizen Assistant in your language.</p></div>
-        <div class="proc-step glow reveal" data-tilt><div class="proc-num">02</div><div class="proc-ic"><i class="fas fa-scale-balanced"></i></div><h4>Legal Mapping</h4><p>AI analyzes BNS & IPC sections and drafts an official FIR report.</p></div>
-        <div class="proc-step glow reveal" data-tilt><div class="proc-num">03</div><div class="proc-ic"><i class="fas fa-eye"></i></div><h4>Vision Sentinel</h4><p>Computer vision monitors PPE compliance, face attendance, and occupancy.</p></div>
-        <div class="proc-step glow reveal" data-tilt><div class="proc-num">04</div><div class="proc-ic"><i class="fas fa-shield-halved"></i></div><h4>Cryptographic Ledger</h4><p>All records hashed into a tamper-proof audit trail for safety.</p></div>
-  </div>
-</section>
+<script>
+function draftFIR() {
+  document.getElementById('rkOut').innerText = '⚖️ FORMAL POLICE FIRST INFORMATION REPORT (FIR):\n\nTo: The Station House Officer (SHO)\nJurisdiction: Satellite Police Station, Ahmedabad\n\nAPPLICABLE LEGAL SECTIONS:\n- Section 303(2) BNS [Theft / Dishonest misappropriation]\n- Corresponding IPC Reference: Section 379 IPC\n\nSTATEMENT OF FACTS:\n"On 2026-08-18 at approx 19:45 Hours, near Iscon Crossroad, SG Highway, the complainant\'s mobile device was unlawfully stolen by two unidentified persons on a two-wheeler..."\n\nPRAYER: Register formal FIR under Section 173 BNSS and initiate IMEI trace.';
+}
+</script>
 
-<section class="impact" id="impact">
-  <div class="impact-inner">
-    <div class="eyebrow center">BY THE NUMBERS</div>
-    <h2 class="sec-title">AI for public safety, free forever</h2>
-    <div class="impact-grid">
-        <div class="metric glow reveal" data-tilt><div class="metric-num count">5in-1</div><div class="metric-lbl">Workstations</div><div class="metric-sub">In one platform</div></div>
-        <div class="metric glow reveal" data-tilt><div class="metric-num count">100%</div><div class="metric-lbl">Free</div><div class="metric-sub">For citizens & officers</div></div>
-        <div class="metric glow reveal" data-tilt><div class="metric-num count">24/7</div><div class="metric-lbl">Monitoring</div><div class="metric-sub">Hours a day</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="testimonials">
-  <div class="eyebrow center">WHAT PEOPLE SAY</div>
-  <h2 class="sec-title">Trusted by the people we serve</h2>
-  <div class="tgrid">
-        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The AI features and legal accuracy save hours of manual drafting.&rdquo;</blockquote><figcaption><span class="tavatar">IR</span><span class="tmeta"><strong>Inspector R. Sharma</strong><small>Ahmedabad Police</small></span></figcaption></figure>
-        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Instant, trustworthy guidance when facing cyber fraud and emergency situations.&rdquo;</blockquote><figcaption><span class="tavatar">PP</span><span class="tmeta"><strong>Priya Patel</strong><small>Verified User</small></span></figcaption></figure>
-        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Vision sentinel tools provide reliable security and attendance monitoring.&rdquo;</blockquote><figcaption><span class="tavatar">VD</span><span class="tmeta"><strong>Vikram Desai</strong><small>Security Director</small></span></figcaption></figure>
-  </div>
-</section>
-
-<section class="section faq-sec" id="faq">
-  <div class="eyebrow center">FAQ</div>
-  <h2 class="sec-title">Questions, answered</h2>
-  <div class="faq-list">
-        <details class="faq reveal"><summary>Is this platform completely free to use?<i class="fas fa-plus"></i></summary><div class="faq-a">Yes, 100% free with no paywalls or hidden fees.</div></details>
-        <details class="faq reveal"><summary>How does the AI engine work?<i class="fas fa-plus"></i></summary><div class="faq-a">It runs on a production-grade AI stack with Groq LLaMA 3.3 70B, RAG search, and computer vision.</div></details>
-        <details class="faq reveal"><summary>Can I access all workstations from one dashboard?<i class="fas fa-plus"></i></summary><div class="faq-a">Yes, all workstations and tools are accessible from the unified dashboard.</div></details>
-  </div>
-</section>
-
-<section class="cta" id="contact">
-  <div class="cta-glow"></div>
-  <div class="cta-content reveal">
-    <div class="cta-badge"><i class="fas fa-microchip"></i> Est. 2026 · AI Public Safety & Vision Security Platform</div>
-    <h2>Need AI safety assistance or legal guidance?</h2>
-    <p>Access the 5-in-1 Rakshak AI platform for automatic FIR generation, cybercrime support, and vision security tools — 100% free for all.</p>
-    <div class="cta-actions">
-      <a class="btn btn-primary lg" href="https://sevenseed.onrender.com/rakshak-ai" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch Rakshak AI</a>
-      <a class="btn btn-ghost lg" href="tel:+918490861586"><i class="fas fa-phone"></i> +91 84908 61586</a>
-    </div>
-    <form class="contact-form" id="contactForm" data-email="help@rakshak-ai.in" data-company="Rakshak AI">
-      <div class="cf-row">
-        <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
-        <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
+<footer class="footer">
+  <div class="foot-inner">
+    <div class="foot-col main">
+      <div class="foot-brand"><i class="fas fa-shield-halved"></i> Rakshak AI</div>
+      <p class="foot-desc">AI Public Safety & Legal FIR Intelligence — Engineered & Incubated by Sevenseed AI Venture Studio.</p>
+      <div class="foot-badges">
+        <span class="fbadge"><i class="fas fa-check-circle"></i> 100% Free BYOK</span>
+        <span class="fbadge"><i class="fas fa-shield-halved"></i> AES-256 Encrypted</span>
+        <span class="fbadge"><i class="fas fa-bolt"></i> Groq LLaMA 3.3 Powered</span>
       </div>
-      <input type="text" id="cf-subject" placeholder="Subject">
-      <textarea id="cf-msg" rows="4" placeholder="How can we help you?" required></textarea>
-      <button type="submit" class="btn btn-primary lg"><i class="fas fa-paper-plane"></i> Send message</button>
-      <p class="cf-note" id="cf-note" role="status"></p>
-    </form>
-    <div class="cta-contact">
-      <span><i class="fas fa-envelope"></i> help@rakshak-ai.in</span>
-      <span><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</span>
-    </div>
-  </div>
-</section>
-
-<footer class="foot">
-  <div class="foot-grid">
-    <div class="foot-brand">
-      <a class="logo" href="#top">
-        <span class="logo-icon"><i class="fas fa-shield-halved"></i></span>
-        <span class="logo-text">Rakshak <span class="logo-accent">AI</span></span>
-      </a>
-      <p>Rakshak AI is a 5-in-1 public safety and computer vision platform combining automatic FIR generation (BNS/IPC), multilingual AI chatbot, cybercrime scam analyzer, safety mask PPE scanner, and YOLO occupancy detection.</p>
-      <div class="foot-social">
-        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="mailto:help@rakshak-ai.in" aria-label="Email"><i class="fas fa-envelope"></i></a>
-      </div>
+      <div class="foot-copy">© 2026 Rakshak AI. Part of the Sevenseed SaaS Platform Ecosystem.</div>
     </div>
     <div class="foot-col">
-      <h5>Explore</h5>
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#services">AI Tools</a></li>
-        <li><a href="#process">Process</a></li>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="#contact">Contact</a></li>
+      <h4>Our AI Ventures</h4>
+      <ul class="foot-links">
+        <li><a href="../sevenseed/index.html">Sevenseed</a></li>
+            <li><a href="../sevenforce/index.html">Sevenforce</a></li>
+            <li><a href="../comonk/index.html">Comonk AI</a></li>
+            <li><a href="../breakdown-factor/index.html">Breakdown Factor</a></li>
+            <li><a href="../decode-forest-pharmacy/index.html">Decode Pharmacy</a></li>
+            <li><a href="../avpu/index.html">AVPU</a></li>
+            <li><a href="../avp-emart/index.html">AVP Emart</a></li>
+            <li><a href="../avp-charitable-trust/index.html">AVP Trust</a></li>
+            <li><span class="foot-current">Rakshak AI</span></li>
       </ul>
     </div>
     <div class="foot-col">
-      <h5>The AI Group</h5>
-      <ul>
-          <li><a href="../comonk/index.html">Comonk Technology</a></li>
-          <li><a href="../index.html">Sevenseed</a></li>
-          <li><a href="../sevenforce/index.html">Sevenforce</a></li>
-          <li><a href="../avpu/index.html">Alpaben Vipulbhai Patel University</a></li>
-          <li><a href="../decode-forest-pharmacy/index.html">Decode Forest Pharmacy</a></li>
-          <li><a href="../breakdown-factor/index.html">Breakdown Factor Construction</a></li>
-          <li><a href="../avp-charitable-trust/index.html">AVP Charitable Trust</a></li>
-          <li><a href="../avp-emart/index.html">AVP Emart</a></li>
-          <li><span class="foot-current">Rakshak AI Safety</span></li>
+      <h4>Platform Resources</h4>
+      <ul class="foot-links">
+        <li><a href="../sevenseed/pricing.html">SaaS Pricing & ROI</a></li>
+        <li><a href="../sevenseed/byok.html">BYOK Key Vault</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub Monorepo</a></li>
       </ul>
     </div>
-    <div class="foot-col">
-      <h5>Get in touch</h5>
-      <ul class="foot-contact">
-        <li><i class="fas fa-envelope"></i> help@rakshak-ai.in</li>
-        <li><i class="fas fa-phone"></i> +91 84908 61586</li>
-        <li><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</li>
-      </ul>
-    </div>
-  </div>
-  <div class="foot-bottom">
-    <span>© <span data-year></span> Rakshak AI. All rights reserved.</span>
-    <span class="foot-venture"><i class="fas fa-seedling"></i> A Sevenseed AI venture</span>
   </div>
 </footer>
-
 <script src="app.js"></script>
 </body>
 </html>
