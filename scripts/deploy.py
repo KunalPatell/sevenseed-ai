@@ -62,7 +62,7 @@ def main():
         run_cmd(f'git commit -m "{args.message}"')
         print(f'   [OK] Committed with message: "{args.message}"')
 
-    if args.dry-run:
+    if args.dry_run:
         print("\n[DRY RUN COMPLETE] Skipping remote git pushes.")
         sys.exit(0)
 
