@@ -42,12 +42,15 @@ def main():
     print(" 🚀 SEVENSEED SaaS DUAL-REMOTE DEPLOYMENT")
     print("==================================================")
 
-    # 1. Regenerate static marketing sites
-    print("\n1. Regenerating static venture marketing sites...")
+    # 1. Regenerate static marketing sites & sub-pages
+    print("\n1. Regenerating static venture marketing sites & dedicated sub-pages...")
     gen_script = REPO_ROOT / "generate_sites.py"
     if gen_script.is_file():
         run_cmd(f'"{sys.executable}" "{gen_script}"')
-        print("   [OK] Generated venture sites cleanly.")
+    sub_script = REPO_ROOT / "scripts" / "generate_all_subpages.py"
+    if sub_script.is_file():
+        run_cmd(f'"{sys.executable}" "{sub_script}"')
+    print("   [OK] Generated all 9 venture root sites & 24 dedicated sub-pages cleanly.")
 
     # 2. Stage changes
     print("\n2. Staging Git changes...")
