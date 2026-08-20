@@ -171,6 +171,15 @@ img{max-width:100%;display:block}
 .faq[open] summary i{transform:rotate(45deg)}
 .faq-a{padding:0 22px 20px;color:var(--text-2);font-size:14.5px;line-height:1.7}
 
+/* Enterprise & partnerships */
+.enterprise-sec{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
+.ent-card{position:relative;overflow:hidden;border:1px solid var(--border-hi);border-radius:26px;padding:clamp(32px,5vw,56px);background:linear-gradient(135deg,rgba(var(--primary-rgb),.1),var(--bg-2) 55%)}
+.ent-copy{max-width:640px}
+.ent-copy p{color:var(--text-2);font-size:15px;line-height:1.75;margin:16px 0 26px}
+.ent-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 20px;margin-bottom:30px}
+.ent-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text)}
+.ent-list li i{color:var(--primary-l);margin-top:3px;flex-shrink:0}
+
 /* Ventures showcase (Sevenseed hub) */
 .ventures{background:linear-gradient(180deg,rgba(var(--primary-rgb),.05),transparent)}
 .vent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}

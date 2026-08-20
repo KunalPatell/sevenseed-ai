@@ -766,6 +766,28 @@ def render_ventures_section(current_slug):
 """
 
 
+def render_enterprise_section(c):
+    name = c["logo_main"]
+    return f"""
+<section class="section enterprise-sec" id="enterprise">
+  <div class="ent-card reveal glow" data-tilt>
+    <div class="ent-copy">
+      <div class="eyebrow"><i class="fas fa-building"></i> FOR TEAMS &amp; ENTERPRISE</div>
+      <h2 class="sec-title left">Built for institutions, not just individuals</h2>
+      <p>{name} works with teams, institutions, and government partners who need more than the self-serve experience — a dedicated point of contact, custom rollout, and terms that fit multi-site or multi-year arrangements.</p>
+      <ul class="ent-list">
+        <li><i class="fas fa-user-tie"></i> A dedicated account contact, not a ticket queue</li>
+        <li><i class="fas fa-gears"></i> Custom integration &amp; rollout for your existing workflows</li>
+        <li><i class="fas fa-layer-group"></i> Volume, multi-site &amp; multi-year arrangements</li>
+        <li><i class="fas fa-bolt"></i> Priority response and hands-on onboarding</li>
+      </ul>
+      <a class="btn btn-primary lg" href="#contact" id="enterpriseCta"><i class="fas fa-handshake"></i> Talk to our enterprise team</a>
+    </div>
+  </div>
+</section>
+"""
+
+
 def render_group_footer(current_slug):
     out = []
     for slug, name, href in GROUP:
@@ -1025,6 +1047,7 @@ def render_html(c):
             {"label": "Impact", "hash": "#impact"},
             {"label": "Reviews", "hash": "#testimonials"},
             {"label": "FAQ", "hash": "#faq"},
+            {"label": "Enterprise", "hash": "#enterprise"},
             {"label": "Contact", "hash": "#contact"},
         ] if x],
         "ventures": [{"label": label, "href": href} for slug, label, href in GROUP if slug != c["slug"]],
@@ -1189,7 +1212,7 @@ def render_html(c):
         {render_faqs(faqs_list)}
   </div>
 </section>
-
+{render_enterprise_section(c)}
 <section class="cta" id="contact">
   <div class="cta-glow"></div>
   <div class="cta-content reveal">
@@ -1201,6 +1224,13 @@ def render_html(c):
       <a class="btn btn-ghost lg" href="tel:{phone.replace(' ', '')}"><i class="fas fa-phone"></i> {phone}</a>
     </div>
     <form class="contact-form" id="contactForm" data-email="{email}" data-company="{full_name}">
+      <select id="cf-type">
+        <option value="">I'm reaching out about…</option>
+        <option value="Individual">Individual enquiry</option>
+        <option value="Business">Business enquiry</option>
+        <option value="Enterprise / Government">Enterprise / Government partnership</option>
+        <option value="Media / Press">Media / Press</option>
+      </select>
       <div class="cf-row">
         <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
         <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
@@ -1250,6 +1280,7 @@ def render_html(c):
         <li><a href="#services">AI Tools</a></li>
         <li><a href="#process">Process</a></li>
         <li><a href="#faq">FAQ</a></li>
+        <li><a href="#enterprise">Enterprise</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><button type="button" id="shortcutsBtn">Keyboard shortcuts</button></li>
       </ul>
@@ -1507,6 +1538,15 @@ img{max-width:100%;display:block}
 .faq summary i{color:var(--primary-l);font-size:14px;transition:transform var(--t);flex-shrink:0}
 .faq[open] summary i{transform:rotate(45deg)}
 .faq-a{padding:0 22px 20px;color:var(--text-2);font-size:14.5px;line-height:1.7}
+
+/* Enterprise & partnerships */
+.enterprise-sec{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
+.ent-card{position:relative;overflow:hidden;border:1px solid var(--border-hi);border-radius:26px;padding:clamp(32px,5vw,56px);background:linear-gradient(135deg,rgba(var(--primary-rgb),.1),var(--bg-2) 55%)}
+.ent-copy{max-width:640px}
+.ent-copy p{color:var(--text-2);font-size:15px;line-height:1.75;margin:16px 0 26px}
+.ent-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 20px;margin-bottom:30px}
+.ent-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text)}
+.ent-list li i{color:var(--primary-l);margin-top:3px;flex-shrink:0}
 
 /* Ventures showcase (Sevenseed hub) */
 .ventures{background:linear-gradient(180deg,rgba(var(--primary-rgb),.05),transparent)}
@@ -2042,9 +2082,13 @@ if (cform) {
     var sizeEl = document.getElementById('cf-size');
     var org = orgEl ? (orgEl.value || '').trim() : '';
     var size = sizeEl ? (sizeEl.value || '').trim() : '';
+    var typeEl = document.getElementById('cf-type');
+    var type = typeEl ? (typeEl.value || '').trim() : '';
     var subj = (document.getElementById('cf-subject').value || '').trim() || ('Enquiry for ' + company);
+    if (type) subj = '[' + type + '] ' + subj;
     var msg = (document.getElementById('cf-msg').value || '').trim();
     var body = 'Name: ' + name + '\nEmail: ' + from +
+      (type ? '\nEnquiry type: ' + type : '') +
       (org ? '\nCompany: ' + org : '') +
       (size ? '\nTeam size: ' + size : '') +
       '\n\n' + msg;
@@ -2054,6 +2098,19 @@ if (cform) {
     toast('Opening your email app to send this message…');
   });
 }
+
+// "Talk to our enterprise team" → jumps to contact and pre-selects the enquiry type
+var entCta = document.getElementById('enterpriseCta');
+if (entCta) entCta.addEventListener('click', function(e){
+  var typeEl = document.getElementById('cf-type');
+  var nameEl = document.getElementById('cf-name');
+  if (typeEl){
+    Array.prototype.forEach.call(typeEl.options, function(o){
+      if (o.value === 'Enterprise / Government') typeEl.value = o.value;
+    });
+  }
+  setTimeout(function(){ if (nameEl) nameEl.focus(); }, 500);
+});
 
 // Nav background on scroll
 var nav = document.querySelector('.nav');

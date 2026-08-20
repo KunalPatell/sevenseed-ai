@@ -238,6 +238,23 @@
   </div>
 </section>
 
+<section class="section enterprise-sec" id="enterprise">
+  <div class="ent-card reveal glow" data-tilt>
+    <div class="ent-copy">
+      <div class="eyebrow"><i class="fas fa-building"></i> FOR TEAMS &amp; ENTERPRISE</div>
+      <h2 class="sec-title left">Built for institutions, not just individuals</h2>
+      <p>AVP works with teams, institutions, and government partners who need more than the self-serve experience — a dedicated point of contact, custom rollout, and terms that fit multi-site or multi-year arrangements.</p>
+      <ul class="ent-list">
+        <li><i class="fas fa-user-tie"></i> A dedicated account contact, not a ticket queue</li>
+        <li><i class="fas fa-gears"></i> Custom integration &amp; rollout for your existing workflows</li>
+        <li><i class="fas fa-layer-group"></i> Volume, multi-site &amp; multi-year arrangements</li>
+        <li><i class="fas fa-bolt"></i> Priority response and hands-on onboarding</li>
+      </ul>
+      <a class="btn btn-primary lg" href="#contact" id="enterpriseCta"><i class="fas fa-handshake"></i> Talk to our enterprise team</a>
+    </div>
+  </div>
+</section>
+
 <section class="cta" id="contact">
   <div class="cta-glow"></div>
   <div class="cta-content reveal">
@@ -249,6 +266,13 @@
       <a class="btn btn-ghost lg" href="tel:+918490861586"><i class="fas fa-phone"></i> +91 84908 61586</a>
     </div>
     <form class="contact-form" id="contactForm" data-email="admissions@avpu.edu.in" data-company="AVP University">
+      <select id="cf-type">
+        <option value="">I'm reaching out about…</option>
+        <option value="Individual">Individual enquiry</option>
+        <option value="Business">Business enquiry</option>
+        <option value="Enterprise / Government">Enterprise / Government partnership</option>
+        <option value="Media / Press">Media / Press</option>
+      </select>
       <div class="cf-row">
         <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
         <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
@@ -298,6 +322,7 @@
         <li><a href="#services">AI Tools</a></li>
         <li><a href="#process">Process</a></li>
         <li><a href="#faq">FAQ</a></li>
+        <li><a href="#enterprise">Enterprise</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><button type="button" id="shortcutsBtn">Keyboard shortcuts</button></li>
       </ul>
@@ -377,7 +402,7 @@
   </div>
 </div>
 
-<script id="ssData" type="application/json">{"site": "AVP University", "sector": "AI-Powered Higher Education", "summary": "A future-ready university where AI tutors, adaptive learning paths, and intelligent placement engines help every student learn faster, build real skills, and graduate career-ready.", "about": "Alpaben Vipulbhai Patel University reimagines higher education for the AI era. Every learner gets a personal AI tutor, an adaptive curriculum, and instant feedback — so no one is left behind and no one is held back. We pair AI-driven learning with real industry projects and a semantic placement engine, so students graduate with the knowledge, skills, and job matches to launch their careers.", "highlights": ["Personal AI tutor for every student", "Adaptive, ML-personalised curriculum", "Semantic AI placement matching", "Research copilot for projects"], "services": [{"name": "AI Tutor & Doubt Solver", "desc": "A 24/7 LLM tutor answers questions and explains concepts from your own course material."}, {"name": "Adaptive Learning Paths", "desc": "ML models personalise each student's curriculum to their pace and performance."}, {"name": "AI Placement Matcher", "desc": "Semantic vector search matches students to the right companies and roles."}, {"name": "Automated Assessment", "desc": "AI grades assignments and returns instant, detailed, actionable feedback."}, {"name": "Research Copilot", "desc": "An AI assistant for literature review, summarisation, and academic drafting."}, {"name": "Smart Admissions", "desc": "AI counselling guides every applicant to the program that fits them best."}], "faqs": [{"q": "How does the AI tutor work?", "a": "A Groq LLaMA-powered assistant, grounded in your course material via RAG, answers questions and explains concepts 24/7."}, {"q": "Are the programs accredited?", "a": "We are actively pursuing accreditation and recognition from national education bodies."}, {"q": "Do you offer scholarships?", "a": "Yes — merit and need-based scholarships, including support through the AVP Charitable Trust."}, {"q": "Is there placement support?", "a": "A semantic AI placement engine plus a dedicated cell provide matching, training, and interview prep."}], "contact": {"email": "admissions@avpu.edu.in", "phone": "+91 84908 61586", "location": "Anand, Gujarat, India"}, "sections": [{"label": "About", "hash": "#about"}, {"label": "AI Tools", "hash": "#services"}, {"label": "Live Demo", "hash": "#sandbox"}, {"label": "Process", "hash": "#process"}, {"label": "Impact", "hash": "#impact"}, {"label": "Reviews", "hash": "#testimonials"}, {"label": "FAQ", "hash": "#faq"}, {"label": "Contact", "hash": "#contact"}], "ventures": [{"label": "Comonk Technology", "href": "../comonk/index.html"}, {"label": "Sevenseed", "href": "../index.html"}, {"label": "Sevenforce", "href": "../sevenforce/index.html"}, {"label": "Decode Forest Pharmacy", "href": "../decode-forest-pharmacy/index.html"}, {"label": "Breakdown Factor Construction", "href": "../breakdown-factor/index.html"}, {"label": "AVP Charitable Trust", "href": "../avp-charitable-trust/index.html"}, {"label": "AVP Emart", "href": "../avp-emart/index.html"}, {"label": "Rakshak AI Safety", "href": "../rakshak-ai/index.html"}]}</script>
+<script id="ssData" type="application/json">{"site": "AVP University", "sector": "AI-Powered Higher Education", "summary": "A future-ready university where AI tutors, adaptive learning paths, and intelligent placement engines help every student learn faster, build real skills, and graduate career-ready.", "about": "Alpaben Vipulbhai Patel University reimagines higher education for the AI era. Every learner gets a personal AI tutor, an adaptive curriculum, and instant feedback — so no one is left behind and no one is held back. We pair AI-driven learning with real industry projects and a semantic placement engine, so students graduate with the knowledge, skills, and job matches to launch their careers.", "highlights": ["Personal AI tutor for every student", "Adaptive, ML-personalised curriculum", "Semantic AI placement matching", "Research copilot for projects"], "services": [{"name": "AI Tutor & Doubt Solver", "desc": "A 24/7 LLM tutor answers questions and explains concepts from your own course material."}, {"name": "Adaptive Learning Paths", "desc": "ML models personalise each student's curriculum to their pace and performance."}, {"name": "AI Placement Matcher", "desc": "Semantic vector search matches students to the right companies and roles."}, {"name": "Automated Assessment", "desc": "AI grades assignments and returns instant, detailed, actionable feedback."}, {"name": "Research Copilot", "desc": "An AI assistant for literature review, summarisation, and academic drafting."}, {"name": "Smart Admissions", "desc": "AI counselling guides every applicant to the program that fits them best."}], "faqs": [{"q": "How does the AI tutor work?", "a": "A Groq LLaMA-powered assistant, grounded in your course material via RAG, answers questions and explains concepts 24/7."}, {"q": "Are the programs accredited?", "a": "We are actively pursuing accreditation and recognition from national education bodies."}, {"q": "Do you offer scholarships?", "a": "Yes — merit and need-based scholarships, including support through the AVP Charitable Trust."}, {"q": "Is there placement support?", "a": "A semantic AI placement engine plus a dedicated cell provide matching, training, and interview prep."}], "contact": {"email": "admissions@avpu.edu.in", "phone": "+91 84908 61586", "location": "Anand, Gujarat, India"}, "sections": [{"label": "About", "hash": "#about"}, {"label": "AI Tools", "hash": "#services"}, {"label": "Live Demo", "hash": "#sandbox"}, {"label": "Process", "hash": "#process"}, {"label": "Impact", "hash": "#impact"}, {"label": "Reviews", "hash": "#testimonials"}, {"label": "FAQ", "hash": "#faq"}, {"label": "Enterprise", "hash": "#enterprise"}, {"label": "Contact", "hash": "#contact"}], "ventures": [{"label": "Comonk Technology", "href": "../comonk/index.html"}, {"label": "Sevenseed", "href": "../index.html"}, {"label": "Sevenforce", "href": "../sevenforce/index.html"}, {"label": "Decode Forest Pharmacy", "href": "../decode-forest-pharmacy/index.html"}, {"label": "Breakdown Factor Construction", "href": "../breakdown-factor/index.html"}, {"label": "AVP Charitable Trust", "href": "../avp-charitable-trust/index.html"}, {"label": "AVP Emart", "href": "../avp-emart/index.html"}, {"label": "Rakshak AI Safety", "href": "../rakshak-ai/index.html"}]}</script>
 <script src="app.js"></script>
 </body>
 </html>

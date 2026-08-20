@@ -79,9 +79,13 @@ if (cform) {
     var sizeEl = document.getElementById('cf-size');
     var org = orgEl ? (orgEl.value || '').trim() : '';
     var size = sizeEl ? (sizeEl.value || '').trim() : '';
+    var typeEl = document.getElementById('cf-type');
+    var type = typeEl ? (typeEl.value || '').trim() : '';
     var subj = (document.getElementById('cf-subject').value || '').trim() || ('Enquiry for ' + company);
+    if (type) subj = '[' + type + '] ' + subj;
     var msg = (document.getElementById('cf-msg').value || '').trim();
     var body = 'Name: ' + name + '\nEmail: ' + from +
+      (type ? '\nEnquiry type: ' + type : '') +
       (org ? '\nCompany: ' + org : '') +
       (size ? '\nTeam size: ' + size : '') +
       '\n\n' + msg;
@@ -91,6 +95,19 @@ if (cform) {
     toast('Opening your email app to send this message…');
   });
 }
+
+// "Talk to our enterprise team" → jumps to contact and pre-selects the enquiry type
+var entCta = document.getElementById('enterpriseCta');
+if (entCta) entCta.addEventListener('click', function(e){
+  var typeEl = document.getElementById('cf-type');
+  var nameEl = document.getElementById('cf-name');
+  if (typeEl){
+    Array.prototype.forEach.call(typeEl.options, function(o){
+      if (o.value === 'Enterprise / Government') typeEl.value = o.value;
+    });
+  }
+  setTimeout(function(){ if (nameEl) nameEl.focus(); }, 500);
+});
 
 // Nav background on scroll
 var nav = document.querySelector('.nav');
