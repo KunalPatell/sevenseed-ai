@@ -187,6 +187,21 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
   el.addEventListener('mouseleave', function(){ el.style.transform = ''; });
 });
 
+// Button ripple micro-interaction
+document.querySelectorAll('.btn').forEach(function(btn){
+  btn.addEventListener('click', function(e){
+    var r = btn.getBoundingClientRect();
+    var size = Math.max(r.width, r.height);
+    var span = document.createElement('span');
+    span.className = 'btn-ripple';
+    span.style.width = span.style.height = size + 'px';
+    span.style.left = (e.clientX - r.left - size / 2) + 'px';
+    span.style.top = (e.clientY - r.top - size / 2) + 'px';
+    btn.appendChild(span);
+    setTimeout(function(){ if (span.parentNode) span.parentNode.removeChild(span); }, 650);
+  });
+});
+
 // Hero particle network
 (function(){
   var c = document.getElementById('particles');
@@ -552,6 +567,15 @@ function toast(msg, type){
     return el;
   }
 
+  function addTypingMsg(){
+    var el = document.createElement('div');
+    el.className = 'chat-msg bot typing';
+    el.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+    return el;
+  }
+
   function localAnswer(q){
     var ql = q.toLowerCase();
     var pool = [];
@@ -597,7 +621,7 @@ function toast(msg, type){
     if (!q) return;
     addMsg(q, 'user');
     input.value = '';
-    var pending = addMsg('Thinking…', 'bot typing');
+    var pending = addTypingMsg();
     var key = getKey();
     if (key){
       askGemini(q, key).then(function(text){

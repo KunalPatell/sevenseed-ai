@@ -48,10 +48,46 @@ VENTURE_META = {
     "rakshak-ai":             ("fa-shield-halved", "AI Public Safety", "5-in-1 AI public safety platform with automatic FIR generation (BNS/IPC) and vision sentinel."),
 }
 
+# ── Layout variants ──────────────────────────────────────────────────────────
+# Each venture is assigned one variant (see "variant" key on its entry below).
+# A variant swaps display typography, the hero's layout/background treatment,
+# and the visual language of cards/nav via `[data-variant="…"]`-scoped CSS —
+# so all 9 sites stay data-driven from one generator but no longer look identical.
+VARIANTS = {
+    "bold-centered": {
+        "font_import": None,  # Inter is already the base font; no extra import needed
+        "display_font": "'Inter', system-ui, -apple-system, sans-serif",
+    },
+    "technical-mono": {
+        "font_import": "Space+Grotesk:wght@400;500;600;700",
+        "display_font": "'Space Grotesk', 'JetBrains Mono', monospace",
+    },
+    "dashboard": {
+        "font_import": "Manrope:wght@400;500;600;700;800",
+        "display_font": "'Manrope', system-ui, -apple-system, sans-serif",
+    },
+    "editorial": {
+        "font_import": "Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700",
+        "display_font": "'Fraunces', Georgia, serif",
+    },
+    "warm-commerce": {
+        "font_import": "Poppins:wght@400;500;600;700;800",
+        "display_font": "'Poppins', system-ui, -apple-system, sans-serif",
+    },
+    "industrial-blueprint": {
+        "font_import": "Oswald:wght@400;500;600;700",
+        "display_font": "'Oswald', system-ui, -apple-system, sans-serif",
+    },
+    "tactical-alert": {
+        "font_import": "Rajdhani:wght@500;600;700",
+        "display_font": "'Rajdhani', system-ui, -apple-system, sans-serif",
+    },
+}
+
 # ── Company content (AI-native positioning) ─────────────────────────────────
 COMPANIES = [
     {
-        "slug": "comonk", "emoji": "🧠", "icon": "fa-brain",
+        "slug": "comonk", "variant": "technical-mono", "emoji": "🧠", "icon": "fa-brain",
         "live_url": "https://comonk-ai.onrender.com",
         "logo_main": "Comonk", "logo_accent": "AI",
         "sector": "AI Career Intelligence Platform", "established": "Est. 2026",
@@ -93,7 +129,7 @@ COMPANIES = [
         "contact": ("hello@comonk.ai", "+91 84908 61586", "Ahmedabad, Gujarat, India"),
     },
     {
-        "slug": "sevenseed", "emoji": "🌱", "icon": "fa-seedling",
+        "slug": "sevenseed", "variant": "bold-centered", "emoji": "🌱", "icon": "fa-seedling",
         "logo_main": "Seven", "logo_accent": "seed",
         "sector": "AI Venture Studio & Startup Incubator", "established": "Est. 2026",
         "accent": ("#6366f1", "#a5b4fc", "#a855f7", "#d8b4fe", "99,102,241", "168,85,247"),
@@ -134,7 +170,7 @@ COMPANIES = [
         "contact": ("hello@sevenseed.in", "+91 84908 61586", "Ahmedabad, Gujarat, India"),
     },
     {
-        "slug": "sevenforce", "emoji": "🤖", "icon": "fa-users-gear",
+        "slug": "sevenforce", "variant": "dashboard", "emoji": "🤖", "icon": "fa-users-gear",
         "app_url": "app",
         "logo_main": "Seven", "logo_accent": "force",
         "sector": "AI Workforce & Business Automation", "established": "Est. 2026",
@@ -177,7 +213,7 @@ COMPANIES = [
         "contact": ("hello@sevenforce.ai", "+91 84908 61586", "Ahmedabad, Gujarat, India"),
     },
     {
-        "slug": "avpu", "emoji": "🎓", "icon": "fa-graduation-cap",
+        "slug": "avpu", "variant": "editorial", "emoji": "🎓", "icon": "fa-graduation-cap",
         "logo_main": "AVP", "logo_accent": "University",
         "sector": "AI-Powered Higher Education", "established": "Est. 2026",
         "accent": ("#2563eb", "#93c5fd", "#f59e0b", "#fcd34d", "37,99,235", "245,158,11"),
@@ -218,7 +254,7 @@ COMPANIES = [
         "contact": ("admissions@avpu.edu.in", "+91 84908 61586", "Anand, Gujarat, India"),
     },
     {
-        "slug": "decode-forest-pharmacy", "emoji": "💊", "icon": "fa-mortar-pestle",
+        "slug": "decode-forest-pharmacy", "variant": "warm-commerce", "emoji": "💊", "icon": "fa-mortar-pestle",
         "logo_main": "Decode Forest", "logo_accent": "Pharmacy",
         "sector": "AI-Powered Pharmacy & Healthcare", "established": "Est. 2026",
         "accent": ("#10b981", "#6ee7b7", "#14b8a6", "#5eead4", "16,185,129", "20,184,166"),
@@ -259,7 +295,7 @@ COMPANIES = [
         "contact": ("care@decodeforest.in", "+91 84908 61586", "Ahmedabad, Gujarat, India"),
     },
     {
-        "slug": "breakdown-factor", "emoji": "🏗️", "icon": "fa-helmet-safety",
+        "slug": "breakdown-factor", "variant": "industrial-blueprint", "emoji": "🏗️", "icon": "fa-helmet-safety",
         "logo_main": "Breakdown Factor", "logo_accent": "Construction",
         "sector": "AI-Driven Construction & Infrastructure", "established": "Est. 2026",
         "accent": ("#f59e0b", "#fcd34d", "#f97316", "#fdba74", "245,158,11", "249,115,22"),
@@ -300,7 +336,7 @@ COMPANIES = [
         "contact": ("projects@breakdownfactor.in", "+91 84908 61586", "Ahmedabad, Gujarat, India"),
     },
     {
-        "slug": "rakshak-ai", "emoji": "🛡️", "icon": "fa-shield-halved",
+        "slug": "rakshak-ai", "variant": "tactical-alert", "emoji": "🛡️", "icon": "fa-shield-halved",
         "live_url": "https://sevenseed.onrender.com/rakshak-ai",
         "logo_main": "Rakshak", "logo_accent": "AI",
         "sector": "AI Public Safety & Vision Security Platform", "established": "Est. 2026",
@@ -342,7 +378,7 @@ COMPANIES = [
         "contact": ("help@rakshak-ai.in", "+91 84908 61586", "Ahmedabad, Gujarat, India"),
     },
     {
-        "slug": "avp-charitable-trust", "emoji": "🤝", "icon": "fa-hand-holding-heart",
+        "slug": "avp-charitable-trust", "variant": "editorial", "emoji": "🤝", "icon": "fa-hand-holding-heart",
         "logo_main": "AVP", "logo_accent": "Charitable Trust",
         "sector": "AI for Social Impact · Non-Profit", "established": "Est. 2026",
         "accent": ("#f43f5e", "#fda4af", "#f59e0b", "#fcd34d", "244,63,94", "245,158,11"),
@@ -383,7 +419,7 @@ COMPANIES = [
         "contact": ("connect@avptrust.org", "+91 84908 61586", "Ahmedabad, Gujarat, India"),
     },
     {
-        "slug": "avp-emart", "emoji": "🛒", "icon": "fa-cart-shopping",
+        "slug": "avp-emart", "variant": "warm-commerce", "emoji": "🛒", "icon": "fa-cart-shopping",
         "logo_main": "AVP", "logo_accent": "Emart",
         "sector": "AI-Powered E-Commerce & Smart Shopping", "established": "Est. 2026",
         "accent": ("#f97316", "#fdba74", "#10b981", "#6ee7b7", "249,115,22", "16,185,129"),
@@ -916,6 +952,11 @@ def render_sandbox(c):
 def render_html(c):
     email, phone, location = c["contact"]
     live_url = c.get("live_url")
+    variant = c.get("variant", "bold-centered")
+    vfont_import = (
+        f'\n  <link href="https://fonts.googleapis.com/css2?family={VARIANTS[variant]["font_import"]}&display=swap" rel="stylesheet">'
+        if VARIANTS[variant]["font_import"] else ""
+    )
     name = f'{c["logo_main"]} <span class="logo-accent">{c["logo_accent"]}</span>'
     full_name = f'{c["logo_main"]} {c["logo_accent"]}'
     favicon = (
@@ -1001,11 +1042,11 @@ def render_html(c):
   <script>(function(){{try{{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})();</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">{vfont_import}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-variant="{variant}" style="--font-display:{VARIANTS[variant]["display_font"]}">
 <span id="top"></span>
 
 <div class="preloader" id="preloader">
@@ -1074,7 +1115,7 @@ def render_html(c):
 
 <section class="ai-strip">
   <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
-  <div class="ai-chips">{render_ai_chips(c["ai_stack"])}</div>
+  <div class="ai-marquee"><div class="marquee-track ai-track">{render_ai_chips(c["ai_stack"])}{render_ai_chips(c["ai_stack"])}</div></div>
 </section>
 
 <section class="trust-strip">
@@ -1299,6 +1340,7 @@ def render_css(c):
   --radius:16px; --radius-sm:10px;
   --shadow:0 10px 40px rgba(0,0,0,.45); --shadow-lg:0 24px 70px rgba(0,0,0,.6);
   --maxw:1180px; --nav-h:66px; --t:.25s ease;
+  --font-display:'Inter',system-ui,-apple-system,sans-serif;
   --nav-glass:rgba(8,8,14,.55); --nav-glass-scrolled:rgba(8,8,14,.9); --nav-glass-mobile:rgba(8,8,14,.97);
   --glass-a:rgba(255,255,255,.03); --glass-b:rgba(255,255,255,.05); --glass-c:rgba(255,255,255,.06); --glass-d:rgba(255,255,255,.1);
 }}
@@ -1321,6 +1363,7 @@ html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 10px)}
 body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 ul{list-style:none}
+h1,h2,h3,h4,.logo-text,.pl-name{font-family:var(--font-display)}
 img{max-width:100%;display:block}
 ::selection{background:rgba(var(--primary-rgb),.35)}
 ::-webkit-scrollbar{width:9px;height:9px}
@@ -1329,7 +1372,10 @@ img{max-width:100%;display:block}
 .grad{background:linear-gradient(115deg,var(--primary-l),var(--secondary-l));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 
 /* Buttons */
-.btn{display:inline-flex;align-items:center;gap:9px;padding:11px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;transition:all var(--t);white-space:nowrap;border:1px solid transparent;cursor:pointer}
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:9px;padding:11px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;transition:all var(--t);white-space:nowrap;border:1px solid transparent;cursor:pointer}
+.btn-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:btnRipple .6s ease-out forwards;pointer-events:none}
+@keyframes btnRipple{to{transform:scale(2.6);opacity:0}}
+@media(prefers-reduced-motion:reduce){.btn-ripple{display:none}}
 .btn.lg{padding:14px 26px;font-size:15px}
 .btn-primary{background:linear-gradient(120deg,var(--primary),var(--secondary));color:#fff;box-shadow:0 6px 22px rgba(var(--primary-rgb),.35)}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 34px rgba(var(--primary-rgb),.5)}
@@ -1374,12 +1420,15 @@ img{max-width:100%;display:block}
 @keyframes marquee{to{transform:translateX(-50%)}}
 
 /* AI stack strip */
-.ai-strip{max-width:var(--maxw);margin:0 auto;padding:26px clamp(18px,4vw,40px);display:flex;align-items:center;justify-content:center;gap:18px 26px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
-.ai-strip-label{font-size:12.5px;font-weight:700;letter-spacing:.5px;color:var(--text-2);display:inline-flex;align-items:center;gap:8px}
+.ai-strip{max-width:var(--maxw);margin:0 auto;padding:26px clamp(18px,4vw,40px);display:flex;align-items:center;gap:18px 26px;flex-wrap:nowrap;border-bottom:1px solid var(--border)}
+.ai-strip-label{flex-shrink:0;font-size:12.5px;font-weight:700;letter-spacing:.5px;color:var(--text-2);display:inline-flex;align-items:center;gap:8px}
 .ai-strip-label i{color:var(--primary-l)}
-.ai-chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.ai-marquee{flex:1;min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.ai-track{gap:9px;animation-duration:30s}
 .ai-chip{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:var(--text);background:var(--bg-2);border:1px solid var(--border);padding:6px 12px;border-radius:8px}
 .ai-chip i{color:var(--primary-l);font-size:10px}
+.ai-marquee:hover .ai-track{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.ai-track{animation:none}}
 
 /* Trust / enterprise strip */
 .trust-strip{max-width:var(--maxw);margin:0 auto;padding:16px clamp(18px,4vw,40px) 28px;display:flex;align-items:center;justify-content:center;gap:12px 28px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
@@ -1780,7 +1829,12 @@ body.js .reveal.in{opacity:1;transform:none}
 .chat-msg{max-width:88%;padding:10px 13px;border-radius:12px;line-height:1.55}
 .chat-msg.bot{background:var(--bg-2);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:3px;white-space:pre-wrap}
 .chat-msg.user{background:linear-gradient(120deg,var(--primary),var(--secondary));color:#fff;align-self:flex-end;border-bottom-right-radius:3px}
-.chat-msg.typing{color:var(--text-3);font-style:italic}
+.chat-msg.typing{color:var(--text-3)}
+.typing-dots{display:inline-flex;gap:4px;align-items:center;padding:2px 0}
+.typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--text-3);animation:typingBounce 1.1s ease-in-out infinite}
+.typing-dots span:nth-child(2){animation-delay:.15s}
+.typing-dots span:nth-child(3){animation-delay:.3s}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
 .chat-keybar{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--bg-2);border-top:1px solid var(--border);font-size:11.5px;color:var(--text-2);flex-wrap:wrap}
 .chat-keybar span{flex:1 1 100%}
 .chat-keybar input{flex:1;min-width:0;background:var(--bg-3);border:1px solid var(--border-hi);border-radius:7px;padding:7px 9px;color:var(--text);font-size:12px;font-family:inherit}
@@ -1824,6 +1878,68 @@ body.js .reveal.in{opacity:1;transform:none}
   .chat-panel{right:16px;bottom:80px;left:16px;width:auto}
   .toast-stack{left:16px;bottom:16px}
 }
+
+/* ── Layout variants ─────────────────────────────────────────────────────── */
+/* bold-centered (Sevenseed) is the base look above and needs no overrides. */
+
+/* technical-mono — Comonk: terminal-flavoured, sharp, left-aligned */
+body[data-variant="technical-mono"]{--radius:6px;--radius-sm:4px}
+body[data-variant="technical-mono"] .hero{text-align:left}
+body[data-variant="technical-mono"] .hero-content{margin:0;max-width:820px}
+body[data-variant="technical-mono"] .hero-actions,body[data-variant="technical-mono"] .stats-row{justify-content:flex-start;margin-left:0}
+body[data-variant="technical-mono"] .hero-sub{margin:0 0 32px}
+body[data-variant="technical-mono"] .hero-pill{border-radius:4px;font-family:'JetBrains Mono',monospace}
+body[data-variant="technical-mono"] .logo-text{display:inline-flex;gap:6px;font-family:'JetBrains Mono',monospace}
+body[data-variant="technical-mono"] .logo-text::before{content:'['}
+body[data-variant="technical-mono"] .logo-text::after{content:']'}
+body[data-variant="technical-mono"] .svc-card,body[data-variant="technical-mono"] .proc-step,body[data-variant="technical-mono"] .metric,body[data-variant="technical-mono"] .tcard,body[data-variant="technical-mono"] .vent-card,body[data-variant="technical-mono"] .about-card{box-shadow:none}
+body[data-variant="technical-mono"] .hero-orb{opacity:.5}
+
+/* dashboard — Sevenforce: product-UI flavoured, flat accent-bar cards */
+body[data-variant="dashboard"]{--radius:12px;--radius-sm:8px}
+body[data-variant="dashboard"] .hero-pill{position:relative;padding-left:38px}
+body[data-variant="dashboard"] .hero-pill::before{content:'';position:absolute;left:14px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:-11px 0 0 #f59e0b,-22px 0 0 #ef4444}
+body[data-variant="dashboard"] .svc-card,body[data-variant="dashboard"] .proc-step,body[data-variant="dashboard"] .vent-card{border-left:3px solid var(--primary);box-shadow:none}
+body[data-variant="dashboard"] .metric,body[data-variant="dashboard"] .about-card{border-left:3px solid var(--secondary);box-shadow:none}
+body[data-variant="dashboard"] .hero-orb,body[data-variant="dashboard"] .hero-grid{opacity:.5}
+
+/* editorial — AVPU / AVP Charitable Trust: serif, airy, left-aligned */
+body[data-variant="editorial"]{--radius:2px;--radius-sm:2px}
+body[data-variant="editorial"] .hero{text-align:left}
+body[data-variant="editorial"] .hero-content{margin:0;max-width:760px}
+body[data-variant="editorial"] .hero-actions,body[data-variant="editorial"] .stats-row{justify-content:flex-start;margin-left:0}
+body[data-variant="editorial"] .hero-sub{margin:0 0 32px;font-size:clamp(16px,2vw,20px)}
+body[data-variant="editorial"] .hero-title{font-weight:600;letter-spacing:-1px}
+body[data-variant="editorial"] .hero-pill{background:none;border:none;border-top:1px solid var(--border-hi);border-bottom:1px solid var(--border-hi);border-radius:0;padding:8px 0;text-transform:uppercase;letter-spacing:2px;font-size:11px}
+body[data-variant="editorial"] .hero-orb,body[data-variant="editorial"] #particles,body[data-variant="editorial"] .hero-grid{display:none}
+body[data-variant="editorial"] .sec-title{font-weight:600}
+body[data-variant="editorial"] .svc-card,body[data-variant="editorial"] .proc-step,body[data-variant="editorial"] .metric,body[data-variant="editorial"] .tcard,body[data-variant="editorial"] .vent-card,body[data-variant="editorial"] .about-card{box-shadow:none;border:none;border-bottom:1px solid var(--border-hi);border-radius:0}
+body[data-variant="editorial"] .faq{border:none;border-bottom:1px solid var(--border-hi);border-radius:0;background:none}
+
+/* warm-commerce — Decode Forest Pharmacy / AVP Emart: rounded, playful */
+body[data-variant="warm-commerce"]{--radius:26px;--radius-sm:16px}
+body[data-variant="warm-commerce"] .hero-orb{filter:blur(90px);opacity:.85}
+body[data-variant="warm-commerce"] .hero-grid{display:none}
+body[data-variant="warm-commerce"] .hero-pill{border-radius:999px}
+body[data-variant="warm-commerce"] .btn{border-radius:999px}
+body[data-variant="warm-commerce"] .svc-card:hover,body[data-variant="warm-commerce"] .proc-step:hover,body[data-variant="warm-commerce"] .vent-card:hover{transform:translateY(-6px) scale(1.015)}
+
+/* industrial-blueprint — Breakdown Factor: technical drawing, angular */
+body[data-variant="industrial-blueprint"]{--radius:2px;--radius-sm:2px}
+body[data-variant="industrial-blueprint"] .hero-title,body[data-variant="industrial-blueprint"] .sec-title{text-transform:uppercase}
+body[data-variant="industrial-blueprint"] .hero-pill{border-radius:0;clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%)}
+body[data-variant="industrial-blueprint"] .btn{border-radius:0;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+body[data-variant="industrial-blueprint"] .svc-card,body[data-variant="industrial-blueprint"] .proc-step,body[data-variant="industrial-blueprint"] .metric,body[data-variant="industrial-blueprint"] .tcard,body[data-variant="industrial-blueprint"] .vent-card,body[data-variant="industrial-blueprint"] .about-card{border-radius:0;border-color:var(--border-hi);box-shadow:none}
+body[data-variant="industrial-blueprint"] .hero-grid{opacity:.28;background-size:36px 36px}
+body[data-variant="industrial-blueprint"] .hero-orb{display:none}
+
+/* tactical-alert — Rakshak AI: high-contrast command-center */
+body[data-variant="tactical-alert"]{--radius:4px;--radius-sm:4px}
+body[data-variant="tactical-alert"] .hero-title,body[data-variant="tactical-alert"] .sec-title{text-transform:uppercase}
+body[data-variant="tactical-alert"] .hero-pill{border-radius:4px;animation:tacticalPulse 2.2s ease-in-out infinite}
+body[data-variant="tactical-alert"] .svc-card,body[data-variant="tactical-alert"] .proc-step,body[data-variant="tactical-alert"] .metric,body[data-variant="tactical-alert"] .vent-card{border-left:3px solid var(--primary);border-radius:4px}
+@keyframes tacticalPulse{0%,100%{box-shadow:0 0 0 0 rgba(var(--primary-rgb),.35)}50%{box-shadow:0 0 0 8px rgba(var(--primary-rgb),0)}}
+@media(prefers-reduced-motion:reduce){body[data-variant="tactical-alert"] .hero-pill{animation:none}}
 
 /* Printable company overview (triggered by the "Download overview" button) */
 @media print{
@@ -2032,6 +2148,21 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
     el.style.transform = 'translate(' + ((e.clientX - (r.left + r.width/2)) * 0.28).toFixed(1) + 'px,' + ((e.clientY - (r.top + r.height/2)) * 0.28).toFixed(1) + 'px)';
   });
   el.addEventListener('mouseleave', function(){ el.style.transform = ''; });
+});
+
+// Button ripple micro-interaction
+document.querySelectorAll('.btn').forEach(function(btn){
+  btn.addEventListener('click', function(e){
+    var r = btn.getBoundingClientRect();
+    var size = Math.max(r.width, r.height);
+    var span = document.createElement('span');
+    span.className = 'btn-ripple';
+    span.style.width = span.style.height = size + 'px';
+    span.style.left = (e.clientX - r.left - size / 2) + 'px';
+    span.style.top = (e.clientY - r.top - size / 2) + 'px';
+    btn.appendChild(span);
+    setTimeout(function(){ if (span.parentNode) span.parentNode.removeChild(span); }, 650);
+  });
 });
 
 // Hero particle network
@@ -2399,6 +2530,15 @@ function toast(msg, type){
     return el;
   }
 
+  function addTypingMsg(){
+    var el = document.createElement('div');
+    el.className = 'chat-msg bot typing';
+    el.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+    return el;
+  }
+
   function localAnswer(q){
     var ql = q.toLowerCase();
     var pool = [];
@@ -2444,7 +2584,7 @@ function toast(msg, type){
     if (!q) return;
     addMsg(q, 'user');
     input.value = '';
-    var pending = addMsg('Thinking…', 'bot typing');
+    var pending = addTypingMsg();
     var key = getKey();
     if (key){
       askGemini(q, key).then(function(text){
