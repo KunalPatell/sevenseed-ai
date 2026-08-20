@@ -98,6 +98,13 @@
   <div class="ai-chips"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>YOLO Vision</span><span class="ai-chip"><i class="fas fa-microchip"></i>ML Forecasting</span></div>
 </section>
 
+<section class="trust-strip">
+  <div class="trust-item"><i class="fas fa-lock"></i> Your API keys stay in your browser — never sent to our servers</div>
+  <div class="trust-item"><i class="fas fa-headset"></i> Real support at projects@breakdownfactor.in</div>
+  <div class="trust-item"><i class="fas fa-seedling"></i> Part of the Sevenseed AI venture portfolio</div>
+  <button class="trust-item trust-print" id="printBtn" type="button"><i class="fas fa-file-arrow-down"></i> Download overview</button>
+</section>
+
 <section class="section about" id="about">
   <div class="about-grid">
     <div class="about-copy reveal">
@@ -245,6 +252,17 @@
         <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
         <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
       </div>
+      <div class="cf-row">
+        <input type="text" id="cf-org" placeholder="Company / organisation (optional)" autocomplete="organization">
+        <select id="cf-size">
+          <option value="">Team size (optional)</option>
+          <option value="Just me">Just me</option>
+          <option value="2-10">2–10</option>
+          <option value="11-50">11–50</option>
+          <option value="51-200">51–200</option>
+          <option value="200+">200+ (enterprise)</option>
+        </select>
+      </div>
       <input type="text" id="cf-subject" placeholder="Subject">
       <textarea id="cf-msg" rows="4" placeholder="How can we help you?" required></textarea>
       <button type="submit" class="btn btn-primary lg"><i class="fas fa-paper-plane"></i> Send message</button>
@@ -280,6 +298,7 @@
         <li><a href="#process">Process</a></li>
         <li><a href="#faq">FAQ</a></li>
         <li><a href="#contact">Contact</a></li>
+        <li><button type="button" id="shortcutsBtn">Keyboard shortcuts</button></li>
       </ul>
     </div>
     <div class="foot-col">
@@ -342,6 +361,18 @@
     <div class="cmdk-input-row"><i class="fas fa-magnifying-glass"></i><input type="text" id="cmdkInput" placeholder="Search sections, AI tools, FAQs, ventures…" autocomplete="off"></div>
     <div class="cmdk-list" id="cmdkList"></div>
     <div class="cmdk-hint"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span><span><kbd>&crarr;</kbd> select</span><span><kbd>esc</kbd> close</span></div>
+  </div>
+</div>
+
+<div class="cmdk-overlay" id="shortcutsModal" aria-hidden="true">
+  <div class="cmdk-panel shortcuts-panel">
+    <div class="shortcuts-head">Keyboard shortcuts</div>
+    <div class="shortcuts-list">
+      <div class="shortcuts-row"><span>Open search / command palette</span><span><kbd>Ctrl</kbd>+<kbd>K</kbd></span></div>
+      <div class="shortcuts-row"><span>Toggle light / dark theme</span><span>click the sun/moon icon</span></div>
+      <div class="shortcuts-row"><span>Open this list</span><span><kbd>?</kbd></span></div>
+      <div class="shortcuts-row"><span>Close any dialog</span><span><kbd>esc</kbd></span></div>
+    </div>
   </div>
 </div>
 

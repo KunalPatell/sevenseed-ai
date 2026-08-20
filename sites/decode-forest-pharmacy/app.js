@@ -75,9 +75,16 @@ if (cform) {
     var company = cform.getAttribute('data-company') || '';
     var name = (document.getElementById('cf-name').value || '').trim();
     var from = (document.getElementById('cf-email').value || '').trim();
+    var orgEl = document.getElementById('cf-org');
+    var sizeEl = document.getElementById('cf-size');
+    var org = orgEl ? (orgEl.value || '').trim() : '';
+    var size = sizeEl ? (sizeEl.value || '').trim() : '';
     var subj = (document.getElementById('cf-subject').value || '').trim() || ('Enquiry for ' + company);
     var msg = (document.getElementById('cf-msg').value || '').trim();
-    var body = 'Name: ' + name + '\nEmail: ' + from + '\n\n' + msg;
+    var body = 'Name: ' + name + '\nEmail: ' + from +
+      (org ? '\nCompany: ' + org : '') +
+      (size ? '\nTeam size: ' + size : '') +
+      '\n\n' + msg;
     var note = document.getElementById('cf-note');
     window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
     if (note) note.textContent = 'Opening your email app to send this message…';
@@ -601,5 +608,28 @@ function toast(msg, type){
     } else {
       setTimeout(function(){ pending.textContent = localAnswer(q); pending.classList.remove('typing'); }, 350);
     }
+  });
+})();
+
+// Download overview (print stylesheet)
+(function(){
+  var btn = document.getElementById('printBtn');
+  if (!btn) return;
+  btn.addEventListener('click', function(){ window.print(); });
+})();
+
+// Keyboard shortcuts modal ("?" or the footer link)
+(function(){
+  var overlay = document.getElementById('shortcutsModal');
+  var openBtn = document.getElementById('shortcutsBtn');
+  if (!overlay) return;
+  function open(){ overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false'); }
+  function close(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true'); }
+  if (openBtn) openBtn.addEventListener('click', open);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); });
+  document.addEventListener('keydown', function(e){
+    var typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '');
+    if (e.key === '?' && !typing){ e.preventDefault(); overlay.classList.contains('open') ? close() : open(); return; }
+    if (e.key === 'Escape' && overlay.classList.contains('open')) close();
   });
 })();

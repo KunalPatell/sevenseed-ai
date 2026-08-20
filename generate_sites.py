@@ -1077,6 +1077,13 @@ def render_html(c):
   <div class="ai-chips">{render_ai_chips(c["ai_stack"])}</div>
 </section>
 
+<section class="trust-strip">
+  <div class="trust-item"><i class="fas fa-lock"></i> Your API keys stay in your browser — never sent to our servers</div>
+  <div class="trust-item"><i class="fas fa-headset"></i> Real support at {email}</div>
+  <div class="trust-item"><i class="fas fa-seedling"></i> Part of the Sevenseed AI venture portfolio</div>
+  <button class="trust-item trust-print" id="printBtn" type="button"><i class="fas fa-file-arrow-down"></i> Download overview</button>
+</section>
+
 <section class="section about" id="about">
   <div class="about-grid">
     <div class="about-copy reveal">
@@ -1157,6 +1164,17 @@ def render_html(c):
         <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
         <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
       </div>
+      <div class="cf-row">
+        <input type="text" id="cf-org" placeholder="Company / organisation (optional)" autocomplete="organization">
+        <select id="cf-size">
+          <option value="">Team size (optional)</option>
+          <option value="Just me">Just me</option>
+          <option value="2-10">2–10</option>
+          <option value="11-50">11–50</option>
+          <option value="51-200">51–200</option>
+          <option value="200+">200+ (enterprise)</option>
+        </select>
+      </div>
       <input type="text" id="cf-subject" placeholder="Subject">
       <textarea id="cf-msg" rows="4" placeholder="How can we help you?" required></textarea>
       <button type="submit" class="btn btn-primary lg"><i class="fas fa-paper-plane"></i> Send message</button>
@@ -1192,6 +1210,7 @@ def render_html(c):
         <li><a href="#process">Process</a></li>
         <li><a href="#faq">FAQ</a></li>
         <li><a href="#contact">Contact</a></li>
+        <li><button type="button" id="shortcutsBtn">Keyboard shortcuts</button></li>
       </ul>
     </div>
     <div class="foot-col">
@@ -1246,6 +1265,18 @@ def render_html(c):
     <div class="cmdk-input-row"><i class="fas fa-magnifying-glass"></i><input type="text" id="cmdkInput" placeholder="Search sections, AI tools, FAQs, ventures…" autocomplete="off"></div>
     <div class="cmdk-list" id="cmdkList"></div>
     <div class="cmdk-hint"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span><span><kbd>&crarr;</kbd> select</span><span><kbd>esc</kbd> close</span></div>
+  </div>
+</div>
+
+<div class="cmdk-overlay" id="shortcutsModal" aria-hidden="true">
+  <div class="cmdk-panel shortcuts-panel">
+    <div class="shortcuts-head">Keyboard shortcuts</div>
+    <div class="shortcuts-list">
+      <div class="shortcuts-row"><span>Open search / command palette</span><span><kbd>Ctrl</kbd>+<kbd>K</kbd></span></div>
+      <div class="shortcuts-row"><span>Toggle light / dark theme</span><span>click the sun/moon icon</span></div>
+      <div class="shortcuts-row"><span>Open this list</span><span><kbd>?</kbd></span></div>
+      <div class="shortcuts-row"><span>Close any dialog</span><span><kbd>esc</kbd></span></div>
+    </div>
   </div>
 </div>
 
@@ -1349,6 +1380,13 @@ img{max-width:100%;display:block}
 .ai-chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
 .ai-chip{display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:var(--text);background:var(--bg-2);border:1px solid var(--border);padding:6px 12px;border-radius:8px}
 .ai-chip i{color:var(--primary-l);font-size:10px}
+
+/* Trust / enterprise strip */
+.trust-strip{max-width:var(--maxw);margin:0 auto;padding:16px clamp(18px,4vw,40px) 28px;display:flex;align-items:center;justify-content:center;gap:12px 28px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.trust-item{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:var(--text-2)}
+.trust-item i{color:var(--primary-l)}
+.trust-print{background:none;border:1px solid var(--border-hi);border-radius:20px;padding:6px 13px;cursor:pointer;color:var(--text-2);font:inherit;transition:all var(--t)}
+.trust-print:hover{border-color:rgba(var(--primary-rgb),.5);color:var(--primary-l)}
 
 /* Sections */
 .section{max-width:var(--maxw);margin:0 auto;padding:clamp(60px,8vw,104px) clamp(18px,4vw,40px)}
@@ -1456,9 +1494,11 @@ img{max-width:100%;display:block}
 .cta-actions{display:flex;gap:13px;justify-content:center;flex-wrap:wrap;margin-top:30px}
 .contact-form{max-width:560px;margin:34px auto 0;display:flex;flex-direction:column;gap:12px;text-align:left}
 .cf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.contact-form input,.contact-form textarea{width:100%;padding:13px 15px;background:var(--bg-1);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:inherit;transition:border-color var(--t)}
+.contact-form input,.contact-form textarea,.contact-form select{width:100%;padding:13px 15px;background:var(--bg-1);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:inherit;transition:border-color var(--t)}
+.contact-form select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%239aa0b8'%3E%3Cpath d='M5.5 7.5l4.5 4.5 4.5-4.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.contact-form select option{background:var(--bg-1);color:var(--text)}
 .contact-form input::placeholder,.contact-form textarea::placeholder{color:var(--text-3)}
-.contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--primary)}
+.contact-form input:focus,.contact-form textarea:focus,.contact-form select:focus{outline:none;border-color:var(--primary)}
 .contact-form textarea{resize:vertical;line-height:1.6}
 .contact-form .btn{justify-content:center;width:100%}
 .cf-note{font-size:13px;color:var(--secondary-l);min-height:18px;text-align:center;margin:0}
@@ -1476,8 +1516,8 @@ img{max-width:100%;display:block}
 .foot-social a:hover{color:#fff;background:linear-gradient(135deg,var(--primary),var(--secondary));border-color:transparent;transform:translateY(-2px)}
 .foot-col h5{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;color:var(--text)}
 .foot-col ul li{margin-bottom:11px}
-.foot-col ul a{color:var(--text-2);font-size:14px;transition:color var(--t)}
-.foot-col ul a:hover{color:var(--primary-l)}
+.foot-col ul a,.foot-col ul button{color:var(--text-2);font-size:14px;transition:color var(--t);background:none;border:none;padding:0;font-family:inherit;cursor:pointer}
+.foot-col ul a:hover,.foot-col ul button:hover{color:var(--primary-l)}
 .foot-current{color:var(--primary-l);font-size:14px;font-weight:600}
 .foot-contact li{color:var(--text-2);font-size:13.5px;margin-bottom:11px;display:flex;align-items:flex-start;gap:9px}
 .foot-contact i{color:var(--primary-l);margin-top:3px}
@@ -1766,6 +1806,13 @@ body.js .reveal.in{opacity:1;transform:none}
 .cmdk-hint{display:flex;gap:16px;padding:10px 18px;border-top:1px solid var(--border);font-size:11px;color:var(--text-3)}
 .cmdk-hint kbd{background:var(--bg-3);border:1px solid var(--border-hi);border-radius:4px;padding:1px 6px;font-family:inherit}
 
+/* Keyboard shortcuts modal (reuses .cmdk-overlay/.cmdk-panel) */
+.shortcuts-panel{padding:6px 0 16px}
+.shortcuts-head{padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:15px}
+.shortcuts-list{padding:10px 20px 4px;display:flex;flex-direction:column;gap:14px}
+.shortcuts-row{display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:13.5px;color:var(--text-2)}
+.shortcuts-row kbd{background:var(--bg-3);border:1px solid var(--border-hi);border-radius:4px;padding:2px 7px;font-family:inherit;color:var(--text)}
+
 /* Toast notifications */
 .toast-stack{position:fixed;left:22px;bottom:22px;z-index:600;display:flex;flex-direction:column;gap:10px;max-width:min(320px,calc(100vw - 32px))}
 .toast{background:var(--bg-1);border:1px solid var(--border-hi);border-left:3px solid var(--primary);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text);box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:all .25s ease}
@@ -1776,6 +1823,24 @@ body.js .reveal.in{opacity:1;transform:none}
   .fab-stack{right:16px;bottom:16px}
   .chat-panel{right:16px;bottom:80px;left:16px;width:auto}
   .toast-stack{left:16px;bottom:16px}
+}
+
+/* Printable company overview (triggered by the "Download overview" button) */
+@media print{
+  :root{
+    --bg:#ffffff; --bg-1:#ffffff; --bg-2:#f4f4f8; --bg-3:#ececf4;
+    --border:#e2e2ea; --border-hi:#d0d0dc;
+    --text:#14141f; --text-2:#4c4f68; --text-3:#7d7f9a;
+    --shadow:none; --shadow-lg:none;
+  }
+  body{background:#fff}
+  .nav,.fab-stack,.chat-panel,.cmdk-overlay,.cursor-ring,.scroll-progress,.toast-stack,
+  .preloader,#particles,.hero-orb,.hero-grid,.grain,.contact-form,.hero-marquee,
+  .trust-print,.hamburger,.hero-actions,.cta-actions,.tnav,.tdots,.sandbox-sec{display:none!important}
+  .hero{min-height:auto;padding-top:30px}
+  .hero-glow{display:none}
+  .section,.hero,.cta,.impact,.trust-strip,.ai-strip{break-inside:avoid-page}
+  .glow,.svc-card,.proc-step,.metric,.tcard,.about-card{box-shadow:none;border-color:var(--border)}
 }
 """
 
@@ -1857,9 +1922,16 @@ if (cform) {
     var company = cform.getAttribute('data-company') || '';
     var name = (document.getElementById('cf-name').value || '').trim();
     var from = (document.getElementById('cf-email').value || '').trim();
+    var orgEl = document.getElementById('cf-org');
+    var sizeEl = document.getElementById('cf-size');
+    var org = orgEl ? (orgEl.value || '').trim() : '';
+    var size = sizeEl ? (sizeEl.value || '').trim() : '';
     var subj = (document.getElementById('cf-subject').value || '').trim() || ('Enquiry for ' + company);
     var msg = (document.getElementById('cf-msg').value || '').trim();
-    var body = 'Name: ' + name + '\nEmail: ' + from + '\n\n' + msg;
+    var body = 'Name: ' + name + '\nEmail: ' + from +
+      (org ? '\nCompany: ' + org : '') +
+      (size ? '\nTeam size: ' + size : '') +
+      '\n\n' + msg;
     var note = document.getElementById('cf-note');
     window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
     if (note) note.textContent = 'Opening your email app to send this message…';
@@ -2383,6 +2455,29 @@ function toast(msg, type){
     } else {
       setTimeout(function(){ pending.textContent = localAnswer(q); pending.classList.remove('typing'); }, 350);
     }
+  });
+})();
+
+// Download overview (print stylesheet)
+(function(){
+  var btn = document.getElementById('printBtn');
+  if (!btn) return;
+  btn.addEventListener('click', function(){ window.print(); });
+})();
+
+// Keyboard shortcuts modal ("?" or the footer link)
+(function(){
+  var overlay = document.getElementById('shortcutsModal');
+  var openBtn = document.getElementById('shortcutsBtn');
+  if (!overlay) return;
+  function open(){ overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false'); }
+  function close(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true'); }
+  if (openBtn) openBtn.addEventListener('click', open);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); });
+  document.addEventListener('keydown', function(e){
+    var typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '');
+    if (e.key === '?' && !typing){ e.preventDefault(); overlay.classList.contains('open') ? close() : open(); return; }
+    if (e.key === 'Escape' && overlay.classList.contains('open')) close();
   });
 })();
 """
