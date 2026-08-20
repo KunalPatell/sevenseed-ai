@@ -81,6 +81,7 @@ if (cform) {
     var note = document.getElementById('cf-note');
     window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
     if (note) note.textContent = 'Opening your email app to send this message…';
+    toast('Opening your email app to send this message…');
   });
 }
 
@@ -343,7 +344,262 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
     navigator.clipboard.writeText(output.textContent).then(function(){
       var origHtml = copyBtn.innerHTML;
       copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+      toast('Copied to clipboard');
       setTimeout(function(){ copyBtn.innerHTML = origHtml; }, 2000);
     });
+  });
+})();
+
+// ── Enterprise UX layer ──────────────────────────────────────────────────
+
+// Toast notifications
+function toast(msg, type){
+  var stack = document.getElementById('toastStack');
+  if (!stack) return;
+  var el = document.createElement('div');
+  el.className = 'toast' + (type === 'error' ? ' error' : '');
+  el.textContent = msg;
+  stack.appendChild(el);
+  requestAnimationFrame(function(){ el.classList.add('show'); });
+  setTimeout(function(){
+    el.classList.remove('show');
+    setTimeout(function(){ if (el.parentNode) el.parentNode.removeChild(el); }, 300);
+  }, 4200);
+}
+
+// Theme toggle (applied synchronously in <head>; this just wires the button)
+(function(){
+  var root = document.documentElement;
+  var btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  var icon = btn.querySelector('i');
+  function setIcon(theme){ if (icon) icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon'; }
+  setIcon(root.getAttribute('data-theme') || 'dark');
+  btn.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    setIcon(next);
+    try { localStorage.setItem('ss-theme', next); } catch(e){}
+  });
+})();
+
+// Back-to-top
+(function(){
+  var btn = document.getElementById('backToTop');
+  if (!btn) return;
+  window.addEventListener('scroll', function(){
+    if (window.scrollY > 500) btn.classList.add('show'); else btn.classList.remove('show');
+  }, { passive: true });
+  btn.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+
+// Testimonials carousel
+(function(){
+  var track = document.getElementById('tTrack');
+  var prev = document.getElementById('tPrev');
+  var next = document.getElementById('tNext');
+  var dotsWrap = document.getElementById('tDots');
+  if (!track) return;
+  var cards = Array.prototype.slice.call(track.children);
+  if (dotsWrap) cards.forEach(function(card, i){
+    var d = document.createElement('button');
+    d.type = 'button';
+    d.className = 'tdot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Go to review ' + (i + 1));
+    d.addEventListener('click', function(){ card.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' }); });
+    dotsWrap.appendChild(d);
+  });
+  var dots = dotsWrap ? Array.prototype.slice.call(dotsWrap.children) : [];
+  function scrollByCard(dir){
+    var w = (cards[0] ? cards[0].getBoundingClientRect().width : 300) + 22;
+    track.scrollBy({ left: dir * w, behavior: 'smooth' });
+  }
+  if (prev) prev.addEventListener('click', function(){ scrollByCard(-1); });
+  if (next) next.addEventListener('click', function(){ scrollByCard(1); });
+  if (dots.length) track.addEventListener('scroll', function(){
+    var idx = 0, best = Infinity;
+    cards.forEach(function(card, i){
+      var d = Math.abs(card.offsetLeft - track.scrollLeft);
+      if (d < best){ best = d; idx = i; }
+    });
+    dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
+  }, { passive: true });
+})();
+
+// Command palette (Ctrl/Cmd+K) — searches sections, AI tools, FAQs and group ventures
+(function(){
+  var overlay = document.getElementById('cmdkOverlay');
+  var input = document.getElementById('cmdkInput');
+  var list = document.getElementById('cmdkList');
+  var openBtn = document.getElementById('searchBtn');
+  if (!overlay || !input || !list) return;
+
+  var dataEl = document.getElementById('ssData');
+  var data = {};
+  try { data = JSON.parse(dataEl ? dataEl.textContent : '{}'); } catch(e){}
+
+  var items = [];
+  (data.sections || []).forEach(function(s){ items.push({ label: s.label, sub: 'Section', hash: s.hash }); });
+  (data.services || []).forEach(function(s){ items.push({ label: s.name, sub: 'AI Tool', hash: '#services' }); });
+  (data.faqs || []).forEach(function(f){ items.push({ label: f.q, sub: 'FAQ', hash: '#faq' }); });
+  (data.ventures || []).forEach(function(v){ items.push({ label: v.label, sub: 'Sevenseed Venture', href: v.href }); });
+
+  var active = 0, filtered = items.slice();
+
+  function render(){
+    list.innerHTML = '';
+    if (!filtered.length){ list.innerHTML = '<div class="cmdk-empty">No results</div>'; return; }
+    filtered.forEach(function(item, i){
+      var row = document.createElement('div');
+      row.className = 'cmdk-item' + (i === active ? ' active' : '');
+      row.innerHTML = '<strong>' + item.label + '</strong><small>' + item.sub + '</small>';
+      row.addEventListener('mouseenter', function(){ active = i; render(); });
+      row.addEventListener('click', function(){ go(item); });
+      list.appendChild(row);
+    });
+  }
+  function go(item){
+    close();
+    if (item.href) window.location.href = item.href;
+    else if (item.hash) {
+      var target = document.querySelector(item.hash);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      history.replaceState(null, '', item.hash);
+    }
+  }
+  function filter(){
+    var q = input.value.trim().toLowerCase();
+    filtered = !q ? items.slice() : items.filter(function(it){ return it.label.toLowerCase().indexOf(q) !== -1; });
+    active = 0;
+    render();
+  }
+  function open(){
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    input.value = '';
+    filter();
+    setTimeout(function(){ input.focus(); }, 30);
+  }
+  function close(){
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+  }
+
+  if (openBtn) openBtn.addEventListener('click', open);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); });
+  input.addEventListener('input', filter);
+  document.addEventListener('keydown', function(e){
+    var mod = e.ctrlKey || e.metaKey;
+    if (mod && e.key.toLowerCase() === 'k'){ e.preventDefault(); if (overlay.classList.contains('open')) close(); else open(); }
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape'){ close(); }
+    else if (e.key === 'ArrowDown'){ e.preventDefault(); active = Math.min(active + 1, filtered.length - 1); render(); }
+    else if (e.key === 'ArrowUp'){ e.preventDefault(); active = Math.max(active - 1, 0); render(); }
+    else if (e.key === 'Enter'){ e.preventDefault(); if (filtered[active]) go(filtered[active]); }
+  });
+
+  render();
+})();
+
+// AI assistant — Gemini BYOK when a key is saved, keyword-matched fallback otherwise
+(function(){
+  var toggle = document.getElementById('chatToggle');
+  var panel = document.getElementById('chatPanel');
+  var closeBtn = document.getElementById('chatClose');
+  var body = document.getElementById('chatBody');
+  var form = document.getElementById('chatForm');
+  var input = document.getElementById('chatInput');
+  var keybar = document.getElementById('chatKeybar');
+  var keyInput = document.getElementById('chatKeyInput');
+  var keySave = document.getElementById('chatKeySave');
+  if (!toggle || !panel || !form) return;
+
+  var dataEl = document.getElementById('ssData');
+  var ctx = {};
+  try { ctx = JSON.parse(dataEl ? dataEl.textContent : '{}'); } catch(e){}
+
+  function getKey(){ try { return localStorage.getItem('user_gemini_key') || ''; } catch(e){ return ''; } }
+  function syncKeybar(){ if (keybar) keybar.classList.toggle('hide', !!getKey()); }
+  syncKeybar();
+
+  function open(){ panel.classList.add('open'); panel.setAttribute('aria-hidden', 'false'); setTimeout(function(){ input.focus(); }, 30); }
+  function close(){ panel.classList.remove('open'); panel.setAttribute('aria-hidden', 'true'); }
+  toggle.addEventListener('click', function(){ if (panel.classList.contains('open')) close(); else open(); });
+  if (closeBtn) closeBtn.addEventListener('click', close);
+
+  if (keySave) keySave.addEventListener('click', function(){
+    var v = (keyInput.value || '').trim();
+    if (!v) return;
+    try { localStorage.setItem('user_gemini_key', v); } catch(e){}
+    keyInput.value = '';
+    syncKeybar();
+    toast('Gemini API key saved on this device');
+  });
+
+  function addMsg(text, cls){
+    var el = document.createElement('div');
+    el.className = 'chat-msg ' + cls;
+    el.textContent = text;
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+    return el;
+  }
+
+  function localAnswer(q){
+    var ql = q.toLowerCase();
+    var pool = [];
+    (ctx.faqs || []).forEach(function(f){ pool.push({ text: f.a, hay: f.q + ' ' + f.a }); });
+    (ctx.services || []).forEach(function(s){ pool.push({ text: s.name + ' — ' + s.desc, hay: s.name + ' ' + s.desc }); });
+    if (ctx.about) pool.push({ text: ctx.about, hay: ctx.about });
+    var words = ql.split(/\s+/).filter(function(w){ return w.length > 2; });
+    var best = null, bestScore = 0;
+    pool.forEach(function(p){
+      var hay = p.hay.toLowerCase();
+      var score = words.reduce(function(s, w){ return s + (hay.indexOf(w) !== -1 ? 1 : 0); }, 0);
+      if (score > bestScore){ bestScore = score; best = p; }
+    });
+    if (best && bestScore > 0) return best.text;
+    return "I couldn't find a specific answer to that. Reach out directly at " + (ctx.contact ? ctx.contact.email : 'our contact form') + ', or add a free Gemini API key above for open-ended answers.';
+  }
+
+  function askGemini(q, key){
+    var sys = 'You are the AI assistant embedded on the ' + ctx.site + ' website (' + ctx.sector + '). ' +
+      'Answer the visitor briefly and helpfully using only this information — if the answer is not in it, say so and suggest contacting ' + (ctx.contact ? ctx.contact.email : 'the team') + '.\n\n' +
+      'SUMMARY: ' + ctx.summary + '\nABOUT: ' + ctx.about + '\nHIGHLIGHTS: ' + (ctx.highlights || []).join('; ') + '\n' +
+      'SERVICES: ' + (ctx.services || []).map(function(s){ return s.name + ' - ' + s.desc; }).join('; ') + '\n' +
+      'FAQ: ' + (ctx.faqs || []).map(function(f){ return f.q + ' -> ' + f.a; }).join('; ') + '\n' +
+      'CONTACT: ' + (ctx.contact ? (ctx.contact.email + ', ' + ctx.contact.phone) : '');
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(key);
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text: sys + '\n\nVISITOR QUESTION: ' + q }] }] })
+    })
+    .then(function(res){ if (!res.ok) throw new Error('status ' + res.status); return res.json(); })
+    .then(function(data){
+      var text = data && data.candidates && data.candidates[0] && data.candidates[0].content &&
+        data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+      if (!text) throw new Error('empty response');
+      return text.trim();
+    });
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var q = (input.value || '').trim();
+    if (!q) return;
+    addMsg(q, 'user');
+    input.value = '';
+    var pending = addMsg('Thinking…', 'bot typing');
+    var key = getKey();
+    if (key){
+      askGemini(q, key).then(function(text){
+        pending.textContent = text; pending.classList.remove('typing');
+      }).catch(function(){
+        pending.textContent = localAnswer(q); pending.classList.remove('typing');
+      });
+    } else {
+      setTimeout(function(){ pending.textContent = localAnswer(q); pending.classList.remove('typing'); }, 350);
+    }
   });
 })();

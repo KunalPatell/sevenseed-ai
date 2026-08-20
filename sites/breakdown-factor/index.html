@@ -6,6 +6,7 @@
   <title>Breakdown Factor Construction — AI-Driven Construction & Infrastructure</title>
   <meta name="description" content="A construction company where computer vision monitors site safety, AI forecasts cost and schedule, and intelligent project agents keep every residential, commercial, and industrial build on track.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏗️%3C/text%3E%3C/svg%3E">
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -49,6 +50,8 @@
     <a href="#contact">Contact</a>
   </div>
   <div class="nav-right">
+    <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
     <a class="btn btn-ghost" href="http://localhost:8005/dashboard"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
     <a class="btn btn-primary" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
@@ -204,11 +207,16 @@
 <section class="section" id="testimonials">
   <div class="eyebrow center">WHAT PEOPLE SAY</div>
   <h2 class="sec-title">Trusted by the people we serve</h2>
-  <div class="tgrid">
+  <div class="tcarousel">
+    <button class="tnav tprev" id="tPrev" type="button" aria-label="Previous reviews"><i class="fas fa-chevron-left"></i></button>
+    <div class="tgrid" id="tTrack">
         <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Their AI safety monitoring flagged a hazard before it became an incident.&rdquo;</blockquote><figcaption><span class="tavatar">C</span><span class="tmeta"><strong>Client</strong><small>Retail Developer</small></span></figcaption></figure>
         <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The cost forecast was accurate to the rupee — no surprises.&rdquo;</blockquote><figcaption><span class="tavatar">C</span><span class="tmeta"><strong>Client</strong><small>Homeowner</small></span></figcaption></figure>
         <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The AI project copilot kept us updated at every milestone, automatically.&rdquo;</blockquote><figcaption><span class="tavatar">C</span><span class="tmeta"><strong>Client</strong><small>Industrial Client</small></span></figcaption></figure>
+    </div>
+    <button class="tnav tnext" id="tNext" type="button" aria-label="Next reviews"><i class="fas fa-chevron-right"></i></button>
   </div>
+  <div class="tdots" id="tDots" aria-hidden="true"></div>
 </section>
 
 <section class="section faq-sec" id="faq">
@@ -303,6 +311,41 @@
   </div>
 </footer>
 
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<div class="fab-stack">
+  <button class="fab" id="backToTop" type="button" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+  <button class="fab fab-chat" id="chatToggle" type="button" aria-label="Open AI assistant"><i class="fas fa-comment-dots"></i></button>
+</div>
+
+<div class="chat-panel" id="chatPanel" aria-hidden="true">
+  <div class="chat-head">
+    <span><i class="fas fa-helmet-safety"></i> Breakdown Factor AI Assistant</span>
+    <button class="chat-close" id="chatClose" type="button" aria-label="Close assistant"><i class="fas fa-xmark"></i></button>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-msg bot">Hi, I'm the Breakdown Factor AI Assistant — ask me about our services, how it works, or how to get in touch.</div>
+  </div>
+  <div class="chat-keybar" id="chatKeybar">
+    <span>Add a free Gemini API key for open-ended AI answers</span>
+    <input type="password" id="chatKeyInput" placeholder="Gemini API key" autocomplete="off">
+    <button type="button" id="chatKeySave" class="btn btn-ghost">Save</button>
+  </div>
+  <form class="chat-input-row" id="chatForm">
+    <input type="text" id="chatInput" placeholder="Ask a question…" autocomplete="off">
+    <button type="submit" class="btn btn-primary" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
+  </form>
+</div>
+
+<div class="cmdk-overlay" id="cmdkOverlay" aria-hidden="true">
+  <div class="cmdk-panel">
+    <div class="cmdk-input-row"><i class="fas fa-magnifying-glass"></i><input type="text" id="cmdkInput" placeholder="Search sections, AI tools, FAQs, ventures…" autocomplete="off"></div>
+    <div class="cmdk-list" id="cmdkList"></div>
+    <div class="cmdk-hint"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span><span><kbd>&crarr;</kbd> select</span><span><kbd>esc</kbd> close</span></div>
+  </div>
+</div>
+
+<script id="ssData" type="application/json">{"site": "Breakdown Factor Construction", "sector": "AI-Driven Construction & Infrastructure", "summary": "A construction company where computer vision monitors site safety, AI forecasts cost and schedule, and intelligent project agents keep every residential, commercial, and industrial build on track.", "about": "Breakdown Factor Construction delivers residential, commercial, and industrial projects with an AI edge. Computer vision watches every site for safety, and ML forecasts budgets and timelines before problems appear. From AI-generated estimates to automated quality inspection, intelligent software keeps every phase on time, on budget, and built to last — with a relentless, zero-incident safety culture.", "highlights": ["Computer-vision site safety, 24/7", "AI cost & schedule forecasting", "Automated defect detection", "AI project copilot & reporting"], "services": [{"name": "AI Site Safety Monitor", "desc": "Computer vision detects PPE, hazards, and unsafe zones in real time."}, {"name": "Cost & Schedule Prediction", "desc": "ML models forecast budgets and timelines and flag overruns early."}, {"name": "Damage & Defect Detection", "desc": "Vision models inspect structures for cracks, pipe damage, and defects."}, {"name": "AI Project Copilot", "desc": "An LLM agent tracks progress, drafts reports, and answers project queries."}, {"name": "Smart Estimation", "desc": "AI generates material and labour estimates from your plans in minutes."}, {"name": "Quality Assurance AI", "desc": "Automated visual QA checks work against ISO standards at every phase."}], "faqs": [{"q": "How do you use AI on site?", "a": "Computer vision monitors PPE and hazards in real time, while ML forecasts cost and schedule and AI agents track progress and draft reports."}, {"q": "What types of projects do you take on?", "a": "Residential, commercial, and industrial construction, plus turnkey projects and government tenders."}, {"q": "Are you ISO certified?", "a": "We follow ISO-aligned quality management with automated AI inspection, and are pursuing formal certification."}, {"q": "How do you ensure safety?", "a": "A computer-vision safety monitor plus a strict, zero-incident safety culture across all sites."}], "contact": {"email": "projects@breakdownfactor.in", "phone": "+91 84908 61586", "location": "Ahmedabad, Gujarat, India"}, "sections": [{"label": "About", "hash": "#about"}, {"label": "AI Tools", "hash": "#services"}, {"label": "Live Demo", "hash": "#sandbox"}, {"label": "Process", "hash": "#process"}, {"label": "Impact", "hash": "#impact"}, {"label": "Reviews", "hash": "#testimonials"}, {"label": "FAQ", "hash": "#faq"}, {"label": "Contact", "hash": "#contact"}], "ventures": [{"label": "Comonk Technology", "href": "../comonk/index.html"}, {"label": "Sevenseed", "href": "../index.html"}, {"label": "Sevenforce", "href": "../sevenforce/index.html"}, {"label": "Alpaben Vipulbhai Patel University", "href": "../avpu/index.html"}, {"label": "Decode Forest Pharmacy", "href": "../decode-forest-pharmacy/index.html"}, {"label": "AVP Charitable Trust", "href": "../avp-charitable-trust/index.html"}, {"label": "AVP Emart", "href": "../avp-emart/index.html"}, {"label": "Rakshak AI Safety", "href": "../rakshak-ai/index.html"}]}</script>
 <script src="app.js"></script>
 </body>
 </html>

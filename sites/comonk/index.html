@@ -6,6 +6,7 @@
   <title>Comonk AI — AI Career Intelligence Platform</title>
   <meta name="description" content="Comonk is a free, AI-native career platform for the Ahmedabad/Gandhinagar tech market — resume tailoring, an approval-gated AI application autopilot, mock interviews with real-time scoring, and a full application tracker, all in one place.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🧠%3C/text%3E%3C/svg%3E">
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -49,6 +50,8 @@
     <a href="#contact">Contact</a>
   </div>
   <div class="nav-right">
+    <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
     <a class="btn btn-ghost" href="https://comonk-ai.onrender.com"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
     <a class="btn btn-primary" href="https://comonk-ai.onrender.com" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch</a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
@@ -155,11 +158,16 @@
 <section class="section" id="testimonials">
   <div class="eyebrow center">WHAT PEOPLE SAY</div>
   <h2 class="sec-title">Trusted by the people we serve</h2>
-  <div class="tgrid">
+  <div class="tcarousel">
+    <button class="tnav tprev" id="tPrev" type="button" aria-label="Previous reviews"><i class="fas fa-chevron-left"></i></button>
+    <div class="tgrid" id="tTrack">
         <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The autopilot found companies I'd never have thought to apply to — and I stayed in control of every message it drafted.&rdquo;</blockquote><figcaption><span class="tavatar">JS</span><span class="tmeta"><strong>Job Seeker</strong><small>Ahmedabad</small></span></figcaption></figure>
         <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The mock interview scoring told me exactly where I was losing points before the real thing.&rdquo;</blockquote><figcaption><span class="tavatar">C</span><span class="tmeta"><strong>Candidate</strong><small>Gandhinagar</small></span></figcaption></figure>
         <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Free, and genuinely more useful than tools I've paid for.&rdquo;</blockquote><figcaption><span class="tavatar">JS</span><span class="tmeta"><strong>Job Seeker</strong><small>Ahmedabad</small></span></figcaption></figure>
+    </div>
+    <button class="tnav tnext" id="tNext" type="button" aria-label="Next reviews"><i class="fas fa-chevron-right"></i></button>
   </div>
+  <div class="tdots" id="tDots" aria-hidden="true"></div>
 </section>
 
 <section class="section faq-sec" id="faq">
@@ -254,6 +262,41 @@
   </div>
 </footer>
 
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<div class="fab-stack">
+  <button class="fab" id="backToTop" type="button" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+  <button class="fab fab-chat" id="chatToggle" type="button" aria-label="Open AI assistant"><i class="fas fa-comment-dots"></i></button>
+</div>
+
+<div class="chat-panel" id="chatPanel" aria-hidden="true">
+  <div class="chat-head">
+    <span><i class="fas fa-brain"></i> Comonk AI Assistant</span>
+    <button class="chat-close" id="chatClose" type="button" aria-label="Close assistant"><i class="fas fa-xmark"></i></button>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-msg bot">Hi, I'm the Comonk AI Assistant — ask me about our services, how it works, or how to get in touch.</div>
+  </div>
+  <div class="chat-keybar" id="chatKeybar">
+    <span>Add a free Gemini API key for open-ended AI answers</span>
+    <input type="password" id="chatKeyInput" placeholder="Gemini API key" autocomplete="off">
+    <button type="button" id="chatKeySave" class="btn btn-ghost">Save</button>
+  </div>
+  <form class="chat-input-row" id="chatForm">
+    <input type="text" id="chatInput" placeholder="Ask a question…" autocomplete="off">
+    <button type="submit" class="btn btn-primary" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
+  </form>
+</div>
+
+<div class="cmdk-overlay" id="cmdkOverlay" aria-hidden="true">
+  <div class="cmdk-panel">
+    <div class="cmdk-input-row"><i class="fas fa-magnifying-glass"></i><input type="text" id="cmdkInput" placeholder="Search sections, AI tools, FAQs, ventures…" autocomplete="off"></div>
+    <div class="cmdk-list" id="cmdkList"></div>
+    <div class="cmdk-hint"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span><span><kbd>&crarr;</kbd> select</span><span><kbd>esc</kbd> close</span></div>
+  </div>
+</div>
+
+<script id="ssData" type="application/json">{"site": "Comonk AI", "sector": "AI Career Intelligence Platform", "summary": "Comonk is a free, AI-native career platform for the Ahmedabad/Gandhinagar tech market — resume tailoring, an approval-gated AI application autopilot, mock interviews with real-time scoring, and a full application tracker, all in one place.", "about": "Comonk is a 100% free AI career platform — resume parsing and RAG-based company matching, an ATS optimizer, LinkedIn profile optimization, salary intelligence, and AI-generated career roadmaps, all powered by a LangGraph multi-agent engine on Groq LLaMA 3.3 70B. Beyond search, Comonk runs your job hunt end-to-end: an approval-gated AI autopilot matches and drafts outreach to the best-fit companies, a full application tracker keeps every stage organised with automatic follow-ups, and voice/video mock interviews score your answers and generate a PDF report.", "highlights": ["Free RAG-based company matching", "Approval-gated AI application autopilot", "Voice & video mock interviews with PDF reports", "Full application tracker with follow-up automation"], "services": [{"name": "AI Application Autopilot", "desc": "Matches your resume against thousands of companies and drafts outreach for your approval — you stay in control."}, {"name": "ATS Resume Optimizer", "desc": "Rewrites and tailors your resume to beat applicant tracking systems and match any job description."}, {"name": "Mock Interviews", "desc": "Practice with AI-generated questions via text, voice, or recorded video — get a scored PDF report."}, {"name": "Salary Intelligence", "desc": "Real salary estimates and offer comparison so you know your worth before you negotiate."}, {"name": "Application Tracker", "desc": "A kanban board for every application with automatic follow-up reminders and HR-reply detection."}, {"name": "AI Career Roadmap", "desc": "A personalised, AI-generated learning roadmap from your current skills to your target role."}], "faqs": [{"q": "Is Comonk really free?", "a": "Yes — 100% free, no subscription or paywall. It's built to help the Ahmedabad/Gandhinagar tech community find AI/ML and software roles."}, {"q": "What is the AI application autopilot?", "a": "It matches your resume against thousands of tracked companies using RAG-based scoring, then drafts outreach — but never sends anything without your explicit approval."}, {"q": "Can I practice interviews with it?", "a": "Yes — text, voice, or full video mock interviews, each scored with a detailed PDF report you can review afterward."}, {"q": "Does it track my applications?", "a": "Yes — a full kanban-style tracker with automatic follow-up reminders and HR-reply detection, so nothing falls through the cracks."}], "contact": {"email": "hello@comonk.ai", "phone": "+91 84908 61586", "location": "Ahmedabad, Gujarat, India"}, "sections": [{"label": "About", "hash": "#about"}, {"label": "AI Tools", "hash": "#services"}, {"label": "Process", "hash": "#process"}, {"label": "Impact", "hash": "#impact"}, {"label": "Reviews", "hash": "#testimonials"}, {"label": "FAQ", "hash": "#faq"}, {"label": "Contact", "hash": "#contact"}], "ventures": [{"label": "Sevenseed", "href": "../index.html"}, {"label": "Sevenforce", "href": "../sevenforce/index.html"}, {"label": "Alpaben Vipulbhai Patel University", "href": "../avpu/index.html"}, {"label": "Decode Forest Pharmacy", "href": "../decode-forest-pharmacy/index.html"}, {"label": "Breakdown Factor Construction", "href": "../breakdown-factor/index.html"}, {"label": "AVP Charitable Trust", "href": "../avp-charitable-trust/index.html"}, {"label": "AVP Emart", "href": "../avp-emart/index.html"}, {"label": "Rakshak AI Safety", "href": "../rakshak-ai/index.html"}]}</script>
 <script src="app.js"></script>
 </body>
 </html>

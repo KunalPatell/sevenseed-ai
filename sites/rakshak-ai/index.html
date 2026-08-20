@@ -6,6 +6,7 @@
   <title>Rakshak AI — AI Public Safety & Vision Security Platform</title>
   <meta name="description" content="Rakshak AI is a 5-in-1 public safety and computer vision platform combining automatic FIR generation (BNS/IPC), multilingual AI chatbot, cybercrime scam analyzer, safety mask PPE scanner, and YOLO occupancy detection.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🛡️%3C/text%3E%3C/svg%3E">
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -49,6 +50,8 @@
     <a href="#contact">Contact</a>
   </div>
   <div class="nav-right">
+    <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
     <a class="btn btn-ghost" href="https://comonk-ai.onrender.com"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
     <a class="btn btn-primary" href="https://sevenseed.onrender.com/rakshak-ai" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch</a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
@@ -184,11 +187,16 @@
 <section class="section" id="testimonials">
   <div class="eyebrow center">WHAT PEOPLE SAY</div>
   <h2 class="sec-title">Trusted by the people we serve</h2>
-  <div class="tgrid">
+  <div class="tcarousel">
+    <button class="tnav tprev" id="tPrev" type="button" aria-label="Previous reviews"><i class="fas fa-chevron-left"></i></button>
+    <div class="tgrid" id="tTrack">
         <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;The AI features and legal accuracy save hours of manual drafting.&rdquo;</blockquote><figcaption><span class="tavatar">IR</span><span class="tmeta"><strong>Inspector R. Sharma</strong><small>Ahmedabad Police</small></span></figcaption></figure>
         <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Instant, trustworthy guidance when facing cyber fraud and emergency situations.&rdquo;</blockquote><figcaption><span class="tavatar">PP</span><span class="tmeta"><strong>Priya Patel</strong><small>Verified User</small></span></figcaption></figure>
         <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Vision sentinel tools provide reliable security and attendance monitoring.&rdquo;</blockquote><figcaption><span class="tavatar">VD</span><span class="tmeta"><strong>Vikram Desai</strong><small>Security Director</small></span></figcaption></figure>
+    </div>
+    <button class="tnav tnext" id="tNext" type="button" aria-label="Next reviews"><i class="fas fa-chevron-right"></i></button>
   </div>
+  <div class="tdots" id="tDots" aria-hidden="true"></div>
 </section>
 
 <section class="section faq-sec" id="faq">
@@ -282,6 +290,41 @@
   </div>
 </footer>
 
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<div class="fab-stack">
+  <button class="fab" id="backToTop" type="button" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+  <button class="fab fab-chat" id="chatToggle" type="button" aria-label="Open AI assistant"><i class="fas fa-comment-dots"></i></button>
+</div>
+
+<div class="chat-panel" id="chatPanel" aria-hidden="true">
+  <div class="chat-head">
+    <span><i class="fas fa-shield-halved"></i> Rakshak AI Assistant</span>
+    <button class="chat-close" id="chatClose" type="button" aria-label="Close assistant"><i class="fas fa-xmark"></i></button>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-msg bot">Hi, I'm the Rakshak AI Assistant — ask me about our services, how it works, or how to get in touch.</div>
+  </div>
+  <div class="chat-keybar" id="chatKeybar">
+    <span>Add a free Gemini API key for open-ended AI answers</span>
+    <input type="password" id="chatKeyInput" placeholder="Gemini API key" autocomplete="off">
+    <button type="button" id="chatKeySave" class="btn btn-ghost">Save</button>
+  </div>
+  <form class="chat-input-row" id="chatForm">
+    <input type="text" id="chatInput" placeholder="Ask a question…" autocomplete="off">
+    <button type="submit" class="btn btn-primary" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
+  </form>
+</div>
+
+<div class="cmdk-overlay" id="cmdkOverlay" aria-hidden="true">
+  <div class="cmdk-panel">
+    <div class="cmdk-input-row"><i class="fas fa-magnifying-glass"></i><input type="text" id="cmdkInput" placeholder="Search sections, AI tools, FAQs, ventures…" autocomplete="off"></div>
+    <div class="cmdk-list" id="cmdkList"></div>
+    <div class="cmdk-hint"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span><span><kbd>&crarr;</kbd> select</span><span><kbd>esc</kbd> close</span></div>
+  </div>
+</div>
+
+<script id="ssData" type="application/json">{"site": "Rakshak AI", "sector": "AI Public Safety & Vision Security Platform", "summary": "Rakshak AI is a 5-in-1 public safety and computer vision platform combining automatic FIR generation (BNS/IPC), multilingual AI chatbot, cybercrime scam analyzer, safety mask PPE scanner, and YOLO occupancy detection.", "about": "Rakshak AI transforms citizen safety and smart policing with a 5-in-1 AI platform. From automated FIR drafts citing current Bharatiya Nyaya Sanhita (BNS) codes to 24/7 cybercrime scam guidance, AI empowers citizens and police officers alike. Integrated computer vision workstations provide safety mask PPE compliance scanning, facial attendance verification, and real-time YOLO occupancy monitoring — backed by a tamper-proof SHA-256 cryptographic audit ledger.", "highlights": ["Automatic FIR Generator with BNS/IPC mapping", "Multilingual Citizen AI Copilot (EN/HI/GJ)", "Cybercrime Scam Analyzer & Evidence Checklist", "Computer Vision Safety Mask & Facial Attendance Workstations"], "services": [{"name": "Automatic FIR Generator", "desc": "Generates structured FIR drafts automatically under Bharatiya Nyaya Sanhita (BNS) & IPC laws."}, {"name": "Multilingual Citizen AI", "desc": "24/7 AI safety copilot answering legal queries, emergency assistance, and station finding."}, {"name": "Cybercrime Scam Analyzer", "desc": "Analyzes fraud patterns (OTP, UPI, loan scams), provides action steps, and evidence lists."}, {"name": "Safety Mask PPE Scanner", "desc": "Real-time OpenCV & PyTorch computer vision workstation for safety compliance monitoring."}, {"name": "Facial Attendance System", "desc": "Sub-second facial identity verification and attendance tracking."}, {"name": "SHA-256 Hash Audit Trail", "desc": "Tamper-proof cryptographic ledger verifying all complaints, reports, and AI actions."}], "faqs": [{"q": "Is this platform completely free to use?", "a": "Yes, 100% free with no paywalls or hidden fees."}, {"q": "How does the AI engine work?", "a": "It runs on a production-grade AI stack with Groq LLaMA 3.3 70B, RAG search, and computer vision."}, {"q": "Can I access all workstations from one dashboard?", "a": "Yes, all workstations and tools are accessible from the unified dashboard."}], "contact": {"email": "help@rakshak-ai.in", "phone": "+91 84908 61586", "location": "Ahmedabad, Gujarat, India"}, "sections": [{"label": "About", "hash": "#about"}, {"label": "AI Tools", "hash": "#services"}, {"label": "Live Demo", "hash": "#sandbox"}, {"label": "Process", "hash": "#process"}, {"label": "Impact", "hash": "#impact"}, {"label": "Reviews", "hash": "#testimonials"}, {"label": "FAQ", "hash": "#faq"}, {"label": "Contact", "hash": "#contact"}], "ventures": [{"label": "Comonk Technology", "href": "../comonk/index.html"}, {"label": "Sevenseed", "href": "../index.html"}, {"label": "Sevenforce", "href": "../sevenforce/index.html"}, {"label": "Alpaben Vipulbhai Patel University", "href": "../avpu/index.html"}, {"label": "Decode Forest Pharmacy", "href": "../decode-forest-pharmacy/index.html"}, {"label": "Breakdown Factor Construction", "href": "../breakdown-factor/index.html"}, {"label": "AVP Charitable Trust", "href": "../avp-charitable-trust/index.html"}, {"label": "AVP Emart", "href": "../avp-emart/index.html"}]}</script>
 <script src="app.js"></script>
 </body>
 </html>
