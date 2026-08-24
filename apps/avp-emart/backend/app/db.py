@@ -123,6 +123,30 @@ def list_price_history(query: str, limit: int = 20) -> list[dict]:
         return []
 
 
+def price_typical(query: str, exclude_latest: bool = True, sample: int = 20) -> dict | None:
+    """Average of past recorded best-prices for a query, excluding the search
+    that's about to be saved — lets the caller say 'X% below what you usually
+    see', Google Shopping's 'typical price' signal, from this app's own data."""
+    if not _available or not query.strip():
+        return None
+    try:
+        with _conn() as c:
+            offset = 1 if exclude_latest else 0
+            rows = c.execute(
+                """
+                SELECT best_price FROM price_searches WHERE LOWER(query) = LOWER(?)
+                ORDER BY id DESC LIMIT ? OFFSET ?
+                """,
+                (query.strip(), sample, offset),
+            ).fetchall()
+            prices = [r["best_price"] for r in rows]
+            if len(prices) < 2:
+                return None
+            return {"average": sum(prices) / len(prices), "samples": len(prices)}
+    except Exception:
+        return None
+
+
 def list_trending_queries(limit: int = 6) -> list[dict]:
     """Most-searched terms across all shoppers, real counts from price_searches —
     Smartprix/Google Shopping-style 'trending searches', not a canned list."""

@@ -99,12 +99,20 @@ def health():
 def compare(req: CompareReq):
     data = comparator.compare(req.query, req.n or 6)
     products = data.get("products", [])
+    # Google Shopping's "typical price" signal — this query's own past best
+    # prices, averaged, so we can flag when today's price is a real drop.
+    # Computed before save_search() below, so it never includes this search.
+    typical = db.price_typical(req.query, exclude_latest=False)
     mapped = []
     import random
     for p in products:
+        price = p.get("price", 0)
+        vs_typical_pct = None
+        if typical and typical["average"] > 0:
+            vs_typical_pct = round((typical["average"] - price) / typical["average"] * 100, 1)
         mapped.append({
             "title": p.get("name", ""),
-            "price": p.get("price", 0),
+            "price": price,
             "platform": p.get("platform", ""),
             "url": p.get("link", ""),
             "rating": p.get("rating", 0.0),
@@ -116,6 +124,7 @@ def compare(req: CompareReq):
             "z_score": p.get("z_score", 0.0),
             "image": p.get("image", ""),
             "category": p.get("category", "gadget"),
+            "vs_typical_pct": vs_typical_pct,
         })
     if mapped:
         sorted_results = sorted(mapped, key=lambda x: x.get("price", 9999999))

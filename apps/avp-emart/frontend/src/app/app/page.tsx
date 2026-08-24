@@ -68,6 +68,7 @@ interface ProductComparison {
   z_score?: number;
   image?: string;
   category?: string;
+  vs_typical_pct?: number | null;
 }
 
 interface WishlistItem {
@@ -137,6 +138,17 @@ function ProductTile({ image, category, size = "md" }: { image?: string; categor
     <div className={`${dim} rounded-xl bg-gradient-to-br from-[#ea580c]/20 to-[#10b981]/10 border border-white/10 flex items-center justify-center shrink-0`}>
       <Icon className={size === "sm" ? "h-5 w-5 text-[#fdba74]" : "h-6 w-6 text-[#fdba74]"} />
     </div>
+  );
+}
+
+// Google Shopping's "Price Drop" / "typical price" annotation — only shown
+// once the drop is big enough to be a real signal, not search-to-search noise.
+function PriceDropBadge({ pct }: { pct?: number | null }) {
+  if (pct == null || pct < 3) return null;
+  return (
+    <span className="inline-flex items-center gap-1 bg-rose-500/15 text-rose-400 border border-rose-500/30 rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider">
+      <ArrowDown className="h-3 w-3" /> {pct}% below typical
+    </span>
   );
 }
 
@@ -817,6 +829,7 @@ export default function AppPortal() {
                   <span>💰 <strong>Price:</strong> ₹{compareResults[0].price}</span>
                   <span>⭐ <strong>Rating:</strong> {compareResults[0].rating} ★ ({compareResults[0].reviews_count.toLocaleString()} reviews)</span>
                   <span>📊 <strong>Value Score:</strong> {compareResults[0].best_value_score || 0} / 100</span>
+                  <PriceDropBadge pct={compareResults[0].vs_typical_pct} />
                 </div>
                 {couponResult && (
                   <div className="mt-4 inline-flex flex-wrap items-center gap-2 bg-[#10b981]/10 border border-[#10b981]/30 rounded-xl px-3 py-2 text-xs">
@@ -1128,6 +1141,9 @@ export default function AppPortal() {
                             </span>
                           )}
                         </div>
+                        {p.vs_typical_pct != null && p.vs_typical_pct >= 3 && (
+                          <div className="mt-2"><PriceDropBadge pct={p.vs_typical_pct} /></div>
+                        )}
                         
                         <div className="text-xs text-[#9aa0b8] mt-2">Rating: {p.rating} ({p.reviews_count} reviews)</div>
                         <div className="text-xs text-[#9aa0b8] mt-0.5">Delivered in {p.delivery_days} days</div>
