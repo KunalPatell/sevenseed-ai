@@ -33,7 +33,17 @@ import {
   Filter,
   ArrowUpDown,
   Tag,
-  LineChart
+  LineChart,
+  Smartphone,
+  Laptop,
+  Tablet,
+  Tv,
+  Watch,
+  Headphones,
+  Camera,
+  Gamepad2,
+  Refrigerator,
+  Box
 } from "lucide-react";
 
 // This dashboard is served under the "/avp-emart" path when merged into the
@@ -56,6 +66,8 @@ interface ProductComparison {
   best_value_score?: number;
   positioning?: string;
   z_score?: number;
+  image?: string;
+  category?: string;
 }
 
 interface WishlistItem {
@@ -83,6 +95,36 @@ interface SearchHistoryItem {
   best_price: number;
   best_platform: string;
   results: ProductComparison[];
+}
+
+const CATEGORY_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
+  phone: Smartphone, laptop: Laptop, tablet: Tablet, tv: Tv, watch: Watch,
+  audio: Headphones, camera: Camera, gaming: Gamepad2, appliance: Refrigerator, gadget: Box,
+};
+
+// Real product thumbnail when SerpAPI supplied one; otherwise a category icon
+// tile — offline/sample mode has no real image, and a broken <img> reads
+// worse than an honest placeholder (matches Smartprix/Google Shopping's
+// image-first grid without pretending to have photos we don't have).
+function ProductTile({ image, category, size = "md" }: { image?: string; category?: string; size?: "sm" | "md" }) {
+  const Icon = CATEGORY_ICON[category || "gadget"] || Box;
+  const dim = size === "sm" ? "w-11 h-11" : "w-14 h-14";
+  const [broken, setBroken] = useState(false);
+  if (image && !broken) {
+    return (
+      <img
+        src={image}
+        alt=""
+        className={`${dim} rounded-xl object-contain bg-white/5 border border-white/10 shrink-0 p-1`}
+        onError={() => setBroken(true)}
+      />
+    );
+  }
+  return (
+    <div className={`${dim} rounded-xl bg-gradient-to-br from-[#ea580c]/20 to-[#10b981]/10 border border-white/10 flex items-center justify-center shrink-0`}>
+      <Icon className={size === "sm" ? "h-5 w-5 text-[#fdba74]" : "h-6 w-6 text-[#fdba74]"} />
+    </div>
+  );
 }
 
 export default function AppPortal() {
@@ -686,7 +728,9 @@ export default function AppPortal() {
 
             {/* 🏆 Best Overall Recommendation Card */}
             <div className="bg-gradient-to-br from-[#064e3b]/30 to-[#065f46]/10 border border-[#10b981]/30 rounded-2xl p-6 shadow-[0_8px_30px_rgba(16,185,129,0.15)] flex flex-col md:flex-row justify-between items-start md:items-center gap-6 animate-[fade_0.3s_ease]">
-              <div className="flex-1">
+              <div className="flex-1 flex gap-4">
+                <ProductTile image={compareResults[0].image} category={compareResults[0].category} />
+                <div className="flex-1 min-w-0">
                 <span className="bg-[#10b981]/15 text-[#6ee7b7] border border-[#10b981]/30 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider">🏆 Best Recommendation</span>
                 <h4 className="font-extrabold text-white text-lg mt-3 leading-snug">{compareResults[0].title}</h4>
                 <div className="flex flex-wrap gap-4 mt-3 text-xs text-[#9aa0b8]">
@@ -703,6 +747,7 @@ export default function AppPortal() {
                     <span className="font-bold text-white">→ ₹{(compareResults[0].price - couponResult.savings).toLocaleString()}</span>
                   </div>
                 )}
+                </div>
               </div>
               <div className="flex flex-col gap-2 shrink-0">
                 <a href={compareResults[0].url} target="_blank" rel="noopener noreferrer" className="btn bg-[#10b981] hover:bg-[#059669] text-[#0d0f0e] px-6 py-3.5 rounded-xl font-bold text-sm inline-flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(16,185,129,0.3)] border-none">
@@ -965,9 +1010,14 @@ export default function AppPortal() {
                             ★ Best Price
                           </span>
                         )}
-                        <span className="text-[10px] text-[#5b5f78] uppercase font-bold tracking-wider">{p.platform}</span>
-                        <h4 className="font-bold text-white text-sm mt-1 leading-snug flex-1">{p.title}</h4>
-                        
+                        <div className="flex items-start gap-3">
+                          <ProductTile image={p.image} category={p.category} />
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[10px] text-[#5b5f78] uppercase font-bold tracking-wider">{p.platform}</span>
+                            <h4 className="font-bold text-white text-sm mt-1 leading-snug">{p.title}</h4>
+                          </div>
+                        </div>
+
                         <div className="flex items-center justify-between mt-4">
                           <div className="text-2xl font-black text-white">₹{p.price}</div>
                           {p.positioning && (
@@ -1136,8 +1186,13 @@ export default function AppPortal() {
                         <span className="absolute top-4 right-4 bg-[#10b981] text-[#0d0f0e] rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider">
                           Best Value Match
                         </span>
-                        <span className="text-[10px] text-[#6ee7b7] uppercase font-bold tracking-wider">{best.platform}</span>
-                        <h4 className="font-bold text-white text-base mt-1 leading-snug">{best.title}</h4>
+                        <div className="flex items-start gap-3 mt-1">
+                          <ProductTile image={best.image} category={best.category} />
+                          <div className="flex-1 min-w-0">
+                            <span className="text-[10px] text-[#6ee7b7] uppercase font-bold tracking-wider">{best.platform}</span>
+                            <h4 className="font-bold text-white text-base mt-1 leading-snug">{best.title}</h4>
+                          </div>
+                        </div>
                         <div className="text-2xl font-black text-white mt-3">₹{best.price}</div>
                         <div className="text-xs text-[#9aa0b8] mt-2">Value score: {best.best_value_score || 0} · {best.rating}★ ({best.reviews_count.toLocaleString()} reviews)</div>
                         <div className="flex gap-2 mt-4">
@@ -1154,8 +1209,13 @@ export default function AppPortal() {
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {sorted.slice(1).map((p, idx) => (
                           <div key={idx} className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-6 flex flex-col hover:border-white/15 transition-all">
-                            <span className="text-[10px] text-[#5b5f78] uppercase font-bold tracking-wider">{p.platform}</span>
-                            <h4 className="font-bold text-white text-sm mt-1 leading-snug flex-1">{p.title}</h4>
+                            <div className="flex items-start gap-3">
+                              <ProductTile image={p.image} category={p.category} size="sm" />
+                              <div className="flex-1 min-w-0">
+                                <span className="text-[10px] text-[#5b5f78] uppercase font-bold tracking-wider">{p.platform}</span>
+                                <h4 className="font-bold text-white text-sm mt-1 leading-snug">{p.title}</h4>
+                              </div>
+                            </div>
                             <div className="text-lg font-black text-white mt-4">₹{p.price}</div>
                             <div className="flex gap-2 mt-4">
                               <a href={p.url} target="_blank" className="btn bg-white/5 border border-white/10 text-white text-xs hover:bg-[#18182a] py-2 px-3 flex items-center gap-1">

@@ -51,6 +51,33 @@ def _base_price(query: str, rng: random.Random) -> int:
     return rng.randint(3000, 40000)
 
 
+# Coarse category tag for the frontend's fallback product-tile icon when no
+# real thumbnail is available (offline sample mode, or a SerpAPI item with no
+# image). Independent of the price buckets above — this groups by what the
+# product visually *is*, not what it costs.
+_CATEGORIES = [
+    (["phone", "mobile", "smartphone", "iphone", "galaxy", "oneplus", "pixel",
+      "redmi", "poco", "vivo", "oppo", "realme", "moto g", "nokia"], "phone"),
+    (["laptop", "macbook", "notebook", "chromebook", "thinkpad", "ideapad",
+      "vivobook", "zenbook", "inspiron", "pavilion", "spectre"], "laptop"),
+    (["tablet", "ipad"], "tablet"),
+    (["tv", "television", "oled", "led tv", "qled", "smart tv"], "tv"),
+    (["watch", "smartwatch", "fitness band"], "watch"),
+    (["earbud", "headphone", "speaker", "earphone", "airpods", "buds", "soundbar"], "audio"),
+    (["camera"], "camera"),
+    (["console", "gaming", "playstation", "xbox", "ps5", "ps4", "nintendo"], "gaming"),
+    (["refrigerator", "washing", "microwave", "air conditioner", " ac ", "vacuum", "mixer", "fridge"], "appliance"),
+]
+
+
+def _category(query: str) -> str:
+    ql = f" {query.lower()} "
+    for kws, cat in _CATEGORIES:
+        if any(k in ql for k in kws):
+            return cat
+    return "gadget"
+
+
 def _sample(query: str, n: int) -> List[Dict[str, Any]]:
     rng = random.Random(_seed(query))
     base = _base_price(query, rng)
@@ -72,6 +99,7 @@ def _sample(query: str, n: int) -> List[Dict[str, Any]]:
             "price": price, "rating": rating, "reviews": reviews,
             "link": _BUY[site] + urllib.parse.quote(query),
             "in_stock": rng.random() > 0.12,
+            "image": "", "category": _category(query),
         })
     return out
 
@@ -95,6 +123,7 @@ def _fetch_serpapi_site(query: str, n: int, key: str, site: str, label: str) -> 
                 "reviews": int(item.get("reviews", rich.get("reviews", 0)) or 0),
                 "link": item.get("link", _BUY[site] + urllib.parse.quote(query)),
                 "in_stock": True,
+                "image": item.get("thumbnail", ""), "category": _category(query),
             })
     except Exception as e:
         print(f"[comparator] SerpAPI error ({site}): {e}")

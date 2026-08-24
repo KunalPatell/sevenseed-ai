@@ -114,6 +114,8 @@ def compare(req: CompareReq):
             "best_value_score": p.get("value_score", 0),
             "positioning": p.get("positioning", "Standard"),
             "z_score": p.get("z_score", 0.0),
+            "image": p.get("image", ""),
+            "category": p.get("category", "gadget"),
         })
     if mapped:
         sorted_results = sorted(mapped, key=lambda x: x.get("price", 9999999))
