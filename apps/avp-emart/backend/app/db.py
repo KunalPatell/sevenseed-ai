@@ -103,6 +103,26 @@ def list_searches(limit: int = 50) -> list[dict]:
         return []
 
 
+def list_price_history(query: str, limit: int = 20) -> list[dict]:
+    """Real (not simulated) price history for a search term — every past best
+    price this app itself observed for that exact query, oldest first."""
+    if not _available or not query.strip():
+        return []
+    try:
+        with _conn() as c:
+            rows = c.execute(
+                """
+                SELECT created_at, best_price, best_platform FROM price_searches
+                WHERE LOWER(query) = LOWER(?)
+                ORDER BY id DESC LIMIT ?
+                """,
+                (query.strip(), limit),
+            ).fetchall()
+            return [dict(r) for r in reversed(rows)]
+    except Exception:
+        return []
+
+
 # ── Wishlist CRUD ─────────────────────────────────────────────────────────────
 def add_to_wishlist(title: str, price: float, platform: str, url: str) -> int | None:
     if not _available: return None

@@ -202,6 +202,12 @@ def delete_alert(alert_id: int, _user: dict = Depends(require_user)):
 def get_searches(limit: int = 50, _user: dict = Depends(require_user)):
     return {"searches": db.list_searches(limit)}
 
+@app.get("/api/price-history")
+def price_history(query: str = "", limit: int = 20):
+    # Real observed history, not the seeded/forecast one from /api/trend — every
+    # past best price this app itself recorded for the same search term.
+    return {"query": query, "points": db.list_price_history(query, limit)}
+
 
 # ── Static frontend mounting ──────────────────────────────────────────────────
 # Enterprise features: auth, AI tools, analytics, export, alerts

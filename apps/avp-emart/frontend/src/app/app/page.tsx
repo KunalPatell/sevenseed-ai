@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import {
   LayoutDashboard,
@@ -29,7 +29,11 @@ import {
   Users,
   Award,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  Filter,
+  ArrowUpDown,
+  Tag,
+  LineChart
 } from "lucide-react";
 
 // This dashboard is served under the "/avp-emart" path when merged into the
@@ -163,6 +167,21 @@ export default function AppPortal() {
   const [h2hProductA, setH2hProductA] = useState<number>(0);
   const [h2hProductB, setH2hProductB] = useState<number>(1);
   const [budgetLimit, setBudgetLimit] = useState<number>(50000);
+
+  // Result filters/sort (list tab) — platform facets, min rating, sort order,
+  // mirroring the filter/sort controls on Smartprix & Google Shopping so the
+  // grid below the top recommendation is explorable, not just a flat list.
+  const [platformFilter, setPlatformFilter] = useState<string[]>([]);
+  const [minRatingFilter, setMinRatingFilter] = useState<number>(0);
+  const [sortBy, setSortBy] = useState<"value" | "price_low" | "price_high" | "rating">("value");
+
+  // Coupon lookup on the top recommendation
+  const [couponResult, setCouponResult] = useState<{ code: string; discount_pct: number; savings: number } | null>(null);
+  const [couponLoading, setCouponLoading] = useState(false);
+
+  // Real (not simulated) price history for the current query — every past
+  // best price this app itself has recorded for that exact search term.
+  const [priceHistory, setPriceHistory] = useState<{ created_at: string; best_price: number; best_platform: string }[]>([]);
 
   // Chat
   const [chatInput, setChatInput] = useState("");
@@ -303,6 +322,11 @@ export default function AppPortal() {
     if (!query || compareLoading) return;
     setCompareLoading(true);
     setCompareResults([]);
+    setPlatformFilter([]);
+    setMinRatingFilter(0);
+    setSortBy("value");
+    setCouponResult(null);
+    setPriceHistory([]);
     if (!q) setCompareQuery(query);
     try {
       const res = await fetch(API_BASE + "/api/compare", {
@@ -320,6 +344,13 @@ export default function AppPortal() {
     } finally {
       setCompareLoading(false);
     }
+    try {
+      const hRes = await fetch(API_BASE + "/api/price-history?query=" + encodeURIComponent(query));
+      if (hRes.ok) {
+        const hData = await hRes.json();
+        setPriceHistory(hData.points || []);
+      }
+    } catch (e) {}
   };
 
   const handleChatSend = async () => {
@@ -368,15 +399,17 @@ export default function AppPortal() {
     }
   };
 
-  const handleTrendSearch = async () => {
-    if (!trendQuery.trim() || trendLoading) return;
+  const handleTrendSearch = async (q?: string) => {
+    const query = (q || trendQuery).trim();
+    if (!query || trendLoading) return;
     setTrendLoading(true);
     setTrendResult(null);
+    if (q) setTrendQuery(query);
     try {
       const res = await fetch(API_BASE + "/api/trend", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: trendQuery })
+        body: JSON.stringify({ query })
       });
       if (res.ok) {
         const d = await res.json();
@@ -386,6 +419,33 @@ export default function AppPortal() {
       setTrendResult({ message: "⚠️ Price trend query failed." });
     } finally {
       setTrendLoading(false);
+    }
+  };
+
+  // Jump from a comparator result straight into its price-trend forecast —
+  // Smartprix surfaces trend inline; here it's one click instead of a
+  // separate manual lookup in the Trends panel.
+  const goToTrend = (query: string) => {
+    setActivePanel("trends");
+    handleTrendSearch(query);
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!compareResults.length || couponLoading) return;
+    setCouponLoading(true);
+    try {
+      const res = await fetch(API_BASE + "/api/tools/coupon", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cart_value: compareResults[0].price })
+      });
+      if (res.ok) {
+        const d = await res.json();
+        setCouponResult({ code: d.code, discount_pct: d.discount_pct, savings: d.savings });
+      }
+    } catch (e) {
+    } finally {
+      setCouponLoading(false);
     }
   };
 
@@ -443,6 +503,52 @@ export default function AppPortal() {
         setAlerts(prev => prev.filter(item => item.id !== id));
       }
     } catch (e) {}
+  };
+
+  const availablePlatforms = useMemo(
+    () => Array.from(new Set(compareResults.map(p => p.platform))),
+    [compareResults]
+  );
+
+  const displayResults = useMemo(() => {
+    let r = compareResults.filter(p => p.rating >= minRatingFilter);
+    if (platformFilter.length) r = r.filter(p => platformFilter.includes(p.platform));
+    r = [...r];
+    if (sortBy === "price_low") r.sort((a, b) => a.price - b.price);
+    else if (sortBy === "price_high") r.sort((a, b) => b.price - a.price);
+    else if (sortBy === "rating") r.sort((a, b) => b.rating - a.rating);
+    else r.sort((a, b) => (b.best_value_score || 0) - (a.best_value_score || 0));
+    return r;
+  }, [compareResults, platformFilter, minRatingFilter, sortBy]);
+
+  const togglePlatformFilter = (platform: string) => {
+    setPlatformFilter(prev => prev.includes(platform) ? prev.filter(p => p !== platform) : [...prev, platform]);
+  };
+
+  // Inline sparkline over this app's own recorded best-price history for a
+  // query — real data (price_searches rows), not the seeded /api/trend forecast.
+  const renderSparkline = (points: { created_at: string; best_price: number; best_platform: string }[]) => {
+    const w = 560, h = 90, pad = 8;
+    const prices = points.map(p => p.best_price);
+    const min = Math.min(...prices), max = Math.max(...prices);
+    const range = max - min || 1;
+    const step = points.length > 1 ? (w - pad * 2) / (points.length - 1) : 0;
+    const coords = points.map((p, i) => ({
+      x: pad + i * step,
+      y: pad + (h - pad * 2) * (1 - (p.best_price - min) / range),
+    }));
+    const path = coords.map((c, i) => `${i === 0 ? "M" : "L"}${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(" ");
+    const last = points[points.length - 1];
+    const first = points[0];
+    const falling = last.best_price < first.best_price;
+    return (
+      <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-[90px]">
+        <path d={path} fill="none" stroke={falling ? "#10b981" : "#ea580c"} strokeWidth={2} />
+        {coords.map((c, i) => (
+          <circle key={i} cx={c.x} cy={c.y} r={i === coords.length - 1 ? 4 : 2.5} fill={falling ? "#10b981" : "#ea580c"} />
+        ))}
+      </svg>
+    );
   };
 
   const formatMd = (s: string) => {
@@ -589,10 +695,28 @@ export default function AppPortal() {
                   <span>⭐ <strong>Rating:</strong> {compareResults[0].rating} ★ ({compareResults[0].reviews_count.toLocaleString()} reviews)</span>
                   <span>📊 <strong>Value Score:</strong> {compareResults[0].best_value_score || 0} / 100</span>
                 </div>
+                {couponResult && (
+                  <div className="mt-4 inline-flex flex-wrap items-center gap-2 bg-[#10b981]/10 border border-[#10b981]/30 rounded-xl px-3 py-2 text-xs">
+                    <Tag className="h-3.5 w-3.5 text-[#6ee7b7]" />
+                    <span className="font-mono font-bold text-[#6ee7b7]">{couponResult.code}</span>
+                    <span className="text-[#9aa0b8]">{couponResult.discount_pct}% off · save ₹{couponResult.savings.toLocaleString()}</span>
+                    <span className="font-bold text-white">→ ₹{(compareResults[0].price - couponResult.savings).toLocaleString()}</span>
+                  </div>
+                )}
               </div>
-              <a href={compareResults[0].url} target="_blank" rel="noopener noreferrer" className="btn bg-[#10b981] hover:bg-[#059669] text-[#0d0f0e] px-6 py-3.5 rounded-xl font-bold text-sm shrink-0 inline-flex items-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(16,185,129,0.3)] border-none">
-                🛒 Buy on {compareResults[0].platform} <ExternalLink className="h-4 w-4" />
-              </a>
+              <div className="flex flex-col gap-2 shrink-0">
+                <a href={compareResults[0].url} target="_blank" rel="noopener noreferrer" className="btn bg-[#10b981] hover:bg-[#059669] text-[#0d0f0e] px-6 py-3.5 rounded-xl font-bold text-sm inline-flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_14px_rgba(16,185,129,0.3)] border-none">
+                  🛒 Buy on {compareResults[0].platform} <ExternalLink className="h-4 w-4" />
+                </a>
+                <div className="flex gap-2">
+                  <button onClick={handleApplyCoupon} disabled={couponLoading} className="btn flex-1 bg-white/5 border border-white/10 text-white text-xs hover:bg-white/10 py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50">
+                    {couponLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Tag className="h-3.5 w-3.5" />} Coupon
+                  </button>
+                  <button onClick={() => goToTrend(compareQuery)} className="btn flex-1 bg-white/5 border border-white/10 text-white text-xs hover:bg-white/10 py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer">
+                    <LineChart className="h-3.5 w-3.5" /> Trend
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* 💸 Savings Calculator Component & Global Metrics */}
@@ -685,6 +809,23 @@ export default function AppPortal() {
               );
             })()}
 
+            {/* Real price-history sparkline — this app's own past searches for this term */}
+            {priceHistory.length >= 2 && (
+              <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-6 flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-extrabold text-[#eeeef8] text-xs uppercase tracking-wider flex items-center gap-1.5">
+                    <LineChart className="h-3.5 w-3.5 text-[#9aa0b8]" /> Your price history for &ldquo;{compareQuery}&rdquo;
+                  </h4>
+                  <span className="text-[10px] text-[#5b5f78]">{priceHistory.length} past searches</span>
+                </div>
+                {renderSparkline(priceHistory)}
+                <div className="flex justify-between text-[10px] text-[#5b5f78]">
+                  <span>{new Date(priceHistory[0].created_at).toLocaleDateString()} · ₹{priceHistory[0].best_price.toLocaleString()} on {priceHistory[0].best_platform}</span>
+                  <span>{new Date(priceHistory[priceHistory.length - 1].created_at).toLocaleDateString()} · ₹{priceHistory[priceHistory.length - 1].best_price.toLocaleString()} on {priceHistory[priceHistory.length - 1].best_platform}</span>
+                </div>
+              </div>
+            )}
+
             {/* 🏪 Per-Site Best Deals Section */}
             {(() => {
               const siteBest: { [key: string]: ProductComparison } = {};
@@ -728,12 +869,63 @@ export default function AppPortal() {
 
             {comparatorTab === "list" && (
               <div className="flex flex-col gap-6 animate-[fade_0.2s_ease]">
+                {/* Filter & sort toolbar */}
+                <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-5 flex flex-col gap-4">
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                    <div className="flex items-center gap-2">
+                      <Filter className="h-3.5 w-3.5 text-[#9aa0b8]" />
+                      <span className="text-[10px] uppercase font-bold text-[#9aa0b8] tracking-wider">Platform</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {availablePlatforms.map(pf => (
+                          <button
+                            key={pf}
+                            onClick={() => togglePlatformFilter(pf)}
+                            className={`px-2.5 py-1 rounded-full text-[10px] font-bold border cursor-pointer transition-all ${
+                              platformFilter.includes(pf) || platformFilter.length === 0
+                                ? "bg-[#ea580c]/15 border-[#ea580c]/40 text-[#fdba74]"
+                                : "bg-transparent border-white/10 text-[#5b5f78]"
+                            }`}
+                          >
+                            {pf}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Star className="h-3.5 w-3.5 text-[#9aa0b8]" />
+                      <span className="text-[10px] uppercase font-bold text-[#9aa0b8] tracking-wider">Min rating</span>
+                      <select
+                        value={minRatingFilter}
+                        onChange={(e) => setMinRatingFilter(Number(e.target.value))}
+                        className="bg-[#12121e] border border-white/10 rounded-lg px-2.5 py-1.5 text-[11px] text-white focus:outline-none focus:border-[#ea580c]"
+                      >
+                        {[0, 3, 3.5, 4, 4.5].map(v => <option key={v} value={v}>{v === 0 ? "Any" : `${v}★+`}</option>)}
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-2 ml-auto">
+                      <ArrowUpDown className="h-3.5 w-3.5 text-[#9aa0b8]" />
+                      <span className="text-[10px] uppercase font-bold text-[#9aa0b8] tracking-wider">Sort</span>
+                      <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                        className="bg-[#12121e] border border-white/10 rounded-lg px-2.5 py-1.5 text-[11px] text-white focus:outline-none focus:border-[#ea580c]"
+                      >
+                        <option value="value">Best value</option>
+                        <option value="price_low">Price: Low to High</option>
+                        <option value="price_high">Price: High to Low</option>
+                        <option value="rating">Highest rated</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="text-[11px] text-[#5b5f78]">{displayResults.length} of {compareResults.length} results</div>
+                </div>
+
                 {/* SVG Price Chart */}
                 <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-6 flex flex-col gap-4">
                   <h4 className="font-extrabold text-[#eeeef8] text-xs uppercase tracking-wider">Price Positioning Chart</h4>
                   <div className="w-full h-[150px] flex items-end justify-around border-b border-white/10 pb-4 pt-6">
-                    {compareResults.map((p, idx) => {
-                      const maxPrice = Math.max(...compareResults.map(pr => pr.price)) || 1;
+                    {displayResults.map((p, idx) => {
+                      const maxPrice = Math.max(...displayResults.map(pr => pr.price)) || 1;
                       const heightPct = (p.price / maxPrice) * 100;
                       return (
                         <div key={idx} className="flex flex-col items-center gap-2 group cursor-pointer">
@@ -755,9 +947,15 @@ export default function AppPortal() {
                   </div>
                 </div>
 
+                {displayResults.length === 0 && (
+                  <div className="flex flex-col items-center justify-center gap-2 py-14 text-[#5b5f78] border border-dashed border-white/10 rounded-2xl">
+                    <Filter className="h-6 w-6 opacity-30" />
+                    <p className="text-xs">No results match these filters. Try widening the platform or rating filter.</p>
+                  </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {compareResults.map((p, idx) => {
-                    const isBest = idx === 0;
+                  {displayResults.map((p, idx) => {
+                    const isBest = p === compareResults[0];
                     return (
                       <div key={idx} className={`bg-[#0d0f0e] border rounded-2xl p-6 flex flex-col hover:border-white/15 transition-all relative ${
                         isBest ? "border-[#6ee7b7]/30 shadow-[0_8px_30px_rgba(16,185,129,0.1)]" : "border-white/5"
@@ -800,6 +998,9 @@ export default function AppPortal() {
                             }
                           }} className="btn border-none bg-[#10b981]/10 text-[#6ee7b7] text-xs hover:bg-[#10b981]/20 py-2 px-3 flex items-center gap-1 cursor-pointer">
                             <Bell className="h-3.5 w-3.5" /> Alert
+                          </button>
+                          <button onClick={() => goToTrend(p.title)} className="btn border-none bg-white/5 text-[#9aa0b8] text-xs hover:bg-white/10 py-2 px-2.5 flex items-center gap-1 cursor-pointer ml-auto" title="View price trend">
+                            <LineChart className="h-3.5 w-3.5" />
                           </button>
                         </div>
                       </div>
@@ -1069,7 +1270,7 @@ export default function AppPortal() {
             placeholder="e.g. Samsung Galaxy S24 Ultra"
             className="w-full bg-[#12121e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#ea580c]"
           />
-          <button onClick={handleTrendSearch} disabled={trendLoading} className="btn w-full bg-gradient-to-r from-[#ea580c] to-[#10b981] text-white font-semibold py-3.5 rounded-xl cursor-pointer">
+          <button onClick={() => handleTrendSearch()} disabled={trendLoading} className="btn w-full bg-gradient-to-r from-[#ea580c] to-[#10b981] text-white font-semibold py-3.5 rounded-xl cursor-pointer">
             {trendLoading ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : "Check Price Trends"}
           </button>
         </div>
