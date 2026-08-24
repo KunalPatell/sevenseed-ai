@@ -102,6 +102,19 @@ const CATEGORY_ICON: Record<string, React.ComponentType<{ className?: string }>>
   audio: Headphones, camera: Camera, gaming: Gamepad2, appliance: Refrigerator, gadget: Box,
 };
 
+// Smartprix-style "browse by category" chips on the dashboard — each just
+// runs a normal /api/compare search for a representative term in that category.
+const CATEGORY_CHIPS: { label: string; query: string; category: string }[] = [
+  { label: "Mobiles", query: "Smartphone", category: "phone" },
+  { label: "Laptops", query: "Laptop", category: "laptop" },
+  { label: "TVs", query: "Smart TV", category: "tv" },
+  { label: "Audio", query: "Headphones", category: "audio" },
+  { label: "Watches", query: "Smartwatch", category: "watch" },
+  { label: "Tablets", query: "Tablet", category: "tablet" },
+  { label: "Cameras", query: "Camera", category: "camera" },
+  { label: "Gaming", query: "Gaming Console", category: "gaming" },
+];
+
 // Real product thumbnail when SerpAPI supplied one; otherwise a category icon
 // tile — offline/sample mode has no real image, and a broken <img> reads
 // worse than an honest placeholder (matches Smartprix/Google Shopping's
@@ -215,6 +228,7 @@ export default function AppPortal() {
   // grid below the top recommendation is explorable, not just a flat list.
   const [platformFilter, setPlatformFilter] = useState<string[]>([]);
   const [minRatingFilter, setMinRatingFilter] = useState<number>(0);
+  const [maxPriceFilter, setMaxPriceFilter] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState<"value" | "price_low" | "price_high" | "rating">("value");
 
   // Coupon lookup on the top recommendation
@@ -248,11 +262,13 @@ export default function AppPortal() {
   const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
   const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
+  const [trending, setTrending] = useState<{ query: string; count: number }[]>([]);
 
   // Trigger loading
   useEffect(() => {
     loadHealthAndData();
     loadDbHistory();
+    loadTrending();
   }, []);
 
   useEffect(() => {
@@ -358,6 +374,18 @@ export default function AppPortal() {
     } catch (e) {}
   };
 
+  // Real "trending searches" — most-searched terms across all shoppers, not
+  // a canned list. Public endpoint (no sign-in needed), unlike wishlist/alerts.
+  const loadTrending = async () => {
+    try {
+      const res = await fetch(API_BASE + "/api/trending");
+      if (res.ok) {
+        const d = await res.json();
+        setTrending(d.trending || []);
+      }
+    } catch (e) {}
+  };
+
   // Actions
   const handleCompare = async (q?: string) => {
     const query = q || compareQuery.trim();
@@ -366,6 +394,7 @@ export default function AppPortal() {
     setCompareResults([]);
     setPlatformFilter([]);
     setMinRatingFilter(0);
+    setMaxPriceFilter(null);
     setSortBy("value");
     setCouponResult(null);
     setPriceHistory([]);
@@ -381,6 +410,7 @@ export default function AppPortal() {
         setCompareResults(d || []);
         setActivePanel("comparator");
         loadDbHistory();
+        loadTrending();
       }
     } catch (e) {
     } finally {
@@ -552,16 +582,22 @@ export default function AppPortal() {
     [compareResults]
   );
 
+  const maxResultPrice = useMemo(
+    () => compareResults.length ? Math.max(...compareResults.map(p => p.price)) : 0,
+    [compareResults]
+  );
+
   const displayResults = useMemo(() => {
     let r = compareResults.filter(p => p.rating >= minRatingFilter);
     if (platformFilter.length) r = r.filter(p => platformFilter.includes(p.platform));
+    if (maxPriceFilter !== null) r = r.filter(p => p.price <= maxPriceFilter);
     r = [...r];
     if (sortBy === "price_low") r.sort((a, b) => a.price - b.price);
     else if (sortBy === "price_high") r.sort((a, b) => b.price - a.price);
     else if (sortBy === "rating") r.sort((a, b) => b.rating - a.rating);
     else r.sort((a, b) => (b.best_value_score || 0) - (a.best_value_score || 0));
     return r;
-  }, [compareResults, platformFilter, minRatingFilter, sortBy]);
+  }, [compareResults, platformFilter, minRatingFilter, maxPriceFilter, sortBy]);
 
   const togglePlatformFilter = (platform: string) => {
     setPlatformFilter(prev => prev.includes(platform) ? prev.filter(p => p !== platform) : [...prev, platform]);
@@ -669,6 +705,49 @@ export default function AppPortal() {
             </button>
           </div>
         </div>
+
+        {/* Browse by category — Smartprix-style homepage browsing */}
+        <div className="flex flex-col gap-3">
+          <h4 className="font-extrabold text-[#eeeef8] text-sm uppercase tracking-wider">Browse by category</h4>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            {CATEGORY_CHIPS.map(c => {
+              const Icon = CATEGORY_ICON[c.category] || Box;
+              return (
+                <button
+                  key={c.label}
+                  onClick={() => handleCompare(c.query)}
+                  className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-[#ea580c]/50 hover:-translate-y-0.5 transition-all cursor-pointer"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ea580c]/20 to-[#10b981]/10 border border-white/10 flex items-center justify-center">
+                    <Icon className="h-5 w-5 text-[#fdba74]" />
+                  </div>
+                  <span className="text-[11px] font-bold text-[#eeeef8]">{c.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Trending searches — real counts from this app's own search history */}
+        {trending.length > 0 && (
+          <div className="flex flex-col gap-3">
+            <h4 className="font-extrabold text-[#eeeef8] text-sm uppercase tracking-wider flex items-center gap-1.5">
+              <TrendingUp className="h-4 w-4 text-[#fdba74]" /> Trending searches
+            </h4>
+            <div className="flex flex-wrap gap-2.5">
+              {trending.map(t => (
+                <button
+                  key={t.query}
+                  onClick={() => handleCompare(t.query)}
+                  className="bg-[#0d0f0e] border border-white/5 rounded-full pl-4 pr-3 py-2 flex items-center gap-2 hover:border-[#ea580c]/50 transition-all cursor-pointer"
+                >
+                  <span className="text-xs font-semibold text-[#eeeef8]">{t.query}</span>
+                  <span className="text-[10px] font-bold text-[#5b5f78] bg-white/5 rounded-full px-1.5 py-0.5">{t.count}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* History of searches */}
         <div className="flex flex-col gap-3">
@@ -946,6 +1025,25 @@ export default function AppPortal() {
                       >
                         {[0, 3, 3.5, 4, 4.5].map(v => <option key={v} value={v}>{v === 0 ? "Any" : `${v}★+`}</option>)}
                       </select>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <IndianRupee className="h-3.5 w-3.5 text-[#9aa0b8]" />
+                      <span className="text-[10px] uppercase font-bold text-[#9aa0b8] tracking-wider">Max price</span>
+                      <input
+                        type="range"
+                        min={0}
+                        max={maxResultPrice || 1}
+                        step={Math.max(1, Math.round((maxResultPrice || 1) / 100))}
+                        value={maxPriceFilter === null ? maxResultPrice : maxPriceFilter}
+                        onChange={(e) => setMaxPriceFilter(Number(e.target.value))}
+                        className="w-32 accent-[#ea580c]"
+                      />
+                      <span className="text-[11px] font-bold text-white w-20">
+                        {maxPriceFilter === null ? "Any" : `≤ ₹${maxPriceFilter.toLocaleString()}`}
+                      </span>
+                      {maxPriceFilter !== null && (
+                        <button onClick={() => setMaxPriceFilter(null)} className="text-[10px] text-[#5b5f78] hover:text-white cursor-pointer underline">reset</button>
+                      )}
                     </div>
                     <div className="flex items-center gap-2 ml-auto">
                       <ArrowUpDown className="h-3.5 w-3.5 text-[#9aa0b8]" />

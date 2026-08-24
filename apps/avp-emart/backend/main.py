@@ -210,6 +210,10 @@ def price_history(query: str = "", limit: int = 20):
     # past best price this app itself recorded for the same search term.
     return {"query": query, "points": db.list_price_history(query, limit)}
 
+@app.get("/api/trending")
+def trending(limit: int = 6):
+    return {"trending": db.list_trending_queries(limit)}
+
 
 # ── Static frontend mounting ──────────────────────────────────────────────────
 # Enterprise features: auth, AI tools, analytics, export, alerts

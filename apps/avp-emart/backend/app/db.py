@@ -123,6 +123,26 @@ def list_price_history(query: str, limit: int = 20) -> list[dict]:
         return []
 
 
+def list_trending_queries(limit: int = 6) -> list[dict]:
+    """Most-searched terms across all shoppers, real counts from price_searches —
+    Smartprix/Google Shopping-style 'trending searches', not a canned list."""
+    if not _available:
+        return []
+    try:
+        with _conn() as c:
+            rows = c.execute(
+                """
+                SELECT query, COUNT(*) as count, MAX(created_at) as last_searched
+                FROM price_searches GROUP BY LOWER(query)
+                ORDER BY count DESC, last_searched DESC LIMIT ?
+                """,
+                (limit,),
+            ).fetchall()
+            return [dict(r) for r in rows]
+    except Exception:
+        return []
+
+
 # ── Wishlist CRUD ─────────────────────────────────────────────────────────────
 def add_to_wishlist(title: str, price: float, platform: str, url: str) -> int | None:
     if not _available: return None
