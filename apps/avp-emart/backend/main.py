@@ -71,6 +71,10 @@ class TrendReq(BaseModel):
     query: str
     weeks: int | None = 12
 
+class SpecCompareReq(BaseModel):
+    product_a: str
+    product_b: str
+
 class WishlistReq(BaseModel):
     title: str
     price: float
@@ -156,6 +160,10 @@ def reviews(req: ReviewReq):
     cons = "\n".join(f"- {c}" for c in res.get("cons", []))
     summary = f"### 📊 Review Analysis for {req.product or 'Product'}\n\n**Verdict:** {verdict}\n\n**👍 Pros:**\n{pros}\n\n**👎 Cons:**\n{cons}"
     return {"summary": summary}
+
+@app.post("/api/spec-compare")
+def spec_compare(req: SpecCompareReq):
+    return agents.spec_compare(req.product_a, req.product_b)
 
 @app.get("/api/recommend")
 def recommend(category: str = ""):

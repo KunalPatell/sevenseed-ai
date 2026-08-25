@@ -23,34 +23,41 @@ def _gemini_key(): return gemini_key_var.get().strip() or os.environ.get("GEMINI
 def _openai_key(): return openai_key_var.get().strip() or os.environ.get("OPENAI_API_KEY", "").strip()
 
 
-def _get_llm(temperature: float = 0.4):
+def _llm_candidates(temperature: float = 0.4):
+    """Yield (name, llm) for every configured provider, in fallback order. A
+    configured API key only proves the string exists — constructing the client
+    never calls out to verify it, so an expired key or a retired model name
+    (Groq periodically sunsets models) still yields a candidate here and only
+    fails once _llm_text() actually invokes it. Yielding every candidate up
+    front, instead of returning the first one, is what lets _llm_text() move
+    on to Gemini/OpenAI when that happens instead of going straight to the
+    offline fallback while a working key sits unused."""
     if _groq_key():
         try:
             from langchain_groq import ChatGroq
-            return ChatGroq(api_key=_groq_key(),
-                            model=os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile"),
-                            temperature=temperature)
+            yield "Groq", ChatGroq(api_key=_groq_key(),
+                                   model=os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b"),
+                                   temperature=temperature)
         except Exception:
             pass
     if _gemini_key():
         try:
             from langchain_google_genai import ChatGoogleGenerativeAI
-            return ChatGoogleGenerativeAI(google_api_key=_gemini_key(),
-                                          model="gemini-1.5-flash", temperature=temperature)
+            yield "Gemini", ChatGoogleGenerativeAI(google_api_key=_gemini_key(),
+                                                    model="gemini-1.5-flash", temperature=temperature)
         except Exception:
             pass
     if _openai_key():
         try:
             from langchain_openai import ChatOpenAI
-            return ChatOpenAI(api_key=_openai_key(), model="gpt-4o-mini", temperature=temperature)
+            yield "OpenAI", ChatOpenAI(api_key=_openai_key(), model="gpt-4o-mini", temperature=temperature)
         except Exception:
             pass
-    return None
 
 
 def active_provider() -> str:
     if _groq_key():
-        return f"Groq ({os.environ.get('GROQ_MODEL', 'llama-3.3-70b-versatile')})"
+        return f"Groq ({os.environ.get('GROQ_MODEL', 'openai/gpt-oss-120b')})"
     if _gemini_key():
         return "Google Gemini 1.5 Flash"
     if _openai_key():
@@ -59,15 +66,13 @@ def active_provider() -> str:
 
 
 def _llm_text(system: str, user: str, temperature: float = 0.4) -> str | None:
-    llm = _get_llm(temperature)
-    if not llm:
-        return None
-    try:
-        from langchain_core.messages import SystemMessage, HumanMessage
-        return llm.invoke([SystemMessage(content=system), HumanMessage(content=user)]).content
-    except Exception as e:
-        print(f"[LLM] {e}")
-        return None
+    from langchain_core.messages import SystemMessage, HumanMessage
+    for name, llm in _llm_candidates(temperature):
+        try:
+            return llm.invoke([SystemMessage(content=system), HumanMessage(content=user)]).content
+        except Exception as e:
+            print(f"[LLM] {name} failed, trying next provider: {e}")
+    return None
 
 
 def _inr(n: int) -> str:
@@ -143,7 +148,7 @@ def _demo_llm(temperature: float = 0.5):
     if groq_key:
         try:
             from langchain_groq import ChatGroq
-            model = os.environ.get("GROQ_DEMO_MODEL", "llama-3.1-8b-instant")
+            model = os.environ.get("GROQ_DEMO_MODEL", "openai/gpt-oss-20b")
             return ChatGroq(api_key=groq_key, model=model, temperature=temperature, max_tokens=320)
         except Exception:
             pass
@@ -179,7 +184,7 @@ def _demo_llm_text(system: str, user: str, temperature: float = 0.5) -> str | No
 
 def _demo_active_provider() -> str:
     if os.environ.get("GROQ_API_KEY", "").strip():
-        return f"Groq ({os.environ.get('GROQ_DEMO_MODEL', 'llama-3.1-8b-instant')})"
+        return f"Groq ({os.environ.get('GROQ_DEMO_MODEL', 'openai/gpt-oss-20b')})"
     if os.environ.get("GEMINI_API_KEY", "").strip():
         return "Google Gemini 1.5 Flash"
     if os.environ.get("OPENAI_API_KEY", "").strip():
@@ -282,6 +287,41 @@ def recommend(category: str = "") -> Dict[str, Any]:
                           "rating": b["rating"], "value_score": b["value_score"], "link": b["link"]})
     items.sort(key=lambda x: x["value_score"], reverse=True)
     return {"category": cat, "categories": list(_CATALOG), "items": items, "provider": active_provider()}
+
+
+# ── AI Spec Compare (Head-to-Head) ───────────────────────────────────────────
+# Offline sample data has no real specs (screen/chip/battery/camera) — this
+# asks the LLM to fill that gap for the two products a shopper picked in the
+# Head-to-Head tab, matching Smartprix's per-product spec comparison table.
+_SYS_SPEC_COMPARE = (
+    "You are a product-spec analyst. Given two product names, produce a comparison across the "
+    "specs that actually matter for that category (e.g. phones: display, chipset, RAM/storage, "
+    "battery, camera; laptops: CPU, RAM, storage, display, battery). Use your general knowledge of "
+    "these products — if you are not certain of an exact figure, give a realistic typical value for "
+    "that product line rather than inventing an oddly specific one. Output ONLY lines in this exact "
+    "format, one spec per line, 4-6 specs total:\n"
+    "SPEC: <spec name> | A: <value for product A> | B: <value for product B>"
+)
+
+
+def spec_compare(product_a: str, product_b: str) -> Dict[str, Any]:
+    text = _llm_text(_SYS_SPEC_COMPARE, f"Product A: {product_a}\nProduct B: {product_b}", 0.3)
+    if not text:
+        return {
+            "success": False,
+            "error": "AI spec comparison needs an LLM key (Groq/Gemini/OpenAI) — none is configured right now.",
+            "provider": active_provider(),
+        }
+    rows = []
+    for line in text.splitlines():
+        m = re.match(r"\s*SPEC:\s*(.+?)\s*\|\s*A:\s*(.+?)\s*\|\s*B:\s*(.+?)\s*$", line)
+        if m:
+            rows.append({"spec": m.group(1).strip(), "a": m.group(2).strip(), "b": m.group(3).strip()})
+    if not rows:
+        return {"success": False, "error": "Could not parse a spec comparison from the AI response.",
+                "provider": active_provider()}
+    return {"success": True, "product_a": product_a, "product_b": product_b, "specs": rows,
+            "provider": active_provider()}
 
 
 # ── Price-trend forecasting ──────────────────────────────────────────────────

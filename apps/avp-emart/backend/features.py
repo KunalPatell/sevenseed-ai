@@ -28,7 +28,7 @@ def _get_llm(t=0.4):
     if _groq_key():
         try:
             from langchain_groq import ChatGroq
-            return ChatGroq(api_key=_groq_key(), model=os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile"), temperature=t)
+            return ChatGroq(api_key=_groq_key(), model=os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b"), temperature=t)
         except Exception: pass
     if _gemini_key():
         try:
@@ -43,7 +43,7 @@ def _get_llm(t=0.4):
     return None
 
 def active_provider():
-    for k, n in [("GROQ_API_KEY", f"Groq ({os.environ.get('GROQ_MODEL','llama-3.3-70b-versatile')})"),
+    for k, n in [("GROQ_API_KEY", f"Groq ({os.environ.get('GROQ_MODEL','openai/gpt-oss-120b')})"),
                  ("GEMINI_API_KEY", "Google Gemini 1.5 Flash"), ("OPENAI_API_KEY", "OpenAI GPT-4o-mini")]:
         if os.environ.get(k, "").strip(): return n
     return "offline"

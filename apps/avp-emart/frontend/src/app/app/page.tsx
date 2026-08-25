@@ -251,6 +251,13 @@ export default function AppPortal() {
   // best price this app itself has recorded for that exact search term.
   const [priceHistory, setPriceHistory] = useState<{ created_at: string; best_price: number; best_platform: string }[]>([]);
 
+  // AI Spec Compare (Head-to-Head) — keyed by which two products it's for, so
+  // switching the A/B dropdowns doesn't show a stale comparison.
+  const [specCompare, setSpecCompare] = useState<{
+    forA: string; forB: string; loading: boolean; error: string;
+    specs: { spec: string; a: string; b: string }[] | null;
+  }>({ forA: "", forB: "", loading: false, error: "", specs: null });
+
   // Chat
   const [chatInput, setChatInput] = useState("");
   const [chatMessages, setChatMessages] = useState<{ role: "user" | "ai"; text: string }[]>([
@@ -530,6 +537,25 @@ export default function AppPortal() {
     } catch (e) {
     } finally {
       setCouponLoading(false);
+    }
+  };
+
+  const handleSpecCompare = async (a: ProductComparison, b: ProductComparison) => {
+    setSpecCompare({ forA: a.title, forB: b.title, loading: true, error: "", specs: null });
+    try {
+      const res = await fetch(API_BASE + "/api/spec-compare", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ product_a: a.title, product_b: b.title })
+      });
+      const d = await res.json();
+      if (d.success) {
+        setSpecCompare({ forA: a.title, forB: b.title, loading: false, error: "", specs: d.specs });
+      } else {
+        setSpecCompare({ forA: a.title, forB: b.title, loading: false, error: d.error || "Spec comparison failed.", specs: null });
+      }
+    } catch (e) {
+      setSpecCompare({ forA: a.title, forB: b.title, loading: false, error: "Could not reach the server.", specs: null });
     }
   };
 
@@ -1262,6 +1288,37 @@ export default function AppPortal() {
                           })}
                           <div className="bg-[#10b981]/10 border border-[#10b981]/25 p-4 rounded-xl flex items-center justify-center gap-2 mt-3 text-xs text-[#6ee7b7]">
                             <Award className="h-4 w-4" /> <strong>Winner: {overallWinner.title}</strong> — won {Math.max(aWins, bWins)} of {metrics.length} categories!
+                          </div>
+
+                          {/* AI Spec Compare — fills the gap that offline sample data has no real specs */}
+                          <div className="border-t border-white/5 pt-4 flex flex-col gap-3">
+                            {specCompare.forA === a.title && specCompare.forB === b.title && specCompare.specs ? (
+                              <>
+                                <div className="grid grid-cols-[2fr_1.5fr_1.5fr] gap-4 font-bold text-xs uppercase tracking-wider text-[#9aa0b8] border-b border-white/5 pb-2">
+                                  <div className="flex items-center gap-1.5"><Cpu className="h-3.5 w-3.5" /> AI Spec Compare</div>
+                                  <div>Product A</div>
+                                  <div>Product B</div>
+                                </div>
+                                {specCompare.specs.map((s, idx) => (
+                                  <div key={idx} className="grid grid-cols-[2fr_1.5fr_1.5fr] gap-4 text-xs border-b border-white/5 py-2.5 items-center">
+                                    <div className="text-white font-medium">{s.spec}</div>
+                                    <div className="text-[#9aa0b8]">{s.a}</div>
+                                    <div className="text-[#9aa0b8]">{s.b}</div>
+                                  </div>
+                                ))}
+                                <button onClick={() => handleSpecCompare(a, b)} className="btn self-start bg-white/5 border border-white/10 text-white text-xs hover:bg-white/10 py-2 px-3 rounded-lg cursor-pointer">
+                                  Re-run comparison
+                                </button>
+                              </>
+                            ) : specCompare.forA === a.title && specCompare.forB === b.title && specCompare.loading ? (
+                              <div className="flex items-center gap-2 text-xs text-[#9aa0b8]"><Loader2 className="h-3.5 w-3.5 animate-spin" /> Asking the AI for a spec comparison…</div>
+                            ) : specCompare.forA === a.title && specCompare.forB === b.title && specCompare.error ? (
+                              <div className="text-xs text-[#ea580c]">{specCompare.error}</div>
+                            ) : (
+                              <button onClick={() => handleSpecCompare(a, b)} className="btn self-start bg-white/5 border border-white/10 text-white text-xs hover:bg-white/10 py-2 px-3 rounded-lg cursor-pointer inline-flex items-center gap-1.5">
+                                <Cpu className="h-3.5 w-3.5" /> AI Spec Compare
+                              </button>
+                            )}
                           </div>
                         </div>
                       );
