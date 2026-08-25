@@ -770,7 +770,7 @@ export default function AppPortal() {
                 <div key={s.id} onClick={() => handleCompare(s.query)} className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-5 hover:border-[#ea580c]/50 hover:-translate-y-0.5 transition-all cursor-pointer">
                   <h5 className="font-bold text-white text-sm">{s.query}</h5>
                   <p className="text-xs text-[#9aa0b8] mt-2">
-                    Best: <strong className="text-[#6ee7b7]">₹{s.best_price}</strong> on {s.best_platform}
+                    Best: <strong className="text-[#6ee7b7]">₹{s.best_price.toLocaleString()}</strong> on {s.best_platform}
                   </p>
                   <p className="text-[10px] text-[#5b5f78] mt-1">Searched: {new Date(s.created_at).toLocaleDateString()}</p>
                 </div>
@@ -826,7 +826,7 @@ export default function AppPortal() {
                 <h4 className="font-extrabold text-white text-lg mt-3 leading-snug">{compareResults[0].title}</h4>
                 <div className="flex flex-wrap gap-4 mt-3 text-xs text-[#9aa0b8]">
                   <span>🏪 <strong>Platform:</strong> {compareResults[0].platform}</span>
-                  <span>💰 <strong>Price:</strong> ₹{compareResults[0].price}</span>
+                  <span>💰 <strong>Price:</strong> ₹{compareResults[0].price.toLocaleString()}</span>
                   <span>⭐ <strong>Rating:</strong> {compareResults[0].rating} ★ ({compareResults[0].reviews_count.toLocaleString()} reviews)</span>
                   <span>📊 <strong>Value Score:</strong> {compareResults[0].best_value_score || 0} / 100</span>
                   <PriceDropBadge pct={compareResults[0].vs_typical_pct} />
@@ -1086,9 +1086,9 @@ export default function AppPortal() {
                       return (
                         <div key={idx} className="flex flex-col items-center gap-2 group cursor-pointer">
                           <div className="text-[10px] text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity bg-black px-1.5 py-0.5 rounded">
-                            ₹{p.price}
+                            ₹{p.price.toLocaleString()}
                           </div>
-                          <div 
+                          <div
                             className={`w-10 rounded-t-lg transition-all duration-500 bg-gradient-to-t ${
                               p.positioning === "Competitive" ? "from-[#10b981] to-[#6ee7b7]" :
                               p.positioning === "Premium" ? "from-[#f43f5e] to-[#fda4af]" :
@@ -1130,7 +1130,7 @@ export default function AppPortal() {
                         </div>
 
                         <div className="flex items-center justify-between mt-4">
-                          <div className="text-2xl font-black text-white">₹{p.price}</div>
+                          <div className="text-2xl font-black text-white">₹{p.price.toLocaleString()}</div>
                           {p.positioning && (
                             <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase border ${
                               p.positioning === "Competitive" ? "bg-[#10b981]/10 text-[#6ee7b7] border-[#10b981]/25" :
@@ -1193,7 +1193,7 @@ export default function AppPortal() {
                           className="w-full bg-[#12121e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#ea580c]"
                         >
                           {compareResults.map((p, idx) => (
-                            <option key={idx} value={idx}>{p.title} (₹{p.price})</option>
+                            <option key={idx} value={idx}>{p.title} (₹{p.price.toLocaleString()})</option>
                           ))}
                         </select>
                       </div>
@@ -1205,7 +1205,7 @@ export default function AppPortal() {
                           className="w-full bg-[#12121e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#ea580c]"
                         >
                           {compareResults.map((p, idx) => (
-                            <option key={idx} value={idx}>{p.title} (₹{p.price})</option>
+                            <option key={idx} value={idx}>{p.title} (₹{p.price.toLocaleString()})</option>
                           ))}
                         </select>
                       </div>
@@ -1219,7 +1219,7 @@ export default function AppPortal() {
                       if (!a || !b) return null;
 
                       const metrics = [
-                        { label: "Price", icon: IndianRupee, valA: a.price, valB: b.price, rawA: `₹${a.price}`, rawB: `₹${b.price}`, prefer: "lower" },
+                        { label: "Price", icon: IndianRupee, valA: a.price, valB: b.price, rawA: `₹${a.price.toLocaleString()}`, rawB: `₹${b.price.toLocaleString()}`, prefer: "lower" },
                         { label: "Rating", icon: Star, valA: a.rating, valB: b.rating, rawA: `${a.rating}★`, rawB: `${b.rating}★`, prefer: "higher" },
                         { label: "Reviews", icon: Users, valA: a.reviews_count, valB: b.reviews_count, rawA: `${a.reviews_count.toLocaleString()}`, rawB: `${b.reviews_count.toLocaleString()}`, prefer: "higher" },
                         { label: "Value Score", icon: Award, valA: a.best_value_score || 0, valB: b.best_value_score || 0, rawA: `${a.best_value_score || 0}`, rawB: `${b.best_value_score || 0}`, prefer: "higher" }
@@ -1307,7 +1307,7 @@ export default function AppPortal() {
                             <h4 className="font-bold text-white text-base mt-1 leading-snug">{best.title}</h4>
                           </div>
                         </div>
-                        <div className="text-2xl font-black text-white mt-3">₹{best.price}</div>
+                        <div className="text-2xl font-black text-white mt-3">₹{best.price.toLocaleString()}</div>
                         <div className="text-xs text-[#9aa0b8] mt-2">Value score: {best.best_value_score || 0} · {best.rating}★ ({best.reviews_count.toLocaleString()} reviews)</div>
                         <div className="flex gap-2 mt-4">
                           <a href={best.url} target="_blank" className="btn bg-[#10b981] text-[#0d0f0e] text-xs hover:bg-[#6ee7b7] py-2 px-4 rounded-lg font-bold">
@@ -1330,7 +1330,7 @@ export default function AppPortal() {
                                 <h4 className="font-bold text-white text-sm mt-1 leading-snug">{p.title}</h4>
                               </div>
                             </div>
-                            <div className="text-lg font-black text-white mt-4">₹{p.price}</div>
+                            <div className="text-lg font-black text-white mt-4">₹{p.price.toLocaleString()}</div>
                             <div className="flex gap-2 mt-4">
                               <a href={p.url} target="_blank" className="btn bg-white/5 border border-white/10 text-white text-xs hover:bg-[#18182a] py-2 px-3 flex items-center gap-1">
                                 Buy <ExternalLink className="h-3 w-3" />
@@ -1490,7 +1490,7 @@ export default function AppPortal() {
               <div key={item.id} className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-6 flex flex-col">
                 <span className="text-[10px] text-[#5b5f78] uppercase font-bold tracking-wider">{item.platform}</span>
                 <h4 className="font-bold text-white text-sm mt-1 leading-snug flex-1">{item.title}</h4>
-                <div className="text-2xl font-black text-white mt-4">₹{item.price}</div>
+                <div className="text-2xl font-black text-white mt-4">₹{item.price.toLocaleString()}</div>
                 <div className="flex gap-2 mt-6 pt-4 border-t border-white/5">
                   <a href={item.url} target="_blank" className="btn bg-white/5 border border-white/10 text-white text-xs hover:bg-[#18182a] py-2 px-3 flex items-center gap-1">
                     Buy <ExternalLink className="h-3 w-3" />
@@ -1521,11 +1521,11 @@ export default function AppPortal() {
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <div>
                     <span className="text-[10px] text-[#5b5f78] uppercase font-bold">Current Price</span>
-                    <div className="text-lg font-black text-white mt-1">₹{alert.current_price}</div>
+                    <div className="text-lg font-black text-white mt-1">₹{alert.current_price.toLocaleString()}</div>
                   </div>
                   <div>
                     <span className="text-[10px] text-[#5b5f78] uppercase font-bold">Target Price</span>
-                    <div className="text-lg font-black text-[#6ee7b7] mt-1">₹{alert.target_price}</div>
+                    <div className="text-lg font-black text-[#6ee7b7] mt-1">₹{alert.target_price.toLocaleString()}</div>
                   </div>
                 </div>
                 <div className="flex justify-between items-center mt-6 pt-4 border-t border-white/5">

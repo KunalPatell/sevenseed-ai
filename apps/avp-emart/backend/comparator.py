@@ -30,11 +30,20 @@ _BUY = {
     "snapdeal.com": "https://www.snapdeal.com/search?keyword=",
 }
 
-# Rough base-price buckets by keyword, for realistic offline data.
+# Rough base-price buckets by keyword, for realistic offline data. Needs brand
+# and model names, not just generic nouns — "Samsung Galaxy S24" has neither
+# "phone" nor "smartphone" in it, and used to fall through to the (3000, 40000)
+# catch-all default below, pricing a flagship phone like a phone case.
 _BUCKETS = [
-    (["iphone", "macbook", "laptop", "gaming", "oled", "refrigerator", "washing", "camera dslr"], (45000, 145000)),
-    (["phone", "mobile", "smartphone", "tablet", "ipad", "tv", "console", "air conditioner", "ac"], (12000, 55000)),
-    (["watch", "earbuds", "headphone", "speaker", "monitor", "printer", "microwave", "mixer"], (2500, 22000)),
+    (["iphone", "macbook", "laptop", "gaming", "oled", "refrigerator", "washing",
+      "camera dslr", "galaxy s", "galaxy note", "galaxy z", "galaxy fold",
+      "oneplus", "pixel"], (45000, 145000)),
+    (["phone", "mobile", "smartphone", "tablet", "ipad", "tv", "console",
+      "air conditioner", "ac", "galaxy", "redmi", "poco", "vivo", "oppo",
+      "realme", "moto g", "nokia", "thinkpad", "ideapad", "vivobook",
+      "zenbook", "inspiron", "pavilion", "spectre"], (12000, 55000)),
+    (["watch", "earbuds", "headphone", "speaker", "monitor", "printer",
+      "microwave", "mixer", "smartwatch", "airpods", "buds", "soundbar"], (2500, 22000)),
     (["cable", "case", "cover", "charger", "mouse", "keyboard", "bottle", "book", "toy"], (200, 2500)),
 ]
 
