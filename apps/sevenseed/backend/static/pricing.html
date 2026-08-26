@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaaS Subscription & ROI Calculator — Sevenseed</title>
+  <meta name="description" content="Compare our Free BYOK Tier with Pro Builder and Enterprise managed plans.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
+    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
+    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
+    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
+    .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
+    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
+    .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
+    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">
+      <span class="nav-logo-wrap"><i class="fas fa-seedling"></i></span>
+      <span class="nav-name">Sevenseed</span>
+    </a>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="ventures.html">Portfolio</a>
+        <a href="pricing.html" class="active">SaaS Pricing</a>
+        <a href="byok.html">BYOK Vault</a>
+    </div>
+    <div class="nav-actions">
+      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
+      <a class="btn btn-primary sm" href="index.html#contact"><i class="fas fa-rocket"></i> Launch</a>
+    </div>
+  </div>
+</nav>
+
+
+<header class="sub-hero">
+  <div class="sub-hero-pill"><i class="fas fa-sparkles"></i> 100% Free · Interactive AI Tool</div>
+  <h1 class="sub-hero-title">SaaS Subscription & ROI Calculator</h1>
+  <p class="sub-hero-sub">Compare our Free BYOK Tier with Pro Builder and Enterprise managed plans.</p>
+</header>
+
+<main class="container">
+  
+<div class="interactive-card">
+  <div class="grid-3" style="margin-bottom: 40px;">
+    <div class="tool-box">
+      <h3 style="color:#38bdf8;">Community Tier</h3>
+      <div style="font-size:36px; font-weight:800; margin:16px 0;">$0 <span style="font-size:14px; color:#94a3b8;">/ month</span></div>
+      <p style="color:#94a3b8; font-size:14px; margin-bottom:20px;">Bring Your Own Key (BYOK) for Groq, Gemini, or OpenAI.</p>
+      <ul style="text-align:left; font-size:14px; line-height:2; color:#cbd5e1;">
+        <li><i class="fas fa-check" style="color:#10b981;"></i> Access all 7+ AI Ventures</li>
+        <li><i class="fas fa-check" style="color:#10b981;"></i> Unlimited calls via own keys</li>
+        <li><i class="fas fa-check" style="color:#10b981;"></i> AES-256 Key Vault</li>
+      </ul>
+      <a class="btn btn-ghost" href="index.html" style="width:100%; margin-top:24px;">Start Free</a>
+    </div>
+
+    <div class="tool-box" style="border-color:#6366f1; background:rgba(99,102,241,0.08);">
+      <span style="background:#6366f1; font-size:11px; padding:3px 10px; border-radius:999px; font-weight:700;">POPULAR</span>
+      <h3 style="color:#a5b4fc; margin-top:8px;">Pro Builder</h3>
+      <div style="font-size:36px; font-weight:800; margin:16px 0;">$19 <span style="font-size:14px; color:#94a3b8;">/ month (₹1,499)</span></div>
+      <p style="color:#94a3b8; font-size:14px; margin-bottom:20px;">Managed AI Infrastructure — zero setup required.</p>
+      <ul style="text-align:left; font-size:14px; line-height:2; color:#cbd5e1;">
+        <li><i class="fas fa-check" style="color:#10b981;"></i> 500,000 Monthly Managed Tokens</li>
+        <li><i class="fas fa-check" style="color:#10b981;"></i> High-Speed Groq LLaMA 3.3 70B</li>
+        <li><i class="fas fa-check" style="color:#10b981;"></i> Priority Computer Vision GPU</li>
+        <li><i class="fas fa-check" style="color:#10b981;"></i> PDF Report Exports</li>
+      </ul>
+      <button class="btn btn-primary" onclick="alert('Redirecting to Stripe/Razorpay Checkout for Pro Builder ($19/mo)...')" style="width:100%; margin-top:24px;">Upgrade to Pro</button>
+    </div>
+
+    <div class="tool-box">
+      <h3 style="color:#c084fc;">Enterprise Team</h3>
+      <div style="font-size:36px; font-weight:800; margin:16px 0;">$79 <span style="font-size:14px; color:#94a3b8;">/ month (₹5,999)</span></div>
+      <p style="color:#94a3b8; font-size:14px; margin-bottom:20px;">Unlimited team seats, custom domain, and dedicated support.</p>
+      <ul style="text-align:left; font-size:14px; line-height:2; color:#cbd5e1;">
+        <li><i class="fas fa-check" style="color:#10b981;"></i> 5,000,000 Monthly Managed Tokens</li>
+        <li><i class="fas fa-check" style="color:#10b981;"></i> Multi-user Team Workspace</li>
+        <li><i class="fas fa-check" style="color:#10b981;"></i> Custom API Integrations</li>
+      </ul>
+      <button class="btn btn-ghost" onclick="alert('Redirecting to Stripe/Razorpay Checkout for Enterprise ($79/mo)...')" style="width:100%; margin-top:24px;">Get Enterprise</button>
+    </div>
+  </div>
+
+  <div class="tool-box" style="text-align:left;">
+    <h3>💰 Interactive ROI & Cost Savings Calculator</h3>
+    <p style="color:#94a3b8; margin-bottom:20px;">Calculate how much you save using Sevenseed vs separate SaaS subscriptions.</p>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Team Size (Members)</label>
+        <input type="number" id="teamSize" class="form-control" value="5" min="1" max="100" oninput="calcROI()">
+      </div>
+      <div class="form-group">
+        <label>Estimated Monthly Savings</label>
+        <div id="savingsResult" style="font-size:28px; font-weight:800; color:#10b981; padding-top:8px;">$1,200 / month</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function calcROI() {
+  var size = parseInt(document.getElementById('teamSize').value) || 1;
+  var traditionalSaaS = size * 250; // $250/mo per seat across 7 tools
+  var sevenseedCost = 79;
+  var savings = traditionalSaaS - sevenseedCost;
+  document.getElementById('savingsResult').innerText = '$' + savings.toLocaleString() + ' / month';
+}
+</script>
+
+</main>
+
+
+<footer class="footer">
+  <div class="foot-inner">
+    <div class="foot-col">
+      <div class="foot-brand"><i class="fas fa-seedling"></i> Sevenseed</div>
+      <p class="foot-tag">AI Venture Studio & SaaS Hub — Part of the Sevenseed AI Venture Studio portfolio.</p>
+      <div class="foot-copy">© 2026 Sevenseed. 100% Free · Bring Your Own Key Architecture.</div>
+    </div>
+    <div class="foot-col">
+      <h4>Navigation</h4>
+      <ul class="foot-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="../index.html">Sevenseed Hub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -566,6 +566,18 @@ body[data-variant="technical-mono"] .logo-text::before{content:'['}
 body[data-variant="technical-mono"] .logo-text::after{content:']'}
 body[data-variant="technical-mono"] .svc-card,body[data-variant="technical-mono"] .proc-step,body[data-variant="technical-mono"] .metric,body[data-variant="technical-mono"] .tcard,body[data-variant="technical-mono"] .vent-card,body[data-variant="technical-mono"] .about-card{box-shadow:none}
 body[data-variant="technical-mono"] .hero-orb{opacity:.5}
+/* structural: two-column hero — copy left, stats as a vertical terminal readout */
+body[data-variant="technical-mono"] .hero-content{display:grid;grid-template-columns:1.4fr .6fr;grid-template-areas:"pill stats" "title stats" "sub stats" "actions stats" "marquee marquee";column-gap:32px;align-items:start;max-width:1040px}
+body[data-variant="technical-mono"] .hero-pill{grid-area:pill}
+body[data-variant="technical-mono"] .hero-title{grid-area:title}
+body[data-variant="technical-mono"] .hero-sub{grid-area:sub}
+body[data-variant="technical-mono"] .hero-actions{grid-area:actions}
+body[data-variant="technical-mono"] .stats-row{grid-area:stats;flex-direction:column;width:100%;margin:0;background:var(--bg-2);border-radius:var(--radius)}
+body[data-variant="technical-mono"] .hs{width:100%;text-align:left;padding:16px 18px;border-bottom:1px solid var(--border)}
+body[data-variant="technical-mono"] .hs:last-child{border-bottom:none}
+body[data-variant="technical-mono"] .hs-sep{display:none}
+body[data-variant="technical-mono"] .hero-marquee{grid-area:marquee;max-width:none;margin-top:8px}
+@media(max-width:860px){body[data-variant="technical-mono"] .hero-content{grid-template-columns:1fr;grid-template-areas:"pill" "title" "sub" "actions" "stats" "marquee"}}
 
 /* dashboard — Sevenforce: product-UI flavoured, flat accent-bar cards */
 body[data-variant="dashboard"]{--radius:12px;--radius-sm:8px}
@@ -574,6 +586,16 @@ body[data-variant="dashboard"] .hero-pill::before{content:'';position:absolute;l
 body[data-variant="dashboard"] .svc-card,body[data-variant="dashboard"] .proc-step,body[data-variant="dashboard"] .vent-card{border-left:3px solid var(--primary);box-shadow:none}
 body[data-variant="dashboard"] .metric,body[data-variant="dashboard"] .about-card{border-left:3px solid var(--secondary);box-shadow:none}
 body[data-variant="dashboard"] .hero-orb,body[data-variant="dashboard"] .hero-grid{opacity:.5}
+/* structural: KPI-card stats grid, pill-group nav, bento services grid */
+body[data-variant="dashboard"] .stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border-radius:var(--radius);overflow:hidden;width:min(420px,100%)}
+body[data-variant="dashboard"] .hs{background:var(--bg-2)}
+body[data-variant="dashboard"] .hs-sep{display:none}
+body[data-variant="dashboard"] .nav-links{background:var(--bg-2);border:1px solid var(--border);border-radius:999px;padding:4px;gap:2px}
+body[data-variant="dashboard"] .nav-links a{border-radius:999px}
+@media(min-width:861px){
+  body[data-variant="dashboard"] .svc-grid{grid-template-columns:repeat(3,1fr)}
+  body[data-variant="dashboard"] .svc-card:first-child{grid-column:span 2}
+}
 
 /* editorial — AVPU / AVP Charitable Trust: serif, airy, left-aligned */
 body[data-variant="editorial"]{--radius:2px;--radius-sm:2px}
@@ -587,6 +609,17 @@ body[data-variant="editorial"] .hero-orb,body[data-variant="editorial"] #particl
 body[data-variant="editorial"] .sec-title{font-weight:600}
 body[data-variant="editorial"] .svc-card,body[data-variant="editorial"] .proc-step,body[data-variant="editorial"] .metric,body[data-variant="editorial"] .tcard,body[data-variant="editorial"] .vent-card,body[data-variant="editorial"] .about-card{box-shadow:none;border:none;border-bottom:1px solid var(--border-hi);border-radius:0}
 body[data-variant="editorial"] .faq{border:none;border-bottom:1px solid var(--border-hi);border-radius:0;background:none}
+/* structural: drop-cap intro, static tag row instead of a ticker, quote-wall testimonials, tighter footer */
+body[data-variant="editorial"] .hero-sub::first-letter{float:left;font-family:var(--font-display);font-size:52px;line-height:.82;font-weight:600;padding:2px 8px 0 0;color:var(--primary-l)}
+body[data-variant="editorial"] .hero-marquee{overflow:hidden;max-width:620px;-webkit-mask-image:linear-gradient(90deg,#000 82%,transparent);mask-image:linear-gradient(90deg,#000 82%,transparent)}
+body[data-variant="editorial"] .marquee-track{animation:none}
+body[data-variant="editorial"] .tcarousel{display:block}
+body[data-variant="editorial"] .tnav,body[data-variant="editorial"] .tdots{display:none}
+body[data-variant="editorial"] .tgrid{display:block;column-count:2;column-gap:24px;overflow:visible;padding:0}
+body[data-variant="editorial"] .tcard{display:inline-block;width:100%;break-inside:avoid;margin-bottom:20px}
+@media(max-width:760px){body[data-variant="editorial"] .tgrid{column-count:1}}
+body[data-variant="editorial"] .foot-grid{grid-template-columns:1fr 1fr;row-gap:32px}
+body[data-variant="editorial"] .foot-brand{grid-column:1/-1}
 
 /* warm-commerce — Decode Forest Pharmacy / AVP Emart: rounded, playful */
 body[data-variant="warm-commerce"]{--radius:26px;--radius-sm:16px}
@@ -595,6 +628,10 @@ body[data-variant="warm-commerce"] .hero-grid{display:none}
 body[data-variant="warm-commerce"] .hero-pill{border-radius:999px}
 body[data-variant="warm-commerce"] .btn{border-radius:999px}
 body[data-variant="warm-commerce"] .svc-card:hover,body[data-variant="warm-commerce"] .proc-step:hover,body[data-variant="warm-commerce"] .vent-card:hover{transform:translateY(-6px) scale(1.015)}
+/* structural: tilted floating stats card, denser catalog-style services grid */
+body[data-variant="warm-commerce"] .stats-row{transform:rotate(-2deg);box-shadow:var(--shadow-lg);transition:transform var(--t)}
+body[data-variant="warm-commerce"] .stats-row:hover{transform:rotate(0deg)}
+body[data-variant="warm-commerce"] .svc-grid{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
 
 /* industrial-blueprint — Breakdown Factor: technical drawing, angular */
 body[data-variant="industrial-blueprint"]{--radius:2px;--radius-sm:2px}
@@ -604,6 +641,21 @@ body[data-variant="industrial-blueprint"] .btn{border-radius:0;clip-path:polygon
 body[data-variant="industrial-blueprint"] .svc-card,body[data-variant="industrial-blueprint"] .proc-step,body[data-variant="industrial-blueprint"] .metric,body[data-variant="industrial-blueprint"] .tcard,body[data-variant="industrial-blueprint"] .vent-card,body[data-variant="industrial-blueprint"] .about-card{border-radius:0;border-color:var(--border-hi);box-shadow:none}
 body[data-variant="industrial-blueprint"] .hero-grid{opacity:.28;background-size:36px 36px}
 body[data-variant="industrial-blueprint"] .hero-orb{display:none}
+/* structural: corner tick-mark framing, connected horizontal process timeline */
+body[data-variant="industrial-blueprint"] .hero::before,body[data-variant="industrial-blueprint"] .hero::after{content:'';position:absolute;width:28px;height:28px;border-color:rgba(var(--primary-rgb),.5);z-index:2;pointer-events:none}
+body[data-variant="industrial-blueprint"] .hero::before{top:18px;left:18px;border-top:2px solid;border-left:2px solid}
+body[data-variant="industrial-blueprint"] .hero::after{bottom:18px;right:18px;border-bottom:2px solid;border-right:2px solid}
+body[data-variant="industrial-blueprint"] .proc-grid{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:0;padding-top:10px}
+body[data-variant="industrial-blueprint"] .proc-step{flex:1 1 0;min-width:200px;border:none;background:none;box-shadow:none;padding:32px 18px 0;position:relative}
+body[data-variant="industrial-blueprint"] .proc-step::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:rgba(var(--primary-rgb),.35);z-index:1}
+body[data-variant="industrial-blueprint"] .proc-ic{position:absolute;top:-16px;left:18px;width:32px;height:32px;font-size:13px;z-index:2}
+body[data-variant="industrial-blueprint"] .proc-num{top:2px;right:14px;font-size:22px}
+@media(max-width:760px){
+  body[data-variant="industrial-blueprint"] .proc-grid{flex-direction:column;overflow-x:visible}
+  body[data-variant="industrial-blueprint"] .proc-step::after{top:0;bottom:0;left:0;right:auto;width:2px;height:auto}
+  body[data-variant="industrial-blueprint"] .proc-step{padding:12px 18px 12px 42px}
+  body[data-variant="industrial-blueprint"] .proc-ic{top:8px;left:0}
+}
 
 /* tactical-alert — Rakshak AI: high-contrast command-center */
 body[data-variant="tactical-alert"]{--radius:4px;--radius-sm:4px}
@@ -612,6 +664,68 @@ body[data-variant="tactical-alert"] .hero-pill{border-radius:4px;animation:tacti
 body[data-variant="tactical-alert"] .svc-card,body[data-variant="tactical-alert"] .proc-step,body[data-variant="tactical-alert"] .metric,body[data-variant="tactical-alert"] .vent-card{border-left:3px solid var(--primary);border-radius:4px}
 @keyframes tacticalPulse{0%,100%{box-shadow:0 0 0 0 rgba(var(--primary-rgb),.35)}50%{box-shadow:0 0 0 8px rgba(var(--primary-rgb),0)}}
 @media(prefers-reduced-motion:reduce){body[data-variant="tactical-alert"] .hero-pill{animation:none}}
+/* structural: HUD corner-bracket framing, scanline hero, bento services grid */
+body[data-variant="tactical-alert"] .hero::before,body[data-variant="tactical-alert"] .hero::after{content:'';position:absolute;width:36px;height:36px;z-index:2;pointer-events:none;border-color:rgba(var(--primary-rgb),.6)}
+body[data-variant="tactical-alert"] .hero::before{top:20px;left:20px;border-top:2px solid;border-left:2px solid}
+body[data-variant="tactical-alert"] .hero::after{bottom:20px;right:20px;border-bottom:2px solid;border-right:2px solid}
+body[data-variant="tactical-alert"] .nav{border-bottom:1px solid rgba(var(--primary-rgb),.25)}
+body[data-variant="tactical-alert"] .hero-glow{background-image:
+  repeating-linear-gradient(0deg,rgba(var(--primary-rgb),.05) 0px,rgba(var(--primary-rgb),.05) 1px,transparent 1px,transparent 3px),
+  radial-gradient(60% 55% at 50% 0%,rgba(var(--primary-rgb),.28),transparent 70%),
+  radial-gradient(45% 45% at 85% 30%,rgba(var(--secondary-rgb),.18),transparent 70%),
+  radial-gradient(45% 45% at 12% 40%,rgba(var(--primary-rgb),.14),transparent 70%)}
+@media(min-width:861px){
+  body[data-variant="tactical-alert"] .svc-grid{grid-template-columns:repeat(3,1fr)}
+  body[data-variant="tactical-alert"] .svc-card:first-child{grid-column:span 2;grid-row:span 2;display:flex;flex-direction:column;justify-content:center}
+}
+
+/* compassion-serif — AVP Charitable Trust: warm split hero, floating impact card */
+body[data-variant="compassion-serif"]{--radius:22px;--radius-sm:14px}
+body[data-variant="compassion-serif"] .hero{text-align:left}
+body[data-variant="compassion-serif"] .hero-pill{border-radius:999px}
+body[data-variant="compassion-serif"] .btn{border-radius:999px}
+body[data-variant="compassion-serif"] .hero-orb{filter:blur(100px);opacity:.7}
+body[data-variant="compassion-serif"] .hero-content{display:grid;grid-template-columns:1.3fr .7fr;grid-template-areas:"pill stats" "title stats" "sub stats" "actions stats" "marquee marquee";column-gap:36px;align-items:start;max-width:1080px}
+body[data-variant="compassion-serif"] .hero-pill{grid-area:pill}
+body[data-variant="compassion-serif"] .hero-title{grid-area:title}
+body[data-variant="compassion-serif"] .hero-sub{grid-area:sub}
+body[data-variant="compassion-serif"] .hero-actions{grid-area:actions;justify-content:flex-start;margin-left:0}
+body[data-variant="compassion-serif"] .stats-row{grid-area:stats;flex-direction:column;width:100%;margin:8px 0 0;background:linear-gradient(160deg,var(--bg-2),var(--bg-1));border-radius:var(--radius);box-shadow:var(--shadow-lg);transform:rotate(-1.4deg)}
+body[data-variant="compassion-serif"] .hs{width:100%;text-align:left;padding:18px 22px;border-bottom:1px solid var(--border)}
+body[data-variant="compassion-serif"] .hs:last-child{border-bottom:none}
+body[data-variant="compassion-serif"] .hs-sep{display:none}
+body[data-variant="compassion-serif"] .hero-marquee{grid-area:marquee;max-width:none;margin-top:10px}
+@media(max-width:860px){
+  body[data-variant="compassion-serif"] .hero-content{grid-template-columns:1fr;grid-template-areas:"pill" "title" "sub" "actions" "stats" "marquee"}
+  body[data-variant="compassion-serif"] .stats-row{transform:none}
+}
+body[data-variant="compassion-serif"] .tcarousel{display:block}
+body[data-variant="compassion-serif"] .tnav,body[data-variant="compassion-serif"] .tdots{display:none}
+body[data-variant="compassion-serif"] .tgrid{display:block;column-count:2;column-gap:22px;overflow:visible;padding:0}
+body[data-variant="compassion-serif"] .tcard{display:inline-block;width:100%;break-inside:avoid;margin-bottom:20px}
+@media(max-width:760px){body[data-variant="compassion-serif"] .tgrid{column-count:1}}
+body[data-variant="compassion-serif"] .foot-grid{grid-template-columns:1fr 1fr;row-gap:32px}
+body[data-variant="compassion-serif"] .foot-brand{grid-column:1/-1}
+
+/* clinical-grid — Decode Forest Pharmacy: bordered panel hero, dense row-list services */
+body[data-variant="clinical-grid"]{--radius:10px;--radius-sm:6px}
+body[data-variant="clinical-grid"] .hero{text-align:left}
+body[data-variant="clinical-grid"] .hero-content{max-width:900px;margin:0;border:1px solid var(--border-hi);border-radius:var(--radius);padding:clamp(28px,4vw,48px);background:linear-gradient(160deg,var(--bg-2),var(--bg-1));position:relative}
+body[data-variant="clinical-grid"] .hero-content::before,body[data-variant="clinical-grid"] .hero-content::after{content:'+';position:absolute;font-size:22px;font-weight:800;color:rgba(var(--primary-rgb),.45);line-height:1}
+body[data-variant="clinical-grid"] .hero-content::before{top:14px;left:16px}
+body[data-variant="clinical-grid"] .hero-content::after{bottom:14px;right:16px}
+body[data-variant="clinical-grid"] .hero-actions,body[data-variant="clinical-grid"] .stats-row{justify-content:flex-start;margin-left:0}
+body[data-variant="clinical-grid"] .stats-row{background:var(--bg-3);border:1px solid var(--border)}
+body[data-variant="clinical-grid"] .hero-orb{opacity:.35}
+body[data-variant="clinical-grid"] .svc-grid{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+body[data-variant="clinical-grid"] .svc-card{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:18px 22px;border-radius:0;border:none;border-bottom:1px solid var(--border)}
+body[data-variant="clinical-grid"] .svc-card:last-child{border-bottom:none}
+body[data-variant="clinical-grid"] .svc-card:hover{transform:none;background:var(--bg-3)}
+body[data-variant="clinical-grid"] .svc-ic{width:40px;height:40px;font-size:16px;margin-bottom:0;flex-shrink:0}
+body[data-variant="clinical-grid"] .svc-card h4{flex:0 0 200px;margin-bottom:0}
+body[data-variant="clinical-grid"] .svc-card p{flex:1;min-width:220px;margin-bottom:0}
+body[data-variant="clinical-grid"] .svc-card .svc-tag{flex-shrink:0}
+@media(max-width:760px){body[data-variant="clinical-grid"] .svc-card h4{flex:1 1 100%}}
 
 /* Printable company overview (triggered by the "Download overview" button) */
 @media print{
