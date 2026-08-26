@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import {
-  LayoutDashboard,
   Bot,
   Search,
   TrendingUp,
@@ -15,7 +14,6 @@ import {
   Send,
   Loader2,
   Trash2,
-  ArrowLeft,
   Cpu,
   ExternalLink,
   Settings,
@@ -677,115 +675,104 @@ export default function AppPortal() {
 
   const panels = {
     dashboard: (
-      <div className="flex flex-col gap-8 animate-[fade_0.3s_ease]">
-        <div className="welcome bg-gradient-to-r from-[#ea580c]/15 to-[#10b981]/5 border border-white/5 rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#ea580c] to-[#10b981] flex items-center justify-center shrink-0 shadow-[0_6px_16px_rgba(234,88,12,0.3)]">
-              <ShoppingBag className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-xl md:text-2xl font-black text-white">Compare prices across platforms</h2>
-              <p className="text-sm text-[#9aa0b8] mt-1 max-w-[620px]">
-                Look up any phone, tablet, television, or headphone to trigger real-time price scans and see best-value suggestions.
-              </p>
-            </div>
+      <div className="flex flex-col gap-10 animate-[fade_0.3s_ease]">
+        {/* Hero — search-engine style: centered wordmark, one big pill search bar */}
+        <div className="flex flex-col items-center text-center gap-6 pt-2 pb-1 md:pt-8">
+          <div className="flex items-center gap-3">
+            <span className="w-12 h-12 md:w-14 md:h-14 rounded-2xl grid place-items-center text-white bg-gradient-to-br from-[#ea580c] to-[#10b981] shadow-[0_10px_30px_rgba(234,88,12,0.35)]">
+              <ShoppingBag className="h-6 w-6 md:h-7 md:w-7" />
+            </span>
+            <h1 className="text-2xl md:text-4xl font-black text-white tracking-tight">AVP <span className="text-[#fdba74]">Emart</span></h1>
           </div>
-        </div>
+          <p className="text-sm text-[#9aa0b8] max-w-[480px]">
+            Compare real-time prices across Amazon, Flipkart, Reliance Digital &amp; Snapdeal — one search, every platform.
+          </p>
 
-        {/* Quick stat strip */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-4 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#ea580c]/10 flex items-center justify-center shrink-0"><Search className="h-4 w-4 text-[#fdba74]" /></div>
-            <div>
-              <div className="text-lg font-black text-white">{searchHistory.length}</div>
-              <div className="text-[10px] uppercase font-bold text-[#5b5f78] tracking-wider">Searches</div>
-            </div>
-          </div>
-          <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-4 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#10b981]/10 flex items-center justify-center shrink-0"><Heart className="h-4 w-4 text-[#6ee7b7]" /></div>
-            <div>
-              <div className="text-lg font-black text-white">{wishlist.length}</div>
-              <div className="text-[10px] uppercase font-bold text-[#5b5f78] tracking-wider">Wishlist</div>
-            </div>
-          </div>
-          <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-4 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#ea580c]/10 flex items-center justify-center shrink-0"><Bell className="h-4 w-4 text-[#fdba74]" /></div>
-            <div>
-              <div className="text-lg font-black text-white">{alerts.length}</div>
-              <div className="text-[10px] uppercase font-bold text-[#5b5f78] tracking-wider">Price Alarms</div>
-            </div>
-          </div>
-          <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-4 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#10b981]/10 flex items-center justify-center shrink-0"><Package className="h-4 w-4 text-[#6ee7b7]" /></div>
-            <div>
-              <div className="text-lg font-black text-white">{platforms.length || 4}</div>
-              <div className="text-[10px] uppercase font-bold text-[#5b5f78] tracking-wider">Platforms</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Comparison search input */}
-        <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-6 flex flex-col gap-2.5 max-w-[620px]">
-          <label className="text-[10px] uppercase font-bold text-[#9aa0b8] tracking-wider">Quick Price Search</label>
-          <div className="flex gap-3 items-center">
-            <div className="flex-1">
+          <div className="w-full max-w-[640px] flex gap-3 items-center">
+            <div className="flex-1 relative">
+              <Search className="h-4 w-4 text-[#5b5f78] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={compareQuery}
                 onChange={(e) => setCompareQuery(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleCompare()}
                 placeholder="Search e.g. iPhone 15, OnePlus Nord..."
-                className="w-full bg-[#12121e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#ea580c]"
+                className="w-full bg-[#0d0f0e] border border-white/10 rounded-full pl-11 pr-4 py-4 text-sm text-white focus:outline-none focus:border-[#ea580c] shadow-[0_8px_24px_rgba(0,0,0,0.25)]"
               />
             </div>
-            <button onClick={() => handleCompare()} className="btn bg-gradient-to-r from-[#ea580c] to-[#10b981] text-white px-6 py-3 rounded-xl cursor-pointer inline-flex items-center gap-2 font-semibold text-sm shrink-0">
+            <button onClick={() => handleCompare()} className="btn bg-gradient-to-r from-[#ea580c] to-[#10b981] text-white px-6 py-4 rounded-full cursor-pointer inline-flex items-center gap-2 font-semibold text-sm shrink-0 shadow-[0_8px_24px_rgba(234,88,12,0.3)]">
               {compareLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4" /> Compare</>}
             </button>
           </div>
-        </div>
 
-        {/* Browse by category — Smartprix-style homepage browsing */}
-        <div className="flex flex-col gap-3">
-          <h4 className="font-extrabold text-[#eeeef8] text-sm uppercase tracking-wider">Browse by category</h4>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+          {/* Browse by category — Smartprix-style homepage browsing */}
+          <div className="flex flex-wrap justify-center gap-2.5 max-w-[720px]">
             {CATEGORY_CHIPS.map(c => {
               const Icon = CATEGORY_ICON[c.category] || Box;
               return (
                 <button
                   key={c.label}
                   onClick={() => handleCompare(c.query)}
-                  className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-4 flex flex-col items-center gap-2 hover:border-[#ea580c]/50 hover:-translate-y-0.5 transition-all cursor-pointer"
+                  className="bg-[#0d0f0e] border border-white/5 rounded-full pl-3 pr-4 py-2 flex items-center gap-2 hover:border-[#ea580c]/50 hover:-translate-y-0.5 transition-all cursor-pointer"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ea580c]/20 to-[#10b981]/10 border border-white/10 flex items-center justify-center">
-                    <Icon className="h-5 w-5 text-[#fdba74]" />
-                  </div>
-                  <span className="text-[11px] font-bold text-[#eeeef8]">{c.label}</span>
+                  <Icon className="h-3.5 w-3.5 text-[#fdba74]" />
+                  <span className="text-xs font-bold text-[#eeeef8]">{c.label}</span>
                 </button>
               );
             })}
           </div>
-        </div>
 
-        {/* Trending searches — real counts from this app's own search history */}
-        {trending.length > 0 && (
-          <div className="flex flex-col gap-3">
-            <h4 className="font-extrabold text-[#eeeef8] text-sm uppercase tracking-wider flex items-center gap-1.5">
-              <TrendingUp className="h-4 w-4 text-[#fdba74]" /> Trending searches
-            </h4>
-            <div className="flex flex-wrap gap-2.5">
+          {/* Trending searches — real counts from this app's own search history */}
+          {trending.length > 0 && (
+            <div className="flex flex-wrap justify-center items-center gap-2.5 max-w-[720px]">
+              <span className="text-[10px] uppercase font-bold text-[#5b5f78] tracking-wider flex items-center gap-1">
+                <TrendingUp className="h-3.5 w-3.5" /> Trending:
+              </span>
               {trending.map(t => (
                 <button
                   key={t.query}
                   onClick={() => handleCompare(t.query)}
-                  className="bg-[#0d0f0e] border border-white/5 rounded-full pl-4 pr-3 py-2 flex items-center gap-2 hover:border-[#ea580c]/50 transition-all cursor-pointer"
+                  className="bg-white/[0.03] border border-white/5 rounded-full pl-3 pr-2 py-1.5 flex items-center gap-1.5 hover:border-[#ea580c]/50 transition-all cursor-pointer"
                 >
-                  <span className="text-xs font-semibold text-[#eeeef8]">{t.query}</span>
-                  <span className="text-[10px] font-bold text-[#5b5f78] bg-white/5 rounded-full px-1.5 py-0.5">{t.count}</span>
+                  <span className="text-[11px] font-semibold text-[#eeeef8]">{t.query}</span>
+                  <span className="text-[9px] font-bold text-[#5b5f78] bg-white/5 rounded-full px-1.5">{t.count}</span>
                 </button>
               ))}
             </div>
+          )}
+        </div>
+
+        {/* Slim stat strip — de-emphasized, below the fold like a footer summary */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-[720px] mx-auto w-full">
+          <div className="bg-[#0d0f0e] border border-white/5 rounded-xl p-3 flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-[#ea580c]/10 flex items-center justify-center shrink-0"><Search className="h-3.5 w-3.5 text-[#fdba74]" /></div>
+            <div>
+              <div className="text-sm font-black text-white">{searchHistory.length}</div>
+              <div className="text-[9px] uppercase font-bold text-[#5b5f78] tracking-wider">Searches</div>
+            </div>
           </div>
-        )}
+          <div className="bg-[#0d0f0e] border border-white/5 rounded-xl p-3 flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-[#10b981]/10 flex items-center justify-center shrink-0"><Heart className="h-3.5 w-3.5 text-[#6ee7b7]" /></div>
+            <div>
+              <div className="text-sm font-black text-white">{wishlist.length}</div>
+              <div className="text-[9px] uppercase font-bold text-[#5b5f78] tracking-wider">Wishlist</div>
+            </div>
+          </div>
+          <div className="bg-[#0d0f0e] border border-white/5 rounded-xl p-3 flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-[#ea580c]/10 flex items-center justify-center shrink-0"><Bell className="h-3.5 w-3.5 text-[#fdba74]" /></div>
+            <div>
+              <div className="text-sm font-black text-white">{alerts.length}</div>
+              <div className="text-[9px] uppercase font-bold text-[#5b5f78] tracking-wider">Price Alarms</div>
+            </div>
+          </div>
+          <div className="bg-[#0d0f0e] border border-white/5 rounded-xl p-3 flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-[#10b981]/10 flex items-center justify-center shrink-0"><Package className="h-3.5 w-3.5 text-[#6ee7b7]" /></div>
+            <div>
+              <div className="text-sm font-black text-white">{platforms.length || 4}</div>
+              <div className="text-[9px] uppercase font-bold text-[#5b5f78] tracking-wider">Platforms</div>
+            </div>
+          </div>
+        </div>
 
         {/* History of searches */}
         <div className="flex flex-col gap-3">
@@ -1601,8 +1588,17 @@ export default function AppPortal() {
     )
   };
 
+  const NAV_ITEMS: { key: PanelType; label: string; icon: React.ComponentType<{ className?: string }>; badge?: number }[] = [
+    { key: "comparator", label: "Comparator", icon: Search },
+    { key: "assistant", label: "Copilot", icon: Bot },
+    { key: "reviews", label: "Reviews", icon: MessageSquare },
+    { key: "trends", label: "Trends", icon: TrendingUp },
+    { key: "wishlist", label: "Wishlist", icon: Heart, badge: wishlist.length },
+    { key: "alerts", label: "Alerts", icon: Bell, badge: alerts.length },
+  ];
+
   return (
-    <div className="app-shell flex min-h-screen">
+    <div className="app-shell flex flex-col min-h-screen">
       {authOpen && (
         <div
           className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center p-5"
@@ -1659,98 +1655,94 @@ export default function AppPortal() {
           </div>
         </div>
       )}
-      {/* Sidebar */}
-      <aside className={`sidebar w-[255px] shrink-0 bg-[#0d0f0e] border-r border-white/5 flex flex-col p-[18px_14px] fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky ${
-        sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-      }`}>
-        <div className="flex justify-between items-center mb-6">
-          <Link href="/" className="side-logo flex items-center gap-3 font-extrabold text-[15px] tracking-tight">
-            <span className="logo-icon w-[34px] h-[34px] rounded-[10px] grid place-items-center text-white bg-gradient-to-br from-[#ea580c] to-[#10b981] shadow-[0_6px_16px_rgba(234,88,12,0.3)]">
-              <ShoppingCartIcon className="h-4 w-4" />
-            </span>
-            <span className="text-white">AVP <span className="text-[#fdba74]">Emart</span></span>
-          </Link>
-          <button onClick={() => setSidebarOpen(false)} className="md:hidden text-white/50 hover:text-white transition-all cursor-pointer">
-            <X className="h-5 w-5" />
-          </button>
-        </div>
+      {/* Top navbar — search-engine style: one slim bar, no persistent sidebar */}
+      <header className="topbar sticky top-0 bg-[#060609]/95 backdrop-blur-md border-b border-white/5 z-40 flex items-center gap-4 px-4 md:px-8 py-3">
+        <button
+          onClick={() => setActivePanel("dashboard")}
+          className="side-logo flex items-center gap-2.5 font-extrabold text-[15px] tracking-tight border-none bg-transparent cursor-pointer shrink-0"
+        >
+          <span className="logo-icon w-[30px] h-[30px] rounded-[9px] grid place-items-center text-white bg-gradient-to-br from-[#ea580c] to-[#10b981] shadow-[0_6px_16px_rgba(234,88,12,0.3)]">
+            <ShoppingCartIcon className="h-3.5 w-3.5" />
+          </span>
+          <span className="text-white hidden sm:inline">AVP <span className="text-[#fdba74]">Emart</span></span>
+        </button>
 
-        <nav className="side-nav flex flex-col gap-1.5 flex-1">
-          <button onClick={() => { setActivePanel("dashboard"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all ${activePanel === "dashboard" ? "bg-[#ea580c]/15 text-[#fdba74]" : "text-[#8890aa] hover:bg-[#12121e] hover:text-white"}`}>
-            <LayoutDashboard className="h-4 w-4" /> Dashboard
-          </button>
-          <button onClick={() => { setActivePanel("comparator"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all ${activePanel === "comparator" ? "bg-[#ea580c]/15 text-[#fdba74]" : "text-[#8890aa] hover:bg-[#12121e] hover:text-white"}`}>
-            <Search className="h-4 w-4" /> Price Comparator
-          </button>
-          <button onClick={() => { setActivePanel("assistant"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all ${activePanel === "assistant" ? "bg-[#ea580c]/15 text-[#fdba74]" : "text-[#8890aa] hover:bg-[#12121e] hover:text-white"}`}>
-            <Bot className="h-4 w-4" /> Shopping Copilot
-          </button>
-          <button onClick={() => { setActivePanel("reviews"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all ${activePanel === "reviews" ? "bg-[#ea580c]/15 text-[#fdba74]" : "text-[#8890aa] hover:bg-[#12121e] hover:text-white"}`}>
-            <MessageSquare className="h-4 w-4" /> Review Intelligence
-          </button>
-          <button onClick={() => { setActivePanel("trends"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all ${activePanel === "trends" ? "bg-[#ea580c]/15 text-[#fdba74]" : "text-[#8890aa] hover:bg-[#12121e] hover:text-white"}`}>
-            <TrendingUp className="h-4 w-4" /> Price Trends
-          </button>
-          <button onClick={() => { setActivePanel("wishlist"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all ${activePanel === "wishlist" ? "bg-[#ea580c]/15 text-[#fdba74]" : "text-[#8890aa] hover:bg-[#12121e] hover:text-white"}`}>
-            <Heart className="h-4 w-4" /> Wishlist ({wishlist.length})
-          </button>
-          <button onClick={() => { setActivePanel("alerts"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all ${activePanel === "alerts" ? "bg-[#ea580c]/15 text-[#fdba74]" : "text-[#8890aa] hover:bg-[#12121e] hover:text-white"}`}>
-            <Bell className="h-4 w-4" /> Price Alarms ({alerts.length})
-          </button>
+        <nav className="hidden md:flex items-center gap-1 mx-auto">
+          {NAV_ITEMS.map(item => (
+            <button
+              key={item.key}
+              onClick={() => setActivePanel(item.key)}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold border-none cursor-pointer transition-all ${
+                activePanel === item.key ? "bg-[#ea580c]/15 text-[#fdba74]" : "text-[#8890aa] hover:bg-[#12121e] hover:text-white"
+              }`}
+            >
+              <item.icon className="h-3.5 w-3.5" /> {item.label}
+              {!!item.badge && <span className="text-[9px] font-bold bg-white/10 rounded-full px-1.5">{item.badge}</span>}
+            </button>
+          ))}
         </nav>
 
-        <div className="side-foot flex flex-col gap-3 pt-4 border-t border-white/5 mt-auto"><button onClick={() => setSettingsOpen(true)} className="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all text-[#8890aa] hover:bg-[#12121e] hover:text-white"> <Settings className="h-4 w-4" /> API Settings </button>
-          <div className={`sysbadge flex items-center gap-2 text-[10.5px] font-mono rounded-lg border p-2.5 transition-all duration-300 ${
+        <div className="flex items-center gap-2 ml-auto md:ml-0">
+          <Link href="/" className="hidden lg:inline-flex text-[11px] font-semibold text-[#8890aa] hover:text-white transition-colors px-2">
+            ← Site
+          </Link>
+          <button onClick={() => setSettingsOpen(true)} title="API Settings" className="hidden lg:flex w-9 h-9 rounded-lg bg-[#12121e] border border-white/10 items-center justify-center text-[#8890aa] hover:text-white transition-all cursor-pointer">
+            <Settings className="h-4 w-4" />
+          </button>
+          <span className={`hidden lg:inline-flex items-center gap-1.5 text-[10.5px] font-mono rounded-lg border px-2.5 py-2 transition-all duration-300 ${
             llmEnabled ? "text-[#ea580c] border-[#ea580c]/30 bg-[#ea580c]/5" : "text-[#8890aa] border-white/5 bg-[#12121e]"
           }`}>
             <i className={`fas fa-circle ${llmEnabled ? "text-[#ea580c]" : "text-[#5b5f78]"} text-[6px]`}></i>
-            {llmEnabled ? "LLM Ready" : "Offline Mode"}
-          </div>
-          <Link href="/" className="side-back flex items-center gap-2 text-xs text-[#8890aa] hover:text-white py-1 transition-all">
-            <ArrowLeft className="h-3.5 w-3.5" /> Back to landing page
+            {llmEnabled ? providerName : "Offline Mode"}
+          </span>
+          {authUser ? (
+            <span className="hidden sm:flex items-center gap-2 text-[11px] text-[#8890aa]">
+              <span className="font-semibold text-white">{authUser.name || authUser.email}</span>
+              <button onClick={handleSignOut} className="px-2.5 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 text-[#8890aa] hover:text-white transition-colors cursor-pointer">
+                Sign out
+              </button>
+            </span>
+          ) : (
+            <button
+              onClick={() => { setAuthOpen(true); setAuthError(""); }}
+              className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-[#ea580c]/15 border border-[#ea580c]/30 text-[#fdba74] hover:bg-[#ea580c]/25 transition-colors cursor-pointer"
+            >
+              Sign in
+            </button>
+          )}
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="md:hidden w-9 h-9 rounded-lg bg-[#12121e] border border-white/10 flex items-center justify-center text-white cursor-pointer">
+            {sidebarOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile nav dropdown */}
+      {sidebarOpen && (
+        <div className="md:hidden bg-[#0d0f0e] border-b border-white/5 px-4 py-3 flex flex-col gap-1 sticky top-[57px] z-30">
+          {NAV_ITEMS.map(item => (
+            <button
+              key={item.key}
+              onClick={() => { setActivePanel(item.key); setSidebarOpen(false); }}
+              className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-left text-xs font-semibold border-none cursor-pointer transition-all ${
+                activePanel === item.key ? "bg-[#ea580c]/15 text-[#fdba74]" : "text-[#8890aa] hover:bg-[#12121e] hover:text-white"
+              }`}
+            >
+              <item.icon className="h-4 w-4" /> {item.label}
+              {!!item.badge && <span className="text-[9px] font-bold bg-white/10 rounded-full px-1.5">{item.badge}</span>}
+            </button>
+          ))}
+          <button onClick={() => { setSettingsOpen(true); setSidebarOpen(false); }} className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-left text-xs font-semibold border-none cursor-pointer text-[#8890aa] hover:bg-[#12121e] hover:text-white">
+            <Settings className="h-4 w-4" /> API Settings
+          </button>
+          <Link href="/" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-left text-xs font-semibold text-[#8890aa] hover:bg-[#12121e] hover:text-white">
+            ← Back to landing page
           </Link>
         </div>
-      </aside>
+      )}
 
-      {/* Main Panel Area */}
-      <div className="main flex-1 flex flex-col min-w-0">
-        <header className="topbar sticky top-0 bg-[#060609]/95 backdrop-blur-md border-b border-white/5 z-20 flex items-center gap-4 px-6 md:px-12 py-4">
-          <button onClick={() => setSidebarOpen(true)} className="md:hidden w-10 h-10 rounded-lg bg-[#12121e] border border-white/10 flex items-center justify-center text-white cursor-pointer">
-            <Menu className="h-5 w-5" />
-          </button>
-          <div>
-            <h1 className="text-lg font-black text-white capitalize">{activePanel}</h1>
-            <p className="text-xs text-[#9aa0b8] mt-0.5">AI Smart Shopping Portal</p>
-          </div>
-          <div className="ml-auto flex items-center gap-2">
-            {authUser ? (
-              <span className="flex items-center gap-2 text-[11px] text-[#8890aa]">
-                <span className="hidden sm:inline font-semibold text-white">{authUser.name || authUser.email}</span>
-                <button onClick={handleSignOut} className="px-2.5 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 text-[#8890aa] hover:text-white transition-colors cursor-pointer">
-                  Sign out
-                </button>
-              </span>
-            ) : (
-              <button
-                onClick={() => { setAuthOpen(true); setAuthError(""); }}
-                className="px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-[#ea580c]/15 border border-[#ea580c]/30 text-[#fdba74] hover:bg-[#ea580c]/25 transition-colors cursor-pointer"
-              >
-                Sign in for your lists
-              </button>
-            )}
-          </div>
-          <div className="hidden md:block">
-            <span className="prov-chip font-mono text-[11px] font-semibold text-[#fdba74] bg-[#ea580c]/10 border border-[#ea580c]/25 px-3 py-1.5 rounded-full">
-              <Cpu className="h-3 w-3 inline mr-1.5" />
-              {llmEnabled ? providerName : "Offline AI Engine"} · 4 Platforms compared
-            </span>
-          </div>
-        </header>
-
-        <main className="panels p-6 md:p-12 max-w-[1180px] w-full flex-1">
-          {panels[activePanel]}
-        </main>
-      </div>
+      <main className="panels p-6 md:p-12 max-w-[1180px] w-full mx-auto flex-1">
+        {panels[activePanel]}
+      </main>
 
       {settingsOpen && (
         <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
