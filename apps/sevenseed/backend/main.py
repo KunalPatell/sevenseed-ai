@@ -40,7 +40,7 @@ except:
 VENTURES = [
     {"name": "Comonk Technology", "sector": "AI Career Intelligence", "stage": "Live", "color": "indigo",
      "ai_stack": "LangGraph multi-agent, Groq LLaMA 3.3 70B, ChromaDB RAG, FastAPI",
-     "url": "https://comonk-ai.onrender.com",
+     "url": "/comonk-ai/",
      "description": "Enterprise AI career platform — multi-agent counselors, ATS optimizer, mock interviews."},
     {"name": "Alpaben Vipulbhai Patel University", "sector": "AI Education", "stage": "Building", "color": "blue",
      "ai_stack": "Groq LLaMA, Adaptive ML, RAG Embeddings, NLP Assessment, AI Agent",

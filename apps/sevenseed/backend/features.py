@@ -3,9 +3,14 @@
 from __future__ import annotations
 import os, json, datetime, hashlib, hmac, secrets, sqlite3, html as _html
 from itsdangerous import URLSafeTimedSerializer
-from fastapi import APIRouter, Header
+from fastapi import APIRouter, Header, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
+
+try:
+    from app.ratelimit import check_rate_limit
+except Exception:
+    check_rate_limit = None
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 try:
@@ -223,7 +228,18 @@ def list_ideas(email: str = ""):
         return {"ideas": [dict(x) for x in c.execute(q, (email,) if email else ()).fetchall()]}
 
 @router.get("/api/analytics/overview")
-def analytics(): return _overview()
+def analytics(x_admin_key: str = Header(default=""), authorization: str = Header(default="")):
+    admin_key = os.environ.get("ADMIN_KEY", "")
+    is_admin = (admin_key and x_admin_key == admin_key) or _verify(authorization.replace("Bearer ", "").strip() if authorization else None)
+    if not is_admin:
+        # Return sanitized summary stats instead of raw schema tables and internal production counts
+        return {
+            "platform": "Sevenseed AI Venture Studio",
+            "active_ventures": 8,
+            "status": "operational",
+            "mode": "production"
+        }
+    return _overview()
 @router.post("/api/export/report")
 def export_report(r: ReportReq): return HTMLResponse(_report_html(r.title, r.subtitle, r.sections))
 
@@ -435,7 +451,11 @@ def _brevo_email(to, subject, body, to_name=""):
         return {"sent": False, "error": str(e)}
 
 @router.post("/api/notify/email")
-def notify_email(r: EmailReq):
+def notify_email(r: EmailReq, x_admin_key: str = Header(default=""), authorization: str = Header(default="")):
+    admin_key = os.environ.get("ADMIN_KEY", "")
+    is_admin = (admin_key and x_admin_key == admin_key) or _verify(authorization.replace("Bearer ", "").strip() if authorization else None)
+    if not is_admin:
+        raise HTTPException(status_code=403, detail="Unauthorized notification relay. Admin authentication required.")
     return _brevo_email(r.to, r.subject, r.body, r.name)
 
 
@@ -1047,10 +1067,30 @@ class _OwlReq(BaseModel):
 
 
 @router.post("/api/agent/run")
-def owl_run(r: _OwlReq):
+def owl_run(
+    r: _OwlReq,
+    request: Request,
+    authorization: str = Header(default=""),
+    x_groq_api_key: str = Header(default=""),
+    x_openai_api_key: str = Header(default=""),
+    x_gemini_api_key: str = Header(default=""),
+    x_admin_key: str = Header(default="")
+):
     msg = (r.message or "").strip()
     if not msg:
         return {"error": "Tell Owl what you need done."}
+
+    # Verify authorization: Admin key, JWT session, or personal BYOK key
+    admin_key = os.environ.get("ADMIN_KEY", "")
+    has_admin = bool(admin_key and x_admin_key == admin_key)
+    has_user = bool(_verify(authorization.replace("Bearer ", "").strip() if authorization else None))
+    has_byok = bool(x_groq_api_key or x_openai_api_key or x_gemini_api_key)
+
+    if not (has_admin or has_user or has_byok):
+        # Apply strict rate limiting to prevent automated quota depletion
+        if check_rate_limit:
+            check_rate_limit(request, bucket="agent_run", limit=5, window_s=3600, global_limit=50)
+
     g = _owl_graph()
     if g:
         try:
@@ -1165,5 +1205,15 @@ boot();
 
 
 @router.get("/dashboard")
-def owl_dashboard():
+def owl_dashboard(x_admin_key: str = Header(default=""), authorization: str = Header(default="")):
+    """Admin dashboard — gated by X-Admin-Key or a valid user session token."""
+    admin_key = os.environ.get("ADMIN_KEY", "")
+    if admin_key:
+        has_admin = x_admin_key == admin_key
+        has_user = bool(_verify(authorization.replace("Bearer ", "").strip() if authorization else None))
+        if not (has_admin or has_user):
+            raise HTTPException(
+                status_code=403,
+                detail="Dashboard access requires authentication. Set X-Admin-Key header or sign in."
+            )
     return HTMLResponse(_OWL_DASHBOARD_HTML)

@@ -66,13 +66,13 @@ if (ham && navLinks) {
   });
 }
 
-// Contact form → opens the visitor's email app (no backend required)
+// Contact form → submits asynchronously to backend API (/api/contact) with mailto fallback
 var cform = document.getElementById('contactForm');
 if (cform) {
-  cform.addEventListener('submit', function(e){
+  cform.addEventListener('submit', async function(e){
     e.preventDefault();
-    var to = cform.getAttribute('data-email');
-    var company = cform.getAttribute('data-company') || '';
+    var to = cform.getAttribute('data-email') || 'hello@sevenseed.in';
+    var company = cform.getAttribute('data-company') || 'Sevenseed';
     var name = (document.getElementById('cf-name').value || '').trim();
     var from = (document.getElementById('cf-email').value || '').trim();
     var orgEl = document.getElementById('cf-org');
@@ -84,15 +84,75 @@ if (cform) {
     var subj = (document.getElementById('cf-subject').value || '').trim() || ('Enquiry for ' + company);
     if (type) subj = '[' + type + '] ' + subj;
     var msg = (document.getElementById('cf-msg').value || '').trim();
-    var body = 'Name: ' + name + '\nEmail: ' + from +
-      (type ? '\nEnquiry type: ' + type : '') +
-      (org ? '\nCompany: ' + org : '') +
-      (size ? '\nTeam size: ' + size : '') +
-      '\n\n' + msg;
     var note = document.getElementById('cf-note');
-    window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-    if (note) note.textContent = 'Opening your email app to send this message…';
-    toast('Opening your email app to send this message…');
+    var sbtn = cform.querySelector('button[type="submit"]');
+    var originalBtnHtml = sbtn ? sbtn.innerHTML : 'Send message';
+
+    if (!name || !from || !msg) {
+      if (note) {
+        note.style.color = '#ef4444';
+        note.textContent = 'Please fill out your name, email, and message.';
+      }
+      return;
+    }
+
+    if (sbtn) {
+      sbtn.disabled = true;
+      sbtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sending…';
+    }
+    if (note) {
+      note.style.color = 'var(--text-muted, #94a3b8)';
+      note.textContent = 'Connecting to studio server…';
+    }
+
+    var fullMsg = (type ? 'Enquiry Type: ' + type + '\n' : '') +
+      (org ? 'Company: ' + org + '\n' : '') +
+      (size ? 'Team Size: ' + size + '\n' : '') +
+      (org || type || size ? '\n' : '') + msg;
+
+    try {
+      var res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name,
+          email: from,
+          subject: subj,
+          message: fullMsg
+        })
+      });
+
+      var data = await res.json().catch(function(){ return {}; });
+
+      if (res.ok && data.success !== false) {
+        if (note) {
+          note.style.color = '#10b981';
+          note.innerHTML = '<i class="fas fa-circle-check"></i> Thank you! Your message has been saved and forwarded to our team.';
+        }
+        if (typeof toast === 'function') toast('Message submitted successfully!');
+        cform.reset();
+      } else {
+        throw new Error(data.detail || data.error || 'Server error');
+      }
+    } catch (err) {
+      console.warn('Contact API submission failed, falling back to mailto:', err);
+      var body = 'Name: ' + name + '\nEmail: ' + from +
+        (type ? '\nEnquiry type: ' + type : '') +
+        (org ? '\nCompany: ' + org : '') +
+        (size ? '\nTeam size: ' + size : '') +
+        '\n\n' + msg;
+      window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+      if (note) {
+        note.style.color = '#38bdf8';
+        note.textContent = 'Opening your email app to send this message directly…';
+      }
+      if (typeof toast === 'function') toast('Opening your email app to send this message…');
+    } finally {
+      if (sbtn) {
+        sbtn.disabled = false;
+        sbtn.innerHTML = originalBtnHtml;
+      }
+    }
   });
 }
 
@@ -300,16 +360,16 @@ document.querySelectorAll('.btn').forEach(function(btn){
     }
 
     // Shared domain localStorage verification
-    var token = localStorage.getItem('sevenforce_token');
-    var isDemo = !token || token === 'demo_token';
+    var token = localStorage.getItem('sevenforce_token') || localStorage.getItem('auth_token') || '';
     var hasKeys = localStorage.getItem('user_groq_key') || 
                   localStorage.getItem('user_gemini_key') || 
                   localStorage.getItem('user_openai_key') || 
+                  localStorage.getItem('user_mistral_key') ||
                   localStorage.getItem('user_serpapi_key') || 
-                  localStorage.getItem('user_huggingface_key') || 
-                  localStorage.getItem('user_mistral_key');
+                  localStorage.getItem('user_huggingface_key');
+    var isDemo = !token && !hasKeys;
 
-    if (isDemo || !hasKeys) {
+    if (isDemo) {
       // Offline/Demo Preview Fallback
       setTimeout(function(){
         var data;
@@ -331,10 +391,12 @@ document.querySelectorAll('.btn').forEach(function(btn){
           data = { success: true, mode: "Static Preview Mock Output" };
         }
         
-        output.textContent = '💡 DEMO MODE (Preview Output):\\n' + JSON.stringify(data, null, 2) + '\\n\\n💡 To run this live, sign in and add your API Keys at Sevenforce: https://kunalpatell.github.io/sevenseed/sevenforce/index.html';
+        output.textContent = '💡 DEMO MODE (Preview Output):\n' + JSON.stringify(data, null, 2) + '\n\n💡 To run this live with real LLM inference, configure your free API Keys in BYOK or visit Sevenforce: /sevenforce/';
         btn.disabled = false;
         btn.innerHTML = btnText;
       }, 700);
+      return;
+    }}, 700);
       return;
     }
 

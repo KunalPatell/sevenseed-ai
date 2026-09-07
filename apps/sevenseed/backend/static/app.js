@@ -66,21 +66,76 @@ if (ham && navLinks) {
   });
 }
 
-// Contact form → opens the visitor's email app (no backend required)
+// Contact form → submits asynchronously to backend API (/api/contact) with mailto fallback
 var cform = document.getElementById('contactForm');
 if (cform) {
-  cform.addEventListener('submit', function(e){
+  cform.addEventListener('submit', async function(e){
     e.preventDefault();
-    var to = cform.getAttribute('data-email');
-    var company = cform.getAttribute('data-company') || '';
+    var to = cform.getAttribute('data-email') || 'hello@sevenseed.in';
+    var company = cform.getAttribute('data-company') || 'Sevenseed';
     var name = (document.getElementById('cf-name').value || '').trim();
     var from = (document.getElementById('cf-email').value || '').trim();
     var subj = (document.getElementById('cf-subject').value || '').trim() || ('Enquiry for ' + company);
     var msg = (document.getElementById('cf-msg').value || '').trim();
-    var body = 'Name: ' + name + '\nEmail: ' + from + '\n\n' + msg;
     var note = document.getElementById('cf-note');
-    window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-    if (note) note.textContent = 'Opening your email app to send this message…';
+    var sbtn = cform.querySelector('button[type="submit"]');
+    var originalBtnHtml = sbtn ? sbtn.innerHTML : 'Send message';
+
+    if (!name || !from || !msg) {
+      if (note) {
+        note.style.color = '#ef4444';
+        note.textContent = 'Please fill out your name, email, and message.';
+      }
+      return;
+    }
+
+    if (sbtn) {
+      sbtn.disabled = true;
+      sbtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sending…';
+    }
+    if (note) {
+      note.style.color = 'var(--text-muted, #94a3b8)';
+      note.textContent = 'Connecting to studio server…';
+    }
+
+    try {
+      var res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name,
+          email: from,
+          subject: subj,
+          message: msg
+        })
+      });
+
+      var data = await res.json().catch(function(){ return {}; });
+
+      if (res.ok && data.success !== false) {
+        if (note) {
+          note.style.color = '#10b981';
+          note.innerHTML = '<i class="fas fa-circle-check"></i> Thank you! Your message has been saved and forwarded to our partners.';
+        }
+        cform.reset();
+      } else {
+        throw new Error(data.detail || data.error || 'Server returned an error');
+      }
+    } catch (err) {
+      // Fallback: If server/API is unreachable or in static preview, open email client
+      console.warn('Contact API submission failed, falling back to mailto:', err);
+      var body = 'Name: ' + name + '\nEmail: ' + from + '\n\n' + msg;
+      window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+      if (note) {
+        note.style.color = '#38bdf8';
+        note.textContent = 'Opening your email app to send this message directly…';
+      }
+    } finally {
+      if (sbtn) {
+        sbtn.disabled = false;
+        sbtn.innerHTML = originalBtnHtml;
+      }
+    }
   });
 }
 
@@ -291,7 +346,7 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
           data = { success: true, mode: "Static Preview Mock Output" };
         }
         
-        output.textContent = '💡 DEMO MODE (Preview Output):\\n' + JSON.stringify(data, null, 2) + '\\n\\n💡 To run this live, sign in and add your API Keys at Sevenforce: https://kunalpatell.github.io/sevenseed/sevenforce/index.html';
+        output.textContent = '💡 DEMO MODE (Preview Output):\\n' + JSON.stringify(data, null, 2) + '\\n\\n💡 To run live AI inference, add your free API keys at /sevenforce/ (BYOK — Bring Your Own Key).';
         btn.disabled = false;
         btn.innerHTML = btnText;
       }, 700);
@@ -472,14 +527,40 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
 
   if (saveByokBtn) {
     saveByokBtn.addEventListener('click', function(){
-      if (groqIn && groqIn.value.trim()) localStorage.setItem('user_groq_key', groqIn.value.trim());
-      if (openaiIn && openaiIn.value.trim()) localStorage.setItem('user_openai_key', openaiIn.value.trim());
-      if (geminiIn && geminiIn.value.trim()) localStorage.setItem('user_gemini_key', geminiIn.value.trim());
+      var gVal = groqIn ? groqIn.value.trim() : '';
+      var oVal = openaiIn ? openaiIn.value.trim() : '';
+      var gmVal = geminiIn ? geminiIn.value.trim() : '';
+
+      if (gVal) localStorage.setItem('user_groq_key', gVal);
+      else localStorage.removeItem('user_groq_key');
+
+      if (oVal) localStorage.setItem('user_openai_key', oVal);
+      else localStorage.removeItem('user_openai_key');
+
+      if (gmVal) localStorage.setItem('user_gemini_key', gmVal);
+      else localStorage.removeItem('user_gemini_key');
       
       if (statusEl) {
-        statusEl.innerHTML = '<i class="fas fa-circle-check"></i> Keys saved locally! Testing Groq LLaMA 3.3 latency: <strong style="color:var(--primary-l)">42ms</strong>';
+        statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving & benchmarking latency…';
       }
-      setTimeout(closeBYOK, 1800);
+
+      var tStart = performance.now();
+      fetch('/api/health')
+        .then(function(){
+          var latency = Math.round(performance.now() - tStart);
+          if (statusEl) {
+            statusEl.innerHTML = '<i class="fas fa-circle-check" style="color:#10b981"></i> Keys saved locally! Verified server latency: <strong style="color:var(--primary-l)">' + latency + 'ms</strong>';
+          }
+        })
+        .catch(function(){
+          var latency = Math.round(performance.now() - tStart);
+          if (statusEl) {
+            statusEl.innerHTML = '<i class="fas fa-circle-check" style="color:#10b981"></i> Keys saved locally! Client latency: <strong style="color:var(--primary-l)">' + latency + 'ms</strong>';
+          }
+        })
+        .finally(function(){
+          setTimeout(closeBYOK, 1800);
+        });
     });
   }
 
@@ -502,14 +583,14 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
   var cmdList = document.getElementById('cmdList');
 
   var COMMANDS = [
-    { title: 'Comonk Technology', desc: 'AI Career Intelligence & STAR Interviews', url: 'comonk/index.html', icon: 'fa-brain', badge: 'Venture' },
-    { title: 'Sevenforce AI', desc: 'Hire 7 AI Employees & Workforce', url: 'sevenforce/index.html', icon: 'fa-users-gear', badge: 'Venture' },
-    { title: 'Alpaben Vipulbhai Patel University', desc: 'AI-Native Higher Education', url: 'avpu/index.html', icon: 'fa-graduation-cap', badge: 'Venture' },
-    { title: 'Decode Forest Pharmacy', desc: 'Prescription OCR & Drug Interaction AI', url: 'decode-forest-pharmacy/index.html', icon: 'fa-mortar-pestle', badge: 'Venture' },
-    { title: 'Breakdown Factor Construction', desc: 'IS 456 Civil Engineering & BOQ Cost', url: 'breakdown-factor/index.html', icon: 'fa-helmet-safety', badge: 'Venture' },
-    { title: 'AVP Charitable Trust', desc: 'Section 80G Impact & NGO Tracking', url: 'avp-charitable-trust/index.html', icon: 'fa-hand-holding-heart', badge: 'Venture' },
-    { title: 'AVP Emart', desc: '4-Store Live Price Arbitrage', url: 'avp-emart/index.html', icon: 'fa-cart-shopping', badge: 'Venture' },
-    { title: 'Rakshak AI Safety', desc: '5-in-1 Public Safety & Automated FIR', url: 'rakshak-ai/index.html', icon: 'fa-shield-halved', badge: 'Venture' },
+    { title: 'Comonk Technology', desc: 'AI Career Intelligence & STAR Interviews', url: '/comonk-ai/', icon: 'fa-brain', badge: 'Venture' },
+    { title: 'Sevenforce AI', desc: 'Hire 7 AI Employees & Workforce', url: '/sevenforce/', icon: 'fa-users-gear', badge: 'Venture' },
+    { title: 'Alpaben Vipulbhai Patel University', desc: 'AI-Native Higher Education', url: '/avpu/', icon: 'fa-graduation-cap', badge: 'Venture' },
+    { title: 'Decode Forest Pharmacy', desc: 'Prescription OCR & Drug Interaction AI', url: '/pharmacy/', icon: 'fa-mortar-pestle', badge: 'Venture' },
+    { title: 'Breakdown Factor Construction', desc: 'IS 456 Civil Engineering & BOQ Cost', url: '/breakdown/', icon: 'fa-helmet-safety', badge: 'Venture' },
+    { title: 'AVP Charitable Trust', desc: 'Section 80G Impact & NGO Tracking', url: '/trust/', icon: 'fa-hand-holding-heart', badge: 'Venture' },
+    { title: 'AVP Emart', desc: '4-Store Live Price Arbitrage', url: '/avp-emart/', icon: 'fa-cart-shopping', badge: 'Venture' },
+    { title: 'Rakshak AI Safety', desc: '5-in-1 Public Safety & Automated FIR', url: '/rakshak-ai/', icon: 'fa-shield-halved', badge: 'Venture' },
     { title: 'Configure BYOK Keys', desc: 'Bring Your Own Groq/OpenAI/Gemini Keys', action: openBYOK, icon: 'fa-key', badge: 'Setting' },
     { title: 'AI Workforce Roster', desc: 'Jump to Maya, Buddy, Cassie, Dexter...', url: '#workforce', icon: 'fa-robot', badge: 'Section' },
     { title: 'Workflow Recipes', desc: 'Jump to Multi-Agent Orchestration', url: '#workflows', icon: 'fa-diagram-project', badge: 'Section' }
@@ -761,10 +842,12 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
   function executePrompt(promptText){
     if (!promptText || !promptText.trim()) return;
 
+    var cleaned = promptText.trim();
+
     // Append User Message
     var userMsg = document.createElement('div');
     userMsg.className = 'ws-msg user';
-    userMsg.innerHTML = '<div class="ws-bubble">' + promptText.trim() + '</div>';
+    userMsg.innerHTML = '<div class="ws-bubble">' + cleaned + '</div>';
     chatBody.appendChild(userMsg);
     if (wsInput) wsInput.value = '';
     chatBody.scrollTop = chatBody.scrollHeight;
@@ -774,28 +857,92 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
     asstMsg.className = 'ws-msg assistant';
     var bubble = document.createElement('div');
     bubble.className = 'ws-bubble';
-    bubble.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="color:var(--primary-l)"></i> Thinking...';
+    bubble.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="color:var(--primary-l)"></i> Thinking…';
     asstMsg.appendChild(bubble);
     chatBody.appendChild(asstMsg);
     chatBody.scrollTop = chatBody.scrollHeight;
 
     var agent = AGENTS_DATA[currentAgentKey] || AGENTS_DATA['maya'];
-    var fullText = agent.responses['default'];
 
-    // Stream Output simulation
+    // Check for user BYOK keys or auth token
+    var groqKey = localStorage.getItem('user_groq_key') || '';
+    var openaiKey = localStorage.getItem('user_openai_key') || '';
+    var geminiKey = localStorage.getItem('user_gemini_key') || '';
+    var authToken = localStorage.getItem('sevenforce_token') || localStorage.getItem('auth_token') || '';
+
+    if (groqKey || openaiKey || geminiKey || authToken) {
+      var hdrs = { 'Content-Type': 'application/json' };
+      if (groqKey) hdrs['X-Groq-API-Key'] = groqKey;
+      if (openaiKey) hdrs['X-OpenAI-API-Key'] = openaiKey;
+      if (geminiKey) hdrs['X-Gemini-API-Key'] = geminiKey;
+      if (authToken) hdrs['Authorization'] = 'Bearer ' + authToken;
+
+      fetch('/api/agent/run', {
+        method: 'POST',
+        headers: hdrs,
+        body: JSON.stringify({ message: '[' + agent.name + '] ' + cleaned })
+      })
+      .then(function(res){ return res.json(); })
+      .then(function(data){
+        var reply = data.reply || data.result || data.output || (typeof data === 'string' ? data : JSON.stringify(data, null, 2));
+        var badge = '<div style="margin-bottom:8px;"><span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;font-size:11px;border-radius:12px;background:rgba(16,185,129,0.15);color:#10b981;font-weight:600;"><i class="fas fa-bolt"></i> Live LLM Inference</span></div>';
+        bubble.innerHTML = badge + reply.replace(/\n/g, '<br>');
+        chatBody.scrollTop = chatBody.scrollHeight;
+      })
+      .catch(function(){
+        streamDynamicFallback(cleaned, agent, bubble);
+      });
+      return;
+    }
+
+    streamDynamicFallback(cleaned, agent, bubble);
+  }
+
+  function streamDynamicFallback(promptText, agent, bubble){
+    var topic = promptText.length > 50 ? promptText.substring(0, 50) + '…' : promptText;
+    var dynamicResponse = '';
+
+    if (currentAgentKey === 'maya') {
+      dynamicResponse = "🎯 **Maya's Strategic Growth Analysis for:** \"" + topic + "\"\n\n" +
+        "1. **Opportunity Angle:** Evaluated high-converting programmatic search intent & viral distribution paths.\n" +
+        "2. **Channel Strategy:** Launching tailored content campaign on LinkedIn & X targeting key decision-makers.\n" +
+        "3. **Deliverable:** 3 SEO pillar outlines prepared with conversion-optimized schema markup.\n\n" +
+        "💡 *Tip: Add your free Groq API key in BYOK to generate custom long-form content in real-time.*";
+    } else if (currentAgentKey === 'buddy') {
+      dynamicResponse = "💼 **Buddy's B2B Outreach Campaign for:** \"" + topic + "\"\n\n" +
+        "**Subject Line:** Optimizing workflow execution for {{Company}}\n\n" +
+        "Hi {{FirstName}},\n\nSaw your priority on " + topic + ". Sevenseed's autonomous multi-agent stack deploys targeted operational pipelines in under 14 days.\n\nOpen to reviewing our benchmark architecture this week?";
+    } else if (currentAgentKey === 'cassie') {
+      dynamicResponse = "🌟 **Cassie's Client Success Blueprint for:** \"" + topic + "\"\n\n" +
+        "1. **Triage Priority:** P1 high-impact resolution mapped to client SLA requirements.\n" +
+        "2. **Action Protocol:** Automated response dispatched with zero-downtime milestone tracking.\n" +
+        "3. **Retention Impact:** Expected CSAT improvement: +28% based on automated follow-through.";
+    } else if (currentAgentKey === 'dexter') {
+      dynamicResponse = "🛠️ **Dexter's Technical Architecture for:** \"" + topic + "\"\n\n" +
+        "```python\n# Microservice route for " + topic.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() + "\n@app.post('/api/pipeline/execute')\nasync def run_pipeline(payload: dict):\n    return {'status': 'processed', 'target': '" + topic + "', 'latency_ms': 18.4}\n```\n" +
+        "✅ Architecture reviewed: Docker containerized, stateless, Neon Postgres ready.";
+    } else {
+      dynamicResponse = "⚡ **Echo's Workflow Orchestration for:** \"" + topic + "\"\n\n" +
+        "```json\n{\n  \"task\": \"" + topic + "\",\n  \"status\": \"ORCHESTRATED_200_OK\",\n  \"agents_dispatched\": [\"maya.growth\", \"dexter.infra\"],\n  \"latency_ms\": 24.8\n}\n```";
+    }
+
+    var badge = '<div style="margin-bottom:8px;"><span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;font-size:11px;border-radius:12px;background:rgba(56,189,248,0.15);color:#38bdf8;font-weight:600;"><i class="fas fa-microchip"></i> Interactive Simulation · Add BYOK for Live LLM</span></div>';
+    
     setTimeout(function(){
-      bubble.textContent = '';
+      bubble.innerHTML = badge + '<div class="typing-target"></div>';
+      var target = bubble.querySelector('.typing-target');
       var idx = 0;
       var timer = setInterval(function(){
-        if (idx < fullText.length) {
-          bubble.textContent += fullText.charAt(idx);
+        if (idx < dynamicResponse.length) {
+          var char = dynamicResponse.charAt(idx);
+          target.innerHTML += (char === '\n' ? '<br>' : char);
           idx++;
           chatBody.scrollTop = chatBody.scrollHeight;
         } else {
           clearInterval(timer);
         }
-      }, 12);
-    }, 350);
+      }, 10);
+    }, 300);
   }
 
   agentList.querySelectorAll('.ws-agent-btn').forEach(function(btn){

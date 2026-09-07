@@ -19,6 +19,10 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     # Use SQLite fallback
     DATABASE_URL = f"sqlite:///{DEFAULT_SQLITE_PATH}"
+else:
+    # Standardize PostgreSQL URL schema for SQLAlchemy (Render/Neon/Supabase use postgres://)
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 # Configure engine connect args (SQLite needs check_same_thread=False)
 connect_args = {}
