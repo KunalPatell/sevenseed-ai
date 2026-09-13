@@ -9,9 +9,13 @@ import { Footer } from "@/components/Footer";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { GlowCard } from "@/components/GlowCard";
 import { AIDemoWidget } from "@/components/AIDemoWidget";
+import { PriceMatrixBoard } from "@/components/PriceMatrixBoard";
+import { SpecCompareStudio } from "@/components/SpecCompareStudio";
+import { PriceTrendForecaster } from "@/components/PriceTrendForecaster";
 import { ValOrb } from "@/components/ValOrb";
 import { CustomCursor } from "@/components/CustomCursor";
 import { TextScramble } from "@/components/TextScramble";
+import { Hero3D } from "@/components/Hero3D";
 import { Tilt } from "@/components/Tilt";
 import { submitContact, type ContactStatus } from "@/lib/contact";
 import {
@@ -250,6 +254,7 @@ export default function Home() {
       <header className="relative min-h-screen flex items-center overflow-hidden bg-[#04040c] pt-[var(--nav-h)]">
         <div className="star-field" />
         <div className="space-grid" />
+        <Hero3D primary="#6366f1" secondary="#a5b4fc" geometry="dodecahedron" className="opacity-90" />
 
         <div className="relative z-10 w-full max-w-[var(--maxw)] mx-auto px-6 md:px-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="flex flex-col gap-7">
@@ -290,13 +295,13 @@ export default function Home() {
               transition={{ duration:0.6, delay:0.26 }}
               className="flex flex-wrap gap-4"
             >
-              <Link href="/app/" className="btn-primary">
+              <a href="#matrix-board" className="btn-primary">
                 <ShoppingCart className="h-4 w-4" />
-                Launch Price Matrix
-              </Link>
-              <a href="#how-it-works" className="btn-ghost">
+                Launch 4-Store Matrix
+              </a>
+              <a href="#spec-studio" className="btn-ghost">
                 <TrendingUp className="h-4 w-4" />
-                See 30-day forecast
+                Head-to-Head Specs
               </a>
             </motion.div>
 
@@ -347,6 +352,24 @@ export default function Home() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* 4-STORE LIVE COMPARISON MATRIX BOARD */}
+      <section className="max-w-[var(--maxw)] mx-auto py-24 px-6 md:px-12" id="matrix-board">
+        <RevealOnScroll>
+          <div className="text-center mb-14">
+            <span className="eyebrow center mb-4">LIVE 4-STORE COMPARISON</span>
+            <h2 className="text-3xl md:text-5xl font-black text-white mt-4">
+              Amazon · Flipkart · Reliance · Snapdeal
+            </h2>
+            <p className="text-[#a5b4fc] mt-4 max-w-[560px] mx-auto text-sm md:text-base opacity-80 leading-relaxed">
+              Real-time multi-retailer intelligence. We score every listing with 40% price weighting, 40% verified ratings, and 20% review volume.
+            </p>
+          </div>
+        </RevealOnScroll>
+        <RevealOnScroll delay={0.1}>
+          <PriceMatrixBoard />
+        </RevealOnScroll>
       </section>
 
       {/* MEET VAL */}
@@ -427,6 +450,44 @@ export default function Home() {
               </Tilt>
             </RevealOnScroll>
           ))}
+        </div>
+      </section>
+
+      {/* HEAD-TO-HEAD AI SPEC COMPARE STUDIO */}
+      <section className="max-w-[var(--maxw)] mx-auto py-20 px-6 md:px-12" id="spec-studio">
+        <RevealOnScroll>
+          <div className="text-center mb-12">
+            <span className="eyebrow center mb-4">HEAD-TO-HEAD BENCHMARK</span>
+            <h2 className="text-3xl md:text-5xl font-black text-white mt-3">
+              AI Spec Compare Studio
+            </h2>
+            <p className="text-[#a5b4fc] mt-3 max-w-[520px] mx-auto text-sm opacity-80">
+              Pit any two products head-to-head. Val breaks down display, chipset, battery, and build specs to declare the objective winner.
+            </p>
+          </div>
+        </RevealOnScroll>
+        <RevealOnScroll delay={0.1}>
+          <SpecCompareStudio />
+        </RevealOnScroll>
+      </section>
+
+      {/* 30-DAY PREDICTIVE PRICE RADAR */}
+      <section className="bg-[#08081a] py-20 px-6 md:px-12 border-y border-[rgba(99,102,241,0.1)]" id="trends">
+        <div className="max-w-[var(--maxw)] mx-auto">
+          <RevealOnScroll>
+            <div className="text-center mb-12">
+              <span className="eyebrow center mb-4">PRICE INTELLIGENCE</span>
+              <h2 className="text-3xl md:text-5xl font-black text-white mt-3">
+                30-Day Predictive Trend Radar
+              </h2>
+              <p className="text-[#a5b4fc] mt-3 max-w-[500px] mx-auto text-sm opacity-80">
+                Track historical 12-week price movements, identify the bottom of price drops, and get Val's purchase timing signals.
+              </p>
+            </div>
+          </RevealOnScroll>
+          <RevealOnScroll delay={0.1}>
+            <PriceTrendForecaster />
+          </RevealOnScroll>
         </div>
       </section>
 

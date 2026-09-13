@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { AuthModal } from "@/components/AuthModal";
+import { Hero3D } from "@/components/Hero3D";
 import { PersonaAvatar } from "@/components/PersonaAvatar";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
@@ -136,6 +137,7 @@ export default function LandingPage() {
       <section className="relative overflow-hidden pt-20 pb-24 px-6">
         <div className="mesh-bg" />
         <div className="hero-grid" />
+        <Hero3D primary="#8b5cf6" secondary="#c4b5fd" geometry="octahedron" className="opacity-90" />
         <div className="relative max-w-[1180px] mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

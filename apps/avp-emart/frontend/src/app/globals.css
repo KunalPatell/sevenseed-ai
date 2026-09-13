@@ -256,3 +256,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .val-ring, .val-core, .marquee-track, .float-anim { animation: none; }
 }
+
+/* ── Scrollbar utility ──────────────────────────────────── */
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }

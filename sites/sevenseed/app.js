@@ -66,13 +66,13 @@ if (ham && navLinks) {
   });
 }
 
-// Contact form → submits asynchronously to backend API (/api/contact) with mailto fallback
+// Contact form → opens the visitor's email app (no backend required)
 var cform = document.getElementById('contactForm');
 if (cform) {
-  cform.addEventListener('submit', async function(e){
+  cform.addEventListener('submit', function(e){
     e.preventDefault();
-    var to = cform.getAttribute('data-email') || 'hello@sevenseed.in';
-    var company = cform.getAttribute('data-company') || 'Sevenseed';
+    var to = cform.getAttribute('data-email');
+    var company = cform.getAttribute('data-company') || '';
     var name = (document.getElementById('cf-name').value || '').trim();
     var from = (document.getElementById('cf-email').value || '').trim();
     var orgEl = document.getElementById('cf-org');
@@ -84,75 +84,15 @@ if (cform) {
     var subj = (document.getElementById('cf-subject').value || '').trim() || ('Enquiry for ' + company);
     if (type) subj = '[' + type + '] ' + subj;
     var msg = (document.getElementById('cf-msg').value || '').trim();
+    var body = 'Name: ' + name + '\nEmail: ' + from +
+      (type ? '\nEnquiry type: ' + type : '') +
+      (org ? '\nCompany: ' + org : '') +
+      (size ? '\nTeam size: ' + size : '') +
+      '\n\n' + msg;
     var note = document.getElementById('cf-note');
-    var sbtn = cform.querySelector('button[type="submit"]');
-    var originalBtnHtml = sbtn ? sbtn.innerHTML : 'Send message';
-
-    if (!name || !from || !msg) {
-      if (note) {
-        note.style.color = '#ef4444';
-        note.textContent = 'Please fill out your name, email, and message.';
-      }
-      return;
-    }
-
-    if (sbtn) {
-      sbtn.disabled = true;
-      sbtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sending…';
-    }
-    if (note) {
-      note.style.color = 'var(--text-muted, #94a3b8)';
-      note.textContent = 'Connecting to studio server…';
-    }
-
-    var fullMsg = (type ? 'Enquiry Type: ' + type + '\n' : '') +
-      (org ? 'Company: ' + org + '\n' : '') +
-      (size ? 'Team Size: ' + size + '\n' : '') +
-      (org || type || size ? '\n' : '') + msg;
-
-    try {
-      var res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: name,
-          email: from,
-          subject: subj,
-          message: fullMsg
-        })
-      });
-
-      var data = await res.json().catch(function(){ return {}; });
-
-      if (res.ok && data.success !== false) {
-        if (note) {
-          note.style.color = '#10b981';
-          note.innerHTML = '<i class="fas fa-circle-check"></i> Thank you! Your message has been saved and forwarded to our team.';
-        }
-        if (typeof toast === 'function') toast('Message submitted successfully!');
-        cform.reset();
-      } else {
-        throw new Error(data.detail || data.error || 'Server error');
-      }
-    } catch (err) {
-      console.warn('Contact API submission failed, falling back to mailto:', err);
-      var body = 'Name: ' + name + '\nEmail: ' + from +
-        (type ? '\nEnquiry type: ' + type : '') +
-        (org ? '\nCompany: ' + org : '') +
-        (size ? '\nTeam size: ' + size : '') +
-        '\n\n' + msg;
-      window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-      if (note) {
-        note.style.color = '#38bdf8';
-        note.textContent = 'Opening your email app to send this message directly…';
-      }
-      if (typeof toast === 'function') toast('Opening your email app to send this message…');
-    } finally {
-      if (sbtn) {
-        sbtn.disabled = false;
-        sbtn.innerHTML = originalBtnHtml;
-      }
-    }
+    window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+    if (note) note.textContent = 'Opening your email app to send this message…';
+    toast('Opening your email app to send this message…');
   });
 }
 
@@ -279,10 +219,10 @@ document.querySelectorAll('.btn').forEach(function(btn){
   });
 });
 
-// Hero particle network
+// Hero particle network (2D fallback when Three.js is unavailable)
 (function(){
   var c = document.getElementById('particles');
-  if (!c) return;
+  if (!c || typeof THREE !== 'undefined') return;
   var ctx = c.getContext('2d');
   var w, h, parts;
   var rgb = (getComputedStyle(document.documentElement).getPropertyValue('--primary-rgb') || '124,58,237').trim();
@@ -360,16 +300,16 @@ document.querySelectorAll('.btn').forEach(function(btn){
     }
 
     // Shared domain localStorage verification
-    var token = localStorage.getItem('sevenforce_token') || localStorage.getItem('auth_token') || '';
+    var token = localStorage.getItem('sevenforce_token');
+    var isDemo = !token || token === 'demo_token';
     var hasKeys = localStorage.getItem('user_groq_key') || 
                   localStorage.getItem('user_gemini_key') || 
                   localStorage.getItem('user_openai_key') || 
-                  localStorage.getItem('user_mistral_key') ||
                   localStorage.getItem('user_serpapi_key') || 
-                  localStorage.getItem('user_huggingface_key');
-    var isDemo = !token && !hasKeys;
+                  localStorage.getItem('user_huggingface_key') || 
+                  localStorage.getItem('user_mistral_key');
 
-    if (isDemo) {
+    if (isDemo || !hasKeys) {
       // Offline/Demo Preview Fallback
       setTimeout(function(){
         var data;
@@ -391,12 +331,10 @@ document.querySelectorAll('.btn').forEach(function(btn){
           data = { success: true, mode: "Static Preview Mock Output" };
         }
         
-        output.textContent = '💡 DEMO MODE (Preview Output):\n' + JSON.stringify(data, null, 2) + '\n\n💡 To run this live with real LLM inference, configure your free API Keys in BYOK or visit Sevenforce: /sevenforce/';
+        output.textContent = '💡 DEMO MODE (Preview Output):\\n' + JSON.stringify(data, null, 2) + '\\n\\n💡 To run this live, sign in and add your API Keys at Sevenforce: https://kunalpatell.github.io/sevenseed/sevenforce/index.html';
         btn.disabled = false;
         btn.innerHTML = btnText;
       }, 700);
-      return;
-    }}, 700);
       return;
     }
 
@@ -734,5 +672,312 @@ function toast(msg, type){
     var typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '');
     if (e.key === '?' && !typing){ e.preventDefault(); overlay.classList.contains('open') ? close() : open(); return; }
     if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+  });
+})();
+
+// ── 3D Render & 3D Animation Engine (Three.js WebGL) ───────────────────
+(function initHero3D(){
+  var canvas = document.getElementById('particles');
+  if (!canvas || typeof THREE === 'undefined') return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var container = canvas.parentElement;
+  if (!container) return;
+
+  var width = container.clientWidth || window.innerWidth;
+  var height = container.clientHeight || window.innerHeight;
+
+  var style = getComputedStyle(document.documentElement);
+  var primaryHex = (style.getPropertyValue('--primary') || '#6366f1').trim();
+  var secondaryHex = (style.getPropertyValue('--secondary') || '#a855f7').trim();
+  var primaryColor = new THREE.Color(primaryHex);
+  var secondaryColor = new THREE.Color(secondaryHex);
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+  camera.position.set(0, 0, 8.5);
+
+  var renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    alpha: true,
+    antialias: true,
+    powerPreference: 'high-performance'
+  });
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+  var variant = document.body.getAttribute('data-variant') || 'bold-centered';
+
+  var coreGroup = new THREE.Group();
+  scene.add(coreGroup);
+
+  var isDesktop = window.innerWidth > 960;
+  var targetCorePos = isDesktop ? new THREE.Vector3(2.4, 0.2, -1.2) : new THREE.Vector3(0, 0.8, -2.2);
+  coreGroup.position.copy(targetCorePos);
+
+  var geom;
+  if (variant === 'tactical-alert') {
+    geom = new THREE.DodecahedronGeometry(1.35, 0);
+  } else if (variant === 'technical-mono') {
+    geom = new THREE.TorusKnotGeometry(0.9, 0.28, 128, 16);
+  } else if (variant === 'clinical-grid') {
+    geom = new THREE.OctahedronGeometry(1.4, 1);
+  } else if (variant === 'warm-commerce') {
+    geom = new THREE.OctahedronGeometry(1.35, 0);
+  } else if (variant === 'compassion-serif') {
+    geom = new THREE.IcosahedronGeometry(1.35, 0);
+  } else if (variant === 'industrial-blueprint') {
+    geom = new THREE.BoxGeometry(1.8, 1.8, 1.8);
+  } else {
+    geom = new THREE.IcosahedronGeometry(1.35, 1);
+  }
+
+  var coreMat = new THREE.MeshStandardMaterial({
+    color: primaryColor,
+    emissive: primaryColor,
+    emissiveIntensity: 0.45,
+    roughness: 0.25,
+    metalness: 0.8,
+    wireframe: false,
+    transparent: true,
+    opacity: 0.85
+  });
+  var coreMesh = new THREE.Mesh(geom, coreMat);
+  coreGroup.add(coreMesh);
+
+  var wireMat = new THREE.MeshBasicMaterial({
+    color: secondaryColor,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.4
+  });
+  var wireMesh = new THREE.Mesh(geom.clone(), wireMat);
+  wireMesh.scale.set(1.08, 1.08, 1.08);
+  coreGroup.add(wireMesh);
+
+  // Concentric tilted orbital energy rings
+  var ringGeom1 = new THREE.TorusGeometry(1.95, 0.022, 16, 100);
+  var ringMat1 = new THREE.MeshBasicMaterial({ color: primaryColor, transparent: true, opacity: 0.65 });
+  var ring1 = new THREE.Mesh(ringGeom1, ringMat1);
+  ring1.rotation.x = Math.PI / 3;
+  ring1.rotation.y = 0.25;
+  coreGroup.add(ring1);
+
+  var ringGeom2 = new THREE.TorusGeometry(2.35, 0.016, 16, 100);
+  var ringMat2 = new THREE.MeshBasicMaterial({ color: secondaryColor, transparent: true, opacity: 0.5 });
+  var ring2 = new THREE.Mesh(ringGeom2, ringMat2);
+  ring2.rotation.x = -Math.PI / 4;
+  ring2.rotation.y = -0.35;
+  coreGroup.add(ring2);
+
+  // Orbiting venture satellites
+  var satelliteGroup = new THREE.Group();
+  coreGroup.add(satelliteGroup);
+  var numSatellites = 7;
+  var satellites = [];
+  var satGeom = new THREE.SphereGeometry(0.085, 16, 16);
+  var ventureColors = [
+    0x6366f1, 0x06b6d4, 0x38bdf8, 0x10b981, 0xf59e0b, 0xfb7185, 0xef4444
+  ];
+
+  for (var s = 0; s < numSatellites; s++) {
+    var satMat = new THREE.MeshBasicMaterial({
+      color: ventureColors[s % ventureColors.length],
+      transparent: true,
+      opacity: 0.95
+    });
+    var satMesh = new THREE.Mesh(satGeom, satMat);
+    var angle = (s / numSatellites) * Math.PI * 2;
+    satMesh.userData = { angle: angle, radius: 2.15, speed: 0.009 + (s % 3) * 0.003, ring: s % 2 };
+    satelliteGroup.add(satMesh);
+    satellites.push(satMesh);
+  }
+
+  // Cosmic 3D particle nebula
+  var particleCount = 240;
+  var particleGeom = new THREE.BufferGeometry();
+  var particlePositions = new Float32Array(particleCount * 3);
+  var particleColors = new Float32Array(particleCount * 3);
+
+  for (var p = 0; p < particleCount; p++) {
+    var pr = 2.4 + Math.random() * 6.5;
+    var pTheta = Math.random() * Math.PI * 2;
+    var pPhi = Math.acos(2 * Math.random() - 1);
+    particlePositions[p * 3] = targetCorePos.x + pr * Math.sin(pPhi) * Math.cos(pTheta);
+    particlePositions[p * 3 + 1] = targetCorePos.y + pr * Math.sin(pPhi) * Math.sin(pTheta);
+    particlePositions[p * 3 + 2] = targetCorePos.z + pr * Math.cos(pPhi);
+
+    var c = Math.random() > 0.5 ? secondaryColor : primaryColor;
+    particleColors[p * 3] = c.r;
+    particleColors[p * 3 + 1] = c.g;
+    particleColors[p * 3 + 2] = c.b;
+  }
+  particleGeom.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+  particleGeom.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
+  var particleMat = new THREE.PointsMaterial({
+    size: 0.045,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.75,
+    blending: THREE.AdditiveBlending
+  });
+  var particleSystem = new THREE.Points(particleGeom, particleMat);
+  scene.add(particleSystem);
+
+  // Lighting
+  var ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+  scene.add(ambientLight);
+
+  var dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+  dirLight.position.set(5, 8, 5);
+  scene.add(dirLight);
+
+  var pointLight1 = new THREE.PointLight(primaryColor, 2.5, 12);
+  pointLight1.position.set(targetCorePos.x + 2, targetCorePos.y + 2, targetCorePos.z + 3);
+  scene.add(pointLight1);
+
+  var pointLight2 = new THREE.PointLight(secondaryColor, 2.0, 10);
+  pointLight2.position.set(targetCorePos.x - 2, targetCorePos.y - 2, targetCorePos.z + 2);
+  scene.add(pointLight2);
+
+  // Smooth mouse tracking
+  var mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
+  window.addEventListener('mousemove', function(e) {
+    mouse.targetX = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.targetY = -(e.clientY / window.innerHeight) * 2 + 1;
+  }, { passive: true });
+
+  // Speed boost on hover
+  var speedMultiplier = 1.0;
+  var targetSpeedMultiplier = 1.0;
+  document.querySelectorAll('.hero-actions a, .btn-primary, .pillar, .hs, .ai-chip').forEach(function(el) {
+    el.addEventListener('mouseenter', function() { targetSpeedMultiplier = 2.8; coreMat.emissiveIntensity = 0.85; });
+    el.addEventListener('mouseleave', function() { targetSpeedMultiplier = 1.0; coreMat.emissiveIntensity = 0.45; });
+  });
+
+  // Intersection Observer
+  var isVisible = true;
+  var heroObserver = new IntersectionObserver(function(entries) {
+    isVisible = entries[0].isIntersecting;
+  }, { threshold: 0.05 });
+  heroObserver.observe(container);
+
+  // Resize
+  window.addEventListener('resize', function() {
+    var nw = container.clientWidth || window.innerWidth;
+    var nh = container.clientHeight || window.innerHeight;
+    camera.aspect = nw / nh;
+    camera.updateProjectionMatrix();
+    renderer.setSize(nw, nh);
+
+    var desk = window.innerWidth > 960;
+    targetCorePos.set(desk ? 2.4 : 0, desk ? 0.2 : 0.8, desk ? -1.2 : -2.2);
+    coreGroup.position.copy(targetCorePos);
+  }, { passive: true });
+
+  // Animation Loop
+  var clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    if (!isVisible) return;
+
+    var delta = clock.getDelta();
+    var time = clock.getElapsedTime();
+
+    mouse.x += (mouse.targetX - mouse.x) * 0.05;
+    mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+    speedMultiplier += (targetSpeedMultiplier - speedMultiplier) * 0.08;
+
+    coreMesh.rotation.x += 0.4 * delta * speedMultiplier;
+    coreMesh.rotation.y += 0.6 * delta * speedMultiplier;
+    wireMesh.rotation.x -= 0.3 * delta * speedMultiplier;
+    wireMesh.rotation.y -= 0.5 * delta * speedMultiplier;
+
+    coreGroup.position.y = targetCorePos.y + Math.sin(time * 1.4) * 0.12;
+
+    ring1.rotation.z += 0.5 * delta * speedMultiplier;
+    ring2.rotation.z -= 0.4 * delta * speedMultiplier;
+
+    for (var i = 0; i < satellites.length; i++) {
+      var sat = satellites[i];
+      sat.userData.angle += sat.userData.speed * speedMultiplier;
+      var r = sat.userData.radius;
+      if (sat.userData.ring === 0) {
+        sat.position.x = Math.cos(sat.userData.angle) * r;
+        sat.position.y = Math.sin(sat.userData.angle) * r * Math.sin(Math.PI / 3);
+        sat.position.z = Math.sin(sat.userData.angle) * r * Math.cos(Math.PI / 3);
+      } else {
+        sat.position.x = Math.cos(sat.userData.angle) * r * 1.1;
+        sat.position.y = -Math.sin(sat.userData.angle) * r * 1.1 * Math.sin(Math.PI / 4);
+        sat.position.z = Math.sin(sat.userData.angle) * r * 1.1 * Math.cos(Math.PI / 4);
+      }
+    }
+
+    particleSystem.rotation.y = time * 0.03;
+    particleSystem.rotation.x = Math.sin(time * 0.02) * 0.08;
+
+    camera.position.x = mouse.x * 0.85;
+    camera.position.y = mouse.y * 0.65;
+    camera.lookAt(0, 0, 0);
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+})();
+
+// ── 3D Card Perspective Tilt & Specular Sheen Animation ──────
+(function init3DTilt(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia && window.matchMedia('(hover: none)').matches) return;
+
+  var cards = document.querySelectorAll('[data-tilt], .glow, .svc-card, .proc-step, .metric, .about-card, .tcard');
+  cards.forEach(function(card){
+    var rect, cx, cy;
+    var raf = null;
+    var rx = 0, ry = 0;
+
+    function updateRect(){
+      rect = card.getBoundingClientRect();
+      cx = rect.left + rect.width / 2;
+      cy = rect.top + rect.height / 2;
+    }
+
+    card.addEventListener('mouseenter', function(){
+      updateRect();
+      card.style.transition = 'transform 0.15s ease-out, box-shadow 0.15s ease-out';
+    });
+
+    card.addEventListener('mousemove', function(e){
+      if (!rect) updateRect();
+      var dx = (e.clientX - cx) / (rect.width / 2);
+      var dy = (e.clientY - cy) / (rect.height / 2);
+      dx = Math.max(-1, Math.min(1, dx));
+      dy = Math.max(-1, Math.min(1, dy));
+
+      rx = -dy * 8;
+      ry = dx * 8;
+
+      var mx = ((e.clientX - rect.left) / rect.width) * 100;
+      var my = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mx', mx + '%');
+      card.style.setProperty('--my', my + '%');
+
+      if (!raf) {
+        raf = requestAnimationFrame(function(){
+          card.style.transform = 'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateY(-4px)';
+          raf = null;
+        });
+      }
+    });
+
+    card.addEventListener('mouseleave', function(){
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      card.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease';
+      card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0)';
+      rect = null;
+    });
   });
 })();

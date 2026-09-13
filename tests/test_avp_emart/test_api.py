@@ -43,6 +43,13 @@ def client(tmp_path_factory):
     agents_mock.review_intel.return_value = MOCK_REVIEW
     agents_mock.recommend.return_value = MOCK_RECOMMEND
     agents_mock.trend.return_value = MOCK_TREND
+    agents_mock.spec_compare.return_value = {
+        "success": True,
+        "product_a": "iPhone 15",
+        "product_b": "Samsung S24",
+        "specs": [{"spec": "Display", "a": "6.1 Super Retina", "b": "6.2 Dynamic AMOLED"}],
+        "provider": "offline-heuristic",
+    }
 
     comparator_mock = MagicMock()
     comparator_mock.mode.return_value = MOCK_MODE
@@ -224,3 +231,17 @@ class TestSearchHistory:
         r = client.get("/api/searches")
         assert r.status_code == 200
         assert "searches" in r.json()
+
+
+class TestSpecCompare:
+    def test_spec_compare_valid(self, client):
+        r = client.post("/api/spec-compare", json={
+            "product_a": "iPhone 15",
+            "product_b": "Samsung S24"
+        })
+        assert r.status_code == 200
+        data = r.json()
+        assert data.get("success") is True
+        assert "specs" in data
+        assert len(data["specs"]) > 0
+        assert data["specs"][0]["spec"] == "Display"

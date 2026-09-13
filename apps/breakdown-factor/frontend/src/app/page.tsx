@@ -14,6 +14,7 @@ import { CustomCursor } from "@/components/CustomCursor";
 import { StarCanvas } from "@/components/StarCanvas";
 import { Tilt } from "@/components/Tilt";
 import { TextScramble } from "@/components/TextScramble";
+import { Hero3D } from "@/components/Hero3D";
 import { submitContact, type ContactStatus } from "@/lib/contact";
 import {
   ChevronDown, Star, Shield, Zap, Clock, ScanLine,
@@ -226,6 +227,7 @@ export default function Home() {
       <header className="relative min-h-screen flex items-center overflow-hidden bg-[#060503] pt-[var(--nav-h)]">
         <StarCanvas />
         <div className="blueprint-grid" />
+        <Hero3D primary="#f59e0b" secondary="#fcd34d" geometry="torusKnot" className="opacity-90" />
 
         <div className="relative z-10 w-full max-w-[var(--maxw)] mx-auto px-6 md:px-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="flex flex-col gap-7">

@@ -12,6 +12,7 @@ import { AIDemoWidget } from "@/components/AIDemoWidget";
 import { CustomCursor } from "@/components/CustomCursor";
 import { TextScramble } from "@/components/TextScramble";
 import { Tilt } from "@/components/Tilt";
+import { Hero3D } from "@/components/Hero3D";
 import { submitContact, type ContactStatus } from "@/lib/contact";
 import {
   Heart, Shield, Receipt, Award, BookOpen,
@@ -149,6 +150,7 @@ export default function Home() {
       {/* HERO */}
       <header className="relative min-h-screen flex items-center overflow-hidden bg-[#0d0905] pt-[var(--nav-h)]">
         <div className="warm-sunburst" />
+        <Hero3D primary="#fb7185" secondary="#fda4af" geometry="icosahedron" className="opacity-90" />
 
         <div className="relative z-10 w-full max-w-[var(--maxw)] mx-auto px-6 md:px-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="flex flex-col gap-7">

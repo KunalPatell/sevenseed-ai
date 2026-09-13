@@ -649,6 +649,172 @@ def content_demo(r: ContentDemoReq, request: Request):
     return {"result": ans.strip(), "provider": _active_provider_demo()}
 
 
+# == 7-Agent Unified Workstation Public Demo ==================================
+class AgentDemoReq(BaseModel):
+    agent: str = "maya"
+    prompt: str = ""
+
+
+_AGENT_PROMPTS = {
+    "maya": (
+        "You are Maya, Sevenforce's AI content & SEO writer, running a public demo. Given a topic, write "
+        "a short, SEO-friendly opening paragraph (80-120 words) that hooks the reader in the first sentence and "
+        "naturally works in the likely primary keyword. Respond in under 140 words with this exact structure:\n"
+        "**Suggested title:** ...\n**Opening paragraph:** ...\nNo markdown fences."
+    ),
+    "nova": (
+        "You are Nova, Sevenforce's AI Business Analyst, running a public demo. Given a feature concept or product brief, "
+        "generate a concise Product Requirements Document (PRD) snippet. Structure as:\n"
+        "**Feature Title:** ...\n**Problem & Objective:** (1-2 sentences)\n**User Stories:**\n"
+        "- As a [role], I want [capability] so that [benefit]\n- As a [role], I want [capability] so that [benefit]\n"
+        "**Acceptance Criteria:**\n- [Criterion 1]\n- [Criterion 2]\nNo markdown fences."
+    ),
+    "wave": (
+        "You are Wave, Sevenforce's AI Sales & Outreach Specialist, running a public demo. Given a product or offering, "
+        "generate an Ideal Customer Profile (ICP) breakdown and a high-converting cold outreach email snippet. Structure as:\n"
+        "**Target Persona:** (Job titles & industry)\n**Core Pain Point:** (1 sentence)\n"
+        "**Cold Email Subject:** ...\n**Cold Email Body:** (Concise 3-sentence hook, value prop, and low-friction CTA)\nNo markdown fences."
+    ),
+    "vibe": (
+        "You are Vibe, Sevenforce's AI Social Media Lead, running a public demo. Given a topic or product announcement, "
+        "generate platform-tuned copy for LinkedIn and X/Twitter. Structure as:\n"
+        "**LinkedIn Post:** (Engaging hook, 3 bullet points with value, and conversation starter)\n\n"
+        "**X / Twitter Post:** (Punchy tweet under 240 chars with 2 hashtags)\nNo markdown fences."
+    ),
+    "echo": (
+        "You are Echo, Sevenforce's AI Meeting Assistant, running a public demo. Given meeting notes or a discussion topic, "
+        "generate a structured meeting digest. Structure as:\n"
+        "**Meeting Focus:** ...\n**Key Decisions:** (2-3 bullet points)\n"
+        "**Action Items (Owner-Tagged):**\n- [ ] [Task 1] — @Owner (Due: EOW)\n- [ ] [Task 2] — @Owner (Due: Next Tuesday)\nNo markdown fences."
+    ),
+    "scout": (
+        "You are Scout, Sevenforce's AI Technical Recruiter, running a public demo. Given a job role or hiring requirement, "
+        "generate a structured candidate screening rubric and interview questions. Structure as:\n"
+        "**Role:** ...\n**Core Competencies:** (3 key criteria)\n"
+        "**Technical Interview Questions:**\n1. [Deep-dive technical question on competency 1]\n"
+        "2. [Problem-solving architectural scenario question]\n3. [Real-world operational judgment question]\nNo markdown fences."
+    ),
+    "sage": (
+        "You are Sage, Sevenforce's AI Data Analyst, running a public demo. Given a business analytics question, "
+        "generate a SQL query and an executive business insight explanation. Structure as:\n"
+        "**Business Question:** ...\n**Generated SQL (SQLite / PostgreSQL):**\n```sql\n[Valid SQL query]\n```\n"
+        "**Executive Insight:** (2-3 sentences explaining what metric this reveals and the actionable takeaway)\nNo markdown fences except the sql block."
+    ),
+}
+
+
+def _get_agent_fallback(agent: str, prompt: str) -> str:
+    p_clean = prompt.strip()
+    p_title = p_clean.title() if p_clean else "Core Platform Workflows"
+    if agent == "nova":
+        return (
+            f"**Feature Title:** {p_title} Automation Pipeline\n\n"
+            f"**Problem & Objective:** Eliminate manual operational bottlenecks for {p_clean or 'key processes'} "
+            "with an auditable, sub-500ms multi-agent workflow.\n\n"
+            "**User Stories:**\n"
+            f"- As an operator, I want automated execution of {p_clean or 'the task'} so our team cuts cycle time by 80%.\n"
+            "- As an enterprise admin, I want full telemetry and audit logs so compliance standards are continuously verified.\n\n"
+            "**Acceptance Criteria:**\n"
+            "- System handles requests with idempotent request IDs and graceful error boundaries.\n"
+            "- All state transitions exportable as structured JSON and Word (.docx) deliverables."
+        )
+    elif agent == "wave":
+        return (
+            "**Target Persona:** VP of Operations, Head of Growth, Engineering Directors (B2B SaaS & Tech)\n\n"
+            f"**Core Pain Point:** Teams spend 15+ hours weekly on manual coordination around {p_clean or 'business processes'} without unified automation.\n\n"
+            f"**Cold Email Subject:** Quick question regarding {p_clean or 'your automation stack'}\n\n"
+            "**Cold Email Body:**\n"
+            "Hi [First Name],\n\n"
+            f"Noticed your team is scaling initiatives around {p_clean or 'operational growth'}. Most engineering and ops leaders we talk to struggle with fragmented tools and high contractor overhead.\n\n"
+            "Sevenforce deploys 7 specialized AI employees that handle content, PRDs, meetings, and data pipelines autonomously with zero seat markup.\n\n"
+            "Open to a brief 4-minute demo this Thursday?"
+        )
+    elif agent == "vibe":
+        return (
+            "**LinkedIn Post:**\n"
+            f"Stop building manual workflows for {p_clean or 'every new initiative'}. The fastest-scaling teams aren't working more hours — they're deploying autonomous agent teams.\n\n"
+            "Here is the playbook high-growth companies use:\n"
+            "• Automate 80% of repetitive drafts before human review\n"
+            "• Maintain unified brand tone across LinkedIn, X, and direct outreach\n"
+            "• Scale output 5x with zero added headcount\n\n"
+            f"How is your team tackling {p_clean or 'workflow automation'} this quarter?\n\n"
+            "**X / Twitter Post:**\n"
+            f"Scaling {p_clean or 'operations'} doesn't require 10 new hires. It requires autonomous AI employees running in sync 24/7. 🚀\n\n"
+            "Built with @Sevenforce. #AI #Automation #Productivity"
+        )
+    elif agent == "echo":
+        return (
+            f"**Meeting Focus:** Strategic Alignment & Execution: {p_title}\n\n"
+            "**Key Decisions:**\n"
+            f"• Approved the direct rollout for {p_clean or 'the workflow'} with phased milestone checkpoints.\n"
+            "• Enforced strict zero-storage BYOK architecture for all upstream API credentials.\n\n"
+            "**Action Items (Owner-Tagged):**\n"
+            f"- [ ] Finalize production contract & schemas for {p_clean or 'the initiative'} — @TechLead (Due: EOW)\n"
+            "- [ ] Wire up real-time telemetry metrics and latency alarms — @DevOps (Due: Tuesday)\n"
+            "- [ ] Review end-to-end integration walkthrough — @Product (Due: Friday)"
+        )
+    elif agent == "scout":
+        return (
+            f"**Role:** Principal Specialist — {p_title}\n\n"
+            "**Core Competencies:**\n"
+            f"• Proven track record architecting high-availability systems for {p_clean or 'distributed systems'}\n"
+            "• Strong technical leadership and cross-functional operational ownership\n"
+            "• Mastery of sub-second streaming inference and resilient failover patterns\n\n"
+            "**Technical Interview Questions:**\n"
+            f"1. How do you design an end-to-end architecture for {p_clean or 'this service'} that guarantees sub-500ms response times under 10x traffic surges?\n"
+            f"2. Walk through a time when a production workflow in {p_clean or 'your stack'} failed silently. What observability telemetry did you add to prevent recurrence?\n"
+            "3. How do you evaluate the tradeoff between specialized fine-tuned models vs. prompt-engineered multi-agent orchestrations?"
+        )
+    elif agent == "sage":
+        slug = re.sub(r"[^a-zA-Z0-9_]+", "_", (p_clean or "core_metrics").lower()).strip("_")
+        return (
+            f"**Business Question:** Real-time performance & conversion analysis for {p_clean or 'platform activity'}\n\n"
+            "**Generated SQL (SQLite / PostgreSQL):**\n"
+            "```sql\n"
+            "SELECT\n"
+            "    date(created_at) AS log_date,\n"
+            "    COUNT(DISTINCT id) AS total_runs,\n"
+            "    ROUND(AVG(duration_ms), 1) AS avg_duration_ms,\n"
+            "    SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS success_rate_pct\n"
+            "FROM agent_executions\n"
+            f"WHERE agent_tag = '{slug}'\n"
+            "GROUP BY 1\n"
+            "ORDER BY 1 DESC\n"
+            "LIMIT 14;\n"
+            "```\n\n"
+            "**Executive Insight:**\n"
+            f"This query quantifies operational velocity and error rates for {p_clean or 'the selected pipeline'}. "
+            "Tracking duration percentiles alongside success rates identifies operational bottlenecks before they degrade user experience."
+        )
+    # Default: Maya
+    return (
+        f"**Suggested title:** {p_title} — The Practical Blueprint\n\n"
+        f"**Opening paragraph:** {p_clean or 'Intelligent automation'} is redefining modern enterprise operations. "
+        "In this guide, we break down the architectural choices, the essential tooling, and the common pitfalls to avoid "
+        "— giving your team the blueprint to execute with speed and precision."
+    )
+
+
+@router.post("/api/tools/agent-demo")
+def agent_demo(r: AgentDemoReq, request: Request):
+    check_rate_limit(request, bucket="agent_demo", limit=15, window_s=3600, global_limit=400)
+    agent = (r.agent or "maya").strip().lower()
+    prompt = (r.prompt or "").strip()[:200]
+    if not prompt:
+        return JSONResponse({"error": "Please provide a prompt or topic for the AI agent."}, status_code=400)
+    
+    sys_prompt = _AGENT_PROMPTS.get(agent, _AGENT_PROMPTS["maya"])
+    ans = _llm_demo(sys_prompt, f"Task brief: {prompt}", 0.65)
+    if not ans:
+        ans = _get_agent_fallback(agent, prompt)
+    
+    return {
+        "agent": agent,
+        "result": ans.strip(),
+        "provider": _active_provider_demo()
+    }
+
+
 # == Brand profile from a URL (reused from blogpost.ai enrichment) =============
 class BrandUrlReq(BaseModel):
     url: str

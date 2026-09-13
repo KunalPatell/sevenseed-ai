@@ -66,78 +66,48 @@ if (ham && navLinks) {
   });
 }
 
-// Contact form → submits asynchronously to backend API (/api/contact) with mailto fallback
+// Contact form → opens the visitor's email app (no backend required)
 var cform = document.getElementById('contactForm');
 if (cform) {
-  cform.addEventListener('submit', async function(e){
+  cform.addEventListener('submit', function(e){
     e.preventDefault();
-    var to = cform.getAttribute('data-email') || 'hello@sevenseed.in';
-    var company = cform.getAttribute('data-company') || 'Sevenseed';
+    var to = cform.getAttribute('data-email');
+    var company = cform.getAttribute('data-company') || '';
     var name = (document.getElementById('cf-name').value || '').trim();
     var from = (document.getElementById('cf-email').value || '').trim();
+    var orgEl = document.getElementById('cf-org');
+    var sizeEl = document.getElementById('cf-size');
+    var org = orgEl ? (orgEl.value || '').trim() : '';
+    var size = sizeEl ? (sizeEl.value || '').trim() : '';
+    var typeEl = document.getElementById('cf-type');
+    var type = typeEl ? (typeEl.value || '').trim() : '';
     var subj = (document.getElementById('cf-subject').value || '').trim() || ('Enquiry for ' + company);
+    if (type) subj = '[' + type + '] ' + subj;
     var msg = (document.getElementById('cf-msg').value || '').trim();
+    var body = 'Name: ' + name + '\nEmail: ' + from +
+      (type ? '\nEnquiry type: ' + type : '') +
+      (org ? '\nCompany: ' + org : '') +
+      (size ? '\nTeam size: ' + size : '') +
+      '\n\n' + msg;
     var note = document.getElementById('cf-note');
-    var sbtn = cform.querySelector('button[type="submit"]');
-    var originalBtnHtml = sbtn ? sbtn.innerHTML : 'Send message';
-
-    if (!name || !from || !msg) {
-      if (note) {
-        note.style.color = '#ef4444';
-        note.textContent = 'Please fill out your name, email, and message.';
-      }
-      return;
-    }
-
-    if (sbtn) {
-      sbtn.disabled = true;
-      sbtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sending…';
-    }
-    if (note) {
-      note.style.color = 'var(--text-muted, #94a3b8)';
-      note.textContent = 'Connecting to studio server…';
-    }
-
-    try {
-      var res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: name,
-          email: from,
-          subject: subj,
-          message: msg
-        })
-      });
-
-      var data = await res.json().catch(function(){ return {}; });
-
-      if (res.ok && data.success !== false) {
-        if (note) {
-          note.style.color = '#10b981';
-          note.innerHTML = '<i class="fas fa-circle-check"></i> Thank you! Your message has been saved and forwarded to our partners.';
-        }
-        cform.reset();
-      } else {
-        throw new Error(data.detail || data.error || 'Server returned an error');
-      }
-    } catch (err) {
-      // Fallback: If server/API is unreachable or in static preview, open email client
-      console.warn('Contact API submission failed, falling back to mailto:', err);
-      var body = 'Name: ' + name + '\nEmail: ' + from + '\n\n' + msg;
-      window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-      if (note) {
-        note.style.color = '#38bdf8';
-        note.textContent = 'Opening your email app to send this message directly…';
-      }
-    } finally {
-      if (sbtn) {
-        sbtn.disabled = false;
-        sbtn.innerHTML = originalBtnHtml;
-      }
-    }
+    window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+    if (note) note.textContent = 'Opening your email app to send this message…';
+    toast('Opening your email app to send this message…');
   });
 }
+
+// "Talk to our enterprise team" → jumps to contact and pre-selects the enquiry type
+var entCta = document.getElementById('enterpriseCta');
+if (entCta) entCta.addEventListener('click', function(e){
+  var typeEl = document.getElementById('cf-type');
+  var nameEl = document.getElementById('cf-name');
+  if (typeEl){
+    Array.prototype.forEach.call(typeEl.options, function(o){
+      if (o.value === 'Enterprise / Government') typeEl.value = o.value;
+    });
+  }
+  setTimeout(function(){ if (nameEl) nameEl.focus(); }, 500);
+});
 
 // Nav background on scroll
 var nav = document.querySelector('.nav');
@@ -234,10 +204,25 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
   el.addEventListener('mouseleave', function(){ el.style.transform = ''; });
 });
 
-// Hero particle network
+// Button ripple micro-interaction
+document.querySelectorAll('.btn').forEach(function(btn){
+  btn.addEventListener('click', function(e){
+    var r = btn.getBoundingClientRect();
+    var size = Math.max(r.width, r.height);
+    var span = document.createElement('span');
+    span.className = 'btn-ripple';
+    span.style.width = span.style.height = size + 'px';
+    span.style.left = (e.clientX - r.left - size / 2) + 'px';
+    span.style.top = (e.clientY - r.top - size / 2) + 'px';
+    btn.appendChild(span);
+    setTimeout(function(){ if (span.parentNode) span.parentNode.removeChild(span); }, 650);
+  });
+});
+
+// Hero particle network (2D fallback when Three.js is unavailable)
 (function(){
   var c = document.getElementById('particles');
-  if (!c) return;
+  if (!c || typeof THREE !== 'undefined') return;
   var ctx = c.getContext('2d');
   var w, h, parts;
   var rgb = (getComputedStyle(document.documentElement).getPropertyValue('--primary-rgb') || '124,58,237').trim();
@@ -346,7 +331,7 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
           data = { success: true, mode: "Static Preview Mock Output" };
         }
         
-        output.textContent = '💡 DEMO MODE (Preview Output):\\n' + JSON.stringify(data, null, 2) + '\\n\\n💡 To run live AI inference, add your free API keys at /sevenforce/ (BYOK — Bring Your Own Key).';
+        output.textContent = '💡 DEMO MODE (Preview Output):\\n' + JSON.stringify(data, null, 2) + '\\n\\n💡 To run this live, sign in and add your API Keys at Sevenforce: https://kunalpatell.github.io/sevenseed/sevenforce/index.html';
         btn.disabled = false;
         btn.innerHTML = btnText;
       }, 700);
@@ -398,638 +383,601 @@ if (!noHover) document.querySelectorAll('.btn-primary').forEach(function(el){
     navigator.clipboard.writeText(output.textContent).then(function(){
       var origHtml = copyBtn.innerHTML;
       copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+      toast('Copied to clipboard');
       setTimeout(function(){ copyBtn.innerHTML = origHtml; }, 2000);
     });
   });
 })();
 
-// ==========================================================================
-// 1. SINTRA.AI INSPIRATION: ROI CALCULATOR INTERACTION
-// ==========================================================================
+// ── Enterprise UX layer ──────────────────────────────────────────────────
+
+// Toast notifications
+function toast(msg, type){
+  var stack = document.getElementById('toastStack');
+  if (!stack) return;
+  var el = document.createElement('div');
+  el.className = 'toast' + (type === 'error' ? ' error' : '');
+  el.textContent = msg;
+  stack.appendChild(el);
+  requestAnimationFrame(function(){ el.classList.add('show'); });
+  setTimeout(function(){
+    el.classList.remove('show');
+    setTimeout(function(){ if (el.parentNode) el.parentNode.removeChild(el); }, 300);
+  }, 4200);
+}
+
+// Theme toggle (applied synchronously in <head>; this just wires the button)
 (function(){
-  var slider = document.getElementById('roiSlider');
-  var countEl = document.getElementById('roiCount');
-  var humanEl = document.getElementById('humanCost');
-  var aiEl = document.getElementById('aiCost');
-  var savingsEl = document.getElementById('savingsCost');
-
-  if (!slider) return;
-
-  function updateROI(){
-    var count = parseInt(slider.value, 10);
-    if (countEl) countEl.textContent = count;
-    
-    var human = count * 800000;
-    var ai = count * 16000;
-    var savings = human - ai;
-    var pct = Math.round((savings / human) * 100);
-
-    if (humanEl) humanEl.textContent = '₹' + human.toLocaleString('en-IN');
-    if (aiEl) aiEl.textContent = '₹' + ai.toLocaleString('en-IN');
-    if (savingsEl) savingsEl.textContent = '₹' + savings.toLocaleString('en-IN') + ' (' + pct + '%)';
-  }
-
-  slider.addEventListener('input', updateROI);
-  updateROI();
+  var root = document.documentElement;
+  var btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  var icon = btn.querySelector('i');
+  function setIcon(theme){ if (icon) icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon'; }
+  setIcon(root.getAttribute('data-theme') || 'dark');
+  btn.addEventListener('click', function(){
+    var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    setIcon(next);
+    try { localStorage.setItem('ss-theme', next); } catch(e){}
+  });
 })();
 
-// ==========================================================================
-// 2. AUTOMATIONOWL INSPIRATION: WORKFLOW RECIPES VISUALIZER
-// ==========================================================================
+// Back-to-top
 (function(){
-  var container = document.getElementById('recipeVisualizer');
-  var btns = document.querySelectorAll('.recipe-btn');
-  if (!container || !btns.length) return;
+  var btn = document.getElementById('backToTop');
+  if (!btn) return;
+  window.addEventListener('scroll', function(){
+    if (window.scrollY > 500) btn.classList.add('show'); else btn.classList.remove('show');
+  }, { passive: true });
+  btn.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
 
-  var RECIPES = {
-    '1': [
-      { tag: 'TRIGGER · AVPU', title: 'Course Milestone Complete', desc: 'Student finishes Final Python / AI Engineering semester module.' },
-      { tag: 'AGENT · MAYA', title: 'Portfolio Synthesis', desc: 'Synthesizes student GitHub repo and project into a verified dossier.' },
-      { tag: 'ACTION · COMONK', title: 'Autonomous Mock Interview', desc: 'Schedules dynamic Groq LLaMA 3.3 STAR interview coach with recruiter dispatch.' }
-    ],
-    '2': [
-      { tag: 'TRIGGER · AVP EMART', title: 'Low Inventory Alert', desc: 'Stock falls below threshold across 4 synchronized supplier feeds.' },
-      { tag: 'AGENT · DEXTER', title: 'Price Arbitrage Audit', desc: 'Calculates bulk wholesale margins and generates purchase orders.' },
-      { tag: 'ACTION · BREAKDOWN', title: 'Fleet & Logistics Dispatch', desc: 'Schedules route-optimized delivery through construction fleet vehicles.' }
-    ],
-    '3': [
-      { tag: 'TRIGGER · RAKSHAK AI', title: 'SOS / Incident Triage', desc: 'Public safety or cybercrime complaint received via 5-in-1 portal.' },
-      { tag: 'AGENT · VANCE', title: 'Legal & BNS Mapping', desc: 'Maps incident facts to relevant Bharatiya Nyaya Sanhita (BNS) clauses.' },
-      { tag: 'ACTION · AUTOMATION', title: 'FIR Draft & Notary PDF', desc: 'Auto-generates signed FIR PDF and routes to jurisdiction desk.' }
-    ],
-    '4': [
-      { tag: 'TRIGGER · AVP TRUST', title: 'Social Donation Received', desc: 'Donor contributes to rural education or healthcare trust fund.' },
-      { tag: 'AGENT · ECHO', title: 'Milestone Allocation', desc: 'Routes funds to verified medical supplies at Decode Forest Pharmacy.' },
-      { tag: 'ACTION · COMPLIANCE', title: 'Instant 80G Tax Receipt', desc: 'Generates Section 80G tax exemption certificate with QR verification.' }
-    ]
-  };
-
-  function renderRecipe(id){
-    var nodes = RECIPES[id] || RECIPES['1'];
-    var html = '<div class="recipe-nodes">';
-    nodes.forEach(function(node, i){
-      var tagClass = node.tag.indexOf('TRIGGER') !== -1 ? 'trigger' : (node.tag.indexOf('AGENT') !== -1 ? 'agent' : 'action');
-      html += '<div class="r-node glow">';
-      html += '<div class="r-node-tag ' + tagClass + '"><i class="fas fa-circle-dot"></i> ' + node.tag + '</div>';
-      html += '<h5>' + node.title + '</h5>';
-      html += '<p>' + node.desc + '</p>';
-      html += '</div>';
+// Testimonials carousel
+(function(){
+  var track = document.getElementById('tTrack');
+  var prev = document.getElementById('tPrev');
+  var next = document.getElementById('tNext');
+  var dotsWrap = document.getElementById('tDots');
+  if (!track) return;
+  var cards = Array.prototype.slice.call(track.children);
+  if (dotsWrap) cards.forEach(function(card, i){
+    var d = document.createElement('button');
+    d.type = 'button';
+    d.className = 'tdot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Go to review ' + (i + 1));
+    d.addEventListener('click', function(){ card.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' }); });
+    dotsWrap.appendChild(d);
+  });
+  var dots = dotsWrap ? Array.prototype.slice.call(dotsWrap.children) : [];
+  function scrollByCard(dir){
+    var w = (cards[0] ? cards[0].getBoundingClientRect().width : 300) + 22;
+    track.scrollBy({ left: dir * w, behavior: 'smooth' });
+  }
+  if (prev) prev.addEventListener('click', function(){ scrollByCard(-1); });
+  if (next) next.addEventListener('click', function(){ scrollByCard(1); });
+  if (dots.length) track.addEventListener('scroll', function(){
+    var idx = 0, best = Infinity;
+    cards.forEach(function(card, i){
+      var d = Math.abs(card.offsetLeft - track.scrollLeft);
+      if (d < best){ best = d; idx = i; }
     });
-    html += '</div>';
-    container.innerHTML = html;
+    dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
+  }, { passive: true });
+})();
+
+// Command palette (Ctrl/Cmd+K) — searches sections, AI tools, FAQs and group ventures
+(function(){
+  var overlay = document.getElementById('cmdkOverlay');
+  var input = document.getElementById('cmdkInput');
+  var list = document.getElementById('cmdkList');
+  var openBtn = document.getElementById('searchBtn');
+  if (!overlay || !input || !list) return;
+
+  var dataEl = document.getElementById('ssData');
+  var data = {};
+  try { data = JSON.parse(dataEl ? dataEl.textContent : '{}'); } catch(e){}
+
+  var items = [];
+  (data.sections || []).forEach(function(s){ items.push({ label: s.label, sub: 'Section', hash: s.hash }); });
+  (data.services || []).forEach(function(s){ items.push({ label: s.name, sub: 'AI Tool', hash: '#services' }); });
+  (data.faqs || []).forEach(function(f){ items.push({ label: f.q, sub: 'FAQ', hash: '#faq' }); });
+  (data.ventures || []).forEach(function(v){ items.push({ label: v.label, sub: 'Sevenseed Venture', href: v.href }); });
+
+  var active = 0, filtered = items.slice();
+
+  function render(){
+    list.innerHTML = '';
+    if (!filtered.length){ list.innerHTML = '<div class="cmdk-empty">No results</div>'; return; }
+    filtered.forEach(function(item, i){
+      var row = document.createElement('div');
+      row.className = 'cmdk-item' + (i === active ? ' active' : '');
+      row.innerHTML = '<strong>' + item.label + '</strong><small>' + item.sub + '</small>';
+      row.addEventListener('mouseenter', function(){ active = i; render(); });
+      row.addEventListener('click', function(){ go(item); });
+      list.appendChild(row);
+    });
+  }
+  function go(item){
+    close();
+    if (item.href) window.location.href = item.href;
+    else if (item.hash) {
+      var target = document.querySelector(item.hash);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      history.replaceState(null, '', item.hash);
+    }
+  }
+  function filter(){
+    var q = input.value.trim().toLowerCase();
+    filtered = !q ? items.slice() : items.filter(function(it){ return it.label.toLowerCase().indexOf(q) !== -1; });
+    active = 0;
+    render();
+  }
+  function open(){
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    input.value = '';
+    filter();
+    setTimeout(function(){ input.focus(); }, 30);
+  }
+  function close(){
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
   }
 
-  btns.forEach(function(btn){
-    btn.addEventListener('click', function(){
-      btns.forEach(function(b){ b.classList.remove('active'); });
-      btn.classList.add('active');
-      renderRecipe(btn.getAttribute('data-recipe'));
-    });
+  if (openBtn) openBtn.addEventListener('click', open);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); });
+  input.addEventListener('input', filter);
+  document.addEventListener('keydown', function(e){
+    var mod = e.ctrlKey || e.metaKey;
+    if (mod && e.key.toLowerCase() === 'k'){ e.preventDefault(); if (overlay.classList.contains('open')) close(); else open(); }
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape'){ close(); }
+    else if (e.key === 'ArrowDown'){ e.preventDefault(); active = Math.min(active + 1, filtered.length - 1); render(); }
+    else if (e.key === 'ArrowUp'){ e.preventDefault(); active = Math.max(active - 1, 0); render(); }
+    else if (e.key === 'Enter'){ e.preventDefault(); if (filtered[active]) go(filtered[active]); }
   });
 
-  renderRecipe('1');
+  render();
 })();
 
-// ==========================================================================
-// 3. AUTOMUSK.AI INSPIRATION: UNIVERSAL BYOK MODAL & COMMAND PALETTE (⌘K)
-// ==========================================================================
+// AI assistant — Gemini BYOK when a key is saved, keyword-matched fallback otherwise
 (function(){
-  // BYOK Modal
-  var byokModal = document.getElementById('byokModal');
-  var openByokBtn = document.getElementById('openByokBtn');
-  var closeByokBtn = document.getElementById('closeByokBtn');
-  var saveByokBtn = document.getElementById('saveByokBtn');
-  var clearByokBtn = document.getElementById('clearByokBtn');
-  var groqIn = document.getElementById('byokGroq');
-  var openaiIn = document.getElementById('byokOpenAI');
-  var geminiIn = document.getElementById('byokGemini');
-  var statusEl = document.getElementById('byokStatus');
+  var toggle = document.getElementById('chatToggle');
+  var panel = document.getElementById('chatPanel');
+  var closeBtn = document.getElementById('chatClose');
+  var body = document.getElementById('chatBody');
+  var form = document.getElementById('chatForm');
+  var input = document.getElementById('chatInput');
+  var keybar = document.getElementById('chatKeybar');
+  var keyInput = document.getElementById('chatKeyInput');
+  var keySave = document.getElementById('chatKeySave');
+  if (!toggle || !panel || !form) return;
 
-  function openBYOK(){
-    if (groqIn) groqIn.value = localStorage.getItem('user_groq_key') || '';
-    if (openaiIn) openaiIn.value = localStorage.getItem('user_openai_key') || '';
-    if (geminiIn) geminiIn.value = localStorage.getItem('user_gemini_key') || '';
-    if (statusEl) statusEl.textContent = '';
-    if (byokModal) byokModal.classList.add('open');
+  var dataEl = document.getElementById('ssData');
+  var ctx = {};
+  try { ctx = JSON.parse(dataEl ? dataEl.textContent : '{}'); } catch(e){}
+
+  function getKey(){ try { return localStorage.getItem('user_gemini_key') || ''; } catch(e){ return ''; } }
+  function syncKeybar(){ if (keybar) keybar.classList.toggle('hide', !!getKey()); }
+  syncKeybar();
+
+  function open(){ panel.classList.add('open'); panel.setAttribute('aria-hidden', 'false'); setTimeout(function(){ input.focus(); }, 30); }
+  function close(){ panel.classList.remove('open'); panel.setAttribute('aria-hidden', 'true'); }
+  toggle.addEventListener('click', function(){ if (panel.classList.contains('open')) close(); else open(); });
+  if (closeBtn) closeBtn.addEventListener('click', close);
+
+  if (keySave) keySave.addEventListener('click', function(){
+    var v = (keyInput.value || '').trim();
+    if (!v) return;
+    try { localStorage.setItem('user_gemini_key', v); } catch(e){}
+    keyInput.value = '';
+    syncKeybar();
+    toast('Gemini API key saved on this device');
+  });
+
+  function addMsg(text, cls){
+    var el = document.createElement('div');
+    el.className = 'chat-msg ' + cls;
+    el.textContent = text;
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+    return el;
   }
 
-  function closeBYOK(){
-    if (byokModal) byokModal.classList.remove('open');
+  function addTypingMsg(){
+    var el = document.createElement('div');
+    el.className = 'chat-msg bot typing';
+    el.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+    return el;
   }
 
-  if (openByokBtn) openByokBtn.addEventListener('click', openBYOK);
-  if (closeByokBtn) closeByokBtn.addEventListener('click', closeBYOK);
-  if (byokModal) {
-    byokModal.addEventListener('click', function(e){
-      if (e.target === byokModal) closeBYOK();
+  function localAnswer(q){
+    var ql = q.toLowerCase();
+    var pool = [];
+    (ctx.faqs || []).forEach(function(f){ pool.push({ text: f.a, hay: f.q + ' ' + f.a }); });
+    (ctx.services || []).forEach(function(s){ pool.push({ text: s.name + ' — ' + s.desc, hay: s.name + ' ' + s.desc }); });
+    if (ctx.about) pool.push({ text: ctx.about, hay: ctx.about });
+    var words = ql.split(/\s+/).filter(function(w){ return w.length > 2; });
+    var best = null, bestScore = 0;
+    pool.forEach(function(p){
+      var hay = p.hay.toLowerCase();
+      var score = words.reduce(function(s, w){ return s + (hay.indexOf(w) !== -1 ? 1 : 0); }, 0);
+      if (score > bestScore){ bestScore = score; best = p; }
+    });
+    if (best && bestScore > 0) return best.text;
+    return "I couldn't find a specific answer to that. Reach out directly at " + (ctx.contact ? ctx.contact.email : 'our contact form') + ', or add a free Gemini API key above for open-ended answers.';
+  }
+
+  function askGemini(q, key){
+    var sys = 'You are the AI assistant embedded on the ' + ctx.site + ' website (' + ctx.sector + '). ' +
+      'Answer the visitor briefly and helpfully using only this information — if the answer is not in it, say so and suggest contacting ' + (ctx.contact ? ctx.contact.email : 'the team') + '.\n\n' +
+      'SUMMARY: ' + ctx.summary + '\nABOUT: ' + ctx.about + '\nHIGHLIGHTS: ' + (ctx.highlights || []).join('; ') + '\n' +
+      'SERVICES: ' + (ctx.services || []).map(function(s){ return s.name + ' - ' + s.desc; }).join('; ') + '\n' +
+      'FAQ: ' + (ctx.faqs || []).map(function(f){ return f.q + ' -> ' + f.a; }).join('; ') + '\n' +
+      'CONTACT: ' + (ctx.contact ? (ctx.contact.email + ', ' + ctx.contact.phone) : '');
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(key);
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text: sys + '\n\nVISITOR QUESTION: ' + q }] }] })
+    })
+    .then(function(res){ if (!res.ok) throw new Error('status ' + res.status); return res.json(); })
+    .then(function(data){
+      var text = data && data.candidates && data.candidates[0] && data.candidates[0].content &&
+        data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+      if (!text) throw new Error('empty response');
+      return text.trim();
     });
   }
 
-  if (saveByokBtn) {
-    saveByokBtn.addEventListener('click', function(){
-      var gVal = groqIn ? groqIn.value.trim() : '';
-      var oVal = openaiIn ? openaiIn.value.trim() : '';
-      var gmVal = geminiIn ? geminiIn.value.trim() : '';
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var q = (input.value || '').trim();
+    if (!q) return;
+    addMsg(q, 'user');
+    input.value = '';
+    var pending = addTypingMsg();
+    var key = getKey();
+    if (key){
+      askGemini(q, key).then(function(text){
+        pending.textContent = text; pending.classList.remove('typing');
+      }).catch(function(){
+        pending.textContent = localAnswer(q); pending.classList.remove('typing');
+      });
+    } else {
+      setTimeout(function(){ pending.textContent = localAnswer(q); pending.classList.remove('typing'); }, 350);
+    }
+  });
+})();
 
-      if (gVal) localStorage.setItem('user_groq_key', gVal);
-      else localStorage.removeItem('user_groq_key');
+// Download overview (print stylesheet)
+(function(){
+  var btn = document.getElementById('printBtn');
+  if (!btn) return;
+  btn.addEventListener('click', function(){ window.print(); });
+})();
 
-      if (oVal) localStorage.setItem('user_openai_key', oVal);
-      else localStorage.removeItem('user_openai_key');
+// Keyboard shortcuts modal ("?" or the footer link)
+(function(){
+  var overlay = document.getElementById('shortcutsModal');
+  var openBtn = document.getElementById('shortcutsBtn');
+  if (!overlay) return;
+  function open(){ overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false'); }
+  function close(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true'); }
+  if (openBtn) openBtn.addEventListener('click', open);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); });
+  document.addEventListener('keydown', function(e){
+    var typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '');
+    if (e.key === '?' && !typing){ e.preventDefault(); overlay.classList.contains('open') ? close() : open(); return; }
+    if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+  });
+})();
 
-      if (gmVal) localStorage.setItem('user_gemini_key', gmVal);
-      else localStorage.removeItem('user_gemini_key');
-      
-      if (statusEl) {
-        statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving & benchmarking latency…';
-      }
+// ── 3D Render & 3D Animation Engine (Three.js WebGL) ───────────────────
+(function initHero3D(){
+  var canvas = document.getElementById('particles');
+  if (!canvas || typeof THREE === 'undefined') return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      var tStart = performance.now();
-      fetch('/api/health')
-        .then(function(){
-          var latency = Math.round(performance.now() - tStart);
-          if (statusEl) {
-            statusEl.innerHTML = '<i class="fas fa-circle-check" style="color:#10b981"></i> Keys saved locally! Verified server latency: <strong style="color:var(--primary-l)">' + latency + 'ms</strong>';
-          }
-        })
-        .catch(function(){
-          var latency = Math.round(performance.now() - tStart);
-          if (statusEl) {
-            statusEl.innerHTML = '<i class="fas fa-circle-check" style="color:#10b981"></i> Keys saved locally! Client latency: <strong style="color:var(--primary-l)">' + latency + 'ms</strong>';
-          }
-        })
-        .finally(function(){
-          setTimeout(closeBYOK, 1800);
-        });
-    });
+  var container = canvas.parentElement;
+  if (!container) return;
+
+  var width = container.clientWidth || window.innerWidth;
+  var height = container.clientHeight || window.innerHeight;
+
+  var style = getComputedStyle(document.documentElement);
+  var primaryHex = (style.getPropertyValue('--primary') || '#6366f1').trim();
+  var secondaryHex = (style.getPropertyValue('--secondary') || '#a855f7').trim();
+  var primaryColor = new THREE.Color(primaryHex);
+  var secondaryColor = new THREE.Color(secondaryHex);
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+  camera.position.set(0, 0, 8.5);
+
+  var renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    alpha: true,
+    antialias: true,
+    powerPreference: 'high-performance'
+  });
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+  var variant = document.body.getAttribute('data-variant') || 'bold-centered';
+
+  var coreGroup = new THREE.Group();
+  scene.add(coreGroup);
+
+  var isDesktop = window.innerWidth > 960;
+  var targetCorePos = isDesktop ? new THREE.Vector3(2.4, 0.2, -1.2) : new THREE.Vector3(0, 0.8, -2.2);
+  coreGroup.position.copy(targetCorePos);
+
+  var geom;
+  if (variant === 'tactical-alert') {
+    geom = new THREE.DodecahedronGeometry(1.35, 0);
+  } else if (variant === 'technical-mono') {
+    geom = new THREE.TorusKnotGeometry(0.9, 0.28, 128, 16);
+  } else if (variant === 'clinical-grid') {
+    geom = new THREE.OctahedronGeometry(1.4, 1);
+  } else if (variant === 'warm-commerce') {
+    geom = new THREE.OctahedronGeometry(1.35, 0);
+  } else if (variant === 'compassion-serif') {
+    geom = new THREE.IcosahedronGeometry(1.35, 0);
+  } else if (variant === 'industrial-blueprint') {
+    geom = new THREE.BoxGeometry(1.8, 1.8, 1.8);
+  } else {
+    geom = new THREE.IcosahedronGeometry(1.35, 1);
   }
 
-  if (clearByokBtn) {
-    clearByokBtn.addEventListener('click', function(){
-      localStorage.removeItem('user_groq_key');
-      localStorage.removeItem('user_openai_key');
-      localStorage.removeItem('user_gemini_key');
-      if (groqIn) groqIn.value = '';
-      if (openaiIn) openaiIn.value = '';
-      if (geminiIn) geminiIn.value = '';
-      if (statusEl) statusEl.textContent = 'Keys cleared.';
-    });
-  }
+  var coreMat = new THREE.MeshStandardMaterial({
+    color: primaryColor,
+    emissive: primaryColor,
+    emissiveIntensity: 0.45,
+    roughness: 0.25,
+    metalness: 0.8,
+    wireframe: false,
+    transparent: true,
+    opacity: 0.85
+  });
+  var coreMesh = new THREE.Mesh(geom, coreMat);
+  coreGroup.add(coreMesh);
 
-  // Command Palette (⌘K)
-  var cmdPalette = document.getElementById('cmdPalette');
-  var openCmdBtn = document.getElementById('openCmdBtn');
-  var cmdInput = document.getElementById('cmdInput');
-  var cmdList = document.getElementById('cmdList');
+  var wireMat = new THREE.MeshBasicMaterial({
+    color: secondaryColor,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.4
+  });
+  var wireMesh = new THREE.Mesh(geom.clone(), wireMat);
+  wireMesh.scale.set(1.08, 1.08, 1.08);
+  coreGroup.add(wireMesh);
 
-  var COMMANDS = [
-    { title: 'Comonk Technology', desc: 'AI Career Intelligence & STAR Interviews', url: '/comonk-ai/', icon: 'fa-brain', badge: 'Venture' },
-    { title: 'Sevenforce AI', desc: 'Hire 7 AI Employees & Workforce', url: '/sevenforce/', icon: 'fa-users-gear', badge: 'Venture' },
-    { title: 'Alpaben Vipulbhai Patel University', desc: 'AI-Native Higher Education', url: '/avpu/', icon: 'fa-graduation-cap', badge: 'Venture' },
-    { title: 'Decode Forest Pharmacy', desc: 'Prescription OCR & Drug Interaction AI', url: '/pharmacy/', icon: 'fa-mortar-pestle', badge: 'Venture' },
-    { title: 'Breakdown Factor Construction', desc: 'IS 456 Civil Engineering & BOQ Cost', url: '/breakdown/', icon: 'fa-helmet-safety', badge: 'Venture' },
-    { title: 'AVP Charitable Trust', desc: 'Section 80G Impact & NGO Tracking', url: '/trust/', icon: 'fa-hand-holding-heart', badge: 'Venture' },
-    { title: 'AVP Emart', desc: '4-Store Live Price Arbitrage', url: '/avp-emart/', icon: 'fa-cart-shopping', badge: 'Venture' },
-    { title: 'Rakshak AI Safety', desc: '5-in-1 Public Safety & Automated FIR', url: '/rakshak-ai/', icon: 'fa-shield-halved', badge: 'Venture' },
-    { title: 'Configure BYOK Keys', desc: 'Bring Your Own Groq/OpenAI/Gemini Keys', action: openBYOK, icon: 'fa-key', badge: 'Setting' },
-    { title: 'AI Workforce Roster', desc: 'Jump to Maya, Buddy, Cassie, Dexter...', url: '#workforce', icon: 'fa-robot', badge: 'Section' },
-    { title: 'Workflow Recipes', desc: 'Jump to Multi-Agent Orchestration', url: '#workflows', icon: 'fa-diagram-project', badge: 'Section' }
+  // Concentric tilted orbital energy rings
+  var ringGeom1 = new THREE.TorusGeometry(1.95, 0.022, 16, 100);
+  var ringMat1 = new THREE.MeshBasicMaterial({ color: primaryColor, transparent: true, opacity: 0.65 });
+  var ring1 = new THREE.Mesh(ringGeom1, ringMat1);
+  ring1.rotation.x = Math.PI / 3;
+  ring1.rotation.y = 0.25;
+  coreGroup.add(ring1);
+
+  var ringGeom2 = new THREE.TorusGeometry(2.35, 0.016, 16, 100);
+  var ringMat2 = new THREE.MeshBasicMaterial({ color: secondaryColor, transparent: true, opacity: 0.5 });
+  var ring2 = new THREE.Mesh(ringGeom2, ringMat2);
+  ring2.rotation.x = -Math.PI / 4;
+  ring2.rotation.y = -0.35;
+  coreGroup.add(ring2);
+
+  // Orbiting venture satellites
+  var satelliteGroup = new THREE.Group();
+  coreGroup.add(satelliteGroup);
+  var numSatellites = 7;
+  var satellites = [];
+  var satGeom = new THREE.SphereGeometry(0.085, 16, 16);
+  var ventureColors = [
+    0x6366f1, 0x06b6d4, 0x38bdf8, 0x10b981, 0xf59e0b, 0xfb7185, 0xef4444
   ];
 
-  function openCmd(){
-    if (cmdPalette) {
-      cmdPalette.classList.add('open');
-      if (cmdInput) { cmdInput.value = ''; cmdInput.focus(); }
-      renderCmds('');
-    }
+  for (var s = 0; s < numSatellites; s++) {
+    var satMat = new THREE.MeshBasicMaterial({
+      color: ventureColors[s % ventureColors.length],
+      transparent: true,
+      opacity: 0.95
+    });
+    var satMesh = new THREE.Mesh(satGeom, satMat);
+    var angle = (s / numSatellites) * Math.PI * 2;
+    satMesh.userData = { angle: angle, radius: 2.15, speed: 0.009 + (s % 3) * 0.003, ring: s % 2 };
+    satelliteGroup.add(satMesh);
+    satellites.push(satMesh);
   }
 
-  function closeCmd(){
-    if (cmdPalette) cmdPalette.classList.remove('open');
+  // Cosmic 3D particle nebula
+  var particleCount = 240;
+  var particleGeom = new THREE.BufferGeometry();
+  var particlePositions = new Float32Array(particleCount * 3);
+  var particleColors = new Float32Array(particleCount * 3);
+
+  for (var p = 0; p < particleCount; p++) {
+    var pr = 2.4 + Math.random() * 6.5;
+    var pTheta = Math.random() * Math.PI * 2;
+    var pPhi = Math.acos(2 * Math.random() - 1);
+    particlePositions[p * 3] = targetCorePos.x + pr * Math.sin(pPhi) * Math.cos(pTheta);
+    particlePositions[p * 3 + 1] = targetCorePos.y + pr * Math.sin(pPhi) * Math.sin(pTheta);
+    particlePositions[p * 3 + 2] = targetCorePos.z + pr * Math.cos(pPhi);
+
+    var c = Math.random() > 0.5 ? secondaryColor : primaryColor;
+    particleColors[p * 3] = c.r;
+    particleColors[p * 3 + 1] = c.g;
+    particleColors[p * 3 + 2] = c.b;
   }
+  particleGeom.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+  particleGeom.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
 
-  function renderCmds(query){
-    if (!cmdList) return;
-    var q = (query || '').toLowerCase().trim();
-    var filtered = COMMANDS.filter(function(c){
-      return !q || c.title.toLowerCase().indexOf(q) !== -1 || c.desc.toLowerCase().indexOf(q) !== -1;
-    });
-
-    if (!filtered.length) {
-      cmdList.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-3);font-size:13px;">No results found.</div>';
-      return;
-    }
-
-    var html = '';
-    filtered.forEach(function(cmd, i){
-      html += '<div class="cmd-item" data-idx="' + i + '">';
-      html += '<div class="cmd-item-left">';
-      html += '<div class="cmd-item-ic"><i class="fas ' + cmd.icon + '"></i></div>';
-      html += '<div><div class="cmd-item-title">' + cmd.title + '</div><div style="font-size:11.5px;color:var(--text-2);">' + cmd.desc + '</div></div>';
-      html += '</div>';
-      html += '<span class="cmd-item-badge">' + cmd.badge + '</span>';
-      html += '</div>';
-    });
-    cmdList.innerHTML = html;
-
-    cmdList.querySelectorAll('.cmd-item').forEach(function(el, i){
-      el.addEventListener('click', function(){
-        var item = filtered[i];
-        closeCmd();
-        if (item.action) {
-          item.action();
-        } else if (item.url) {
-          if (item.url.startsWith('#')) {
-            var target = document.querySelector(item.url);
-            if (target) target.scrollIntoView({ behavior: 'smooth' });
-          } else {
-            window.location.href = item.url;
-          }
-        }
-      });
-    });
-  }
-
-  if (openCmdBtn) openCmdBtn.addEventListener('click', openCmd);
-  var openCmdBtn2 = document.getElementById('openCmdBtn2');
-  if (openCmdBtn2) openCmdBtn2.addEventListener('click', openCmd);
-
-  if (cmdPalette) {
-    cmdPalette.addEventListener('click', function(e){
-      if (e.target === cmdPalette) closeCmd();
-    });
-  }
-
-  if (cmdInput) {
-    cmdInput.addEventListener('input', function(){
-      renderCmds(cmdInput.value);
-    });
-  }
-
-  var pByokBtn = document.getElementById('pByokBtn');
-  if (pByokBtn) pByokBtn.addEventListener('click', openBYOK);
-  var openByokBtn2 = document.getElementById('openByokBtn2');
-  if (openByokBtn2) openByokBtn2.addEventListener('click', openBYOK);
-
-  window.addEventListener('keydown', function(e){
-    if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
-      e.preventDefault();
-      if (cmdPalette && cmdPalette.classList.contains('open')) closeCmd();
-      else openCmd();
-    } else if (e.key === 'Escape') {
-      closeCmd();
-      closeBYOK();
-    }
+  var particleMat = new THREE.PointsMaterial({
+    size: 0.045,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.75,
+    blending: THREE.AdditiveBlending
   });
+  var particleSystem = new THREE.Points(particleGeom, particleMat);
+  scene.add(particleSystem);
+
+  // Lighting
+  var ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+  scene.add(ambientLight);
+
+  var dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+  dirLight.position.set(5, 8, 5);
+  scene.add(dirLight);
+
+  var pointLight1 = new THREE.PointLight(primaryColor, 2.5, 12);
+  pointLight1.position.set(targetCorePos.x + 2, targetCorePos.y + 2, targetCorePos.z + 3);
+  scene.add(pointLight1);
+
+  var pointLight2 = new THREE.PointLight(secondaryColor, 2.0, 10);
+  pointLight2.position.set(targetCorePos.x - 2, targetCorePos.y - 2, targetCorePos.z + 2);
+  scene.add(pointLight2);
+
+  // Smooth mouse tracking
+  var mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
+  window.addEventListener('mousemove', function(e) {
+    mouse.targetX = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.targetY = -(e.clientY / window.innerHeight) * 2 + 1;
+  }, { passive: true });
+
+  // Speed boost on hover
+  var speedMultiplier = 1.0;
+  var targetSpeedMultiplier = 1.0;
+  document.querySelectorAll('.hero-actions a, .btn-primary, .pillar, .hs, .ai-chip').forEach(function(el) {
+    el.addEventListener('mouseenter', function() { targetSpeedMultiplier = 2.8; coreMat.emissiveIntensity = 0.85; });
+    el.addEventListener('mouseleave', function() { targetSpeedMultiplier = 1.0; coreMat.emissiveIntensity = 0.45; });
+  });
+
+  // Intersection Observer
+  var isVisible = true;
+  var heroObserver = new IntersectionObserver(function(entries) {
+    isVisible = entries[0].isIntersecting;
+  }, { threshold: 0.05 });
+  heroObserver.observe(container);
+
+  // Resize
+  window.addEventListener('resize', function() {
+    var nw = container.clientWidth || window.innerWidth;
+    var nh = container.clientHeight || window.innerHeight;
+    camera.aspect = nw / nh;
+    camera.updateProjectionMatrix();
+    renderer.setSize(nw, nh);
+
+    var desk = window.innerWidth > 960;
+    targetCorePos.set(desk ? 2.4 : 0, desk ? 0.2 : 0.8, desk ? -1.2 : -2.2);
+    coreGroup.position.copy(targetCorePos);
+  }, { passive: true });
+
+  // Animation Loop
+  var clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    if (!isVisible) return;
+
+    var delta = clock.getDelta();
+    var time = clock.getElapsedTime();
+
+    mouse.x += (mouse.targetX - mouse.x) * 0.05;
+    mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+    speedMultiplier += (targetSpeedMultiplier - speedMultiplier) * 0.08;
+
+    coreMesh.rotation.x += 0.4 * delta * speedMultiplier;
+    coreMesh.rotation.y += 0.6 * delta * speedMultiplier;
+    wireMesh.rotation.x -= 0.3 * delta * speedMultiplier;
+    wireMesh.rotation.y -= 0.5 * delta * speedMultiplier;
+
+    coreGroup.position.y = targetCorePos.y + Math.sin(time * 1.4) * 0.12;
+
+    ring1.rotation.z += 0.5 * delta * speedMultiplier;
+    ring2.rotation.z -= 0.4 * delta * speedMultiplier;
+
+    for (var i = 0; i < satellites.length; i++) {
+      var sat = satellites[i];
+      sat.userData.angle += sat.userData.speed * speedMultiplier;
+      var r = sat.userData.radius;
+      if (sat.userData.ring === 0) {
+        sat.position.x = Math.cos(sat.userData.angle) * r;
+        sat.position.y = Math.sin(sat.userData.angle) * r * Math.sin(Math.PI / 3);
+        sat.position.z = Math.sin(sat.userData.angle) * r * Math.cos(Math.PI / 3);
+      } else {
+        sat.position.x = Math.cos(sat.userData.angle) * r * 1.1;
+        sat.position.y = -Math.sin(sat.userData.angle) * r * 1.1 * Math.sin(Math.PI / 4);
+        sat.position.z = Math.sin(sat.userData.angle) * r * 1.1 * Math.cos(Math.PI / 4);
+      }
+    }
+
+    particleSystem.rotation.y = time * 0.03;
+    particleSystem.rotation.x = Math.sin(time * 0.02) * 0.08;
+
+    camera.position.x = mouse.x * 0.85;
+    camera.position.y = mouse.y * 0.65;
+    camera.lookAt(0, 0, 0);
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
 })();
 
-// ==========================================================================
-// 4. WORLD-CLASS SAAS: LIVE AI AGENT WORKSPACE SIMULATOR
-// ==========================================================================
-(function(){
-  var agentList = document.getElementById('wsAgentList');
-  var agentName = document.getElementById('wsAgentName');
-  var agentAv = document.getElementById('wsAgentAv');
-  var chatBody = document.getElementById('wsChatBody');
-  var presetsBox = document.getElementById('wsPresets');
-  var wsInput = document.getElementById('wsInput');
-  var wsSendBtn = document.getElementById('wsSendBtn');
-  var wsClearBtn = document.getElementById('wsClearBtn');
-  var wsCopyBtn = document.getElementById('wsCopyBtn');
-  var wsLatency = document.getElementById('wsLatencyBadge');
+// ── 3D Card Perspective Tilt & Specular Sheen Animation ──────
+(function init3DTilt(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia && window.matchMedia('(hover: none)').matches) return;
 
-  if (!agentList || !chatBody) return;
+  var cards = document.querySelectorAll('[data-tilt], .glow, .svc-card, .proc-step, .metric, .about-card, .tcard');
+  cards.forEach(function(card){
+    var rect, cx, cy;
+    var raf = null;
+    var rx = 0, ry = 0;
 
-  var AGENTS_DATA = {
-    maya: {
-      name: 'Maya · Growth & SEO Lead',
-      icon: 'fa-chart-line',
-      gradient: 'linear-gradient(135deg,#a855f7,#ec4899)',
-      greeting: 'Hello! I am Maya, your AI Growth & SEO Specialist. I automate programmatic SEO pipelines, conduct conversion audits, and draft viral content clusters. Pick a prompt below or write your custom brief!',
-      presets: [
-        'Audit Technical SEO & Core Web Vitals',
-        'Generate Programmatic 100-Keyword Topic Cluster',
-        'Draft Viral LinkedIn & Twitter Growth Thread'
-      ],
-      responses: {
-        'default': "🎯 **Maya's Growth & SEO Blueprint:**\n\n1. **Programmatic Target:** Evaluated 14 high-intent long-tail keywords across Gujarat & Indian SaaS markets.\n2. **Conversion Architecture:** Recommended Sticky Hero CTA with sub-30ms client-side latency badge.\n3. **Content Pipeline:** Scheduled 3 automated pillar posts targeting 'Enterprise AI Automation' with Schema.org JSON-LD integration."
-      }
-    },
-    buddy: {
-      name: 'Buddy · B2B Sales Representative',
-      icon: 'fa-handshake',
-      gradient: 'linear-gradient(135deg,#3b82f6,#06b6d4)',
-      greeting: 'Hey there! I am Buddy, your autonomous B2B Sales Rep. I enrich outbound prospect lists, draft hyper-personalized cold emails, and qualify inbound leads 24/7.',
-      presets: [
-        'Draft 3-Step Cold Email Pitch to CTOs',
-        'Qualify Inbound Lead with BANT Framework',
-        'Generate Competitor Battlecard vs Traditional Agencies'
-      ],
-      responses: {
-        'default': "💼 **Buddy's B2B Outreach Strategy:**\n\n**Subject:** Cutting 70% of your operational workflow time with Sevenseed\n\nHi {{FirstName}},\n\nNoticed {{Company}} is scaling engineering operations. Traditional dev agencies take 6 months to deploy AI agents; Sevenseed ships production multi-agent pipelines in 14 days.\n\nWould 15 minutes this Thursday make sense to review your architecture?"
-      }
-    },
-    dexter: {
-      name: 'Dexter · Financial Analyst & BOQ Estimator',
-      icon: 'fa-calculator',
-      gradient: 'linear-gradient(135deg,#f59e0b,#eab308)',
-      greeting: 'Greetings! I am Dexter, your AI Financial & Civil Estimator. I compute IS 456 BOQ material quantities, forecast unit economics, and model venture cash-flows.',
-      presets: [
-        'Calculate IS 456 M25 Concrete BOQ Cost',
-        'Model 3-Year SaaS Breakeven & Gross Margins',
-        'Audit E-Commerce Supplier Bulk Arbitrage'
-      ],
-      responses: {
-        'default': "📊 **Dexter's Financial & BOQ Audit:**\n\n• **Concrete Grade:** M25 Mix (1 : 1.4 : 2.8 ratio)\n• **Cement Requirement:** 380 kg/m³ @ ₹360/bag = ₹2,736/m³\n• **Sand & Aggregate:** 0.45 m³ Sand + 0.88 m³ 20mm Crushed Stone\n• **Steel Reinforcement (1.2%):** 94.2 kg/m³ @ ₹62/kg = ₹5,840/m³\n• **Total Estimated Structural Rate:** **₹11,280 / m³** (including labor & batching)."
-      }
-    },
-    vance: {
-      name: 'Vance · Legal & Compliance Copilot',
-      icon: 'fa-scale-balanced',
-      gradient: 'linear-gradient(135deg,#8b5cf6,#6d28d9)',
-      greeting: 'Welcome. I am Vance, your AI Legal & Regulatory Advisor. I draft founder agreements, map Bharatiya Nyaya Sanhita (BNS 2023) / IPC clauses, and ensure 80G NGO compliance.',
-      presets: [
-        'Draft Founder Mutual Non-Disclosure Agreement',
-        'Map Cyber Fraud Incident to BNS 2023 Sections',
-        'Generate Section 80G NGO Donation Receipt Terms'
-      ],
-      responses: {
-        'default': "⚖️ **Vance's Legal Compliance Review:**\n\n1. **Statutory Mapping:** Incident categorized under **Section 318(4) BNS 2023** (Cheating & Dishonest Inducement) and **Section 66D IT Act 2000**.\n2. **Jurisdiction Desk:** Auto-routed to State Cyber Crime Police Station.\n3. **FIR Draft:** Verified with Digital Notary Hash and automated Section 65B Electronic Evidence Certificate."
-      }
-    },
-    cassie: {
-      name: 'Cassie · 24/7 Customer Support Specialist',
-      icon: 'fa-headset',
-      gradient: 'linear-gradient(135deg,#10b981,#14b8a6)',
-      greeting: 'Hi! I am Cassie, your 24/7 Customer Support & Triage Specialist. I resolve delivery inquiries, handle order returns, and maintain 99.4% customer satisfaction ratings.',
-      presets: [
-        'Handle Delayed Pharmacy Prescription Triage',
-        'Process Refund & Warranty Claim',
-        'Draft Empathetic Inbound Escalation Response'
-      ],
-      responses: {
-        'default': "🎧 **Cassie's Real-Time Support Resolution:**\n\n'Hello! I see your prescription delivery #DF-8821 was verified by our AI pharmacist 12 minutes ago. The delivery rider is currently en route (estimated arrival: 14 mins). Tracking link has been sent via SMS!'"
-      }
-    },
-    aura: {
-      name: 'Aura · UI/UX Product Designer',
-      icon: 'fa-palette',
-      gradient: 'linear-gradient(135deg,#ec4899,#8b5cf6)',
-      greeting: 'Hello! I am Aura, your AI Product & UX Designer. I generate design tokens, wireframe high-converting interfaces, and audit layout accessibility.',
-      presets: [
-        'Generate Modern Dark Glassmorphic Design Tokens',
-        'Audit Mobile Viewport Touch Targets & Contrast',
-        'Create High-Converting SaaS Landing Page Wireframe'
-      ],
-      responses: {
-        'default': "✨ **Aura's Design System Tokens:**\n\n```css\n:root {\n  --surface-glass: rgba(255, 255, 255, 0.035);\n  --border-glass: rgba(255, 255, 255, 0.08);\n  --glow-primary: rgba(99, 102, 241, 0.25);\n  --blur-glass: blur(16px);\n  --radius-saas: 16px;\n}\n```\n*Applied sub-pixel inner highlights and 60fps cubic-bezier transitions.*"
-      }
-    },
-    echo: {
-      name: 'Echo · Operations Orchestrator',
-      icon: 'fa-network-wired',
-      gradient: 'linear-gradient(135deg,#06b6d4,#10b981)',
-      greeting: 'System Online. I am Echo, the LangGraph Operations Orchestrator. I bridge API webhooks, sync cross-venture state, and manage multi-agent supervisor loops.',
-      presets: [
-        'Sync AVPU Student Graduation to Comonk Mock Interview',
-        'Trigger E-Commerce Low Stock Logistics Dispatch',
-        'Route Emergency SOS to Police Sentinel Desk'
-      ],
-      responses: {
-        'default': "⚡ **Echo's Cross-Venture Execution Pipeline:**\n\n```json\n{\n  \"pipeline_id\": \"pipe_avpu_comonk_992\",\n  \"trigger\": \"avpu.student.module_complete\",\n  \"agent_dispatched\": \"maya.portfolio_synthesis\",\n  \"downstream_action\": \"comonk.interview_scheduler\",\n  \"status\": \"EXECUTED_200_OK\",\n  \"latency_ms\": 34.2\n}\n```"
-      }
+    function updateRect(){
+      rect = card.getBoundingClientRect();
+      cx = rect.left + rect.width / 2;
+      cy = rect.top + rect.height / 2;
     }
-  };
 
-  var currentAgentKey = 'maya';
-
-  function setAgent(key){
-    currentAgentKey = key;
-    var data = AGENTS_DATA[key];
-    if (!data) return;
-
-    // Update Sidebar Active
-    agentList.querySelectorAll('.ws-agent-btn').forEach(function(btn){
-      btn.classList.toggle('active', btn.getAttribute('data-agent') === key);
+    card.addEventListener('mouseenter', function(){
+      updateRect();
+      card.style.transition = 'transform 0.15s ease-out, box-shadow 0.15s ease-out';
     });
 
-    // Update Header
-    if (agentName) agentName.textContent = data.name;
-    if (agentAv) {
-      agentAv.style.background = data.gradient;
-      agentAv.innerHTML = '<i class="fas ' + data.icon + '"></i>';
-    }
+    card.addEventListener('mousemove', function(e){
+      if (!rect) updateRect();
+      var dx = (e.clientX - cx) / (rect.width / 2);
+      var dy = (e.clientY - cy) / (rect.height / 2);
+      dx = Math.max(-1, Math.min(1, dx));
+      dy = Math.max(-1, Math.min(1, dy));
 
-    // Update Presets
-    if (presetsBox) {
-      var pHtml = '';
-      data.presets.forEach(function(p){
-        pHtml += '<button class="ws-preset-btn">' + p + '</button>';
-      });
-      presetsBox.innerHTML = pHtml;
+      rx = -dy * 8;
+      ry = dx * 8;
 
-      presetsBox.querySelectorAll('.ws-preset-btn').forEach(function(btn){
-        btn.addEventListener('click', function(){
-          executePrompt(btn.textContent);
+      var mx = ((e.clientX - rect.left) / rect.width) * 100;
+      var my = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mx', mx + '%');
+      card.style.setProperty('--my', my + '%');
+
+      if (!raf) {
+        raf = requestAnimationFrame(function(){
+          card.style.transform = 'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateY(-4px)';
+          raf = null;
         });
-      });
-    }
-
-    // Reset Chat to Greeting
-    chatBody.innerHTML = '<div class="ws-msg assistant"><div class="ws-bubble">' + data.greeting + '</div></div>';
-  }
-
-  function executePrompt(promptText){
-    if (!promptText || !promptText.trim()) return;
-
-    var cleaned = promptText.trim();
-
-    // Append User Message
-    var userMsg = document.createElement('div');
-    userMsg.className = 'ws-msg user';
-    userMsg.innerHTML = '<div class="ws-bubble">' + cleaned + '</div>';
-    chatBody.appendChild(userMsg);
-    if (wsInput) wsInput.value = '';
-    chatBody.scrollTop = chatBody.scrollHeight;
-
-    // Create Assistant Placeholder
-    var asstMsg = document.createElement('div');
-    asstMsg.className = 'ws-msg assistant';
-    var bubble = document.createElement('div');
-    bubble.className = 'ws-bubble';
-    bubble.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="color:var(--primary-l)"></i> Thinking…';
-    asstMsg.appendChild(bubble);
-    chatBody.appendChild(asstMsg);
-    chatBody.scrollTop = chatBody.scrollHeight;
-
-    var agent = AGENTS_DATA[currentAgentKey] || AGENTS_DATA['maya'];
-
-    // Check for user BYOK keys or auth token
-    var groqKey = localStorage.getItem('user_groq_key') || '';
-    var openaiKey = localStorage.getItem('user_openai_key') || '';
-    var geminiKey = localStorage.getItem('user_gemini_key') || '';
-    var authToken = localStorage.getItem('sevenforce_token') || localStorage.getItem('auth_token') || '';
-
-    if (groqKey || openaiKey || geminiKey || authToken) {
-      var hdrs = { 'Content-Type': 'application/json' };
-      if (groqKey) hdrs['X-Groq-API-Key'] = groqKey;
-      if (openaiKey) hdrs['X-OpenAI-API-Key'] = openaiKey;
-      if (geminiKey) hdrs['X-Gemini-API-Key'] = geminiKey;
-      if (authToken) hdrs['Authorization'] = 'Bearer ' + authToken;
-
-      fetch('/api/agent/run', {
-        method: 'POST',
-        headers: hdrs,
-        body: JSON.stringify({ message: '[' + agent.name + '] ' + cleaned })
-      })
-      .then(function(res){ return res.json(); })
-      .then(function(data){
-        var reply = data.reply || data.result || data.output || (typeof data === 'string' ? data : JSON.stringify(data, null, 2));
-        var badge = '<div style="margin-bottom:8px;"><span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;font-size:11px;border-radius:12px;background:rgba(16,185,129,0.15);color:#10b981;font-weight:600;"><i class="fas fa-bolt"></i> Live LLM Inference</span></div>';
-        bubble.innerHTML = badge + reply.replace(/\n/g, '<br>');
-        chatBody.scrollTop = chatBody.scrollHeight;
-      })
-      .catch(function(){
-        streamDynamicFallback(cleaned, agent, bubble);
-      });
-      return;
-    }
-
-    streamDynamicFallback(cleaned, agent, bubble);
-  }
-
-  function streamDynamicFallback(promptText, agent, bubble){
-    var topic = promptText.length > 50 ? promptText.substring(0, 50) + '…' : promptText;
-    var dynamicResponse = '';
-
-    if (currentAgentKey === 'maya') {
-      dynamicResponse = "🎯 **Maya's Strategic Growth Analysis for:** \"" + topic + "\"\n\n" +
-        "1. **Opportunity Angle:** Evaluated high-converting programmatic search intent & viral distribution paths.\n" +
-        "2. **Channel Strategy:** Launching tailored content campaign on LinkedIn & X targeting key decision-makers.\n" +
-        "3. **Deliverable:** 3 SEO pillar outlines prepared with conversion-optimized schema markup.\n\n" +
-        "💡 *Tip: Add your free Groq API key in BYOK to generate custom long-form content in real-time.*";
-    } else if (currentAgentKey === 'buddy') {
-      dynamicResponse = "💼 **Buddy's B2B Outreach Campaign for:** \"" + topic + "\"\n\n" +
-        "**Subject Line:** Optimizing workflow execution for {{Company}}\n\n" +
-        "Hi {{FirstName}},\n\nSaw your priority on " + topic + ". Sevenseed's autonomous multi-agent stack deploys targeted operational pipelines in under 14 days.\n\nOpen to reviewing our benchmark architecture this week?";
-    } else if (currentAgentKey === 'cassie') {
-      dynamicResponse = "🌟 **Cassie's Client Success Blueprint for:** \"" + topic + "\"\n\n" +
-        "1. **Triage Priority:** P1 high-impact resolution mapped to client SLA requirements.\n" +
-        "2. **Action Protocol:** Automated response dispatched with zero-downtime milestone tracking.\n" +
-        "3. **Retention Impact:** Expected CSAT improvement: +28% based on automated follow-through.";
-    } else if (currentAgentKey === 'dexter') {
-      dynamicResponse = "🛠️ **Dexter's Technical Architecture for:** \"" + topic + "\"\n\n" +
-        "```python\n# Microservice route for " + topic.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() + "\n@app.post('/api/pipeline/execute')\nasync def run_pipeline(payload: dict):\n    return {'status': 'processed', 'target': '" + topic + "', 'latency_ms': 18.4}\n```\n" +
-        "✅ Architecture reviewed: Docker containerized, stateless, Neon Postgres ready.";
-    } else {
-      dynamicResponse = "⚡ **Echo's Workflow Orchestration for:** \"" + topic + "\"\n\n" +
-        "```json\n{\n  \"task\": \"" + topic + "\",\n  \"status\": \"ORCHESTRATED_200_OK\",\n  \"agents_dispatched\": [\"maya.growth\", \"dexter.infra\"],\n  \"latency_ms\": 24.8\n}\n```";
-    }
-
-    var badge = '<div style="margin-bottom:8px;"><span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;font-size:11px;border-radius:12px;background:rgba(56,189,248,0.15);color:#38bdf8;font-weight:600;"><i class="fas fa-microchip"></i> Interactive Simulation · Add BYOK for Live LLM</span></div>';
-    
-    setTimeout(function(){
-      bubble.innerHTML = badge + '<div class="typing-target"></div>';
-      var target = bubble.querySelector('.typing-target');
-      var idx = 0;
-      var timer = setInterval(function(){
-        if (idx < dynamicResponse.length) {
-          var char = dynamicResponse.charAt(idx);
-          target.innerHTML += (char === '\n' ? '<br>' : char);
-          idx++;
-          chatBody.scrollTop = chatBody.scrollHeight;
-        } else {
-          clearInterval(timer);
-        }
-      }, 10);
-    }, 300);
-  }
-
-  agentList.querySelectorAll('.ws-agent-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      setAgent(btn.getAttribute('data-agent'));
-    });
-  });
-
-  if (wsSendBtn) {
-    wsSendBtn.addEventListener('click', function(){
-      if (wsInput) executePrompt(wsInput.value);
-    });
-  }
-
-  if (wsInput) {
-    wsInput.addEventListener('keydown', function(e){
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        executePrompt(wsInput.value);
       }
     });
-  }
 
-  if (wsClearBtn) {
-    wsClearBtn.addEventListener('click', function(){
-      setAgent(currentAgentKey);
+    card.addEventListener('mouseleave', function(){
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      card.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease';
+      card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0)';
+      rect = null;
     });
-  }
-
-  if (wsCopyBtn) {
-    wsCopyBtn.addEventListener('click', function(){
-      navigator.clipboard.writeText(chatBody.innerText).then(function(){
-        var orig = wsCopyBtn.innerHTML;
-        wsCopyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-        setTimeout(function(){ wsCopyBtn.innerHTML = orig; }, 1800);
-      });
-    });
-  }
-
-  setAgent('maya');
-})();
-
-// ==========================================================================
-// 5. WORLD-CLASS SAAS: PRICING MATRIX BILLING TOGGLE
-// ==========================================================================
-(function(){
-  var toggle = document.getElementById('pricingBillingToggle');
-  var proPrice = document.getElementById('pPricePro');
-  var proPeriod = document.getElementById('pPeriodPro');
-  var lblM = document.getElementById('lblMonthly');
-  var lblA = document.getElementById('lblAnnual');
-
-  if (!toggle) return;
-
-  toggle.addEventListener('change', function(){
-    if (toggle.checked) {
-      // Annual
-      if (proPrice) proPrice.textContent = '3,999';
-      if (proPeriod) proPeriod.textContent = '/ month (billed ₹47,988/yr)';
-      if (lblM) { lblM.style.fontWeight = '500'; lblM.style.color = 'var(--text-2)'; }
-      if (lblA) { lblA.style.fontWeight = '700'; lblA.style.color = '#fff'; }
-    } else {
-      // Monthly
-      if (proPrice) proPrice.textContent = '4,999';
-      if (proPeriod) proPeriod.textContent = '/ month';
-      if (lblM) { lblM.style.fontWeight = '700'; lblM.style.color = '#fff'; }
-      if (lblA) { lblA.style.fontWeight = '500'; lblA.style.color = 'var(--text-2)'; }
-    }
   });
 })();
-
-// ==========================================================================
-// 6. WORLD-CLASS SAAS: LIVE TELEMETRY TICKER
-// ==========================================================================
-(function(){
-  var tokensEl = document.getElementById('telTokens');
-  var latencyEl = document.getElementById('telLatency');
-
-  var baseTokens = 4821940;
-  setInterval(function(){
-    baseTokens += Math.floor(Math.random() * 45) + 10;
-    if (tokensEl) tokensEl.textContent = baseTokens.toLocaleString('en-IN');
-    if (latencyEl && Math.random() > 0.6) {
-      var lat = (37 + Math.random() * 4).toFixed(1);
-      latencyEl.textContent = lat + ' ms';
-    }
-  }, 2200);
-})();
-
-

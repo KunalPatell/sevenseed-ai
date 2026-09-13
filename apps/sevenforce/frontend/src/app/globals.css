@@ -543,3 +543,569 @@ body.js .reveal.in{opacity:1;transform:none}
 
 /* Hero persona wrapper — centres the Maya character above the hero pill. */
 .persona-wrap{display:flex;justify-content:center;margin:0 auto 26px}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   7-AGENT CYBER COMMAND CENTER & WORKSTATION DOCK
+   ══════════════════════════════════════════════════════════════════════════ */
+.command-center-section {
+  position: relative;
+  z-index: 2;
+  padding-top: 50px;
+  padding-bottom: 70px;
+}
+
+.beacon-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  margin-right: 8px;
+  box-shadow: 0 0 10px #10b981;
+  animation: beaconPulse 2s infinite;
+}
+
+.beacon-ping {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #10b981;
+  border-radius: 50%;
+  margin-right: 6px;
+  box-shadow: 0 0 8px #10b981;
+  animation: beaconPulse 1.8s infinite;
+}
+
+@keyframes beaconPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.6; }
+}
+
+/* ── Interactive Dock Container ────────────────────────────────────────── */
+.dock-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto 28px;
+  overflow-x: auto;
+  padding: 6px 4px 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dock-container::-webkit-scrollbar {
+  height: 6px;
+}
+.dock-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+.dock-track {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  min-width: max-content;
+  margin: 0 auto;
+}
+
+.dock-tab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  background: rgba(13, 17, 30, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text);
+  backdrop-filter: blur(12px);
+  position: relative;
+}
+
+.dock-tab:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+}
+
+.dock-tab.active {
+  background: rgba(18, 26, 45, 0.95);
+  border-color: var(--agent-accent, #06b6d4);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.6), 0 0 16px -2px var(--agent-accent, #06b6d4);
+  transform: translateY(-3px);
+}
+
+.dock-avatar-wrap {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dock-em {
+  font-size: 18px;
+}
+
+.dock-beacon {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: var(--agent-accent, #06b6d4);
+  border-radius: 50%;
+  border: 2px solid #0b0f19;
+  box-shadow: 0 0 6px var(--agent-accent, #06b6d4);
+}
+
+.dock-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.dock-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+
+.dock-suite {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* ── Workstation HUD Console ──────────────────────────────────────────── */
+.workstation-hud {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: rgba(10, 15, 26, 0.85);
+  border: 1px solid rgba(var(--primary-rgb), 0.3);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.8), 0 0 35px -8px var(--agent-accent, rgba(6, 182, 212, 0.35));
+  backdrop-filter: blur(16px);
+  position: relative;
+}
+
+.hud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 30px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.hud-agent-meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.hud-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--agent-accent, #06b6d4);
+  box-shadow: 0 0 16px -4px var(--agent-accent, #06b6d4);
+}
+
+.hud-em {
+  font-size: 28px;
+}
+
+.hud-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.hud-agent-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 0.4px;
+}
+
+.hud-badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+.role-badge {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+}
+
+.suite-badge {
+  background: rgba(var(--primary-rgb), 0.12);
+  border: 1px solid var(--agent-accent, rgba(6, 182, 212, 0.4));
+  color: var(--agent-accent, #06b6d4);
+}
+
+.hud-tagline {
+  font-size: 13.5px;
+  color: var(--muted);
+  margin: 0;
+  max-width: 480px;
+  line-height: 1.5;
+}
+
+.hud-telemetry {
+  display: flex;
+  gap: 20px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.telemetry-item {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.telemetry-lbl {
+  font-size: 9.5px;
+  color: var(--muted);
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.telemetry-val {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--font-mono, monospace);
+}
+
+.text-online {
+  color: #34d399;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* ── HUD Body & Form ───────────────────────────────────────────────────── */
+.hud-body {
+  padding: 28px 30px;
+}
+
+.presets-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hud-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 24px;
+}
+
+.hud-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 7px 15px;
+  font-size: 12.5px;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.hud-chip:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--agent-accent, #06b6d4);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.hud-form {
+  margin-bottom: 22px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 4px 6px 4px 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-group:focus-within {
+  border-color: var(--agent-accent, #06b6d4);
+  box-shadow: 0 0 14px -2px var(--agent-accent, rgba(6, 182, 212, 0.4));
+}
+
+.terminal-prefix {
+  color: var(--agent-accent, #06b6d4);
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: 800;
+  margin-right: 10px;
+  user-select: none;
+}
+
+.hud-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  padding: 12px 0;
+  outline: none;
+}
+
+.hud-input::placeholder {
+  color: #64748b;
+  font-size: 13.5px;
+}
+
+.hud-run-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: none;
+  color: #0b0f19;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+
+.hud-run-btn:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.hud-run-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hud-error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: #fca5a5;
+  font-size: 13px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Terminal Window ───────────────────────────────────────────────────── */
+.terminal-window {
+  background: #080c14;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+  animation: termFade 0.35s ease;
+}
+
+@keyframes termFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.terminal-dots .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.terminal-dots .red { background: #ef4444; }
+.terminal-dots .yellow { background: #f59e0b; }
+.terminal-dots .green { background: #10b981; }
+
+.terminal-title {
+  font-size: 11.5px;
+  font-family: monospace;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.terminal-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.terminal-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.terminal-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.terminal-btn.highlight {
+  background: rgba(var(--primary-rgb), 0.2);
+  border-color: var(--agent-accent, rgba(6, 182, 212, 0.4));
+  color: var(--agent-accent, #06b6d4);
+}
+
+.terminal-btn.highlight:hover {
+  background: var(--agent-accent, #06b6d4);
+  color: #0b0f19;
+}
+
+.terminal-content {
+  padding: 22px 26px;
+  max-height: 440px;
+  overflow-y: auto;
+}
+
+.terminal-pre {
+  margin: 0;
+  font-family: var(--font-mono, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace);
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.terminal-heading {
+  color: var(--agent-accent, #38bdf8);
+  display: block;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.terminal-heading:first-child {
+  margin-top: 0;
+}
+
+.terminal-list-item {
+  color: #cbd5e1;
+  padding-left: 12px;
+  margin-bottom: 4px;
+  position: relative;
+}
+
+.terminal-code-fence {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 10px 0;
+  color: #7dd3fc;
+  font-family: monospace;
+}
+
+.terminal-line {
+  margin-bottom: 6px;
+}
+
+.terminal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 11px;
+  color: #64748b;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ── Responsive adjustments ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hud-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hud-telemetry {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .input-group {
+    flex-direction: column;
+    padding: 10px;
+    align-items: stretch;
+  }
+  .terminal-prefix {
+    display: none;
+  }
+  .hud-input {
+    padding: 8px 4px;
+    margin-bottom: 10px;
+  }
+  .hud-run-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .dock-track {
+    justify-content: flex-start;
+  }
+}
+

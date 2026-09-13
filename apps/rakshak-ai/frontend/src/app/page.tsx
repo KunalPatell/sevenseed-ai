@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { Hero3D } from "@/components/Hero3D";
 import { StarCanvas } from "@/components/StarCanvas";
 import { CustomCursor } from "@/components/CustomCursor";
 import { Tilt } from "@/components/Tilt";
@@ -447,6 +448,7 @@ export default function Home() {
       <section className="relative pt-32 pb-16 px-6 md:px-12 flex flex-col items-center justify-center text-center overflow-hidden">
         <div className="hud-grid" />
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#ef4444]/20 via-[#f59e0b]/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
+        <Hero3D primary="#ef4444" secondary="#f59e0b" geometry="dodecahedron" className="opacity-80" />
 
         <div className="relative z-10 max-w-[1040px] w-full flex flex-col items-center">
           <div className="eyebrow mb-6">

@@ -30,11 +30,11 @@ export function Navbar() {
       <div className={`absolute top-[66px] left-0 right-0 bg-[#0d0d16] backdrop-blur-xl shadow-2xl border-b border-white/5 p-6 flex flex-col gap-4 md:static md:flex md:flex-row md:bg-transparent md:border-none md:p-0 md:gap-1 transition-all duration-300 ${
         menuOpen ? "block" : "hidden md:flex"
       }`}>
-        <a href="#about" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">About</a>
-        <a href="#services" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">AI Capabilities</a>
-        <a href="#process" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">Process</a>
-        <a href="#testimonials" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">Reviews</a>
-        <a href="#faq" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">FAQ</a>
+        <a href="#matrix-board" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">Price Matrix</a>
+        <a href="#spec-studio" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">Spec Compare</a>
+        <a href="#trends" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">Trend Radar</a>
+        <a href="#tools" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">Ask Val</a>
+        <a href="#features" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">Features</a>
         <a href="#contact" onClick={() => setMenuOpen(false)} className="px-4 py-2 text-sm text-[#9aa0b8] hover:text-[#eeeef8] hover:bg-white/[0.04] rounded-lg transition-all duration-200">Contact</a>
         <Link href="/app/" onClick={() => setMenuOpen(false)} className="md:hidden px-4 py-2 text-sm font-semibold text-white bg-white/[0.06] border border-white/10 rounded-lg text-center">Launch AI Comparator</Link>
       </div>

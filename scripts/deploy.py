@@ -56,11 +56,11 @@ def main():
     static_hub = REPO_ROOT / "apps" / "sevenseed" / "backend" / "static"
     if static_hub.is_dir():
         import shutil
-        for f_name in ["pricing.html", "byok.html", "ventures.html"]:
+        for f_name in ["index.html", "style.css", "app.js", "pricing.html", "byok.html", "ventures.html"]:
             src_f = REPO_ROOT / "sites" / "sevenseed" / f_name
             if src_f.is_file():
                 shutil.copy2(src_f, static_hub / f_name)
-        print("   [OK] Synced Hub pricing, byok, and ventures subpages into backend/static.")
+        print("   [OK] Synced Hub index, styles, scripts, pricing, byok, and ventures subpages into backend/static.")
 
 
     # 2. Stage changes

@@ -12,6 +12,7 @@ import { AIDemoWidget } from "@/components/AIDemoWidget";
 import { CustomCursor } from "@/components/CustomCursor";
 import { TextScramble } from "@/components/TextScramble";
 import { Tilt } from "@/components/Tilt";
+import { Hero3D } from "@/components/Hero3D";
 import { submitContact, type ContactStatus } from "@/lib/contact";
 import {
   HeartPulse, Pill, ShieldCheck, MapPin, Phone, Siren,
@@ -209,6 +210,7 @@ export default function Home() {
       {/* HERO */}
       <header className="relative min-h-screen flex items-center overflow-hidden bg-[#020d06] pt-[var(--nav-h)]">
         <div className="forest-grid" />
+        <Hero3D primary="#10b981" secondary="#6ee7b7" geometry="octahedron" className="opacity-90" />
 
         <div className="relative z-10 w-full max-w-[var(--maxw)] mx-auto px-6 md:px-12 py-16 grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
           <div className="flex flex-col gap-7">

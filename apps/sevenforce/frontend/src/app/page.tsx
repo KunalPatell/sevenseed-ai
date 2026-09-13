@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { MayaDemo } from "@/components/MayaDemo";
+import { AgentWorkstationDock } from "@/components/AgentWorkstationDock";
 import { PersonaAvatar } from "@/components/PersonaAvatar";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { Hero3D } from "@/components/Hero3D";
 
 const PILLARS = [
   { icon: "fa-users-gear", title: "7 AI Employees", sub: "A specialist for every core business job." },
@@ -114,6 +115,7 @@ export default function Home() {
         <div className="hero-grid" />
         <div className="hero-orb orb-1" />
         <div className="hero-orb orb-2" />
+        <Hero3D primary="#06b6d4" secondary="#67e8f9" geometry="torusKnot" className="opacity-90" />
 
         <div className="hero-content">
           <div className="persona-wrap">
@@ -151,7 +153,7 @@ export default function Home() {
 
           <div className="hero-actions">
             <a className="btn btn-primary lg" href="#contact"><i className="fas fa-paper-plane" /> Hire Your AI Team</a>
-            <a className="btn btn-ghost lg" href="#services"><i className="fas fa-microchip" /> See the AI</a>
+            <a className="btn btn-ghost lg" href="#workstation-dock"><i className="fas fa-terminal" /> Launch Workstation Dock</a>
           </div>
 
           {/* Keep these in step with METRICS above — the same figures were stated
@@ -250,8 +252,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── LIVE DEMO ────────────────────────────────────────── */}
-      <MayaDemo />
+      {/* ── 7-AGENT WORKSTATION COMMAND CENTER ──────────────── */}
+      <AgentWorkstationDock />
 
       {/* ── PROCESS ──────────────────────────────────────────── */}
       <section className="section process" id="process">
