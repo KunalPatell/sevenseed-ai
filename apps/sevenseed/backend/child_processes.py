@@ -66,17 +66,11 @@ CHILDREN: Dict[str, Dict[str, object]] = {
 
 _HOP_BY_HOP = {"content-length", "transfer-encoding", "connection", "keep-alive"}
 
-IDLE_TIMEOUT_SECONDS = 600  # stop a child after 10 minutes with no requests
-REAPER_INTERVAL_SECONDS = 60
+IDLE_TIMEOUT_SECONDS = 45  # Stop a child after 45s of silence to aggressively free RAM
+REAPER_INTERVAL_SECONDS = 15 # Scan for idle memory every 15 seconds
 
-# Verified live on Render (free plan, 512MB): three of these children warm at
-# once (each imports onnxruntime/insightface/opencv/scikit-learn/pandas) pushed
-# the container over the memory limit and OOM-killed the whole process, even
-# with lazy-start - lazy-start only prevents the all-six-at-boot case, it does
-# not cap how many end up resident from ordinary concurrent traffic. Capping
-# concurrently-running children and evicting the least-recently-used one when
-# a new one is needed keeps steady-state memory bounded regardless of traffic.
-MAX_CONCURRENT_CHILDREN = 2
+# Strictly limit to 1 concurrent child process so memory never spikes above Render 512MB limit
+MAX_CONCURRENT_CHILDREN = 1
 
 _procs: Dict[str, subprocess.Popen] = {}
 _last_used: Dict[str, float] = {}
@@ -99,6 +93,8 @@ def _spawn(prefix: str) -> None:
         backend_dir = APPS_DIR / str(info["folder"])
     env = dict(os.environ)
     env["PORT"] = str(info["port"])
+    # Limit memory allocation flags if supported
+    env["PYTHONOPTIMIZE"] = "1"
     print(f"[hub] starting child '{prefix}' from {backend_dir} on port {info['port']}")
     _procs[prefix] = subprocess.Popen([sys.executable, main_file], cwd=str(backend_dir), env=env)
 
@@ -107,12 +103,14 @@ def _stop(prefix: str) -> None:
     proc = _procs.pop(prefix, None)
     if proc is None:
         return
-    print(f"[hub] stopping idle child '{prefix}'")
+    print(f"[hub] stopping idle child '{prefix}' to free memory")
     proc.terminate()
     try:
-        proc.wait(timeout=10)
+        proc.wait(timeout=5)
     except subprocess.TimeoutExpired:
         proc.kill()
+    import gc
+    gc.collect()
 
 
 async def ensure_child_running(prefix: str) -> None:

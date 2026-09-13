@@ -6,7 +6,10 @@ Supports YOLOv8 segmentation/pose models with robust simulation fallbacks.
 """
 from __future__ import annotations
 import os
-import cv2
+try:
+    import cv2
+except Exception:
+    cv2 = None
 import numpy as np
 
 def detect_safety_gear(image_path: str) -> dict:

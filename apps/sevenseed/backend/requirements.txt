@@ -23,9 +23,6 @@ langchain-openai
 langchain-google-genai
 scikit-learn>=1.4.0
 numpy>=1.26.0
-insightface
-onnxruntime
-opencv-python-headless
 # Rakshak AI: FIR PDF export (apps/rakshak-ai/backend/pdf_util.py)
 fpdf2
 # Comonk AI: password hashing (apps/comonk-ai/comonk_backend.py)

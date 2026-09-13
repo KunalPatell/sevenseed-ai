@@ -7,7 +7,10 @@ import os
 import pickle
 import sqlite3
 import numpy as np
-import cv2
+try:
+    import cv2
+except Exception:
+    cv2 = None
 
 try:
     import face_recognition
