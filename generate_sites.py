@@ -22,15 +22,15 @@ SITES = os.path.join(BASE, "sites")
 
 # ── Group registry (footer cross-links). Comonk points to its live product. ──
 GROUP = [
-    ("comonk",                 "Comonk Technology",                  "../comonk/index.html"),
-    ("sevenseed",              "Sevenseed",                          "../index.html"),
-    ("sevenforce",             "Sevenforce",                         "../sevenforce/index.html"),
-    ("avpu",                   "Alpaben Vipulbhai Patel University",  "../avpu/index.html"),
-    ("decode-forest-pharmacy", "Decode Forest Pharmacy",             "../decode-forest-pharmacy/index.html"),
-    ("breakdown-factor",       "Breakdown Factor Construction",      "../breakdown-factor/index.html"),
-    ("avp-charitable-trust",   "AVP Charitable Trust",               "../avp-charitable-trust/index.html"),
-    ("avp-emart",              "AVP Emart",                          "../avp-emart/index.html"),
-    ("rakshak-ai",             "Rakshak AI Safety",                  "../rakshak-ai/index.html"),
+    ("comonk",                 "Comonk Technology",                  "/comonk-ai/"),
+    ("sevenseed",              "Sevenseed",                          "/"),
+    ("sevenforce",             "Sevenforce",                         "/sevenforce/"),
+    ("avpu",                   "Alpaben Vipulbhai Patel University",  "/avpu/"),
+    ("decode-forest-pharmacy", "Decode Forest Pharmacy",             "/pharmacy/"),
+    ("breakdown-factor",       "Breakdown Factor Construction",      "/breakdown/"),
+    ("avp-charitable-trust",   "AVP Charitable Trust",               "/trust/"),
+    ("avp-emart",              "AVP Emart",                          "/avp-emart/"),
+    ("rakshak-ai",             "Rakshak AI Safety",                  "/rakshak-ai/"),
 ]
 
 # Shared, production-grade AI stack used across the whole group.
@@ -820,7 +820,7 @@ def render_sandbox(c):
     if slug == "sevenseed":
         title = "AI Venture Idea Evaluator"
         desc = "Validate your AI startup concept instantly. Our LLM-driven evaluation system checks viability, market potential, and alignment with the studio's portfolio."
-        endpoint = "http://localhost:8001/api/tools/evaluate"
+        endpoint = "/api/tools/evaluate"
         fields_html = """
         <div class="sandbox-field">
           <label for="sb-name">Venture Name</label>
@@ -838,7 +838,7 @@ def render_sandbox(c):
     elif slug == "sevenforce":
         title = "Scout — AI Recruiter Simulator"
         desc = "Simulate our Scout HR Agent. Input a target role and job description to automatically generate tailored interview questions and evaluation guidance."
-        endpoint = "http://localhost:8002/api/tools/interview-generate"
+        endpoint = "/sevenforce/api/tools/interview-generate"
         fields_html = """
         <div class="sandbox-field">
           <label for="sb-role">Target Role</label>
@@ -856,7 +856,7 @@ def render_sandbox(c):
     elif slug == "avpu":
         title = "Adaptive Study Planner"
         desc = "Personalize your learning path. Enter a topic you want to master, specify your availability, and generate a customized study curriculum."
-        endpoint = "http://localhost:8003/api/tools/study-plan"
+        endpoint = "/avpu/api/tools/study-plan"
         fields_html = """
         <div class="sandbox-field">
           <label for="sb-goal">Learning Goal</label>
@@ -874,7 +874,7 @@ def render_sandbox(c):
     elif slug == "decode-forest-pharmacy":
         title = "AI Drug Interaction Checker"
         desc = "Scan medicine lists for dangerous chemical interactions. Type in two drugs to run our LLM safety protocols."
-        endpoint = "http://localhost:8004/api/interactions"
+        endpoint = "/pharmacy/api/interactions"
         fields_html = """
         <div class="sandbox-field">
           <label for="sb-drug1">Primary Medicine (Drug 1)</label>
@@ -888,7 +888,7 @@ def render_sandbox(c):
     elif slug == "breakdown-factor":
         title = "AI BOQ & Material Cost Estimator"
         desc = "Calculate construction materials (cement, bricks, steel) and estimates. Enter the built-up area and quality grade."
-        endpoint = "http://localhost:8005/api/tools/boq"
+        endpoint = "/breakdown/api/tools/boq"
         fields_html = """
         <div class="sandbox-field">
           <label for="sb-area">Built-Up Area (sq ft)</label>
@@ -906,7 +906,7 @@ def render_sandbox(c):
     elif slug == "avp-charitable-trust":
         title = "Community Needs Assessor"
         desc = "Synthesize village demographics and issues to identify priority intervention strategies, recommended programs, and estimated budgets."
-        endpoint = "http://localhost:8006/api/needs"
+        endpoint = "/trust/api/needs"
         fields_html = """
         <div class="sandbox-field">
           <label for="sb-location">Location / Village</label>
@@ -932,7 +932,7 @@ def render_sandbox(c):
     elif slug == "avp-emart":
         title = "AI Price Comparator & Value Scorer"
         desc = "Simulate live shopping queries across online platforms. Enter a product name to search Flipkart, Amazon, Reliance, and Snapdeal."
-        endpoint = "http://localhost:8007/api/compare"
+        endpoint = "/avp-emart/api/compare"
         fields_html = """
         <div class="sandbox-field">
           <label for="sb-query">Product Name</label>
@@ -1012,13 +1012,20 @@ def render_html(c):
     ventures_section = render_ventures_section(c["slug"]) if c["slug"] == "sevenseed" else ""
     ventures_nav = '<a href="#ventures">Ventures</a>' if c["slug"] == "sevenseed" else ""
     sandbox_section = render_sandbox(c)
-    ports = {
-        "sevenseed": "8001", "sevenforce": "8002", "avpu": "8003",
-        "decode-forest-pharmacy": "8004", "breakdown-factor": "8005",
-        "avp-charitable-trust": "8006", "avp-emart": "8007"
-    }
-    subpath = "app" if c["slug"] == "sevenforce" else "dashboard"
-    app_url = f'http://localhost:{ports[c["slug"]]}/{subpath}' if c["slug"] in ports else "https://comonk-ai.onrender.com"
+    if c["slug"] == "sevenseed":
+        app_url = "/dashboard"
+    elif c["slug"] == "sevenforce":
+        app_url = "/sevenforce/app/"
+    elif c["slug"] == "comonk":
+        app_url = "/comonk-ai/"
+    elif c["slug"] == "decode-forest-pharmacy":
+        app_url = "/pharmacy/"
+    elif c["slug"] == "breakdown-factor":
+        app_url = "/breakdown/"
+    elif c["slug"] == "avp-charitable-trust":
+        app_url = "/trust/"
+    else:
+        app_url = f'/{c["slug"]}/'
     app_btn = f'<a class="btn btn-ghost" href="{app_url}"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>'
     pillars_html = f'''<section class="pillars-band">
   <div class="pillars-inner">
@@ -1069,6 +1076,13 @@ def render_html(c):
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{full_name} — {c["sector"]}</title>
   <meta name="description" content="{c["hero_sub"]}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{full_name} — {c['sector']}">
+  <meta property="og:description" content="{c['hero_sub']}">
+  <meta property="og:url" content="https://sevenseed.onrender.com/{'' if c['slug']=='sevenseed' else c['slug']+'/'}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{full_name} — {c['sector']}">
+  <meta name="twitter:description" content="{c['hero_sub']}">
   <link rel="icon" href="{favicon}">
   <script>(function(){{try{{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})();</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2192,13 +2206,13 @@ if (ham && navLinks) {
   });
 }
 
-// Contact form → opens the visitor's email app (no backend required)
+// Contact form → submits asynchronously to backend API (/api/contact) with mailto fallback
 var cform = document.getElementById('contactForm');
 if (cform) {
-  cform.addEventListener('submit', function(e){
+  cform.addEventListener('submit', async function(e){
     e.preventDefault();
-    var to = cform.getAttribute('data-email');
-    var company = cform.getAttribute('data-company') || '';
+    var to = cform.getAttribute('data-email') || 'hello@sevenseed.in';
+    var company = cform.getAttribute('data-company') || 'Sevenseed';
     var name = (document.getElementById('cf-name').value || '').trim();
     var from = (document.getElementById('cf-email').value || '').trim();
     var orgEl = document.getElementById('cf-org');
@@ -2210,15 +2224,75 @@ if (cform) {
     var subj = (document.getElementById('cf-subject').value || '').trim() || ('Enquiry for ' + company);
     if (type) subj = '[' + type + '] ' + subj;
     var msg = (document.getElementById('cf-msg').value || '').trim();
-    var body = 'Name: ' + name + '\nEmail: ' + from +
-      (type ? '\nEnquiry type: ' + type : '') +
-      (org ? '\nCompany: ' + org : '') +
-      (size ? '\nTeam size: ' + size : '') +
-      '\n\n' + msg;
     var note = document.getElementById('cf-note');
-    window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
-    if (note) note.textContent = 'Opening your email app to send this message…';
-    toast('Opening your email app to send this message…');
+    var sbtn = cform.querySelector('button[type="submit"]');
+    var originalBtnHtml = sbtn ? sbtn.innerHTML : 'Send message';
+
+    if (!name || !from || !msg) {
+      if (note) {
+        note.style.color = '#ef4444';
+        note.textContent = 'Please fill out your name, email, and message.';
+      }
+      return;
+    }
+
+    if (sbtn) {
+      sbtn.disabled = true;
+      sbtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sending…';
+    }
+    if (note) {
+      note.style.color = 'var(--text-muted, #94a3b8)';
+      note.textContent = 'Connecting to studio server…';
+    }
+
+    var fullMsg = (type ? 'Enquiry Type: ' + type + '\n' : '') +
+      (org ? 'Company: ' + org + '\n' : '') +
+      (size ? 'Team Size: ' + size + '\n' : '') +
+      (org || type || size ? '\n' : '') + msg;
+
+    try {
+      var res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name,
+          email: from,
+          subject: subj,
+          message: fullMsg
+        })
+      });
+
+      var data = await res.json().catch(function(){ return {}; });
+
+      if (res.ok && data.success !== false) {
+        if (note) {
+          note.style.color = '#10b981';
+          note.innerHTML = '<i class="fas fa-circle-check"></i> Thank you! Your message has been saved and forwarded to our team.';
+        }
+        if (typeof toast === 'function') toast('Message submitted successfully!');
+        cform.reset();
+      } else {
+        throw new Error(data.detail || data.error || 'Server error');
+      }
+    } catch (err) {
+      console.warn('Contact API submission failed, falling back to mailto:', err);
+      var body = 'Name: ' + name + '\nEmail: ' + from +
+        (type ? '\nEnquiry type: ' + type : '') +
+        (org ? '\nCompany: ' + org : '') +
+        (size ? '\nTeam size: ' + size : '') +
+        '\n\n' + msg;
+      window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
+      if (note) {
+        note.style.color = '#38bdf8';
+        note.textContent = 'Opening your email app to send this message directly…';
+      }
+      if (typeof toast === 'function') toast('Opening your email app to send this message…');
+    } finally {
+      if (sbtn) {
+        sbtn.disabled = false;
+        sbtn.innerHTML = originalBtnHtml;
+      }
+    }
   });
 }
 
@@ -2393,12 +2467,16 @@ document.querySelectorAll('.btn').forEach(function(btn){
   if (!form) return;
   var btn = document.getElementById('sandboxBtn');
   var output = document.getElementById('sandboxOutput');
-  var endpoint = form.getAttribute('data-endpoint');
-  
-  if (window.location.protocol !== 'file:' && endpoint.includes('/api/')) {
-    var rawPath = endpoint.substring(endpoint.indexOf('/api/'));
-    // Use relative path to avoid CORS issues when serving from the same host
-    endpoint = rawPath;
+  var endpoint = form.getAttribute('data-endpoint') || '';
+  if (endpoint.startsWith('http://') || endpoint.startsWith('https://')) {
+    try {
+      var parsedUrl = new URL(endpoint);
+      endpoint = parsedUrl.pathname + parsedUrl.search;
+    } catch(e) {
+      if (endpoint.includes('/api/')) {
+        endpoint = endpoint.substring(endpoint.indexOf('/api/'));
+      }
+    }
   }
 
   form.addEventListener('submit', function(e){
@@ -2426,16 +2504,16 @@ document.querySelectorAll('.btn').forEach(function(btn){
     }
 
     // Shared domain localStorage verification
-    var token = localStorage.getItem('sevenforce_token');
-    var isDemo = !token || token === 'demo_token';
+    var token = localStorage.getItem('sevenforce_token') || localStorage.getItem('auth_token') || '';
     var hasKeys = localStorage.getItem('user_groq_key') || 
                   localStorage.getItem('user_gemini_key') || 
                   localStorage.getItem('user_openai_key') || 
+                  localStorage.getItem('user_mistral_key') || 
                   localStorage.getItem('user_serpapi_key') || 
-                  localStorage.getItem('user_huggingface_key') || 
-                  localStorage.getItem('user_mistral_key');
+                  localStorage.getItem('user_huggingface_key');
+    var isDemo = !token && !hasKeys;
 
-    if (isDemo || !hasKeys) {
+    if (isDemo) {
       // Offline/Demo Preview Fallback
       setTimeout(function(){
         var data;
@@ -2457,7 +2535,7 @@ document.querySelectorAll('.btn').forEach(function(btn){
           data = { success: true, mode: "Static Preview Mock Output" };
         }
         
-        output.textContent = '💡 DEMO MODE (Preview Output):\\n' + JSON.stringify(data, null, 2) + '\\n\\n💡 To run this live, sign in and add your API Keys at Sevenforce: https://kunalpatell.github.io/sevenseed/sevenforce/index.html';
+        output.textContent = '💡 DEMO MODE (Preview Output):\\n' + JSON.stringify(data, null, 2) + '\\n\\n💡 To run this live with real LLM inference, configure your free API Keys in BYOK or visit Sevenforce: /sevenforce/';
         btn.disabled = false;
         btn.innerHTML = btnText;
       }, 700);
