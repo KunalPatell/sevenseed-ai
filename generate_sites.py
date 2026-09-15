@@ -1377,6 +1377,7 @@ def render_html(c):
 
 <script id="ssData" type="application/json">{site_data_json}</script>
 <script src="app.js"></script>
+<script src="three_engine.js"></script>
 </body>
 </html>
 """
@@ -3209,6 +3210,10 @@ def main():
             f.write(render_css(c))
         with open(os.path.join(folder, "app.js"), "w", encoding="utf-8") as f:
             f.write(APP_JS)
+        engine_src = os.path.join(BASE, "apps", "sevenseed", "backend", "static", "three_engine.js")
+        if os.path.exists(engine_src):
+            with open(engine_src, "r", encoding="utf-8") as f_in, open(os.path.join(folder, "three_engine.js"), "w", encoding="utf-8") as f_out:
+                f_out.write(f_in.read())
         print(f"  [ok] {c['slug']:24s} -> {os.path.relpath(folder, BASE)}")
 
     print(f"\nGenerated {len(COMPANIES)} AI-native sites into sites/ — Sevenseed is the group home.")

@@ -2,9 +2,9 @@
   --bg:#060609; --bg-1:#0d0d16; --bg-2:#12121e; --bg-3:#18182a;
   --border:rgba(255,255,255,.07); --border-hi:rgba(255,255,255,.14);
   --text:#eeeef8; --text-2:#9aa0b8; --text-3:#5b5f78;
-  --primary:#ef4444; --primary-l:#fca5a5;
-  --secondary:#dc2626; --secondary-l:#f87171;
-  --primary-rgb:239,68,68; --secondary-rgb:220,38,38;
+  --primary:#6366f1; --primary-l:#a5b4fc;
+  --secondary:#a855f7; --secondary-l:#d8b4fe;
+  --primary-rgb:99,102,241; --secondary-rgb:168,85,247;
   --radius:16px; --radius-sm:10px;
   --shadow:0 10px 40px rgba(0,0,0,.45); --shadow-lg:0 24px 70px rgba(0,0,0,.6);
   --maxw:1180px; --nav-h:66px; --t:.25s ease;
@@ -744,3 +744,100 @@ body[data-variant="clinical-grid"] .svc-card .svc-tag{flex-shrink:0}
   .section,.hero,.cta,.impact,.trust-strip,.ai-strip{break-inside:avoid-page}
   .glow,.svc-card,.proc-step,.metric,.tcard,.about-card{box-shadow:none;border-color:var(--border)}
 }
+
+/* ── 3D Render & 3D Perspective Animation Engine ────────────────────────── */
+.webgl-hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.95;
+}
+
+/* 3D HoloTilt Cards with Dynamic Mouse Spotlight */
+.svc-card, .glow-card, .about-card, .proc-step, .metric, .pillar, .dock-tab, .workstation-hud, .tcard {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.svc-card::before, .glow-card::before, .about-card::before, .proc-step::before, .metric::before, .tcard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    600px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(var(--primary-rgb, 99, 102, 241), 0.16),
+    transparent 60%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.svc-card:hover::before, .glow-card:hover::before, .about-card:hover::before, .proc-step:hover::before, .metric:hover::before, .tcard:hover::before {
+  opacity: 1;
+}
+
+/* 3D Levitating Badges & Key Elements */
+@keyframes float3D {
+  0%, 100% {
+    transform: translateY(0) rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotateX(3deg) rotateY(-3deg);
+  }
+}
+
+.persona-wrap, .hud-avatar, .dock-avatar-wrap {
+  animation: float3D 6s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+/* Cybernetic Laser Scanline */
+@keyframes scanlineSweep {
+  0% {
+    top: 0%;
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0.2;
+  }
+}
+
+.scanline-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary, #6366f1), transparent);
+  box-shadow: 0 0 15px var(--primary, #6366f1);
+  animation: scanlineSweep 3s linear infinite;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 3D Concentric Radar Pulse */
+@keyframes radarPulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.beacon-ping {
+  animation: radarPulse 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
