@@ -215,6 +215,60 @@ def canvas(r: CanvasReq): return _canvas(r.idea)
 @router.post("/api/tools/market-research")
 def market_research(r: MarketReq): return _market_research(r.sector)
 
+# ══════════════════════════════════════════════════════════════════════════════
+#  VENTURE STUDIO BENCHMARKS (AngelList / Crunchbase / PitchBook)
+# ══════════════════════════════════════════════════════════════════════════════
+try:
+    from venture_studio_tools import analyze_pitch_deck, simulate_cap_table, estimate_startup_valuation
+except ImportError:
+    from .venture_studio_tools import analyze_pitch_deck, simulate_cap_table, estimate_startup_valuation
+
+class PitchAuditReq(BaseModel):
+    pitch_text: str = ""
+    sector: str = "AI / SaaS"
+    target_raise_inr: float = 20000000.0
+
+class CapTableReq(BaseModel):
+    founders_shares: float = 1000000.0
+    pre_seed_investment_inr: float = 5000000.0
+    pre_seed_val_inr: float = 25000000.0
+    seed_investment_inr: float = 25000000.0
+    seed_val_inr: float = 100000000.0
+    esop_pool_pct: float = 12.0
+
+class ValuationReq(BaseModel):
+    sector: str = "AI / SaaS"
+    annual_run_rate_inr: float = 3000000.0
+    growth_rate_yoy: float = 120.0
+    stage: str = "Seed"
+    has_live_product: bool = True
+
+@router.post("/api/venture/pitch-audit")
+def api_venture_pitch_audit(r: PitchAuditReq):
+    return analyze_pitch_deck(r.pitch_text, r.sector, r.target_raise_inr)
+
+@router.get("/api/venture/pitch-audit")
+def api_venture_pitch_audit_get(sector: str = "AI / SaaS"):
+    sample_pitch = "Sevenseed incubated AI workflow automation suite with proprietary LangGraph swarm engines. Replaces manual back-office tasks with 7 autonomous AI employees. Verified 28 paying pilots with ₹30L ARR growing at 140% YoY."
+    return analyze_pitch_deck(sample_pitch, sector, 25000000.0)
+
+@router.post("/api/venture/cap-table")
+def api_venture_cap_table(r: CapTableReq):
+    return simulate_cap_table(r.founders_shares, r.pre_seed_investment_inr, r.pre_seed_val_inr, r.seed_investment_inr, r.seed_val_inr, r.esop_pool_pct)
+
+@router.get("/api/venture/cap-table")
+def api_venture_cap_table_get():
+    return simulate_cap_table()
+
+@router.post("/api/venture/valuation")
+def api_venture_valuation(r: ValuationReq):
+    return estimate_startup_valuation(r.sector, r.annual_run_rate_inr, r.growth_rate_yoy, r.stage, r.has_live_product)
+
+@router.get("/api/venture/valuation")
+def api_venture_valuation_get(sector: str = "AI / SaaS", arr_inr: float = 3000000.0):
+    return estimate_startup_valuation(sector, arr_inr, 120.0, "Seed", True)
+
+
 @router.post("/api/ideas")
 def add_idea(r: IdeaReq):
     with _c() as c:

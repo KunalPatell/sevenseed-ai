@@ -41,7 +41,21 @@ import {
   Camera,
   Gamepad2,
   Refrigerator,
-  Box
+  Box,
+  ShoppingCart as ShoppingCartIcon,
+  CheckCircle,
+  AlertCircle,
+  Percent,
+  Gift,
+  Copy,
+  Check,
+  Sparkles,
+  Scale,
+  History,
+  SlidersHorizontal,
+  ShieldCheck,
+  Flame,
+  ArrowRight
 } from "lucide-react";
 
 // This dashboard is served under the "/avp-emart" path when merged into the
@@ -50,7 +64,17 @@ import {
 const API_BASE = "/avp-emart";
 const EMART_TOKEN_KEY = "emart_token";
 
-type PanelType = "dashboard" | "comparator" | "assistant" | "reviews" | "trends" | "wishlist" | "alerts";
+type PanelType =
+  | "dashboard"
+  | "comparator"
+  | "speccompare"
+  | "pricehistory"
+  | "coupons"
+  | "assistant"
+  | "reviews"
+  | "trends"
+  | "wishlist"
+  | "alerts";
 
 interface ProductComparison {
   title: string;
@@ -281,11 +305,34 @@ export default function AppPortal() {
   const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
   const [trending, setTrending] = useState<{ query: string; count: number }[]>([]);
 
+  // ── Smartprix Spec-to-Spec State ──
+  const [specA, setSpecA] = useState("Samsung Galaxy S24");
+  const [specB, setSpecB] = useState("iPhone 15 Pro");
+  const [specC, setSpecC] = useState("OnePlus 12");
+  const [detailedSpecs, setDetailedSpecs] = useState<any>(null);
+  const [specsLoading, setSpecsLoading] = useState(false);
+
+  // ── Buyhatke Historical Price Tracker State ──
+  const [trackerQuery, setTrackerQuery] = useState("iPhone 15");
+  const [trackerDays, setTrackerDays] = useState(90);
+  const [trackerHistory, setTrackerHistory] = useState<any>(null);
+  const [trackerLoading, setTrackerLoading] = useState(false);
+
+  // ── Xerve / Buyhatke Coupons & Cashback Hub State ──
+  const [dealProduct, setDealProduct] = useState("Apple MacBook Air M3");
+  const [dealPrice, setDealPrice] = useState(114900);
+  const [couponHubData, setCouponHubData] = useState<any>(null);
+  const [couponHubLoading, setCouponHubLoading] = useState(false);
+  const [copiedCouponCode, setCopiedCouponCode] = useState<string | null>(null);
+
   // Trigger loading
   useEffect(() => {
     loadHealthAndData();
     loadDbHistory();
     loadTrending();
+    handleFetchPriceTracker("iPhone 15", 90);
+    handleRunDetailedSpecCompare("Samsung Galaxy S24", "iPhone 15 Pro", "OnePlus 12");
+    handleFetchCouponHub("Apple MacBook Air M3", 114900);
   }, []);
 
   useEffect(() => {
@@ -611,6 +658,55 @@ export default function AppPortal() {
         setAlerts(prev => prev.filter(item => item.id !== id));
       }
     } catch (e) {}
+  };
+
+  const handleFetchPriceTracker = async (query = trackerQuery, days = trackerDays) => {
+    if (!query.trim() || trackerLoading) return;
+    setTrackerLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/price-history?query=${encodeURIComponent(query)}&days=${days}`);
+      if (res.ok) {
+        const d = await res.json();
+        setTrackerHistory(d);
+      }
+    } catch (e) {
+    } finally {
+      setTrackerLoading(false);
+    }
+  };
+
+  const handleRunDetailedSpecCompare = async (a = specA, b = specB, c = specC) => {
+    if (!a.trim() || !b.trim() || specsLoading) return;
+    setSpecsLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/spec-compare/detailed`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ product_a: a, product_b: b, product_c: c || null })
+      });
+      if (res.ok) {
+        const d = await res.json();
+        setDetailedSpecs(d);
+      }
+    } catch (e) {
+    } finally {
+      setSpecsLoading(false);
+    }
+  };
+
+  const handleFetchCouponHub = async (prod = dealProduct, price = dealPrice) => {
+    if (!prod.trim() || couponHubLoading) return;
+    setCouponHubLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/coupons-cashback?product=${encodeURIComponent(prod)}&price=${price}`);
+      if (res.ok) {
+        const d = await res.json();
+        setCouponHubData(d);
+      }
+    } catch (e) {
+    } finally {
+      setCouponHubLoading(false);
+    }
   };
 
   const availablePlatforms = useMemo(
@@ -1585,11 +1681,418 @@ export default function AppPortal() {
           <div className="text-center text-[#5b5f78] py-20 text-sm">No price alerts set. Setup price alerts on comparator page.</div>
         )}
       </div>
+    ),
+
+    // ── Smartprix Spec-to-Spec Deep Comparison ──
+    speccompare: (
+      <div className="flex flex-col gap-6 animate-[fade_0.3s_ease]">
+        <div className="bg-gradient-to-r from-[#ea580c]/15 to-[#3b82f6]/10 border border-white/5 rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <span className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#ea580c] to-[#3b82f6] grid place-items-center text-white shrink-0 shadow-[0_6px_20px_rgba(234,88,12,0.3)]">
+              <Scale className="h-6 w-6" />
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-black text-white">Side-by-Side Spec Comparison Matrix</h2>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-[#fdba74] bg-[#ea580c]/15 border border-[#ea580c]/30 px-2 py-0.5 rounded-full">
+                  Smartprix Inspired
+                </span>
+              </div>
+              <p className="text-xs text-[#9aa0b8] mt-1">
+                Detailed technical specifications, display, processor, battery, and AI-computed Value-For-Money scoring between flagship gadgets.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Input Selectors */}
+        <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+          <div>
+            <label className="text-[10.5px] font-bold uppercase tracking-wider text-[#8890aa] block mb-1">Product A</label>
+            <input
+              type="text"
+              value={specA}
+              onChange={(e) => setSpecA(e.target.value)}
+              className="w-full bg-[#12121e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#ea580c]"
+            />
+          </div>
+          <div>
+            <label className="text-[10.5px] font-bold uppercase tracking-wider text-[#8890aa] block mb-1">Product B</label>
+            <input
+              type="text"
+              value={specB}
+              onChange={(e) => setSpecB(e.target.value)}
+              className="w-full bg-[#12121e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#ea580c]"
+            />
+          </div>
+          <div>
+            <label className="text-[10.5px] font-bold uppercase tracking-wider text-[#8890aa] block mb-1">Product C (Optional)</label>
+            <input
+              type="text"
+              value={specC}
+              onChange={(e) => setSpecC(e.target.value)}
+              placeholder="e.g. Pixel 8 Pro"
+              className="w-full bg-[#12121e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#ea580c]"
+            />
+          </div>
+          <button
+            onClick={() => handleRunDetailedSpecCompare()}
+            disabled={specsLoading}
+            className="btn bg-[#ea580c] hover:bg-[#c2410c] text-white font-bold py-2.5 px-4 rounded-xl text-xs cursor-pointer disabled:opacity-60 inline-flex items-center justify-center gap-2 transition-all shadow-[0_4px_12px_rgba(234,88,12,0.3)]"
+          >
+            {specsLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Scale className="h-3.5 w-3.5" />} Compare Specs
+          </button>
+        </div>
+
+        {/* Spec Comparison Table */}
+        {detailedSpecs && (
+          <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-6 flex flex-col gap-6 animate-[fade_0.2s_ease]">
+            {/* Winner banner */}
+            <div className="bg-gradient-to-r from-[#10b981]/15 to-[#3b82f6]/10 border border-[#10b981]/30 rounded-xl p-4 flex items-center gap-3">
+              <span className="w-9 h-9 rounded-lg bg-[#10b981]/20 grid place-items-center text-[#10b981] shrink-0">
+                <Award className="h-5 w-5" />
+              </span>
+              <div>
+                <span className="text-[10.5px] font-mono text-[#6ee7b7] font-bold uppercase tracking-wider">Overall Winner</span>
+                <h4 className="text-sm font-bold text-white">{detailedSpecs.winner}</h4>
+                <p className="text-xs text-[#9aa0b8] mt-0.5">{detailedSpecs.winner_reason}</p>
+              </div>
+            </div>
+
+            {/* Side by side cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {detailedSpecs.specs?.map((item: any, idx: number) => (
+                <div key={idx} className="bg-[#12121e] border border-white/5 rounded-2xl p-5 flex flex-col justify-between gap-4">
+                  <div>
+                    <div className="flex items-center justify-between pb-3 border-b border-white/5">
+                      <h4 className="text-base font-bold text-white">{item.name}</h4>
+                      <span className="text-sm font-black text-[#fdba74]">₹{item.estimated_price?.toLocaleString()}</span>
+                    </div>
+
+                    {/* Scores row */}
+                    <div className="grid grid-cols-3 gap-2 my-3 p-2.5 bg-[#060609] rounded-xl border border-white/5 text-center">
+                      <div>
+                        <span className="text-[9.5px] uppercase font-bold text-[#8890aa] block">Expert</span>
+                        <span className="text-sm font-black text-[#10b981]">{item.expert_score}/100</span>
+                      </div>
+                      <div>
+                        <span className="text-[9.5px] uppercase font-bold text-[#8890aa] block">User</span>
+                        <span className="text-sm font-black text-[#60a5fa]">{item.user_score}/100</span>
+                      </div>
+                      <div>
+                        <span className="text-[9.5px] uppercase font-bold text-[#8890aa] block">VFM</span>
+                        <span className="text-sm font-black text-[#f59e0b]">{item.vfm_index}/10</span>
+                      </div>
+                    </div>
+
+                    {/* Spec items */}
+                    <div className="flex flex-col gap-2.5 text-xs">
+                      <div>
+                        <span className="text-[10px] font-bold uppercase text-[#8890aa] block">Display</span>
+                        <span className="text-white font-medium">{item.display}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold uppercase text-[#8890aa] block">Processor</span>
+                        <span className="text-white font-medium">{item.processor}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold uppercase text-[#8890aa] block">Battery & Charging</span>
+                        <span className="text-white font-medium">{item.battery}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold uppercase text-[#8890aa] block">Camera</span>
+                        <span className="text-white font-medium">{item.camera}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold uppercase text-[#8890aa] block">Storage & RAM</span>
+                        <span className="text-white font-medium">{item.storage}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => { setActivePanel("comparator"); setCompareQuery(item.name); handleCompare(item.name); }}
+                    className="btn w-full bg-white/5 hover:bg-white/10 text-white text-xs font-semibold py-2.5 rounded-xl transition-all border border-white/10 flex items-center justify-center gap-1.5"
+                  >
+                    Compare Live Deals <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    ),
+
+    // ── Buyhatke Historical Price Tracker & AI Deal Meter ──
+    pricehistory: (
+      <div className="flex flex-col gap-6 animate-[fade_0.3s_ease]">
+        <div className="bg-gradient-to-r from-[#10b981]/15 to-[#ea580c]/10 border border-white/5 rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <span className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#10b981] to-[#ea580c] grid place-items-center text-white shrink-0 shadow-[0_6px_20px_rgba(16,185,129,0.3)]">
+              <History className="h-6 w-6" />
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-black text-white">Historical Price Tracker & Decision Meter</h2>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-[#10b981] bg-[#10b981]/15 border border-[#10b981]/30 px-2 py-0.5 rounded-full">
+                  Buyhatke Inspired
+                </span>
+              </div>
+              <p className="text-xs text-[#9aa0b8] mt-1">
+                Track historical 30/90/180-day price drops, discover lowest recorded price points, and check the AI "Should I Buy Now?" verdict.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 w-full md:w-auto">
+            <input
+              type="text"
+              value={trackerQuery}
+              onChange={(e) => setTrackerQuery(e.target.value)}
+              placeholder="e.g. iPhone 15, MacBook Air"
+              className="bg-[#12121e] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-[#10b981] w-full md:w-56"
+            />
+            <button
+              onClick={() => handleFetchPriceTracker(trackerQuery, trackerDays)}
+              disabled={trackerLoading}
+              className="btn bg-[#10b981] hover:bg-[#059669] text-black font-bold px-4 py-2 rounded-xl text-xs cursor-pointer shrink-0 disabled:opacity-60 inline-flex items-center gap-1.5 transition-all"
+            >
+              {trackerLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Search className="h-3.5 w-3.5" />} Track
+            </button>
+          </div>
+        </div>
+
+        {/* Tracker Data Container */}
+        {trackerHistory && (
+          <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-6 flex flex-col gap-6 animate-[fade_0.2s_ease]">
+            {/* AI Decision Alert Box */}
+            <div className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+              trackerHistory.decision_color === "emerald"
+                ? "bg-[#10b981]/10 border-[#10b981]/30 text-[#6ee7b7]"
+                : trackerHistory.decision_color === "blue"
+                ? "bg-blue-500/10 border-blue-500/30 text-blue-300"
+                : "bg-amber-500/10 border-amber-500/30 text-amber-300"
+            }`}>
+              <div>
+                <span className="text-sm font-black uppercase tracking-wider block mb-0.5">{trackerHistory.decision}</span>
+                <p className="text-xs leading-relaxed opacity-90">{trackerHistory.decision_text}</p>
+              </div>
+              <button
+                onClick={() => handleCreateAlert({ title: trackerHistory.query, price: trackerHistory.current_price, platform: "All Platforms", url: "#" } as any, trackerHistory.lowest_price)}
+                className="btn bg-white/10 hover:bg-white/20 text-white text-xs font-semibold px-4 py-2 rounded-xl border border-white/10 shrink-0 cursor-pointer inline-flex items-center gap-1.5"
+              >
+                <Bell className="h-3.5 w-3.5" /> Alert at ₹{trackerHistory.lowest_price?.toLocaleString()}
+              </button>
+            </div>
+
+            {/* Price KPI Strip */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="bg-[#12121e] border border-white/5 rounded-xl p-4">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#8890aa] block">Current Price</span>
+                <span className="text-lg font-black text-white mt-0.5 block">₹{trackerHistory.current_price?.toLocaleString()}</span>
+              </div>
+              <div className="bg-[#12121e] border border-white/5 rounded-xl p-4">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#10b981] block">Lowest Ever</span>
+                <span className="text-lg font-black text-[#6ee7b7] mt-0.5 block">₹{trackerHistory.lowest_price?.toLocaleString()}</span>
+              </div>
+              <div className="bg-[#12121e] border border-white/5 rounded-xl p-4">
+                <span className="text-[10px] font-mono uppercase font-bold text-rose-400 block">Highest Recorded</span>
+                <span className="text-lg font-black text-rose-300 mt-0.5 block">₹{trackerHistory.highest_price?.toLocaleString()}</span>
+              </div>
+              <div className="bg-[#12121e] border border-white/5 rounded-xl p-4">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#60a5fa] block">90-Day Average</span>
+                <span className="text-lg font-black text-[#93c5fd] mt-0.5 block">₹{trackerHistory.average_price?.toLocaleString()}</span>
+              </div>
+            </div>
+
+            {/* Visual SVG Price Trend Curve */}
+            <div className="bg-[#12121e] border border-white/5 rounded-xl p-5 flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                  <LineChart className="h-4 w-4 text-[#10b981]" /> Historical Price Curve
+                </span>
+                <div className="flex gap-1.5">
+                  {[30, 90, 180].map(d => (
+                    <button
+                      key={d}
+                      onClick={() => { setTrackerDays(d); handleFetchPriceTracker(trackerQuery, d); }}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition-all ${
+                        trackerDays === d ? "bg-[#10b981] text-black" : "bg-white/5 text-[#8890aa] hover:text-white"
+                      }`}
+                    >
+                      {d}D
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {renderSparkline(trackerHistory.history?.map((h: any) => ({ created_at: h.date, best_price: h.price, best_platform: "Aggregated" })) || [])}
+            </div>
+          </div>
+        )}
+      </div>
+    ),
+
+    // ── Xerve / Buyhatke Coupons & Cashback Hub ──
+    coupons: (
+      <div className="flex flex-col gap-6 animate-[fade_0.3s_ease]">
+        <div className="bg-gradient-to-r from-[#f59e0b]/15 to-[#10b981]/10 border border-white/5 rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <span className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#f59e0b] to-[#10b981] grid place-items-center text-white shrink-0 shadow-[0_6px_20px_rgba(245,158,11,0.3)]">
+              <Percent className="h-6 w-6" />
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-black text-white">Coupons, Cashback & Net Price Calculator</h2>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-[#f59e0b] bg-[#f59e0b]/15 border border-[#f59e0b]/30 px-2 py-0.5 rounded-full">
+                  Xerve & Buyhatke Inspired
+                </span>
+              </div>
+              <p className="text-xs text-[#9aa0b8] mt-1">
+                Find verified instant bank card discounts, auto-apply coupons, and calculate the true net effective price before purchase.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Product & Price Calculator Controls */}
+        <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+          <div>
+            <label className="text-[10.5px] font-bold uppercase tracking-wider text-[#8890aa] block mb-1">Product Title</label>
+            <input
+              type="text"
+              value={dealProduct}
+              onChange={(e) => setDealProduct(e.target.value)}
+              className="w-full bg-[#12121e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#f59e0b]"
+            />
+          </div>
+          <div>
+            <label className="text-[10.5px] font-bold uppercase tracking-wider text-[#8890aa] block mb-1">Product Price (₹)</label>
+            <input
+              type="number"
+              value={dealPrice}
+              onChange={(e) => setDealPrice(Number(e.target.value))}
+              className="w-full bg-[#12121e] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#f59e0b]"
+            />
+          </div>
+          <button
+            onClick={() => handleFetchCouponHub(dealProduct, dealPrice)}
+            disabled={couponHubLoading}
+            className="btn bg-[#f59e0b] hover:bg-[#d97706] text-black font-bold py-2.5 px-4 rounded-xl text-xs cursor-pointer disabled:opacity-60 inline-flex items-center justify-center gap-2 transition-all shadow-[0_4px_12px_rgba(245,158,11,0.3)]"
+          >
+            {couponHubLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Percent className="h-3.5 w-3.5" />} Calculate Net Savings
+          </button>
+        </div>
+
+        {couponHubData && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-[fade_0.2s_ease]">
+            {/* Left 2 Cols: Bank Offers & Coupons */}
+            <div className="lg:col-span-2 flex flex-col gap-5">
+              {/* Bank Offers */}
+              <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-5 flex flex-col gap-3">
+                <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                  <Wallet className="h-4 w-4 text-[#f59e0b]" /> Available Bank Discounts
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {couponHubData.bank_offers?.map((b: any, idx: number) => (
+                    <div key={idx} className="bg-[#12121e] border border-white/5 rounded-xl p-3.5 flex flex-col justify-between gap-2">
+                      <div>
+                        <span className="text-[10px] font-mono uppercase font-bold text-[#f59e0b]">{b.bank}</span>
+                        <p className="text-xs text-[#eeeef8] font-medium mt-1">{b.offer}</p>
+                      </div>
+                      <span className="text-[11px] font-bold text-[#10b981]">Save up to ₹{b.max_discount?.toLocaleString()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Verified Coupons */}
+              <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-5 flex flex-col gap-3">
+                <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                  <Gift className="h-4 w-4 text-[#10b981]" /> Verified Store Coupons
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {couponHubData.coupons?.map((c: any, idx: number) => {
+                    const isCopied = copiedCouponCode === c.code;
+                    return (
+                      <div key={idx} className="bg-[#12121e] border border-dashed border-[#10b981]/30 rounded-xl p-3.5 flex flex-col justify-between gap-2">
+                        <div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-mono font-black text-[#6ee7b7] bg-[#10b981]/15 px-2 py-0.5 rounded border border-[#10b981]/25">
+                              {c.code}
+                            </span>
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(c.code);
+                                setCopiedCouponCode(c.code);
+                                setTimeout(() => setCopiedCouponCode(null), 2000);
+                              }}
+                              className="text-[10.5px] text-[#8890aa] hover:text-white inline-flex items-center gap-1 cursor-pointer"
+                            >
+                              {isCopied ? <Check className="h-3 w-3 text-[#10b981]" /> : <Copy className="h-3 w-3" />}
+                              {isCopied ? "Copied" : "Copy"}
+                            </button>
+                          </div>
+                          <p className="text-xs text-[#9aa0b8] mt-1.5">{c.desc}</p>
+                        </div>
+                        <span className="text-[10.5px] text-[#5b5f78]">Min order: ₹{c.min_order?.toLocaleString()}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Col: Net Effective Price Card */}
+            <div className="bg-[#0d0f0e] border border-[#10b981]/30 rounded-2xl p-6 flex flex-col justify-between gap-5 shadow-[0_8px_24px_rgba(16,185,129,0.1)]">
+              <div>
+                <span className="text-[10px] font-mono uppercase font-bold text-[#10b981] bg-[#10b981]/15 px-2.5 py-0.5 rounded-full border border-[#10b981]/25">
+                  Effective Price Breakdown
+                </span>
+                <h4 className="text-sm font-bold text-white mt-2">{couponHubData.product}</h4>
+
+                <div className="flex flex-col gap-2.5 mt-5 text-xs">
+                  <div className="flex justify-between text-[#8890aa]">
+                    <span>Original MRP</span>
+                    <span>₹{couponHubData.original_price?.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-[#10b981]">
+                    <span>Bank Offer ({couponHubData.best_bank_offer?.bank})</span>
+                    <span>-₹{couponHubData.best_bank_offer?.max_discount?.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-[#10b981]">
+                    <span>Promo Coupon ({couponHubData.best_coupon?.code})</span>
+                    <span>-₹{couponHubData.best_coupon?.discount?.toLocaleString()}</span>
+                  </div>
+                  <div className="pt-3 border-t border-white/10 flex justify-between items-end">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase text-[#8890aa] block">Net Effective Cost</span>
+                      <span className="text-2xl font-black text-white">₹{couponHubData.net_effective_price?.toLocaleString()}</span>
+                    </div>
+                    <span className="text-xs font-bold text-[#10b981] bg-[#10b981]/15 px-2 py-1 rounded-lg">
+                      Save ₹{couponHubData.total_savings?.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => { setActivePanel("comparator"); setCompareQuery(couponHubData.product); handleCompare(couponHubData.product); }}
+                className="btn w-full bg-[#10b981] hover:bg-[#059669] text-black font-bold py-3 rounded-xl cursor-pointer text-xs flex items-center justify-center gap-1.5 transition-all shadow-[0_4px_12px_rgba(16,185,129,0.25)]"
+              >
+                Compare Across Stores <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     )
   };
 
   const NAV_ITEMS: { key: PanelType; label: string; icon: React.ComponentType<{ className?: string }>; badge?: number }[] = [
     { key: "comparator", label: "Comparator", icon: Search },
+    { key: "speccompare", label: "Spec-to-Spec", icon: Scale },
+    { key: "pricehistory", label: "Price Tracker", icon: History },
+    { key: "coupons", label: "Coupons & Deals", icon: Percent },
     { key: "assistant", label: "Copilot", icon: Bot },
     { key: "reviews", label: "Reviews", icon: MessageSquare },
     { key: "trends", label: "Trends", icon: TrendingUp },
@@ -1802,9 +2305,5 @@ export default function AppPortal() {
       )}
     </div>
   );
-}
 
-// Icon fallback
-function ShoppingCartIcon({ className }: { className?: string }) {
-  return <i className={`fas fa-cart-shopping ${className || ""}`} style={{ fontSize: "inherit" }}></i>;
 }

@@ -70,7 +70,7 @@ function Chip({ label, tone = "default" }: { label: string; tone?: "green" | "re
   return <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full border ${styles}`}>{label}</span>;
 }
 
-function TabBtn({ active, onClick, icon: Icon, label }: { active: boolean; onClick: () => void; icon: React.ElementType; label: string }) {
+function TabBtn({ active, onClick, icon: Icon, label }: { active: boolean; onClick: () => void; icon: React.ComponentType<{ className?: string }>; label: string }) {
   return (
     <button
       onClick={onClick}

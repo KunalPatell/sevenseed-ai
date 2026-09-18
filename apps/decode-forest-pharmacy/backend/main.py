@@ -81,6 +81,14 @@ class SymptomReq(BaseModel):
 class MedicineSearchReq(BaseModel):
     query: str
 
+class GenericSavingsReq(BaseModel):
+    query: str = ""
+
+class PillIdentifierReq(BaseModel):
+    shape: str | None = None
+    color: str | None = None
+    query: str | None = None
+
 class HospitalReq(BaseModel):
     city: str
     radius_km: float | None = 20.0
@@ -217,6 +225,32 @@ def symptoms(req: SymptomReq):
 def search(req: MedicineSearchReq):
     results = rag.search_medicines(req.query, 6)
     return {"results": results, "count": len(results)}
+
+# ── GoodRx / 1mg / Drugs.com Inspired Clinical & Savings Endpoints ──────────
+@app.get("/api/generic-savings")
+def get_generic_savings(q: str = ""):
+    from pharmacy_tools import search_generic_savings
+    return search_generic_savings(q)
+
+@app.post("/api/generic-savings")
+def post_generic_savings(req: GenericSavingsReq):
+    from pharmacy_tools import search_generic_savings
+    return search_generic_savings(req.query)
+
+@app.get("/api/pill-identifier")
+def get_pill_identifier(shape: str | None = None, color: str | None = None, q: str | None = None):
+    from pharmacy_tools import identify_pill
+    return identify_pill(shape=shape, color=color, query=q)
+
+@app.post("/api/pill-identifier")
+def post_pill_identifier(req: PillIdentifierReq):
+    from pharmacy_tools import identify_pill
+    return identify_pill(shape=req.shape, color=req.color, query=req.query)
+
+@app.get("/api/herbal-remedies")
+def get_herbal_remedies_endpoint(category: str | None = None):
+    from pharmacy_tools import get_herbal_remedies
+    return get_herbal_remedies(category=category)
 
 
 # ── Database History Endpoints ───────────────────────────────────────────────

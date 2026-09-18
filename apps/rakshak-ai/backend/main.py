@@ -79,6 +79,8 @@ async def gc_middleware(request: Request, call_next):
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
+if not STATIC_DIR.exists() and (BASE_DIR.parent / "frontend" / "out").exists():
+    STATIC_DIR = BASE_DIR.parent / "frontend" / "out"
 PDF_DIR = BASE_DIR / "data" / "firs"
 PDF_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -117,6 +119,22 @@ class SOSRequest(BaseModel):
     lon: float = 72.5714
     address: str = "Ahmedabad Central"
     emergency_type: str = "SOS Attack / Threat"
+    user_name: Optional[str] = "Citizen in Distress"
+    battery_level: Optional[int] = 85
+
+class ThreatScanRequest(BaseModel):
+    image_b64: Optional[str] = None
+    scene_description: Optional[str] = None
+
+class MissingPersonRequest(BaseModel):
+    query: Optional[str] = None
+    filter_status: Optional[str] = None
+
+class SafeWalkRequest(BaseModel):
+    origin: str = "Prahlad Nagar"
+    destination: str = "Vastrapur"
+    eta_mins: int = 25
+    battery_level: int = 78
 
 class ScanRequest(BaseModel):
     mode: str = "mask"
@@ -753,6 +771,61 @@ def get_audit_trail():
         "audit_integrity": integrity,
         "ledger": ledger
     }
+
+# ---------------------------------------------------------------------------
+# 9. CITIZEN, LIFE360, RAPIDSOS & VERKADA INSPIRED PUBLIC SAFETY WORKSTATIONS
+# ---------------------------------------------------------------------------
+@app.get("/api/sos/broadcast")
+def get_sos_broadcast(lat: float = 23.0225, lon: float = 72.5714, address: str = "Ahmedabad Central"):
+    from security_sentinel import create_sos_beacon
+    return create_sos_beacon(lat=lat, lon=lon, address=address)
+
+@app.post("/api/sos/broadcast")
+def post_sos_broadcast(req: SOSRequest):
+    from security_sentinel import create_sos_beacon
+    return create_sos_beacon(
+        lat=req.lat,
+        lon=req.lon,
+        address=req.address,
+        user_name=req.user_name or "Citizen in Distress",
+        battery_level=req.battery_level or 85,
+        emergency_type=req.emergency_type
+    )
+
+@app.get("/api/vision/threat-detect")
+def get_threat_detect():
+    from security_sentinel import detect_threats_and_weapons
+    return detect_threats_and_weapons()
+
+@app.post("/api/vision/threat-detect")
+def post_threat_detect(req: ThreatScanRequest):
+    from security_sentinel import detect_threats_and_weapons
+    return detect_threats_and_weapons(image_b64=req.image_b64, scene_description=req.scene_description)
+
+@app.get("/api/missing-persons/search")
+def get_missing_persons(q: Optional[str] = None, filter_status: Optional[str] = None):
+    from security_sentinel import search_missing_persons
+    return search_missing_persons(query=q, filter_status=filter_status)
+
+@app.post("/api/missing-persons/search")
+def post_missing_persons(req: MissingPersonRequest):
+    from security_sentinel import search_missing_persons
+    return search_missing_persons(query=req.query, filter_status=req.filter_status)
+
+@app.get("/api/safe-walk/start")
+def get_safe_walk(origin: str = "Prahlad Nagar", destination: str = "Vastrapur", eta_mins: int = 25):
+    from security_sentinel import monitor_safe_walk
+    return monitor_safe_walk(origin=origin, destination=destination, eta_mins=eta_mins)
+
+@app.post("/api/safe-walk/start")
+def post_safe_walk(req: SafeWalkRequest):
+    from security_sentinel import monitor_safe_walk
+    return monitor_safe_walk(
+        origin=req.origin,
+        destination=req.destination,
+        eta_mins=req.eta_mins,
+        battery_level=req.battery_level
+    )
 
 
 if STATIC_DIR.exists():

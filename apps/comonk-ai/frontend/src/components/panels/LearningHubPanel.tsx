@@ -24,7 +24,7 @@ import { Auth } from "@/lib/auth";
 
 type Tab = "resources" | "youtube" | "news" | "cheatsheets" | "roadmaps" | "github" | "producthunt" | "planner";
 
-const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
+const TABS: { id: Tab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: "resources", label: "Resources", icon: Library },
   { id: "youtube", label: "YouTube", icon: Video },
   { id: "news", label: "Tech News", icon: Newspaper },
@@ -362,20 +362,23 @@ export function LearningHubPanel() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => openTab(t.id)}
-            className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-lg cursor-pointer transition-colors border"
-            style={
-              activeTab === t.id
-                ? { background: "linear-gradient(115deg, var(--primary), var(--secondary))", borderColor: "transparent", color: "white" }
-                : { background: "transparent", borderColor: "var(--border)", color: "#9090b0" }
-            }
-          >
-            <t.icon className="h-3.5 w-3.5" /> {t.label}
-          </button>
-        ))}
+        {TABS.map((t) => {
+          const Icon = t.icon;
+          return (
+            <button
+              key={t.id}
+              onClick={() => openTab(t.id)}
+              className="flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-lg cursor-pointer transition-colors border"
+              style={
+                activeTab === t.id
+                  ? { background: "linear-gradient(115deg, var(--primary), var(--secondary))", borderColor: "transparent", color: "white" }
+                  : { background: "transparent", borderColor: "var(--border)", color: "#9090b0" }
+              }
+            >
+              <Icon className="h-3.5 w-3.5" /> {t.label}
+            </button>
+          );
+        })}
       </div>
 
       {activeTab === "resources" && (

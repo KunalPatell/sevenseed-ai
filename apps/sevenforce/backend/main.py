@@ -251,6 +251,14 @@ class IdeateReq(BaseModel):
     problem:str=""
     target_market:str=""
 
+class SwarmSimReq(BaseModel):
+    goal: str = "Launch AI-powered customer acquisition pipeline"
+    focus_area: str = "growth"
+
+class RoiReq(BaseModel):
+    team_size: int = 4
+    avg_salary: float = 75000.0
+
 
 # ── API endpoints ─────────────────────────────────────────────────────────────
 @app.get("/api/health")
@@ -297,6 +305,32 @@ def ideate(req:IdeateReq):
 @app.get("/api/portfolio")
 def portfolio(): 
     return portfolio_analysis()
+
+# ── CrewAI / AutoGen / Notion AI Inspired Multi-Agent Swarm & Operations ────
+@app.get("/api/swarm/simulate")
+def get_swarm_simulate(goal: str = "", focus_area: str = "growth"):
+    from swarm_tools import run_swarm_simulation
+    return run_swarm_simulation(goal=goal, focus_area=focus_area)
+
+@app.post("/api/swarm/simulate")
+def post_swarm_simulate(req: SwarmSimReq):
+    from swarm_tools import run_swarm_simulation
+    return run_swarm_simulation(goal=req.goal, focus_area=req.focus_area)
+
+@app.get("/api/kanban/board")
+def get_kanban_board_endpoint():
+    from swarm_tools import get_kanban_board
+    return get_kanban_board()
+
+@app.get("/api/roi/calculate")
+def get_roi_calculate(team_size: int = 4, avg_salary: float = 75000.0):
+    from swarm_tools import calculate_workforce_roi
+    return calculate_workforce_roi(team_size=team_size, avg_human_salary_inr=avg_salary)
+
+@app.post("/api/roi/calculate")
+def post_roi_calculate(req: RoiReq):
+    from swarm_tools import calculate_workforce_roi
+    return calculate_workforce_roi(team_size=req.team_size, avg_human_salary_inr=req.avg_salary)
 
 
 # ── SQLite database history endpoints ─────────────────────────────────────────

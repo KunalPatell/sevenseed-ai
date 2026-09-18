@@ -66,11 +66,12 @@ CHILDREN: Dict[str, Dict[str, object]] = {
 
 _HOP_BY_HOP = {"content-length", "transfer-encoding", "connection", "keep-alive"}
 
-IDLE_TIMEOUT_SECONDS = 45  # Stop a child after 45s of silence to aggressively free RAM
-REAPER_INTERVAL_SECONDS = 15 # Scan for idle memory every 15 seconds
+IS_RENDER = bool(os.environ.get("RENDER"))
+IDLE_TIMEOUT_SECONDS = 45 if IS_RENDER else 1800  # 45s on Render 512MB limit; 30m locally
+REAPER_INTERVAL_SECONDS = 15 if IS_RENDER else 60
 
-# Strictly limit to 1 concurrent child process so memory never spikes above Render 512MB limit
-MAX_CONCURRENT_CHILDREN = 1
+# Limit to 1 child on Render free tier (512MB), full concurrency locally
+MAX_CONCURRENT_CHILDREN = 1 if IS_RENDER else 8
 
 _procs: Dict[str, subprocess.Popen] = {}
 _last_used: Dict[str, float] = {}

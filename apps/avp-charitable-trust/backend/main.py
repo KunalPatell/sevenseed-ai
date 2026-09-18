@@ -293,6 +293,16 @@ class DonorDemoReq(BaseModel):
 class CampaignSendReq(BaseModel):
     email: str
     subject: str
+
+class Tax80GReq(BaseModel):
+    donor_name: str
+    pan: str
+    amount: float
+    email: str = ""
+
+class BeneficiaryMatchReq(BaseModel):
+    category: str = "all"
+    min_urgency: float = 7.0
     body: str
 
 
@@ -354,6 +364,32 @@ def beneficiary(req:BeneficiaryReq):
 @app.post("/api/impact")
 def impact(req:ImpactReq): 
     return generate_impact_report(req.period)
+
+# ── GiveIndia / GoFundMe / Charity Navigator Inspired Trust Endpoints ───────
+@app.get("/api/trust/ledger")
+def get_trust_ledger():
+    from trust_ledger import get_transparent_ledger
+    return get_transparent_ledger()
+
+@app.get("/api/trust/beneficiaries")
+def get_trust_beneficiaries(category: str = "all", min_urgency: float = 7.0):
+    from trust_ledger import match_beneficiaries
+    return match_beneficiaries(category=category, min_urgency=min_urgency)
+
+@app.post("/api/trust/beneficiaries")
+def post_trust_beneficiaries(req: BeneficiaryMatchReq):
+    from trust_ledger import match_beneficiaries
+    return match_beneficiaries(category=req.category, min_urgency=req.min_urgency)
+
+@app.get("/api/trust/tax-80g")
+def get_tax_80g(name: str = "Anonymous Donor", pan: str = "AAAPA1234F", amount: float = 5000.0):
+    from trust_ledger import generate_80g_receipt
+    return generate_80g_receipt(donor_name=name, pan=pan, amount=amount)
+
+@app.post("/api/trust/tax-80g")
+def post_tax_80g(req: Tax80GReq):
+    from trust_ledger import generate_80g_receipt
+    return generate_80g_receipt(donor_name=req.donor_name, pan=req.pan, amount=req.amount, email=req.email)
 
 @app.post("/api/campaign/send")
 def campaign_send(req: CampaignSendReq):
@@ -421,6 +457,37 @@ def delete_beneficiary_match(item_id: int):
 # Include custom features (auth, 80G receipts, volunteering, reminders)
 from features import router as feat_router
 app.include_router(feat_router)
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  TRANSPARENT LEDGER, VETTED BENEFICIARY & 80G CERTIFICATES (GiveIndia / GoFundMe)
+# ══════════════════════════════════════════════════════════════════════════════
+try:
+    from trust_ledger import get_transparent_ledger, match_beneficiaries, generate_80g_receipt
+except ImportError:
+    from .trust_ledger import get_transparent_ledger, match_beneficiaries, generate_80g_receipt
+
+@app.get("/api/ledger/blocks")
+def api_ledger_blocks():
+    return get_transparent_ledger()
+
+@app.get("/api/beneficiaries/vetted")
+def api_vetted_beneficiaries(category: Optional[str] = None, min_urgency: float = 7.0):
+    return match_beneficiaries(category, min_urgency)
+
+class TaxCertPayload(BaseModel):
+    donor_name: str
+    pan: str
+    amount: float
+    email: Optional[str] = ""
+
+@app.post("/api/certificates/80g")
+def api_generate_80g(payload: TaxCertPayload):
+    return generate_80g_receipt(payload.donor_name, payload.pan, payload.amount, payload.email or "")
+
+@app.get("/api/certificates/80g")
+def api_generate_80g_sample(donor_name: str = "Kunal Patel", pan: str = "ABCDE1234F", amount: float = 25000.0):
+    return generate_80g_receipt(donor_name, pan, amount, "donor@sevenseed.in")
+
 
 
 # ── Static frontend mounting ──────────────────────────────────────────────────

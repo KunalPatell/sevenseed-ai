@@ -213,4 +213,31 @@ export const AGENTS: Agent[] =
       ]}
     ]
   },
+  {
+    id:"swarm", suite:"Orchestrator", em:"🌐", name:"Swarm Collab Graph", role:"Multi-Agent Autonomous Swarm",
+    desc:"CrewAI & AutoGen inspired directed acyclic swarm workflow. Watch Owl, Maya, Wave, and Nova collaborate on end-to-end company goals in real-time.",
+    tools:[
+      {t:"Simulate Multi-Agent Swarm Flow", ep:"/api/swarm/simulate", icon:"fa-diagram-project", f:[
+        {k:"goal",l:"Objective / Goal (e.g. 'Launch B2B outbound campaign for Fintech')",type:"textarea",icon:"fa-bullseye",def:"Launch B2B outbound campaign for Fintech"},
+        {k:"focus_area",l:"Focus Area",type:"select",opts:["growth", "product", "recruitment", "enterprise"],def:"growth",icon:"fa-filter"}
+      ]}
+    ]
+  },
+  {
+    id:"kanban", suite:"Operations", em:"📋", name:"Task Kanban & CoT", role:"Autonomous Task Supervisor",
+    desc:"Devin & Notion AI inspired multi-stage task board. Track agents as they decompose goals, stream chain-of-thought scratchpads, and hand off verified deliverables.",
+    tools:[
+      {t:"Inspect Live Task Stream & Backlog", ep:"/api/kanban/board", icon:"fa-table-columns", f:[]}
+    ]
+  },
+  {
+    id:"roi", suite:"Financials", em:"💰", name:"Workforce ROI Calculator", role:"Economic Modeling Analyst",
+    desc:"Calculate exact financial cost & time savings replacing traditional agencies and headcount with Sevenforce autonomous AI workers.",
+    tools:[
+      {t:"Calculate Monthly Workforce ROI", ep:"/api/roi/calculate", icon:"fa-calculator", f:[
+        {k:"team_size",l:"Human Team Size to Replace",type:"number",def:4,icon:"fa-users"},
+        {k:"avg_salary",l:"Average Human Monthly Salary (INR)",type:"number",def:75000,icon:"fa-indian-rupee-sign"}
+      ]}
+    ]
+  },
 ];

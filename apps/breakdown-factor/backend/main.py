@@ -73,6 +73,20 @@ class CostDemoReq(BaseModel):
     area_sqft: float
     location: str = "Ahmedabad"
 
+class PpeSafetyReq(BaseModel):
+    jobsite: str = "Sector 24 Commercial Hub"
+    zone: str = "Tower A - Slab 5"
+
+class DelayRiskReq(BaseModel):
+    phase: str = "RCC Superstructure"
+    current_progress_pct: float = 48.0
+    weather_risk: str = "moderate_rain"
+
+class BoqReq(BaseModel):
+    built_up_sqft: float = 10000.0
+    building_type: str = "Commercial Office G+3"
+    concrete_grade: str = "M25"
+
 
 # ── AI API Endpoints ──────────────────────────────────────────────────────────
 @app.get("/api/health")
@@ -199,6 +213,37 @@ async def bot_join(req: BotJoinReq):
         return {"status": "success", "message": f"Bot successfully joined meeting: {req.meeting_url}"}
     else:
         raise HTTPException(status_code=500, detail=f"Failed to join meeting: {res.get('error')}")
+
+# ── Procore / PlanGrid / OpenSpace Inspired Site Intelligence Endpoints ─────
+@app.get("/api/safety/ppe-scan")
+def get_ppe_scan(jobsite: str = "Sector 24 Commercial Hub", zone: str = "Tower A - Slab 5"):
+    from construction_pro import detect_ppe_and_site_hazards
+    return detect_ppe_and_site_hazards(jobsite=jobsite, zone=zone)
+
+@app.post("/api/safety/ppe-scan")
+def post_ppe_scan(req: PpeSafetyReq):
+    from construction_pro import detect_ppe_and_site_hazards
+    return detect_ppe_and_site_hazards(jobsite=req.jobsite, zone=req.zone)
+
+@app.get("/api/schedule/delay-risk")
+def get_delay_risk(phase: str = "RCC Superstructure", current_progress_pct: float = 48.0, weather_risk: str = "moderate_rain"):
+    from construction_pro import predict_delay_and_schedule_risk
+    return predict_delay_and_schedule_risk(phase=phase, current_progress_pct=current_progress_pct, weather_risk=weather_risk)
+
+@app.post("/api/schedule/delay-risk")
+def post_delay_risk(req: DelayRiskReq):
+    from construction_pro import predict_delay_and_schedule_risk
+    return predict_delay_and_schedule_risk(phase=req.phase, current_progress_pct=req.current_progress_pct, weather_risk=req.weather_risk)
+
+@app.get("/api/boq/estimate")
+def get_boq_estimate(built_up_sqft: float = 10000.0, building_type: str = "Commercial Office G+3", concrete_grade: str = "M25"):
+    from construction_pro import generate_smart_boq
+    return generate_smart_boq(built_up_sqft=built_up_sqft, building_type=building_type, concrete_grade=concrete_grade)
+
+@app.post("/api/boq/estimate")
+def post_boq_estimate(req: BoqReq):
+    from construction_pro import generate_smart_boq
+    return generate_smart_boq(built_up_sqft=req.built_up_sqft, building_type=req.building_type, concrete_grade=req.concrete_grade)
 
 
 # ── SQLite Database History Endpoints ─────────────────────────────────────────

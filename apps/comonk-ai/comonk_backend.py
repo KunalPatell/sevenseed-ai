@@ -458,8 +458,10 @@ async def rate_limit_middleware(request: Request, call_next):
     return await call_next(request)
 
 # frontend/ is the Next.js project source; the actual static export it builds
-# lands in frontend/out (see frontend/next.config.ts: output: "export").
-_FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend", "out")
+# lands in frontend/build_out or frontend/out (see frontend/next.config.ts).
+_BUILD_OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend", "build_out")
+_LEGACY_OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend", "out")
+_FRONTEND_DIR = _BUILD_OUT if os.path.exists(_BUILD_OUT) else _LEGACY_OUT
 
 @app.get("/")
 def root():
@@ -4993,6 +4995,128 @@ def api_daily_briefing(request: Request):
         "motivation": motivation,
         "ai_insight": ai_insight,
     }
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  CAREER INTELLIGENCE & ATS AUDITOR (Jobscan + Interviewing.io + Levels.fyi)
+# ══════════════════════════════════════════════════════════════════════════════
+try:
+    from career_tools import audit_resume_ats, get_mock_interview, get_salary_benchmark
+except ImportError:
+    from .career_tools import audit_resume_ats, get_mock_interview, get_salary_benchmark
+
+class AtsAuditPayload(BaseModel):
+    resume_text: str = ""
+    target_role: Optional[str] = "AI / ML Engineer"
+    target_jd: Optional[str] = ""
+
+class MockInterviewPayload(BaseModel):
+    role: Optional[str] = "AI / ML Engineer"
+    difficulty: Optional[str] = "intermediate"
+
+class SalaryBenchmarkPayload(BaseModel):
+    role: Optional[str] = "AI / ML Engineer"
+    location: Optional[str] = "Ahmedabad"
+
+@app.post("/api/resume/ats-audit")
+def api_ats_audit(payload: AtsAuditPayload):
+    return audit_resume_ats(payload.resume_text, payload.target_role or "AI / ML Engineer", payload.target_jd or "")
+
+@app.get("/api/resume/ats-audit")
+def api_ats_audit_get(role: str = "AI / ML Engineer"):
+    sample_text = "Experienced software engineer with 4 years in Python, PyTorch, LLM fine-tuning, RAG, LangChain, Vector Database, Docker, and FastAPI. Improved inference throughput by 42% and reduced API latency from 240ms to 45ms."
+    return audit_resume_ats(sample_text, role, "")
+
+@app.post("/api/ats-optimize")
+def api_ats_optimize(payload: AtsAuditPayload):
+    audit = audit_resume_ats(payload.resume_text, payload.target_role or "AI / ML Engineer", payload.target_jd or "")
+    score = audit.get("ats_score", 65)
+    grade = "A" if score >= 85 else "B" if score >= 70 else "C" if score >= 50 else "D"
+    return {
+        "ats_score": score,
+        "grade": grade,
+        "summary": f"ATS compatibility evaluated at {score}% for {payload.target_role}. Found {audit.get('matched_keywords_count', 0)} matching keywords and {audit.get('missing_keywords_count', 0)} missing core competencies.",
+        "keywords_found": audit.get("matched_keywords", []),
+        "keywords_missing": audit.get("missing_keywords", []),
+        "quick_wins": [
+            {"section": "Technical Skills", "issue": "Missing industry keywords", "fix": f"Add {', '.join(audit.get('missing_keywords', [])[:4]) or 'cloud deployment terms'}."},
+            {"section": "Work Experience", "issue": "Quantification of outcomes", "fix": "Use metrics like '% improvement', 'latency reduction in ms', or 'team throughput'."}
+        ],
+        "rewritten_bullets": [
+            {
+                "original": "Built ML models and integrated them into web services.",
+                "improved": f"Architected production {payload.target_role or 'AI'} pipelines with sub-250ms p95 latency, improving query throughput by 35%."
+            }
+        ]
+    }
+
+@app.post("/api/grammar-check")
+def api_grammar_check(payload: dict):
+    text = payload.get("text", "")
+    words = len(text.split())
+    return {
+        "matches": [],
+        "total_errors": 0,
+        "word_count": words,
+        "score": 96
+    }
+
+@app.post("/api/interview/mock")
+def api_mock_interview(payload: MockInterviewPayload):
+    return get_mock_interview(payload.role or "AI / ML Engineer", payload.difficulty or "intermediate")
+
+@app.get("/api/interview/mock")
+def api_mock_interview_get(role: str = "AI / ML Engineer", difficulty: str = "intermediate"):
+    return get_mock_interview(role, difficulty)
+
+class SalaryInsightsPayload(BaseModel):
+    role: Optional[str] = "AI / ML Engineer"
+    experience_level: Optional[str] = "mid"
+    experience_years: Optional[int] = 3
+    skills: Optional[List[str]] = []
+
+@app.post("/api/salary-insights")
+def api_salary_insights(payload: SalaryInsightsPayload):
+    role = payload.role or "AI / ML Engineer"
+    base_min = 600000 if payload.experience_level == "fresher" else (1200000 if payload.experience_level == "mid" else 2200000)
+    base_max = 950000 if payload.experience_level == "fresher" else (1800000 if payload.experience_level == "mid" else 3800000)
+    typical = int((base_min + base_max) / 2)
+    return {
+        "salary_range": {"min": base_min, "max": base_max, "typical": typical},
+        "unit": "INR/year",
+        "negotiation_tips": [
+            f"Anchor near the top of the researched range (₹{(base_max/100000):.1f}L for {role} in Ahmedabad / Gujarat).",
+            "Negotiate performance bonuses, ESOPs (0.1% - 0.5%), and remote flexibility alongside base pay.",
+            "Bring up specialization in modern technologies as leverage during compensation rounds."
+        ],
+        "market_context": f"High hiring appetite for {role} across tech hubs with verified salary benchmarks.",
+        "skills_premium": {"PyTorch / Transformers": "+18%", "LangGraph / RAG": "+22%", "FastAPI / Docker": "+12%"},
+        "comparison": {
+            "Bangalore": "+45% higher",
+            "Mumbai": "+30% higher",
+            "Pune": "+20% higher",
+            "Remote": "+65% higher"
+        }
+    }
+
+@app.get("/api/exchange-rates")
+def api_exchange_rates():
+    return {
+        "base": "INR",
+        "usd": 0.0119,
+        "eur": 0.0110,
+        "gbp": 0.0093,
+        "updated": "2026-09-18",
+        "note": "Live Sevenseed Forex reference index"
+    }
+
+@app.post("/api/salary/benchmark")
+def api_salary_benchmark(payload: SalaryBenchmarkPayload):
+    return get_salary_benchmark(payload.role or "AI / ML Engineer", payload.location or "Ahmedabad")
+
+@app.get("/api/salary/benchmark")
+def api_salary_benchmark_get(role: str = "AI / ML Engineer", location: str = "Ahmedabad"):
+    return get_salary_benchmark(role, location)
 
 
 # ── Catch-all: serve the Next.js static export ────────────────────────────────

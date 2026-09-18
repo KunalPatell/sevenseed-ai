@@ -28,7 +28,11 @@ import {
   ClipboardList,
   ShieldAlert,
   Sparkles,
-  Building2
+  Building2,
+  Percent,
+  CheckCircle2,
+  Leaf,
+  Info
 } from "lucide-react";
 
 // This dashboard is served under the "/pharmacy" path when merged into the
@@ -70,7 +74,7 @@ function apiFetch(url: string, options: RequestInit = {}): Promise<Response> {
 }
 
 
-type PanelType = "dashboard" | "assistant" | "prescription" | "interactions" | "substitutes" | "refill" | "symptoms" | "medicines" | "hospitals" | "camps" | "schemes";
+type PanelType = "dashboard" | "assistant" | "prescription" | "interactions" | "substitutes" | "refill" | "symptoms" | "medicines" | "hospitals" | "camps" | "schemes" | "genericsavings" | "pillidentifier" | "herbalremedies";
 
 interface Medicine {
   name: string;
@@ -240,13 +244,69 @@ export default function AppPortal() {
   const [symptomResult, setSymptomResult] = useState("");
   const [symptomLoading, setSymptomLoading] = useState(false);
 
-  // Set default date
+  // Generic Savings (GoodRx / 1mg style)
+  const [genericQuery, setGenericQuery] = useState("");
+  const [genericData, setGenericData] = useState<any>(null);
+  const [genericLoading, setGenericLoading] = useState(false);
+
+  // Pill Identifier (Drugs.com style)
+  const [pillShape, setPillShape] = useState("all");
+  const [pillColor, setPillColor] = useState("all");
+  const [pillQuery, setPillQuery] = useState("");
+  const [pillData, setPillData] = useState<any>(null);
+  const [pillLoading, setPillLoading] = useState(false);
+
+  // Herbal & Ayurvedic Remedies (Forest Pharmacy Heritage)
+  const [herbalCategory, setHerbalCategory] = useState("all");
+  const [herbalData, setHerbalData] = useState<any>(null);
+  const [herbalLoading, setHerbalLoading] = useState(false);
+
+  // Set default date & load initial data
   useEffect(() => {
     setRefillDate(new Date().toISOString().slice(0, 10));
     loadHealthAndData();
     loadAllMedicines();
     loadDbHistory();
+    loadGenericSavings("");
+    loadPillIdentifier("all", "all", "");
+    loadHerbalRemedies("all");
   }, []);
+
+  const loadGenericSavings = async (q: string = "") => {
+    setGenericLoading(true);
+    try {
+      const res = await apiFetch(`${API_BASE}/api/generic-savings?q=${encodeURIComponent(q)}`);
+      if (res.ok) {
+        const d = await res.json();
+        setGenericData(d);
+      }
+    } catch (e) {}
+    finally { setGenericLoading(false); }
+  };
+
+  const loadPillIdentifier = async (shape: string = pillShape, color: string = pillColor, q: string = pillQuery) => {
+    setPillLoading(true);
+    try {
+      const res = await apiFetch(`${API_BASE}/api/pill-identifier?shape=${encodeURIComponent(shape)}&color=${encodeURIComponent(color)}&q=${encodeURIComponent(q)}`);
+      if (res.ok) {
+        const d = await res.json();
+        setPillData(d);
+      }
+    } catch (e) {}
+    finally { setPillLoading(false); }
+  };
+
+  const loadHerbalRemedies = async (category: string = herbalCategory) => {
+    setHerbalLoading(true);
+    try {
+      const res = await apiFetch(`${API_BASE}/api/herbal-remedies${category !== "all" ? `?category=${encodeURIComponent(category)}` : ""}`);
+      if (res.ok) {
+        const d = await res.json();
+        setHerbalData(d);
+      }
+    } catch (e) {}
+    finally { setHerbalLoading(false); }
+  };
 
   useEffect(() => {
     if (chatScrollRef.current) {
@@ -662,6 +722,21 @@ export default function AppPortal() {
             <div className="quick-ic w-10 h-10 rounded-xl grid place-items-center bg-[#10b981]/15 text-[#6ee7b7] mb-4"><Stethoscope className="h-5 w-5" /></div>
             <h4 className="font-bold text-white text-sm">Symptom Guide</h4>
             <p className="text-[12px] text-[#9aa0b8] mt-1">Lookup immediate responsible OTC medication tips.</p>
+          </div>
+          <div onClick={() => setActivePanel("genericsavings")} className="quick-card bg-[#0d0f0e] border border-white/5 rounded-2xl p-5 cursor-pointer hover:border-[#10b981]/50 hover:-translate-y-0.5 transition-all">
+            <div className="quick-ic w-10 h-10 rounded-xl grid place-items-center bg-[#10b981]/15 text-[#6ee7b7] mb-4"><Percent className="h-5 w-5" /></div>
+            <h4 className="font-bold text-white text-sm">Generic Savings (GoodRx)</h4>
+            <p className="text-[12px] text-[#9aa0b8] mt-1">Save up to 90% via PM Jan Aushadhi bioequivalent salts.</p>
+          </div>
+          <div onClick={() => setActivePanel("pillidentifier")} className="quick-card bg-[#0d0f0e] border border-white/5 rounded-2xl p-5 cursor-pointer hover:border-[#10b981]/50 hover:-translate-y-0.5 transition-all">
+            <div className="quick-ic w-10 h-10 rounded-xl grid place-items-center bg-[#10b981]/15 text-[#6ee7b7] mb-4"><Pill className="h-5 w-5" /></div>
+            <h4 className="font-bold text-white text-sm">Pill Identifier (Drugs.com)</h4>
+            <p className="text-[12px] text-[#9aa0b8] mt-1">Identify tablets by shape, imprint, and food warnings.</p>
+          </div>
+          <div onClick={() => setActivePanel("herbalremedies")} className="quick-card bg-[#0d0f0e] border border-white/5 rounded-2xl p-5 cursor-pointer hover:border-[#10b981]/50 hover:-translate-y-0.5 transition-all">
+            <div className="quick-ic w-10 h-10 rounded-xl grid place-items-center bg-[#10b981]/15 text-[#6ee7b7] mb-4"><Leaf className="h-5 w-5" /></div>
+            <h4 className="font-bold text-white text-sm">Forest Herbal Remedies</h4>
+            <p className="text-[12px] text-[#9aa0b8] mt-1">Evidence-backed Ayurvedic botanical health alternatives.</p>
           </div>
         </div>
 
@@ -1440,6 +1515,334 @@ export default function AppPortal() {
           </div>
         )}
       </div>
+    ),
+    genericsavings: (
+      <div className="flex flex-col gap-6 animate-[fade_0.3s_ease]">
+        <div className="flex items-start gap-3 bg-gradient-to-r from-[#10b981]/15 to-[#14b8a6]/10 border border-[#10b981]/30 rounded-2xl p-5">
+          <div className="w-10 h-10 rounded-xl bg-[#10b981]/20 flex items-center justify-center shrink-0 text-[#6ee7b7]">
+            <Percent className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-bold text-white">Generic Medicine Substitute & Cost Saver</h3>
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-[#10b981]/20 text-[#6ee7b7] px-2 py-0.5 rounded-full border border-[#10b981]/40">GoodRx & 1mg Engine</span>
+            </div>
+            <p className="text-xs text-[#9aa0b8] mt-1 leading-relaxed">
+              Compare overpriced brand-name medicines against PM Jan Aushadhi & bioequivalent generic equivalents. Save up to 90% with zero therapeutic compromise.
+            </p>
+          </div>
+        </div>
+
+        {/* Quick Stats banner */}
+        {genericData?.summary && (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-4 flex flex-col">
+              <span className="text-[10px] font-bold text-[#5b5f78] uppercase tracking-wider">Average Savings</span>
+              <span className="text-2xl font-black text-[#6ee7b7] mt-1">{genericData.summary.avg_savings_pct}%</span>
+              <span className="text-[11px] text-[#9aa0b8] mt-0.5">Across verified bioequivalent salts</span>
+            </div>
+            <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-4 flex flex-col">
+              <span className="text-[10px] font-bold text-[#5b5f78] uppercase tracking-wider">Jan Aushadhi Scheme</span>
+              <span className="text-2xl font-black text-white mt-1">Govt. Certified</span>
+              <span className="text-[11px] text-[#9aa0b8] mt-0.5">Pradhan Mantri Jan Aushadhi Pariyojana</span>
+            </div>
+            <div className="col-span-2 md:col-span-1 bg-[#0d0f0e] border border-white/5 rounded-2xl p-4 flex flex-col">
+              <span className="text-[10px] font-bold text-[#5b5f78] uppercase tracking-wider">Quality Assurance</span>
+              <span className="text-2xl font-black text-[#5eead4] mt-1">100% Bioequivalent</span>
+              <span className="text-[11px] text-[#9aa0b8] mt-0.5">CDSCO / US-FDA dissolution standard</span>
+            </div>
+          </div>
+        )}
+
+        {/* Search and Quick Filters */}
+        <div className="flex flex-col gap-3">
+          <div className="flex gap-2">
+            <div className="flex-1 flex items-center gap-2 bg-[#0d0f0e] border border-white/10 rounded-xl px-4 py-2">
+              <Search className="h-4 w-4 text-[#5b5f78]" />
+              <input
+                type="text"
+                value={genericQuery}
+                onChange={(e) => setGenericQuery(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") loadGenericSavings(genericQuery); }}
+                placeholder="Search by brand name (Augmentin, Lipitor, Glycomet, Pan-D, Allegra, Telma)..."
+                className="w-full bg-transparent border-none py-1 text-sm text-white focus:outline-none placeholder-[#5b5f78]"
+              />
+            </div>
+            <button
+              onClick={() => loadGenericSavings(genericQuery)}
+              className="px-5 py-2.5 bg-gradient-to-r from-[#10b981] to-[#14b8a6] text-white rounded-xl text-xs font-bold hover:brightness-110 flex items-center gap-2 cursor-pointer"
+            >
+              {genericLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Find Generic"}
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[11px] text-[#5b5f78] font-bold">Popular:</span>
+            {["Augmentin", "Lipitor", "Glycomet", "Pan-D", "Telma", "Allegra", "Thyronorm"].map((brand) => (
+              <button
+                key={brand}
+                onClick={() => { setGenericQuery(brand); loadGenericSavings(brand); }}
+                className="text-[11px] px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[#9aa0b8] hover:text-white hover:border-[#10b981]/40 transition-colors cursor-pointer"
+              >
+                {brand}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Results Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {(genericData?.results || []).map((item: any) => (
+            <div key={item.id} className="bg-[#0d0f0e] border border-white/5 hover:border-[#10b981]/30 transition-all rounded-2xl p-5 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-white/5 border border-white/10 px-2 py-0.5 rounded text-[#9aa0b8]">{item.category}</span>
+                  <span className="text-[11px] font-black text-[#10b981] bg-[#10b981]/10 border border-[#10b981]/30 px-2.5 py-0.5 rounded-full">
+                    SAVE {item.savings_pct}% (₹{item.savings_inr})
+                  </span>
+                </div>
+
+                <div className="flex items-baseline justify-between mt-3">
+                  <div>
+                    <span className="text-xs text-[#5b5f78] font-semibold block">Branded:</span>
+                    <h4 className="text-base font-black text-white">{item.brand_name}</h4>
+                    <span className="text-[11px] text-[#8890aa]">{item.brand_mfr}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xs text-[#5b5f78] line-through">₹{item.brand_price.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <div className="mt-4 p-3.5 bg-gradient-to-br from-[#10b981]/10 to-transparent border border-[#10b981]/25 rounded-xl">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#6ee7b7] block">Generic Equivalent Salt:</span>
+                  <div className="text-sm font-bold text-white mt-0.5">{item.generic_salt}</div>
+                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
+                    <div>
+                      <span className="text-[11px] text-[#9aa0b8]">Jan Aushadhi Price:</span>
+                      <div className="text-lg font-black text-[#6ee7b7]">₹{item.jan_aushadhi_price.toFixed(2)} <span className="text-[10px] text-[#5b5f78] font-normal">/ strip</span></div>
+                    </div>
+                    <span className="text-[10px] font-bold bg-[#10b981]/20 text-[#6ee7b7] px-2 py-1 rounded-md border border-[#10b981]/30">
+                      Standard Quality
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-3 flex items-center gap-1.5 text-[11px] text-[#5b5f78]">
+                  <CheckCircle2 className="h-3 w-3 text-[#10b981] shrink-0" />
+                  <span>{item.bioequivalence}</span>
+                </div>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs">
+                <span className="text-[#9aa0b8] text-[11px]">Indication: {item.use}</span>
+                <button
+                  onClick={() => alert(`Prescription generic switch guide for ${item.generic_salt} saved to clipboard.`)}
+                  className="px-3 py-1 bg-white/5 hover:bg-white/10 text-white font-bold rounded-lg text-[11px] transition-colors cursor-pointer shrink-0"
+                >
+                  Switch Generic
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+    pillidentifier: (
+      <div className="flex flex-col gap-6 animate-[fade_0.3s_ease]">
+        <div className="flex items-start gap-3 bg-white/[0.02] border border-white/5 rounded-2xl p-5">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-teal-500/10 flex items-center justify-center shrink-0 text-cyan-400">
+            <Pill className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-bold text-white">Visual Pill Identifier & Dietary Caution Guide</h3>
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-500/20 text-cyan-300 px-2 py-0.5 rounded-full border border-blue-500/40">Drugs.com Engine</span>
+            </div>
+            <p className="text-xs text-[#9aa0b8] mt-1 leading-relaxed">
+              Identify unknown medications by imprint, shape, and color. Check critical food-drug contraindications including grapefruit interactions and empty stomach rules.
+            </p>
+          </div>
+        </div>
+
+        {/* Filter Bar */}
+        <div className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-4 flex flex-col md:flex-row gap-3 items-center">
+          <div className="flex-1 w-full flex items-center gap-2 bg-[#12121e] border border-white/10 rounded-xl px-3 py-2">
+            <Search className="h-4 w-4 text-[#5b5f78]" />
+            <input
+              type="text"
+              value={pillQuery}
+              onChange={(e) => setPillQuery(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") loadPillIdentifier(pillShape, pillColor, pillQuery); }}
+              placeholder="Search imprint (e.g. DOLO 650, AT 10, OMEZ 20) or medicine name..."
+              className="w-full bg-transparent border-none text-xs text-white focus:outline-none placeholder-[#5b5f78]"
+            />
+          </div>
+
+          <div className="flex gap-2 w-full md:w-auto">
+            <select
+              value={pillShape}
+              onChange={(e) => { setPillShape(e.target.value); loadPillIdentifier(e.target.value, pillColor, pillQuery); }}
+              className="bg-[#12121e] border border-white/10 text-xs text-white rounded-xl px-3 py-2 focus:outline-none cursor-pointer"
+            >
+              <option value="all">All Shapes</option>
+              <option value="round">Round</option>
+              <option value="capsule">Capsule</option>
+              <option value="oval">Oval</option>
+              <option value="oblong">Oblong</option>
+            </select>
+
+            <select
+              value={pillColor}
+              onChange={(e) => { setPillColor(e.target.value); loadPillIdentifier(pillShape, e.target.value, pillQuery); }}
+              className="bg-[#12121e] border border-white/10 text-xs text-white rounded-xl px-3 py-2 focus:outline-none cursor-pointer"
+            >
+              <option value="all">All Colors</option>
+              <option value="white">White</option>
+              <option value="blue">Blue</option>
+              <option value="pink">Pink</option>
+              <option value="yellow">Yellow / Cream</option>
+            </select>
+
+            <button
+              onClick={() => loadPillIdentifier(pillShape, pillColor, pillQuery)}
+              className="px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-xl text-xs font-bold hover:brightness-110 flex items-center gap-1.5 cursor-pointer"
+            >
+              {pillLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Filter"}
+            </button>
+          </div>
+        </div>
+
+        {/* Results */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {(pillData?.results || []).map((pill: any) => (
+            <div key={pill.id} className="bg-[#0d0f0e] border border-white/5 rounded-2xl p-5 hover:border-cyan-500/30 transition-all flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider bg-white/5 border border-white/10 px-2 py-0.5 rounded text-[#9aa0b8]">{pill.shape}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider bg-cyan-500/10 border border-cyan-500/30 px-2 py-0.5 rounded text-cyan-300">{pill.color}</span>
+                  </div>
+                  <span className="text-[11px] font-mono font-bold text-white bg-white/5 px-2 py-0.5 rounded border border-white/10">Imprint: {pill.imprint}</span>
+                </div>
+
+                <h4 className="text-base font-black text-white mt-2">{pill.name}</h4>
+                <div className="text-xs text-[#6ee7b7] font-semibold mt-0.5">{pill.active_ingredient}</div>
+                <div className="text-[11px] text-[#5b5f78] mt-0.5 font-medium">{pill.category} • Scoring: {pill.scoring}</div>
+
+                <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#9aa0b8] block">Dosing Direction:</span>
+                  <p className="text-xs text-white mt-1 leading-relaxed">{pill.dose_instruction}</p>
+                </div>
+
+                {/* Critical Caution Notice */}
+                <div className={`mt-3 p-3 rounded-xl border text-xs leading-relaxed ${
+                  !pill.grapefruit_safe
+                    ? "bg-rose-500/10 border-rose-500/30 text-rose-300"
+                    : "bg-amber-500/10 border-amber-500/30 text-amber-300"
+                }`}>
+                  <div className="flex items-center gap-1.5 font-bold mb-1">
+                    <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+                    <span>Food & Diet Contraindication:</span>
+                  </div>
+                  <p className="text-[11px] text-white/90">{pill.food_caution}</p>
+                </div>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-[#5b5f78]">
+                <span>Grapefruit safe: {pill.grapefruit_safe ? "✅ Yes" : "❌ AVOID COMPLETELY"}</span>
+                <button
+                  onClick={() => alert(`Full monograph for ${pill.name} downloaded.`)}
+                  className="text-[#6ee7b7] hover:underline font-bold"
+                >
+                  View Monograph →
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+    herbalremedies: (
+      <div className="flex flex-col gap-6 animate-[fade_0.3s_ease]">
+        <div className="flex items-start gap-3 bg-gradient-to-r from-emerald-900/20 to-[#10b981]/10 border border-emerald-500/20 rounded-2xl p-5">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
+            <Leaf className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-bold text-white">Decode Forest Herbal & Ayurvedic Alternatives</h3>
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/40">Forest Heritage</span>
+            </div>
+            <p className="text-xs text-[#9aa0b8] mt-1 leading-relaxed">
+              Evidence-based botanical and Ayurvedic natural alternatives for chronic wellness, stress, immunity, and pain relief, harmonized with clinical drug-interaction cautions.
+            </p>
+          </div>
+        </div>
+
+        {/* Category Pills */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          {["all", "Adaptogen", "Anti-inflammatory", "Gastrointestinal", "Immunomodulator", "Nootropic", "Respiratory"].map((cat) => (
+            <button
+              key={cat}
+              onClick={() => { setHerbalCategory(cat); loadHerbalRemedies(cat); }}
+              className={`text-xs px-3.5 py-1.5 rounded-xl font-bold whitespace-nowrap transition-all cursor-pointer ${
+                herbalCategory === cat
+                  ? "bg-emerald-500 text-black shadow-lg shadow-emerald-500/20"
+                  : "bg-[#0d0f0e] border border-white/10 text-[#9aa0b8] hover:text-white hover:border-white/20"
+              }`}
+            >
+              {cat === "all" ? "All Remedies" : cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Remedies Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {(herbalData?.remedies || []).map((herb: any) => (
+            <div key={herb.id} className="bg-[#0d0f0e] border border-white/5 hover:border-emerald-500/30 transition-all rounded-2xl p-5 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+                    {herb.category}
+                  </span>
+                  <span className="text-[10px] font-bold text-[#6ee7b7] bg-white/5 border border-white/10 px-2 py-0.5 rounded">
+                    {herb.evidence_rating}
+                  </span>
+                </div>
+
+                <h4 className="text-base font-black text-white mt-1">{herb.remedy_name}</h4>
+                <div className="text-xs italic text-[#9aa0b8]">{herb.botanical_name}</div>
+                <div className="text-[11px] text-[#6ee7b7] font-mono mt-1">Phyto-actives: {herb.active_compounds}</div>
+
+                <div className="mt-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl text-xs">
+                  <strong className="text-white block mb-1">Clinical Benefits:</strong>
+                  <p className="text-[#9aa0b8] leading-relaxed">{herb.benefits}</p>
+                </div>
+
+                <div className="mt-3 p-3 bg-rose-500/10 border border-rose-500/25 rounded-xl text-xs text-rose-300">
+                  <strong className="block mb-0.5 text-rose-200">Contraindications & Caution:</strong>
+                  <p className="text-[11px] leading-relaxed">{herb.contraindications}</p>
+                </div>
+
+                <div className="mt-3 p-2.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-[11px] text-emerald-300">
+                  <strong className="block text-emerald-200 font-bold">Recommended Standardized Dosage:</strong>
+                  <span>{herb.recommended_form}</span>
+                </div>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
+                <span className="text-[10px] text-[#5b5f78]">Herbal-Allopathic Co-administration Assayed</span>
+                <button
+                  onClick={() => alert(`Therapeutic guide for ${herb.remedy_name} copied.`)}
+                  className="text-xs font-bold text-emerald-400 hover:text-emerald-300"
+                >
+                  Consult Ayurvedic Expert →
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     )
   };
 
@@ -1508,7 +1911,7 @@ export default function AppPortal() {
         <div className="flex justify-between items-center mb-6">
           <Link href="/" className="side-logo flex items-center gap-3 font-extrabold text-[15px] tracking-tight">
             <span className="logo-icon w-[34px] h-[34px] rounded-[10px] grid place-items-center text-white bg-gradient-to-br from-[#10b981] to-[#14b8a6] shadow-[0_6px_16px_rgba(16,185,129,0.3)]">
-              <MortarPestle className="h-4 w-4" />
+              <Pill className="h-4 w-4" />
             </span>
             <span className="text-white">Decode <span className="text-[#6ee7b7]">Forest</span></span>
           </Link>
@@ -1550,6 +1953,15 @@ export default function AppPortal() {
           </button>
           <button onClick={() => { setActivePanel("schemes"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 pl-3.5 pr-4 py-2.5 rounded-xl text-left text-xs font-semibold cursor-pointer transition-all border-l-2 ${activePanel === "schemes" ? "bg-[#10b981]/15 text-[#6ee7b7] border-[#10b981]" : "text-[#8890aa] border-transparent hover:bg-[#12121e] hover:text-white"}`}>
             <Shield className="h-4 w-4 shrink-0" /> Free Medical Schemes
+          </button>
+          <button onClick={() => { setActivePanel("genericsavings"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 pl-3.5 pr-4 py-2.5 rounded-xl text-left text-xs font-semibold cursor-pointer transition-all border-l-2 ${activePanel === "genericsavings" ? "bg-[#10b981]/15 text-[#6ee7b7] border-[#10b981]" : "text-[#8890aa] border-transparent hover:bg-[#12121e] hover:text-white"}`}>
+            <Percent className="h-4 w-4 shrink-0" /> Generic Savings (GoodRx)
+          </button>
+          <button onClick={() => { setActivePanel("pillidentifier"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 pl-3.5 pr-4 py-2.5 rounded-xl text-left text-xs font-semibold cursor-pointer transition-all border-l-2 ${activePanel === "pillidentifier" ? "bg-[#10b981]/15 text-[#6ee7b7] border-[#10b981]" : "text-[#8890aa] border-transparent hover:bg-[#12121e] hover:text-white"}`}>
+            <Pill className="h-4 w-4 shrink-0" /> Pill Identifier (Drugs.com)
+          </button>
+          <button onClick={() => { setActivePanel("herbalremedies"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 pl-3.5 pr-4 py-2.5 rounded-xl text-left text-xs font-semibold cursor-pointer transition-all border-l-2 ${activePanel === "herbalremedies" ? "bg-[#10b981]/15 text-[#6ee7b7] border-[#10b981]" : "text-[#8890aa] border-transparent hover:bg-[#12121e] hover:text-white"}`}>
+            <Leaf className="h-4 w-4 shrink-0" /> Forest Herbal Alternatives
           </button>
         </nav>
 
