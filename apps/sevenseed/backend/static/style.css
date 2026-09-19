@@ -744,3 +744,320 @@ body[data-variant="clinical-grid"] .svc-card .svc-tag{flex-shrink:0}
   .section,.hero,.cta,.impact,.trust-strip,.ai-strip{break-inside:avoid-page}
   .glow,.svc-card,.proc-step,.metric,.tcard,.about-card{box-shadow:none;border-color:var(--border)}
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEXT-GEN VISUAL FRAMEWORK
+   Inspired by Unicorn Studio, Aceternity UI, 21st.dev, Spline 3D, Aura Build
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Aceternity Overhead Lamp Illumination ── */
+.hero-lamp {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(920px, 92vw);
+  height: 380px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(var(--primary-rgb), 0.36) 0%, rgba(var(--secondary-rgb), 0.14) 42%, transparent 72%);
+  filter: blur(55px);
+  pointer-events: none;
+  z-index: 2;
+}
+.hero-lamp-line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(440px, 72vw);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffffff, transparent);
+  box-shadow: 0 0 30px 4px rgba(var(--primary-rgb), 0.9);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── Hero Section Architecture ── */
+.hero {
+  position: relative;
+  min-height: 94vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--nav-h) + 48px) clamp(24px, 5vw, 68px) 68px;
+  overflow: hidden;
+  gap: 44px;
+}
+@media(max-width: 992px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding-top: calc(var(--nav-h) + 24px);
+    gap: 32px;
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 5;
+  max-width: 630px;
+  flex: 1 1 540px;
+}
+@media(max-width: 992px) {
+  .hero-content { max-width: 100%; }
+  .hero-actions { justify-content: center; }
+  .stats-row { justify-content: center; }
+}
+
+/* ── Spline-Grade 3D Interactive Stage ── */
+.hero-3d-stage {
+  position: relative;
+  z-index: 5;
+  flex: 1 1 550px;
+  height: 560px;
+  max-width: 620px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+.hero-3d-stage:active { cursor: grabbing; }
+#hero3dCanvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  outline: none;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
+}
+@media(max-width: 992px) {
+  .hero-3d-stage { height: 400px; max-width: 100%; }
+}
+
+/* ── Aura Telemetry HUD Badges ── */
+.aura-telemetry {
+  position: absolute;
+  bottom: 12px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 7px 15px;
+  border-radius: 999px;
+  background: rgba(10, 14, 26, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  backdrop-filter: blur(20px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+  z-index: 6;
+  letter-spacing: 0.03em;
+}
+.aura-telemetry.left { left: 14px; }
+.aura-telemetry.right { right: 14px; }
+.aura-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 12px #10b981;
+  animation: auraPulse 2s infinite ease-in-out;
+}
+@keyframes auraPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.45; }
+}
+
+/* ── Unicorn Studio Interactive Liquid Fluid Canvas Background ── */
+.liquid-fluid-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.85;
+}
+.liquid-mesh {
+  position: absolute;
+  inset: -30%;
+  width: 160%;
+  height: 160%;
+  background: radial-gradient(circle at 35% 35%, rgba(var(--primary-rgb), 0.28), transparent 48%),
+              radial-gradient(circle at 75% 65%, rgba(var(--secondary-rgb), 0.22), transparent 48%),
+              radial-gradient(circle at 50% 85%, rgba(56, 189, 248, 0.16), transparent 42%);
+  filter: blur(85px);
+  animation: liquidMeshMorph 18s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes liquidMeshMorph {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-3%, 4%) scale(1.08) rotate(2deg); }
+  100% { transform: translate(4%, -3%) scale(0.96) rotate(-2deg); }
+}
+
+/* ── Aceternity Shooting Meteors ── */
+.meteors-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+.meteor {
+  position: absolute;
+  top: var(--top, 10%);
+  left: var(--left, 50%);
+  width: 2px;
+  height: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(to right, #ffffff, transparent);
+  box-shadow: 0 0 14px 2px rgba(255,255,255,0.9);
+  transform: rotate(215deg);
+  animation: meteorShower var(--duration, 4s) linear infinite;
+  animation-delay: var(--delay, 0s);
+  opacity: 0;
+}
+.meteor::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 90px;
+  height: 1.5px;
+  background: linear-gradient(90deg, #ffffff, rgba(255,255,255,0.4) 40%, transparent);
+}
+@keyframes meteorShower {
+  0% { transform: rotate(215deg) translateX(0); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: rotate(215deg) translateX(-1000px); opacity: 0; }
+}
+
+/* ── Kinetic Metallic Typography ── */
+.hero-title .grad {
+  background: linear-gradient(120deg, #ffffff 0%, var(--primary-l) 32%, var(--secondary-l) 68%, #ffffff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: kineticShine 6s linear infinite;
+}
+@keyframes kineticShine {
+  to { background-position: 200% center; }
+}
+
+/* ── 21st.dev Animated Continuous Conic Border Beams ── */
+.border-beam-card {
+  position: relative;
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--primary-rgb), 0.14), transparent 45%), var(--bg-1, #0d0d16);
+  border-radius: 20px;
+  padding: 32px;
+  overflow: hidden;
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.15s ease-out, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.border-beam-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(from var(--beam-angle, 0deg), transparent 60%, var(--primary-l, #a5b4fc) 80%, var(--secondary-l, #d8b4fe) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: borderBeamRotate 6s linear infinite;
+}
+@keyframes borderBeamRotate {
+  to { --beam-angle: 360deg; }
+}
+@property --beam-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ── Aceternity Dynamic Spotlight on Cards & Tilt Glare ── */
+.svc-card, .proc-step, .metric, .about-card {
+  position: relative;
+  background: radial-gradient(550px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--primary-rgb), 0.12), transparent 40%), var(--bg-1);
+  transition: transform 0.15s ease-out, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255,255,255,0.22), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  mix-blend-mode: overlay;
+  z-index: 4;
+}
+.border-beam-card:hover .tilt-glare,
+.svc-card:hover .tilt-glare,
+.proc-step:hover .tilt-glare,
+.metric:hover .tilt-glare,
+.about-card:hover .tilt-glare {
+  opacity: 1;
+}
+
+/* ── Uiverse & 21st.dev Shimmer CTA Button ── */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow: 0 4px 24px rgba(var(--primary-rgb), 0.4);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -75%;
+  width: 250%;
+  height: 200%;
+  background: linear-gradient(60deg, transparent 35%, rgba(255,255,255,0.32) 50%, transparent 65%);
+  transform: rotate(25deg);
+  animation: btnShimmer 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes btnShimmer {
+  0% { transform: translateX(-100%) rotate(25deg); }
+  25%, 100% { transform: translateX(100%) rotate(25deg); }
+}
+
+/* Bento Grid System */
+.bento-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  max-width: var(--maxw);
+  margin: 0 auto;
+}
+.bento-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+@media(max-width: 1024px) {
+  .bento-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width: 768px) {
+  .bento-grid-3 { grid-template-columns: 1fr; }
+}
+.bento-wide {
+  grid-column: span 2;
+}
+@media(max-width: 768px) {
+  .bento-wide { grid-column: span 1; }
+}

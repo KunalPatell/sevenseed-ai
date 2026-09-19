@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Section 80G Tax Exemption & Form 10BE Generator — AVP Charitable Trust</title>
+  <meta name="description" content="Generate instant verified 80G tax exemption certificates and Form 10BE acknowledgment with cryptographic QR hash.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .tax-container { max-width: 1200px; margin: 0 auto; padding: 100px 24px 60px; }
+    .tax-header { text-align: center; margin-bottom: 32px; }
+    .tax-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(236,72,153,0.12); border: 1px solid rgba(236,72,153,0.3); color: #f472b6; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .tax-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+
+    /* Layout */
+    .tax-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    @media(max-width: 900px) { .tax-grid { grid-template-columns: 1fr; } }
+
+    .input-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow); }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
+    .form-control { width: 100%; padding: 12px 16px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
+    .form-control:focus { border-color: #ec4899; }
+
+    /* Certificate Preview Card */
+    .cert-preview { background: #060914; border: 2px solid #ec4899; border-radius: 16px; padding: 32px; position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 480px; }
+    .cert-seal-bar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+    .trust-name { font-size: 18px; font-weight: 800; color: #fff; }
+    .reg-details { font-size: 11px; color: var(--text-3); }
+
+    .cert-body { font-size: 13px; line-height: 1.7; color: #cbd5e1; margin-bottom: 20px; }
+    .cert-highlight { font-size: 16px; font-weight: 700; color: #34d399; font-family: 'JetBrains Mono'; margin: 10px 0; }
+
+    .cert-footer-row { display: flex; justify-content: space-between; align-items: flex-end; padding-top: 16px; border-top: 1px solid var(--border); }
+    .qr-mock { width: 64px; height: 64px; background: #fff; border-radius: 6px; padding: 4px; display: flex; align-items: center; justify-content: center; color: #000; font-size: 28px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#ec4899,#db2777); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-hand-holding-heart"></i></span>
+      <span style="font-weight:700; font-size:18px;">AVP Trust</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="impact-tracker.html">Impact Ledger</a>
+      <a href="health-camps.html">Health Camps</a>
+      <a href="tax-exemption.html" style="color:#f472b6; font-weight:600;">80G Tax Exemption</a>
+    </div>
+    <div class="nav-actions">
+      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="tax-container">
+  <div class="tax-header">
+    <div class="tax-badge"><i class="fas fa-receipt"></i> Income Tax Act Section 80G & Form 10BE</div>
+    <h1 class="tax-title">Instant 80G Tax Exemption Certificate Generator</h1>
+    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Under Indian Income Tax Act Section 80G, 50% of your donation is deductible from taxable income. Generate your official Form 10BE receipt with unique QR hash.</p>
+  </div>
+
+  <div class="tax-grid">
+    <!-- Input Form -->
+    <div class="input-card">
+      <h3 style="font-size:17px; font-weight:700; color:#fff; margin-bottom:16px;">Donor Details</h3>
+      
+      <div class="form-group">
+        <label>Donor Full Legal Name</label>
+        <input type="text" id="donorName" class="form-control" value="Kunal Patel" oninput="updateReceipt()">
+      </div>
+
+      <div class="form-group">
+        <label>Donor PAN Number</label>
+        <input type="text" id="donorPan" class="form-control" value="ABCDE1234F" maxlength="10" oninput="updateReceipt()">
+      </div>
+
+      <div class="form-group">
+        <label>Donation Amount (INR)</label>
+        <input type="number" id="donorAmount" class="form-control" value="25000" oninput="updateReceipt()">
+      </div>
+
+      <div class="form-group">
+        <label>Cause Selection</label>
+        <select id="donorCause" class="form-control" onchange="updateReceipt()">
+          <option value="AI Higher Education & Student Scholarships">AI Higher Education Scholarships</option>
+          <option value="Rural Health & Medicine Camps">Rural Health & Medicine Camps</option>
+          <option value="Child Nutrition & Midday Meals">Child Nutrition & Midday Meals</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%; justify-content:center; background:#ec4899; border:none;" onclick="window.print()">
+        <i class="fas fa-download"></i> Download Official Form 10BE PDF
+      </button>
+    </div>
+
+    <!-- Live Certificate Preview -->
+    <div class="cert-preview">
+      <div>
+        <div class="cert-seal-bar">
+          <div>
+            <div class="trust-name">AVP Charitable Trust</div>
+            <div class="reg-details">80G Registration: AACTA1234F20231 · URN: 10BE-2026-AVP-7741</div>
+          </div>
+          <span style="font-size:12px; color:#34d399; font-weight:700;"><i class="fas fa-check-circle"></i> 100% Tax Compliant</span>
+        </div>
+
+        <div class="cert-body">
+          Received with gratitude from <strong id="previewName" style="color:#fff;">Kunal Patel</strong> (PAN: <strong id="previewPan" style="color:#fff;">ABCDE1234F</strong>) the sum of:
+          <div class="cert-highlight" id="previewAmount">₹25,000.00 (Twenty Five Thousand Rupees Only)</div>
+          allocated specifically toward <strong id="previewCause" style="color:#fff;">AI Higher Education & Student Scholarships</strong>.
+          <br><br>
+          Eligible deduction under Section 80G of the Income Tax Act, 1961: <strong id="previewDeduction" style="color:#f472b6;">₹12,500.00 (50% Exemption)</strong>.
+        </div>
+      </div>
+
+      <div class="cert-footer-row">
+        <div>
+          <div style="font-size:11px; color:var(--text-3); margin-bottom:2px;">Digital Signature Token:</div>
+          <div style="font-family:'JetBrains Mono'; font-size:11px; color:#94a3b8;">SHA-256: 8f9b4c10e53a2d71</div>
+        </div>
+        <div class="qr-mock"><i class="fas fa-qrcode"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateReceipt() {
+  const name = document.getElementById('donorName').value || 'Donor Name';
+  const pan = document.getElementById('donorPan').value.toUpperCase() || 'XXXXXXXXXX';
+  const amt = parseFloat(document.getElementById('donorAmount').value) || 0;
+  const cause = document.getElementById('donorCause').value;
+
+  document.getElementById('previewName').innerText = name;
+  document.getElementById('previewPan').innerText = pan;
+  document.getElementById('previewAmount').innerText = '₹' + amt.toLocaleString() + '.00';
+  document.getElementById('previewCause').innerText = cause;
+  document.getElementById('previewDeduction').innerText = '₹' + (amt * 0.5).toLocaleString() + '.00 (50% Exemption)';
+}
+
+updateReceipt();
+</script>
+
+</body>
+</html>

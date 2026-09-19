@@ -282,7 +282,7 @@ document.querySelectorAll('.btn').forEach(function(btn){
 // Hero particle network (2D fallback when Three.js is unavailable)
 (function(){
   var c = document.getElementById('particles');
-  if (!c || typeof THREE !== 'undefined') return;
+  if (!c || typeof THREE === 'undefined') return;
   var ctx = c.getContext('2d');
   var w, h, parts;
   var rgb = (getComputedStyle(document.documentElement).getPropertyValue('--primary-rgb') || '124,58,237').trim();
@@ -1045,3 +1045,565 @@ function toast(msg, type){
     });
   });
 })();
+
+
+// ── Unicorn Studio Dynamic Interactive Fluid Canvas Background ──
+(function initUnicornFluidCanvas(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var hero = document.querySelector('.hero');
+  if (!hero) return;
+
+  var canvas = document.createElement('canvas');
+  canvas.className = 'liquid-fluid-canvas';
+  hero.insertBefore(canvas, hero.firstChild);
+
+  var ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  var width, height;
+  function resize(){
+    width = canvas.width = hero.clientWidth;
+    height = canvas.height = hero.clientHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var style = getComputedStyle(document.documentElement);
+  var prRgb = (style.getPropertyValue('--primary-rgb') || '99,102,241').trim();
+  var scRgb = (style.getPropertyValue('--secondary-rgb') || '168,85,247').trim();
+
+  var mouse = { x: width * 0.5, y: height * 0.5, targetX: width * 0.5, targetY: height * 0.5 };
+  window.addEventListener('mousemove', function(e){
+    var rect = hero.getBoundingClientRect();
+    if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+      mouse.targetX = e.clientX - rect.left;
+      mouse.targetY = e.clientY - rect.top;
+    }
+  });
+
+  var points = [];
+  var count = 5;
+  for (var i = 0; i < count; i++) {
+    points.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.8,
+      radius: Math.min(width, height) * (0.3 + Math.random() * 0.25),
+      color: i % 2 === 0 ? prRgb : scRgb
+    });
+  }
+
+  var time = 0;
+  function drawFluid(){
+    time += 0.012;
+    mouse.x += (mouse.targetX - mouse.x) * 0.05;
+    mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+    ctx.clearRect(0, 0, width, height);
+
+    points.forEach(function(pt, idx){
+      pt.x += pt.vx + Math.sin(time + idx) * 0.4;
+      pt.y += pt.vy + Math.cos(time + idx * 1.5) * 0.4;
+      if (pt.x < -100) pt.x = width + 100;
+      if (pt.x > width + 100) pt.x = -100;
+      if (pt.y < -100) pt.y = height + 100;
+      if (pt.y > height + 100) pt.y = -100;
+
+      var dx = mouse.x - pt.x;
+      var dy = mouse.y - pt.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 320) {
+        pt.x += (dx / dist) * 1.2;
+        pt.y += (dy / dist) * 1.2;
+      }
+
+      var grad = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, pt.radius);
+      grad.addColorStop(0, 'rgba(' + pt.color + ', 0.18)');
+      grad.addColorStop(0.5, 'rgba(' + pt.color + ', 0.06)');
+      grad.addColorStop(1, 'rgba(' + pt.color + ', 0)');
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    requestAnimationFrame(drawFluid);
+  }
+  drawFluid();
+})();
+
+// ── Master Spline-Grade 3D WebGL Interactive Controller ──
+(function initSplineHero3D(){
+  if (typeof THREE === 'undefined') return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var canvas = document.getElementById('hero3dCanvas') || document.getElementById('particles');
+  if (!canvas) return;
+  var stage = document.getElementById('hero3dStage') || canvas.parentElement;
+  if (!stage) return;
+
+  var width = stage.clientWidth || 540;
+  var height = stage.clientHeight || 540;
+
+  var style = getComputedStyle(document.documentElement);
+  var primaryHex = (style.getPropertyValue('--primary') || '#6366f1').trim();
+  var secondaryHex = (style.getPropertyValue('--secondary') || '#a855f7').trim();
+  var primaryColor = new THREE.Color(primaryHex);
+  var secondaryColor = new THREE.Color(secondaryHex);
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+  camera.position.set(0, 0, 7.6);
+
+  var renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    alpha: true,
+    antialias: true,
+    powerPreference: 'high-performance'
+  });
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+  var variant = document.body.getAttribute('data-variant') || 'bold-centered';
+  var rootGroup = new THREE.Group();
+  scene.add(rootGroup);
+
+  var modelGroup = new THREE.Group();
+  rootGroup.add(modelGroup);
+
+  var pbrPrimary = new THREE.MeshPhysicalMaterial({
+    color: primaryColor,
+    emissive: primaryColor,
+    emissiveIntensity: 0.35,
+    roughness: 0.15,
+    metalness: 0.85,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.1,
+    reflectivity: 0.9
+  });
+
+  var pbrGlass = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff,
+    emissive: secondaryColor,
+    emissiveIntensity: 0.2,
+    roughness: 0.08,
+    metalness: 0.1,
+    transmission: 0.82,
+    opacity: 0.9,
+    transparent: true,
+    ior: 1.52
+  });
+
+  var pbrGold = new THREE.MeshPhysicalMaterial({
+    color: 0xf59e0b,
+    emissive: 0xd97706,
+    emissiveIntensity: 0.4,
+    roughness: 0.18,
+    metalness: 0.95,
+    clearcoat: 1.0
+  });
+
+  var coreMesh, wireMesh;
+  var rings = [];
+  var satellites = [];
+  var customUpdaters = [];
+
+  if (variant === 'editorial') {
+    // 1. AVPU: The Quantum Knowledge Prism
+    var octaGeom = new THREE.OctahedronGeometry(1.2, 0);
+    coreMesh = new THREE.Mesh(octaGeom, pbrPrimary);
+    modelGroup.add(coreMesh);
+
+    var innerWire = new THREE.Mesh(new THREE.IcosahedronGeometry(0.7, 0), new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true }));
+    modelGroup.add(innerWire);
+
+    var ringAngles = [ [Math.PI/3, 0], [-Math.PI/3, Math.PI/4], [0, Math.PI/3] ];
+    ringAngles.forEach(function(ang, idx){
+      var rGeom = new THREE.TorusGeometry(1.85 + idx * 0.28, 0.025, 16, 100);
+      var rMat = new THREE.MeshStandardMaterial({ color: idx % 2 === 0 ? primaryColor : secondaryColor, metalness: 0.8, roughness: 0.2 });
+      var rMesh = new THREE.Mesh(rGeom, rMat);
+      rMesh.rotation.x = ang[0];
+      rMesh.rotation.y = ang[1];
+      modelGroup.add(rMesh);
+      rings.push({ mesh: rMesh, speed: (idx + 1) * 0.008 * (idx % 2 === 0 ? 1 : -1) });
+
+      var sat = new THREE.Mesh(new THREE.SphereGeometry(0.09, 16, 16), new THREE.MeshStandardMaterial({ color: 0x60a5fa, emissive: 0x3b82f6 }));
+      modelGroup.add(sat);
+      satellites.push({ mesh: sat, radius: 1.85 + idx * 0.28, angle: idx * 2, speed: 0.015, rx: ang[0], ry: ang[1] });
+    });
+
+  } else if (variant === 'market-vibrant') {
+    // 2. AVP E-Mart: The Hyper-Prism Marketplace
+    var diamGeom = new THREE.ConeGeometry(1.3, 1.8, 6);
+    coreMesh = new THREE.Mesh(diamGeom, pbrPrimary);
+    coreMesh.rotation.x = Math.PI;
+    modelGroup.add(coreMesh);
+
+    var topCone = new THREE.Mesh(new THREE.ConeGeometry(1.3, 0.7, 6), pbrGlass);
+    topCone.position.y = 1.0;
+    modelGroup.add(topCone);
+
+    var goldRing = new THREE.Mesh(new THREE.TorusGeometry(2.1, 0.03, 16, 90), pbrGold);
+    goldRing.rotation.x = Math.PI / 3.5;
+    modelGroup.add(goldRing);
+    rings.push({ mesh: goldRing, speed: 0.012 });
+
+    for (var c = 0; c < 5; c++) {
+      var coin = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.04, 16), pbrGold);
+      modelGroup.add(coin);
+      satellites.push({ mesh: coin, radius: 2.1, angle: (c * Math.PI * 2) / 5, speed: 0.014, rx: Math.PI / 3.5, ry: 0 });
+    }
+
+  } else if (variant === 'technical-mono') {
+    // 3. Comonk AI: The Synaptic Neuro-Knot
+    var knotGeom = new THREE.TorusKnotGeometry(1.05, 0.28, 128, 16, 3, 4);
+    coreMesh = new THREE.Mesh(knotGeom, pbrPrimary);
+    modelGroup.add(coreMesh);
+
+    wireMesh = new THREE.Mesh(knotGeom.clone(), new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.4 }));
+    wireMesh.scale.set(1.06, 1.06, 1.06);
+    modelGroup.add(wireMesh);
+
+    var netGroup = new THREE.Group();
+    for (var n = 0; n < 24; n++) {
+      var node = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 8), new THREE.MeshBasicMaterial({ color: 0x0ea5e9 }));
+      node.position.set((Math.random()-0.5)*3.8, (Math.random()-0.5)*3.8, (Math.random()-0.5)*3.8);
+      netGroup.add(node);
+    }
+    modelGroup.add(netGroup);
+    customUpdaters.push(function(){ netGroup.rotation.y += 0.005; });
+
+  } else if (variant === 'dashboard') {
+    // 4. Sevenforce: The Autonomous Multi-Agent Hive
+    var hiveGeom = new THREE.DodecahedronGeometry(1.0, 0);
+    coreMesh = new THREE.Mesh(hiveGeom, pbrPrimary);
+    modelGroup.add(coreMesh);
+
+    wireMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.4, 1), new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true, transparent: true, opacity: 0.35 }));
+    modelGroup.add(wireMesh);
+
+    var agentColors = [0x22d3ee, 0x34d399, 0xfbbf24, 0xa855f7, 0xf472b6, 0x38bdf8, 0x4ade80];
+    for (var a = 0; a < 7; a++) {
+      var satDrone = new THREE.Mesh(new THREE.OctahedronGeometry(0.12, 0), new THREE.MeshStandardMaterial({ color: agentColors[a], emissive: agentColors[a], emissiveIntensity: 0.5 }));
+      modelGroup.add(satDrone);
+      satellites.push({
+        mesh: satDrone,
+        radius: 2.15,
+        angle: (a * Math.PI * 2) / 7,
+        speed: 0.012 + (a % 3) * 0.004,
+        rx: (a * Math.PI) / 7,
+        ry: (a * Math.PI) / 5
+      });
+    }
+
+  } else if (variant === 'clinical-clean') {
+    // 5. Decode Forest Pharmacy: The Bio-Molecular Helix
+    var helixGroup = new THREE.Group();
+    var hCount = 20;
+    for (var h = 0; h < hCount; h++) {
+      var y = (h - hCount/2) * 0.14;
+      var ang = h * 0.42;
+      var s1 = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x059669 }));
+      var s2 = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), new THREE.MeshStandardMaterial({ color: 0x34d399, emissive: 0x10b981 }));
+      s1.position.set(Math.cos(ang) * 0.9, y, Math.sin(ang) * 0.9);
+      s2.position.set(-Math.cos(ang) * 0.9, y, -Math.sin(ang) * 0.9);
+      helixGroup.add(s1);
+      helixGroup.add(s2);
+
+      var rungGeom = new THREE.CylinderGeometry(0.018, 0.018, 1.8, 8);
+      var rung = new THREE.Mesh(rungGeom, new THREE.MeshBasicMaterial({ color: 0x6ee7b7, transparent: true, opacity: 0.5 }));
+      rung.position.y = y;
+      rung.rotation.z = Math.PI / 2;
+      rung.rotation.y = -ang;
+      helixGroup.add(rung);
+    }
+    modelGroup.add(helixGroup);
+    coreMesh = helixGroup;
+
+  } else if (variant === 'industrial') {
+    // 6. Breakdown Factor: The Structural AEC Tesseract & Laser Scanner
+    var cubeGeom = new THREE.BoxGeometry(1.6, 1.6, 1.6);
+    coreMesh = new THREE.Mesh(cubeGeom, pbrPrimary);
+    modelGroup.add(coreMesh);
+
+    var outerFrame = new THREE.Mesh(new THREE.BoxGeometry(2.1, 2.1, 2.1), new THREE.MeshBasicMaterial({ color: 0xf59e0b, wireframe: true }));
+    modelGroup.add(outerFrame);
+
+    var scanPlane = new THREE.Mesh(new THREE.PlaneGeometry(3.0, 3.0), new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.25, side: THREE.DoubleSide }));
+    scanPlane.rotation.x = Math.PI / 2;
+    modelGroup.add(scanPlane);
+    customUpdaters.push(function(t){ scanPlane.position.y = Math.sin(t * 2.2) * 1.3; });
+
+  } else if (variant === 'humanitarian') {
+    // 7. AVP Charitable Trust: The Lotus of Hope
+    var lotusGroup = new THREE.Group();
+    var petalGeom = new THREE.ConeGeometry(0.5, 1.5, 4);
+    for (var p = 0; p < 8; p++) {
+      var petal = new THREE.Mesh(petalGeom, pbrPrimary);
+      petal.rotation.z = Math.PI / 3.8;
+      petal.rotation.y = (p * Math.PI * 2) / 8;
+      petal.position.y = -0.3;
+      lotusGroup.add(petal);
+    }
+    var heartSphere = new THREE.Mesh(new THREE.SphereGeometry(0.65, 24, 24), pbrGold);
+    lotusGroup.add(heartSphere);
+    modelGroup.add(lotusGroup);
+    coreMesh = lotusGroup;
+
+    var auraRing = new THREE.Mesh(new THREE.TorusGeometry(1.9, 0.025, 16, 90), new THREE.MeshBasicMaterial({ color: 0xfb7185, transparent: true, opacity: 0.6 }));
+    auraRing.rotation.x = Math.PI / 2.5;
+    modelGroup.add(auraRing);
+    rings.push({ mesh: auraRing, speed: 0.01 });
+
+  } else if (variant === 'cyber-defense') {
+    // 8. Rakshak AI: The Cyber Aegis Shield & Radar Scanner
+    var shieldGeom = new THREE.CylinderGeometry(1.2, 0.2, 1.8, 6);
+    coreMesh = new THREE.Mesh(shieldGeom, pbrPrimary);
+    modelGroup.add(coreMesh);
+
+    var radarRing = new THREE.Mesh(new THREE.RingGeometry(1.5, 1.55, 32), new THREE.MeshBasicMaterial({ color: 0xef4444, side: THREE.DoubleSide }));
+    radarRing.rotation.x = Math.PI / 2;
+    modelGroup.add(radarRing);
+
+    var sweepLine = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.04), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+    sweepLine.position.y = 0;
+    modelGroup.add(sweepLine);
+    customUpdaters.push(function(){ sweepLine.rotation.z += 0.04; });
+
+  } else {
+    // 9. Sevenseed (Group Hub): The Genesis Hyper-Icosahedron Core
+    var icoGeom = new THREE.IcosahedronGeometry(1.25, 1);
+    coreMesh = new THREE.Mesh(icoGeom, pbrGold);
+    modelGroup.add(coreMesh);
+
+    wireMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.6, 0), new THREE.MeshBasicMaterial({ color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.55 }));
+    modelGroup.add(wireMesh);
+
+    var r1 = new THREE.Mesh(new THREE.TorusGeometry(2.1, 0.03, 16, 90), pbrPrimary);
+    r1.rotation.x = Math.PI / 3;
+    modelGroup.add(r1);
+    rings.push({ mesh: r1, speed: 0.009 });
+
+    var r2 = new THREE.Mesh(new THREE.TorusGeometry(2.35, 0.02, 16, 90), pbrGlass);
+    r2.rotation.y = Math.PI / 3.5;
+    modelGroup.add(r2);
+    rings.push({ mesh: r2, speed: -0.012 });
+
+    for (var s = 0; s < 6; s++) {
+      var seed = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), pbrGold);
+      modelGroup.add(seed);
+      satellites.push({ mesh: seed, radius: 2.2, angle: (s * Math.PI * 2) / 6, speed: 0.013, rx: Math.PI / 3, ry: 0 });
+    }
+  }
+
+  // ── Cosmic Particle Dust (220 points) ──
+  var pCount = 220;
+  var pGeom = new THREE.BufferGeometry();
+  var pPos = new Float32Array(pCount * 3);
+  var pCols = new Float32Array(pCount * 3);
+  for (var p = 0; p < pCount; p++) {
+    var pr = 2.4 + Math.random() * 5.0;
+    var pT = Math.random() * Math.PI * 2;
+    var pP = Math.acos(2 * Math.random() - 1);
+    pPos[p * 3] = pr * Math.sin(pP) * Math.cos(pT);
+    pPos[p * 3 + 1] = pr * Math.sin(pP) * Math.sin(pT);
+    pPos[p * 3 + 2] = pr * Math.cos(pP);
+    var pCol = Math.random() > 0.5 ? primaryColor : secondaryColor;
+    pCols[p * 3] = pCol.r;
+    pCols[p * 3 + 1] = pCol.g;
+    pCols[p * 3 + 2] = pCol.b;
+  }
+  pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  pGeom.setAttribute('color', new THREE.BufferAttribute(pCols, 3));
+  var pSystem = new THREE.Points(pGeom, new THREE.PointsMaterial({ size: 0.045, vertexColors: true, transparent: true, opacity: 0.65, blending: THREE.AdditiveBlending }));
+  scene.add(pSystem);
+
+  // ── Dynamic Specular Lighting (The Spline Secret) ──
+  var ambLight = new THREE.AmbientLight(0xffffff, 0.85);
+  scene.add(ambLight);
+
+  var dirLight = new THREE.DirectionalLight(0xffffff, 1.8);
+  dirLight.position.set(5, 8, 6);
+  scene.add(dirLight);
+
+  var fillLight = new THREE.DirectionalLight(secondaryColor, 1.2);
+  fillLight.position.set(-5, -4, 4);
+  scene.add(fillLight);
+
+  var cursorLight = new THREE.PointLight(primaryColor, 3.2, 14);
+  cursorLight.position.set(0, 0, 4);
+  scene.add(cursorLight);
+
+  // ── Spline-Grade Mouse-Look Spring Tracking ──
+  var mouseX = 0, mouseY = 0;
+  var targetRotX = 0, targetRotY = 0;
+  window.addEventListener('mousemove', function(e){
+    var nx = (e.clientX / window.innerWidth) * 2 - 1;
+    var ny = (e.clientY / window.innerHeight) * 2 - 1;
+    targetRotY = nx * 0.55;
+    targetRotX = ny * 0.45;
+
+    cursorLight.position.x += (nx * 4 - cursorLight.position.x) * 0.1;
+    cursorLight.position.y += (-ny * 4 - cursorLight.position.y) * 0.1;
+  });
+
+  // ── 360° Drag & Orbit with Inertia ──
+  var isDragging = false;
+  var prevPointerX = 0, prevPointerY = 0;
+  var velX = 0, velY = 0;
+  var friction = 0.92;
+
+  stage.addEventListener('pointerdown', function(e){
+    isDragging = true;
+    prevPointerX = e.clientX;
+    prevPointerY = e.clientY;
+    velX = 0; velY = 0;
+    stage.setPointerCapture(e.pointerId);
+  });
+
+  stage.addEventListener('pointermove', function(e){
+    if (!isDragging) return;
+    var dx = e.clientX - prevPointerX;
+    var dy = e.clientY - prevPointerY;
+    prevPointerX = e.clientX;
+    prevPointerY = e.clientY;
+    modelGroup.rotation.y += dx * 0.008;
+    modelGroup.rotation.x += dy * 0.008;
+    velX = dx * 0.008;
+    velY = dy * 0.008;
+  });
+
+  function endDrag(e){
+    if (isDragging) {
+      isDragging = false;
+      try { stage.releasePointerCapture(e.pointerId); } catch(err){}
+    }
+  }
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
+
+  stage.addEventListener('dblclick', function(){
+    try {
+      var actx = new (window.AudioContext || window.webkitAudioContext)();
+      var osc = actx.createOscillator();
+      var gain = actx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, actx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, actx.currentTime + 0.35);
+      gain.gain.setValueAtTime(0.2, actx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.5);
+      osc.connect(gain);
+      gain.connect(actx.destination);
+      osc.start();
+      osc.stop(actx.currentTime + 0.5);
+    } catch(e){}
+    velX = (Math.random() - 0.5) * 0.12;
+    velY = (Math.random() - 0.5) * 0.1;
+  });
+
+  window.addEventListener('resize', function(){
+    var nw = stage.clientWidth || 540;
+    var nh = stage.clientHeight || 540;
+    camera.aspect = nw / nh;
+    camera.updateProjectionMatrix();
+    renderer.setSize(nw, nh);
+  });
+
+  var clock = new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    var delta = clock.getDelta();
+    var time = clock.getElapsedTime();
+
+    if (!isDragging) {
+      velX *= friction;
+      velY *= friction;
+      modelGroup.rotation.y += velX + 0.004;
+      modelGroup.rotation.x += velY;
+
+      rootGroup.rotation.y += (targetRotY - rootGroup.rotation.y) * 0.05;
+      rootGroup.rotation.x += (targetRotX - rootGroup.rotation.x) * 0.05;
+    }
+
+    rings.forEach(function(r){ r.mesh.rotation.z += r.speed; });
+
+    satellites.forEach(function(s){
+      s.angle += s.speed;
+      s.mesh.position.x = Math.cos(s.angle) * s.radius;
+      s.mesh.position.y = Math.sin(s.angle) * s.radius * Math.sin(s.rx);
+      s.mesh.position.z = Math.sin(s.angle) * s.radius * Math.cos(s.rx);
+    });
+
+    customUpdaters.forEach(function(fn){ fn(time); });
+
+    pSystem.rotation.y = time * 0.018;
+    pSystem.rotation.x = Math.sin(time * 0.012) * 0.04;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+// ── Aceternity UI 3D Card Physics Tilt & Dynamic Specular Glare ──
+(function initAceternity3DTiltAndSpotlight(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia && window.matchMedia('(hover: none)').matches) return;
+
+  var cards = document.querySelectorAll('.border-beam-card, .svc-card, .proc-step, .metric, .about-card');
+  cards.forEach(function(card){
+    if (!card.querySelector('.tilt-glare')) {
+      var glare = document.createElement('div');
+      glare.className = 'tilt-glare';
+      card.appendChild(glare);
+    }
+
+    var rect = null, raf = null;
+    function updateRect(){ rect = card.getBoundingClientRect(); }
+
+    card.addEventListener('mouseenter', function(){
+      updateRect();
+      card.style.transition = 'transform 0.12s ease-out, box-shadow 0.2s ease';
+    });
+
+    card.addEventListener('mousemove', function(e){
+      if (!rect) updateRect();
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+
+      card.style.setProperty('--mouse-x', x + 'px');
+      card.style.setProperty('--mouse-y', y + 'px');
+
+      var cx = rect.width / 2;
+      var cy = rect.height / 2;
+      var dx = (x - cx) / cx;
+      var dy = (y - cy) / cy;
+      dx = Math.max(-1, Math.min(1, dx));
+      dy = Math.max(-1, Math.min(1, dy));
+
+      var rx = -dy * 10;
+      var ry = dx * 10;
+
+      var gx = (x / rect.width) * 100;
+      var gy = (y / rect.height) * 100;
+      card.style.setProperty('--glare-x', gx + '%');
+      card.style.setProperty('--glare-y', gy + '%');
+
+      if (!raf) {
+        raf = requestAnimationFrame(function(){
+          card.style.transform = 'perspective(1000px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) scale3d(1.02, 1.02, 1.02) translateY(-3px)';
+          raf = null;
+        });
+      }
+    });
+
+    card.addEventListener('mouseleave', function(){
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      card.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease';
+      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1) translateY(0)';
+      rect = null;
+    });
+  });
+})();
+

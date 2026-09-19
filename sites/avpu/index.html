@@ -49,14 +49,13 @@
     <span class="logo-text">AVP <span class="logo-accent">University</span></span>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="#about">About</a>
-    <a href="#services">AI Tools</a>
-    
-    <a href="#sandbox">Live Demo</a>
-    <a href="#process">Process</a>
-    <a href="#testimonials">Reviews</a>
+        <a href="learn-dag.html"><i class="fas fa-project-diagram" style="color:var(--accent,#3b82f6)"></i> Learn DAG</a>
+    <a href="duo-league.html"><i class="fas fa-trophy" style="color:var(--accent,#3b82f6)"></i> Duolingo</a>
+    <a href="code-lab.html"><i class="fas fa-code" style="color:var(--accent,#3b82f6)"></i> Code Lab</a>
+    <a href="laws-of-ux.html"><i class="fas fa-brain" style="color:var(--accent,#3b82f6)"></i> UX Laws</a>
+    <a href="challenge-100days.html"><i class="fas fa-calendar-check" style="color:var(--accent,#3b82f6)"></i> 100 Days AI</a>
+    <a href="#feature-suites">Labs</a>
     <a href="#faq">FAQ</a>
-    <a href="#contact">Contact</a>
   </div>
   <div class="nav-right">
     <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
@@ -68,11 +67,19 @@
 </nav>
 
 <header class="hero">
+  <div class="hero-lamp"></div>
+  <div class="hero-lamp-line"></div>
+  <div class="liquid-mesh"></div>
+  <div class="meteors-container">
+    <span class="meteor" style="--top:8%; --left:22%; --delay:0s; --duration:3.8s;"></span>
+    <span class="meteor" style="--top:26%; --left:68%; --delay:1.2s; --duration:5.2s;"></span>
+    <span class="meteor" style="--top:6%; --left:88%; --delay:2.4s; --duration:4.1s;"></span>
+    <span class="meteor" style="--top:38%; --left:14%; --delay:3.6s; --duration:4.8s;"></span>
+    <span class="meteor" style="--top:16%; --left:52%; --delay:0.7s; --duration:5.5s;"></span>
+  </div>
   <div class="hero-glow"></div>
   <div class="hero-grid"></div>
-  <div class="hero-orb orb-1"></div>
-  <div class="hero-orb orb-2"></div>
-  <canvas id="particles"></canvas>
+  
   <div class="hero-content">
     <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI Tutors · Adaptive Learning · LangGraph Agents</span></div>
     <h1 class="hero-title" data-blur-in style="--i:1">AI-powered education that adapts<br>to <span class="grad">every learner</span></h1>
@@ -91,6 +98,12 @@
     </div>
     <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>AI Tutors</span><span>Adaptive Learning</span><span>Auto-Grading</span><span>Placement AI</span><span>Research Copilot</span><span>Skill Analytics</span><span>Live Projects</span><span>Scholarships</span><span>Industry Links</span><span>Innovation</span><span>AI Tutors</span><span>Adaptive Learning</span><span>Auto-Grading</span><span>Placement AI</span><span>Research Copilot</span><span>Skill Analytics</span><span>Live Projects</span><span>Scholarships</span><span>Industry Links</span><span>Innovation</span></div></div>
   </div>
+
+  <div class="hero-3d-stage" id="hero3dStage">
+    <canvas id="hero3dCanvas"></canvas>
+    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · PBR Engine</div>
+    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
+  </div>
 </header>
 
 <section class="pillars-band">
@@ -99,6 +112,75 @@
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-route"></i></div><div class="pillar-txt"><strong>Adaptive Learning</strong><span>Curriculum that adjusts to you.</span></div></div>
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-briefcase"></i></div><div class="pillar-txt"><strong>AI Placements</strong><span>Semantic matching to real roles.</span></div></div>
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-award"></i></div><div class="pillar-txt"><strong>Scholarships</strong><span>Merit & need-based support.</span></div></div>
+  </div>
+</section>
+
+<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-cubes"></i> Comprehensive Educational Labs</div>
+    <h2 class="sec-title">Interactive AI Learning Suites</h2>
+    <p class="sec-sub">Deep, hands-on learning engines inspired by Learn-Anything.xyz, Duolingo, FreeCodeCamp, Laws of UX, and 100 Days of AI.</p>
+  </div>
+  <div class="bento-showcase bento-grid-3">
+    <div class="border-beam-card bento-wide">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">🗺️</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(37,99,235,0.15); color:#60a5fa; border:1px solid rgba(37,99,235,0.3);">Learn-Anything.xyz</span>
+        </div>
+        <h3 style="font-size:22px; font-weight:700; color:#fff; margin-bottom:8px;">Learn-Anything Interactive DAG Graph</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Pan, zoom, and inspect full prerequisite learning paths, topic dependencies, and curated resource trees on an interactive HTML5 Canvas with Ctrl+K node search.</p>
+      </div>
+      <a class="btn btn-primary" href="learn-dag.html"><i class="fas fa-project-diagram"></i> Launch DAG Canvas Graph →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">🏆</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);">Duolingo League</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Duolingo Diamond Arena</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Gamified learning league (Bronze to Diamond) with streak freeze shields, Web Audio sound chimes, and daily XP tracker.</p>
+      </div>
+      <a class="btn btn-primary sm" href="duo-league.html"><i class="fas fa-trophy"></i> Enter Arena →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">💻</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3);">FreeCodeCamp</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">In-Browser Code Lab</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Interactive code editor with automated assertion test runners, live console logs, and verifiable completion certificates.</p>
+      </div>
+      <a class="btn btn-primary sm" href="code-lab.html"><i class="fas fa-code"></i> Open Code Lab →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">🧠</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(168,85,247,0.15); color:#c084fc; border:1px solid rgba(168,85,247,0.3);">Laws of UX</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Cognitive Laws of UX Lab</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">21 psychological design laws with interactive benches: Fitts's Law reaction stopwatch, Hick's Law choice simulator, Miller's 7±2 digits.</p>
+      </div>
+      <a class="btn btn-primary sm" href="laws-of-ux.html"><i class="fas fa-brain"></i> Explore UX Laws →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">📅</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);">100 Days of AI</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">100 Days AI Challenge</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Structured habit tracker with circular progress ring, day-by-day milestone checklists, and persistent state.</p>
+      </div>
+      <a class="btn btn-primary sm" href="challenge-100days.html"><i class="fas fa-calendar-check"></i> Start Challenge →</a>
+    </div>
   </div>
 </section>
 

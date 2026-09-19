@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farnam Street Mental Models Decision Engine — AVPU</title>
+  <meta name="description" content="Master 30+ mental models from Farnam Street including Inversion, First Principles, and Second-Order Thinking with an interactive problem solver.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .mm-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
+    .mm-header { text-align: center; margin-bottom: 32px; }
+    .mm-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .mm-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+
+    /* Interactive Solver */
+    .solver-box { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 48px; box-shadow: var(--shadow); }
+    .solver-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media(max-width: 900px) { .solver-grid { grid-template-columns: 1fr; } }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
+    .form-control { width: 100%; padding: 12px 16px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
+    .form-control:focus { border-color: #10b981; }
+
+    .solution-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 24px; font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.65; color: #e2e8f0; min-height: 280px; overflow-y: auto; }
+    .solution-screen h4 { color: #34d399; font-size: 16px; margin-bottom: 12px; font-weight: 700; }
+    .solution-screen ul { padding-left: 20px; list-style: disc; margin-bottom: 14px; }
+    .solution-screen li { margin-bottom: 6px; }
+
+    /* Mental Models Cards Grid */
+    .mm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+    .mm-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; }
+    .mm-card:hover { transform: translateY(-4px); border-color: rgba(16,185,129,0.4); }
+    .mm-origin { font-size: 11px; text-transform: uppercase; font-weight: 700; color: #34d399; margin-bottom: 8px; letter-spacing: 0.05em; }
+    .mm-name { font-size: 19px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    .mm-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; margin-bottom: 16px; flex: 1; }
+    .mm-example { background: var(--bg-2); border-left: 3px solid #10b981; padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 12px; color: #cbd5e1; }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-graduation-cap"></i></span>
+      <span style="font-weight:700; font-size:18px;">AVPU</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="courses.html">Courses</a>
+      <a href="learn-dag.html">DAG Graph</a>
+      <a href="duo-league.html">Duo League</a>
+      <a href="code-lab.html">Code Lab</a>
+      <a href="laws-of-ux.html">Laws of UX</a>
+      <a href="marketing-teardowns.html">Teardowns</a>
+      <a href="challenge-100days.html">100 Days AI</a>
+      <a href="mental-models.html" style="color:var(--primary-l); font-weight:600;">Mental Models</a>
+    </div>
+    <div class="nav-actions">
+      <a class="btn btn-primary sm" href="courses.html"><i class="fas fa-arrow-left"></i> All Courses</a>
+    </div>
+  </div>
+</nav>
+
+<div class="mm-container">
+  <div class="mm-header">
+    <div class="mm-badge"><i class="fas fa-lightbulb"></i> Inspired by Farnam Street (FS.blog)</div>
+    <h1 class="mm-title">Mental Models Decision Engine</h1>
+    <p style="color:var(--text-2); max-width:720px; margin:0 auto;">Upgrade your cognitive toolkit. Run difficult business dilemmas or technical challenges through Inversion, First Principles, and Second-Order consequence modeling.</p>
+  </div>
+
+  <!-- Interactive Problem Solver -->
+  <div class="solver-box">
+    <h2 style="font-size:20px; font-weight:800; color:#fff; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+      <i class="fas fa-magic" style="color:#10b981;"></i> Mental Model Decision Simulator
+    </h2>
+    <div class="solver-grid">
+      <div>
+        <div class="form-group">
+          <label>Describe your Dilemma or Engineering Challenge</label>
+          <textarea id="dilemmaInput" class="form-control" rows="4" placeholder="e.g. How do we increase user retention on our AI platform without spending thousands on paid ads?"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Choose Mental Model Framework</label>
+          <select id="modelSelect" class="form-control">
+            <option value="inversion">Inversion (Carl Jacobi: Invert, Always Invert)</option>
+            <option value="first_principles">First Principles (Boil down to fundamental truths)</option>
+            <option value="second_order">Second-Order Thinking (And then what?)</option>
+            <option value="margin_safety">Margin of Safety (Buffer against unknowns)</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="solveDilemma()"><i class="fas fa-cogs"></i> Run Mental Model Analysis</button>
+      </div>
+
+      <div>
+        <div class="solution-screen" id="solutionOutput">
+          <p style="color:var(--text-3);">// Select a framework and input your problem to view the structured mental model decomposition...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mental Models Cards Directory -->
+  <h2 style="font-size:24px; font-weight:800; margin-bottom:20px; display:flex; align-items:center; gap:10px;">
+    <i class="fas fa-th-large" style="color:#10b981;"></i> The Core Mental Models Index
+  </h2>
+
+  <div class="mm-grid">
+    <div class="mm-card">
+      <div class="mm-origin">Mathematics & Logic · Carl Jacobi</div>
+      <h3 class="mm-name">Inversion</h3>
+      <p class="mm-desc">Instead of asking how to achieve positive goals, invert the question: what would guarantee utter failure? Avoid that failure point systematically.</p>
+      <div class="mm-example"><strong>Example:</strong> Rather than "How do I build a viral product?", ask "What would make users instantly uninstall?"</div>
+    </div>
+
+    <div class="mm-card">
+      <div class="mm-origin">Physics & Philosophy · Aristotle</div>
+      <h3 class="mm-name">First Principles Thinking</h3>
+      <p class="mm-desc">Boil a situation down to the most foundational truths that cannot be deduced any further, and reason up from there instead of by analogy.</p>
+      <div class="mm-example"><strong>Example:</strong> What does a battery really cost? Raw materials on the London Metal Exchange cost $80/kWh, not $600/kWh.</div>
+    </div>
+
+    <div class="mm-card">
+      <div class="mm-origin">Economics & Strategy · Howard Marks</div>
+      <h3 class="mm-name">Second-Order Thinking</h3>
+      <p class="mm-desc">First-order thinking considers only immediate consequences ("This feels good now"). Second-order thinking asks: "And then what happens?"</p>
+      <div class="mm-example"><strong>Example:</strong> First-order: Slashing prices increases sales. Second-order: Slashing prices attracts low-LTV churners and destroys margins.</div>
+    </div>
+
+    <div class="mm-card">
+      <div class="mm-origin">Philosophy & Science · William of Ockham</div>
+      <h3 class="mm-name">Occam's Razor</h3>
+      <p class="mm-desc">Among competing hypotheses, the one with the fewest assumptions is usually the correct one. Avoid over-engineering solutions.</p>
+      <div class="mm-example"><strong>Example:</strong> If an API is returning 500 errors, check database connection credentials before suspecting a kernel bug.</div>
+    </div>
+
+    <div class="mm-card">
+      <div class="mm-origin">Engineering & Investing · Benjamin Graham</div>
+      <h3 class="mm-name">Margin of Safety</h3>
+      <p class="mm-desc">Always design structures and financial plans to withstand significantly more stress than predicted. Expect unexpected variance.</p>
+      <div class="mm-example"><strong>Example:</strong> If a bridge needs to hold 10-ton trucks, build it to support 30 tons.</div>
+    </div>
+
+    <div class="mm-card">
+      <div class="mm-origin">Mathematics · Albert Einstein</div>
+      <h3 class="mm-name">Compounding</h3>
+      <p class="mm-desc">Small consistent gains of 1% every day yield 37x improvements over a year. The greatest results occur in the late tail of the curve.</p>
+      <div class="mm-example"><strong>Example:</strong> Writing 1 high-signal blog post or open-source commit per day builds unmatched domain authority over 3 years.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function solveDilemma() {
+  const dilemma = document.getElementById('dilemmaInput').value.trim() || 'How to increase user retention on our AI platform';
+  const model = document.getElementById('modelSelect').value;
+  const out = document.getElementById('solutionOutput');
+
+  if (model === 'inversion') {
+    out.innerHTML = `
+      <h4>🔄 INVERSION ANALYSIS (How to Guarantee Failure):</h4>
+      <p>If your goal was to completely destroy retention and ensure 100% of users churn, you would:</p>
+      <ul>
+        <li>Introduce high latency (waiting 8+ seconds for AI generation).</li>
+        <li>Hide value behind a 10-step mandatory onboarding modal.</li>
+        <li>Deliver generic, hallucinated answers with zero factual citations.</li>
+        <li>Send spammy irrelevant emails 3 times a day.</li>
+      </ul>
+      <h4 style="color:#60a5fa; margin-top:16px;">💡 INVERTED ACTION PLAN:</h4>
+      <p>1. Stream AI tokens in &lt;100ms via edge web sockets.<br>2. Eliminate signup friction: Allow instant 1-click guest sandbox.<br>3. Ground answers with RAG source document chips.</p>
+    `;
+  } else if (model === 'first_principles') {
+    out.innerHTML = `
+      <h4>🧱 FIRST PRINCIPLES DECOMPOSITION:</h4>
+      <p>Stripping away analogies and conventional industry dogma to absolute physical constraints:</p>
+      <ul>
+        <li><strong>Atomic Truth 1:</strong> A user stays when the value received exceeds the cognitive effort expended.</li>
+        <li><strong>Atomic Truth 2:</strong> Value = (Accuracy × Speed × Relevance).</li>
+        <li><strong>Atomic Truth 3:</strong> Friction = (Clicks + Waiting Time + Learning Curve).</li>
+      </ul>
+      <h4 style="color:#60a5fa; margin-top:16px;">💡 FIRST-PRINCIPLES ACTION PLAN:</h4>
+      <p>Focus 100% of engineering bandwidth on reducing TTFT (Time To First Token) and eliminating unnecessary clicks. When latency drops below 200ms, perceived product quality jumps 400%.</p>
+    `;
+  } else if (model === 'second_order') {
+    out.innerHTML = `
+      <h4>🎯 SECOND-ORDER CONSEQUENCE MAPPING:</h4>
+      <p>Tracing subsequent ripples beyond initial impressions:</p>
+      <ul>
+        <li><strong>First Order:</strong> You give away free credits to retain users. Immediate result: User logins spike 25%.</li>
+        <li><strong>Second Order:</strong> Free-tier hoarders saturate GPU inference nodes, causing latency to spike for paying customers.</li>
+        <li><strong>Third Order:</strong> High-paying enterprise customers churn due to latency degradations, permanently harming ARR.</li>
+      </ul>
+      <h4 style="color:#60a5fa; margin-top:16px;">💡 SECOND-ORDER ACTION PLAN:</h4>
+      <p>Do not offer blanket free compute. Instead, gate priority GPU lanes for active learners who demonstrate streak milestones or bring their own API keys.</p>
+    `;
+  } else {
+    out.innerHTML = `
+      <h4>🛡️ MARGIN OF SAFETY ARCHITECTURE:</h4>
+      <p>Stress-testing assumptions against unexpected shocks:</p>
+      <ul>
+        <li><strong>Assumed Capacity:</strong> What if upstream LLM provider API goes down for 4 hours?</li>
+        <li><strong>Mitigation:</strong> Implement automated fallback failover from Groq to Anthropic/OpenAI.</li>
+        <li><strong>Financial Buffer:</strong> Maintain 6 months of cloud compute runway in reserve.</li>
+      </ul>
+    `;
+  }
+}
+</script>
+
+</body>
+</html>

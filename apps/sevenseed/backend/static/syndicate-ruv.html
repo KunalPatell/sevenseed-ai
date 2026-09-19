@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AngelList Syndicate & Roll-Up Vehicle (RUV) Calculator — Sevenseed</title>
+  <meta name="description" content="Calculate GP carried interest, LP net returns, 2/20 fee structures, and multi-tier exit waterfalls for startup syndicates.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .ruv-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
+    .ruv-header { text-align: center; margin-bottom: 32px; }
+    .ruv-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .ruv-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+
+    /* Calculator Grid */
+    .ruv-grid { display: grid; grid-template-columns: 440px 1fr; gap: 28px; }
+    @media(max-width: 960px) { .ruv-grid { grid-template-columns: 1fr; } }
+
+    .input-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow); }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
+    .form-control { width: 100%; padding: 12px 16px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
+    .form-control:focus { border-color: #f59e0b; }
+
+    /* Results Waterfall */
+    .waterfall-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; }
+    .waterfall-hero { text-align: center; background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(217,119,6,0.05)); border: 1px solid #f59e0b; border-radius: 14px; padding: 28px; margin-bottom: 24px; }
+    .wf-lbl { font-size: 12px; text-transform: uppercase; color: var(--text-2); letter-spacing: 0.08em; margin-bottom: 4px; }
+    .wf-val { font-size: 44px; font-weight: 900; color: #fbbf24; font-family: 'JetBrains Mono', monospace; }
+
+    .breakdown-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text-2); }
+    .breakdown-row.total { border-top: 2px solid var(--border); border-bottom: none; font-size: 16px; font-weight: 800; color: #fff; padding-top: 16px; }
+    .val-mono { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#f59e0b,#d97706); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-seedling"></i></span>
+      <span style="font-weight:700; font-size:18px;">Sevenseed</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="ventures.html">Ventures</a>
+      <a href="syndicate-ruv.html" style="color:#fbbf24; font-weight:600;">Syndicate RUV</a>
+      <a href="market-sizing.html">TAM Calculator</a>
+      <a href="pricing.html">Pricing</a>
+    </div>
+    <div class="nav-actions">
+      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="ruv-container">
+  <div class="ruv-header">
+    <div class="ruv-badge"><i class="fas fa-coins"></i> Inspired by AngelList Roll Up Vehicles (RUV)</div>
+    <h1 class="ruv-title">Syndicate & Roll-Up Vehicle (RUV) Waterfall Simulator</h1>
+    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Model venture syndicate economics. Calculate General Partner (GP) carried interest, Limited Partner (LP) net multiple, and return distribution waterfalls.</p>
+  </div>
+
+  <div class="ruv-grid">
+    <!-- Input Form -->
+    <div class="input-card">
+      <h3 style="font-size:17px; font-weight:700; color:#fff; margin-bottom:16px;">Syndicate Terms</h3>
+      
+      <div class="form-group">
+        <label>Total Syndicate Capital Raised ($)</label>
+        <input type="number" id="fundSize" class="form-control" value="1000000" step="100000" oninput="computeWaterfall()">
+      </div>
+
+      <div class="form-group">
+        <label>GP Carried Interest (%)</label>
+        <input type="number" id="carryPct" class="form-control" value="20" step="1" oninput="computeWaterfall()">
+      </div>
+
+      <div class="form-group">
+        <label>Expected Exit Multiple</label>
+        <select id="exitMultiple" class="form-control" onchange="computeWaterfall()">
+          <option value="1">1.0x (Capital Returned)</option>
+          <option value="3">3.0x (Solid Return)</option>
+          <option value="5" selected>5.0x (Venture Scale)</option>
+          <option value="10">10.0x (Home Run)</option>
+          <option value="25">25.0x (Unicorn Exit)</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="computeWaterfall()">
+        <i class="fas fa-sync-alt"></i> Recompute Waterfall
+      </button>
+    </div>
+
+    <!-- Waterfall Breakdown -->
+    <div class="waterfall-card">
+      <div>
+        <div class="waterfall-hero">
+          <div class="wf-lbl">Total Gross Exit Proceeds</div>
+          <div class="wf-val" id="grossProceeds">$5,000,000</div>
+        </div>
+
+        <div class="breakdown-row">
+          <span>Initial LP Principal Returned (1.0x Hurdled):</span>
+          <span class="val-mono" id="principalReturned">$1,000,000</span>
+        </div>
+        <div class="breakdown-row">
+          <span>Net Profit Generated:</span>
+          <span class="val-mono" id="netProfit">$4,000,000</span>
+        </div>
+        <div class="breakdown-row">
+          <span>GP Carried Interest (20% of Profit):</span>
+          <span class="val-mono" style="color:#fbbf24;" id="gpCarry">$800,000</span>
+        </div>
+        <div class="breakdown-row total">
+          <span>Total Net LP Distribution:</span>
+          <span class="val-mono" style="color:#34d399;" id="lpNetTotal">$4,200,000 (4.2x Net)</span>
+        </div>
+      </div>
+
+      <div style="font-size:12px; color:var(--text-3); margin-top:20px;">
+        * AngelList RUV setup fees (~$8k one-time) and Delaware franchise taxes amortized at close.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function computeWaterfall() {
+  const fund = parseFloat(document.getElementById('fundSize').value) || 0;
+  const carry = (parseFloat(document.getElementById('carryPct').value) || 0) / 100;
+  const mult = parseFloat(document.getElementById('exitMultiple').value) || 1;
+
+  const gross = fund * mult;
+  const profit = Math.max(0, gross - fund);
+  const gpEarned = profit * carry;
+  const lpEarned = gross - gpEarned;
+  const netMult = fund > 0 ? (lpEarned / fund).toFixed(1) : 0;
+
+  document.getElementById('grossProceeds').innerText = '$' + Math.round(gross).toLocaleString();
+  document.getElementById('principalReturned').innerText = '$' + Math.round(fund).toLocaleString();
+  document.getElementById('netProfit').innerText = '$' + Math.round(profit).toLocaleString();
+  document.getElementById('gpCarry').innerText = '$' + Math.round(gpEarned).toLocaleString();
+  document.getElementById('lpNetTotal').innerText = '$' + Math.round(lpEarned).toLocaleString() + ` (${netMult}x Net)`;
+}
+
+computeWaterfall();
+</script>
+
+</body>
+</html>

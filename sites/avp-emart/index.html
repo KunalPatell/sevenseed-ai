@@ -49,14 +49,12 @@
     <span class="logo-text">AVP <span class="logo-accent">Emart</span></span>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="#about">About</a>
-    <a href="#services">AI Tools</a>
-    
-    <a href="#sandbox">Live Demo</a>
-    <a href="#process">Process</a>
-    <a href="#testimonials">Reviews</a>
+        <a href="spec-compare.html"><i class="fas fa-scale-balanced" style="color:var(--accent,#a855f7)"></i> Smartprix Specs</a>
+    <a href="qcommerce.html"><i class="fas fa-basket-shopping" style="color:var(--accent,#a855f7)"></i> Quick Commerce</a>
+    <a href="coupon-tester.html"><i class="fas fa-ticket" style="color:var(--accent,#a855f7)"></i> Coupon Tester</a>
+    <a href="price-tracker.html"><i class="fas fa-chart-line" style="color:var(--accent,#a855f7)"></i> Price Radar</a>
+    <a href="#feature-suites">Labs</a>
     <a href="#faq">FAQ</a>
-    <a href="#contact">Contact</a>
   </div>
   <div class="nav-right">
     <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
@@ -68,11 +66,19 @@
 </nav>
 
 <header class="hero">
+  <div class="hero-lamp"></div>
+  <div class="hero-lamp-line"></div>
+  <div class="liquid-mesh"></div>
+  <div class="meteors-container">
+    <span class="meteor" style="--top:8%; --left:22%; --delay:0s; --duration:3.8s;"></span>
+    <span class="meteor" style="--top:26%; --left:68%; --delay:1.2s; --duration:5.2s;"></span>
+    <span class="meteor" style="--top:6%; --left:88%; --delay:2.4s; --duration:4.1s;"></span>
+    <span class="meteor" style="--top:38%; --left:14%; --delay:3.6s; --duration:4.8s;"></span>
+    <span class="meteor" style="--top:16%; --left:52%; --delay:0.7s; --duration:5.5s;"></span>
+  </div>
   <div class="hero-glow"></div>
   <div class="hero-grid"></div>
-  <div class="hero-orb orb-1"></div>
-  <div class="hero-orb orb-2"></div>
-  <canvas id="particles"></canvas>
+  
   <div class="hero-content">
     <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI Price Comparison · Best-Value Scoring · LLM Shopping Assistant</span></div>
     <h1 class="hero-title" data-blur-in style="--i:1">AI shopping that finds you the<br><span class="grad">best price</span>, every time</h1>
@@ -91,6 +97,12 @@
     </div>
     <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>AI Price Compare</span><span>Best-Value Scoring</span><span>Shopping Assistant</span><span>Smart Recommendations</span><span>Price Forecasting</span><span>Review Intelligence</span><span>Amazon</span><span>Flipkart</span><span>Reliance Digital</span><span>Snapdeal</span><span>AI Price Compare</span><span>Best-Value Scoring</span><span>Shopping Assistant</span><span>Smart Recommendations</span><span>Price Forecasting</span><span>Review Intelligence</span><span>Amazon</span><span>Flipkart</span><span>Reliance Digital</span><span>Snapdeal</span></div></div>
   </div>
+
+  <div class="hero-3d-stage" id="hero3dStage">
+    <canvas id="hero3dCanvas"></canvas>
+    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · PBR Engine</div>
+    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
+  </div>
 </header>
 
 <section class="pillars-band">
@@ -99,6 +111,63 @@
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-piggy-bank"></i></div><div class="pillar-txt"><strong>Best-Value AI</strong><span>ML scoring on every product.</span></div></div>
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-robot"></i></div><div class="pillar-txt"><strong>Shopping Assistant</strong><span>Ask, and AI finds it for you.</span></div></div>
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-truck-fast"></i></div><div class="pillar-txt"><strong>Fast Delivery</strong><span>Quick, reliable fulfilment.</span></div></div>
+  </div>
+</section>
+
+<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-cubes"></i> E-Commerce Intelligence Engines</div>
+    <h2 class="sec-title">Interactive Price & Deal Workstations</h2>
+    <p class="sec-sub">Production-grade pricing algorithms inspired by Smartprix, Buyhatke, Xerve, and Google Shopping.</p>
+  </div>
+  <div class="bento-showcase bento-grid-3">
+    <div class="border-beam-card bento-wide">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">📱</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(168,85,247,0.15); color:#c084fc; border:1px solid rgba(168,85,247,0.3);">Smartprix Engine</span>
+        </div>
+        <h3 style="font-size:22px; font-weight:700; color:#fff; margin-bottom:8px;">Smartprix 3-Way Spec Comparator</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Side-by-side flagship smartphone comparator featuring dynamic Spec Score (0-100), differential highlight mode, and category breakdown.</p>
+      </div>
+      <a class="btn btn-primary" href="spec-compare.html"><i class="fas fa-scale-balanced"></i> Compare Specs Now →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">⚡</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);">Blinkit vs Zepto</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Quick Commerce Cart Optimizer</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Multi-cart grocery optimizer comparing Blinkit, Zepto, Swiggy Instamart, and BigBasket with surge fees and ETA calculations.</p>
+      </div>
+      <a class="btn btn-primary sm" href="qcommerce.html"><i class="fas fa-basket-shopping"></i> Optimize Basket →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">🎟️</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3);">Xerve.in</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Coupon Auto-Tester & Wallet</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Automated 5-coupon test runner with instant discount mathematics and UPI cashback wallet simulation.</p>
+      </div>
+      <a class="btn btn-primary sm" href="coupon-tester.html"><i class="fas fa-ticket"></i> Test Coupons →</a>
+    </div>
+
+    <div class="border-beam-card bento-wide">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">📈</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);">Buyhatke.com</span>
+        </div>
+        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Buyhatke 90-Day Price Trend Tracker</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Interactive HTML5 Canvas 90-day price trend history, AI "Buy Now vs Wait" verdict score, and instant price drop alert notifications.</p>
+      </div>
+      <a class="btn btn-primary" href="price-tracker.html"><i class="fas fa-chart-line"></i> View Price History →</a>
+    </div>
   </div>
 </section>
 

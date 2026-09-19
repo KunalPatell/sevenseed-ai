@@ -1,3 +1,327 @@
+CUSTOM_NAVS = {'avpu': '    <a href="learn-dag.html"><i class="fas fa-project-diagram" style="color:var(--accent,#3b82f6)"></i> Learn DAG</a>\n    <a href="duo-league.html"><i class="fas fa-trophy" style="color:var(--accent,#3b82f6)"></i> Duolingo</a>\n    <a href="code-lab.html"><i class="fas fa-code" style="color:var(--accent,#3b82f6)"></i> Code Lab</a>\n    <a href="laws-of-ux.html"><i class="fas fa-brain" style="color:var(--accent,#3b82f6)"></i> UX Laws</a>\n    <a href="challenge-100days.html"><i class="fas fa-calendar-check" style="color:var(--accent,#3b82f6)"></i> 100 Days AI</a>\n    <a href="#feature-suites">Labs</a>\n    <a href="#faq">FAQ</a>', 'avp-emart': '    <a href="spec-compare.html"><i class="fas fa-scale-balanced" style="color:var(--accent,#a855f7)"></i> Smartprix Specs</a>\n    <a href="qcommerce.html"><i class="fas fa-basket-shopping" style="color:var(--accent,#a855f7)"></i> Quick Commerce</a>\n    <a href="coupon-tester.html"><i class="fas fa-ticket" style="color:var(--accent,#a855f7)"></i> Coupon Tester</a>\n    <a href="price-tracker.html"><i class="fas fa-chart-line" style="color:var(--accent,#a855f7)"></i> Price Radar</a>\n    <a href="#feature-suites">Labs</a>\n    <a href="#faq">FAQ</a>', 'comonk': '    <a href="resume-analyzer.html"><i class="fas fa-file-lines" style="color:var(--accent,#0ea5e9)"></i> ATS Optimizer</a>\n    <a href="interview-arena.html"><i class="fas fa-terminal" style="color:var(--accent,#0ea5e9)"></i> Mock Interview</a>\n    <a href="salary-insights.html"><i class="fas fa-money-bill-trend-up" style="color:var(--accent,#0ea5e9)"></i> Salary Intel</a>\n    <a href="#feature-suites">Labs</a>\n    <a href="#faq">FAQ</a>', 'sevenforce': '    <a href="workflows.html"><i class="fas fa-diagram-project" style="color:var(--accent,#06b6d4)"></i> LangGraph Studio</a>\n    <a href="devin-terminal.html"><i class="fas fa-terminal" style="color:var(--accent,#06b6d4)"></i> Devin AI Terminal</a>\n    <a href="employees.html"><i class="fas fa-users-gear" style="color:var(--accent,#06b6d4)"></i> 7 AI Employees</a>\n    <a href="pricing.html"><i class="fas fa-calculator" style="color:var(--accent,#06b6d4)"></i> ROI & Pricing</a>\n    <a href="#feature-suites">Labs</a>\n    <a href="#faq">FAQ</a>', 'decode-forest-pharmacy': '    <a href="generic-finder.html"><i class="fas fa-pills" style="color:var(--accent,#10b981)"></i> Generic Finder</a>\n    <a href="interaction-checker.html"><i class="fas fa-triangle-exclamation" style="color:var(--accent,#10b981)"></i> Drug Interactions</a>\n    <a href="prescription-ocr.html"><i class="fas fa-file-prescription" style="color:var(--accent,#10b981)"></i> Prescription OCR</a>\n    <a href="hospital-finder.html"><i class="fas fa-hospital" style="color:var(--accent,#10b981)"></i> Hospital Radar</a>\n    <a href="#feature-suites">Labs</a>\n    <a href="#faq">FAQ</a>', 'breakdown-factor': '    <a href="boq-estimator.html"><i class="fas fa-calculator" style="color:var(--accent,#f59e0b)"></i> CPWD BOQ Estimator</a>\n    <a href="safety-audit.html"><i class="fas fa-clipboard-check" style="color:var(--accent,#f59e0b)"></i> OSHA Safety Audit</a>\n    <a href="cv-scanner.html"><i class="fas fa-camera" style="color:var(--accent,#f59e0b)"></i> CV Site Scanner</a>\n    <a href="#feature-suites">Labs</a>\n    <a href="#faq">FAQ</a>', 'avp-charitable-trust': '    <a href="tax-exemption.html"><i class="fas fa-file-invoice-dollar" style="color:var(--accent,#fb7185)"></i> 80G Tax Exemption</a>\n    <a href="impact-tracker.html"><i class="fas fa-chart-pie" style="color:var(--accent,#fb7185)"></i> Impact & Transparency</a>\n    <a href="health-camps.html"><i class="fas fa-kit-medical" style="color:var(--accent,#fb7185)"></i> Health Camps</a>\n    <a href="#feature-suites">Labs</a>\n    <a href="#faq">FAQ</a>', 'rakshak-ai': '    <a href="fir-generator.html"><i class="fas fa-file-shield" style="color:var(--accent,#ef4444)"></i> BNS FIR Generator</a>\n    <a href="sentinel-vision.html"><i class="fas fa-video" style="color:var(--accent,#ef4444)"></i> Vision Sentinel</a>\n    <a href="threat-radar.html"><i class="fas fa-shield-virus" style="color:var(--accent,#ef4444)"></i> Cyber Threat Radar</a>\n    <a href="#feature-suites">Labs</a>\n    <a href="#faq">FAQ</a>', 'sevenseed': '    <a href="syndicate-ruv.html"><i class="fas fa-chart-pie" style="color:var(--accent,#6366f1)"></i> Syndicate & RUV</a>\n    <a href="market-sizing.html"><i class="fas fa-calculator" style="color:var(--accent,#6366f1)"></i> TAM/SAM/SOM</a>\n    <a href="ventures.html"><i class="fas fa-cubes" style="color:var(--accent,#6366f1)"></i> Portfolio</a>\n    <a href="pricing.html"><i class="fas fa-tag" style="color:var(--accent,#6366f1)"></i> Pricing</a>\n    <a href="byok.html"><i class="fas fa-key" style="color:var(--accent,#6366f1)"></i> BYOK Vault</a>\n    <a href="#feature-suites">Labs</a>\n    <a href="#faq">FAQ</a>'}
+
+BENTO_SHOWCASES = {'avpu': '<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">\n  <div class="sec-head reveal">\n    <div class="eyebrow"><i class="fas fa-cubes"></i> Comprehensive Educational Labs</div>\n    <h2 class="sec-title">Interactive AI Learning Suites</h2>\n    <p class="sec-sub">Deep, hands-on learning engines inspired by Learn-Anything.xyz, Duolingo, FreeCodeCamp, Laws of UX, and 100 Days of AI.</p>\n  </div>\n  <div class="bento-showcase bento-grid-3">\n    <div class="border-beam-card bento-wide">\n      <div>\n        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">\n          <span style="font-size:32px;">🗺️</span>\n          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(37,99,235,0.15); color:#60a5fa; border:1px solid rgba(37,99,235,0.3);">Learn-Anything.xyz</span>\n        </div>\n        <h3 style="font-size:22px; font-weight:700; color:#fff; margin-bottom:8px;">Learn-Anything Interactive DAG Graph</h3>\n        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Pan, zoom, and inspect full prerequisite learning paths, topic dependencies, and curated resource trees on an interactive HTML5 Canvas with Ctrl+K node search.</p>\n      </div>\n      <a class="btn btn-primary" href="learn-dag.html"><i class="fas fa-project-diagram"></i> Launch DAG Canvas Graph →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">\n          <span style="font-size:32px;">🏆</span>\n          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);">Duolingo League</span>\n        </div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Duolingo Diamond Arena</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Gamified learning league (Bronze to Diamond) with streak freeze shields, Web Audio sound chimes, and daily XP tracker.</p>\n      </div>\n      <a class="btn btn-primary sm" href="duo-league.html"><i class="fas fa-trophy"></i> Enter Arena →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">\n          <span style="font-size:32px;">💻</span>\n          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3);">FreeCodeCamp</span>\n        </div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">In-Browser Code Lab</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Interactive code editor with automated assertion test runners, live console logs, and verifiable completion certificates.</p>\n      </div>\n      <a class="btn btn-primary sm" href="code-lab.html"><i class="fas fa-code"></i> Open Code Lab →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">\n          <span style="font-size:32px;">🧠</span>\n          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(168,85,247,0.15); color:#c084fc; border:1px solid rgba(168,85,247,0.3);">Laws of UX</span>\n        </div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Cognitive Laws of UX Lab</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">21 psychological design laws with interactive benches: Fitts\'s Law reaction stopwatch, Hick\'s Law choice simulator, Miller\'s 7±2 digits.</p>\n      </div>\n      <a class="btn btn-primary sm" href="laws-of-ux.html"><i class="fas fa-brain"></i> Explore UX Laws →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">\n          <span style="font-size:32px;">📅</span>\n          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);">100 Days of AI</span>\n        </div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">100 Days AI Challenge</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Structured habit tracker with circular progress ring, day-by-day milestone checklists, and persistent state.</p>\n      </div>\n      <a class="btn btn-primary sm" href="challenge-100days.html"><i class="fas fa-calendar-check"></i> Start Challenge →</a>\n    </div>\n  </div>\n</section>', 'avp-emart': '<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">\n  <div class="sec-head reveal">\n    <div class="eyebrow"><i class="fas fa-cubes"></i> E-Commerce Intelligence Engines</div>\n    <h2 class="sec-title">Interactive Price & Deal Workstations</h2>\n    <p class="sec-sub">Production-grade pricing algorithms inspired by Smartprix, Buyhatke, Xerve, and Google Shopping.</p>\n  </div>\n  <div class="bento-showcase bento-grid-3">\n    <div class="border-beam-card bento-wide">\n      <div>\n        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">\n          <span style="font-size:32px;">📱</span>\n          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(168,85,247,0.15); color:#c084fc; border:1px solid rgba(168,85,247,0.3);">Smartprix Engine</span>\n        </div>\n        <h3 style="font-size:22px; font-weight:700; color:#fff; margin-bottom:8px;">Smartprix 3-Way Spec Comparator</h3>\n        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Side-by-side flagship smartphone comparator featuring dynamic Spec Score (0-100), differential highlight mode, and category breakdown.</p>\n      </div>\n      <a class="btn btn-primary" href="spec-compare.html"><i class="fas fa-scale-balanced"></i> Compare Specs Now →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">\n          <span style="font-size:32px;">⚡</span>\n          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);">Blinkit vs Zepto</span>\n        </div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Quick Commerce Cart Optimizer</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Multi-cart grocery optimizer comparing Blinkit, Zepto, Swiggy Instamart, and BigBasket with surge fees and ETA calculations.</p>\n      </div>\n      <a class="btn btn-primary sm" href="qcommerce.html"><i class="fas fa-basket-shopping"></i> Optimize Basket →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">\n          <span style="font-size:32px;">🎟️</span>\n          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3);">Xerve.in</span>\n        </div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Coupon Auto-Tester & Wallet</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Automated 5-coupon test runner with instant discount mathematics and UPI cashback wallet simulation.</p>\n      </div>\n      <a class="btn btn-primary sm" href="coupon-tester.html"><i class="fas fa-ticket"></i> Test Coupons →</a>\n    </div>\n\n    <div class="border-beam-card bento-wide">\n      <div>\n        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">\n          <span style="font-size:32px;">📈</span>\n          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);">Buyhatke.com</span>\n        </div>\n        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Buyhatke 90-Day Price Trend Tracker</h3>\n        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Interactive HTML5 Canvas 90-day price trend history, AI "Buy Now vs Wait" verdict score, and instant price drop alert notifications.</p>\n      </div>\n      <a class="btn btn-primary" href="price-tracker.html"><i class="fas fa-chart-line"></i> View Price History →</a>\n    </div>\n  </div>\n</section>', 'comonk': '<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">\n  <div class="sec-head reveal">\n    <div class="eyebrow"><i class="fas fa-cubes"></i> Career Acceleration Engines</div>\n    <h2 class="sec-title">Interactive AI Career Workstations</h2>\n    <p class="sec-sub">Production-grade career intelligence tools engineered with inspiration from Jobscan, Interviewing.io, and Levels.fyi.</p>\n  </div>\n  <div class="bento-showcase bento-grid-3">\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">📄</div>\n        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Jobscan ATS Optimizer</h3>\n        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Live resume vs job description semantic matching score, missing keyword pill badges, formatting checks, and AI bullet rewrites.</p>\n      </div>\n      <a class="btn btn-primary" href="resume-analyzer.html"><i class="fas fa-file-lines"></i> Launch ATS Optimizer →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">🎙️</div>\n        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Interviewing.io Mock Arena</h3>\n        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Simulated 45-minute FAANG technical interview room with integrated code editor, rubric evaluations, audio chimes, and instant feedback.</p>\n      </div>\n      <a class="btn btn-primary" href="interview-arena.html"><i class="fas fa-terminal"></i> Enter Mock Arena →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">📊</div>\n        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Levels.fyi Salary Intelligence</h3>\n        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Accurate compensation breakdown by Base, Stock, and Bonus percentiles across Indian startups, MNC GCCs, and US remote roles.</p>\n      </div>\n      <a class="btn btn-primary" href="salary-insights.html"><i class="fas fa-money-bill-trend-up"></i> Explore Salaries →</a>\n    </div>\n  </div>\n</section>', 'sevenforce': '<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">\n  <div class="sec-head reveal">\n    <div class="eyebrow"><i class="fas fa-cubes"></i> Autonomous Workforce Engines</div>\n    <h2 class="sec-title">Interactive AI Agent Workstations</h2>\n    <p class="sec-sub">Built with LangGraph multi-agent choreography, sandboxed code execution, and autonomous enterprise workforce dispatch.</p>\n  </div>\n  <div class="bento-showcase">\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">🕸️</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">LangGraph Agent Studio</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Visual DAG workflow designer connecting Supervisor, Researcher, Coder, and Critic nodes with real-time token telemetry.</p>\n      </div>\n      <a class="btn btn-primary sm" href="workflows.html"><i class="fas fa-diagram-project"></i> Open Agent Studio →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">💻</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Devin AI Terminal</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Sandboxed autonomous developer workspace with virtual shell, git diff viewer, test runner, and automated PR generation.</p>\n      </div>\n      <a class="btn btn-primary sm" href="devin-terminal.html"><i class="fas fa-terminal"></i> Launch Terminal →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">👥</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">7 AI Employees Suite</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Complete directory and dispatch console for Maya, Kabir, Ananya, Rohan, and specialized enterprise agents.</p>\n      </div>\n      <a class="btn btn-primary sm" href="employees.html"><i class="fas fa-users-gear"></i> Inspect Employees →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">📈</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Enterprise ROI Calculator</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Transparent pricing tiers, per-seat unit economics, and interactive ROI calculator showing headcount cost displacement.</p>\n      </div>\n      <a class="btn btn-primary sm" href="pricing.html"><i class="fas fa-calculator"></i> Calculate ROI →</a>\n    </div>\n  </div>\n</section>', 'decode-forest-pharmacy': '<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">\n  <div class="sec-head reveal">\n    <div class="eyebrow"><i class="fas fa-cubes"></i> Clinical AI Workstations</div>\n    <h2 class="sec-title">Interactive Healthcare Engines</h2>\n    <p class="sec-sub">Advanced pharmaceutical AI inspired by PMBJP Jan Aushadhi, Drugs.com, and clinical pharmacology interaction matrices.</p>\n  </div>\n  <div class="bento-showcase">\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">💊</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">PMBJP Generic Salt Finder</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Compare branded medications against Jan Aushadhi certified bio-equivalent generics with 75% to 85% price discounts.</p>\n      </div>\n      <a class="btn btn-primary sm" href="generic-finder.html"><i class="fas fa-pills"></i> Compare Generics →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">⚠️</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Drug-Drug Interaction Checker</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Pharmacological contraindication matrix highlighting Major (QT prolongation, bleeding), Moderate, and Minor drug interactions.</p>\n      </div>\n      <a class="btn btn-primary sm" href="interaction-checker.html"><i class="fas fa-triangle-exclamation"></i> Check Interactions →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">📑</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Prescription OCR Scanner</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Computer vision and LLM parsing of messy doctor handwriting into dosage schedules, frequency tags, and verified salt names.</p>\n      </div>\n      <a class="btn btn-primary sm" href="prescription-ocr.html"><i class="fas fa-file-prescription"></i> Scan Prescription →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">🏥</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Hospital & ICU Bed Radar</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Real-time availability directory of emergency trauma centers, ventilator ICU beds, and 24/7 blood banks in Ahmedabad & Gandhinagar.</p>\n      </div>\n      <a class="btn btn-primary sm" href="hospital-finder.html"><i class="fas fa-hospital"></i> Open Hospital Radar →</a>\n    </div>\n  </div>\n</section>', 'breakdown-factor': '<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">\n  <div class="sec-head reveal">\n    <div class="eyebrow"><i class="fas fa-cubes"></i> Construction Engineering Workstations</div>\n    <h2 class="sec-title">Interactive AEC & Civil Engines</h2>\n    <p class="sec-sub">Built to CPWD DSR 2023 civil schedules, Procore OSHA compliance rubrics, and computer vision site monitoring standards.</p>\n  </div>\n  <div class="bento-showcase">\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">🏗️</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">CPWD DSR 2023 BOQ Estimator</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Civil construction bill-of-quantities takeoff with RCC M25, brickwork, plastering, 15% contractor profit, and 18% GST calculation.</p>\n      </div>\n      <a class="btn btn-primary sm" href="boq-estimator.html"><i class="fas fa-calculator"></i> Open BOQ Estimator →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">🦺</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Procore OSHA Safety Audit</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Standardized site safety inspection checklist, live safety compliance scoring, risk level tiering, and CAPA corrective action generator.</p>\n      </div>\n      <a class="btn btn-primary sm" href="safety-audit.html"><i class="fas fa-clipboard-check"></i> Run Safety Audit →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">📷</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">CV Site Safety Scanner</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Live camera and image scanning for PPE compliance: hardhat detection, high-vis vests, harness attachment, and perimeter monitoring.</p>\n      </div>\n      <a class="btn btn-primary sm" href="cv-scanner.html"><i class="fas fa-camera"></i> Launch CV Scanner →</a>\n    </div>\n  </div>\n</section>', 'avp-charitable-trust': '<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">\n  <div class="sec-head reveal">\n    <div class="eyebrow"><i class="fas fa-cubes"></i> Non-Profit Governance Workstations</div>\n    <h2 class="sec-title">Interactive Philanthropy Engines</h2>\n    <p class="sec-sub">Engineered to Charity Navigator 4-Star standards, Ministry of Finance Form 10BE rules, and direct beneficiary impact tracking.</p>\n  </div>\n  <div class="bento-showcase">\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">📜</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">80G Tax Exemption & Form 10BE</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Instant tax deduction calculator, automated Form 10BE certificate generation with cryptographic SHA-256 verification QR code.</p>\n      </div>\n      <a class="btn btn-primary sm" href="tax-exemption.html"><i class="fas fa-file-invoice-dollar"></i> Generate 80G Certificate →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">📊</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Charity Navigator Impact Ledger</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Open financial accountability ledger with 88.4% program expense ratio, 0% administrative waste, and live audited disbursements.</p>\n      </div>\n      <a class="btn btn-primary sm" href="impact-tracker.html"><i class="fas fa-chart-pie"></i> Inspect Impact Ledger →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">🩺</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Rural Health Camps & Triage</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Symptom triage and appointment booking for rural eye checkups, pediatric nutrition camps, and geriatric dental clinics in Gujarat.</p>\n      </div>\n      <a class="btn btn-primary sm" href="health-camps.html"><i class="fas fa-kit-medical"></i> Book Health Camp →</a>\n    </div>\n  </div>\n</section>', 'rakshak-ai': '<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">\n  <div class="sec-head reveal">\n    <div class="eyebrow"><i class="fas fa-cubes"></i> Public Safety & Forensic Workstations</div>\n    <h2 class="sec-title">Interactive AI Defense & Legal Engines</h2>\n    <p class="sec-sub">Built to Bharatiya Nyaya Sanhita (BNS 2023) legal codes, RapidSOS emergency standards, and real-time computer vision security.</p>\n  </div>\n  <div class="bento-showcase">\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">⚖️</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">BNS 2023 Auto-FIR Generator</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Guided incident intake mapping real incidents to new Bharatiya Nyaya Sanhita legal sections, IPC legacy cross-references, and printable PDF drafts.</p>\n      </div>\n      <a class="btn btn-primary sm" href="fir-generator.html"><i class="fas fa-file-shield"></i> Draft BNS FIR →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">🛡️</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Vision Security Sentinel</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Computer vision workstation scanning for mask PPE compliance, perimeter intrusions, and YOLO real-time crowd occupancy density.</p>\n      </div>\n      <a class="btn btn-primary sm" href="sentinel-vision.html"><i class="fas fa-video"></i> Launch Vision Sentinel →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">🚨</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Cybercrime Threat Radar</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Real-time scam verification for WhatsApp scams, APK malware, fake bank portals, with 1-click filing guidance to 1930 National Cyber Crime portal.</p>\n      </div>\n      <a class="btn btn-primary sm" href="threat-radar.html"><i class="fas fa-shield-virus"></i> Open Threat Radar →</a>\n    </div>\n  </div>\n</section>', 'sevenseed': '<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">\n  <div class="sec-head reveal">\n    <div class="eyebrow"><i class="fas fa-cubes"></i> Studio & Investment Workstations</div>\n    <h2 class="sec-title">Interactive Venture Architecture Engines</h2>\n    <p class="sec-sub">Built to AngelList syndicate waterfall standards, Y Combinator market-sizing methodologies, and zero-margin BYOK security.</p>\n  </div>\n  <div class="bento-showcase">\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">📊</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">AngelList Syndicate & RUV Simulator</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Model SPV investment returns, 20% carry splits, 2% management fees, LP payout waterfalls, and exit MOIC multiples.</p>\n      </div>\n      <a class="btn btn-primary sm" href="syndicate-ruv.html"><i class="fas fa-chart-pie"></i> Model Syndicate →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">🎯</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">YC TAM / SAM / SOM Calculator</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Bottom-up & top-down market sizing with ARPU, serviceable obtainable market share, and investor pitch deck export.</p>\n      </div>\n      <a class="btn btn-primary sm" href="market-sizing.html"><i class="fas fa-calculator"></i> Calculate TAM/SOM →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">🏢</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Venture Portfolio Showcase</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Explore live metrics, AI stacks, target markets, and interactive features across all 8 incubated studio enterprises.</p>\n      </div>\n      <a class="btn btn-primary sm" href="ventures.html"><i class="fas fa-cubes"></i> View Portfolio →</a>\n    </div>\n\n    <div class="border-beam-card">\n      <div>\n        <div style="font-size:32px; margin-bottom:12px;">🔑</div>\n        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Zero-Margin BYOK Vault</h3>\n        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Client-side AES-GCM encrypted API key manager for Groq, OpenAI, Anthropic, and Gemini with zero SaaS markup.</p>\n      </div>\n      <a class="btn btn-primary sm" href="byok.html"><i class="fas fa-key"></i> Open Key Vault →</a>\n    </div>\n  </div>\n</section>'}
+
+PREMIUM_CSS = r"""
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEXT-GEN VISUAL FRAMEWORK
+   Inspired by Unicorn Studio, Aceternity UI, 21st.dev, Spline 3D, Aura Build
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Aceternity Overhead Lamp Illumination ── */
+.hero-lamp {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(920px, 92vw);
+  height: 380px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(var(--primary-rgb), 0.36) 0%, rgba(var(--secondary-rgb), 0.14) 42%, transparent 72%);
+  filter: blur(55px);
+  pointer-events: none;
+  z-index: 2;
+}
+.hero-lamp-line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(440px, 72vw);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffffff, transparent);
+  box-shadow: 0 0 30px 4px rgba(var(--primary-rgb), 0.9);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── Hero Section Architecture ── */
+.hero {
+  position: relative;
+  min-height: 94vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--nav-h) + 48px) clamp(24px, 5vw, 68px) 68px;
+  overflow: hidden;
+  gap: 44px;
+}
+@media(max-width: 992px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding-top: calc(var(--nav-h) + 24px);
+    gap: 32px;
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 5;
+  max-width: 630px;
+  flex: 1 1 540px;
+}
+@media(max-width: 992px) {
+  .hero-content { max-width: 100%; }
+  .hero-actions { justify-content: center; }
+  .stats-row { justify-content: center; }
+}
+
+/* ── Spline-Grade 3D Interactive Stage ── */
+.hero-3d-stage {
+  position: relative;
+  z-index: 5;
+  flex: 1 1 550px;
+  height: 560px;
+  max-width: 620px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+.hero-3d-stage:active { cursor: grabbing; }
+#hero3dCanvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  outline: none;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
+}
+@media(max-width: 992px) {
+  .hero-3d-stage { height: 400px; max-width: 100%; }
+}
+
+/* ── Aura Telemetry HUD Badges ── */
+.aura-telemetry {
+  position: absolute;
+  bottom: 12px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 7px 15px;
+  border-radius: 999px;
+  background: rgba(10, 14, 26, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  backdrop-filter: blur(20px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+  z-index: 6;
+  letter-spacing: 0.03em;
+}
+.aura-telemetry.left { left: 14px; }
+.aura-telemetry.right { right: 14px; }
+.aura-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 12px #10b981;
+  animation: auraPulse 2s infinite ease-in-out;
+}
+@keyframes auraPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.45; }
+}
+
+/* ── Unicorn Studio Interactive Liquid Fluid Canvas Background ── */
+.liquid-fluid-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.85;
+}
+.liquid-mesh {
+  position: absolute;
+  inset: -30%;
+  width: 160%;
+  height: 160%;
+  background: radial-gradient(circle at 35% 35%, rgba(var(--primary-rgb), 0.28), transparent 48%),
+              radial-gradient(circle at 75% 65%, rgba(var(--secondary-rgb), 0.22), transparent 48%),
+              radial-gradient(circle at 50% 85%, rgba(56, 189, 248, 0.16), transparent 42%);
+  filter: blur(85px);
+  animation: liquidMeshMorph 18s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes liquidMeshMorph {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-3%, 4%) scale(1.08) rotate(2deg); }
+  100% { transform: translate(4%, -3%) scale(0.96) rotate(-2deg); }
+}
+
+/* ── Aceternity Shooting Meteors ── */
+.meteors-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+.meteor {
+  position: absolute;
+  top: var(--top, 10%);
+  left: var(--left, 50%);
+  width: 2px;
+  height: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(to right, #ffffff, transparent);
+  box-shadow: 0 0 14px 2px rgba(255,255,255,0.9);
+  transform: rotate(215deg);
+  animation: meteorShower var(--duration, 4s) linear infinite;
+  animation-delay: var(--delay, 0s);
+  opacity: 0;
+}
+.meteor::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 90px;
+  height: 1.5px;
+  background: linear-gradient(90deg, #ffffff, rgba(255,255,255,0.4) 40%, transparent);
+}
+@keyframes meteorShower {
+  0% { transform: rotate(215deg) translateX(0); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: rotate(215deg) translateX(-1000px); opacity: 0; }
+}
+
+/* ── Kinetic Metallic Typography ── */
+.hero-title .grad {
+  background: linear-gradient(120deg, #ffffff 0%, var(--primary-l) 32%, var(--secondary-l) 68%, #ffffff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: kineticShine 6s linear infinite;
+}
+@keyframes kineticShine {
+  to { background-position: 200% center; }
+}
+
+/* ── 21st.dev Animated Continuous Conic Border Beams ── */
+.border-beam-card {
+  position: relative;
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--primary-rgb), 0.14), transparent 45%), var(--bg-1, #0d0d16);
+  border-radius: 20px;
+  padding: 32px;
+  overflow: hidden;
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.15s ease-out, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.border-beam-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(from var(--beam-angle, 0deg), transparent 60%, var(--primary-l, #a5b4fc) 80%, var(--secondary-l, #d8b4fe) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: borderBeamRotate 6s linear infinite;
+}
+@keyframes borderBeamRotate {
+  to { --beam-angle: 360deg; }
+}
+@property --beam-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ── Aceternity Dynamic Spotlight on Cards & Tilt Glare ── */
+.svc-card, .proc-step, .metric, .about-card {
+  position: relative;
+  background: radial-gradient(550px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--primary-rgb), 0.12), transparent 40%), var(--bg-1);
+  transition: transform 0.15s ease-out, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255,255,255,0.22), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  mix-blend-mode: overlay;
+  z-index: 4;
+}
+.border-beam-card:hover .tilt-glare,
+.svc-card:hover .tilt-glare,
+.proc-step:hover .tilt-glare,
+.metric:hover .tilt-glare,
+.about-card:hover .tilt-glare {
+  opacity: 1;
+}
+
+/* ── Uiverse & 21st.dev Shimmer CTA Button ── */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow: 0 4px 24px rgba(var(--primary-rgb), 0.4);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -75%;
+  width: 250%;
+  height: 200%;
+  background: linear-gradient(60deg, transparent 35%, rgba(255,255,255,0.32) 50%, transparent 65%);
+  transform: rotate(25deg);
+  animation: btnShimmer 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes btnShimmer {
+  0% { transform: translateX(-100%) rotate(25deg); }
+  25%, 100% { transform: translateX(100%) rotate(25deg); }
+}
+
+/* Bento Grid System */
+.bento-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  max-width: var(--maxw);
+  margin: 0 auto;
+}
+.bento-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+@media(max-width: 1024px) {
+  .bento-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width: 768px) {
+  .bento-grid-3 { grid-template-columns: 1fr; }
+}
+.bento-wide {
+  grid-column: span 2;
+}
+@media(max-width: 768px) {
+  .bento-wide { grid-column: span 1; }
+}
+"""
+
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -1069,6 +1393,9 @@ def render_html(c):
     }
     site_data_json = json.dumps(site_data, ensure_ascii=False).replace("</", "<\\/")
 
+    brand_nav = CUSTOM_NAVS.get(c["slug"], '<a href="#about">About</a><a href="#services">AI Tools</a><a href="#faq">FAQ</a>')
+    bento_section = BENTO_SHOWCASES.get(c["slug"], '')
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1119,14 +1446,7 @@ def render_html(c):
     <span class="logo-text">{name}</span>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="#about">About</a>
-    <a href="#services">AI Tools</a>
-    {ventures_nav}
-    <a href="#sandbox">Live Demo</a>
-    <a href="#process">Process</a>
-    <a href="#testimonials">Reviews</a>
-    <a href="#faq">FAQ</a>
-    <a href="#contact">Contact</a>
+    {brand_nav}
   </div>
   <div class="nav-right">
     <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
@@ -1138,11 +1458,19 @@ def render_html(c):
 </nav>
 
 <header class="hero">
+  <div class="hero-lamp"></div>
+  <div class="hero-lamp-line"></div>
+  <div class="liquid-mesh"></div>
+  <div class="meteors-container">
+    <span class="meteor" style="--top:8%; --left:22%; --delay:0s; --duration:3.8s;"></span>
+    <span class="meteor" style="--top:26%; --left:68%; --delay:1.2s; --duration:5.2s;"></span>
+    <span class="meteor" style="--top:6%; --left:88%; --delay:2.4s; --duration:4.1s;"></span>
+    <span class="meteor" style="--top:38%; --left:14%; --delay:3.6s; --duration:4.8s;"></span>
+    <span class="meteor" style="--top:16%; --left:52%; --delay:0.7s; --duration:5.5s;"></span>
+  </div>
   <div class="hero-glow"></div>
   <div class="hero-grid"></div>
-  <div class="hero-orb orb-1"></div>
-  <div class="hero-orb orb-2"></div>
-  <canvas id="particles"></canvas>
+  
   <div class="hero-content">
     <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">{c["pill"]}</span></div>
     <h1 class="hero-title" data-blur-in style="--i:1">{c["hero_title"]}</h1>
@@ -1155,9 +1483,17 @@ def render_html(c):
     </div>
     <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track">{render_marquee(c["marquee"])}</div></div>
   </div>
+
+  <div class="hero-3d-stage" id="hero3dStage">
+    <canvas id="hero3dCanvas"></canvas>
+    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · PBR Engine</div>
+    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
+  </div>
 </header>
 
 {pillars_html}
+
+{bento_section}
 
 <section class="ai-strip">
   <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
@@ -1407,7 +1743,7 @@ def render_css(c):
   --glass-a:rgba(20,20,45,.035); --glass-b:rgba(20,20,45,.05); --glass-c:rgba(20,20,45,.055); --glass-d:rgba(20,20,45,.09);
 }}
 """
-    return root + STATIC_CSS
+    return root + STATIC_CSS + PREMIUM_CSS
 
 
 # ── Static stylesheet (uses accent CSS variables above) ─────────────────────
@@ -2422,7 +2758,7 @@ document.querySelectorAll('.btn').forEach(function(btn){
 // Hero particle network (2D fallback when Three.js is unavailable)
 (function(){
   var c = document.getElementById('particles');
-  if (!c || typeof THREE !== 'undefined') return;
+  if (!c || typeof THREE === 'undefined') return;
   var ctx = c.getContext('2d');
   var w, h, parts;
   var rgb = (getComputedStyle(document.documentElement).getPropertyValue('--primary-rgb') || '124,58,237').trim();
@@ -3185,6 +3521,568 @@ function toast(msg, type){
     });
   });
 })();
+
+
+// ── Unicorn Studio Dynamic Interactive Fluid Canvas Background ──
+(function initUnicornFluidCanvas(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var hero = document.querySelector('.hero');
+  if (!hero) return;
+
+  var canvas = document.createElement('canvas');
+  canvas.className = 'liquid-fluid-canvas';
+  hero.insertBefore(canvas, hero.firstChild);
+
+  var ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  var width, height;
+  function resize(){
+    width = canvas.width = hero.clientWidth;
+    height = canvas.height = hero.clientHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var style = getComputedStyle(document.documentElement);
+  var prRgb = (style.getPropertyValue('--primary-rgb') || '99,102,241').trim();
+  var scRgb = (style.getPropertyValue('--secondary-rgb') || '168,85,247').trim();
+
+  var mouse = { x: width * 0.5, y: height * 0.5, targetX: width * 0.5, targetY: height * 0.5 };
+  window.addEventListener('mousemove', function(e){
+    var rect = hero.getBoundingClientRect();
+    if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+      mouse.targetX = e.clientX - rect.left;
+      mouse.targetY = e.clientY - rect.top;
+    }
+  });
+
+  var points = [];
+  var count = 5;
+  for (var i = 0; i < count; i++) {
+    points.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.8,
+      radius: Math.min(width, height) * (0.3 + Math.random() * 0.25),
+      color: i % 2 === 0 ? prRgb : scRgb
+    });
+  }
+
+  var time = 0;
+  function drawFluid(){
+    time += 0.012;
+    mouse.x += (mouse.targetX - mouse.x) * 0.05;
+    mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+    ctx.clearRect(0, 0, width, height);
+
+    points.forEach(function(pt, idx){
+      pt.x += pt.vx + Math.sin(time + idx) * 0.4;
+      pt.y += pt.vy + Math.cos(time + idx * 1.5) * 0.4;
+      if (pt.x < -100) pt.x = width + 100;
+      if (pt.x > width + 100) pt.x = -100;
+      if (pt.y < -100) pt.y = height + 100;
+      if (pt.y > height + 100) pt.y = -100;
+
+      var dx = mouse.x - pt.x;
+      var dy = mouse.y - pt.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 320) {
+        pt.x += (dx / dist) * 1.2;
+        pt.y += (dy / dist) * 1.2;
+      }
+
+      var grad = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, pt.radius);
+      grad.addColorStop(0, 'rgba(' + pt.color + ', 0.18)');
+      grad.addColorStop(0.5, 'rgba(' + pt.color + ', 0.06)');
+      grad.addColorStop(1, 'rgba(' + pt.color + ', 0)');
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    requestAnimationFrame(drawFluid);
+  }
+  drawFluid();
+})();
+
+// ── Master Spline-Grade 3D WebGL Interactive Controller ──
+(function initSplineHero3D(){
+  if (typeof THREE === 'undefined') return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var canvas = document.getElementById('hero3dCanvas') || document.getElementById('particles');
+  if (!canvas) return;
+  var stage = document.getElementById('hero3dStage') || canvas.parentElement;
+  if (!stage) return;
+
+  var width = stage.clientWidth || 540;
+  var height = stage.clientHeight || 540;
+
+  var style = getComputedStyle(document.documentElement);
+  var primaryHex = (style.getPropertyValue('--primary') || '#6366f1').trim();
+  var secondaryHex = (style.getPropertyValue('--secondary') || '#a855f7').trim();
+  var primaryColor = new THREE.Color(primaryHex);
+  var secondaryColor = new THREE.Color(secondaryHex);
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+  camera.position.set(0, 0, 7.6);
+
+  var renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    alpha: true,
+    antialias: true,
+    powerPreference: 'high-performance'
+  });
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+  var variant = document.body.getAttribute('data-variant') || 'bold-centered';
+  var rootGroup = new THREE.Group();
+  scene.add(rootGroup);
+
+  var modelGroup = new THREE.Group();
+  rootGroup.add(modelGroup);
+
+  var pbrPrimary = new THREE.MeshPhysicalMaterial({
+    color: primaryColor,
+    emissive: primaryColor,
+    emissiveIntensity: 0.35,
+    roughness: 0.15,
+    metalness: 0.85,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.1,
+    reflectivity: 0.9
+  });
+
+  var pbrGlass = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff,
+    emissive: secondaryColor,
+    emissiveIntensity: 0.2,
+    roughness: 0.08,
+    metalness: 0.1,
+    transmission: 0.82,
+    opacity: 0.9,
+    transparent: true,
+    ior: 1.52
+  });
+
+  var pbrGold = new THREE.MeshPhysicalMaterial({
+    color: 0xf59e0b,
+    emissive: 0xd97706,
+    emissiveIntensity: 0.4,
+    roughness: 0.18,
+    metalness: 0.95,
+    clearcoat: 1.0
+  });
+
+  var coreMesh, wireMesh;
+  var rings = [];
+  var satellites = [];
+  var customUpdaters = [];
+
+  if (variant === 'editorial') {
+    // 1. AVPU: The Quantum Knowledge Prism
+    var octaGeom = new THREE.OctahedronGeometry(1.2, 0);
+    coreMesh = new THREE.Mesh(octaGeom, pbrPrimary);
+    modelGroup.add(coreMesh);
+
+    var innerWire = new THREE.Mesh(new THREE.IcosahedronGeometry(0.7, 0), new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true }));
+    modelGroup.add(innerWire);
+
+    var ringAngles = [ [Math.PI/3, 0], [-Math.PI/3, Math.PI/4], [0, Math.PI/3] ];
+    ringAngles.forEach(function(ang, idx){
+      var rGeom = new THREE.TorusGeometry(1.85 + idx * 0.28, 0.025, 16, 100);
+      var rMat = new THREE.MeshStandardMaterial({ color: idx % 2 === 0 ? primaryColor : secondaryColor, metalness: 0.8, roughness: 0.2 });
+      var rMesh = new THREE.Mesh(rGeom, rMat);
+      rMesh.rotation.x = ang[0];
+      rMesh.rotation.y = ang[1];
+      modelGroup.add(rMesh);
+      rings.push({ mesh: rMesh, speed: (idx + 1) * 0.008 * (idx % 2 === 0 ? 1 : -1) });
+
+      var sat = new THREE.Mesh(new THREE.SphereGeometry(0.09, 16, 16), new THREE.MeshStandardMaterial({ color: 0x60a5fa, emissive: 0x3b82f6 }));
+      modelGroup.add(sat);
+      satellites.push({ mesh: sat, radius: 1.85 + idx * 0.28, angle: idx * 2, speed: 0.015, rx: ang[0], ry: ang[1] });
+    });
+
+  } else if (variant === 'market-vibrant') {
+    // 2. AVP E-Mart: The Hyper-Prism Marketplace
+    var diamGeom = new THREE.ConeGeometry(1.3, 1.8, 6);
+    coreMesh = new THREE.Mesh(diamGeom, pbrPrimary);
+    coreMesh.rotation.x = Math.PI;
+    modelGroup.add(coreMesh);
+
+    var topCone = new THREE.Mesh(new THREE.ConeGeometry(1.3, 0.7, 6), pbrGlass);
+    topCone.position.y = 1.0;
+    modelGroup.add(topCone);
+
+    var goldRing = new THREE.Mesh(new THREE.TorusGeometry(2.1, 0.03, 16, 90), pbrGold);
+    goldRing.rotation.x = Math.PI / 3.5;
+    modelGroup.add(goldRing);
+    rings.push({ mesh: goldRing, speed: 0.012 });
+
+    for (var c = 0; c < 5; c++) {
+      var coin = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.04, 16), pbrGold);
+      modelGroup.add(coin);
+      satellites.push({ mesh: coin, radius: 2.1, angle: (c * Math.PI * 2) / 5, speed: 0.014, rx: Math.PI / 3.5, ry: 0 });
+    }
+
+  } else if (variant === 'technical-mono') {
+    // 3. Comonk AI: The Synaptic Neuro-Knot
+    var knotGeom = new THREE.TorusKnotGeometry(1.05, 0.28, 128, 16, 3, 4);
+    coreMesh = new THREE.Mesh(knotGeom, pbrPrimary);
+    modelGroup.add(coreMesh);
+
+    wireMesh = new THREE.Mesh(knotGeom.clone(), new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.4 }));
+    wireMesh.scale.set(1.06, 1.06, 1.06);
+    modelGroup.add(wireMesh);
+
+    var netGroup = new THREE.Group();
+    for (var n = 0; n < 24; n++) {
+      var node = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 8), new THREE.MeshBasicMaterial({ color: 0x0ea5e9 }));
+      node.position.set((Math.random()-0.5)*3.8, (Math.random()-0.5)*3.8, (Math.random()-0.5)*3.8);
+      netGroup.add(node);
+    }
+    modelGroup.add(netGroup);
+    customUpdaters.push(function(){ netGroup.rotation.y += 0.005; });
+
+  } else if (variant === 'dashboard') {
+    // 4. Sevenforce: The Autonomous Multi-Agent Hive
+    var hiveGeom = new THREE.DodecahedronGeometry(1.0, 0);
+    coreMesh = new THREE.Mesh(hiveGeom, pbrPrimary);
+    modelGroup.add(coreMesh);
+
+    wireMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.4, 1), new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true, transparent: true, opacity: 0.35 }));
+    modelGroup.add(wireMesh);
+
+    var agentColors = [0x22d3ee, 0x34d399, 0xfbbf24, 0xa855f7, 0xf472b6, 0x38bdf8, 0x4ade80];
+    for (var a = 0; a < 7; a++) {
+      var satDrone = new THREE.Mesh(new THREE.OctahedronGeometry(0.12, 0), new THREE.MeshStandardMaterial({ color: agentColors[a], emissive: agentColors[a], emissiveIntensity: 0.5 }));
+      modelGroup.add(satDrone);
+      satellites.push({
+        mesh: satDrone,
+        radius: 2.15,
+        angle: (a * Math.PI * 2) / 7,
+        speed: 0.012 + (a % 3) * 0.004,
+        rx: (a * Math.PI) / 7,
+        ry: (a * Math.PI) / 5
+      });
+    }
+
+  } else if (variant === 'clinical-clean') {
+    // 5. Decode Forest Pharmacy: The Bio-Molecular Helix
+    var helixGroup = new THREE.Group();
+    var hCount = 20;
+    for (var h = 0; h < hCount; h++) {
+      var y = (h - hCount/2) * 0.14;
+      var ang = h * 0.42;
+      var s1 = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x059669 }));
+      var s2 = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), new THREE.MeshStandardMaterial({ color: 0x34d399, emissive: 0x10b981 }));
+      s1.position.set(Math.cos(ang) * 0.9, y, Math.sin(ang) * 0.9);
+      s2.position.set(-Math.cos(ang) * 0.9, y, -Math.sin(ang) * 0.9);
+      helixGroup.add(s1);
+      helixGroup.add(s2);
+
+      var rungGeom = new THREE.CylinderGeometry(0.018, 0.018, 1.8, 8);
+      var rung = new THREE.Mesh(rungGeom, new THREE.MeshBasicMaterial({ color: 0x6ee7b7, transparent: true, opacity: 0.5 }));
+      rung.position.y = y;
+      rung.rotation.z = Math.PI / 2;
+      rung.rotation.y = -ang;
+      helixGroup.add(rung);
+    }
+    modelGroup.add(helixGroup);
+    coreMesh = helixGroup;
+
+  } else if (variant === 'industrial') {
+    // 6. Breakdown Factor: The Structural AEC Tesseract & Laser Scanner
+    var cubeGeom = new THREE.BoxGeometry(1.6, 1.6, 1.6);
+    coreMesh = new THREE.Mesh(cubeGeom, pbrPrimary);
+    modelGroup.add(coreMesh);
+
+    var outerFrame = new THREE.Mesh(new THREE.BoxGeometry(2.1, 2.1, 2.1), new THREE.MeshBasicMaterial({ color: 0xf59e0b, wireframe: true }));
+    modelGroup.add(outerFrame);
+
+    var scanPlane = new THREE.Mesh(new THREE.PlaneGeometry(3.0, 3.0), new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.25, side: THREE.DoubleSide }));
+    scanPlane.rotation.x = Math.PI / 2;
+    modelGroup.add(scanPlane);
+    customUpdaters.push(function(t){ scanPlane.position.y = Math.sin(t * 2.2) * 1.3; });
+
+  } else if (variant === 'humanitarian') {
+    // 7. AVP Charitable Trust: The Lotus of Hope
+    var lotusGroup = new THREE.Group();
+    var petalGeom = new THREE.ConeGeometry(0.5, 1.5, 4);
+    for (var p = 0; p < 8; p++) {
+      var petal = new THREE.Mesh(petalGeom, pbrPrimary);
+      petal.rotation.z = Math.PI / 3.8;
+      petal.rotation.y = (p * Math.PI * 2) / 8;
+      petal.position.y = -0.3;
+      lotusGroup.add(petal);
+    }
+    var heartSphere = new THREE.Mesh(new THREE.SphereGeometry(0.65, 24, 24), pbrGold);
+    lotusGroup.add(heartSphere);
+    modelGroup.add(lotusGroup);
+    coreMesh = lotusGroup;
+
+    var auraRing = new THREE.Mesh(new THREE.TorusGeometry(1.9, 0.025, 16, 90), new THREE.MeshBasicMaterial({ color: 0xfb7185, transparent: true, opacity: 0.6 }));
+    auraRing.rotation.x = Math.PI / 2.5;
+    modelGroup.add(auraRing);
+    rings.push({ mesh: auraRing, speed: 0.01 });
+
+  } else if (variant === 'cyber-defense') {
+    // 8. Rakshak AI: The Cyber Aegis Shield & Radar Scanner
+    var shieldGeom = new THREE.CylinderGeometry(1.2, 0.2, 1.8, 6);
+    coreMesh = new THREE.Mesh(shieldGeom, pbrPrimary);
+    modelGroup.add(coreMesh);
+
+    var radarRing = new THREE.Mesh(new THREE.RingGeometry(1.5, 1.55, 32), new THREE.MeshBasicMaterial({ color: 0xef4444, side: THREE.DoubleSide }));
+    radarRing.rotation.x = Math.PI / 2;
+    modelGroup.add(radarRing);
+
+    var sweepLine = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.04), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+    sweepLine.position.y = 0;
+    modelGroup.add(sweepLine);
+    customUpdaters.push(function(){ sweepLine.rotation.z += 0.04; });
+
+  } else {
+    // 9. Sevenseed (Group Hub): The Genesis Hyper-Icosahedron Core
+    var icoGeom = new THREE.IcosahedronGeometry(1.25, 1);
+    coreMesh = new THREE.Mesh(icoGeom, pbrGold);
+    modelGroup.add(coreMesh);
+
+    wireMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.6, 0), new THREE.MeshBasicMaterial({ color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.55 }));
+    modelGroup.add(wireMesh);
+
+    var r1 = new THREE.Mesh(new THREE.TorusGeometry(2.1, 0.03, 16, 90), pbrPrimary);
+    r1.rotation.x = Math.PI / 3;
+    modelGroup.add(r1);
+    rings.push({ mesh: r1, speed: 0.009 });
+
+    var r2 = new THREE.Mesh(new THREE.TorusGeometry(2.35, 0.02, 16, 90), pbrGlass);
+    r2.rotation.y = Math.PI / 3.5;
+    modelGroup.add(r2);
+    rings.push({ mesh: r2, speed: -0.012 });
+
+    for (var s = 0; s < 6; s++) {
+      var seed = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), pbrGold);
+      modelGroup.add(seed);
+      satellites.push({ mesh: seed, radius: 2.2, angle: (s * Math.PI * 2) / 6, speed: 0.013, rx: Math.PI / 3, ry: 0 });
+    }
+  }
+
+  // ── Cosmic Particle Dust (220 points) ──
+  var pCount = 220;
+  var pGeom = new THREE.BufferGeometry();
+  var pPos = new Float32Array(pCount * 3);
+  var pCols = new Float32Array(pCount * 3);
+  for (var p = 0; p < pCount; p++) {
+    var pr = 2.4 + Math.random() * 5.0;
+    var pT = Math.random() * Math.PI * 2;
+    var pP = Math.acos(2 * Math.random() - 1);
+    pPos[p * 3] = pr * Math.sin(pP) * Math.cos(pT);
+    pPos[p * 3 + 1] = pr * Math.sin(pP) * Math.sin(pT);
+    pPos[p * 3 + 2] = pr * Math.cos(pP);
+    var pCol = Math.random() > 0.5 ? primaryColor : secondaryColor;
+    pCols[p * 3] = pCol.r;
+    pCols[p * 3 + 1] = pCol.g;
+    pCols[p * 3 + 2] = pCol.b;
+  }
+  pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  pGeom.setAttribute('color', new THREE.BufferAttribute(pCols, 3));
+  var pSystem = new THREE.Points(pGeom, new THREE.PointsMaterial({ size: 0.045, vertexColors: true, transparent: true, opacity: 0.65, blending: THREE.AdditiveBlending }));
+  scene.add(pSystem);
+
+  // ── Dynamic Specular Lighting (The Spline Secret) ──
+  var ambLight = new THREE.AmbientLight(0xffffff, 0.85);
+  scene.add(ambLight);
+
+  var dirLight = new THREE.DirectionalLight(0xffffff, 1.8);
+  dirLight.position.set(5, 8, 6);
+  scene.add(dirLight);
+
+  var fillLight = new THREE.DirectionalLight(secondaryColor, 1.2);
+  fillLight.position.set(-5, -4, 4);
+  scene.add(fillLight);
+
+  var cursorLight = new THREE.PointLight(primaryColor, 3.2, 14);
+  cursorLight.position.set(0, 0, 4);
+  scene.add(cursorLight);
+
+  // ── Spline-Grade Mouse-Look Spring Tracking ──
+  var mouseX = 0, mouseY = 0;
+  var targetRotX = 0, targetRotY = 0;
+  window.addEventListener('mousemove', function(e){
+    var nx = (e.clientX / window.innerWidth) * 2 - 1;
+    var ny = (e.clientY / window.innerHeight) * 2 - 1;
+    targetRotY = nx * 0.55;
+    targetRotX = ny * 0.45;
+
+    cursorLight.position.x += (nx * 4 - cursorLight.position.x) * 0.1;
+    cursorLight.position.y += (-ny * 4 - cursorLight.position.y) * 0.1;
+  });
+
+  // ── 360° Drag & Orbit with Inertia ──
+  var isDragging = false;
+  var prevPointerX = 0, prevPointerY = 0;
+  var velX = 0, velY = 0;
+  var friction = 0.92;
+
+  stage.addEventListener('pointerdown', function(e){
+    isDragging = true;
+    prevPointerX = e.clientX;
+    prevPointerY = e.clientY;
+    velX = 0; velY = 0;
+    stage.setPointerCapture(e.pointerId);
+  });
+
+  stage.addEventListener('pointermove', function(e){
+    if (!isDragging) return;
+    var dx = e.clientX - prevPointerX;
+    var dy = e.clientY - prevPointerY;
+    prevPointerX = e.clientX;
+    prevPointerY = e.clientY;
+    modelGroup.rotation.y += dx * 0.008;
+    modelGroup.rotation.x += dy * 0.008;
+    velX = dx * 0.008;
+    velY = dy * 0.008;
+  });
+
+  function endDrag(e){
+    if (isDragging) {
+      isDragging = false;
+      try { stage.releasePointerCapture(e.pointerId); } catch(err){}
+    }
+  }
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
+
+  stage.addEventListener('dblclick', function(){
+    try {
+      var actx = new (window.AudioContext || window.webkitAudioContext)();
+      var osc = actx.createOscillator();
+      var gain = actx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, actx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, actx.currentTime + 0.35);
+      gain.gain.setValueAtTime(0.2, actx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.5);
+      osc.connect(gain);
+      gain.connect(actx.destination);
+      osc.start();
+      osc.stop(actx.currentTime + 0.5);
+    } catch(e){}
+    velX = (Math.random() - 0.5) * 0.12;
+    velY = (Math.random() - 0.5) * 0.1;
+  });
+
+  window.addEventListener('resize', function(){
+    var nw = stage.clientWidth || 540;
+    var nh = stage.clientHeight || 540;
+    camera.aspect = nw / nh;
+    camera.updateProjectionMatrix();
+    renderer.setSize(nw, nh);
+  });
+
+  var clock = new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    var delta = clock.getDelta();
+    var time = clock.getElapsedTime();
+
+    if (!isDragging) {
+      velX *= friction;
+      velY *= friction;
+      modelGroup.rotation.y += velX + 0.004;
+      modelGroup.rotation.x += velY;
+
+      rootGroup.rotation.y += (targetRotY - rootGroup.rotation.y) * 0.05;
+      rootGroup.rotation.x += (targetRotX - rootGroup.rotation.x) * 0.05;
+    }
+
+    rings.forEach(function(r){ r.mesh.rotation.z += r.speed; });
+
+    satellites.forEach(function(s){
+      s.angle += s.speed;
+      s.mesh.position.x = Math.cos(s.angle) * s.radius;
+      s.mesh.position.y = Math.sin(s.angle) * s.radius * Math.sin(s.rx);
+      s.mesh.position.z = Math.sin(s.angle) * s.radius * Math.cos(s.rx);
+    });
+
+    customUpdaters.forEach(function(fn){ fn(time); });
+
+    pSystem.rotation.y = time * 0.018;
+    pSystem.rotation.x = Math.sin(time * 0.012) * 0.04;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+// ── Aceternity UI 3D Card Physics Tilt & Dynamic Specular Glare ──
+(function initAceternity3DTiltAndSpotlight(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia && window.matchMedia('(hover: none)').matches) return;
+
+  var cards = document.querySelectorAll('.border-beam-card, .svc-card, .proc-step, .metric, .about-card');
+  cards.forEach(function(card){
+    if (!card.querySelector('.tilt-glare')) {
+      var glare = document.createElement('div');
+      glare.className = 'tilt-glare';
+      card.appendChild(glare);
+    }
+
+    var rect = null, raf = null;
+    function updateRect(){ rect = card.getBoundingClientRect(); }
+
+    card.addEventListener('mouseenter', function(){
+      updateRect();
+      card.style.transition = 'transform 0.12s ease-out, box-shadow 0.2s ease';
+    });
+
+    card.addEventListener('mousemove', function(e){
+      if (!rect) updateRect();
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+
+      card.style.setProperty('--mouse-x', x + 'px');
+      card.style.setProperty('--mouse-y', y + 'px');
+
+      var cx = rect.width / 2;
+      var cy = rect.height / 2;
+      var dx = (x - cx) / cx;
+      var dy = (y - cy) / cy;
+      dx = Math.max(-1, Math.min(1, dx));
+      dy = Math.max(-1, Math.min(1, dy));
+
+      var rx = -dy * 10;
+      var ry = dx * 10;
+
+      var gx = (x / rect.width) * 100;
+      var gy = (y / rect.height) * 100;
+      card.style.setProperty('--glare-x', gx + '%');
+      card.style.setProperty('--glare-y', gy + '%');
+
+      if (!raf) {
+        raf = requestAnimationFrame(function(){
+          card.style.transform = 'perspective(1000px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) scale3d(1.02, 1.02, 1.02) translateY(-3px)';
+          raf = null;
+        });
+      }
+    });
+
+    card.addEventListener('mouseleave', function(){
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      card.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease';
+      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1) translateY(0)';
+      rect = null;
+    });
+  });
+})();
+
 """
 
 
@@ -3216,3 +4114,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

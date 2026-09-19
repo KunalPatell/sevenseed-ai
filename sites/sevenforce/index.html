@@ -49,14 +49,12 @@
     <span class="logo-text">Seven <span class="logo-accent">force</span></span>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="#about">About</a>
-    <a href="#services">AI Tools</a>
-    
-    <a href="#sandbox">Live Demo</a>
-    <a href="#process">Process</a>
-    <a href="#testimonials">Reviews</a>
+        <a href="workflows.html"><i class="fas fa-diagram-project" style="color:var(--accent,#06b6d4)"></i> LangGraph Studio</a>
+    <a href="devin-terminal.html"><i class="fas fa-terminal" style="color:var(--accent,#06b6d4)"></i> Devin AI Terminal</a>
+    <a href="employees.html"><i class="fas fa-users-gear" style="color:var(--accent,#06b6d4)"></i> 7 AI Employees</a>
+    <a href="pricing.html"><i class="fas fa-calculator" style="color:var(--accent,#06b6d4)"></i> ROI & Pricing</a>
+    <a href="#feature-suites">Labs</a>
     <a href="#faq">FAQ</a>
-    <a href="#contact">Contact</a>
   </div>
   <div class="nav-right">
     <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
@@ -68,11 +66,19 @@
 </nav>
 
 <header class="hero">
+  <div class="hero-lamp"></div>
+  <div class="hero-lamp-line"></div>
+  <div class="liquid-mesh"></div>
+  <div class="meteors-container">
+    <span class="meteor" style="--top:8%; --left:22%; --delay:0s; --duration:3.8s;"></span>
+    <span class="meteor" style="--top:26%; --left:68%; --delay:1.2s; --duration:5.2s;"></span>
+    <span class="meteor" style="--top:6%; --left:88%; --delay:2.4s; --duration:4.1s;"></span>
+    <span class="meteor" style="--top:38%; --left:14%; --delay:3.6s; --duration:4.8s;"></span>
+    <span class="meteor" style="--top:16%; --left:52%; --delay:0.7s; --duration:5.5s;"></span>
+  </div>
   <div class="hero-glow"></div>
   <div class="hero-grid"></div>
-  <div class="hero-orb orb-1"></div>
-  <div class="hero-orb orb-2"></div>
-  <canvas id="particles"></canvas>
+  
   <div class="hero-content">
     <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">7 AI Employees · Growth AI · Agency AI</span></div>
     <h1 class="hero-title" data-blur-in style="--i:1">Hire your <span class="grad">AI workforce</span><br>— seven experts, one platform</h1>
@@ -91,6 +97,12 @@
     </div>
     <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>Content AI</span><span>Social AI</span><span>WhatsApp AI</span><span>Proposals & BRD</span><span>Meeting Notes</span><span>AI Recruiter</span><span>Ask-Your-Data</span><span>Campaigns</span><span>Test Cases</span><span>Automation</span><span>Content AI</span><span>Social AI</span><span>WhatsApp AI</span><span>Proposals & BRD</span><span>Meeting Notes</span><span>AI Recruiter</span><span>Ask-Your-Data</span><span>Campaigns</span><span>Test Cases</span><span>Automation</span></div></div>
   </div>
+
+  <div class="hero-3d-stage" id="hero3dStage">
+    <canvas id="hero3dCanvas"></canvas>
+    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · PBR Engine</div>
+    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
+  </div>
 </header>
 
 <section class="pillars-band">
@@ -99,6 +111,51 @@
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-rocket"></i></div><div class="pillar-txt"><strong>Growth AI Suite</strong><span>Content, social & campaigns that compound.</span></div></div>
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-building"></i></div><div class="pillar-txt"><strong>Agency AI Suite</strong><span>Proposals, meetings, hiring & delivery.</span></div></div>
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-plug"></i></div><div class="pillar-txt"><strong>One Platform</strong><span>Every agent on Sevenseed's shared AI stack.</span></div></div>
+  </div>
+</section>
+
+<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-cubes"></i> Autonomous Workforce Engines</div>
+    <h2 class="sec-title">Interactive AI Agent Workstations</h2>
+    <p class="sec-sub">Built with LangGraph multi-agent choreography, sandboxed code execution, and autonomous enterprise workforce dispatch.</p>
+  </div>
+  <div class="bento-showcase">
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:12px;">🕸️</div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">LangGraph Agent Studio</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Visual DAG workflow designer connecting Supervisor, Researcher, Coder, and Critic nodes with real-time token telemetry.</p>
+      </div>
+      <a class="btn btn-primary sm" href="workflows.html"><i class="fas fa-diagram-project"></i> Open Agent Studio →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:12px;">💻</div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Devin AI Terminal</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Sandboxed autonomous developer workspace with virtual shell, git diff viewer, test runner, and automated PR generation.</p>
+      </div>
+      <a class="btn btn-primary sm" href="devin-terminal.html"><i class="fas fa-terminal"></i> Launch Terminal →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:12px;">👥</div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">7 AI Employees Suite</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Complete directory and dispatch console for Maya, Kabir, Ananya, Rohan, and specialized enterprise agents.</p>
+      </div>
+      <a class="btn btn-primary sm" href="employees.html"><i class="fas fa-users-gear"></i> Inspect Employees →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:12px;">📈</div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Enterprise ROI Calculator</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Transparent pricing tiers, per-seat unit economics, and interactive ROI calculator showing headcount cost displacement.</p>
+      </div>
+      <a class="btn btn-primary sm" href="pricing.html"><i class="fas fa-calculator"></i> Calculate ROI →</a>
+    </div>
   </div>
 </section>
 

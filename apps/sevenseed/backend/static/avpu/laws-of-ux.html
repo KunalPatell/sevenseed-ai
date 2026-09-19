@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laws of UX Cognitive Science Lab — AVPU</title>
+  <meta name="description" content="Explore 21 Cognitive Psychology & UX Laws with interactive experimental test benches for Fitts's Law, Hick's Law, and Miller's Law.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .ux-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
+    .ux-header { text-align: center; margin-bottom: 32px; }
+    .ux-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.3); color: #c084fc; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .ux-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+
+    /* Interactive Lab Section */
+    .lab-section { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 48px; }
+    .lab-tabs { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+    .lab-tab-btn { padding: 10px 20px; border-radius: 10px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .lab-tab-btn.active, .lab-tab-btn:hover { background: #a855f7; color: #fff; border-color: #a855f7; }
+
+    .experiment-card { display: none; }
+    .experiment-card.active { display: block; }
+
+    /* Fitts's Law Bench */
+    .fitts-arena { position: relative; width: 100%; height: 320px; background: #020617; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; margin: 20px 0; }
+    .fitts-target { position: absolute; border-radius: 50%; background: #3b82f6; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; cursor: pointer; transition: transform 0.1s; user-select: none; }
+    .fitts-target:active { transform: scale(0.92); }
+    .fitts-stats { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 14px; }
+    .fitts-stat-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 13px; }
+    .fitts-stat-box strong { color: #c084fc; font-family: 'JetBrains Mono', monospace; font-size: 16px; }
+
+    /* Hick's Law Bench */
+    .hicks-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; margin: 20px 0; }
+    .hicks-btn { padding: 20px 14px; background: var(--bg-2); border: 2px solid var(--border-hi); border-radius: 10px; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; text-align: center; transition: all 0.15s; }
+    .hicks-btn:hover { border-color: #a855f7; background: var(--bg-3); }
+    .hicks-btn.target-choice { border-color: #f59e0b; box-shadow: 0 0 14px rgba(245,158,11,0.3); }
+
+    /* 21 Laws Cards Grid */
+    .laws-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .law-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; }
+    .law-card:hover { transform: translateY(-4px); border-color: rgba(168,85,247,0.4); }
+    .law-category { font-size: 11px; text-transform: uppercase; font-weight: 700; color: #c084fc; margin-bottom: 8px; letter-spacing: 0.05em; }
+    .law-name { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    .law-summary { font-size: 13px; color: var(--text-2); line-height: 1.6; margin-bottom: 16px; flex: 1; }
+    .law-takeaway { background: var(--bg-2); border-left: 3px solid #a855f7; padding: 8px 12px; border-radius: 0 6px 6px 0; font-size: 12px; color: #cbd5e1; }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-graduation-cap"></i></span>
+      <span style="font-weight:700; font-size:18px;">AVPU</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="courses.html">Courses</a>
+      <a href="learn-dag.html">DAG Graph</a>
+      <a href="duo-league.html">Duo League</a>
+      <a href="code-lab.html">Code Lab</a>
+      <a href="laws-of-ux.html" style="color:var(--primary-l); font-weight:600;">Laws of UX</a>
+      <a href="marketing-teardowns.html">Teardowns</a>
+      <a href="challenge-100days.html">100 Days AI</a>
+      <a href="mental-models.html">Mental Models</a>
+    </div>
+    <div class="nav-actions">
+      <a class="btn btn-primary sm" href="courses.html"><i class="fas fa-arrow-left"></i> All Courses</a>
+    </div>
+  </div>
+</nav>
+
+<div class="ux-container">
+  <div class="ux-header">
+    <div class="ux-badge"><i class="fas fa-brain"></i> Inspired by LawsOfUX.com</div>
+    <h1 class="ux-title">Laws of UX & Cognitive Psychology Lab</h1>
+    <p style="color:var(--text-2); max-width:720px; margin:0 auto;">Master the 21 human cognition laws governing modern interaction design with interactive real-time experiments for Fitts's Law, Hick's Law, and Miller's 7±2 Rule.</p>
+  </div>
+
+  <!-- Interactive Experiment Lab -->
+  <div class="lab-section">
+    <div class="lab-tabs">
+      <button class="lab-tab-btn active" onclick="switchLab('fitts')"><i class="fas fa-bullseye"></i> Experiment 1: Fitts's Law (Stopwatch)</button>
+      <button class="lab-tab-btn" onclick="switchLab('hicks')"><i class="fas fa-list-ol"></i> Experiment 2: Hick's Law (Choice Overload)</button>
+      <button class="lab-tab-btn" onclick="switchLab('millers')"><i class="fas fa-memory"></i> Experiment 3: Miller's Law (7±2 Limit)</button>
+    </div>
+
+    <!-- Fitts's Law Experiment -->
+    <div class="experiment-card active" id="labFitts">
+      <h3 style="color:#fff; font-size:20px; margin-bottom:6px;">Fitts's Law: Target Acquisition Stopwatch</h3>
+      <p style="color:var(--text-2); font-size:14px;">The time required to rapidly move to a target area is a function of the ratio between the distance to the target and the width of the target: <code>MT = a + b · log₂(2D / W)</code>.</p>
+      
+      <div class="fitts-arena" id="fittsArena">
+        <div class="fitts-target" id="fittsTarget" onclick="hitTarget()" style="width:70px; height:70px; top:120px; left:140px;">
+          CLICK
+        </div>
+      </div>
+
+      <div class="fitts-stats">
+        <div class="fitts-stat-box">Target Width: <strong id="fWidth">70px</strong></div>
+        <div class="fitts-stat-box">Distance Moved: <strong id="fDist">0px</strong></div>
+        <div class="fitts-stat-box">Acquisition Time: <strong id="fTime">0 ms</strong></div>
+        <div class="fitts-stat-box">Clicks: <strong id="fHits">0 / 5</strong></div>
+      </div>
+    </div>
+
+    <!-- Hick's Law Experiment -->
+    <div class="experiment-card" id="labHicks">
+      <h3 style="color:#fff; font-size:20px; margin-bottom:6px;">Hick's Law: Decision Time vs Number of Choices</h3>
+      <p style="color:var(--text-2); font-size:14px;">The time it takes to make a decision increases logarithmically with the number and complexity of choices: <code>RT = b · log₂(n + 1)</code>.</p>
+      
+      <div style="margin:20px 0; display:flex; gap:12px; align-items:center;">
+        <span style="font-size:14px;">Select Choice Density:</span>
+        <button class="btn btn-ghost sm" onclick="setHicksMode(2)">2 Choices (Fast)</button>
+        <button class="btn btn-ghost sm" onclick="setHicksMode(4)">4 Choices</button>
+        <button class="btn btn-ghost sm" onclick="setHicksMode(8)">8 Choices (Overload)</button>
+      </div>
+
+      <div style="font-size:15px; font-weight:700; color:#38bdf8; margin-bottom:10px;" id="hicksPrompt">Prompt: Click 'START TEST'</div>
+      <div class="hicks-choices" id="hicksChoiceGrid">
+        <!-- Injected by JS -->
+      </div>
+      <div style="font-size:13px; color:var(--text-2);">Reaction Time: <strong id="hicksResult" style="color:#c084fc; font-family:'JetBrains Mono';">--</strong></div>
+    </div>
+
+    <!-- Miller's Law Experiment -->
+    <div class="experiment-card" id="labMillers">
+      <h3 style="color:#fff; font-size:20px; margin-bottom:6px;">Miller's Law: Working Memory Span (7 ± 2 Items)</h3>
+      <p style="color:var(--text-2); font-size:14px;">The average person can only keep 7 (plus or minus 2) items in their immediate working memory. Chunk information into small meaningful units.</p>
+      
+      <div style="background:var(--bg-2); border:1px solid var(--border); border-radius:12px; padding:24px; text-align:center; margin:20px 0;">
+        <div style="font-size:32px; font-weight:800; font-family:'JetBrains Mono',monospace; letter-spacing:8px; color:#34d399; min-height:48px;" id="millerFlash">???????</div>
+        <div style="margin-top:16px;">
+          <button class="btn btn-primary sm" onclick="startMillerTest()"><i class="fas fa-play"></i> Flash 7 Digits</button>
+        </div>
+      </div>
+      <div style="font-size:13px; color:var(--text-2);" id="millerFeedback">Click Flash to test your instantaneous recall capacity.</div>
+    </div>
+  </div>
+
+  <!-- 21 Laws of UX Directory -->
+  <h2 style="font-size:24px; font-weight:800; margin-bottom:20px; display:flex; align-items:center; gap:10px;">
+    <i class="fas fa-book-open" style="color:#a855f7;"></i> The 21 Core Laws of UX
+  </h2>
+
+  <div class="laws-grid">
+    <div class="law-card">
+      <div class="law-category">Heuristic & Principle</div>
+      <h3 class="law-name">Fitts's Law</h3>
+      <p class="law-summary">The time to acquire a target is a function of the distance to and size of the target. Fast-action buttons should be large and pinned close to thumb reach.</p>
+      <div class="law-takeaway"><strong>Design Rule:</strong> Make primary CTAs large and position them along screen edges or thumb zones.</div>
+    </div>
+
+    <div class="law-card">
+      <div class="law-category">Cognitive Principle</div>
+      <h3 class="law-name">Hick's Law</h3>
+      <p class="law-summary">The time it takes to make a decision increases with the number and complexity of options. Minimize choices in checkouts, nav menus, and pricing tiers.</p>
+      <div class="law-takeaway"><strong>Design Rule:</strong> Break complex workflows into multi-step wizards with 3 or fewer choices per step.</div>
+    </div>
+
+    <div class="law-card">
+      <div class="law-category">Memory & Perception</div>
+      <h3 class="law-name">Miller's Law</h3>
+      <p class="law-summary">The average person can hold only 7 (±2) chunks of information in working memory simultaneously.</p>
+      <div class="law-takeaway"><strong>Design Rule:</strong> Chunk phone numbers, credit cards, and dashboard metrics into clusters of 3-4 items.</div>
+    </div>
+
+    <div class="law-card">
+      <div class="law-category">Expectation Principle</div>
+      <h3 class="law-name">Jakob's Law</h3>
+      <p class="law-summary">Users spend most of their time on other sites. They expect your site to function identically to familiar mental models (e.g. cart on top right, logo on top left).</p>
+      <div class="law-takeaway"><strong>Design Rule:</strong> Innovate on core value, not on foundational navigation conventions.</div>
+    </div>
+
+    <div class="law-card">
+      <div class="law-category">Memory Biases</div>
+      <h3 class="law-name">Peak-End Rule</h3>
+      <p class="law-summary">People judge an experience based on how they felt at its emotional peak and at its conclusion, rather than the average sum of every moment.</p>
+      <div class="law-takeaway"><strong>Design Rule:</strong> Celebrate key milestones with confetti animations and ensure checkout ends on a high note.</div>
+    </div>
+
+    <div class="law-card">
+      <div class="law-category">Task Motivation</div>
+      <h3 class="law-name">Zeigarnik Effect</h3>
+      <p class="law-summary">People remember uncompleted or interrupted tasks significantly better than completed tasks. Incomplete progress bars create psychological tension to finish.</p>
+      <div class="law-takeaway"><strong>Design Rule:</strong> Show "75% profile completed" badges to trigger completion drive.</div>
+    </div>
+
+    <div class="law-card">
+      <div class="law-category">Visual Perception</div>
+      <h3 class="law-name">Aesthetic-Usability Effect</h3>
+      <p class="law-summary">Users perceive aesthetically pleasing designs as significantly more usable and are more forgiving of minor usability hiccups.</p>
+      <div class="law-takeaway"><strong>Design Rule:</strong> Premium micro-interactions and harmonious color palettes build immediate trust.</div>
+    </div>
+
+    <div class="law-card">
+      <div class="law-category">Visual Hierarchy</div>
+      <h3 class="law-name">Von Restorff Effect</h3>
+      <p class="law-summary">When multiple similar objects are present, the one that differs from the rest is most likely to be remembered.</p>
+      <div class="law-takeaway"><strong>Design Rule:</strong> Highlight "Recommended" pricing tiers with high-contrast colored borders.</div>
+    </div>
+
+    <div class="law-card">
+      <div class="law-category">Cognitive Principle</div>
+      <h3 class="law-name">Goal-Gradient Effect</h3>
+      <p class="law-summary">The tendency to approach a goal increases with proximity to the goal. Users accelerate action as the finish line comes in sight.</p>
+      <div class="law-takeaway"><strong>Design Rule:</strong> Start loyalty cards with 2 pre-stamped bonus stars to create perceived initial momentum.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- LAB SWITCHER ---
+function switchLab(id) {
+  document.querySelectorAll('.lab-tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.experiment-card').forEach(c => c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  if (id === 'fitts') document.getElementById('labFitts').classList.add('active');
+  if (id === 'hicks') document.getElementById('labHicks').classList.add('active');
+  if (id === 'millers') document.getElementById('labMillers').classList.add('active');
+}
+
+// --- FITTS'S LAW STOPWATCH ENGINE ---
+let fittsStartTime = Date.now();
+let fittsHits = 0;
+let lastX = 140, lastY = 120;
+
+function hitTarget() {
+  const now = Date.now();
+  const elapsed = now - fittsStartTime;
+  fittsHits++;
+
+  document.getElementById('fTime').innerText = elapsed + ' ms';
+  document.getElementById('fHits').innerText = fittsHits + ' / 5';
+
+  // Calculate random new target position and width
+  const arena = document.getElementById('fittsArena');
+  const target = document.getElementById('fittsTarget');
+  const maxW = arena.clientWidth - 100;
+  const maxH = arena.clientHeight - 100;
+
+  const nextW = Math.floor(Math.random() * 50) + 35; // 35px to 85px
+  const nextX = Math.floor(Math.random() * maxW);
+  const nextY = Math.floor(Math.random() * maxH);
+
+  const dist = Math.round(Math.hypot(nextX - lastX, nextY - lastY));
+  document.getElementById('fWidth').innerText = nextW + 'px';
+  document.getElementById('fDist').innerText = dist + 'px';
+
+  target.style.width = nextW + 'px';
+  target.style.height = nextW + 'px';
+  target.style.left = nextX + 'px';
+  target.style.top = nextY + 'px';
+
+  lastX = nextX;
+  lastY = nextY;
+  fittsStartTime = Date.now();
+}
+
+// --- HICK'S LAW TEST BENCH ---
+let hicksStart = null;
+let currentTargetChoice = null;
+
+function setHicksMode(count) {
+  const grid = document.getElementById('hicksChoiceGrid');
+  const promptEl = document.getElementById('hicksPrompt');
+  document.getElementById('hicksResult').innerText = '--';
+
+  const choices = ['🍎 Apple', '🍌 Banana', '🍒 Cherry', '🍇 Grape', '🍋 Lemon', '🍊 Orange', '🍉 Watermelon', '🥑 Avocado'].slice(0, count);
+  currentTargetChoice = choices[Math.floor(Math.random() * choices.length)];
+  promptEl.innerText = `Click on '${currentTargetChoice}' as fast as possible!`;
+
+  grid.innerHTML = choices.map(item => `
+    <button class="hicks-btn" onclick="checkHickChoice('${item}')">${item}</button>
+  `).join('');
+
+  hicksStart = Date.now();
+}
+
+function checkHickChoice(item) {
+  if (!hicksStart) return;
+  if (item === currentTargetChoice) {
+    const elapsed = Date.now() - hicksStart;
+    document.getElementById('hicksResult').innerText = elapsed + ' ms (Decision RT)';
+    hicksStart = null;
+  }
+}
+
+// --- MILLER'S LAW TEST ---
+function startMillerTest() {
+  const flashEl = document.getElementById('millerFlash');
+  const randomDigits = Math.floor(1000000 + Math.random() * 9000000).toString();
+  flashEl.innerText = randomDigits;
+  document.getElementById('millerFeedback').innerText = 'Memorize the digits... Hiding in 1.5 seconds!';
+
+  setTimeout(() => {
+    flashEl.innerText = '• • • • • • •';
+    document.getElementById('millerFeedback').innerHTML = `
+      Can you recall the 7 digits? <button class="btn btn-ghost sm" onclick="alert('Digits were: ' + ${randomDigits})">Reveal</button>
+    `;
+  }, 1500);
+}
+
+// Init
+setHicksMode(4);
+</script>
+
+</body>
+</html>
