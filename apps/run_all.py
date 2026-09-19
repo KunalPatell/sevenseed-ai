@@ -59,7 +59,12 @@ started = []
 skipped = []
 for slug, port, label, main_file in APPS:
     if slug == "comonk":
-        backend = os.path.join(HERE, "..", "comonk")
+        if os.path.isfile(os.path.join(HERE, "comonk", main_file)):
+            backend = os.path.join(HERE, "comonk")
+        elif os.path.isfile(os.path.join(HERE, "..", "comonk", main_file)):
+            backend = os.path.join(HERE, "..", "comonk")
+        else:
+            backend = os.path.join(HERE, slug, "backend")
     else:
         backend = os.path.join(HERE, slug, "backend")
         

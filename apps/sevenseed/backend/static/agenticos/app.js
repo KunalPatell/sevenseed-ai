@@ -1,31 +1,36 @@
+/* safety_code_injected */
+
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); el.style.opacity = '1'; });
+  document.querySelectorAll('[data-blur-in]').forEach(function(el){ el.classList.add('bin'); el.style.opacity = '1'; el.style.filter = 'none'; });
+});
+setTimeout(function(){
+  document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); el.style.opacity = '1'; });
+  document.querySelectorAll('[data-blur-in]').forEach(function(el){ el.classList.add('bin'); el.style.opacity = '1'; el.style.filter = 'none'; });
+}, 50);
+
 // Enterprise site interactions — Sevenseed AI portfolio
 document.body.classList.add('js');
 
 // Entrance orchestration: reveal blur-in elements + fire scramble
+// Instant reveal entrance
 function revealEntrance(){
-  document.querySelectorAll('[data-blur-in]').forEach(function(el){ el.classList.add('bin'); });
+  document.querySelectorAll('[data-blur-in]').forEach(function(el){ el.classList.add('bin'); el.style.opacity = '1'; el.style.filter = 'none'; });
   document.dispatchEvent(new Event('ss:entrance'));
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', revealEntrance);
+} else {
+  revealEntrance();
 }
 
 // Text-scramble ("decode") effect
 (function(){
   var CHARS = "!<>-_\\/[]{}=+*^?#01ABCXYZ";
   function scramble(el){
+    // Keep text crisp and intact
     var text = el.getAttribute('data-text') || el.textContent;
-    el.setAttribute('data-text', text);
-    var queue = text.split('').map(function(c){ return {c:c, s:Math.floor(Math.random()*16), e:Math.floor(Math.random()*16)+16}; });
-    var f = 0;
-    (function tick(){
-      var out = '', done = 0;
-      queue.forEach(function(q){
-        if (q.c === ' '){ out += ' '; done++; }
-        else if (f >= q.e){ out += q.c; done++; }
-        else if (f >= q.s){ out += CHARS[Math.floor(Math.random()*CHARS.length)]; }
-      });
-      el.textContent = out;
-      if (done >= queue.length) return;
-      f++; requestAnimationFrame(tick);
-    })();
+    el.textContent = text;
   }
   var els = document.querySelectorAll('.scramble');
   document.addEventListener('ss:entrance', function(){ els.forEach(scramble); });
@@ -40,7 +45,7 @@ function revealEntrance(){
   try { seen = sessionStorage.getItem('ss-preloader-seen'); } catch(e){}
   if (seen){ if (pl.parentNode) pl.parentNode.removeChild(pl); setTimeout(revealEntrance, 0); return; }
   var bar = document.getElementById('plBar'), pct = document.getElementById('plPct');
-  var start = Date.now(), dur = 1500;
+  var start = Date.now(), dur = 200;
   var iv = setInterval(function(){
     var p = Math.min(100, Math.floor((Date.now() - start) / dur * 100));
     if (bar) bar.style.width = p + '%';

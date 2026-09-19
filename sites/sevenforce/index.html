@@ -59,7 +59,7 @@
   <div class="nav-right">
     <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
     <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
-    <a class="btn btn-ghost" href="/sevenforce/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-ghost" href="devin-terminal.html"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
     <a class="btn btn-primary" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
   </div>
@@ -470,5 +470,48 @@
 
 <script id="ssData" type="application/json">{"site": "Seven force", "sector": "AI Workforce & Business Automation", "summary": "Sevenforce gives every business a team of specialised AI employees — for marketing, sales, hiring, meetings, documents, and data — all running on Sevenseed's shared AI stack.", "about": "Sevenforce turns AI into your team. Instead of juggling a dozen disconnected tools, you hire specialised AI employees — each an expert at one job — that work together from a single dashboard, around the clock. Two suites cover the whole business: Growth AI runs your content, social media, and campaigns, while Agency AI handles proposals, documents, meetings, hiring, and data — every agent powered by Sevenseed's shared AI backbone.", "highlights": ["7 specialised AI employees", "Growth AI: content, social & campaigns", "Agency AI: proposals, meetings & hiring", "One dashboard, always on"], "services": [{"name": "Maya — Content & SEO", "desc": "Builds a brand profile from any URL, then generates SEO topics and full long-form articles."}, {"name": "Vibe — Social Media", "desc": "Writes platform-perfect captions and posts, schedules them, and tracks engagement."}, {"name": "Wave — Sales & Comms", "desc": "Runs WhatsApp broadcasts, an auto-reply chatbot, and personalised bulk-email campaigns."}, {"name": "Nova — Business Analyst", "desc": "Turns a brief into proposals, BRD/PRD docs (Word export), user stories and test cases."}, {"name": "Echo — Meeting Assistant", "desc": "Turns any transcript into a clean summary, decisions, and owner-tagged action items."}, {"name": "Scout — AI Recruiter", "desc": "Screens resumes, generates interview questions, and scores answers on seven dimensions."}, {"name": "Sage — Data Analyst", "desc": "Answers questions about your data in plain English with a safe, instant NL-to-SQL engine."}], "faqs": [{"q": "What is Sevenforce?", "a": "An AI workforce platform — hire specialised AI employees for marketing, sales, hiring, meetings, documents and data, all from one dashboard."}, {"q": "What are the Growth AI and Agency AI suites?", "a": "Growth AI covers content, social and campaigns (Maya, Vibe, Wave). Agency AI covers proposals & docs, meetings, hiring and data (Nova, Echo, Scout, Sage)."}, {"q": "Do I have to hire all seven?", "a": "No — start with the AI employees you need most and add more anytime. Each works on its own or together with the rest."}, {"q": "What powers Sevenforce?", "a": "Sevenseed's shared AI backbone — LangGraph multi-agent orchestration, Groq LLaMA 3.3 70B, RAG, and a safe NL-to-SQL engine."}], "contact": {"email": "hello@sevenforce.ai", "phone": "+91 84908 61586", "location": "Ahmedabad, Gujarat, India"}, "sections": [{"label": "About", "hash": "#about"}, {"label": "AI Tools", "hash": "#services"}, {"label": "Live Demo", "hash": "#sandbox"}, {"label": "Process", "hash": "#process"}, {"label": "Impact", "hash": "#impact"}, {"label": "Reviews", "hash": "#testimonials"}, {"label": "FAQ", "hash": "#faq"}, {"label": "Enterprise", "hash": "#enterprise"}, {"label": "Contact", "hash": "#contact"}], "ventures": [{"label": "Comonk Technology", "href": "/comonk-ai/"}, {"label": "Sevenseed", "href": "/"}, {"label": "Alpaben Vipulbhai Patel University", "href": "/avpu/"}, {"label": "Decode Forest Pharmacy", "href": "/pharmacy/"}, {"label": "Breakdown Factor Construction", "href": "/breakdown/"}, {"label": "AVP Charitable Trust", "href": "/trust/"}, {"label": "AVP Emart", "href": "/avp-emart/"}, {"label": "Rakshak AI Safety", "href": "/rakshak-ai/"}]}</script>
 <script src="app.js"></script>
+
+<script>
+(function() {
+  // Theme Toggle Handler
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) {
+        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+
+  // Cursor Ring
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+</script>
+
 </body>
 </html>
