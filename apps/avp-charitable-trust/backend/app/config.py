@@ -8,7 +8,11 @@ from pathlib import Path
 
 # Paths
 HERE = Path(__file__).resolve().parent.parent
-_static_candidates = [HERE / "static", HERE.parent / "frontend" / "out"]
+_static_candidates = [
+    HERE.parent / "frontend" / "build_out",
+    HERE / "static",
+    HERE.parent / "frontend" / "out",
+]
 STATIC_DIR = next((p for p in _static_candidates if p.exists()), _static_candidates[0])
 DB_PATH = os.environ.get("DB_PATH", str(HERE / "db.sqlite3"))
 

@@ -183,6 +183,27 @@ def trend(req: TrendReq):
         "points": pts,
     }
 
+class DetailedSpecReq(BaseModel):
+    product_a: str
+    product_b: str
+    product_c: str | None = None
+
+@app.get("/api/price-history")
+def api_price_history(query: str = "iphone 15", days: int = 90):
+    return comparator.get_price_history(query, days)
+
+@app.post("/api/spec-compare/detailed")
+def api_spec_compare_detailed(req: DetailedSpecReq):
+    return comparator.get_specs_comparison(req.product_a, req.product_b, req.product_c)
+
+@app.get("/api/coupons-cashback")
+def api_coupons_cashback(product: str = "Electronics", price: float = 10000):
+    return comparator.get_coupons_and_cashback(product, price)
+
+@app.get("/api/deal-insights")
+def api_deal_insights(query: str = "laptop"):
+    return comparator.deal_insights(query)
+
 
 # ── Wishlist & Alerts History API ─────────────────────────────────────────────
 @app.get("/api/wishlist")

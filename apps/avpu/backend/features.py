@@ -172,6 +172,83 @@ def essay_grade(r: EssayReq):
     return tools_ai.essay_grade(r.essay, r.topic)
 
 
+# ── Reference Tools (LearnAnything, Duolingo, FCC, Laws of UX, etc.) ─────────
+class MentalModelApplyReq(BaseModel):
+    model_id: str
+    problem: str
+
+class UxAuditReq(BaseModel):
+    concept: str
+
+class TeardownAnalyzeReq(BaseModel):
+    concept: str
+
+class ChallengeSubmitReq(BaseModel):
+    day: int
+    submission: str
+
+class CodeExecReq(BaseModel):
+    challenge_id: str
+    code: str
+
+class MindmapReq(BaseModel):
+    topic: str
+
+@router.get("/api/tools/mental-models")
+@router.get("/api/features/mental-models")
+def api_mental_models(category: str | None = None, search: str | None = None):
+    return {"models": tools_ai.get_mental_models(category, search)}
+
+@router.post("/api/tools/mental-model/apply")
+@router.post("/api/features/mental-model/apply")
+def api_apply_mental_model(r: MentalModelApplyReq):
+    return tools_ai.apply_mental_model(r.model_id, r.problem)
+
+@router.get("/api/tools/laws-of-ux")
+@router.get("/api/features/laws-of-ux")
+def api_laws_of_ux():
+    return {"laws": tools_ai.get_laws_of_ux()}
+
+@router.post("/api/tools/laws-of-ux/audit")
+@router.post("/api/features/laws-of-ux/audit")
+def api_audit_laws_of_ux(r: UxAuditReq):
+    return tools_ai.audit_laws_of_ux(r.concept)
+
+@router.get("/api/tools/teardowns")
+@router.get("/api/features/teardowns")
+def api_teardowns(tag: str | None = None):
+    return {"teardowns": tools_ai.get_teardowns(tag)}
+
+@router.post("/api/tools/teardowns/analyze")
+@router.post("/api/features/teardowns/analyze")
+def api_analyze_teardown(r: TeardownAnalyzeReq):
+    return tools_ai.analyze_teardown(r.concept)
+
+@router.get("/api/tools/challenge-100")
+def api_challenge_100(day: int | None = None):
+    return {"challenges": tools_ai.get_100_days_challenge(day)}
+
+@router.post("/api/tools/challenge-100/submit")
+def api_submit_challenge_100(r: ChallengeSubmitReq):
+    return tools_ai.submit_100_days_challenge(r.day, r.submission)
+
+@router.get("/api/tools/code-challenges")
+def api_code_challenges():
+    return {"challenges": tools_ai.get_code_challenges()}
+
+@router.post("/api/tools/code-execute")
+def api_execute_code(r: CodeExecReq):
+    return tools_ai.execute_code_challenge(r.challenge_id, r.code)
+
+@router.get("/api/tools/mindmap")
+def api_get_mindmap(topic: str = "Autonomous AI Agents"):
+    return tools_ai.generate_mindmap(topic)
+
+@router.post("/api/tools/mindmap")
+def api_post_mindmap(r: MindmapReq):
+    return tools_ai.generate_mindmap(r.topic)
+
+
 # ── Analytics ────────────────────────────────────────────────────────────────
 @router.get("/api/analytics/overview")
 def analytics_overview(_user: dict = Depends(require_user)):
