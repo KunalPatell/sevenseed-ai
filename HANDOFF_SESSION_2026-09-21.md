@@ -71,6 +71,11 @@ Found the exact same class of bugs as in the Next.js app (makes sense — same c
 
 Both fixes so far are committed (`eeb7697`) and pushed to both `origin` and `ai` (the Render-watched remote). **A deploy was triggered after the previous commit (`9a1a5fa`) and confirmed live via the Render API. This latest commit (`eeb7697`) was pushed but I did not confirm a new deploy was triggered/completed for it before the session ended — check Render dashboard or re-POST the deploys endpoint.**
 
+### D. Protected the fixes from regressing
+Checked whether `generate_sites.py` (which `deploy.py` runs automatically before every deploy) would silently wipe the fixes above on the next run:
+- **Venture count "7"→"8" was hardcoded in `generate_sites.py` itself** (lines ~471-472) — the next `deploy.py` run would have regenerated `sites/sevenseed/index.html` from scratch and reverted my HTML-level fix back to "7". **Fixed at the source now** — safe permanently.
+- Confirmed `laws-of-ux.html` is NOT touched by either `generate_sites.py` or `scripts/generate_all_subpages.py` — it's genuinely hand-maintained, so that fix is already permanent, no source-level change needed.
+
 ## 5. Recommended next steps, in priority order
 
 1. Check whether `eeb7697` actually deployed (Render dashboard, or `GET /v1/services/srv-d9d03pt8nd3s73cbd3og/deploys?limit=3` via API).
