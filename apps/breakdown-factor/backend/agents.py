@@ -4,7 +4,10 @@ from __future__ import annotations
 import os
 from typing import TypedDict, Annotated, List, Any
 import operator
-import cv2
+try:
+    import cv2
+except Exception as e:
+    cv2 = None
 import numpy as np
 import rag
 
@@ -365,6 +368,8 @@ def _get_yolo_net():
     # converted once locally from best.pt; opencv-python-headless is already a
     # dependency, so this adds zero new production packages).
     global _YOLO_NET
+    if cv2 is None:
+        return None
     if _YOLO_NET is None:
         onnx_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "best.onnx")
         if os.path.exists(onnx_path):

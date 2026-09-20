@@ -3,96 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Charity Navigator 4-Star Transparency & Fund Ledger — AVP Trust</title>
-  <meta name="description" content="100% verified financial transparency ledger with 88% direct program allocation and live audited impact milestones.">
+  <title>Transparent Rupee-by-Rupee Impact Dashboard — AVP Trust</title>
+  <meta name="description" content="Every donation is audited and mapped to real lives impacted across healthcare and education.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .imp-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
-    .imp-header { text-align: center; margin-bottom: 32px; }
-    .imp-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(236,72,153,0.12); border: 1px solid rgba(236,72,153,0.3); color: #f472b6; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
-    .imp-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
-
-    /* Allocation Metrics */
-    .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 36px; }
-    .metric-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; box-shadow: var(--shadow); }
-    .metric-num { font-size: 42px; font-weight: 900; font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
-    .metric-title { font-size: 13px; color: var(--text-2); font-weight: 600; }
-
-    /* Fund Allocation Bar */
-    .allocation-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 36px; }
-    .alloc-bar-wrap { height: 28px; width: 100%; border-radius: 999px; display: flex; overflow: hidden; margin: 20px 0; }
-    .bar-prog { background: #10b981; width: 88%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #000; }
-    .bar-adm { background: #f59e0b; width: 7%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #000; }
-    .bar-fund { background: #6366f1; width: 5%; }
-
-    .alloc-legend { display: flex; gap: 24px; flex-wrap: wrap; font-size: 13px; color: var(--text-2); }
-    .legend-item { display: flex; align-items: center; gap: 8px; }
-    .leg-box { width: 12px; height: 12px; border-radius: 3px; }
+    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
+    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
+    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
+    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
+    .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
+    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
+    .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
+    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
   </style>
 </head>
 <body>
 
+
 <nav class="nav" id="mainNav">
-  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
-      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#ec4899,#db2777); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-hand-holding-heart"></i></span>
-      <span style="font-weight:700; font-size:18px;">AVP Trust</span>
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">
+      <span class="nav-logo-wrap"><i class="fas fa-hand-holding-heart"></i></span>
+      <span class="nav-name">AVP Trust</span>
     </a>
-    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
-      <a href="index.html">Home</a>
-      <a href="impact-tracker.html" style="color:#f472b6; font-weight:600;">Impact Ledger</a>
-      <a href="health-camps.html">Health Camps</a>
-      <a href="tax-exemption.html">80G Tax Exemption</a>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="impact-tracker.html" class="active">Impact Tracker</a>
+        <a href="health-camps.html">Free Health Camps</a>
     </div>
     <div class="nav-actions">
-      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
+      <a class="btn btn-primary sm" href="index.html#contact"><i class="fas fa-rocket"></i> Launch</a>
     </div>
   </div>
 </nav>
 
-<div class="imp-container">
-  <div class="imp-header">
-    <div class="imp-badge"><i class="fas fa-star"></i> Charity Navigator 4-Star Transparency Standard</div>
-    <h1 class="imp-title">Live Transparency & Fund Allocation Ledger</h1>
-    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Audited accountability. 88% of every single rupee donated goes directly into on-the-ground beneficiaries, scholarships, and free rural health camps.</p>
-  </div>
 
-  <div class="metrics-row">
-    <div class="metric-card">
-      <div class="metric-num" style="color:#34d399;">₹4.2 Cr+</div>
-      <div class="metric-title">Total Capital Disbursed</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-num" style="color:#fbbf24;">1,420+</div>
-      <div class="metric-title">Full AI Scholarships Funded</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-num" style="color:#f472b6;">28,500+</div>
-      <div class="metric-title">Patients Treated in Health Camps</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-num" style="color:#60a5fa;">88%</div>
-      <div class="metric-title">Direct Program Expense Ratio</div>
-    </div>
-  </div>
+<header class="sub-hero">
+  <div class="sub-hero-pill"><i class="fas fa-sparkles"></i> 100% Free · Interactive AI Tool</div>
+  <h1 class="sub-hero-title">Transparent Rupee-by-Rupee Impact Dashboard</h1>
+  <p class="sub-hero-sub">Every donation is audited and mapped to real lives impacted across healthcare and education.</p>
+</header>
 
-  <div class="allocation-card">
-    <h3 style="font-size:18px; font-weight:700; color:#fff;">Audited Expense Breakdown</h3>
-    <div class="alloc-bar-wrap">
-      <div class="bar-prog">88% Direct Program Execution</div>
-      <div class="bar-adm">7% Admin</div>
-      <div class="bar-fund"></div>
+<main class="container">
+  
+<div class="interactive-card" style="text-align:left;">
+  <div class="grid-3" style="margin-bottom:32px;">
+    <div class="tool-box">
+      <div style="font-size:28px; font-weight:800; color:#10b981;">14,500+</div>
+      <div style="color:#94a3b8; font-size:13px;">Patients Treated Free</div>
     </div>
-    <div class="alloc-legend">
-      <div class="legend-item"><span class="leg-box" style="background:#10b981;"></span> <strong>88% Direct Programs</strong> (Scholarships, Medicines, Medical Staff)</div>
-      <div class="legend-item"><span class="leg-box" style="background:#f59e0b;"></span> <strong>7% Administrative</strong> (Legal Compliance, Audit, Infrastructure)</div>
-      <div class="legend-item"><span class="leg-box" style="background:#6366f1;"></span> <strong>5% Fundraising</strong> (Payment Gateway Fees, Platform Maintenance)</div>
+    <div class="tool-box">
+      <div style="font-size:28px; font-weight:800; color:#38bdf8;">850+</div>
+      <div style="color:#94a3b8; font-size:13px;">Full Scholarships Awarded</div>
+    </div>
+    <div class="tool-box">
+      <div style="font-size:28px; font-weight:800; color:#f43f5e;">100%</div>
+      <div style="color:#94a3b8; font-size:13px;">Donations Directly Utilized</div>
     </div>
   </div>
+  <div class="output-screen">// Real-time Ledger Verification: All expenditures are recorded transparently and audited quarterly.</div>
 </div>
 
+</main>
+
+
+<footer class="footer">
+  <div class="foot-inner">
+    <div class="foot-col">
+      <div class="foot-brand"><i class="fas fa-hand-holding-heart"></i> AVP Trust</div>
+      <p class="foot-tag">AI Social Impact — Part of the Sevenseed AI Venture Studio portfolio.</p>
+      <div class="foot-copy">© 2026 AVP Trust. 100% Free · Bring Your Own Key Architecture.</div>
+    </div>
+    <div class="foot-col">
+      <h4>Navigation</h4>
+      <ul class="foot-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="../index.html">Sevenseed Hub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+<script src="app.js"></script>
 </body>
 </html>

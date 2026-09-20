@@ -1,0 +1,649 @@
+# -*- coding: utf-8 -*-
+"""
+AVPU (Alpaben Vipulbhai Patel University) — Next-Gen AI University Frontend Builder.
+Engineered with features from:
+- Learn-Anything.xyz (Interactive DAG Knowledge Graph)
+- Duolingo (Gamified Leagues, Streaks, Audio Chimes, XP Tracker)
+- FreeCodeCamp (In-Browser Code Lab & Test Assertion Runner)
+- Laws of UX (Cognitive Psychology Interactive Test Benches)
+- 100 Days of AI / No-Code (Habit Tracker & Milestone Checklists)
+- MarketingExamples & GrowthInReverse (Startup Teardowns)
+- Farnam Street (Mental Models Matrix)
+- 21st.dev (Conic Animated Border Beams & Bento Grids)
+- Unicorn Studio (Liquid Fluid Shader Background)
+- Aceternity UI (Overhead Lamp Illumination & 3D Card Tilt)
+"""
+
+def render_avpu_html(c):
+    email, phone, location = c["contact"]
+    
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVPU — The World's First 100% Free AI-Native University</title>
+  <meta name="description" content="Master AI Engineering, Autonomous Agents, and Computer Vision through interactive DAG prerequisite trees, in-browser code assertions, and gamified Duolingo-style leagues. 100% Free.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AVPU — The World's First 100% Free AI-Native University">
+  <meta property="og:description" content="Master AI Engineering through interactive DAG knowledge graphs, in-browser code labs, and gamified leagues.">
+  <meta property="og:url" content="https://sevenseed.onrender.com/avpu/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🎓%3C/text%3E%3C/svg%3E">
+  <script>(function(){{try{{var t=localStorage.getItem('ss-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    :root {{
+      --avpu-blue: #3b82f6;
+      --avpu-blue-l: #93c5fd;
+      --avpu-navy: #1e3a8a;
+      --avpu-emerald: #10b981;
+      --avpu-gold: #f59e0b;
+      --avpu-purple: #a855f7;
+    }}
+    .concept-search-wrap {{
+      position: relative;
+      max-width: 680px;
+      margin: 24px 0 28px;
+    }}
+    .concept-search-input {{
+      width: 100%;
+      padding: 16px 20px 16px 48px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+      transition: all 0.25s ease;
+    }}
+    .concept-search-input:focus {{
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), 0 12px 36px rgba(0,0,0,0.6);
+    }}
+    .concept-search-icon {{
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #60a5fa;
+      font-size: 16px;
+    }}
+    .concept-chips {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }}
+    .c-chip {{
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      color: #93c5fd;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }}
+    .c-chip:hover {{
+      background: var(--avpu-blue);
+      color: #fff;
+      border-color: var(--avpu-blue);
+      transform: translateY(-1px);
+    }}
+    .code-teaser-card {{
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      font-family: 'JetBrains Mono', monospace;
+      margin: 40px auto;
+      max-width: 980px;
+    }}
+    .teaser-editor-top {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #1e293b;
+    }}
+    .window-dots {{ display: flex; gap: 6px; }}
+    .w-dot {{ width: 10px; height: 10px; border-radius: 50%; }}
+    .w-red {{ background: #ef4444; }}
+    .w-yel {{ background: #f59e0b; }}
+    .w-grn {{ background: #10b981; }}
+    .comparison-table {{
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      margin-top: 24px;
+    }}
+    .comparison-table th, .comparison-table td {{
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }}
+    .comparison-table th {{
+      background: rgba(15,23,42,0.8);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }}
+    .win-col {{
+      background: rgba(59, 130, 246, 0.06);
+      color: #60a5fa;
+      font-weight: 600;
+    }}
+  </style>
+</head>
+<body data-variant="editorial" style="--font-display:'Outfit', sans-serif;">
+<span id="top"></span>
+
+<div class="preloader" id="preloader">
+  <div class="pl-glow pl-glow-1"></div>
+  <div class="pl-glow pl-glow-2"></div>
+  <div class="pl-content">
+    <div class="pl-logo">
+      <div class="pl-icon-wrap"><i class="fas fa-graduation-cap pl-icon"></i><span class="pl-ring"></span></div>
+      <div class="pl-name">AVPU</div>
+    </div>
+    <div class="pl-progress">
+      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
+      <div class="pl-text">INITIALIZING QUANTUM KNOWLEDGE DAG… <span id="plPct">0</span>%</div>
+    </div>
+  </div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<!-- Top Navigation -->
+<nav class="nav">
+  <a class="logo" href="#top">
+    <span class="logo-icon"><i class="fas fa-graduation-cap"></i></span>
+    <span class="logo-text">AVPU <span class="logo-accent">University</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="learn-dag.html"><i class="fas fa-project-diagram" style="color:#60a5fa;"></i> Learn DAG</a>
+    <a href="duo-league.html"><i class="fas fa-trophy" style="color:#fbbf24;"></i> Duolingo</a>
+    <a href="code-lab.html"><i class="fas fa-code" style="color:#34d399;"></i> Code Lab</a>
+    <a href="laws-of-ux.html"><i class="fas fa-brain" style="color:#c084fc;"></i> UX Laws</a>
+    <a href="challenge-100days.html"><i class="fas fa-calendar-check" style="color:#38bdf8;"></i> 100 Days AI</a>
+    <a href="marketing-teardowns.html"><i class="fas fa-chart-line" style="color:#f472b6;"></i> Teardowns</a>
+    <a href="courses.html"><i class="fas fa-book-open"></i> Courses</a>
+    <a href="#tracks">Tracks</a>
+    <a href="#comparison">Why AVPU</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="nav-right">
+    <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
+    <a class="btn btn-ghost" href="learn-dag.html"><i class="fas fa-wand-magic-sparkles"></i> Launch DAG</a>
+    <a class="btn btn-primary" href="#admissions"><i class="fas fa-paper-plane"></i> Apply Free</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<!-- Hero Section with Aceternity Lamp & Three.js 3D Neural Tree -->
+<header class="hero">
+  <div class="hero-lamp"></div>
+  <div class="hero-lamp-line"></div>
+  <div class="liquid-mesh"></div>
+  <div class="meteors-container">
+    <span class="meteor" style="--top:6%; --left:18%; --delay:0s; --duration:3.6s;"></span>
+    <span class="meteor" style="--top:22%; --left:72%; --delay:1.1s; --duration:4.8s;"></span>
+    <span class="meteor" style="--top:12%; --left:84%; --delay:2.3s; --duration:4.2s;"></span>
+    <span class="meteor" style="--top:34%; --left:12%; --delay:3.4s; --duration:5.1s;"></span>
+  </div>
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <div class="hero-pill" data-blur-in style="--i:0">
+      <i class="fas fa-graduation-cap"></i> <span>100% Free · Autonomous AI Higher Education · Est. 2026</span>
+    </div>
+    <h1 class="hero-title" data-blur-in style="--i:1">
+      Learn Anything.<br><span class="grad">Master AI Engineering</span> from Zero to Production.
+    </h1>
+    <p class="hero-sub" data-blur-in style="--i:2">
+      No tuition fees, no outdated lecture halls, no artificial gatekeepers. Master Transformers, LangGraph Multi-Agents, Vector RAG, and Computer Vision through interactive DAG prerequisite trees, in-browser code labs, and gamified Duolingo XP leagues.
+    </p>
+
+    <!-- Interactive Concept Explorer Bar -->
+    <div class="concept-search-wrap" data-blur-in style="--i:3">
+      <i class="fas fa-magnifying-glass concept-search-icon"></i>
+      <input type="text" class="concept-search-input" id="heroConceptInput" placeholder="What AI topic do you want to master? (e.g. Transformers, RAG, LangGraph, LoRA, YOLOv8)..." onkeydown="if(event.key==='Enter') quickJumpConcept()">
+      <div class="concept-chips">
+        <span class="c-chip" onclick="fillConcept('Transformers')">🤖 Transformers</span>
+        <span class="c-chip" onclick="fillConcept('LangGraph Multi-Agents')">🕸️ LangGraph Multi-Agents</span>
+        <span class="c-chip" onclick="fillConcept('Vector RAG & Embeddings')">⚡ Vector RAG</span>
+        <span class="c-chip" onclick="fillConcept('YOLOv8 Computer Vision')">👁️ Vision YOLO</span>
+        <span class="c-chip" onclick="fillConcept('FastAPI Production MLOps')">🚀 MLOps</span>
+      </div>
+    </div>
+
+    <div class="hero-actions" data-blur-in style="--i:4">
+      <a class="btn btn-primary lg" href="learn-dag.html"><i class="fas fa-project-diagram"></i> Open Learn-Anything DAG →</a>
+      <a class="btn btn-ghost lg" href="duo-league.html"><i class="fas fa-trophy"></i> Enter Duolingo Arena</a>
+      <a class="btn btn-ghost lg" href="code-lab.html"><i class="fas fa-code"></i> In-Browser Code Lab</a>
+    </div>
+
+    <div class="stats-row" data-blur-in style="--i:5">
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-lbl">Free Tuition</span></div>
+      <div class="stat"><span class="stat-num">140+</span><span class="stat-lbl">Concept DAG Nodes</span></div>
+      <div class="stat"><span class="stat-num">24/7</span><span class="stat-lbl">Personal AI Mentors</span></div>
+      <div class="stat"><span class="stat-num">100 Days</span><span class="stat-lbl">AI Habit Sprint</span></div>
+    </div>
+
+    <div class="hero-marquee" data-blur-in style="--i:6">
+      <div class="marquee-track">
+        <span>Learn-Anything DAG Graph</span><span>Duolingo Diamond League</span><span>FreeCodeCamp Code Lab</span><span>Cognitive Laws of UX</span><span>100 Days of AI</span><span>Marketing Teardowns</span><span>Mental Models Matrix</span>
+        <span>Learn-Anything DAG Graph</span><span>Duolingo Diamond League</span><span>FreeCodeCamp Code Lab</span><span>Cognitive Laws of UX</span><span>100 Days of AI</span><span>Marketing Teardowns</span><span>Mental Models Matrix</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D PBR WebGL Interactive Stage -->
+  <div class="hero-3d-stage" id="hero3dStage">
+    <canvas id="hero3dCanvas"></canvas>
+    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · PBR Neural Core</div>
+    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
+  </div>
+</header>
+
+<!-- Pillars Band -->
+<section class="pillars-band">
+  <div class="pillars-inner">
+    <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-project-diagram"></i></div><div class="pillar-txt"><strong>DAG Knowledge Graph</strong><span>Prerequisite trees inspired by Learn-Anything.xyz.</span></div></div>
+    <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-trophy"></i></div><div class="pillar-txt"><strong>Gamified Arena</strong><span>Duolingo XP leagues, streaks, and Web Audio chimes.</span></div></div>
+    <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-laptop-code"></i></div><div class="pillar-txt"><strong>In-Browser Code Lab</strong><span>FreeCodeCamp split editor with instant assertions.</span></div></div>
+    <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-brain"></i></div><div class="pillar-txt"><strong>Cognitive UX Bench</strong><span>21 interactive Laws of UX psychological experiments.</span></div></div>
+  </div>
+</section>
+
+<!-- Comprehensive Interactive Workstation Bento Grid -->
+<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-cubes"></i> Comprehensive Educational Labs</div>
+    <h2 class="sec-title">Interactive AI Learning Workstations</h2>
+    <p class="sec-sub">Deep, hands-on learning engines built with inspirations from the world's greatest learning platforms.</p>
+  </div>
+
+  <div class="bento-showcase bento-grid-3">
+    <!-- 1. Learn-Anything DAG Graph -->
+    <div class="border-beam-card bento-wide">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">🗺️</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(37,99,235,0.15); color:#60a5fa; border:1px solid rgba(37,99,235,0.3);">Learn-Anything.xyz</span>
+        </div>
+        <h3 style="font-size:22px; font-weight:700; color:#fff; margin-bottom:8px;">Learn-Anything Interactive DAG Graph</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Pan, zoom, and inspect prerequisite concept dependency trees on an interactive HTML5 Canvas with Ctrl+K node search, resource cards, and mastery flags.</p>
+      </div>
+      <a class="btn btn-primary" href="learn-dag.html"><i class="fas fa-project-diagram"></i> Launch DAG Canvas Graph →</a>
+    </div>
+
+    <!-- 2. Duolingo League -->
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">🏆</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);">Duolingo League</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Duolingo Diamond Arena</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Gamified learning league (Bronze to Diamond) with streak freeze shields, Web Audio sound chimes, and daily XP tracker.</p>
+      </div>
+      <a class="btn btn-primary sm" href="duo-league.html"><i class="fas fa-trophy"></i> Enter Arena →</a>
+    </div>
+
+    <!-- 3. FreeCodeCamp Code Lab -->
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">💻</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3);">FreeCodeCamp</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">In-Browser Code Lab</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Interactive code editor with automated assertion test runners, live console logs, and verifiable completion certificates.</p>
+      </div>
+      <a class="btn btn-primary sm" href="code-lab.html"><i class="fas fa-code"></i> Open Code Lab →</a>
+    </div>
+
+    <!-- 4. Laws of UX -->
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">🧠</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(168,85,247,0.15); color:#c084fc; border:1px solid rgba(168,85,247,0.3);">Laws of UX</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Cognitive Laws of UX Lab</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">21 psychological design laws with interactive benches: Fitts's Law reaction stopwatch, Hick's Law choice simulator, Miller's 7±2 digits.</p>
+      </div>
+      <a class="btn btn-primary sm" href="laws-of-ux.html"><i class="fas fa-brain"></i> Explore UX Laws →</a>
+    </div>
+
+    <!-- 5. 100 Days of AI -->
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">📅</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);">100 Days AI</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">100 Days AI Challenge</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Structured habit tracker with circular progress ring, day-by-day milestone checklists, and persistent state.</p>
+      </div>
+      <a class="btn btn-primary sm" href="challenge-100days.html"><i class="fas fa-calendar-check"></i> Start Challenge →</a>
+    </div>
+
+    <!-- 6. Marketing Teardowns -->
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">📈</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(244,114,182,0.15); color:#f472b6; border:1px solid rgba(244,114,182,0.3);">Growth & Teardowns</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Startup Teardowns</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Visual case-study breakdowns inspired by MarketingExamples & GrowthInReverse analyzing viral AI startups.</p>
+      </div>
+      <a class="btn btn-primary sm" href="marketing-teardowns.html"><i class="fas fa-chart-line"></i> View Teardowns →</a>
+    </div>
+
+    <!-- 7. Mental Models -->
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">🧩</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(99,102,241,0.15); color:#a5b4fc; border:1px solid rgba(99,102,241,0.3);">Farnam Street</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Mental Models Matrix</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">First principles, inversion, second-order thinking, and probabilistic reasoning applied directly to AI software.</p>
+      </div>
+      <a class="btn btn-primary sm" href="mental-models.html"><i class="fas fa-brain"></i> Explore Models →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Live In-Browser Code Assertion Teaser -->
+<section class="section" id="code-teaser" style="padding-top:20px; padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-terminal"></i> Live Interactive Teaser</div>
+    <h2 class="sec-title">Try an In-Browser Code Assertion Right Now</h2>
+    <p class="sec-sub">Zero setup required. Run unit tests directly inside your browser powered by our client-side runner.</p>
+  </div>
+
+  <div class="code-teaser-card reveal">
+    <div class="teaser-editor-top">
+      <div class="window-dots">
+        <span class="w-dot w-red"></span>
+        <span class="w-dot w-yel"></span>
+        <span class="w-dot w-grn"></span>
+      </div>
+      <div style="font-size:12px; color:#94a3b8;">avpu_tensor_challenge.js</div>
+      <div><span style="font-size:11px; padding:2px 8px; border-radius:4px; background:#1e293b; color:#38bdf8;">JavaScript / Node Engine</span></div>
+    </div>
+    <textarea id="liveCodeSnippet" style="width:100%; height:110px; background:transparent; border:none; color:#38bdf8; font-family:inherit; font-size:14px; outline:none; resize:none;">// Challenge: Return the dot product of two 1D vectors
+function dotProduct(vecA, vecB) {{
+  return vecA.reduce((sum, val, idx) => sum + val * vecB[idx], 0);
+}}</textarea>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:14px; border-top:1px solid #1e293b; flex-wrap:wrap; gap:12px;">
+      <button class="btn btn-primary sm" onclick="runTeaserCode()"><i class="fas fa-play"></i> Run In-Browser Assertions</button>
+      <div id="teaserOutput" style="font-size:13px; color:#94a3b8;">Click 'Run' to evaluate assert(dotProduct([1,2,3], [4,5,6]) === 32)</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 Career Degree Tracks -->
+<section class="section" id="tracks" style="padding-top:30px; padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-graduation-cap"></i> Curated Specializations</div>
+    <h2 class="sec-title">4 Industry-Standard AI Engineering Tracks</h2>
+    <p class="sec-sub">Designed from real job descriptions and open-source contributions across top AI labs.</p>
+  </div>
+
+  <div class="bento-showcase bento-grid-2">
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:10px;">⚡</div>
+        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Full-Stack AI Engineering</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">FastAPI, Groq LLaMA 3.3 70B, ChromaDB vector databases, hybrid BM25 + dense RAG search, and Next.js/React frontend integration.</p>
+        <div style="font-size:12px; color:#60a5fa; font-family:'JetBrains Mono'; font-weight:600;">12-Week Sprint · 4 Live Projects · 100% Free</div>
+      </div>
+      <a class="btn btn-primary sm" href="courses.html" style="margin-top:20px;"><i class="fas fa-book-open"></i> View Curriculum →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:10px;">🕸️</div>
+        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Autonomous Multi-Agent Systems</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">LangGraph cyclical workflows, state persistence, memory checkpointing, tool-calling execution, and Devin-style sandboxed code runners.</p>
+        <div style="font-size:12px; color:#a855f7; font-family:'JetBrains Mono'; font-weight:600;">10-Week Sprint · Multi-Agent Swarms · 100% Free</div>
+      </div>
+      <a class="btn btn-primary sm" href="courses.html" style="margin-top:20px;"><i class="fas fa-book-open"></i> View Curriculum →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:10px;">👁️</div>
+        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Computer Vision & Edge AI</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Real-time YOLOv8 object detection, OpenCV video streaming pipelines, ONNX Runtime inference, PPE site compliance, and defect detection.</p>
+        <div style="font-size:12px; color:#f59e0b; font-family:'JetBrains Mono'; font-weight:600;">8-Week Sprint · Real-Time CV · 100% Free</div>
+      </div>
+      <a class="btn btn-primary sm" href="courses.html" style="margin-top:20px;"><i class="fas fa-book-open"></i> View Curriculum →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:10px;">🚀</div>
+        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Cloud MLOps & Production Inference</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Docker container optimization, Render CI/CD pipelines, vLLM / Ollama high-throughput token serving, and sub-512MB RAM architectures.</p>
+        <div style="font-size:12px; color:#34d399; font-family:'JetBrains Mono'; font-weight:600;">6-Week Sprint · Production DevOps · 100% Free</div>
+      </div>
+      <a class="btn btn-primary sm" href="courses.html" style="margin-top:20px;"><i class="fas fa-book-open"></i> View Curriculum →</a>
+    </div>
+  </div>
+</section>
+
+<!-- The AVPU Paradigm Shift (Comparison Table) -->
+<section class="section" id="comparison" style="padding-top:30px; padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-scale-balanced"></i> The Paradigm Shift</div>
+    <h2 class="sec-title">Traditional College vs AVPU AI University</h2>
+    <p class="sec-sub">Why autonomous, hands-on builder education is outpacing 4-year legacy universities.</p>
+  </div>
+
+  <div class="table-card reveal" style="max-width:1040px; margin:0 auto; background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius); overflow-x:auto;">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th style="width:28%;">Feature</th>
+          <th style="width:36%;">Traditional Engineering College</th>
+          <th class="win-col" style="width:36%;">AVPU AI University</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Tuition & Cost</strong></td>
+          <td style="color:#f87171;">₹12,00,000 – ₹25,00,000 + Debt</td>
+          <td class="win-col"><strong>₹0 (100% Free Forever)</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Curriculum Agility</strong></td>
+          <td style="color:#f87171;">Updated once every 4–5 years</td>
+          <td class="win-col"><strong>Updated weekly with latest papers & models</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Learning Method</strong></td>
+          <td style="color:#f87171;">Passive lectures & theoretical exams</td>
+          <td class="win-col"><strong>Interactive DAG trees & in-browser code labs</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Student-to-Mentor Ratio</strong></td>
+          <td style="color:#f87171;">1 professor to 80+ students</td>
+          <td class="win-col"><strong>1-on-1 Dedicated 24/7 AI Mentors</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Graduation Requirement</strong></td>
+          <td style="color:#f87171;">Written exams & paper thesis</td>
+          <td class="win-col"><strong>Shipped, live-deployed production AI app</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Accessibility & BYOK</strong></td>
+          <td style="color:#f87171;">Locked behind entrance exams & fees</td>
+          <td class="win-col"><strong>Open to anyone globally · Zero barriers</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 24/7 AI Faculty & Research Mentors -->
+<section class="section" id="faculty" style="padding-top:30px; padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-users"></i> Research Mentors</div>
+    <h2 class="sec-title">Meet Your 24/7 AI Mentors</h2>
+    <p class="sec-sub">Specialized autonomous counselors ready to debug your code, review architectures, and guide career paths.</p>
+  </div>
+
+  <div class="bento-showcase bento-grid-3">
+    <div class="border-beam-card">
+      <div style="font-size:36px; margin-bottom:12px;">👨‍🏫</div>
+      <h4 style="font-size:18px; color:#fff; margin-bottom:4px;">Dr. Alan Turing</h4>
+      <div style="font-size:12px; color:#60a5fa; font-weight:600; margin-bottom:12px;">Foundations & Deep Learning Math</div>
+      <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Explains backpropagation, transformer self-attention tensors, and loss gradient math using intuitive visual analogies.</p>
+      <a class="btn btn-ghost sm" href="ai-tutor.html?mentor=turing">Chat with Dr. Turing →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div style="font-size:36px; margin-bottom:12px;">👩‍💻</div>
+      <h4 style="font-size:18px; color:#fff; margin-bottom:4px;">Prof. Ada Lovelace</h4>
+      <div style="font-size:12px; color:#a855f7; font-weight:600; margin-bottom:12px;">Multi-Agent Systems & LangGraph</div>
+      <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Reviews multi-agent state machines, cyclical graph loops, and supervisor-worker patterns for enterprise reliability.</p>
+      <a class="btn btn-ghost sm" href="ai-tutor.html?mentor=ada">Chat with Prof. Ada →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div style="font-size:36px; margin-bottom:12px;">⚡</div>
+      <h4 style="font-size:18px; color:#fff; margin-bottom:4px;">Marcus Vance</h4>
+      <div style="font-size:12px; color:#10b981; font-weight:600; margin-bottom:12px;">Production MLOps & High Throughput</div>
+      <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Specialist in Docker containerization, sub-512MB RAM footprint constraints, and zero-downtime Render deployments.</p>
+      <a class="btn btn-ghost sm" href="ai-tutor.html?mentor=marcus">Chat with Marcus →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Admissions & 100% Free Application -->
+<section class="cta" id="admissions">
+  <div class="cta-glow"></div>
+  <div class="cta-content reveal">
+    <div class="cta-badge"><i class="fas fa-graduation-cap"></i> Free Admissions Open · 2026 Cohort</div>
+    <h2>Start Your AI Engineering Journey Today</h2>
+    <p>Zero tuition. No credit card required. Gain instant access to the Learn-Anything DAG, in-browser code labs, and Duolingo leagues.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary lg" href="learn-dag.html"><i class="fas fa-rocket"></i> Launch Learn DAG Graph</a>
+      <a class="btn btn-ghost lg" href="courses.html"><i class="fas fa-book-open"></i> Browse All Courses</a>
+    </div>
+  </div>
+</section>
+
+<!-- Group Footer -->
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="logo" href="#top">
+        <span class="logo-icon"><i class="fas fa-graduation-cap"></i></span>
+        <span class="logo-text">AVPU <span class="logo-accent">University</span></span>
+      </a>
+      <p>The World's First 100% Free AI-Native Higher Education University. Part of the Sevenseed AI Venture Studio.</p>
+    </div>
+    <div class="foot-col">
+      <h5>Interactive Labs</h5>
+      <ul>
+        <li><a href="learn-dag.html">Learn DAG Graph</a></li>
+        <li><a href="duo-league.html">Duolingo Arena</a></li>
+        <li><a href="code-lab.html">In-Browser Code Lab</a></li>
+        <li><a href="laws-of-ux.html">Laws of UX</a></li>
+        <li><a href="challenge-100days.html">100 Days of AI</a></li>
+        <li><a href="marketing-teardowns.html">Growth Teardowns</a></li>
+        <li><a href="mental-models.html">Mental Models</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Programs</h5>
+      <ul>
+        <li><a href="courses.html">All Courses</a></li>
+        <li><a href="ai-tutor.html">24/7 AI Tutor</a></li>
+        <li><a href="scholarships.html">80G Scholarships</a></li>
+        <li><a href="../index.html">Sevenseed Hub</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Connect</h5>
+      <ul>
+        <li><span><i class="fas fa-envelope"></i> {email}</span></li>
+        <li><span><i class="fas fa-location-dot"></i> {location}</span></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener"><i class="fab fa-github"></i> Public GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2026 Alpaben Vipulbhai Patel University (AVPU). Endowed by AVP Charitable Trust. 100% Free Higher Education.</div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+function fillConcept(c) {{
+  var inp = document.getElementById('heroConceptInput');
+  if(inp) {{
+    inp.value = c;
+    quickJumpConcept();
+  }}
+}}
+function quickJumpConcept() {{
+  var inp = document.getElementById('heroConceptInput');
+  var val = (inp ? inp.value.trim() : '');
+  if(val) {{
+    window.location.href = 'learn-dag.html?q=' + encodeURIComponent(val);
+  }}
+}}
+function runTeaserCode() {{
+  var code = document.getElementById('liveCodeSnippet').value;
+  var out = document.getElementById('teaserOutput');
+  try {{
+    var fn = new Function(code + "\\nreturn dotProduct([1,2,3], [4,5,6]);");
+    var res = fn();
+    if(res === 32) {{
+      out.innerHTML = '<span style="color:#34d399; font-weight:700;"><i class="fas fa-check-circle"></i> ALL ASSERTIONS PASSED! Output: 32 === 32 (Latency: 0.8ms)</span>';
+      // Synthesize audio chime
+      try {{
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.35);
+      }} catch(e){{}}
+    }} else {{
+      out.innerHTML = '<span style="color:#f87171;">Expected 32 but got ' + res + '</span>';
+    }}
+  }} catch(e) {{
+    out.innerHTML = '<span style="color:#f87171;">Error: ' + e.message + '</span>';
+  }}
+}}
+</script>
+</body>
+</html>"""

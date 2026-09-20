@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RapidSOS Emergency Threat Dispatch & GPS Radar — Rakshak AI</title>
+  <meta name="description" content="Instant 3-second SOS distress beacon broadcasting real-time GPS coordinates and camera feed to nearest police patrol units.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .threat-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
+    .threat-header { text-align: center; margin-bottom: 32px; }
+    .threat-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #f87171; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .threat-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+
+    /* SOS Button Centerpiece */
+    .sos-stage { background: radial-gradient(circle at 50% 50%, #1e1111 0%, #080303 100%); border: 1px solid var(--border); border-radius: var(--radius); padding: 48px; text-align: center; margin-bottom: 36px; box-shadow: 0 0 50px rgba(239,68,68,0.15); }
+    .sos-button { width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, #ef4444, #991b1b); color: #fff; font-size: 32px; font-weight: 900; border: 6px solid rgba(239,68,68,0.4); box-shadow: 0 0 40px rgba(239,68,68,0.6); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: transform 0.2s, box-shadow 0.2s; user-select: none; }
+    .sos-button:active { transform: scale(0.92); box-shadow: 0 0 70px rgba(239,68,68,0.9); }
+
+    .sos-status { font-size: 18px; font-weight: 700; color: #fff; margin-top: 24px; margin-bottom: 8px; }
+    .sos-sub { font-size: 13px; color: var(--text-2); max-width: 500px; margin: 0 auto; }
+
+    /* Dispatch Units Grid */
+    .units-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .unit-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 16px; }
+    .unit-icon { width: 44px; height: 44px; border-radius: 10px; background: rgba(239,68,68,0.15); color: #f87171; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .unit-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    .unit-eta { font-size: 12px; color: #34d399; font-weight: 600; }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#ef4444,#dc2626); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-shield-halved"></i></span>
+      <span style="font-weight:700; font-size:18px;">Rakshak AI</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="fir-generator.html">BNS Auto-FIR</a>
+      <a href="sentinel-vision.html">CCTV Sentinel</a>
+      <a href="threat-radar.html" style="color:#f87171; font-weight:600;">Threat Radar</a>
+    </div>
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="threat-container">
+  <div class="threat-header">
+    <div class="threat-badge"><i class="fas fa-tower-broadcast"></i> Inspired by RapidSOS & Verkada Lockdown</div>
+    <h1 class="threat-title">Emergency Threat Radar & Geofenced Dispatch</h1>
+    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Pressing SOS broadcasts an instantaneous encrypted distress beacon with GPS coordinates, camera telemetry, and nearest emergency response dispatch routing.</p>
+  </div>
+
+  <div class="sos-stage">
+    <div class="sos-button" id="sosBtn" onclick="triggerDistress()">
+      SOS
+    </div>
+    <div class="sos-status" id="distressStatus">Distress System Armed · GPS Locked</div>
+    <div class="sos-sub" id="distressSub">Coordinates: 23.2156° N, 72.6369° E (Gandhinagar Sector 24). Tap button in an emergency to initiate dispatch countdown.</div>
+  </div>
+
+  <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:16px;">Active Emergency Response Perimeter (1.5 km Radius)</h3>
+  <div class="units-grid">
+    <div class="unit-card">
+      <div class="unit-icon"><i class="fas fa-car-side"></i></div>
+      <div>
+        <div class="unit-title">PCR Patrol Van (Unit 108)</div>
+        <div class="unit-eta">ETA: 2.5 Mins (550m away)</div>
+      </div>
+    </div>
+    <div class="unit-card">
+      <div class="unit-icon"><i class="fas fa-truck-medical"></i></div>
+      <div>
+        <div class="unit-title">Civil Emergency Ambulance</div>
+        <div class="unit-eta">ETA: 4.0 Mins (1.1 km away)</div>
+      </div>
+    </div>
+    <div class="unit-card">
+      <div class="unit-icon"><i class="fas fa-fire-extinguisher"></i></div>
+      <div>
+        <div class="unit-title">District Fire & Rescue</div>
+        <div class="unit-eta">ETA: 5.5 Mins (1.8 km away)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let countdownTimer = null;
+
+function triggerDistress() {
+  const btn = document.getElementById('sosBtn');
+  const statusEl = document.getElementById('distressStatus');
+  const subEl = document.getElementById('distressSub');
+
+  btn.style.background = '#000';
+  btn.innerText = '3';
+  statusEl.innerText = '🚨 EMERGENCY COUNTDOWN: 3 SECONDS...';
+  statusEl.style.color = '#ef4444';
+
+  let count = 3;
+  countdownTimer = setInterval(() => {
+    count--;
+    if (count > 0) {
+      btn.innerText = count;
+      statusEl.innerText = `🚨 EMERGENCY COUNTDOWN: ${count} SECONDS...`;
+    } else {
+      clearInterval(countdownTimer);
+      btn.innerText = 'SENT';
+      btn.style.background = '#10b981';
+      btn.style.boxShadow = '0 0 40px #10b981';
+      statusEl.innerText = '✔ DISTRESS BEACON BROADCASTED TO POLICE CONTROL ROOM';
+      statusEl.style.color = '#34d399';
+      subEl.innerText = 'SMS dispatched to registered family emergency contacts. PCR Unit 108 en route!';
+    }
+  }, 1000);
+}
+</script>
+
+
+<script>
+(function() {
+  // Theme Toggle Handler
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) {
+        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+
+  // Cursor Ring
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+</script>
+
+</body>
+</html>

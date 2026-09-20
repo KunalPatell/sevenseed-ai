@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Shopping Multi-Seller Price Radar — AVP Emart</title>
+  <meta name="description" content="Live multi-merchant deal scanner aggregating Amazon, Flipkart, Croma, Reliance Digital, and Vijay Sales offers.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .deals-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
+    .deals-header { text-align: center; margin-bottom: 32px; }
+    .deals-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .deals-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+
+    /* Filters Bar */
+    .deals-filter-bar { display: flex; justify-content: space-between; align-items: center; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 24px; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+    .sort-options { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--text-2); }
+    .sort-btn { padding: 6px 14px; border-radius: 6px; background: var(--bg-2); border: 1px solid var(--border); color: #fff; cursor: pointer; font-size: 12px; font-weight: 600; }
+    .sort-btn.active { background: #f59e0b; color: #000; border-color: #f59e0b; }
+
+    /* Deals Grid */
+    .deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px; }
+    .deal-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s; position: relative; }
+    .deal-card:hover { transform: translateY(-4px); border-color: rgba(245,158,11,0.4); box-shadow: var(--shadow); }
+
+    .deal-badge-pill { position: absolute; top: 16px; right: 16px; font-size: 11px; font-weight: 800; background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; padding: 3px 8px; border-radius: 6px; }
+    .deal-seller { font-size: 12px; color: #fbbf24; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+    .deal-item-name { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1.35; }
+
+    .price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+    .deal-price { font-size: 26px; font-weight: 800; color: #34d399; font-family: 'JetBrains Mono', monospace; }
+    .deal-mrp { font-size: 14px; color: var(--text-3); text-decoration: line-through; }
+    .deal-disc { font-size: 12px; color: #ef4444; font-weight: 700; }
+
+    .seller-specs { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 12px; color: var(--text-2); display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+    .seller-specs div { display: flex; justify-content: space-between; }
+
+    .deal-footer { display: flex; gap: 10px; }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#f59e0b,#d97706); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-cart-shopping"></i></span>
+      <span style="font-weight:700; font-size:18px;">AVP Emart</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="deals-radar.html" style="color:#fbbf24; font-weight:600;">Deals Radar</a>
+      <a href="price-tracker.html">Price Tracker</a>
+      <a href="spec-compare.html">Spec Comparator</a>
+      <a href="qcommerce.html">Quick Commerce</a>
+      <a href="coupon-tester.html">Coupon Tester</a>
+    </div>
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
+    </div>
+  </div>
+</nav>
+
+<div class="deals-container">
+  <div class="deals-header">
+    <div class="deals-badge"><i class="fas fa-satellite-dish"></i> Inspired by Google Shopping India Radar</div>
+    <h1 class="deals-title">Multi-Seller Live Price & Deal Radar</h1>
+    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Compare verified sellers across Amazon, Flipkart, Croma, Reliance Digital, and Vijay Sales with transparent stock, warranty, and return terms.</p>
+  </div>
+
+  <div class="deals-filter-bar">
+    <div class="sort-options">
+      <span>Sort Deals:</span>
+      <button class="sort-btn active" onclick="sortDeals('discount')">Highest Discount</button>
+      <button class="sort-btn" onclick="sortDeals('price')">Lowest Price First</button>
+      <button class="sort-btn" onclick="sortDeals('rating')">Top Rated Sellers</button>
+    </div>
+    <div style="font-size:13px; color:var(--text-2);">
+      Showing 6 Verified Multi-Merchant Deals
+    </div>
+  </div>
+
+  <div class="deals-grid" id="dealsGrid">
+    <div class="deal-card" data-price="127990" data-disc="5" data-rating="4.8">
+      <span class="deal-badge-pill">⭐ Lowest Price</span>
+      <div>
+        <div class="deal-seller"><i class="fas fa-store"></i> Vijay Sales Verified</div>
+        <h3 class="deal-item-name">Apple iPhone 15 Pro (128GB, Natural Titanium)</h3>
+        <div class="price-row">
+          <span class="deal-price">₹1,27,990</span>
+          <span class="deal-mrp">₹1,34,900</span>
+          <span class="deal-disc">Save ₹6,910 (5% Off)</span>
+        </div>
+        <div class="seller-specs">
+          <div><span>Merchant Rating:</span> <span>4.8 / 5.0 (14,200 Reviews)</span></div>
+          <div><span>Return Policy:</span> <span>7-Day Replacement</span></div>
+          <div><span>Warranty:</span> <span>1 Year Official Apple India</span></div>
+        </div>
+      </div>
+      <div class="deal-footer">
+        <a class="btn btn-primary sm" style="flex:1; justify-content:center;" href="https://www.google.com/search?q=iPhone+15+Pro+Vijay+Sales" target="_blank">View on Vijay Sales →</a>
+      </div>
+    </div>
+
+    <div class="deal-card" data-price="129999" data-disc="13" data-rating="4.7">
+      <span class="deal-badge-pill">🔥 Prime 1-Day</span>
+      <div>
+        <div class="deal-seller"><i class="fab fa-amazon"></i> Amazon India (Appario Retail)</div>
+        <h3 class="deal-item-name">Samsung Galaxy S24 Ultra (512GB, Titanium Gray)</h3>
+        <div class="price-row">
+          <span class="deal-price">₹1,29,999</span>
+          <span class="deal-mrp">₹1,49,999</span>
+          <span class="deal-disc">Save ₹20,000 (13% Off)</span>
+        </div>
+        <div class="seller-specs">
+          <div><span>Merchant Rating:</span> <span>4.7 / 5.0 (28,000 Reviews)</span></div>
+          <div><span>Delivery:</span> <span>Free Next-Day Prime</span></div>
+          <div><span>Bank Offer:</span> <span>₹5,000 Instant HDFC Card Discount</span></div>
+        </div>
+      </div>
+      <div class="deal-footer">
+        <a class="btn btn-primary sm" style="flex:1; justify-content:center;" href="https://www.google.com/search?q=Galaxy+S24+Ultra+Amazon" target="_blank">View on Amazon →</a>
+      </div>
+    </div>
+
+    <div class="deal-card" data-price="26990" data-disc="23" data-rating="4.9">
+      <span class="deal-badge-pill">🎧 Editor Choice</span>
+      <div>
+        <div class="deal-seller"><i class="fas fa-store"></i> Croma Electronics</div>
+        <h3 class="deal-item-name">Sony WH-1000XM5 Noise Cancelling Headphones</h3>
+        <div class="price-row">
+          <span class="deal-price">₹26,990</span>
+          <span class="deal-mrp">₹34,990</span>
+          <span class="deal-disc">Save ₹8,000 (23% Off)</span>
+        </div>
+        <div class="seller-specs">
+          <div><span>Merchant Rating:</span> <span>4.9 / 5.0 (9,800 Reviews)</span></div>
+          <div><span>In-Store Pickup:</span> <span>Available in 2 Hours</span></div>
+          <div><span>Warranty:</span> <span>1 Year Sony India Domestic</span></div>
+        </div>
+      </div>
+      <div class="deal-footer">
+        <a class="btn btn-primary sm" style="flex:1; justify-content:center;" href="https://www.google.com/search?q=Sony+WH1000XM5+Croma" target="_blank">View on Croma →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function sortDeals(criterion) {
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  const grid = document.getElementById('dealsGrid');
+  const cards = Array.from(grid.children);
+
+  if (criterion === 'price') {
+    cards.sort((a, b) => parseFloat(a.dataset.price) - parseFloat(b.dataset.price));
+  } else if (criterion === 'discount') {
+    cards.sort((a, b) => parseFloat(b.dataset.disc) - parseFloat(a.dataset.disc));
+  } else if (criterion === 'rating') {
+    cards.sort((a, b) => parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating));
+  }
+
+  cards.forEach(card => grid.appendChild(card));
+}
+</script>
+
+
+<script>
+(function() {
+  // Theme Toggle Handler
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) {
+        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+
+  // Cursor Ring
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -8,7 +8,10 @@ Uses ~10-15 MB RAM, fitting easily within container limits.
 
 import os
 import gc
-import cv2
+try:
+    import cv2
+except Exception:
+    cv2 = None
 import numpy as np
 
 try:

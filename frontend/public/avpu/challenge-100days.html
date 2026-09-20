@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>100 Days of AI & No-Code Challenge — AVPU</title>
+  <meta name="description" content="100-day structured daily habit tracker and curriculum for mastering artificial intelligence, autonomous agents, and no-code MVPs.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .chal-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
+    .chal-header { text-align: center; margin-bottom: 32px; }
+    .chal-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.3); color: #60a5fa; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .chal-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+
+    /* Progress Banner */
+    .progress-banner { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 32px; margin-bottom: 36px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+    .banner-stat { display: flex; align-items: center; gap: 16px; }
+    .stat-circle { width: 68px; height: 68px; border-radius: 50%; background: conic-gradient(#3b82f6 var(--pct, 0%), var(--bg-3) 0); display: flex; align-items: center; justify-content: center; position: relative; }
+    .stat-circle::before { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: var(--bg-1); }
+    .stat-circle span { position: relative; font-weight: 800; font-size: 14px; font-family: 'JetBrains Mono', monospace; }
+    .banner-details h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .banner-details p { font-size: 13px; color: var(--text-2); }
+
+    /* Phase Tabs */
+    .phase-nav { display: flex; gap: 10px; overflow-x: auto; margin-bottom: 28px; padding-bottom: 8px; }
+    .phase-btn { padding: 10px 20px; border-radius: 10px; background: var(--bg-1); border: 1px solid var(--border); color: var(--text-2); font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.2s; }
+    .phase-btn.active, .phase-btn:hover { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+
+    /* Days List */
+    .days-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+    .day-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s; position: relative; }
+    .day-card:hover { transform: translateY(-2px); border-color: rgba(59,130,246,0.4); }
+    .day-card.completed { border-color: #10b981; background: rgba(16,185,129,0.04); }
+
+    .day-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .day-num { font-size: 12px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #60a5fa; text-transform: uppercase; }
+    .day-time { font-size: 11px; color: var(--text-3); display: flex; align-items: center; gap: 4px; }
+
+    .day-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px; line-height: 1.35; }
+    .day-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; margin-bottom: 16px; }
+
+    .day-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid var(--border); }
+    .check-label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; cursor: pointer; user-select: none; }
+    .check-label input { width: 16px; height: 16px; accent-color: #10b981; cursor: pointer; }
+    .artifact-badge { font-size: 11px; color: var(--text-3); text-decoration: underline; cursor: pointer; }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-graduation-cap"></i></span>
+      <span style="font-weight:700; font-size:18px;">AVPU</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="courses.html">Courses</a>
+      <a href="learn-dag.html">DAG Graph</a>
+      <a href="duo-league.html">Duo League</a>
+      <a href="code-lab.html">Code Lab</a>
+      <a href="laws-of-ux.html">Laws of UX</a>
+      <a href="marketing-teardowns.html">Teardowns</a>
+      <a href="challenge-100days.html" style="color:var(--primary-l); font-weight:600;">100 Days AI</a>
+      <a href="mental-models.html">Mental Models</a>
+    </div>
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm" href="courses.html"><i class="fas fa-arrow-left"></i> All Courses</a>
+    </div>
+  </div>
+</nav>
+
+<div class="chal-container">
+  <div class="chal-header">
+    <div class="chal-badge"><i class="fas fa-calendar-check"></i> Inspired by 100DaysOfAI & 100DaysOfNoCode</div>
+    <h1 class="chal-title">100 Days of AI Engineering Challenge</h1>
+    <p style="color:var(--text-2); max-width:720px; margin:0 auto;">Build an unbreakable daily habit. 30 minutes every day building real artifacts—from Python foundations to autonomous multi-agent production systems.</p>
+  </div>
+
+  <!-- Progress Ribbon -->
+  <div class="progress-banner">
+    <div class="banner-stat">
+      <div class="stat-circle" id="circleProgress" style="--pct: 12%;">
+        <span id="circlePct">12%</span>
+      </div>
+      <div class="banner-details">
+        <h3>Your Learning Momentum</h3>
+        <p>Completed <strong id="completedCount" style="color:#fff;">12</strong> of 100 Days · Current Streak: <strong style="color:#f59e0b;">12 Days 🔥</strong></p>
+      </div>
+    </div>
+    <div>
+      <button class="btn btn-ghost sm" onclick="resetProgress()"><i class="fas fa-redo"></i> Reset Tracker</button>
+      <button class="btn btn-primary sm" onclick="alert('Progress saved to browser storage!')"><i class="fas fa-cloud-upload-alt"></i> Sync Progress</button>
+    </div>
+  </div>
+
+  <!-- Phase Switcher -->
+  <div class="phase-nav">
+    <button class="phase-btn active" data-phase="1">Phase 1: Foundations (Days 1–20)</button>
+    <button class="phase-btn" data-phase="2">Phase 2: ML & APIs (Days 21–50)</button>
+    <button class="phase-btn" data-phase="3">Phase 3: LLMs & RAG (Days 51–80)</button>
+    <button class="phase-btn" data-phase="4">Phase 4: Multi-Agent Systems (Days 81–100)</button>
+  </div>
+
+  <!-- Day Cards Grid -->
+  <div class="days-grid" id="daysGrid">
+    <!-- Populated by JavaScript -->
+  </div>
+</div>
+
+<script>
+// --- CURRICULUM SAMPLE DATA ---
+const SPRINT_DAYS = [
+  { day: 1, phase: 1, title: 'Python Environment & Modern Tooling', time: '30 mins', desc: 'Install uv/pyenv, configure VS Code with Ruff and Black linters, and initialize your AI artifact repo.' },
+  { day: 2, phase: 1, title: 'Vectorized Operations in NumPy', time: '30 mins', desc: 'Benchmark for-loops vs NumPy vectorized dot products; measure 50x CPU acceleration.' },
+  { day: 3, phase: 1, title: 'Matrix Math: Transpose & Dot Product', time: '30 mins', desc: 'Compute linear transformations geometrically; calculate dot products for text similarity.' },
+  { day: 4, phase: 1, title: 'FastAPI Async Endpoints', time: '30 mins', desc: 'Build an async FastAPI service that accepts JSON payloads and returns structured responses.' },
+  { day: 5, phase: 1, title: 'Prompt Engineering Frameworks', time: '30 mins', desc: 'Implement Few-Shot, Chain-of-Thought, and ReAct prompting templates using Pydantic output schemas.' },
+  { day: 6, phase: 1, title: 'Connecting to Groq LLaMA 3.3 API', time: '30 mins', desc: 'Stream 70B token responses with sub-100ms time-to-first-token using Groq Cloud API.' },
+  { day: 7, phase: 1, title: 'Build Your First CLI AI Assistant', time: '30 mins', desc: 'Create a terminal assistant that takes user questions and maintains multi-turn conversation memory.' },
+
+  { day: 21, phase: 2, title: 'Text Embeddings with Sentence-Transformers', time: '30 mins', desc: 'Generate dense 384-dimension vector embeddings using all-MiniLM-L6-v2.' },
+  { day: 22, phase: 2, title: 'Cosine Similarity Search from Scratch', time: '30 mins', desc: 'Write pure Python cosine similarity and find the top-3 closest matching documents.' },
+  { day: 23, phase: 2, title: 'ChromaDB Local Vector Storage', time: '30 mins', desc: 'Create a persistent collection, upsert document embeddings, and run metadata-filtered similarity queries.' },
+  { day: 24, phase: 2, title: 'Document Chunking Strategies', time: '30 mins', desc: 'Compare fixed-length chunking vs recursive character chunking with 15% overlap windows.' },
+
+  { day: 51, phase: 3, title: 'Full RAG Pipeline with ChromaDB', time: '30 mins', desc: 'Retrieve relevant PDF passages, construct augmented prompts, and generate grounded answers.' },
+  { day: 52, phase: 3, title: 'Reranking with Cross-Encoders', time: '30 mins', desc: 'Pass top-20 retrieved candidates through BGE-Reranker to prioritize the top-3 high-relevance chunks.' },
+  { day: 53, phase: 3, title: 'Hybrid Search (BM25 + Dense Vectors)', time: '30 mins', desc: 'Combine keyword BM25 retrieval with semantic cosine similarity using Reciprocal Rank Fusion.' },
+
+  { day: 81, phase: 4, title: 'LangGraph Cyclic State Machine', time: '30 mins', desc: 'Define TypedDict AgentState, nodes for researcher and writer, and conditional routing edges.' },
+  { day: 82, phase: 4, title: 'Tool Execution Sandboxes', time: '30 mins', desc: 'Equip an agent with Python execution and web search tools using JSON schema binding.' },
+  { day: 83, phase: 4, title: 'Multi-Agent Supervisor Hierarchy', time: '30 mins', desc: 'Build a lead orchestrator agent that delegates complex coding tasks to sub-agents.' },
+  { day: 100, phase: 4, title: 'Production Capstone & Docker Deployment', time: '45 mins', desc: 'Containerize your multi-agent application with Docker, configure Nginx reverse proxy, and deploy live.' }
+];
+
+let completedDays = new Set(JSON.parse(localStorage.getItem('avpu_100days_done') || '[1, 2, 3, 4, 5, 6, 7]'));
+let activePhase = 1;
+
+function renderDays() {
+  const grid = document.getElementById('daysGrid');
+  const phaseDays = SPRINT_DAYS.filter(d => d.phase === activePhase);
+
+  grid.innerHTML = phaseDays.map(item => {
+    const isDone = completedDays.has(item.day);
+    return `
+      <div class="day-card ${isDone ? 'completed' : ''}">
+        <div>
+          <div class="day-topbar">
+            <span class="day-num">Day ${item.day}</span>
+            <span class="day-time"><i class="far fa-clock"></i> ${item.time}</span>
+          </div>
+          <h3 class="day-title">${item.title}</h3>
+          <p class="day-desc">${item.desc}</p>
+        </div>
+        <div class="day-bottom">
+          <label class="check-label">
+            <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleDay(${item.day})">
+            <span>${isDone ? 'Completed' : 'Mark Done'}</span>
+          </label>
+          <span class="artifact-badge" onclick="submitArtifact(${item.day})">Attach Artifact</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  updateProgress();
+}
+
+function toggleDay(day) {
+  if (completedDays.has(day)) {
+    completedDays.delete(day);
+  } else {
+    completedDays.add(day);
+  }
+  localStorage.setItem('avpu_100days_done', JSON.stringify([...completedDays]));
+  renderDays();
+}
+
+function updateProgress() {
+  const count = completedDays.size;
+  const pct = Math.round((count / 100) * 100);
+  document.getElementById('completedCount').innerText = count;
+  document.getElementById('circlePct').innerText = pct + '%';
+  document.getElementById('circleProgress').style.setProperty('--pct', pct + '%');
+}
+
+function submitArtifact(day) {
+  const url = prompt(`Enter GitHub or live URL for Day ${day} artifact:`);
+  if (url) alert(`Artifact for Day ${day} successfully linked!`);
+}
+
+function resetProgress() {
+  if (confirm('Reset your 100-Day challenge progress?')) {
+    completedDays.clear();
+    localStorage.removeItem('avpu_100days_done');
+    renderDays();
+  }
+}
+
+document.querySelectorAll('.phase-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activePhase = parseInt(btn.getAttribute('data-phase'));
+    renderDays();
+  });
+});
+
+// Init
+renderDays();
+</script>
+
+
+<script>
+(function() {
+  // Theme Toggle Handler
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) {
+        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+
+  // Cursor Ring
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+</script>
+
+</body>
+</html>

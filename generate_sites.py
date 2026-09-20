@@ -1304,6 +1304,38 @@ def render_sandbox(c):
 
 
 def render_html(c):
+    slug = c["slug"]
+    try:
+        if slug == "avpu":
+            from site_builder.avpu_builder import render_avpu_html
+            return render_avpu_html(c)
+        elif slug == "avp-emart":
+            from site_builder.emart_builder import render_emart_html
+            return render_emart_html(c)
+        elif slug == "comonk":
+            from site_builder.comonk_builder import render_comonk_html
+            return render_comonk_html(c)
+        elif slug == "sevenforce":
+            from site_builder.sevenforce_builder import render_sevenforce_html
+            return render_sevenforce_html(c)
+        elif slug == "decode-forest-pharmacy":
+            from site_builder.pharmacy_builder import render_pharmacy_html
+            return render_pharmacy_html(c)
+        elif slug == "breakdown-factor":
+            from site_builder.breakdown_builder import render_breakdown_html
+            return render_breakdown_html(c)
+        elif slug == "avp-charitable-trust":
+            from site_builder.trust_builder import render_trust_html
+            return render_trust_html(c)
+        elif slug == "rakshak-ai":
+            from site_builder.rakshak_builder import render_rakshak_html
+            return render_rakshak_html(c)
+        elif slug == "sevenseed":
+            from site_builder.sevenseed_builder import render_sevenseed_html
+            return render_sevenseed_html(c)
+    except Exception as _e:
+        pass  # Fallback to default render if any exception occurs
+
     email, phone, location = c["contact"]
     live_url = c.get("live_url")
     variant = c.get("variant", "bold-centered")

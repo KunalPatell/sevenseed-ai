@@ -95,8 +95,16 @@ def _spawn(prefix: str) -> None:
     env["PORT"] = str(info["port"])
     # Limit memory allocation flags if supported
     env["PYTHONOPTIMIZE"] = "1"
+    log_file = backend_dir / "_run_log.txt"
+    log_fp = open(log_file, "w", encoding="utf-8", errors="replace")
     print(f"[hub] starting child '{prefix}' from {backend_dir} on port {info['port']}")
-    _procs[prefix] = subprocess.Popen([sys.executable, main_file], cwd=str(backend_dir), env=env)
+    _procs[prefix] = subprocess.Popen(
+        [sys.executable, main_file],
+        cwd=str(backend_dir),
+        env=env,
+        stdout=log_fp,
+        stderr=subprocess.STDOUT
+    )
 
 
 def _stop(prefix: str) -> None:
@@ -239,12 +247,24 @@ async def proxy_to_child(request: Request, prefix: str, tail: str) -> Response:
                 proc = _procs.get(prefix)
                 if proc is not None and proc.poll() is not None:
                     code = proc.poll()
+                    err_snippet = ""
+                    info = CHILDREN.get(prefix, {})
+                    sub = str(info.get("backend_subdir", "backend"))
+                    lf = APPS_DIR / str(info.get("folder", prefix)) / sub / "_run_log.txt" if sub else APPS_DIR / str(info.get("folder", prefix)) / "_run_log.txt"
+                    if lf.exists():
+                        try:
+                            with open(lf, "r", encoding="utf-8", errors="replace") as f:
+                                err_lines = [line.strip() for line in f.readlines() if line.strip()]
+                                err_snippet = " | ".join(err_lines[-6:])
+                        except Exception:
+                            pass
+                    print(f"[hub] child '{prefix}' crashed (exit code {code}): {err_snippet}")
+                    detail = f"child process '{prefix}' exited immediately (exit code {code})"
+                    if err_snippet:
+                        detail += f": {err_snippet}"
+                    import json as _json
                     return Response(
-                        content=(
-                            f'{{"error":"child process crashed",'
-                            f'"detail":"child process \'{prefix}\' exited immediately '
-                            f'(exit code {code}) - check its logs"}}'
-                        ),
+                        content=_json.dumps({"error": "child process crashed", "detail": detail}),
                         status_code=503,
                         media_type="application/json",
                     )

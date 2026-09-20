@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn-Anything DAG Knowledge Graph — AVPU</title>
+  <meta name="description" content="Interactive DAG Knowledge Graph for AI Engineering. Explore prerequisite topic trees, command palette search, and curated resources.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .dag-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
+    .dag-header { text-align: center; margin-bottom: 28px; }
+    .dag-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.3); color: #93c5fd; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+    .dag-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .dag-sub { color: var(--text-2); font-size: 16px; max-width: 720px; margin: 0 auto 24px; }
+    
+    /* Toolbar & Search */
+    .dag-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 20px; margin-bottom: 20px; }
+    .search-wrap { position: relative; flex: 1; min-width: 260px; max-width: 480px; }
+    .search-wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-3); font-size: 14px; }
+    .search-input { width: 100%; padding: 10px 16px 10px 38px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 8px; color: var(--text); font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    .search-input:focus { border-color: var(--primary); }
+    .search-hint { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 11px; padding: 2px 6px; background: var(--bg-3); border-radius: 4px; color: var(--text-3); }
+    
+    .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pill-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg-2); color: var(--text-2); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .pill-btn.active, .pill-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+    
+    /* Graph Layout */
+    .dag-workspace { display: grid; grid-template-columns: 1fr 360px; gap: 20px; min-height: 600px; }
+    @media(max-width: 960px) { .dag-workspace { grid-template-columns: 1fr; } }
+    
+    .canvas-stage { position: relative; background: radial-gradient(circle at 50% 50%, #0d1226 0%, var(--bg-1) 100%); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; min-height: 620px; }
+    #dagCanvas { width: 100%; height: 100%; display: block; cursor: grab; }
+    #dagCanvas:active { cursor: grabbing; }
+    
+    .zoom-controls { position: absolute; bottom: 16px; right: 16px; display: flex; flex-direction: column; gap: 6px; z-index: 10; }
+    .zoom-btn { width: 34px; height: 34px; border-radius: 8px; background: var(--bg-2); border: 1px solid var(--border-hi); color: var(--text); display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: 0.2s; }
+    .zoom-btn:hover { background: var(--primary); color: #fff; }
+    
+    .stage-stats { position: absolute; top: 16px; left: 16px; background: rgba(13,18,38,0.85); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 12px; color: var(--text-2); display: flex; gap: 14px; }
+    .stage-stats span strong { color: var(--primary-l); }
+    
+    /* Detail Panel */
+    .detail-panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; }
+    .panel-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+    .panel-node-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .panel-tier { font-size: 11px; text-transform: uppercase; font-weight: 700; padding: 3px 8px; border-radius: 4px; display: inline-block; }
+    .tier-beg { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .tier-int { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+    .tier-adv { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    
+    .panel-desc { font-size: 14px; color: var(--text-2); line-height: 1.6; margin-bottom: 20px; }
+    
+    .panel-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .meta-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 12px; }
+    .meta-lbl { color: var(--text-3); font-size: 11px; margin-bottom: 2px; }
+    .meta-val { font-weight: 600; color: var(--text); }
+    
+    .prereq-list { margin-bottom: 22px; }
+    .prereq-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-3); margin-bottom: 8px; }
+    .prereq-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .prereq-chip { font-size: 12px; padding: 4px 10px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 6px; color: #93c5fd; }
+    
+    .resources-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-3); margin-bottom: 10px; }
+    .resource-link { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--text); margin-bottom: 8px; transition: all 0.2s; }
+    .resource-link:hover { border-color: var(--primary); background: var(--bg-3); transform: translateX(3px); }
+    .resource-link i { color: var(--primary-l); font-size: 12px; }
+    
+    .mastery-btn { margin-top: auto; padding: 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+    .mastery-btn.not-mastered { background: linear-gradient(120deg, var(--primary), #3b82f6); color: #fff; }
+    .mastery-btn.mastered { background: rgba(16,185,129,0.2); border: 1px solid #10b981; color: #34d399; }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-graduation-cap"></i></span>
+      <span style="font-weight:700; font-size:18px;">AVPU</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="courses.html">Courses</a>
+      <a href="learn-dag.html" style="color:var(--primary-l); font-weight:600;">DAG Graph</a>
+      <a href="duo-league.html">Duo League</a>
+      <a href="code-lab.html">Code Lab</a>
+      <a href="laws-of-ux.html">Laws of UX</a>
+      <a href="marketing-teardowns.html">Teardowns</a>
+      <a href="challenge-100days.html">100 Days AI</a>
+      <a href="mental-models.html">Mental Models</a>
+    </div>
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm" href="courses.html"><i class="fas fa-arrow-left"></i> All Courses</a>
+    </div>
+  </div>
+</nav>
+
+<div class="dag-container">
+  <div class="dag-header">
+    <div class="dag-badge"><i class="fas fa-network-wired"></i> Inspired by Learn-Anything.xyz</div>
+    <h1 class="dag-title">Interactive AI Knowledge DAG Graph</h1>
+    <p class="dag-sub">Explore the visual dependency tree of modern AI Engineering. Click on any concept node to inspect prerequisites, difficulty tiers, and curated learning roadmaps.</p>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="dag-toolbar">
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" id="nodeSearch" class="search-input" placeholder="Search concepts (e.g. Attention, PyTorch, RAG)...">
+      <span class="search-hint">Ctrl + K</span>
+    </div>
+    <div class="filter-pills">
+      <button class="pill-btn active" data-filter="all">All Disciplines</button>
+      <button class="pill-btn" data-filter="foundation">Foundations</button>
+      <button class="pill-btn" data-filter="deep-learning">Deep Learning</button>
+      <button class="pill-btn" data-filter="llm-agents">LLMs & Multi-Agent</button>
+      <button class="pill-btn" data-filter="mlops">MLOps & Production</button>
+    </div>
+  </div>
+
+  <!-- Workspace -->
+  <div class="dag-workspace">
+    <div class="canvas-stage">
+      <div class="stage-stats">
+        <span>Nodes: <strong id="nodeCount">11</strong></span>
+        <span>Mastered: <strong id="masteredCount">0</strong> / 11</span>
+        <span>Graph Flow: <strong>DAG Topological</strong></span>
+      </div>
+      <canvas id="dagCanvas"></canvas>
+      <div class="zoom-controls">
+        <button class="zoom-btn" id="zoomIn" title="Zoom In"><i class="fas fa-plus"></i></button>
+        <button class="zoom-btn" id="zoomOut" title="Zoom Out"><i class="fas fa-minus"></i></button>
+        <button class="zoom-btn" id="zoomReset" title="Reset View"><i class="fas fa-compress-arrows-alt"></i></button>
+      </div>
+    </div>
+
+    <!-- Inspector Panel -->
+    <div class="detail-panel" id="detailPanel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-node-title" id="panelTitle">Python for AI</div>
+          <span class="panel-tier tier-beg" id="panelTier">Beginner</span>
+        </div>
+        <span style="font-size:24px;" id="panelEmoji">🐍</span>
+      </div>
+      <p class="panel-desc" id="panelDesc">Core language fundamentals, vectorized array operations, list comprehensions, object-oriented pipelines, and type annotations.</p>
+
+      <div class="panel-meta">
+        <div class="meta-box">
+          <div class="meta-lbl">Estimated Time</div>
+          <div class="meta-val" id="panelTime">14 Hours</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-lbl">Category</div>
+          <div class="meta-val" id="panelCategory">Foundations</div>
+        </div>
+      </div>
+
+      <div class="prereq-list">
+        <div class="prereq-title">Prerequisites</div>
+        <div class="prereq-chips" id="panelPrereqs">
+          <span class="prereq-chip">High School Math</span>
+          <span class="prereq-chip">Command Line Basics</span>
+        </div>
+      </div>
+
+      <div class="resources-title">Curated Deep-Dive Resources</div>
+      <div id="panelResources">
+        <a class="resource-link" href="#" target="_blank"><span>Python Data Science Handbook</span> <i class="fas fa-external-link-alt"></i></a>
+        <a class="resource-link" href="#" target="_blank"><span>NumPy Vectorization Visual Guide</span> <i class="fas fa-external-link-alt"></i></a>
+      </div>
+
+      <button class="mastery-btn not-mastered" id="masteryBtn" onclick="toggleMastery()">
+        <i class="fas fa-check-circle"></i> Mark Node as Mastered
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- DAG DATA DEFINITION ---
+const NODES = [
+  { id: 'py', title: 'Python for AI', emoji: '🐍', x: 120, y: 120, cat: 'foundation', tier: 'Beginner', time: '14 Hours', desc: 'Core language syntax, vectorized computing, asynchronous I/O, and typing for AI pipelines.', prereqs: ['Basic Logic'], resources: ['Python 3 Official Docs', 'RealPython NumPy Tutorial'], next: ['math', 'numpy'] },
+  { id: 'math', title: 'Linear Algebra & Calculus', emoji: '📐', x: 340, y: 120, cat: 'foundation', tier: 'Beginner', time: '20 Hours', desc: 'Matrix multiplication, eigenvalues, dot products, partial derivatives, and gradient descent mechanics.', prereqs: ['Python for AI'], resources: ['3Blue1Brown Essence of LinAlg', 'Khan Academy Multivariable Calculus'], next: ['pytorch'] },
+  { id: 'numpy', title: 'NumPy & Pandas Vectorization', emoji: '📊', x: 120, y: 280, cat: 'foundation', tier: 'Beginner', time: '12 Hours', desc: 'Multi-dimensional array slicing, broadcasting rules, memory buffers, and DataFrame transformations.', prereqs: ['Python for AI'], resources: ['100 NumPy Exercises', 'Pandas Cookbook'], next: ['pytorch'] },
+  { id: 'pytorch', title: 'PyTorch & AutoGrad Engine', emoji: '🔥', x: 340, y: 280, cat: 'deep-learning', tier: 'Intermediate', time: '28 Hours', desc: 'Dynamic computational graphs, tensor GPU allocation, backpropagation with autograd, and custom nn.Module architectures.', prereqs: ['Linear Algebra', 'NumPy'], resources: ['PyTorch 60-Minute Blitz', 'Karpathy: Micrograd from Scratch'], next: ['transformers', 'cv'] },
+  { id: 'cv', title: 'Computer Vision & YOLOv8', emoji: '👁️', x: 120, y: 440, cat: 'deep-learning', tier: 'Intermediate', time: '22 Hours', desc: 'Convolutional kernels, spatial convolutions, bounding box regression, and YOLO real-time inference.', prereqs: ['PyTorch & AutoGrad'], resources: ['Ultralytics YOLO Docs', 'CS231n Stanford Notes'], next: ['prod'] },
+  { id: 'transformers', title: 'Attention & Transformers', emoji: '⚡', x: 560, y: 200, cat: 'deep-learning', tier: 'Intermediate', time: '32 Hours', desc: 'Self-attention math: softmax(Q*K^T / sqrt(d))*V, multi-head projection, positional embeddings, and encoder-decoder stacks.', prereqs: ['PyTorch & AutoGrad'], resources: ['Illustrated Transformer by Jay Alammar', 'Attention Is All You Need (Original Paper)'], next: ['rag', 'llm'] },
+  { id: 'rag', title: 'Vector DBs & RAG Architecture', emoji: '🗄️', x: 560, y: 380, cat: 'llm-agents', tier: 'Intermediate', time: '24 Hours', desc: 'Dense passage retrieval, HNSW cosine index, embedding chunking strategies, hybrid keyword-vector search, and ChromaDB.', prereqs: ['Attention & Transformers'], resources: ['Pinecone Vector Search Handbook', 'LangChain Retrieval Strategies'], next: ['agents'] },
+  { id: 'llm', title: 'Fine-Tuning & Quantization (LoRA)', emoji: '🎛️', x: 780, y: 160, cat: 'llm-agents', tier: 'Advanced', time: '30 Hours', desc: 'Parameter-efficient fine-tuning (PEFT), LoRA adapter rank matrices, 4-bit / 8-bit QLoRA, and vLLM serving.', prereqs: ['Attention & Transformers'], resources: ['HuggingFace PEFT Guide', 'Unsloth Fast Fine-Tuning'], next: ['prod'] },
+  { id: 'agents', title: 'LangGraph & Multi-Agent Systems', emoji: '🤖', x: 780, y: 340, cat: 'llm-agents', tier: 'Advanced', time: '35 Hours', desc: 'Cyclic state machines, supervisor routers, tool execution sandboxes, episodic memory buffers, and human-in-the-loop validation.', prereqs: ['RAG Architecture'], resources: ['LangGraph Conceptual Guides', 'CrewAI Production Patterns'], next: ['eval'] },
+  { id: 'eval', title: 'LLM Evaluation & Guardrails', emoji: '🛡️', x: 980, y: 340, cat: 'llm-agents', tier: 'Advanced', time: '18 Hours', desc: 'Ragas evaluation framework (Faithfulness, Answer Relevance), prompt injection defenses, and semantic validation guardrails.', prereqs: ['LangGraph & Multi-Agent Systems'], resources: ['Ragas Metrics Guide', 'NeMo Guardrails'], next: ['prod'] },
+  { id: 'prod', title: 'High-Throughput Serving & Docker', emoji: '🚀', x: 980, y: 180, cat: 'mlops', tier: 'Advanced', time: '25 Hours', desc: 'FastAPI async streaming, continuous batching with vLLM, TensorRT-LLM, Docker multi-stage builds, and Render / AWS deployment.', prereqs: ['LLM Fine-Tuning', 'Multi-Agent Systems'], resources: ['vLLM Architecture Paper', 'Docker for ML Best Practices'], next: [] }
+];
+
+let selectedNodeId = 'transformers';
+let masteredNodes = new Set(JSON.parse(localStorage.getItem('avpu_mastered_dag') || '[]'));
+let activeFilter = 'all';
+let searchQuery = '';
+
+// Canvas Pan & Zoom state
+let scale = 1;
+let panX = 40;
+let panY = 60;
+let isDragging = false;
+let startX, startY;
+
+const canvas = document.getElementById('dagCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+  drawGraph();
+}
+window.addEventListener('resize', resizeCanvas);
+
+function drawGraph() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save();
+  ctx.translate(panX, panY);
+  ctx.scale(scale, scale);
+
+  // Draw Grid Lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  ctx.lineWidth = 1;
+  const gridSize = 40;
+  for (let x = -500; x < 2000; x += gridSize) {
+    ctx.beginPath(); ctx.moveTo(x, -500); ctx.lineTo(x, 1500); ctx.stroke();
+  }
+  for (let y = -500; y < 1500; y += gridSize) {
+    ctx.beginPath(); ctx.moveTo(-500, y); ctx.lineTo(2000, y); ctx.stroke();
+  }
+
+  // Draw Edges
+  NODES.forEach(node => {
+    if (node.next) {
+      node.next.forEach(targetId => {
+        const target = NODES.find(n => n.id === targetId);
+        if (target) {
+          const isHighlighted = (node.id === selectedNodeId || target.id === selectedNodeId);
+          ctx.beginPath();
+          ctx.moveTo(node.x + 90, node.y + 35);
+          
+          // Bezier curve
+          const cx1 = node.x + 90 + (target.x - (node.x + 90)) * 0.5;
+          const cy1 = node.y + 35;
+          const cx2 = node.x + 90 + (target.x - (node.x + 90)) * 0.5;
+          const cy2 = target.y + 35;
+          ctx.bezierCurveTo(cx1, cy1, cx2, cy2, target.x, target.y + 35);
+
+          ctx.strokeStyle = isHighlighted ? '#60a5fa' : 'rgba(255,255,255,0.12)';
+          ctx.lineWidth = isHighlighted ? 2.5 : 1.5;
+          ctx.stroke();
+
+          // Arrowhead
+          const angle = Math.atan2(target.y + 35 - cy2, target.x - cx2);
+          ctx.beginPath();
+          ctx.moveTo(target.x, target.y + 35);
+          ctx.lineTo(target.x - 8 * Math.cos(angle - Math.PI / 6), target.y + 35 - 8 * Math.sin(angle - Math.PI / 6));
+          ctx.lineTo(target.x - 8 * Math.cos(angle + Math.PI / 6), target.y + 35 - 8 * Math.sin(angle + Math.PI / 6));
+          ctx.fillStyle = isHighlighted ? '#60a5fa' : 'rgba(255,255,255,0.2)';
+          ctx.fill();
+        }
+      });
+    }
+  });
+
+  // Draw Nodes
+  NODES.forEach(node => {
+    const isSelected = node.id === selectedNodeId;
+    const isMastered = masteredNodes.has(node.id);
+    const matchesFilter = (activeFilter === 'all' || node.cat === activeFilter);
+    const matchesSearch = !searchQuery || node.title.toLowerCase().includes(searchQuery) || node.desc.toLowerCase().includes(searchQuery);
+
+    const opacity = (matchesFilter && matchesSearch) ? 1.0 : 0.25;
+    ctx.globalAlpha = opacity;
+
+    const w = 180;
+    const h = 70;
+    const r = 10;
+
+    // Card background
+    ctx.beginPath();
+    ctx.roundRect(node.x, node.y, w, h, r);
+    ctx.fillStyle = isSelected ? '#1e293b' : (isMastered ? '#064e3b' : '#0f172a');
+    ctx.fill();
+
+    // Card border
+    ctx.lineWidth = isSelected ? 2.5 : 1;
+    ctx.strokeStyle = isSelected ? '#38bdf8' : (isMastered ? '#10b981' : 'rgba(255,255,255,0.14)');
+    ctx.stroke();
+
+    // Emoji icon box
+    ctx.beginPath();
+    ctx.roundRect(node.x + 10, node.y + 12, 34, 34, 8);
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.fill();
+    ctx.font = '18px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(node.emoji, node.x + 27, node.y + 29);
+
+    // Title text
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#fff';
+    ctx.font = '600 12px Inter, sans-serif';
+    ctx.fillText(node.title.length > 17 ? node.title.slice(0, 16) + '…' : node.title, node.x + 52, node.y + 24);
+
+    // Tier badge
+    ctx.font = '500 10px Inter, sans-serif';
+    ctx.fillStyle = node.tier === 'Beginner' ? '#34d399' : (node.tier === 'Intermediate' ? '#fbbf24' : '#f87171');
+    ctx.fillText(node.tier + ' · ' + node.time, node.x + 52, node.y + 40);
+
+    // Mastered checkmark
+    if (isMastered) {
+      ctx.fillStyle = '#34d399';
+      ctx.font = '12px sans-serif';
+      ctx.fillText('✔ Done', node.x + 52, node.y + 56);
+    }
+
+    ctx.globalAlpha = 1.0;
+  });
+
+  ctx.restore();
+}
+
+// Interaction Handlers
+canvas.addEventListener('mousedown', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left - panX) / scale;
+  const my = (e.clientY - rect.top - panY) / scale;
+
+  // Check if clicked a node
+  let hitNode = null;
+  for (let i = NODES.length - 1; i >= 0; i--) {
+    const n = NODES[i];
+    if (mx >= n.x && mx <= n.x + 180 && my >= n.y && my <= n.y + 70) {
+      hitNode = n;
+      break;
+    }
+  }
+
+  if (hitNode) {
+    selectedNodeId = hitNode.id;
+    updatePanel(hitNode);
+    drawGraph();
+  } else {
+    isDragging = true;
+    startX = e.clientX - panX;
+    startY = e.clientY - panY;
+  }
+});
+
+window.addEventListener('mousemove', e => {
+  if (isDragging) {
+    panX = e.clientX - startX;
+    panY = e.clientY - startY;
+    drawGraph();
+  }
+});
+
+window.addEventListener('mouseup', () => { isDragging = false; });
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+  scale = Math.min(Math.max(0.4, scale * zoomFactor), 2.2);
+  drawGraph();
+}, { passive: false });
+
+document.getElementById('zoomIn').onclick = () => { scale = Math.min(2.2, scale * 1.2); drawGraph(); };
+document.getElementById('zoomOut').onclick = () => { scale = Math.max(0.4, scale / 1.2); drawGraph(); };
+document.getElementById('zoomReset').onclick = () => { scale = 1; panX = 40; panY = 60; drawGraph(); };
+
+function updatePanel(node) {
+  document.getElementById('panelTitle').innerText = node.title;
+  document.getElementById('panelEmoji').innerText = node.emoji;
+  document.getElementById('panelDesc').innerText = node.desc;
+  document.getElementById('panelTime').innerText = node.time;
+  document.getElementById('panelCategory').innerText = node.cat.toUpperCase();
+
+  const tierEl = document.getElementById('panelTier');
+  tierEl.innerText = node.tier;
+  tierEl.className = 'panel-tier ' + (node.tier === 'Beginner' ? 'tier-beg' : (node.tier === 'Intermediate' ? 'tier-int' : 'tier-adv'));
+
+  const prereqWrap = document.getElementById('panelPrereqs');
+  prereqWrap.innerHTML = node.prereqs.map(p => `<span class="prereq-chip">${p}</span>`).join('');
+
+  const resWrap = document.getElementById('panelResources');
+  resWrap.innerHTML = node.resources.map(r => `
+    <a class="resource-link" href="https://www.google.com/search?q=${encodeURIComponent(r)}" target="_blank">
+      <span>${r}</span> <i class="fas fa-external-link-alt"></i>
+    </a>
+  `).join('');
+
+  const mBtn = document.getElementById('masteryBtn');
+  const isM = masteredNodes.has(node.id);
+  mBtn.className = 'mastery-btn ' + (isM ? 'mastered' : 'not-mastered');
+  mBtn.innerHTML = isM ? '<i class="fas fa-check-double"></i> Mastered Concept!' : '<i class="fas fa-check-circle"></i> Mark Node as Mastered';
+
+  document.getElementById('masteredCount').innerText = masteredNodes.size;
+}
+
+function toggleMastery() {
+  if (masteredNodes.has(selectedNodeId)) {
+    masteredNodes.delete(selectedNodeId);
+  } else {
+    masteredNodes.add(selectedNodeId);
+  }
+  localStorage.setItem('avpu_mastered_dag', JSON.stringify([...masteredNodes]));
+  const node = NODES.find(n => n.id === selectedNodeId);
+  updatePanel(node);
+  drawGraph();
+}
+
+// Search and Filter Controls
+document.getElementById('nodeSearch').addEventListener('input', e => {
+  searchQuery = e.target.value.trim().toLowerCase();
+  drawGraph();
+});
+
+document.querySelectorAll('.pill-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.getAttribute('data-filter');
+    drawGraph();
+  });
+});
+
+// Keyboard shortcut (Ctrl+K)
+window.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    document.getElementById('nodeSearch').focus();
+  }
+});
+
+// Init
+resizeCanvas();
+updatePanel(NODES.find(n => n.id === selectedNodeId));
+</script>
+
+
+<script>
+(function() {
+  // Theme Toggle Handler
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) {
+        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+
+  // Cursor Ring
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+</script>
+
+</body>
+</html>

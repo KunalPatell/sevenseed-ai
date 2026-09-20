@@ -3,182 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Course Catalog & Curriculum Explorer — AVPU</title>
-  <meta name="description" content="Explore 100% free, career-ready AI degrees and certificate programs with interactive curriculum syllabi and hands-on projects.">
+  <title>AI Course Catalog & Curriculum Preview — AVPU</title>
+  <meta name="description" content="Career-focused AI degree and certificate programs designed for the modern industry.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .courses-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
-    .courses-header { text-align: center; margin-bottom: 32px; }
-    .courses-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.3); color: #93c5fd; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
-    .courses-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
-
-    /* Search and Filter */
-    .filter-bar { display: flex; gap: 16px; justify-content: space-between; align-items: center; flex-wrap: wrap; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 24px; margin-bottom: 32px; }
-    .search-box { position: relative; flex: 1; min-width: 260px; max-width: 440px; }
-    .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-3); }
-    .search-box input { width: 100%; padding: 10px 16px 10px 38px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 8px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
-    .search-box input:focus { border-color: var(--primary); }
-
-    .category-pills { display: flex; gap: 8px; flex-wrap: wrap; }
-    .cat-btn { padding: 8px 16px; border-radius: 20px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .cat-btn.active, .cat-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
-
-    /* Courses Grid */
-    .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px; }
-    .course-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; transition: all 0.2s; }
-    .course-card:hover { transform: translateY(-4px); border-color: rgba(37,99,235,0.4); box-shadow: var(--shadow); }
-
-    .course-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .course-badge { font-size: 11px; text-transform: uppercase; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
-    .badge-eng { background: rgba(37,99,235,0.15); color: #93c5fd; }
-    .badge-cv { background: rgba(168,85,247,0.15); color: #c084fc; }
-    .badge-mlops { background: rgba(245,158,11,0.15); color: #fbbf24; }
-    .course-duration { font-size: 12px; color: #34d399; font-weight: 600; }
-
-    .course-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 10px; }
-    .course-desc { font-size: 14px; color: var(--text-2); line-height: 1.6; margin-bottom: 20px; flex: 1; }
-
-    .curriculum-preview { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 20px; font-size: 12px; }
-    .curr-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; color: var(--text-2); }
-    .curr-item:last-child { margin-bottom: 0; }
-    .curr-item i { color: var(--primary-l); font-size: 11px; }
-
-    .course-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid var(--border); }
-    .course-price { font-size: 15px; font-weight: 700; color: #34d399; }
+    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
+    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
+    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
+    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
+    .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
+    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
+    .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
+    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
   </style>
 </head>
 <body>
 
+
 <nav class="nav" id="mainNav">
-  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
-      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-graduation-cap"></i></span>
-      <span style="font-weight:700; font-size:18px;">AVPU</span>
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">
+      <span class="nav-logo-wrap"><i class="fas fa-graduation-cap"></i></span>
+      <span class="nav-name">AVPU</span>
     </a>
-    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
-      <a href="index.html">Home</a>
-      <a href="courses.html" style="color:var(--primary-l); font-weight:600;">Courses</a>
-      <a href="learn-dag.html">DAG Graph</a>
-      <a href="duo-league.html">Duo League</a>
-      <a href="code-lab.html">Code Lab</a>
-      <a href="laws-of-ux.html">Laws of UX</a>
-      <a href="marketing-teardowns.html">Teardowns</a>
-      <a href="challenge-100days.html">100 Days AI</a>
-      <a href="mental-models.html">Mental Models</a>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="courses.html" class="active">AI Courses</a>
+        <a href="ai-tutor.html">Personal AI Tutor</a>
+        <a href="scholarships.html">Scholarships</a>
     </div>
     <div class="nav-actions">
-      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
+      <a class="btn btn-primary sm" href="index.html#contact"><i class="fas fa-rocket"></i> Launch</a>
     </div>
   </div>
 </nav>
 
-<div class="courses-container">
-  <div class="courses-header">
-    <div class="courses-badge"><i class="fas fa-graduation-cap"></i> 100% Free · Real-World Industry Syllabi</div>
-    <h1 class="courses-title">AI Degree Programs & Specialized Tracks</h1>
-    <p style="color:var(--text-2); max-width:720px; margin:0 auto;">Rigorous, engineering-focused curriculum designed with leading AI research labs. Learn by shipping production code and verifiable artifacts.</p>
-  </div>
 
-  <!-- Search and Category Filters -->
-  <div class="filter-bar">
-    <div class="search-box">
-      <i class="fas fa-search"></i>
-      <input type="text" id="courseSearch" placeholder="Search tracks (e.g. LangGraph, YOLO, PyTorch)...">
-    </div>
-    <div class="category-pills">
-      <button class="cat-btn active" data-cat="all">All Tracks</button>
-      <button class="cat-btn" data-cat="eng">AI Engineering</button>
-      <button class="cat-btn" data-cat="cv">Computer Vision</button>
-      <button class="cat-btn" data-cat="mlops">MLOps & Cloud</button>
-    </div>
-  </div>
+<header class="sub-hero">
+  <div class="sub-hero-pill"><i class="fas fa-sparkles"></i> 100% Free · Interactive AI Tool</div>
+  <h1 class="sub-hero-title">AI Course Catalog & Curriculum Preview</h1>
+  <p class="sub-hero-sub">Career-focused AI degree and certificate programs designed for the modern industry.</p>
+</header>
 
-  <!-- Courses Grid -->
-  <div class="courses-grid" id="coursesGrid">
-    <div class="course-card" data-cat="eng">
-      <div class="course-topbar">
-        <span class="course-badge badge-eng">AI Engineering</span>
-        <span class="course-duration">12 Weeks · Self-Paced</span>
-      </div>
-      <h3 class="course-title">Full-Stack AI & Multi-Agent Systems</h3>
-      <p class="course-desc">Master LangGraph cyclic agents, Groq LLaMA 3.3 70B inference, ChromaDB dense retrieval, and FastAPI streaming backends.</p>
-      <div class="curriculum-preview">
-        <div class="curr-item"><i class="fas fa-check"></i> Module 1: Scaled Dot-Product Attention & Transformers</div>
-        <div class="curr-item"><i class="fas fa-check"></i> Module 2: Dense Embeddings & Vector Search (HNSW)</div>
-        <div class="curr-item"><i class="fas fa-check"></i> Module 3: LangGraph Multi-Agent Orchestration</div>
-      </div>
-      <div class="course-footer">
-        <span class="course-price">100% Free · BYOK</span>
-        <button class="btn btn-primary sm" onclick="enrollModal('Full-Stack AI & Multi-Agent Systems')">Enroll Now →</button>
-      </div>
+<main class="container">
+  
+<div class="interactive-card" style="text-align:left;">
+  <div class="grid-3">
+    <div class="tool-box">
+      <h4 style="color:#38bdf8;">Full-Stack AI Engineering</h4>
+      <p style="color:#94a3b8; font-size:13px;">FastAPI, LangGraph, Groq LLaMA, ChromaDB RAG, and React dashboard development.</p>
+      <span style="font-size:12px; color:#10b981;">12 Weeks · 100% Free</span>
     </div>
-
-    <div class="course-card" data-cat="cv">
-      <div class="course-topbar">
-        <span class="course-badge badge-cv">Computer Vision</span>
-        <span class="course-duration">8 Weeks · Practical</span>
-      </div>
-      <h3 class="course-title">Computer Vision with YOLOv8 & OpenCV</h3>
-      <p class="course-desc">Build real-time industrial object detection pipelines, safety PPE compliance scanners, and defect inspection models with ONNX runtime.</p>
-      <div class="curriculum-preview">
-        <div class="curr-item"><i class="fas fa-check"></i> Module 1: Spatial Convolutions & Feature Maps</div>
-        <div class="curr-item"><i class="fas fa-check"></i> Module 2: YOLOv8 Bounding Box & Anchor Optimization</div>
-        <div class="curr-item"><i class="fas fa-check"></i> Module 3: ONNX Quantization & RTSP Video Streaming</div>
-      </div>
-      <div class="course-footer">
-        <span class="course-price">100% Free · BYOK</span>
-        <button class="btn btn-primary sm" onclick="enrollModal('Computer Vision with YOLOv8')">Enroll Now →</button>
-      </div>
+    <div class="tool-box">
+      <h4 style="color:#a855f7;">Computer Vision with YOLO & OpenCV</h4>
+      <p style="color:#94a3b8; font-size:13px;">Real-time object detection, PPE compliance, and damage defect inspection pipelines.</p>
+      <span style="font-size:12px; color:#10b981;">8 Weeks · 100% Free</span>
     </div>
-
-    <div class="course-card" data-cat="mlops">
-      <div class="course-topbar">
-        <span class="course-badge badge-mlops">MLOps & Cloud</span>
-        <span class="course-duration">6 Weeks · Production</span>
-      </div>
-      <h3 class="course-title">Production MLOps, Docker & vLLM</h3>
-      <p class="course-desc">Deploy high-throughput inference engines with continuous batching (vLLM), multi-stage Dockerfiles, Nginx load balancing, and Render CI/CD.</p>
-      <div class="curriculum-preview">
-        <div class="curr-item"><i class="fas fa-check"></i> Module 1: Multi-Stage Docker Containerization</div>
-        <div class="curr-item"><i class="fas fa-check"></i> Module 2: Continuous Batching & PagedAttention with vLLM</div>
-        <div class="curr-item"><i class="fas fa-check"></i> Module 3: PostgreSQL Multi-Tenancy & CI/CD Pipelines</div>
-      </div>
-      <div class="course-footer">
-        <span class="course-price">100% Free · BYOK</span>
-        <button class="btn btn-primary sm" onclick="enrollModal('Production MLOps, Docker & vLLM')">Enroll Now →</button>
-      </div>
+    <div class="tool-box">
+      <h4 style="color:#f59e0b;">MLOps & Cloud Deployment</h4>
+      <p style="color:#94a3b8; font-size:13px;">Docker containers, Nginx reverse proxy, PostgreSQL multi-tenancy, and Render CI/CD.</p>
+      <span style="font-size:12px; color:#10b981;">6 Weeks · 100% Free</span>
     </div>
   </div>
 </div>
 
-<script>
-function enrollModal(courseName) {
-  alert(`🎓 Successfully enrolled in "${courseName}"!\nAccess granted to all interactive labs, notebooks, and lecture notes.`);
-}
+</main>
 
-document.getElementById('courseSearch').addEventListener('input', e => {
-  const query = e.target.value.toLowerCase();
-  document.querySelectorAll('.course-card').forEach(card => {
-    const text = card.innerText.toLowerCase();
-    card.style.display = text.includes(query) ? 'flex' : 'none';
-  });
-});
 
-document.querySelectorAll('.cat-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const cat = btn.getAttribute('data-cat');
-    document.querySelectorAll('.course-card').forEach(card => {
-      card.style.display = (cat === 'all' || card.getAttribute('data-cat') === cat) ? 'flex' : 'none';
-    });
-  });
-});
-</script>
+<footer class="footer">
+  <div class="foot-inner">
+    <div class="foot-col">
+      <div class="foot-brand"><i class="fas fa-graduation-cap"></i> AVPU</div>
+      <p class="foot-tag">AI Higher Education — Part of the Sevenseed AI Venture Studio portfolio.</p>
+      <div class="foot-copy">© 2026 AVPU. 100% Free · Bring Your Own Key Architecture.</div>
+    </div>
+    <div class="foot-col">
+      <h4>Navigation</h4>
+      <ul class="foot-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="../index.html">Sevenseed Hub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
 
+
+<script src="app.js"></script>
 </body>
 </html>

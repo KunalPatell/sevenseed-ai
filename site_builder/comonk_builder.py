@@ -1,0 +1,299 @@
+# -*- coding: utf-8 -*-
+"""
+Comonk AI — Next-Gen AI Career Intelligence Workstation.
+Engineered with features from:
+- Jobscan.co (ATS Keyword Optimizer, Semantic Match Score, Missing Keyword Pills)
+- Levels.fyi (Compensation Intelligence, Base/Stock/Bonus Breakdown, Indian Tech CTC)
+- Interviewing.io (Simulated FAANG Mock Interview Arena with Real-Time Scoring)
+- Huntr.co (Kanban Application Pipeline & Automated Follow-Up Reminders)
+- 21st.dev (Conic Animated Border Beams & Bento Grids)
+- Unicorn Studio (Liquid Fluid Shader Background)
+- Aceternity UI (Overhead Lamp Illumination & 3D Card Tilt)
+"""
+
+def render_comonk_html(c):
+    email, phone, location = c["contact"]
+    
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comonk AI — Next-Gen Career Copilot, ATS Optimizer & Interview Arena</title>
+  <meta name="description" content="Land your target tech role. Free AI resume tailoring, Jobscan ATS keyword optimization, Levels.fyi salary benchmarks, and FAANG mock interview arenas.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Comonk AI — Next-Gen Career Copilot">
+  <meta property="og:description" content="Beat applicant tracking systems and ace technical interviews with AI-native career intelligence.">
+  <meta property="og:url" content="https://sevenseed.onrender.com/comonk/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🧠%3C/text%3E%3C/svg%3E">
+  <script>(function(){{try{{var t=localStorage.getItem('ss-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    :root {{
+      --comonk-sky: #0ea5e9;
+      --comonk-sky-l: #38bdf8;
+      --comonk-indigo: #6366f1;
+      --comonk-emerald: #10b981;
+    }}
+    .ats-teaser-wrap {{
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-top: 32px;
+      box-shadow: var(--shadow);
+    }}
+    .score-circle-box {{
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 20px;
+    }}
+    .score-circle {{
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: conic-gradient(#10b981 84%, #1e293b 0%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    }}
+    .pill-badge {{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 3px;
+    }}
+    .pill-pass {{ background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }}
+    .pill-miss {{ background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }}
+  </style>
+</head>
+<body data-variant="technical-mono" style="--font-display:'Outfit', sans-serif;">
+<span id="top"></span>
+
+<div class="preloader" id="preloader">
+  <div class="pl-glow pl-glow-1"></div>
+  <div class="pl-glow pl-glow-2"></div>
+  <div class="pl-content">
+    <div class="pl-logo">
+      <div class="pl-icon-wrap"><i class="fas fa-brain pl-icon"></i><span class="pl-ring"></span></div>
+      <div class="pl-name">COMONK AI</div>
+    </div>
+    <div class="pl-progress">
+      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
+      <div class="pl-text">INITIALIZING ATS SEMANTIC ENGINE… <span id="plPct">0</span>%</div>
+    </div>
+  </div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<!-- Top Navigation -->
+<nav class="nav">
+  <a class="logo" href="#top">
+    <span class="logo-icon"><i class="fas fa-brain"></i></span>
+    <span class="logo-text">Comonk <span class="logo-accent">AI</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="resume-analyzer.html"><i class="fas fa-file-lines" style="color:#38bdf8;"></i> ATS Optimizer</a>
+    <a href="interview-arena.html"><i class="fas fa-terminal" style="color:#fbbf24;"></i> Mock Interview</a>
+    <a href="salary-insights.html"><i class="fas fa-money-bill-trend-up" style="color:#34d399;"></i> Salary Intel</a>
+    <a href="#workstations">Workstations</a>
+    <a href="#ats-demo">ATS Scanner</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="nav-right">
+    <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
+    <a class="btn btn-ghost" href="resume-analyzer.html"><i class="fas fa-wand-magic-sparkles"></i> Scan Resume</a>
+    <a class="btn btn-primary" href="interview-arena.html"><i class="fas fa-microphone"></i> Mock Interview</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<!-- Hero Section with Overhead Lamp & 3D Neuro-Knot Canvas -->
+<header class="hero">
+  <div class="hero-lamp"></div>
+  <div class="hero-lamp-line"></div>
+  <div class="liquid-mesh"></div>
+  <div class="meteors-container">
+    <span class="meteor" style="--top:8%; --left:20%; --delay:0s; --duration:3.8s;"></span>
+    <span class="meteor" style="--top:26%; --left:70%; --delay:1.2s; --duration:5s;"></span>
+  </div>
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <div class="hero-pill" data-blur-in style="--i:0">
+      <i class="fas fa-brain"></i> <span>AI Career Intelligence · LangGraph Multi-Agent · 100% Free</span>
+    </div>
+    <h1 class="hero-title" data-blur-in style="--i:1">
+      Your AI-Powered <span class="grad">Career Copilot</span><br>to Land the Tech Role You Want.
+    </h1>
+    <p class="hero-sub" data-blur-in style="--i:2">
+      Engineered with inspiration from Jobscan, Levels.fyi, and Interviewing.io. Beat applicant tracking systems with keyword scoring, benchmark compensation across Indian tech hubs, and practice in FAANG-grade mock interview rooms with real-time scoring.
+    </p>
+
+    <div class="hero-actions" data-blur-in style="--i:3">
+      <a class="btn btn-primary lg" href="resume-analyzer.html"><i class="fas fa-file-lines"></i> Launch Jobscan ATS Optimizer →</a>
+      <a class="btn btn-ghost lg" href="interview-arena.html"><i class="fas fa-terminal"></i> Enter FAANG Mock Arena</a>
+      <a class="btn btn-ghost lg" href="salary-insights.html"><i class="fas fa-money-bill-trend-up"></i> Levels.fyi Salaries</a>
+    </div>
+
+    <div class="stats-row" data-blur-in style="--i:4">
+      <div class="stat"><span class="stat-num">2,000+</span><span class="stat-lbl">Companies Tracked</span></div>
+      <div class="stat"><span class="stat-num">84%</span><span class="stat-lbl">Average ATS Score</span></div>
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-lbl">Free Forever</span></div>
+      <div class="stat"><span class="stat-num">24/7</span><span class="stat-lbl">AI Interview Coach</span></div>
+    </div>
+
+    <div class="hero-marquee" data-blur-in style="--i:5">
+      <div class="marquee-track">
+        <span>Jobscan ATS Optimizer</span><span>Interviewing.io Arena</span><span>Levels.fyi Compensation Intel</span><span>Kanban Job Tracker</span><span>LinkedIn Profile AI</span><span>Semantic Resume Match</span>
+        <span>Jobscan ATS Optimizer</span><span>Interviewing.io Arena</span><span>Levels.fyi Compensation Intel</span><span>Kanban Job Tracker</span><span>LinkedIn Profile AI</span><span>Semantic Resume Match</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D PBR WebGL Interactive Stage -->
+  <div class="hero-3d-stage" id="hero3dStage">
+    <canvas id="hero3dCanvas"></canvas>
+    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · Neuro-Matrix</div>
+    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
+  </div>
+</header>
+
+<!-- Bento Workstations -->
+<section class="section" id="workstations" style="padding-top:40px; padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-cubes"></i> Career Acceleration Engines</div>
+    <h2 class="sec-title">Interactive AI Career Workstations</h2>
+    <p class="sec-sub">Production-grade career intelligence tools engineered with inspiration from Jobscan, Interviewing.io, and Levels.fyi.</p>
+  </div>
+
+  <div class="bento-showcase bento-grid-3">
+    <!-- 1. ATS Optimizer -->
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:12px;">📄</div>
+        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Jobscan ATS Optimizer</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Live resume vs job description semantic matching score, missing keyword pill badges, formatting checks, and AI bullet rewrites.</p>
+      </div>
+      <a class="btn btn-primary" href="resume-analyzer.html"><i class="fas fa-file-lines"></i> Launch ATS Optimizer →</a>
+    </div>
+
+    <!-- 2. Interview Arena -->
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:12px;">🎙️</div>
+        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Interviewing.io Mock Arena</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Simulated 45-minute FAANG technical interview room with integrated code editor, rubric evaluations, audio chimes, and instant feedback.</p>
+      </div>
+      <a class="btn btn-primary" href="interview-arena.html"><i class="fas fa-terminal"></i> Enter Mock Arena →</a>
+    </div>
+
+    <!-- 3. Salary Intelligence -->
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:12px;">📊</div>
+        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Levels.fyi Salary Intelligence</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Accurate compensation breakdown by Base, Stock, and Bonus percentiles across Indian startups, MNC GCCs, and US remote roles.</p>
+      </div>
+      <a class="btn btn-primary" href="salary-insights.html"><i class="fas fa-money-bill-trend-up"></i> Explore Salaries →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Live Interactive ATS Scanner Teaser -->
+<section class="section" id="ats-demo" style="padding-top:20px; padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-bolt"></i> Live ATS Scanner</div>
+    <h2 class="sec-title">Simulate an ATS Match in 1 Click</h2>
+    <p class="sec-sub">See how corporate Applicant Tracking Systems parse and grade resumes.</p>
+  </div>
+
+  <div class="ats-teaser-wrap reveal" style="max-width:920px; margin:0 auto;">
+    <div class="score-circle-box">
+      <div class="score-circle">84%</div>
+      <div>
+        <h3 style="color:#fff; font-size:18px; margin-bottom:4px;">Strong Match for Senior AI Engineer</h3>
+        <p style="color:var(--text-2); font-size:13px;">Tested against requirements from Google, Microsoft, and high-growth AI unicorns.</p>
+      </div>
+    </div>
+
+    <div style="margin-bottom:18px;">
+      <div style="font-size:12px; font-weight:700; color:#10b981; text-transform:uppercase; margin-bottom:6px;">Matched Keywords (12):</div>
+      <span class="pill-badge pill-pass">FastAPI</span>
+      <span class="pill-badge pill-pass">PyTorch</span>
+      <span class="pill-badge pill-pass">LangGraph</span>
+      <span class="pill-badge pill-pass">Docker</span>
+      <span class="pill-badge pill-pass">Vector RAG</span>
+      <span class="pill-badge pill-pass">LLaMA 3</span>
+      <span class="pill-badge pill-pass">REST APIs</span>
+      <span class="pill-badge pill-pass">ChromaDB</span>
+    </div>
+
+    <div>
+      <div style="font-size:12px; font-weight:700; color:#ef4444; text-transform:uppercase; margin-bottom:6px;">Missing Recommended Keywords (2):</div>
+      <span class="pill-badge pill-miss">Kubernetes Clustering</span>
+      <span class="pill-badge pill-miss">Triton Inference Server</span>
+    </div>
+
+    <div style="margin-top:24px; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <span style="font-size:13px; color:var(--text-3);">Ready to scan your own resume against any job description?</span>
+      <a class="btn btn-primary sm" href="resume-analyzer.html"><i class="fas fa-file-lines"></i> Open Full ATS Analyzer →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Group Footer -->
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="logo" href="#top">
+        <span class="logo-icon"><i class="fas fa-brain"></i></span>
+        <span class="logo-text">Comonk <span class="logo-accent">AI</span></span>
+      </a>
+      <p>Next-Gen AI Career Copilot. Part of the Sevenseed AI Venture Studio portfolio.</p>
+    </div>
+    <div class="foot-col">
+      <h5>Career Tools</h5>
+      <ul>
+        <li><a href="resume-analyzer.html">ATS Resume Optimizer</a></li>
+        <li><a href="interview-arena.html">Mock Interview Arena</a></li>
+        <li><a href="salary-insights.html">Levels.fyi Salaries</a></li>
+        <li><a href="../index.html">Sevenseed Hub</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Connect</h5>
+      <ul>
+        <li><span><i class="fas fa-envelope"></i> {email}</span></li>
+        <li><span><i class="fas fa-location-dot"></i> {location}</span></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener"><i class="fab fa-github"></i> Public GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2026 Comonk AI. 100% Free Career Intelligence. Part of Sevenseed AI Studio.</div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>"""

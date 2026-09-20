@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duolingo AI Mastery League — AVPU</title>
+  <meta name="description" content="Gamified AI learning arena with weekly leagues, streak freezes, Web Audio sound effects, and XP micro-challenges.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .duo-container { max-width: 1200px; margin: 0 auto; padding: 100px 24px 60px; }
+    .duo-header { text-align: center; margin-bottom: 32px; }
+    .duo-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .duo-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    
+    /* Player Status Bar */
+    .status-ribbon { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 24px; margin-bottom: 28px; box-shadow: var(--shadow); }
+    .status-group { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .stat-pill { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
+    .streak-icon { color: #f97316; font-size: 20px; animation: pulseStreak 1.8s infinite; }
+    @keyframes pulseStreak { 0%,100%{transform:scale(1);} 50%{transform:scale(1.2);} }
+    .gem-icon { color: #06b6d4; font-size: 18px; }
+    .hearts-box { display: flex; gap: 4px; color: #ef4444; font-size: 16px; }
+    .league-badge { padding: 4px 12px; border-radius: 999px; background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(245,158,11,0.35); }
+
+    /* Arena Grid */
+    .arena-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+    @media(max-width: 900px) { .arena-grid { grid-template-columns: 1fr; } }
+    
+    /* Quiz Stage */
+    .quiz-stage { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; display: flex; flex-direction: column; justify-content: space-between; min-height: 520px; position: relative; overflow: hidden; }
+    .quiz-progress-wrap { margin-bottom: 24px; }
+    .progress-bar-bg { width: 100%; height: 12px; background: var(--bg-3); border-radius: 999px; overflow: hidden; }
+    .progress-bar-fill { width: 33%; height: 100%; background: linear-gradient(90deg, #10b981, #34d399); border-radius: 999px; transition: width 0.4s ease; }
+    
+    .question-box { margin-bottom: 28px; }
+    .question-category { font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; color: var(--primary-l); margin-bottom: 8px; }
+    .question-text { font-size: 20px; font-weight: 700; color: #fff; line-height: 1.4; margin-bottom: 12px; }
+    .code-snippet { background: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; margin-bottom: 20px; overflow-x: auto; }
+    
+    .options-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 28px; }
+    .option-card { background: var(--bg-2); border: 2px solid var(--border-hi); border-radius: 12px; padding: 16px 20px; font-size: 15px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s; }
+    .option-card:hover { border-color: var(--primary); background: var(--bg-3); transform: translateY(-2px); }
+    .option-card.selected { border-color: #60a5fa; background: rgba(37,99,235,0.15); }
+    .option-card.correct { border-color: #10b981; background: rgba(16,185,129,0.18); color: #34d399; }
+    .option-card.incorrect { border-color: #ef4444; background: rgba(239,68,68,0.18); color: #f87171; }
+    
+    .quiz-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid var(--border); }
+    .feedback-msg { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    
+    /* Leaderboard Card */
+    .leaderboard-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; }
+    .lb-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .lb-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .time-left { font-size: 12px; color: var(--text-3); }
+    
+    .lb-list { display: flex; flex-direction: column; gap: 8px; }
+    .lb-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; transition: transform 0.2s; }
+    .lb-item.current-user { border-color: #10b981; background: rgba(16,185,129,0.1); }
+    .lb-rank { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; background: var(--bg-3); }
+    .rank-1 { background: #f59e0b; color: #000; }
+    .rank-2 { background: #94a3b8; color: #000; }
+    .rank-3 { background: #b45309; color: #fff; }
+    .lb-info { display: flex; align-items: center; gap: 10px; flex: 1; margin-left: 10px; }
+    .lb-xp { color: var(--primary-l); font-family: 'JetBrains Mono', monospace; }
+    
+    .tier-cutoffs { margin-top: 18px; padding: 12px; background: var(--bg-2); border-radius: 8px; font-size: 12px; color: var(--text-2); display: flex; justify-content: space-between; }
+    .promo-zone { color: #34d399; font-weight: 600; }
+    .demo-zone { color: #f87171; font-weight: 600; }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-graduation-cap"></i></span>
+      <span style="font-weight:700; font-size:18px;">AVPU</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="courses.html">Courses</a>
+      <a href="learn-dag.html">DAG Graph</a>
+      <a href="duo-league.html" style="color:var(--primary-l); font-weight:600;">Duo League</a>
+      <a href="code-lab.html">Code Lab</a>
+      <a href="laws-of-ux.html">Laws of UX</a>
+      <a href="marketing-teardowns.html">Teardowns</a>
+      <a href="challenge-100days.html">100 Days AI</a>
+      <a href="mental-models.html">Mental Models</a>
+    </div>
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm" href="courses.html"><i class="fas fa-arrow-left"></i> All Courses</a>
+    </div>
+  </div>
+</nav>
+
+<div class="duo-container">
+  <div class="duo-header">
+    <div class="duo-badge"><i class="fas fa-trophy"></i> Inspired by Duolingo Leagues</div>
+    <h1 class="duo-title">AI Mastery League & Gamified Arena</h1>
+    <p style="color:var(--text-2); max-width:680px; margin:0 auto;">Earn XP through daily micro-challenges, climb the Diamond League leaderboard, maintain your streak, and unlock mastery shields.</p>
+  </div>
+
+  <!-- Status Ribbon -->
+  <div class="status-ribbon">
+    <div class="status-group">
+      <div class="stat-pill">
+        <i class="fas fa-fire streak-icon"></i>
+        <span><span id="streakVal">7</span> Day Streak</span>
+      </div>
+      <div class="stat-pill">
+        <i class="fas fa-gem gem-icon"></i>
+        <span><span id="gemsVal">420</span> Gems</span>
+      </div>
+      <div class="stat-pill">
+        <span>Lives:</span>
+        <div class="hearts-box" id="heartsBox">
+          <i class="fas fa-heart"></i>
+          <i class="fas fa-heart"></i>
+          <i class="fas fa-heart"></i>
+          <i class="fas fa-heart"></i>
+          <i class="fas fa-heart"></i>
+        </div>
+      </div>
+    </div>
+    <div class="status-group">
+      <div class="league-badge">
+        <i class="fas fa-crown"></i> Gold League · Rank #3
+      </div>
+    </div>
+  </div>
+
+  <!-- Arena Grid -->
+  <div class="arena-grid">
+    <!-- Interactive Quiz Stage -->
+    <div class="quiz-stage">
+      <div>
+        <div class="quiz-progress-wrap">
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div class="question-box">
+          <div class="question-category" id="qCat">Transformers & Deep Learning</div>
+          <h2 class="question-text" id="qTitle">What is the primary role of the scaling factor sqrt(d_k) in Scaled Dot-Product Attention?</h2>
+          <div class="code-snippet" id="qCode">Attention(Q, K, V) = softmax( (Q * K^T) / sqrt(d_k) ) * V</div>
+        </div>
+
+        <div class="options-grid" id="optionsGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <div class="quiz-footer">
+        <div class="feedback-msg" id="feedbackMsg"></div>
+        <button class="btn btn-primary" id="actionBtn" onclick="handleAction()">Check Answer</button>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="leaderboard-card">
+      <div class="lb-header">
+        <div class="lb-title"><i class="fas fa-medal" style="color:#f59e0b;"></i> Gold League</div>
+        <div class="time-left"><i class="far fa-clock"></i> 2d 14h left</div>
+      </div>
+
+      <div class="lb-list" id="lbList">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="tier-cutoffs">
+        <span class="promo-zone"><i class="fas fa-arrow-up"></i> Top 3: Promote to Sapphire</span>
+        <span class="demo-zone"><i class="fas fa-arrow-down"></i> Bottom 2: Demotion</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- WEB AUDIO API SOUND SYNTHESIZER ---
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new AudioContext();
+}
+
+function playCorrectSound() {
+  initAudio();
+  const now = audioCtx.currentTime;
+  const osc1 = audioCtx.createOscillator();
+  const osc2 = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc1.type = 'sine'; osc1.frequency.setValueAtTime(523.25, now); // C5
+  osc1.frequency.exponentialRampToValueAtTime(659.25, now + 0.12); // E5
+  osc2.type = 'triangle'; osc2.frequency.setValueAtTime(783.99, now + 0.12); // G5
+  osc2.frequency.exponentialRampToValueAtTime(1046.50, now + 0.28); // C6
+
+  gain.gain.setValueAtTime(0.2, now);
+  gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+
+  osc1.connect(gain); osc2.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc1.start(now); osc2.start(now + 0.12);
+  osc1.stop(now + 0.28); osc2.stop(now + 0.45);
+}
+
+function playWrongSound() {
+  initAudio();
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.type = 'sawtooth';
+  osc.frequency.setValueAtTime(220, now);
+  osc.frequency.linearRampToValueAtTime(140, now + 0.25);
+
+  gain.gain.setValueAtTime(0.25, now);
+  gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start(now);
+  osc.stop(now + 0.3);
+}
+
+// --- QUESTIONS POOL ---
+const QUESTIONS = [
+  {
+    cat: 'Transformers & Deep Learning',
+    title: 'What is the primary role of the scaling factor sqrt(d_k) in Scaled Dot-Product Attention?',
+    code: 'Attention(Q, K, V) = softmax( (Q * K^T) / sqrt(d_k) ) * V',
+    options: [
+      'To prevent extremely small gradient magnitudes caused by softmax saturation when dot products grow large',
+      'To reduce memory footprint of Key-Value cache in RAM',
+      'To enable parallel matrix multiplication on GPUs',
+      'To enforce causal masking during autoregressive token generation'
+    ],
+    answer: 0,
+    explanation: 'For large values of d_k, the dot products grow large in magnitude, pushing the softmax function into regions where it has extremely small gradients.'
+  },
+  {
+    cat: 'Vector Search & Embeddings',
+    title: 'Which distance metric is invariant to vector scaling and commonly used for dense text retrieval?',
+    code: 'similarity = dot(A, B) / ( norm(A) * norm(B) )',
+    options: [
+      'Euclidean (L2) Distance',
+      'Manhattan (L1) Distance',
+      'Cosine Similarity',
+      'Mahalanobis Distance'
+    ],
+    answer: 2,
+    explanation: 'Cosine similarity measures the angle between two vectors and ignores vector magnitude differences.'
+  },
+  {
+    cat: 'Multi-Agent Systems (LangGraph)',
+    title: 'In a cyclic multi-agent graph, what prevents an infinite reasoning loop?',
+    code: 'class AgentState(TypedDict):\n    messages: list\n    iteration_count: int\n    should_continue: bool',
+    options: [
+      'Disabling Python recursion limits',
+      'Conditional router edge with maximum recursion count (recursion_limit guardrail)',
+      'Running agents on separate thread pools',
+      'Using JSON output formatting'
+    ],
+    answer: 1,
+    explanation: 'A conditional edge inspecting an iteration counter or termination condition prevents infinite cyclic agent loops.'
+  }
+];
+
+let currentQIdx = 0;
+let selectedOption = null;
+let isAnswered = false;
+let userXP = 640;
+let userStreak = 7;
+let userLives = 5;
+
+// Mock Leaderboard
+const LEADERBOARD = [
+  { name: 'Arjun Verma', xp: 820, avatar: '👨‍💻' },
+  { name: 'Priya Sharma', xp: 750, avatar: '👩‍🔬' },
+  { name: 'You (Student)', xp: 640, avatar: '⚡', isUser: true },
+  { name: 'Rohan Patel', xp: 610, avatar: '🤖' },
+  { name: 'Ananya Roy', xp: 580, avatar: '🎯' },
+  { name: 'Vikram Singh', xp: 490, avatar: '🚀' },
+  { name: 'Neha Gupta', xp: 420, avatar: '💻' },
+  { name: 'Kavita Das', xp: 310, avatar: '📚' }
+];
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQIdx];
+  document.getElementById('qCat').innerText = q.cat;
+  document.getElementById('qTitle').innerText = q.title;
+  document.getElementById('qCode').innerText = q.code;
+  document.getElementById('progressFill').style.width = ((currentQIdx + 1) / QUESTIONS.length * 100) + '%';
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = q.options.map((opt, i) => `
+    <div class="option-card" data-index="${i}" onclick="selectOption(${i})">
+      <span>${opt}</span>
+      <i class="far fa-circle" style="color:var(--text-3)"></i>
+    </div>
+  `).join('');
+
+  selectedOption = null;
+  isAnswered = false;
+  document.getElementById('feedbackMsg').innerHTML = '';
+  document.getElementById('actionBtn').innerText = 'Check Answer';
+}
+
+function selectOption(idx) {
+  if (isAnswered) return;
+  selectedOption = idx;
+  document.querySelectorAll('.option-card').forEach((card, i) => {
+    if (i === idx) {
+      card.className = 'option-card selected';
+      card.querySelector('i').className = 'fas fa-check-circle';
+      card.querySelector('i').style.color = 'var(--primary-l)';
+    } else {
+      card.className = 'option-card';
+      card.querySelector('i').className = 'far fa-circle';
+      card.querySelector('i').style.color = 'var(--text-3)';
+    }
+  });
+}
+
+function handleAction() {
+  if (!isAnswered) {
+    if (selectedOption === null) {
+      alert('Please select an option first!');
+      return;
+    }
+    checkAnswer();
+  } else {
+    // Next question
+    currentQIdx = (currentQIdx + 1) % QUESTIONS.length;
+    renderQuestion();
+  }
+}
+
+function checkAnswer() {
+  isAnswered = true;
+  const q = QUESTIONS[currentQIdx];
+  const isCorrect = (selectedOption === q.answer);
+  const cards = document.querySelectorAll('.option-card');
+
+  if (isCorrect) {
+    playCorrectSound();
+    cards[selectedOption].className = 'option-card correct';
+    document.getElementById('feedbackMsg').innerHTML = '<span style="color:#34d399;"><i class="fas fa-check-circle"></i> Outstanding! +20 XP</span>';
+    userXP += 20;
+    LEADERBOARD.find(p => p.isUser).xp = userXP;
+    renderLeaderboard();
+  } else {
+    playWrongSound();
+    cards[selectedOption].className = 'option-card incorrect';
+    cards[q.answer].className = 'option-card correct';
+    document.getElementById('feedbackMsg').innerHTML = `<span style="color:#f87171;"><i class="fas fa-times-circle"></i> ${q.explanation}</span>`;
+    userLives = Math.max(0, userLives - 1);
+    updateLives();
+  }
+
+  document.getElementById('actionBtn').innerText = 'Next Challenge →';
+}
+
+function updateLives() {
+  const box = document.getElementById('heartsBox');
+  box.innerHTML = Array.from({ length: 5 }, (_, i) => `
+    <i class="${i < userLives ? 'fas fa-heart' : 'far fa-heart'}" style="${i < userLives ? 'color:#ef4444;' : 'color:var(--text-3);'}"></i>
+  `).join('');
+}
+
+function renderLeaderboard() {
+  LEADERBOARD.sort((a, b) => b.xp - a.xp);
+  const list = document.getElementById('lbList');
+  list.innerHTML = LEADERBOARD.map((item, idx) => {
+    let rankCls = idx === 0 ? 'rank-1' : (idx === 1 ? 'rank-2' : (idx === 2 ? 'rank-3' : ''));
+    return `
+      <div class="lb-item ${item.isUser ? 'current-user' : ''}">
+        <div class="lb-rank ${rankCls}">${idx + 1}</div>
+        <div class="lb-info">
+          <span>${item.avatar}</span>
+          <span>${item.name}</span>
+        </div>
+        <div class="lb-xp">${item.xp} XP</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Init
+renderQuestion();
+renderLeaderboard();
+</script>
+
+
+<script>
+(function() {
+  // Theme Toggle Handler
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) {
+        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+
+  // Cursor Ring
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+</script>
+
+</body>
+</html>

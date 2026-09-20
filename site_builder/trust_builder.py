@@ -1,0 +1,207 @@
+# -*- coding: utf-8 -*-
+"""
+AVP Charitable Trust — AI Social Impact & Philanthropy Workstation.
+Engineered with features from:
+- Charity Navigator 4-Star Standards (Open Audited Financial Ledger & 88.4% Program Ratio)
+- Ministry of Finance Form 10BE (80G Tax Exemption & Cryptographic QR Verification)
+- Telehealth Rural Health Camps (Triage & Clinic Appointment Scheduler)
+- 21st.dev (Conic Animated Border Beams & Bento Grids)
+- Unicorn Studio (Liquid Fluid Shader Background)
+- Aceternity UI (Overhead Lamp Illumination & 3D Card Tilt)
+"""
+
+def render_trust_html(c):
+    email, phone, location = c["contact"]
+    
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVP Charitable Trust — AI-Powered Philanthropy, 80G Tax Exemption & Impact Ledger</title>
+  <meta name="description" content="Transparent non-profit governance. Generate instant 80G Form 10BE certificates with cryptographic QR codes, view audited impact ledgers, and book free rural health camps.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AVP Charitable Trust — AI Philanthropy">
+  <meta property="og:description" content="80G Form 10BE certificates, Charity Navigator open ledger, and rural health clinics.">
+  <meta property="og:url" content="https://sevenseed.onrender.com/trust/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E❤️%3C/text%3E%3C/svg%3E">
+  <script>(function(){{try{{var t=localStorage.getItem('ss-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body data-variant="story-driven" style="--font-display:'Outfit', sans-serif;">
+<span id="top"></span>
+
+<div class="preloader" id="preloader">
+  <div class="pl-glow pl-glow-1"></div>
+  <div class="pl-glow pl-glow-2"></div>
+  <div class="pl-content">
+    <div class="pl-logo">
+      <div class="pl-icon-wrap"><i class="fas fa-hand-holding-heart pl-icon"></i><span class="pl-ring"></span></div>
+      <div class="pl-name">AVP CHARITABLE TRUST</div>
+    </div>
+    <div class="pl-progress">
+      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
+      <div class="pl-text">INITIALIZING IMPACT LEDGER & FORM 10BE ENGINE… <span id="plPct">0</span>%</div>
+    </div>
+  </div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<!-- Top Navigation -->
+<nav class="nav">
+  <a class="logo" href="#top">
+    <span class="logo-icon"><i class="fas fa-hand-holding-heart"></i></span>
+    <span class="logo-text">AVP <span class="logo-accent">Trust</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="tax-exemption.html"><i class="fas fa-file-invoice-dollar" style="color:#fb7185;"></i> 80G & Form 10BE</a>
+    <a href="impact-tracker.html"><i class="fas fa-chart-pie" style="color:#38bdf8;"></i> Impact Ledger</a>
+    <a href="health-camps.html"><i class="fas fa-kit-medical" style="color:#34d399;"></i> Health Camps</a>
+    <a href="#workstations">Workstations</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="nav-right">
+    <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
+    <a class="btn btn-ghost" href="tax-exemption.html"><i class="fas fa-file-invoice"></i> 80G Certificate</a>
+    <a class="btn btn-primary" href="health-camps.html"><i class="fas fa-heart"></i> Book Camp</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<!-- Hero Section with Overhead Lamp & 3D Radiant Polyhedral Heart -->
+<header class="hero">
+  <div class="hero-lamp"></div>
+  <div class="hero-lamp-line"></div>
+  <div class="liquid-mesh"></div>
+  <div class="meteors-container">
+    <span class="meteor" style="--top:12%; --left:26%; --delay:0s; --duration:3.8s;"></span>
+    <span class="meteor" style="--top:30%; --left:66%; --delay:1.4s; --duration:5.2s;"></span>
+  </div>
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <div class="hero-pill" data-blur-in style="--i:0">
+      <i class="fas fa-hand-holding-heart"></i> <span>100% Transparent Non-Profit · 80G Tax Deductible · Form 10BE</span>
+    </div>
+    <h1 class="hero-title" data-blur-in style="--i:1">
+      AI-Powered Philanthropy.<br><span class="grad">100% Impact</span>, Zero Admin Waste.
+    </h1>
+    <p class="hero-sub" data-blur-in style="--i:2">
+      Engineered to Charity Navigator 4-star governance standards. Instant 80G tax deduction receipts with cryptographic SHA-256 Form 10BE certificates, an audited transparent impact ledger, and free rural health camps across Gujarat.
+    </p>
+
+    <div class="hero-actions" data-blur-in style="--i:3">
+      <a class="btn btn-primary lg" href="tax-exemption.html"><i class="fas fa-file-invoice-dollar"></i> Generate 80G Form 10BE Receipt →</a>
+      <a class="btn btn-ghost lg" href="impact-tracker.html"><i class="fas fa-chart-pie"></i> Inspect Impact Ledger</a>
+      <a class="btn btn-ghost lg" href="health-camps.html"><i class="fas fa-kit-medical"></i> Free Health Camps</a>
+    </div>
+
+    <div class="stats-row" data-blur-in style="--i:4">
+      <div class="stat"><span class="stat-num">88.4%</span><span class="stat-lbl">Program Ratio</span></div>
+      <div class="stat"><span class="stat-num">₹0 Waste</span><span class="stat-lbl">Admin Displaced by AI</span></div>
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-lbl">80G Tax Exemption</span></div>
+      <div class="stat"><span class="stat-num">4,200+</span><span class="stat-lbl">Rural Beneficiaries</span></div>
+    </div>
+
+    <div class="hero-marquee" data-blur-in style="--i:5">
+      <div class="marquee-track">
+        <span>Section 80G Tax Deduction</span><span>Form 10BE Cryptographic Certificates</span><span>Charity Navigator 4-Star Transparency</span><span>Rural Health Camps</span><span>Zero Admin Overhead</span>
+        <span>Section 80G Tax Deduction</span><span>Form 10BE Cryptographic Certificates</span><span>Charity Navigator 4-Star Transparency</span><span>Rural Health Camps</span><span>Zero Admin Overhead</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D PBR WebGL Interactive Stage -->
+  <div class="hero-3d-stage" id="hero3dStage">
+    <canvas id="hero3dCanvas"></canvas>
+    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · Radiant Heart</div>
+    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
+  </div>
+</header>
+
+<!-- Bento Workstations -->
+<section class="section" id="workstations" style="padding-top:40px; padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-cubes"></i> Non-Profit Governance Workstations</div>
+    <h2 class="sec-title">Interactive Philanthropy Engines</h2>
+    <p class="sec-sub">Engineered to Charity Navigator 4-Star standards, Ministry of Finance Form 10BE rules, and direct beneficiary impact tracking.</p>
+  </div>
+
+  <div class="bento-showcase">
+    <!-- 1. Tax Exemption -->
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:12px;">📜</div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">80G Tax Exemption & Form 10BE</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Instant tax deduction calculator, automated Form 10BE certificate generation with cryptographic SHA-256 verification QR code.</p>
+      </div>
+      <a class="btn btn-primary sm" href="tax-exemption.html"><i class="fas fa-file-invoice-dollar"></i> Generate 80G Certificate →</a>
+    </div>
+
+    <!-- 2. Impact Tracker -->
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:12px;">📊</div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Charity Navigator Impact Ledger</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Open financial accountability ledger with 88.4% program expense ratio, 0% administrative waste, and live audited disbursements.</p>
+      </div>
+      <a class="btn btn-primary sm" href="impact-tracker.html"><i class="fas fa-chart-pie"></i> Inspect Impact Ledger →</a>
+    </div>
+
+    <!-- 3. Health Camps -->
+    <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:12px;">🩺</div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Rural Health Camps & Triage</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Symptom triage and appointment booking for rural eye checkups, pediatric nutrition camps, and geriatric dental clinics in Gujarat.</p>
+      </div>
+      <a class="btn btn-primary sm" href="health-camps.html"><i class="fas fa-kit-medical"></i> Book Health Camp →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Group Footer -->
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="logo" href="#top">
+        <span class="logo-icon"><i class="fas fa-hand-holding-heart"></i></span>
+        <span class="logo-text">AVP <span class="logo-accent">Trust</span></span>
+      </a>
+      <p>AI-Powered Philanthropy, 80G Tax Exemption, and Rural Healthcare Triage. Part of Sevenseed AI Studio.</p>
+    </div>
+    <div class="foot-col">
+      <h5>Trust Tools</h5>
+      <ul>
+        <li><a href="tax-exemption.html">80G Form 10BE Receipt</a></li>
+        <li><a href="impact-tracker.html">Impact Ledger</a></li>
+        <li><a href="health-camps.html">Free Health Camps</a></li>
+        <li><a href="../index.html">Sevenseed Hub</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Connect</h5>
+      <ul>
+        <li><span><i class="fas fa-envelope"></i> {email}</span></li>
+        <li><span><i class="fas fa-location-dot"></i> {location}</span></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener"><i class="fab fa-github"></i> Public GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2026 AVP Charitable Trust. Registered Public Charitable Trust. 100% Tax Exempt under Section 80G.</div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>"""
