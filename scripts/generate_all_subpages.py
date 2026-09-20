@@ -127,7 +127,7 @@ def render_subpage_footer(slug: str) -> str:
       <ul class="foot-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="../index.html">Sevenseed Hub</a></li>
-        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
     </div>
   </div>
