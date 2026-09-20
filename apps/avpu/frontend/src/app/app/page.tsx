@@ -167,6 +167,7 @@ export default function StudentPortal() {
   const [providerName, setProviderName] = useState("Offline AI");
   const [ragBackend, setRagBackend] = useState("Local");
   const [dbStatus, setDbStatus] = useState("connected");
+  const [backendWaking, setBackendWaking] = useState(false);
   
   // RAG / Programs list
   const [programsList, setProgramsList] = useState<any[]>([]);
@@ -372,7 +373,7 @@ export default function StudentPortal() {
     return () => clearInterval(id);
   }, [sessionExpiresAt]);
 
-  const loadHealthAndPrograms = async () => {
+  const loadHealthAndPrograms = async (attempt = 0) => {
     try {
       const hRes = await fetch(API_BASE + "/api/health");
       if (hRes.ok) {
@@ -380,6 +381,13 @@ export default function StudentPortal() {
         setLlmEnabled(hData.llm_enabled);
         setProviderName(hData.provider);
         setRagBackend(hData.rag_backend || "Vector RAG");
+      } else if (attempt < 10) {
+        // Backend process is still cold-starting (can take 20-30s on first
+        // request) — retry with backoff instead of rendering as if there's
+        // simply no data.
+        setBackendWaking(true);
+        setTimeout(() => loadHealthAndPrograms(attempt + 1), 3000);
+        return;
       }
 
       const pRes = await fetch(API_BASE + "/api/programs");
@@ -387,7 +395,14 @@ export default function StudentPortal() {
         const pData = await pRes.json();
         setProgramsList(pData.programs || []);
       }
+      setBackendWaking(false);
     } catch (e) {
+      if (attempt < 10) {
+        setBackendWaking(true);
+        setTimeout(() => loadHealthAndPrograms(attempt + 1), 3000);
+        return;
+      }
+      setBackendWaking(false);
       setDbStatus("offline");
     }
   };
@@ -2393,6 +2408,11 @@ export default function StudentPortal() {
 
   return (
     <div className="app-shell flex min-h-screen">
+      {backendWaking && (
+        <div className="fixed top-0 left-0 right-0 z-[100] bg-amber-500 text-black text-xs font-bold text-center py-2">
+          Waking up the AVPU AI backend (free-tier cold start, up to ~30s)... data will appear automatically.
+        </div>
+      )}
       {/* Sidebar */}
       <aside className={`sidebar w-[255px] shrink-0 bg-[#0d0f0e] border-r border-white/5 flex flex-col p-[18px_14px] fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky ${
         sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"

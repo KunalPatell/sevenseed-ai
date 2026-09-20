@@ -76,6 +76,23 @@ Checked whether `generate_sites.py` (which `deploy.py` runs automatically before
 - **Venture count "7"→"8" was hardcoded in `generate_sites.py` itself** (lines ~471-472) — the next `deploy.py` run would have regenerated `sites/sevenseed/index.html` from scratch and reverted my HTML-level fix back to "7". **Fixed at the source now** — safe permanently.
 - Confirmed `laws-of-ux.html` is NOT touched by either `generate_sites.py` or `scripts/generate_all_subpages.py` — it's genuinely hand-maintained, so that fix is already permanent, no source-level change needed.
 
+## 4b. "/app" pages look very simple — diagnosed, fix written but NOT committed (read this carefully)
+
+Every venture's marketing site links to a "Launch App" button pointing at `/<venture>/app/` (e.g. `sites/avpu/app/index.html`). This is a static export of the REAL standalone app at `apps/<venture>/frontend/src/app/app/page.tsx` — for avpu that's 2,579 lines of genuinely rich functionality (dashboard, AI tutor, mindmaps, code lab, assessments, placements, attendance, etc.), calling a REAL Python backend with real data.
+
+**Root cause of "very simple":** the hub spawns each venture's backend as an on-demand child process only when first requested (see `apps/sevenseed/apps/sevenseed/backend/child_processes.py`) — a deliberate design to fit Render's free-tier 512MB RAM limit (can't run all 8 backends simultaneously). Confirmed live: first request to `avpu/api/health` timed out at 25s (cold start), a follow-up succeeded in 9.6s. The frontend's `loadHealthAndPrograms()` does one single fetch attempt with no retry and no loading indicator — on a cold backend it just fails silently and the dashboard renders as if there's no data at all. That's the "very simple" look.
+
+**Fix written and verified logically correct, in `apps/avpu/frontend/src/app/app/page.tsx`:**
+- Added `const [backendWaking, setBackendWaking] = useState(false);` near the other state declarations (~line 169).
+- Changed `loadHealthAndPrograms` to accept an `attempt` param, retry up to 10 times with a 3s backoff on failure/non-ok response (covers the ~30s cold-start window), setting `backendWaking` true/false around the retry.
+- Added a fixed amber banner at the top of the main return's outer `<div className="app-shell ...">`, shown only while `backendWaking` is true: *"Waking up the AVPU AI backend (free-tier cold start, up to ~30s)... data will appear automatically."*
+
+**⚠️ This fix is NOT in git and will be lost if this local checkout is lost.** `apps/*/frontend/` is deliberately gitignored (`.gitignore` line 25, comment: "Built frontend copied into the backend at build time") — these standalone app sources are meant to be built locally and their *output* copied into `sites/<venture>/app/`, not version-controlled as source. I did not fight this design given the token budget, but it means: **someone needs to (1) manually re-apply this same 3-part patch to the other 7 standalone apps' `.../app/page.tsx` files** (comonk, avp-emart, breakdown-factor, avp-charitable-trust, decode-forest-pharmacy, sevenforce, rakshak-ai — check each for a similar single-shot `fetch(".../api/health")` or equivalent boot call), **(2) rebuild each with `next build && next export` (or whatever the project's actual export command is — check `apps/<venture>/frontend/package.json` scripts), and (3) copy the exported output into `sites/<venture>/app/`** the same way the existing ones got there, then commit+deploy through the normal flow in §2.
+
+## 4c. Another remote divergence appeared
+
+When trying to push the (uncommitted, gitignored) avpu fix area, `git push` failed on both `origin` and `ai` with a non-fast-forward error — meaning **another session/person pushed to this repo again** after my last successful push (`9f3901c`). Do **not** blindly force-push. Same procedure as §"Merge with another concurrent session's work" above: `git fetch`, inspect `git log HEAD..origin/main`, check for real file overlap before merging.
+
 ## 5. Recommended next steps, in priority order
 
 1. Check whether `eeb7697` actually deployed (Render dashboard, or `GET /v1/services/srv-d9d03pt8nd3s73cbd3og/deploys?limit=3` via API).
