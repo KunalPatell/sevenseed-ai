@@ -61,6 +61,50 @@ if (document.readyState === 'loading') {
 
 document.querySelectorAll('[data-year]').forEach(function(e){ e.textContent = new Date().getFullYear(); });
 
+// Universal Theme Toggle
+(function() {
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn && !tBtn._ssBound) {
+    tBtn._ssBound = true;
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) {
+        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('ss-theme', next); } catch(e){}
+      updateIcon(next);
+    });
+  }
+
+  // Universal Cursor Ring
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window._ssCursorInitialized && !window.matchMedia('(pointer: coarse)').matches) {
+    window._ssCursorInitialized = true;
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+
+
+
 // Mobile nav with overlay backdrop & icon animation
 var ham = document.getElementById('hamburger');
 var navLinks = document.getElementById('navLinks');
