@@ -61,13 +61,42 @@ if (document.readyState === 'loading') {
 
 document.querySelectorAll('[data-year]').forEach(function(e){ e.textContent = new Date().getFullYear(); });
 
-// Mobile nav
+// Mobile nav with overlay backdrop & icon animation
 var ham = document.getElementById('hamburger');
 var navLinks = document.getElementById('navLinks');
+var navOverlay = document.getElementById('navOverlay');
+
+function closeMobileNav() {
+  if (navLinks) navLinks.classList.remove('open');
+  if (navOverlay) navOverlay.classList.remove('open');
+  if (ham) {
+    ham.setAttribute('aria-expanded', 'false');
+    var ic = ham.querySelector('i');
+    if (ic) { ic.className = 'fas fa-bars'; }
+  }
+}
+
+function toggleMobileNav() {
+  if (!navLinks) return;
+  var isOpen = navLinks.classList.toggle('open');
+  if (navOverlay) navOverlay.classList.toggle('open', isOpen);
+  if (ham) {
+    ham.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    var ic = ham.querySelector('i');
+    if (ic) { ic.className = isOpen ? 'fas fa-xmark' : 'fas fa-bars'; }
+  }
+}
+
 if (ham && navLinks) {
-  ham.addEventListener('click', function(){ navLinks.classList.toggle('open'); });
+  ham.addEventListener('click', toggleMobileNav);
+  if (navOverlay) navOverlay.addEventListener('click', closeMobileNav);
   navLinks.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', function(){ navLinks.classList.remove('open'); });
+    a.addEventListener('click', closeMobileNav);
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+      closeMobileNav();
+    }
   });
 }
 
