@@ -59,13 +59,15 @@ Found the exact same class of bugs as in the Next.js app (makes sense — same c
 - ✅ **Fixed & deployed**: hub homepage "7 AI Ventures" → corrected to 8.
 - ✅ **Fixed & deployed**: `sites/avpu/laws-of-ux.html` claimed "21 Core Laws of UX" but only had 9 real cards. Added the missing 12 to reach 21. Also fixed 3 instances of an unescaped `&` (HTML validity, caught by IDE lint).
 - ✅ Verified: all internal links across all 8 venture static sites resolve to real files (no broken links found).
-- ⏳ **In progress when session ended**: `sites/avpu/ai-tutor.html` has a "3 Steps" claim at line 133 — **not yet checked** whether the actual step count matches. Check this first.
-- ⏳ **Not yet audited at all**: `avp-charitable-trust`, `avp-emart`, `breakdown-factor`, `comonk`, `decode-forest-pharmacy`, `rakshak-ai`, `sevenforce` sites — only checked them for broken links, not for count-mismatch bugs, fake buttons, or other issues. The audit method that worked well:
+- ✅ **Checked, no fix needed**: `sites/avpu/ai-tutor.html`'s "3 Steps" is buried inside a chatbot canned-response markdown string (not a visible UI count) — low value, left as-is.
+- ✅ **Audited all 8 venture sites' homepages + every subpage** (not just index.html) for the same "claims N things, ships fewer" pattern using:
   ```
-  grep -rnoE "[0-9]+\+?\s*(Laws?|Models?|Categories|Modules?|Tools?|Programs?|Steps?|Agents?|Employees|Salts?|Medicines?|Companies)" <venture>/*.html
+  grep -rnoE "[0-9]+\+?\s*(Laws?|Models?|Categories|Tools?|Programs?|Modules?|Agents?|Companies|Salts?|Medicines?|Steps?|Drugs?|Hospitals?)\b" <venture>/*.html
   ```
-  then manually verify each match's claimed count against the actual number of matching elements in that page (e.g. count `<div class="X-card">` elements). This exact pattern (a page saying "N things" but shipping fewer) was the single highest-value bug class found all session, in both codebases.
-- ⏳ Also worth checking in `sites/`: fake buttons (a button that claims to do something — download, export, submit — but the JS handler doesn't actually do it). Found one real instance of this in the Next.js app (trust page's fake "Download Certificate" button) — check for the equivalent in `sites/trust/*.html` and elsewhere. The hub's own "Download overview" button and contact form were both checked and are genuinely functional (window.print() and a real `/api/contact` POST respectively) — good pattern to compare against.
+  **Result: nothing further found.** The hub stat and Laws of UX catalog were the only two instances of this bug across the entire static site.
+- ✅ **Checked fake-button pattern** (a button claiming to download/export/submit but the handler doesn't actually do it — found and fixed one real instance of this in the Next.js app's trust page). Checked the static site's equivalent (`avp-charitable-trust/tax-exemption.html` and `sites/sevenseed/index.html`'s download buttons): **both are genuinely functional** (`onclick="window.print()"`, real `/api/contact` POST). No fix needed — this static site was built more carefully than its Next.js counterpart on this front.
+
+**Static-site audit is now reasonably thorough for: broken links (checked), count-mismatch claims (checked), fake buttons (checked). Not checked**: form validation edge cases, JS console errors, actual mobile-viewport rendering (only reasoned about it from CSS/markup, never opened a real mobile browser or devtools device emulator against it), and the standalone per-venture apps under `apps/sevenseed/apps/*` (completely untouched).
 
 Both fixes so far are committed (`eeb7697`) and pushed to both `origin` and `ai` (the Render-watched remote). **A deploy was triggered after the previous commit (`9a1a5fa`) and confirmed live via the Render API. This latest commit (`eeb7697`) was pushed but I did not confirm a new deploy was triggered/completed for it before the session ended — check Render dashboard or re-POST the deploys endpoint.**
 
