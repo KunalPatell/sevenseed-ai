@@ -114,7 +114,6 @@ def render_subpage_header(slug: str, current_page: str) -> str:
 
 def render_subpage_footer(slug: str) -> str:
     brand = BRAND_METAS[slug]
-    hub_href = "index.html" if slug == "sevenseed" else "/index.html"
     return f"""
 <footer class="footer">
   <div class="foot-inner">
@@ -127,8 +126,8 @@ def render_subpage_footer(slug: str) -> str:
       <h4>Navigation</h4>
       <ul class="foot-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="{hub_href}">Sevenseed Hub</a></li>
-        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="../index.html">Sevenseed Hub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
     </div>
   </div>
@@ -345,28 +344,28 @@ function testBYOKKey() {
       <h3 style="color:#8b5cf6;"><i class="fas fa-users-gear"></i> Sevenforce</h3>
       <span style="font-size:12px; color:#38bdf8; font-weight:700;">AI WORKFORCE & AUTOMATION</span>
       <p style="color:#94a3b8; margin:12px 0;">7 specialized AI employees for marketing, sales, recruiting, and business intelligence.</p>
-      <a class="btn btn-ghost sm" href="/sevenforce/">Visit Sevenforce →</a>
+      <a class="btn btn-ghost sm" href="../sevenforce/index.html">Visit Sevenforce →</a>
     </div>
 
     <div class="tool-box" style="text-align:left;">
       <h3 style="color:#0ea5e9;"><i class="fas fa-brain"></i> Comonk AI</h3>
       <span style="font-size:12px; color:#38bdf8; font-weight:700;">AI CAREER INTELLIGENCE</span>
       <p style="color:#94a3b8; margin:12px 0;">Complete career intelligence suite with ATS resume optimizer and mock interview arena.</p>
-      <a class="btn btn-ghost sm" href="/comonk/">Visit Comonk →</a>
+      <a class="btn btn-ghost sm" href="../comonk/index.html">Visit Comonk →</a>
     </div>
 
     <div class="tool-box" style="text-align:left;">
       <h3 style="color:#f59e0b;"><i class="fas fa-helmet-safety"></i> Breakdown Factor</h3>
       <span style="font-size:12px; color:#38bdf8; font-weight:700;">AI CONSTRUCTION & SAFETY</span>
       <p style="color:#94a3b8; margin:12px 0;">YOLO Computer Vision site safety monitoring and instant BOQ materials cost forecasting.</p>
-      <a class="btn btn-ghost sm" href="/breakdown-factor/">Visit Breakdown Factor →</a>
+      <a class="btn btn-ghost sm" href="../breakdown-factor/index.html">Visit Breakdown Factor →</a>
     </div>
 
     <div class="tool-box" style="text-align:left;">
       <h3 style="color:#10b981;"><i class="fas fa-mortar-pestle"></i> Decode Forest Pharmacy</h3>
       <span style="font-size:12px; color:#38bdf8; font-weight:700;">AI HEALTHCARE & OCR</span>
       <p style="color:#94a3b8; margin:12px 0;">Prescription OCR scanner, drug interaction warning engine, and emergency hospital locator.</p>
-      <a class="btn btn-ghost sm" href="/decode-forest-pharmacy/">Visit Decode Pharmacy →</a>
+      <a class="btn btn-ghost sm" href="../decode-forest-pharmacy/index.html">Visit Decode Pharmacy →</a>
     </div>
   </div>
 </div>

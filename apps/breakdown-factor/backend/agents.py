@@ -6,10 +6,11 @@ from typing import TypedDict, Annotated, List, Any
 import operator
 try:
     import cv2
-except Exception as e:
+except Exception:
     cv2 = None
 import numpy as np
 import rag
+
 
 from app.api_keys import groq_key_var, gemini_key_var, openai_key_var
 
@@ -378,6 +379,7 @@ def _get_yolo_net():
             except Exception as e:
                 print(f"[YOLO ONNX load error] {e}")
     return _YOLO_NET
+
 
 def _yolo_detect_classes(image_path: str, conf_threshold: float = 0.35, nms_threshold: float = 0.45) -> list[str]:
     net = _get_yolo_net()

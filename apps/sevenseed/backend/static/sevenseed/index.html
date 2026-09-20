@@ -4,21 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sevenseed — AI Venture Studio & Startup Incubator</title>
-  <meta name="description" content="An AI-first startup studio that ideates, incubates, and launches AI ventures powered by LLM agents, RAG, and computer vision on a shared AI infrastructure.">
+  <meta name="description" content="An AI-first startup studio that ideates, incubates, and launches ventures powered by LLM agents, RAG, and computer vision — on a shared AI infrastructure used across the entire portfolio.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Sevenseed — AI Venture Studio">
-  <meta property="og:description" content="We engineer AI-native companies from seed to scale on shared infrastructure.">
+  <meta property="og:title" content="Sevenseed — AI Venture Studio & Startup Incubator">
+  <meta property="og:description" content="An AI-first startup studio that ideates, incubates, and launches ventures powered by LLM agents, RAG, and computer vision — on a shared AI infrastructure used across the entire portfolio.">
   <meta property="og:url" content="https://sevenseed.onrender.com/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sevenseed — AI Venture Studio & Startup Incubator">
+  <meta name="twitter:description" content="An AI-first startup studio that ideates, incubates, and launches ventures powered by LLM agents, RAG, and computer vision — on a shared AI infrastructure used across the entire portfolio.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🌱%3C/text%3E%3C/svg%3E">
-  <script>(function(){try{var t=localStorage.getItem('ss-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
-<body data-variant="bold-centered" style="--font-display:'Outfit', sans-serif;">
+<body data-variant="bold-centered" style="--font-display:'Inter', system-ui, -apple-system, sans-serif">
 <span id="top"></span>
 
 <div class="preloader" id="preloader">
@@ -27,11 +30,11 @@
   <div class="pl-content">
     <div class="pl-logo">
       <div class="pl-icon-wrap"><i class="fas fa-seedling pl-icon"></i><span class="pl-ring"></span></div>
-      <div class="pl-name">SEVENSEED</div>
+      <div class="pl-name">Sevenseed</div>
     </div>
     <div class="pl-progress">
       <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
-      <div class="pl-text">INITIALIZING SHARED AI BACKBONE… <span id="plPct">0</span>%</div>
+      <div class="pl-text">INITIALIZING SYSTEM… <span id="plPct">0</span>%</div>
     </div>
   </div>
 </div>
@@ -39,31 +42,29 @@
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
-<!-- Top Navigation -->
 <nav class="nav">
   <a class="logo" href="#top">
     <span class="logo-icon"><i class="fas fa-seedling"></i></span>
-    <span class="logo-text">Seven<span class="logo-accent">seed</span></span>
+    <span class="logo-text">Seven <span class="logo-accent">seed</span></span>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="syndicate-ruv.html"><i class="fas fa-chart-pie" style="color:#6366f1;"></i> Syndicate & RUV</a>
-    <a href="market-sizing.html"><i class="fas fa-calculator" style="color:#a855f7;"></i> TAM / SAM / SOM</a>
-    <a href="ventures.html"><i class="fas fa-cubes" style="color:#38bdf8;"></i> Portfolio</a>
-    <a href="pricing.html"><i class="fas fa-tag" style="color:#34d399;"></i> Pricing</a>
-    <a href="byok.html"><i class="fas fa-key" style="color:#fbbf24;"></i> BYOK Vault</a>
-    <a href="#portfolio">Ventures</a>
+        <a href="syndicate-ruv.html"><i class="fas fa-chart-pie" style="color:var(--accent,#6366f1)"></i> Syndicate & RUV</a>
+    <a href="market-sizing.html"><i class="fas fa-calculator" style="color:var(--accent,#6366f1)"></i> TAM/SAM/SOM</a>
+    <a href="ventures.html"><i class="fas fa-cubes" style="color:var(--accent,#6366f1)"></i> Portfolio</a>
+    <a href="pricing.html"><i class="fas fa-tag" style="color:var(--accent,#6366f1)"></i> Pricing</a>
+    <a href="byok.html"><i class="fas fa-key" style="color:var(--accent,#6366f1)"></i> BYOK Vault</a>
+    <a href="#feature-suites">Labs</a>
     <a href="#faq">FAQ</a>
   </div>
   <div class="nav-right">
     <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
     <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
-    <a class="btn btn-ghost" href="ventures.html"><i class="fas fa-cubes"></i> Portfolio</a>
-    <a class="btn btn-primary" href="#contact"><i class="fas fa-paper-plane"></i> Pitch Studio</a>
+    <a class="btn btn-ghost" href="/sevenforce/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-primary" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
   </div>
 </nav>
 
-<!-- Hero Section with Overhead Lamp & 3D Venture Seed Core -->
 <header class="hero">
   <div class="hero-lamp"></div>
   <div class="hero-lamp-line"></div>
@@ -71,60 +72,55 @@
   <div class="meteors-container">
     <span class="meteor" style="--top:8%; --left:22%; --delay:0s; --duration:3.8s;"></span>
     <span class="meteor" style="--top:26%; --left:68%; --delay:1.2s; --duration:5.2s;"></span>
+    <span class="meteor" style="--top:6%; --left:88%; --delay:2.4s; --duration:4.1s;"></span>
+    <span class="meteor" style="--top:38%; --left:14%; --delay:3.6s; --duration:4.8s;"></span>
+    <span class="meteor" style="--top:16%; --left:52%; --delay:0.7s; --duration:5.5s;"></span>
   </div>
   <div class="hero-glow"></div>
   <div class="hero-grid"></div>
-
+  
   <div class="hero-content">
-    <div class="hero-pill" data-blur-in style="--i:0">
-      <i class="fas fa-seedling"></i> <span>AI-Native Venture Studio · 8 Startups · Shared AI Platform</span>
-    </div>
-    <h1 class="hero-title" data-blur-in style="--i:1">
-      We Build <span class="grad">AI-Native Companies</span><br>from Seed to Scale.
-    </h1>
-    <p class="hero-sub" data-blur-in style="--i:2">
-      Sevenseed is an AI-first startup studio that ideates, incubates, and scales high-impact companies across career intelligence, higher education, price intelligence, clinical healthcare, construction safety, and social welfare — powered by a shared LLM and multi-agent infrastructure.
-    </p>
-
+    <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI-Native Studio · LangGraph Agents · Shared AI Infrastructure</span></div>
+    <h1 class="hero-title" data-blur-in style="--i:1">We build <span class="grad">AI-native</span> companies<br>from seed to scale</h1>
+    <p class="hero-sub" data-blur-in style="--i:2">An AI-first startup studio that ideates, incubates, and launches ventures powered by LLM agents, RAG, and computer vision — on a shared AI infrastructure used across the entire portfolio.</p>
     <div class="hero-actions" data-blur-in style="--i:3">
-      <a class="btn btn-primary lg" href="ventures.html"><i class="fas fa-cubes"></i> Explore 8 Studio Ventures →</a>
-      <a class="btn btn-ghost lg" href="syndicate-ruv.html"><i class="fas fa-chart-pie"></i> AngelList Syndicate Model</a>
-      <a class="btn btn-ghost lg" href="byok.html"><i class="fas fa-key"></i> BYOK Vault</a>
+      <a class="btn btn-primary lg" href="#contact"><i class="fas fa-paper-plane"></i> Partner with Sevenseed</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
     </div>
-
     <div class="stats-row" data-blur-in style="--i:4">
-      <div class="stat"><span class="stat-num">8 Ventures</span><span class="stat-lbl">Active Incubations</span></div>
-      <div class="stat"><span class="stat-num">6 Sectors</span><span class="stat-lbl">Broad Coverage</span></div>
-      <div class="stat"><span class="stat-num">1 Shared Brain</span><span class="stat-lbl">Unified AI Backbone</span></div>
-      <div class="stat"><span class="stat-num">100%</span><span class="stat-lbl">Free BYOK Delivery</span></div>
+        <div class="hs"><div class="hs-num count">7</div><div class="hs-lbl">AI Ventures</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">6</div><div class="hs-lbl">Industries</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">3</div><div class="hs-lbl">New Ventures / Year</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-num count">1</div><div class="hs-lbl">Shared AI Stack</div></div>
     </div>
-
-    <div class="hero-marquee" data-blur-in style="--i:5">
-      <div class="marquee-track">
-        <span>AVPU (AI University)</span><span>AVP Emart (Price Radar)</span><span>Sevenforce (AI Workforce)</span><span>Comonk AI (Career Copilot)</span><span>Decode Pharmacy</span><span>Breakdown Factor</span><span>AVP Charitable Trust</span><span>Rakshak AI</span>
-        <span>AVPU (AI University)</span><span>AVP Emart (Price Radar)</span><span>Sevenforce (AI Workforce)</span><span>Comonk AI (Career Copilot)</span><span>Decode Pharmacy</span><span>Breakdown Factor</span><span>AVP Charitable Trust</span><span>Rakshak AI</span>
-      </div>
-    </div>
+    <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>LLM Agents</span><span>RAG Pipelines</span><span>Computer Vision</span><span>MLOps</span><span>Vector Search</span><span>Automation</span><span>Forecasting</span><span>Fine-Tuning</span><span>Prompt Engineering</span><span>Shared AI Platform</span><span>LLM Agents</span><span>RAG Pipelines</span><span>Computer Vision</span><span>MLOps</span><span>Vector Search</span><span>Automation</span><span>Forecasting</span><span>Fine-Tuning</span><span>Prompt Engineering</span><span>Shared AI Platform</span></div></div>
   </div>
 
-  <!-- 3D PBR WebGL Interactive Stage -->
   <div class="hero-3d-stage" id="hero3dStage">
     <canvas id="hero3dCanvas"></canvas>
-    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · Studio Seed Core</div>
+    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · PBR Engine</div>
     <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
   </div>
 </header>
 
-<!-- Bento Workstations -->
-<section class="section" id="workstations" style="padding-top:40px; padding-bottom:60px;">
+<section class="pillars-band">
+  <div class="pillars-inner">
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-brain"></i></div><div class="pillar-txt"><strong>AI-Native</strong><span>Every venture is built with AI from day one.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-shield-halved"></i></div><div class="pillar-txt"><strong>Shared AI Backbone</strong><span>One LLM + RAG stack across the group.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-users"></i></div><div class="pillar-txt"><strong>Founder-First</strong><span>Hands-on AI engineering, every week.</span></div></div>
+        <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-layer-group"></i></div><div class="pillar-txt"><strong>Diversified</strong><span>Six industries, one intelligent ecosystem.</span></div></div>
+  </div>
+</section>
+
+<section class="section" id="feature-suites" style="padding-top:40px; padding-bottom:60px;">
   <div class="sec-head reveal">
     <div class="eyebrow"><i class="fas fa-cubes"></i> Studio & Investment Workstations</div>
     <h2 class="sec-title">Interactive Venture Architecture Engines</h2>
     <p class="sec-sub">Built to AngelList syndicate waterfall standards, Y Combinator market-sizing methodologies, and zero-margin BYOK security.</p>
   </div>
-
   <div class="bento-showcase">
-    <!-- 1. Syndicate RUV -->
     <div class="border-beam-card">
       <div>
         <div style="font-size:32px; margin-bottom:12px;">📊</div>
@@ -134,7 +130,6 @@
       <a class="btn btn-primary sm" href="syndicate-ruv.html"><i class="fas fa-chart-pie"></i> Model Syndicate →</a>
     </div>
 
-    <!-- 2. TAM / SAM / SOM -->
     <div class="border-beam-card">
       <div>
         <div style="font-size:32px; margin-bottom:12px;">🎯</div>
@@ -144,7 +139,6 @@
       <a class="btn btn-primary sm" href="market-sizing.html"><i class="fas fa-calculator"></i> Calculate TAM/SOM →</a>
     </div>
 
-    <!-- 3. Portfolio Showcase -->
     <div class="border-beam-card">
       <div>
         <div style="font-size:32px; margin-bottom:12px;">🏢</div>
@@ -154,7 +148,6 @@
       <a class="btn btn-primary sm" href="ventures.html"><i class="fas fa-cubes"></i> View Portfolio →</a>
     </div>
 
-    <!-- 4. BYOK Vault -->
     <div class="border-beam-card">
       <div>
         <div style="font-size:32px; margin-bottom:12px;">🔑</div>
@@ -166,53 +159,373 @@
   </div>
 </section>
 
-<!-- Group Footer -->
+<section class="ai-strip">
+  <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
+  <div class="ai-marquee"><div class="marquee-track ai-track"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>Computer Vision</span><span class="ai-chip"><i class="fas fa-microchip"></i>MLOps</span><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>Computer Vision</span><span class="ai-chip"><i class="fas fa-microchip"></i>MLOps</span></div></div>
+</section>
+
+<section class="trust-strip">
+  <div class="trust-item"><i class="fas fa-lock"></i> Your API keys stay in your browser — never sent to our servers</div>
+  <div class="trust-item"><i class="fas fa-headset"></i> Real support at hello@sevenseed.in</div>
+  <div class="trust-item"><i class="fas fa-seedling"></i> Part of the Sevenseed AI venture portfolio</div>
+  <button class="trust-item trust-print" id="printBtn" type="button"><i class="fas fa-file-arrow-down"></i> Download overview</button>
+</section>
+
+<section class="section about" id="about">
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <div class="eyebrow">Est. 2026 · AI Venture Studio & Startup Incubator</div>
+      <h2 class="sec-title left">One AI studio. Seven ventures. One shared brain.</h2>
+      <p>Sevenseed is an AI-native startup studio behind a group of companies across technology, education, healthcare, construction, social impact, and e-commerce. We don't just fund ideas — we engineer them with AI from day one.</p><p>Every venture plugs into a shared AI backbone — an LLM gateway, vector store, and multi-agent framework — so founders ship intelligent products in weeks, not years, and compound value across the whole portfolio.</p>
+    </div>
+    <aside class="about-card glow reveal">
+      <div class="about-card-ic"><i class="fas fa-seedling"></i></div>
+      <h3>Why Seven?</h3>
+      <ul class="hl-list">
+          <li><i class="fas fa-check"></i>AI-first ventures from day one</li>
+          <li><i class="fas fa-check"></i>Shared LLM + RAG infrastructure</li>
+          <li><i class="fas fa-check"></i>Reusable multi-agent workflows</li>
+          <li><i class="fas fa-check"></i>Hands-on AI engineering support</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="eyebrow center">AI CAPABILITIES</div>
+  <h2 class="sec-title">The AI engine behind every venture</h2>
+  <div class="svc-grid">
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-lightbulb"></i></div><h4>AI Venture Ideation</h4><p>LLM-driven market research and idea validation surface high-potential ventures fast.</p><span class="svc-tag"><i class="fas fa-bolt"></i>LLM + RAG</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-layer-group"></i></div><h4>Shared AI Platform</h4><p>A common backbone — LLM gateway, vector store, and agent framework — reused by every company.</p><span class="svc-tag"><i class="fas fa-bolt"></i>LangGraph</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-robot"></i></div><h4>Multi-Agent Automation</h4><p>Reusable agent workflows automate operations, support, and content across the group.</p><span class="svc-tag"><i class="fas fa-bolt"></i>Multi-Agent</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-database"></i></div><h4>RAG Knowledge Base</h4><p>A shared retrieval-augmented knowledge base connecting data across all ventures.</p><span class="svc-tag"><i class="fas fa-bolt"></i>ChromaDB RAG</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-microchip"></i></div><h4>AI Talent & Tooling</h4><p>Shared AI engineers, MLOps, and tooling so each startup ships AI features quickly.</p><span class="svc-tag"><i class="fas fa-bolt"></i>MLOps</span></article>
+        <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-chart-line"></i></div><h4>Portfolio Intelligence</h4><p>AI dashboards forecast growth and surface cross-company synergies automatically.</p><span class="svc-tag"><i class="fas fa-bolt"></i>ML Forecasting</span></article>
+  </div>
+</section>
+
+<section class="section ventures" id="ventures">
+  <div class="eyebrow center">THE PORTFOLIO</div>
+  <h2 class="sec-title">Our AI ventures</h2>
+  <div class="vent-grid">
+        <a class="vent-card glow reveal" href="/comonk/" data-tilt><div class="vent-top"><span class="vent-ic"><i class="fas fa-brain"></i></span></div><h4>Comonk Technology</h4><span class="vent-sector">AI Career Intelligence</span><p>Enterprise AI career platform — LangGraph agents, RAG job matching, and mock interviews.</p><span class="vent-go">Visit site <i class="fas fa-arrow-right"></i></span></a>
+        <a class="vent-card glow reveal" href="/sevenforce/" data-tilt><div class="vent-top"><span class="vent-ic"><i class="fas fa-users-gear"></i></span></div><h4>Sevenforce</h4><span class="vent-sector">AI Workforce</span><p>Hire a team of AI employees for marketing, sales, hiring, meetings, and data — one platform.</p><span class="vent-go">Visit site <i class="fas fa-arrow-right"></i></span></a>
+        <a class="vent-card glow reveal" href="/avpu/" data-tilt><div class="vent-top"><span class="vent-ic"><i class="fas fa-graduation-cap"></i></span></div><h4>Alpaben Vipulbhai Patel University</h4><span class="vent-sector">AI Education</span><p>An AI-powered university with a personal AI tutor and adaptive, career-ready learning.</p><span class="vent-go">Visit site <i class="fas fa-arrow-right"></i></span></a>
+        <a class="vent-card glow reveal" href="/pharmacy/" data-tilt><div class="vent-top"><span class="vent-ic"><i class="fas fa-mortar-pestle"></i></span></div><h4>Decode Forest Pharmacy</h4><span class="vent-sector">AI Pharmacy</span><p>AI reads prescriptions, checks drug interactions, and delivers genuine medicines fast.</p><span class="vent-go">Visit site <i class="fas fa-arrow-right"></i></span></a>
+        <a class="vent-card glow reveal" href="/breakdown/" data-tilt><div class="vent-top"><span class="vent-ic"><i class="fas fa-helmet-safety"></i></span></div><h4>Breakdown Factor Construction</h4><span class="vent-sector">AI Construction</span><p>Computer-vision site safety and AI cost forecasting for builds that last.</p><span class="vent-go">Visit site <i class="fas fa-arrow-right"></i></span></a>
+        <a class="vent-card glow reveal" href="/trust/" data-tilt><div class="vent-top"><span class="vent-ic"><i class="fas fa-hand-holding-heart"></i></span></div><h4>AVP Charitable Trust</h4><span class="vent-sector">AI for Social Impact</span><p>AI finds where help matters most and reports transparent, measurable impact.</p><span class="vent-go">Visit site <i class="fas fa-arrow-right"></i></span></a>
+        <a class="vent-card glow reveal" href="/avp-emart/" data-tilt><div class="vent-top"><span class="vent-ic"><i class="fas fa-cart-shopping"></i></span></div><h4>AVP Emart</h4><span class="vent-sector">AI E-Commerce</span><p>AI compares live prices across four platforms and finds you the best value.</p><span class="vent-go">Visit site <i class="fas fa-arrow-right"></i></span></a>
+        <a class="vent-card glow reveal" href="/rakshak-ai/" data-tilt><div class="vent-top"><span class="vent-ic"><i class="fas fa-shield-halved"></i></span></div><h4>Rakshak AI Safety</h4><span class="vent-sector">AI Public Safety</span><p>5-in-1 AI public safety platform with automatic FIR generation (BNS/IPC) and vision sentinel.</p><span class="vent-go">Visit site <i class="fas fa-arrow-right"></i></span></a>
+  </div>
+</section>
+
+
+<section class="section sandbox-sec" id="sandbox">
+  <div class="eyebrow center">AI PLAYGROUND</div>
+  <h2 class="sec-title">Try the AI Live</h2>
+  <p class="sandbox-subtitle center">Validate your AI startup concept instantly. Our LLM-driven evaluation system checks viability, market potential, and alignment with the studio's portfolio.</p>
+  
+  <div class="sandbox-container reveal">
+    <div class="sandbox-card glow">
+      <div class="sandbox-card-header">
+        <div class="sandbox-dot red"></div>
+        <div class="sandbox-dot yellow"></div>
+        <div class="sandbox-dot green"></div>
+        <span class="sandbox-card-title">AI Venture Idea Evaluator</span>
+      </div>
+      <div class="sandbox-card-body">
+        <form class="sandbox-form" id="sandboxForm" data-endpoint="/api/tools/evaluate">
+          
+        <div class="sandbox-field">
+          <label for="sb-name">Venture Name</label>
+          <input type="text" id="sb-name" placeholder="e.g. EcoSphere" required>
+        </div>
+        <div class="sandbox-field">
+          <label for="sb-sector">Industry Sector</label>
+          <input type="text" id="sb-sector" placeholder="e.g. ClimateTech / Carbon Reporting" required>
+        </div>
+        <div class="sandbox-field">
+          <label for="sb-description">Description & AI Angle</label>
+          <textarea id="sb-description" rows="4" placeholder="Describe the problem, target audience, and how AI solves it..." required></textarea>
+        </div>
+        
+          <button type="submit" class="btn btn-primary lg" id="sandboxBtn">
+            <i class="fas fa-play"></i> Run AI Model
+          </button>
+        </form>
+        <div class="sandbox-result">
+          <div class="sandbox-result-header">
+            <span>Terminal Output</span>
+            <button class="sandbox-copy-btn" id="sandboxCopy" type="button" aria-label="Copy output">
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+          <div class="sandbox-pre-wrap">
+            <pre class="sandbox-pre" id="sandboxOutput">// Output will be displayed here after you execute the model...</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section process" id="process">
+  <div class="eyebrow center">THE PROCESS</div>
+  <h2 class="sec-title">From seed to forest — the AI way</h2>
+  <div class="proc-grid">
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">01</div><div class="proc-ic"><i class="fas fa-lightbulb"></i></div><h4>Ideate with AI</h4><p>LLM research validates the opportunity and shapes the product.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">02</div><div class="proc-ic"><i class="fas fa-seedling"></i></div><h4>Incubate</h4><p>Stand up the team on our shared AI platform and infrastructure.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">03</div><div class="proc-ic"><i class="fas fa-robot"></i></div><h4>Build with Agents</h4><p>Ship intelligent features fast with reusable multi-agent workflows.</p></div>
+        <div class="proc-step glow reveal" data-tilt><div class="proc-num">04</div><div class="proc-ic"><i class="fas fa-chart-line"></i></div><h4>Scale</h4><p>Grow revenue and compound AI advantages across the group.</p></div>
+  </div>
+</section>
+
+<section class="impact" id="impact">
+  <div class="impact-inner">
+    <div class="eyebrow center">BY THE NUMBERS</div>
+    <h2 class="sec-title">The AI portfolio at a glance</h2>
+    <div class="impact-grid">
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">3</div><div class="metric-lbl">Ventures / Year</div><div class="metric-sub">AI-native from scratch</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">7</div><div class="metric-lbl">Active Companies</div><div class="metric-sub">All AI-powered</div></div>
+        <div class="metric glow reveal" data-tilt><div class="metric-num count">6</div><div class="metric-lbl">Industries</div><div class="metric-sub">One shared AI stack</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="testimonials">
+  <div class="eyebrow center">WHAT PEOPLE SAY</div>
+  <h2 class="sec-title">Trusted by the people we serve</h2>
+  <div class="tcarousel">
+    <button class="tnav tprev" id="tPrev" type="button" aria-label="Previous reviews"><i class="fas fa-chevron-left"></i></button>
+    <div class="tgrid" id="tTrack">
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Sevenseed's shared AI stack let us launch an intelligent product in weeks, not years.&rdquo;</blockquote><figcaption><span class="tavatar">PF</span><span class="tmeta"><strong>Portfolio Founder</strong><small>Comonk Technology</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;Their multi-agent framework did the work of a whole engineering team.&rdquo;</blockquote><figcaption><span class="tavatar">OP</span><span class="tmeta"><strong>Operating Partner</strong><small>AVP Emart</small></span></figcaption></figure>
+        <figure class="tcard glow reveal"><div class="tstars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><blockquote>&ldquo;More than investors — they're AI builders in the trenches with you.&rdquo;</blockquote><figcaption><span class="tavatar">F</span><span class="tmeta"><strong>Founder</strong><small>Decode Forest Pharmacy</small></span></figcaption></figure>
+    </div>
+    <button class="tnav tnext" id="tNext" type="button" aria-label="Next reviews"><i class="fas fa-chevron-right"></i></button>
+  </div>
+  <div class="tdots" id="tDots" aria-hidden="true"></div>
+</section>
+
+<section class="section faq-sec" id="faq">
+  <div class="eyebrow center">FAQ</div>
+  <h2 class="sec-title">Questions, answered</h2>
+  <div class="faq-list">
+        <details class="faq reveal"><summary>What makes Sevenseed AI-native?<i class="fas fa-plus"></i></summary><div class="faq-a">Every venture is engineered on a shared AI backbone — LangGraph multi-agent, Groq LLaMA 3.3 70B, and ChromaDB RAG — so AI isn't bolted on, it's the foundation.</div></details>
+        <details class="faq reveal"><summary>Do you invest in external startups?<i class="fas fa-plus"></i></summary><div class="faq-a">We primarily build in-house, but we selectively partner with exceptional AI founders whose ideas fit the portfolio.</div></details>
+        <details class="faq reveal"><summary>Which sectors do you operate in?<i class="fas fa-plus"></i></summary><div class="faq-a">Technology, education, healthcare, construction, social impact, and e-commerce — all AI-powered.</div></details>
+        <details class="faq reveal"><summary>How can I pitch an idea?<i class="fas fa-plus"></i></summary><div class="faq-a">Reach out via our contact section or email — we review every serious AI proposal personally.</div></details>
+  </div>
+</section>
+
+<section class="section enterprise-sec" id="enterprise">
+  <div class="ent-card reveal glow" data-tilt>
+    <div class="ent-copy">
+      <div class="eyebrow"><i class="fas fa-building"></i> FOR TEAMS &amp; ENTERPRISE</div>
+      <h2 class="sec-title left">Built for institutions, not just individuals</h2>
+      <p>Seven works with teams, institutions, and government partners who need more than the self-serve experience — a dedicated point of contact, custom rollout, and terms that fit multi-site or multi-year arrangements.</p>
+      <ul class="ent-list">
+        <li><i class="fas fa-user-tie"></i> A dedicated account contact, not a ticket queue</li>
+        <li><i class="fas fa-gears"></i> Custom integration &amp; rollout for your existing workflows</li>
+        <li><i class="fas fa-layer-group"></i> Volume, multi-site &amp; multi-year arrangements</li>
+        <li><i class="fas fa-bolt"></i> Priority response and hands-on onboarding</li>
+      </ul>
+      <a class="btn btn-primary lg" href="#contact" id="enterpriseCta"><i class="fas fa-handshake"></i> Talk to our enterprise team</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="cta-glow"></div>
+  <div class="cta-content reveal">
+    <div class="cta-badge"><i class="fas fa-microchip"></i> Est. 2026 · AI Venture Studio & Startup Incubator</div>
+    <h2>Have a bold AI idea? Let's build it together.</h2>
+    <p>We back founders with AI infrastructure, capital, and hands-on engineering. If you're building something intelligent and ambitious, we want to hear from you.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary lg" href="mailto:hello@sevenseed.in"><i class="fas fa-paper-plane"></i> Partner with Sevenseed</a>
+      <a class="btn btn-ghost lg" href="tel:+918490861586"><i class="fas fa-phone"></i> +91 84908 61586</a>
+    </div>
+    <form class="contact-form" id="contactForm" data-email="hello@sevenseed.in" data-company="Sevenseed">
+      <select id="cf-type">
+        <option value="">I'm reaching out about…</option>
+        <option value="Individual">Individual enquiry</option>
+        <option value="Business">Business enquiry</option>
+        <option value="Enterprise / Government">Enterprise / Government partnership</option>
+        <option value="Media / Press">Media / Press</option>
+      </select>
+      <div class="cf-row">
+        <input type="text" id="cf-name" placeholder="Your name" autocomplete="name" required>
+        <input type="email" id="cf-email" placeholder="Your email" autocomplete="email" required>
+      </div>
+      <div class="cf-row">
+        <input type="text" id="cf-org" placeholder="Company / organisation (optional)" autocomplete="organization">
+        <select id="cf-size">
+          <option value="">Team size (optional)</option>
+          <option value="Just me">Just me</option>
+          <option value="2-10">2–10</option>
+          <option value="11-50">11–50</option>
+          <option value="51-200">51–200</option>
+          <option value="200+">200+ (enterprise)</option>
+        </select>
+      </div>
+      <input type="text" id="cf-subject" placeholder="Subject">
+      <textarea id="cf-msg" rows="4" placeholder="How can we help you?" required></textarea>
+      <button type="submit" class="btn btn-primary lg"><i class="fas fa-paper-plane"></i> Send message</button>
+      <p class="cf-note" id="cf-note" role="status"></p>
+    </form>
+    <div class="cta-contact">
+      <span><i class="fas fa-envelope"></i> hello@sevenseed.in</span>
+      <span><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</span>
+    </div>
+  </div>
+</section>
+
 <footer class="foot">
   <div class="foot-grid">
     <div class="foot-brand">
       <a class="logo" href="#top">
         <span class="logo-icon"><i class="fas fa-seedling"></i></span>
-        <span class="logo-text">Seven<span class="logo-accent">seed</span></span>
+        <span class="logo-text">Seven <span class="logo-accent">seed</span></span>
       </a>
-      <p>AI Venture Studio & Incubation Platform. Engineering AI-native companies from seed to scale.</p>
+      <p>An AI-first startup studio that ideates, incubates, and launches ventures powered by LLM agents, RAG, and computer vision — on a shared AI infrastructure used across the entire portfolio.</p>
+      <div class="foot-social">
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="mailto:hello@sevenseed.in" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div>
     </div>
     <div class="foot-col">
-      <h5>Studio Platforms</h5>
+      <h5>Explore</h5>
       <ul>
-        <li><a href="ventures.html">Portfolio Ventures</a></li>
-        <li><a href="syndicate-ruv.html">Syndicate Calculator</a></li>
-        <li><a href="market-sizing.html">TAM / SAM / SOM</a></li>
-        <li><a href="byok.html">BYOK Vault</a></li>
-        <li><a href="pricing.html">SaaS Pricing</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">AI Tools</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#enterprise">Enterprise</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><button type="button" id="shortcutsBtn">Keyboard shortcuts</button></li>
       </ul>
     </div>
     <div class="foot-col">
-      <h5>8 Venture Portals</h5>
+      <h5>The AI Group</h5>
       <ul>
-        <li><a href="/avpu/">AVPU (AI University)</a></li>
-        <li><a href="/avp-emart/">AVP Emart (Price Radar)</a></li>
-        <li><a href="/sevenforce/">Sevenforce (AI Workforce)</a></li>
-        <li><a href="/comonk-ai/">Comonk AI (Careers)</a></li>
-        <li><a href="/pharmacy/">Decode Pharmacy</a></li>
-        <li><a href="/breakdown/">Breakdown Factor</a></li>
-        <li><a href="/trust/">AVP Charitable Trust</a></li>
-        <li><a href="/rakshak-ai/">Rakshak AI</a></li>
+          <li><a href="/comonk/">Comonk Technology</a></li>
+          <li><span class="foot-current">Sevenseed</span></li>
+          <li><a href="/sevenforce/">Sevenforce</a></li>
+          <li><a href="/avpu/">Alpaben Vipulbhai Patel University</a></li>
+          <li><a href="/pharmacy/">Decode Forest Pharmacy</a></li>
+          <li><a href="/breakdown/">Breakdown Factor Construction</a></li>
+          <li><a href="/trust/">AVP Charitable Trust</a></li>
+          <li><a href="/avp-emart/">AVP Emart</a></li>
+          <li><a href="/rakshak-ai/">Rakshak AI Safety</a></li>
       </ul>
     </div>
     <div class="foot-col">
-      <h5>Connect</h5>
-      <ul>
-        <li><span><i class="fas fa-envelope"></i> hello@sevenseed.in</span></li>
-        <li><span><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</span></li>
-        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener"><i class="fab fa-github"></i> Public GitHub</a></li>
+      <h5>Get in touch</h5>
+      <ul class="foot-contact">
+        <li><i class="fas fa-envelope"></i> hello@sevenseed.in</li>
+        <li><i class="fas fa-phone"></i> +91 84908 61586</li>
+        <li><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</li>
       </ul>
     </div>
   </div>
   <div class="foot-bottom">
-    <div>© 2026 Sevenseed Venture Studio. All Rights Reserved. Shared AI Platform Architecture.</div>
+    <span>© <span data-year></span> Sevenseed. All rights reserved.</span>
+    <span class="foot-venture"><i class="fas fa-seedling"></i> A Sevenseed AI venture</span>
   </div>
 </footer>
 
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<div class="fab-stack">
+  <button class="fab" id="backToTop" type="button" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+  <button class="fab fab-chat" id="chatToggle" type="button" aria-label="Open AI assistant"><i class="fas fa-comment-dots"></i></button>
+</div>
+
+<div class="chat-panel" id="chatPanel" aria-hidden="true">
+  <div class="chat-head">
+    <span><i class="fas fa-seedling"></i> Seven AI Assistant</span>
+    <button class="chat-close" id="chatClose" type="button" aria-label="Close assistant"><i class="fas fa-xmark"></i></button>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-msg bot">Hi, I'm the Seven AI Assistant — ask me about our services, how it works, or how to get in touch.</div>
+  </div>
+  <div class="chat-keybar" id="chatKeybar">
+    <span>Add a free Gemini API key for open-ended AI answers</span>
+    <input type="password" id="chatKeyInput" placeholder="Gemini API key" autocomplete="off">
+    <button type="button" id="chatKeySave" class="btn btn-ghost">Save</button>
+  </div>
+  <form class="chat-input-row" id="chatForm">
+    <input type="text" id="chatInput" placeholder="Ask a question…" autocomplete="off">
+    <button type="submit" class="btn btn-primary" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
+  </form>
+</div>
+
+<div class="cmdk-overlay" id="cmdkOverlay" aria-hidden="true">
+  <div class="cmdk-panel">
+    <div class="cmdk-input-row"><i class="fas fa-magnifying-glass"></i><input type="text" id="cmdkInput" placeholder="Search sections, AI tools, FAQs, ventures…" autocomplete="off"></div>
+    <div class="cmdk-list" id="cmdkList"></div>
+    <div class="cmdk-hint"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span><span><kbd>&crarr;</kbd> select</span><span><kbd>esc</kbd> close</span></div>
+  </div>
+</div>
+
+<div class="cmdk-overlay" id="shortcutsModal" aria-hidden="true">
+  <div class="cmdk-panel shortcuts-panel">
+    <div class="shortcuts-head">Keyboard shortcuts</div>
+    <div class="shortcuts-list">
+      <div class="shortcuts-row"><span>Open search / command palette</span><span><kbd>Ctrl</kbd>+<kbd>K</kbd></span></div>
+      <div class="shortcuts-row"><span>Toggle light / dark theme</span><span>click the sun/moon icon</span></div>
+      <div class="shortcuts-row"><span>Open this list</span><span><kbd>?</kbd></span></div>
+      <div class="shortcuts-row"><span>Close any dialog</span><span><kbd>esc</kbd></span></div>
+    </div>
+  </div>
+</div>
+
+<script id="ssData" type="application/json">{"site": "Sevenseed", "sector": "AI Venture Studio & Startup Incubator", "summary": "An AI-first startup studio that ideates, incubates, and launches ventures powered by LLM agents, RAG, and computer vision — on a shared AI infrastructure used across the entire portfolio.", "about": "Sevenseed is an AI-native startup studio behind a group of companies across technology, education, healthcare, construction, social impact, and e-commerce. We don't just fund ideas — we engineer them with AI from day one. Every venture plugs into a shared AI backbone — an LLM gateway, vector store, and multi-agent framework — so founders ship intelligent products in weeks, not years, and compound value across the whole portfolio.", "highlights": ["AI-first ventures from day one", "Shared LLM + RAG infrastructure", "Reusable multi-agent workflows", "Hands-on AI engineering support"], "services": [{"name": "AI Venture Ideation", "desc": "LLM-driven market research and idea validation surface high-potential ventures fast."}, {"name": "Shared AI Platform", "desc": "A common backbone — LLM gateway, vector store, and agent framework — reused by every company."}, {"name": "Multi-Agent Automation", "desc": "Reusable agent workflows automate operations, support, and content across the group."}, {"name": "RAG Knowledge Base", "desc": "A shared retrieval-augmented knowledge base connecting data across all ventures."}, {"name": "AI Talent & Tooling", "desc": "Shared AI engineers, MLOps, and tooling so each startup ships AI features quickly."}, {"name": "Portfolio Intelligence", "desc": "AI dashboards forecast growth and surface cross-company synergies automatically."}], "faqs": [{"q": "What makes Sevenseed AI-native?", "a": "Every venture is engineered on a shared AI backbone — LangGraph multi-agent, Groq LLaMA 3.3 70B, and ChromaDB RAG — so AI isn't bolted on, it's the foundation."}, {"q": "Do you invest in external startups?", "a": "We primarily build in-house, but we selectively partner with exceptional AI founders whose ideas fit the portfolio."}, {"q": "Which sectors do you operate in?", "a": "Technology, education, healthcare, construction, social impact, and e-commerce — all AI-powered."}, {"q": "How can I pitch an idea?", "a": "Reach out via our contact section or email — we review every serious AI proposal personally."}], "contact": {"email": "hello@sevenseed.in", "phone": "+91 84908 61586", "location": "Ahmedabad, Gujarat, India"}, "sections": [{"label": "About", "hash": "#about"}, {"label": "AI Tools", "hash": "#services"}, {"label": "Ventures", "hash": "#ventures"}, {"label": "Live Demo", "hash": "#sandbox"}, {"label": "Process", "hash": "#process"}, {"label": "Impact", "hash": "#impact"}, {"label": "Reviews", "hash": "#testimonials"}, {"label": "FAQ", "hash": "#faq"}, {"label": "Enterprise", "hash": "#enterprise"}, {"label": "Contact", "hash": "#contact"}], "ventures": [{"label": "Comonk Technology", "href": "/comonk-ai/"}, {"label": "Sevenforce", "href": "/sevenforce/"}, {"label": "Alpaben Vipulbhai Patel University", "href": "/avpu/"}, {"label": "Decode Forest Pharmacy", "href": "/pharmacy/"}, {"label": "Breakdown Factor Construction", "href": "/breakdown/"}, {"label": "AVP Charitable Trust", "href": "/trust/"}, {"label": "AVP Emart", "href": "/avp-emart/"}, {"label": "Rakshak AI Safety", "href": "/rakshak-ai/"}]}</script>
 <script src="app.js"></script>
+
+<script>
+(function() {
+  // Theme Toggle Handler
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) {
+        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+
+  // Cursor Ring
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+</script>
+
 </body>
 </html>

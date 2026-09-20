@@ -1140,36 +1140,7 @@ pre{background:#0a1122;border:1px solid var(--ln);border-radius:8px;padding:12px
 .kv{font-size:13px;line-height:1.7}.kv b{color:var(--a)}table{border-collapse:collapse;width:100%;font-size:12.5px;margin-top:6px}
 th,td{border:1px solid var(--ln);padding:6px 9px;text-align:left}th{background:var(--pan2)}.err{color:#fca5a5}
 .score{font-size:32px;font-weight:800;background:linear-gradient(135deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
-.note{color:var(--mut);font-size:12px;margin-top:7px}@media(max-width:768px){
-  header{padding:10px 14px;flex-wrap:wrap;gap:8px}
-  header h1{font-size:16px}
-  header .sub{font-size:11px}
-  .prov{font-size:11px;padding:4px 8px;margin-left:0}
-  .wrap{flex-direction:column;width:100%;overflow-x:hidden}
-  nav{
-    width:100%;max-height:none;border-right:0;border-bottom:1px solid var(--ln);
-    display:flex;flex-direction:row;overflow-x:auto;white-space:nowrap;
-    -webkit-overflow-scrolling:touch;padding:8px 10px;gap:8px;align-items:center;
-    box-sizing:border-box;
-  }
-  nav::-webkit-scrollbar{height:4px}
-  nav::-webkit-scrollbar-thumb{background:var(--ln);border-radius:4px}
-  nav .grp{display:none}
-  nav button{
-    display:inline-flex;align-items:center;width:auto;white-space:nowrap;
-    padding:7px 14px;font-size:12.5px;flex-shrink:0;border:1px solid var(--ln);
-    background:var(--pan);border-radius:20px;min-height:36px;
-  }
-  nav button.on{
-    background:linear-gradient(135deg,var(--a),var(--b));color:#06121f;font-weight:700;
-  }
-  main{padding:16px 12px;width:100%;max-width:100%;box-sizing:border-box}
-  .card{padding:14px 12px;width:100%;max-width:100%;box-sizing:border-box;border-radius:12px}
-  input,textarea,select{font-size:16px;box-sizing:border-box;max-width:100%}
-  button.run{width:100%;padding:12px;font-size:15px}
-  table{display:block;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  pre{max-width:100%;box-sizing:border-box;font-size:11px;padding:10px}
-}
+.note{color:var(--mut);font-size:12px;margin-top:7px}@media(max-width:760px){.wrap{flex-direction:column}nav{width:auto;max-height:none;border-right:0;border-bottom:1px solid var(--ln)}}
 </style></head><body>
 <header><div class="logo" id="emoji">🤖</div><div><h1 id="bname">AI Dashboard</h1><div class="sub" id="bsub">powered by Owl</div></div><div class="prov" id="prov">provider: <b>…</b></div></header>
 <div class="wrap"><nav id="nav"></nav><main id="main"></main></div>

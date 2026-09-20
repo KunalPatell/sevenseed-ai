@@ -52,48 +52,15 @@ def main():
         run_cmd(f'"{sys.executable}" "{sub_script}"')
     print("   [OK] Generated all 9 venture root sites & 24 dedicated sub-pages cleanly.")
 
-    # 1b. Sync all 9 venture sites and sub-pages to backend static directory
+    # 1b. Sync Hub sub-pages to backend static directory
     static_hub = REPO_ROOT / "apps" / "sevenseed" / "backend" / "static"
     if static_hub.is_dir():
         import shutil
-        sites_root = REPO_ROOT / "sites"
-        # 1. Sync Sevenseed Hub root files
-        hub_dir = sites_root / "sevenseed"
-        if hub_dir.is_dir():
-            for f in hub_dir.iterdir():
-                if f.is_file():
-                    shutil.copy2(f, static_hub / f.name)
-            hub_sub = static_hub / "sevenseed"
-            hub_sub.mkdir(parents=True, exist_ok=True)
-            for f in hub_dir.iterdir():
-                if f.is_file():
-                    shutil.copy2(f, hub_sub / f.name)
-        
-        # 2. Sync all venture sub-directories
-        ventures = ["sevenforce", "comonk", "breakdown-factor", "decode-forest-pharmacy", 
-                    "avpu", "avp-emart", "avp-charitable-trust", "rakshak-ai"]
-        aliases = {
-            "comonk": "comonk-ai",
-            "decode-forest-pharmacy": "pharmacy",
-            "breakdown-factor": "breakdown",
-            "avp-charitable-trust": "trust"
-        }
-        for slug in ventures:
-            v_src = sites_root / slug
-            if v_src.is_dir():
-                v_dest = static_hub / slug
-                v_dest.mkdir(parents=True, exist_ok=True)
-                for f in v_src.iterdir():
-                    if f.is_file():
-                        shutil.copy2(f, v_dest / f.name)
-                # Also sync to alias directory if defined
-                if slug in aliases:
-                    alias_dest = static_hub / aliases[slug]
-                    alias_dest.mkdir(parents=True, exist_ok=True)
-                    for f in v_src.iterdir():
-                        if f.is_file():
-                            shutil.copy2(f, alias_dest / f.name)
-        print("   [OK] Synced all 9 venture sites, subpages, and route aliases into apps/sevenseed/backend/static/.")
+        for f_name in ["index.html", "style.css", "app.js", "pricing.html", "byok.html", "ventures.html"]:
+            src_f = REPO_ROOT / "sites" / "sevenseed" / f_name
+            if src_f.is_file():
+                shutil.copy2(src_f, static_hub / f_name)
+        print("   [OK] Synced Hub index, styles, scripts, pricing, byok, and ventures subpages into backend/static.")
 
 
     # 2. Stage changes

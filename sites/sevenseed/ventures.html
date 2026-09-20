@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sevenseed Portfolio & Startup Showcase — Sevenseed</title>
@@ -28,6 +29,7 @@
   </style>
 </head>
 <body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 
 <nav class="nav" id="mainNav">
@@ -42,7 +44,9 @@
         <a href="pricing.html">SaaS Pricing</a>
         <a href="byok.html">BYOK Vault</a>
     </div>
-    <div class="nav-actions">
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
       <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
       <a class="btn btn-primary sm" href="index.html#contact"><i class="fas fa-rocket"></i> Launch</a>
     </div>
@@ -58,37 +62,141 @@
 
 <main class="container">
   
-<div class="interactive-card">
-  <div class="grid-2">
-    <div class="tool-box" style="text-align:left;">
-      <h3 style="color:#8b5cf6;"><i class="fas fa-users-gear"></i> Sevenforce</h3>
-      <span style="font-size:12px; color:#38bdf8; font-weight:700;">AI WORKFORCE & AUTOMATION</span>
-      <p style="color:#94a3b8; margin:12px 0;">7 specialized AI employees for marketing, sales, recruiting, and business intelligence.</p>
-      <a class="btn btn-ghost sm" href="/sevenforce/">Visit Sevenforce →</a>
+
+<div class="interactive-card" style="max-width:1140px;">
+  <div class="grid-2" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+    
+    <!-- Sevenforce -->
+    <div class="tool-box" style="text-align:left; background:var(--bg-2); border:1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <span style="font-size:28px;">👥</span>
+        <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(139,92,246,0.15); color:#a78bfa; border:1px solid rgba(139,92,246,0.3);">Enterprise AI</span>
+      </div>
+      <h3 style="color:#a78bfa; margin-bottom:4px;"><i class="fas fa-users-gear"></i> Sevenforce</h3>
+      <span style="font-size:12px; color:var(--text-3); font-weight:700;">AI WORKFORCE & MULTI-AGENT STUDIO</span>
+      <p style="color:var(--text-2); margin:12px 0; font-size:14px; line-height:1.6;">7 specialized autonomous AI employees, LangGraph visual workflow choreography, and sandboxed Devin developer workspace.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;">
+        <a class="btn btn-primary sm" href="/sevenforce/">Visit Portal →</a>
+        <a class="btn btn-ghost sm" href="/sevenforce/workflows.html">LangGraph Studio</a>
+        <a class="btn btn-ghost sm" href="/sevenforce/devin-terminal.html">Devin Terminal</a>
+      </div>
     </div>
 
-    <div class="tool-box" style="text-align:left;">
-      <h3 style="color:#0ea5e9;"><i class="fas fa-brain"></i> Comonk AI</h3>
-      <span style="font-size:12px; color:#38bdf8; font-weight:700;">AI CAREER INTELLIGENCE</span>
-      <p style="color:#94a3b8; margin:12px 0;">Complete career intelligence suite with ATS resume optimizer and mock interview arena.</p>
-      <a class="btn btn-ghost sm" href="/comonk/">Visit Comonk →</a>
+    <!-- Comonk AI -->
+    <div class="tool-box" style="text-align:left; background:var(--bg-2); border:1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <span style="font-size:28px;">🧠</span>
+        <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(14,165,233,0.15); color:#38bdf8; border:1px solid rgba(14,165,233,0.3);">Career Intelligence</span>
+      </div>
+      <h3 style="color:#38bdf8; margin-bottom:4px;"><i class="fas fa-brain"></i> Comonk AI</h3>
+      <span style="font-size:12px; color:var(--text-3); font-weight:700;">ATS MATCHING & TECHNICAL INTERVIEWS</span>
+      <p style="color:var(--text-2); margin:12px 0; font-size:14px; line-height:1.6;">Jobscan-grade ATS resume semantic gap analysis, 45-minute simulated FAANG technical interview arena, and real-time tech salary percentiles.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;">
+        <a class="btn btn-primary sm" href="/comonk/">Visit Portal →</a>
+        <a class="btn btn-ghost sm" href="/comonk/resume-analyzer.html">ATS Optimizer</a>
+        <a class="btn btn-ghost sm" href="/comonk/interview-arena.html">Mock Arena</a>
+      </div>
     </div>
 
-    <div class="tool-box" style="text-align:left;">
-      <h3 style="color:#f59e0b;"><i class="fas fa-helmet-safety"></i> Breakdown Factor</h3>
-      <span style="font-size:12px; color:#38bdf8; font-weight:700;">AI CONSTRUCTION & SAFETY</span>
-      <p style="color:#94a3b8; margin:12px 0;">YOLO Computer Vision site safety monitoring and instant BOQ materials cost forecasting.</p>
-      <a class="btn btn-ghost sm" href="/breakdown-factor/">Visit Breakdown Factor →</a>
+    <!-- AVP University -->
+    <div class="tool-box" style="text-align:left; background:var(--bg-2); border:1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <span style="font-size:28px;">🎓</span>
+        <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.3);">AI Higher Education</span>
+      </div>
+      <h3 style="color:#60a5fa; margin-bottom:4px;"><i class="fas fa-graduation-cap"></i> AVP University</h3>
+      <span style="font-size:12px; color:var(--text-3); font-weight:700;">INTERACTIVE COGNITIVE LABS</span>
+      <p style="color:var(--text-2); margin:12px 0; font-size:14px; line-height:1.6;">Learn-Anything topological DAG knowledge trees, Duolingo Diamond League XP gamification, Laws of UX psychology benches, and in-browser code sandbox.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;">
+        <a class="btn btn-primary sm" href="/avpu/">Visit Portal →</a>
+        <a class="btn btn-ghost sm" href="/avpu/learn-dag.html">DAG Graph</a>
+        <a class="btn btn-ghost sm" href="/avpu/laws-of-ux.html">Laws of UX</a>
+      </div>
     </div>
 
-    <div class="tool-box" style="text-align:left;">
-      <h3 style="color:#10b981;"><i class="fas fa-mortar-pestle"></i> Decode Forest Pharmacy</h3>
-      <span style="font-size:12px; color:#38bdf8; font-weight:700;">AI HEALTHCARE & OCR</span>
-      <p style="color:#94a3b8; margin:12px 0;">Prescription OCR scanner, drug interaction warning engine, and emergency hospital locator.</p>
-      <a class="btn btn-ghost sm" href="/decode-forest-pharmacy/">Visit Decode Pharmacy →</a>
+    <!-- AVP E-Mart -->
+    <div class="tool-box" style="text-align:left; background:var(--bg-2); border:1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <span style="font-size:28px;">🛒</span>
+        <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(249,115,22,0.15); color:#fb923c; border:1px solid rgba(249,115,22,0.3);">Smart Shopping</span>
+      </div>
+      <h3 style="color:#fb923c; margin-bottom:4px;"><i class="fas fa-cart-shopping"></i> AVP E-Mart</h3>
+      <span style="font-size:12px; color:var(--text-3); font-weight:700;">PRICE TRACKER & QUICK COMMERCE</span>
+      <p style="color:var(--text-2); margin:12px 0; font-size:14px; line-height:1.6;">Smartprix 3-way smartphone comparator, Buyhatke 90-day price trend canvas, Xerve coupon tester, and multi-store quick commerce cart optimizer.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;">
+        <a class="btn btn-primary sm" href="/avp-emart/">Visit Portal →</a>
+        <a class="btn btn-ghost sm" href="/avp-emart/spec-compare.html">Spec Compare</a>
+        <a class="btn btn-ghost sm" href="/avp-emart/price-tracker.html">Price Tracker</a>
+      </div>
     </div>
+
+    <!-- Decode Forest Pharmacy -->
+    <div class="tool-box" style="text-align:left; background:var(--bg-2); border:1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <span style="font-size:28px;">💊</span>
+        <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3);">Clinical AI</span>
+      </div>
+      <h3 style="color:#34d399; margin-bottom:4px;"><i class="fas fa-mortar-pestle"></i> Decode Forest Pharmacy</h3>
+      <span style="font-size:12px; color:var(--text-3); font-weight:700;">GENERIC SAVINGS & DRUG INTERACTIONS</span>
+      <p style="color:var(--text-2); margin:12px 0; font-size:14px; line-height:1.6;">Jan Aushadhi generic bio-equivalent savings engine (75-85% discount), multi-drug contraindication matrix, and handwritten prescription OCR reader.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;">
+        <a class="btn btn-primary sm" href="/pharmacy/">Visit Portal →</a>
+        <a class="btn btn-ghost sm" href="/pharmacy/generic-finder.html">Generic Finder</a>
+        <a class="btn btn-ghost sm" href="/pharmacy/interaction-checker.html">Interactions</a>
+      </div>
+    </div>
+
+    <!-- Breakdown Factor Construction -->
+    <div class="tool-box" style="text-align:left; background:var(--bg-2); border:1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <span style="font-size:28px;">🏗️</span>
+        <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);">Construction Safety</span>
+      </div>
+      <h3 style="color:#fbbf24; margin-bottom:4px;"><i class="fas fa-helmet-safety"></i> Breakdown Factor</h3>
+      <span style="font-size:12px; color:var(--text-3); font-weight:700;">CPWD DSR 2023 & OSHA AUDIT</span>
+      <p style="color:var(--text-2); margin:12px 0; font-size:14px; line-height:1.6;">Civil CPWD rate analysis bill-of-quantities cost takeoff, Procore-grade OSHA site hazard compliance audits, and YOLO computer vision PPE scanner.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;">
+        <a class="btn btn-primary sm" href="/breakdown/">Visit Portal →</a>
+        <a class="btn btn-ghost sm" href="/breakdown/boq-estimator.html">BOQ Estimator</a>
+        <a class="btn btn-ghost sm" href="/breakdown/safety-audit.html">Safety Audit</a>
+      </div>
+    </div>
+
+    <!-- AVP Charitable Trust -->
+    <div class="tool-box" style="text-align:left; background:var(--bg-2); border:1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <span style="font-size:28px;">🤝</span>
+        <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(244,63,94,0.15); color:#fb7185; border:1px solid rgba(244,63,94,0.3);">Social Impact</span>
+      </div>
+      <h3 style="color:#fb7185; margin-bottom:4px;"><i class="fas fa-hand-holding-heart"></i> AVP Charitable Trust</h3>
+      <span style="font-size:12px; color:var(--text-3); font-weight:700;">80G TAX EXEMPTION & IMPACT LEDGER</span>
+      <p style="color:var(--text-2); margin:12px 0; font-size:14px; line-height:1.6;">Ministry of Finance Section 80G instant certificate generator with SHA-256 QR verification, open financial disbursement ledger, and rural health camps schedule.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;">
+        <a class="btn btn-primary sm" href="/trust/">Visit Portal →</a>
+        <a class="btn btn-ghost sm" href="/trust/tax-exemption.html">80G Tax Exemption</a>
+        <a class="btn btn-ghost sm" href="/trust/impact-tracker.html">Impact Ledger</a>
+      </div>
+    </div>
+
+    <!-- Rakshak AI -->
+    <div class="tool-box" style="text-align:left; background:var(--bg-2); border:1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+        <span style="font-size:28px;">🛡️</span>
+        <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3);">Public Safety</span>
+      </div>
+      <h3 style="color:#f87171; margin-bottom:4px;"><i class="fas fa-shield-halved"></i> Rakshak AI</h3>
+      <span style="font-size:12px; color:var(--text-3); font-weight:700;">BNS 2023 AUTO-FIR & SURVEILLANCE</span>
+      <p style="color:var(--text-2); margin:12px 0; font-size:14px; line-height:1.6;">Automated Bharatiya Nyaya Sanhita (BNS) legal section classifier and printable FIR generator, real-time perimeter CCTV intruder detection, and cyber scam radar.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;">
+        <a class="btn btn-primary sm" href="/rakshak-ai/">Visit Portal →</a>
+        <a class="btn btn-ghost sm" href="/rakshak-ai/fir-generator.html">BNS FIR Draft</a>
+        <a class="btn btn-ghost sm" href="/rakshak-ai/threat-radar.html">Threat Radar</a>
+      </div>
+    </div>
+
   </div>
 </div>
+
 
 </main>
 
@@ -104,8 +212,8 @@
       <h4>Navigation</h4>
       <ul class="foot-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="index.html">Sevenseed Hub</a></li>
-        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="../index.html">Sevenseed Hub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
     </div>
   </div>
@@ -113,5 +221,48 @@
 
 
 <script src="app.js"></script>
+
+<script>
+(function() {
+  // Theme Toggle Handler
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) {
+        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+
+  // Cursor Ring
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+</script>
+
 </body>
 </html>

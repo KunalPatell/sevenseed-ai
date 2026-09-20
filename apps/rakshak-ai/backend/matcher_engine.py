@@ -26,10 +26,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-try:
-    import cv2
-except Exception:
-    cv2 = None
+import cv2
 import numpy as np
 import requests
 
