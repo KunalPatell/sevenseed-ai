@@ -23,6 +23,8 @@ import {
   FileCheck,
   ArrowUpRight,
   Sun,
+  HandCoins,
+  HandHeart,
 } from "lucide-react";
 
 interface DonationRecord {
@@ -77,6 +79,31 @@ export default function TrustPage() {
     }
     const receipt = `FORM-10BE-${Date.now().toString().slice(-6)}`;
     setIssuedCert(receipt);
+
+    const certificateText = `FORM 10BE — CERTIFICATE OF DONATION UNDER SECTION 80G(5)(vi)
+Registration No: TRUST/GJ/80G/2026/A4901
+Issued By: AVP Charitable Trust
+
+Certificate ID: ${receipt}
+Date of Issue: ${new Date().toLocaleDateString("en-IN")}
+
+Donor Name: ${donorName}
+Donor PAN: ${taxPan.toUpperCase()}
+
+This certifies that the above donor's contribution qualifies for tax exemption
+under Section 80G(5)(vi) of the Income Tax Act, 1961, at 50% exemption.
+
+Verify this certificate at sevenseed.onrender.com/trust using Certificate ID ${receipt}.
+`;
+    const blob = new Blob([certificateText], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${receipt}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -137,6 +164,12 @@ export default function TrustPage() {
             <div className="flex flex-wrap items-center gap-4">
               <CyberButton href="/trust/tax-exemption" icon={FileCheck} className="from-amber-500 via-yellow-600 to-emerald-600 border-amber-400/30 shadow-amber-500/25">
                 Generate 80G Form 10BE
+              </CyberButton>
+              <CyberButton href="/trust/campaigns" icon={HandCoins} className="from-emerald-500 via-teal-600 to-amber-500 border-emerald-400/30 shadow-emerald-500/25">
+                Live Fundraising Campaigns
+              </CyberButton>
+              <CyberButton href="/trust/volunteer" icon={HandHeart} className="from-amber-500 via-orange-500 to-yellow-500 border-amber-400/30 shadow-amber-500/25">
+                Volunteer Sign-Up
               </CyberButton>
             </div>
           </div>

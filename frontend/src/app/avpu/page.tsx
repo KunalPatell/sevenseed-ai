@@ -26,6 +26,7 @@ import {
   Bot,
   CheckCircle2,
   Compass,
+  Layers,
 } from "lucide-react";
 
 const avpuModules = [
@@ -108,6 +109,16 @@ const avpuModules = [
     badge: "Pedagogy AI",
     color: "#6366f1",
     href: "/avpu/ai-tutor",
+  },
+  {
+    id: "flashcards",
+    name: "Spaced Repetition Flashcards",
+    reference: "Anki / learn-anything.xyz",
+    desc: "Leitner-box style flashcard review — cards you know move up a box, cards you miss reset for extra practice.",
+    icon: Layers,
+    badge: "Memory Retention",
+    color: "#22c55e",
+    href: "/avpu/flashcards",
   },
 ];
 

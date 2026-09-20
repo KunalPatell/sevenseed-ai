@@ -83,11 +83,70 @@ const mentalModels: MentalModel[] = [
       dilemma: "Which UI elements give the highest visual WOW factor?",
       action: "The 20% elements: 3D WebGL PBR materials, Aceternity spotlight cards, and smooth Lenis scrolling deliver 80% of the perceived quality."
     }
+  },
+  {
+    id: "feedback-loops",
+    name: "Feedback Loops",
+    domain: "Systems Thinking",
+    tagline: "Outputs of a system are routed back as inputs, reinforcing or dampening what happens next.",
+    explanation: "A reinforcing loop amplifies a trend; a balancing loop pulls a system back toward equilibrium. Most product growth or decay is a loop, not a single event.",
+    scenario: {
+      dilemma: "Why does one venture's user growth compound while another plateaus?",
+      action: "Map the loop: does using the product create more of the input that drives more usage (referrals, data, content)? If not, growth stays linear."
+    }
+  },
+  {
+    id: "leverage",
+    name: "Leverage",
+    domain: "Physics, Chemistry & Biology",
+    tagline: "A small input force applied at the right point moves a disproportionately large load.",
+    explanation: "Borrowed from the physical lever, this model says effort should go where a small push produces an outsized result, not where the work feels hardest.",
+    scenario: {
+      dilemma: "Where should one engineer spend a week: polishing UI copy or fixing the shared component library?",
+      action: "The shared library is leverage — one fix propagates across all 9 ventures instantly, versus a single-page copy edit."
+    }
+  },
+  {
+    id: "regression-to-the-mean",
+    name: "Regression to the Mean",
+    domain: "Mathematics",
+    tagline: "Extreme results tend to be followed by more average ones, with no special cause required.",
+    explanation: "After an unusually good or bad outcome, the next measurement is likely closer to the long-run average — not because anything changed, but because extremes are rare by definition.",
+    scenario: {
+      dilemma: "One venture's conversion rate spiked 40% last week — do we scale the campaign that caused it?",
+      action: "Check for regression first: a single great week is often noise. Wait for a second data point before reallocating budget."
+    }
+  },
+  {
+    id: "framing",
+    name: "Framing",
+    domain: "Art",
+    tagline: "What's included, excluded, and emphasized changes how the same information is perceived.",
+    explanation: "Identical facts presented with a different frame — what's shown first, what's left out, what's compared against — produce different judgments from the same audience.",
+    scenario: {
+      dilemma: "Should a venture card say '10-min delivery' or '83% faster than Amazon'?",
+      action: "Frame around the comparison people already anchor to — relative framing against a known baseline reads as more impressive than an absolute number."
+    }
+  },
+  {
+    id: "asymmetric-warfare",
+    name: "Asymmetric Competition",
+    domain: "Military & War",
+    tagline: "A smaller player wins by refusing to fight on the larger player's terms.",
+    explanation: "When you can't out-resource an incumbent, change the terrain: compete on speed, niche depth, or a distribution channel the incumbent is structurally unable to use.",
+    scenario: {
+      dilemma: "How does an 8-person studio compete with Amazon on e-commerce?",
+      action: "Don't compete on catalog size. Compete on hyper-local 10-minute delivery and India-specific price intelligence Amazon doesn't optimize for."
+    }
   }
 ];
 
+const DOMAINS = ["All", ...Array.from(new Set(mentalModels.map((m) => m.domain)))];
+
 export default function MentalModelsRoute() {
   const [selectedModel, setSelectedModel] = useState<MentalModel>(mentalModels[0]);
+  const [domainFilter, setDomainFilter] = useState("All");
+  const visibleModels = domainFilter === "All" ? mentalModels : mentalModels.filter((m) => m.domain === domainFilter);
 
   return (
     <SmoothScrollProvider>
@@ -157,9 +216,24 @@ export default function MentalModelsRoute() {
 
         {/* Mental Models Latticework Grid */}
         <div>
-          <div className="text-xs font-mono uppercase text-slate-400 mb-3">Explore the Latticework</div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-xs font-mono uppercase text-slate-400">Explore the Latticework</div>
+            <div className="flex flex-wrap gap-1.5 justify-end">
+              {DOMAINS.map((d) => (
+                <button
+                  key={d}
+                  onClick={() => setDomainFilter(d)}
+                  className={`px-2.5 py-1 rounded-full text-[10px] font-mono transition-colors ${
+                    domainFilter === d ? "bg-pink-500 text-black font-bold" : "bg-slate-900 text-slate-400 border border-slate-800 hover:text-white"
+                  }`}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {mentalModels.map((m) => {
+            {visibleModels.map((m) => {
               const isSelected = selectedModel.id === m.id;
               return (
                 <div

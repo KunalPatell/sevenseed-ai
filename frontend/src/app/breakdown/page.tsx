@@ -23,6 +23,8 @@ import {
   Ruler,
   ArrowUpRight,
   Compass,
+  CalendarRange,
+  Boxes,
 } from "lucide-react";
 
 interface DSRItem {
@@ -127,6 +129,12 @@ export default function BreakdownFactorPage() {
             <div className="flex flex-wrap items-center gap-4">
               <CyberButton href="/breakdown/boq-estimator" icon={Calculator} className="from-amber-600 via-orange-600 to-yellow-600 border-amber-400/30 shadow-amber-500/25">
                 Launch BOQ Estimator
+              </CyberButton>
+              <CyberButton href="/breakdown/project-timeline" icon={CalendarRange} className="from-red-600 via-rose-600 to-amber-600 border-red-400/30 shadow-red-500/25">
+                Track Project Timeline
+              </CyberButton>
+              <CyberButton href="/breakdown/material-prices" icon={Boxes} className="from-sky-600 via-blue-600 to-amber-600 border-sky-400/30 shadow-sky-500/25">
+                Live Material Prices
               </CyberButton>
             </div>
           </div>

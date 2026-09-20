@@ -20,7 +20,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@main/ui-core": ["../../../packages/ui-core/src/index.ts"]
+      "@main/ui-core": ["./packages/ui-core/src/index.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

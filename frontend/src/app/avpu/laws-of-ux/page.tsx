@@ -77,7 +77,7 @@ const uxLaws: UXLaw[] = [
   }
 ];
 
-export function InteractiveLawTester({ type }: { type: UXLaw["interactiveType"] }) {
+function InteractiveLawTester({ type }: { type: UXLaw["interactiveType"] }) {
   const [fittsSize, setFittsSize] = useState(48);
   const [fittsDistance, setFittsDistance] = useState(120);
   const [clickTime, setClickTime] = useState<number | null>(null);

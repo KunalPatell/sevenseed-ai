@@ -23,6 +23,8 @@ import {
   Radar,
   Lock,
   Radio,
+  UserSearch,
+  MapPinned,
 } from "lucide-react";
 
 export default function RakshakAIPage() {
@@ -107,6 +109,12 @@ export default function RakshakAIPage() {
               </CyberButton>
               <CyberButton href="/rakshak-ai/threat-radar" icon={Radar} className="from-slate-800 via-blue-900 to-red-900 border-red-500/30 shadow-red-950/50">
                 Scan Cyber Threats
+              </CyberButton>
+              <CyberButton href="/rakshak-ai/missing-person" icon={UserSearch} className="from-rose-600 via-red-600 to-orange-600 border-rose-400/30 shadow-rose-500/25">
+                Report Missing Person
+              </CyberButton>
+              <CyberButton href="/rakshak-ai/safety-heatmap" icon={MapPinned} className="from-red-700 via-rose-700 to-red-900 border-red-500/30 shadow-red-950/50">
+                Safety Heatmap
               </CyberButton>
             </div>
           </div>

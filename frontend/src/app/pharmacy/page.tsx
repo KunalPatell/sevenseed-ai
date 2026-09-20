@@ -24,6 +24,7 @@ import {
   Activity,
   ArrowUpRight,
   Cross,
+  Stethoscope,
 } from "lucide-react";
 
 interface MedicineMapping {
@@ -133,6 +134,15 @@ export default function PharmacyPage() {
               </CyberButton>
               <CyberButton href="/pharmacy/interaction-checker" icon={AlertTriangle} className="from-rose-600 via-pink-600 to-orange-600 border-rose-400/30 shadow-rose-500/25">
                 Check Drug Interactions
+              </CyberButton>
+              <CyberButton href="/pharmacy/hospital-finder" icon={Hospital} className="from-cyan-600 via-sky-600 to-blue-600 border-cyan-400/30 shadow-cyan-500/25">
+                Find Nearby Hospital Beds
+              </CyberButton>
+              <CyberButton href="/pharmacy/medicine-reminders" icon={Activity} className="from-emerald-600 via-teal-600 to-cyan-600 border-emerald-400/30 shadow-emerald-500/25">
+                Set Refill Reminders
+              </CyberButton>
+              <CyberButton href="/pharmacy/doctor-consultation" icon={Stethoscope} className="from-teal-600 via-cyan-600 to-sky-600 border-teal-400/30 shadow-teal-500/25">
+                Book Doctor Consultation
               </CyberButton>
             </div>
           </div>

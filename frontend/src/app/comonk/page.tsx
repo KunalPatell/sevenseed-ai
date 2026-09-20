@@ -24,6 +24,8 @@ import {
   Brain,
   ArrowUpRight,
   TrendingUp,
+  MessageSquareQuote,
+  Building2,
 } from "lucide-react";
 
 export default function ComonkAIPage() {
@@ -89,7 +91,7 @@ export default function ComonkAIPage() {
               98.4% ATS Match Accuracy
             </span>
             <Link
-              href="/contact"
+              href="/#contact"
               className="hidden sm:inline-flex px-4 py-2 rounded-xl text-xs font-bold text-black bg-gradient-to-r from-purple-400 to-fuchsia-400 hover:opacity-90 transition-opacity shadow-lg shadow-purple-500/20"
             >
               Partner With Comonk
@@ -122,6 +124,12 @@ export default function ComonkAIPage() {
               </CyberButton>
               <CyberButton href="/comonk/interview-arena" icon={Mic} className="from-indigo-600 via-purple-600 to-fuchsia-600 border-indigo-400/30 shadow-indigo-500/25">
                 Start Mock Interview
+              </CyberButton>
+              <CyberButton href="/comonk/interview-experiences" icon={MessageSquareQuote} className="from-fuchsia-600 via-pink-600 to-rose-600 border-fuchsia-400/30 shadow-fuchsia-500/25">
+                Read Interview Experiences
+              </CyberButton>
+              <CyberButton href="/comonk/company-reviews" icon={Building2} className="from-purple-600 via-violet-600 to-indigo-600 border-purple-400/30 shadow-purple-500/25">
+                Company Culture Ratings
               </CyberButton>
             </div>
           </div>
@@ -191,10 +199,18 @@ export default function ComonkAIPage() {
               </span>
             ))}
           </div>
+
+          <Link
+            href="/comonk/salary-insights"
+            className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 hover:text-emerald-300 font-bold"
+          >
+            <span>View full base/stock/bonus breakdown by level &amp; region (India vs US)</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
         {/* Section 2: Interactive ATS Resume & Interview Workstations */}
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Jobscan ATS Simulator */}
           <div className="p-6 rounded-2xl bg-purple-950/20 border border-purple-900/30 space-y-4 backdrop-blur-md">
             <div className="flex items-center justify-between">
@@ -261,6 +277,37 @@ export default function ComonkAIPage() {
             >
               <Mic className="w-3.5 h-3.5" />
               <span>Start 15-Minute Mock Session</span>
+            </Link>
+          </div>
+
+          {/* Glassdoor-style Interview Experience Board */}
+          <div className="p-6 rounded-2xl bg-purple-950/20 border border-purple-900/30 space-y-4 backdrop-blur-md">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-slate-200 font-bold text-sm">
+                <MessageSquareQuote className="w-4 h-4 text-fuchsia-400" />
+                <span>Interview Experience Board</span>
+              </div>
+              <span className="text-xs font-mono text-purple-400 bg-purple-950 border border-purple-800 px-2 py-0.5 rounded">
+                4+ shared
+              </span>
+            </div>
+
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Crowd-sourced, Glassdoor-style writeups of real interview rounds — difficulty, outcome, and what to expect.
+            </p>
+
+            <div className="p-4 rounded-xl bg-[#080214] border border-purple-900/50 space-y-2">
+              <div className="text-[11px] font-mono text-slate-400 italic">
+                &quot;Whiteboard a multi-agent consensus protocol. They care more about failure handling than the happy path.&quot;
+              </div>
+            </div>
+
+            <Link
+              href="/comonk/interview-experiences"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-fuchsia-600 to-rose-600 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 hover:opacity-95 transition-opacity"
+            >
+              <MessageSquareQuote className="w-3.5 h-3.5" />
+              <span>Browse & Share Experiences</span>
             </Link>
           </div>
         </div>

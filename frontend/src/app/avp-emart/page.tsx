@@ -24,6 +24,8 @@ import {
   Zap,
   CheckCircle2,
   Tag,
+  Heart,
+  Scan,
 } from "lucide-react";
 
 const emartEngines = [
@@ -76,6 +78,26 @@ const emartEngines = [
     badge: "Hyperlocal Dispatch",
     color: "#ec4899",
     href: "/avp-emart/qcommerce",
+  },
+  {
+    id: "wishlist",
+    name: "Price Drop Wishlist & Alerts",
+    reference: "smartprix.com / buyhatke.com",
+    desc: "Save products with a target price, and get flagged the moment any tracked store hits it.",
+    icon: Heart,
+    badge: "Alert Engine",
+    color: "#f43f5e",
+    href: "/avp-emart/wishlist",
+  },
+  {
+    id: "deal-scanner",
+    name: "Smart Deal Scanner",
+    reference: "buyhatke.com",
+    desc: "Filter live deals by budget, minimum discount, and category — flags inflated MRPs by comparing against pre-sale typical price.",
+    icon: Scan,
+    badge: "Fake-Discount Detector",
+    color: "#22c55e",
+    href: "/avp-emart/deal-scanner",
   },
 ];
 

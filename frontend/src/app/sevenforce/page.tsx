@@ -24,6 +24,8 @@ import {
   Bot,
   Sparkles,
   Command,
+  Store,
+  Calculator,
 } from "lucide-react";
 
 export default function SevenforcePage() {
@@ -110,6 +112,12 @@ export default function SevenforcePage() {
               </CyberButton>
               <CyberButton href="/sevenforce/devin-terminal" icon={Terminal} className="from-slate-800 via-zinc-800 to-amber-900 border-amber-600/40 shadow-amber-950/50">
                 Devin Virtual Terminal
+              </CyberButton>
+              <CyberButton href="/sevenforce/marketplace" icon={Store} className="from-orange-600 via-amber-600 to-yellow-600 border-orange-400/30 shadow-orange-500/25">
+                Agent Marketplace
+              </CyberButton>
+              <CyberButton href="/sevenforce/roi-calculator" icon={Calculator} className="from-yellow-600 via-amber-600 to-orange-700 border-yellow-400/30 shadow-yellow-500/25">
+                Automation ROI Calculator
               </CyberButton>
             </div>
           </div>

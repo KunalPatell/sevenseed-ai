@@ -8,7 +8,7 @@ import { ArrowLeft, Megaphone, ArrowRight, Check, X, Sparkles, Filter } from "lu
 interface Teardown {
   id: string;
   brand: string;
-  category: "Copywriting" | "Cold Email" | "Landing Page" | "Pricing";
+  category: "Copywriting" | "Cold Email" | "Landing Page" | "Pricing" | "Social" | "Ads" | "Retention" | "Referral";
   headline: string;
   before: string;
   after: string;
@@ -46,6 +46,56 @@ const teardowns: Teardown[] = [
     after: "$30/mo invite-only experience with 1-on-1 VIP onboarding call to achieve Inbox Zero in half the time.",
     whyItWorks: "Charging 3x higher combined with human concierge onboarding signals luxury and ultra-high efficiency.",
     liftMetric: "100k+ Waitlist",
+  },
+  {
+    id: "td-4",
+    brand: "Duolingo",
+    category: "Social",
+    headline: "Post as an Unhinged Mascot, Not a Brand Account",
+    before: "Learn a new language today! Download Duolingo and start your streak. #LanguageLearning #EdTech",
+    after: "A TikTok of the owl mascot 'threatening' users who broke their streak — millions of organic shares from the bit alone.",
+    whyItWorks: "Brand-safe corporate voice gets scrolled past. A recurring, slightly unhinged character people can quote is what actually spreads.",
+    liftMetric: "4M+ TikTok Followers",
+  },
+  {
+    id: "td-5",
+    brand: "Notion",
+    category: "Referral",
+    headline: "Give Credits, Not Cash, for Referrals",
+    before: "Refer a friend and get $10 off your next invoice.",
+    after: "Invite a friend, you both get free workspace credit — spendable only inside the product you already love.",
+    whyItWorks: "Product credit keeps the reward inside the ecosystem and reinforces continued usage, instead of leaking value out as cash.",
+    liftMetric: "2x Referral Redemption Rate",
+  },
+  {
+    id: "td-6",
+    brand: "Headspace",
+    category: "Retention",
+    headline: "Re-engage With a Question, Not a Reminder",
+    before: "Push notification: 'You haven't meditated in 5 days. Open the app now!'",
+    after: "Push notification: 'What's on your mind today?' — leads straight into a 1-tap 3-minute session matched to the answer.",
+    whyItWorks: "A guilt-trip reminder gets dismissed. A question invites a reply and removes the decision of 'which session do I even pick.'",
+    liftMetric: "+19% Reactivation Rate",
+  },
+  {
+    id: "td-7",
+    brand: "Ahrefs",
+    category: "Ads",
+    headline: "Show the Product Screenshot, Not a Stock Photo",
+    before: "A generic image of a diverse team smiling around a laptop, captioned 'Grow Your Business Today.'",
+    after: "A cropped screenshot of the actual keyword-gap report, captioned 'Your competitor ranks for 4,200 keywords you don't.'",
+    whyItWorks: "A specific, slightly uncomfortable number the viewer can verify beats generic aspiration — it reads as proof, not promotion.",
+    liftMetric: "3.1x Click-Through Rate",
+  },
+  {
+    id: "td-8",
+    brand: "Loom",
+    category: "Cold Email",
+    headline: "Send a Video Instead of More Text",
+    before: "Hi {{first_name}}, I wanted to reach out because I think our product could really help your team save time...",
+    after: "A 47-second Loom recording of the sender using the prospect's own website, with a one-line text: 'Recorded this for you, 47 sec.'",
+    whyItWorks: "A cold email with a real, personalized video proves effort no template can fake, so it survives the 2-second delete decision.",
+    liftMetric: "+62% Reply Rate",
   }
 ];
 
@@ -77,8 +127,8 @@ export default function MarketingTeardownsRoute() {
             </div>
           </div>
 
-          <div className="hidden sm:flex items-center gap-2">
-            {["All", "Landing Page", "Copywriting", "Pricing"].map((cat) => (
+          <div className="hidden sm:flex flex-wrap items-center gap-2 justify-end max-w-lg">
+            {["All", "Landing Page", "Copywriting", "Cold Email", "Pricing", "Social", "Ads", "Retention", "Referral"].map((cat) => (
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}

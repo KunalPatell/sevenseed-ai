@@ -1,9 +1,14 @@
+"use client";
+
 import React from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { APIKeyManager } from "@main/ui-core";
 
 export default function BYOKPage() {
+  const router = useRouter();
+
   return (
     <main className="min-h-screen py-10 px-4">
       <div className="max-w-4xl mx-auto mb-6">
@@ -12,7 +17,7 @@ export default function BYOKPage() {
         </Link>
       </div>
       <div className="max-w-4xl mx-auto">
-        <APIKeyManager />
+        <APIKeyManager isOpen={true} onClose={() => router.push("/")} />
       </div>
     </main>
   );
