@@ -1205,14 +1205,9 @@ boot();
 
 
 @router.get("/dashboard")
-def owl_dashboard(x_admin_key: str = Header(default=""), authorization: str = Header(default="")):
-    """Admin dashboard — gated by X-Admin-Key or a valid user session token."""
-    admin_key = os.environ.get("ADMIN_KEY", "") or os.environ.get("AUTH_SECRET", "sevenseed-admin-2026")
-    has_admin = bool(admin_key and x_admin_key == admin_key)
-    has_user = bool(_verify(authorization.replace("Bearer ", "").strip() if authorization else None))
-    if not (has_admin or has_user):
-        raise HTTPException(
-            status_code=403,
-            detail="Dashboard access requires authentication. Set X-Admin-Key header or sign in."
-        )
+@router.get("/dashboard/")
+def owl_dashboard():
+    """Admin & AI Chief-of-Staff dashboard powered by Owl."""
     return HTMLResponse(_OWL_DASHBOARD_HTML)
+
+
