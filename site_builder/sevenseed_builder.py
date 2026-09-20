@@ -205,14 +205,14 @@ def render_sevenseed_html(c):
     <div class="foot-col">
       <h5>8 Venture Portals</h5>
       <ul>
-        <li><a href="avpu/index.html">AVPU (AI University)</a></li>
-        <li><a href="avp-emart/index.html">AVP Emart (Price Radar)</a></li>
-        <li><a href="sevenforce/index.html">Sevenforce (AI Workforce)</a></li>
-        <li><a href="comonk/index.html">Comonk AI (Careers)</a></li>
-        <li><a href="decode-forest-pharmacy/index.html">Decode Pharmacy</a></li>
-        <li><a href="breakdown-factor/index.html">Breakdown Factor</a></li>
-        <li><a href="avp-charitable-trust/index.html">AVP Charitable Trust</a></li>
-        <li><a href="rakshak-ai/index.html">Rakshak AI</a></li>
+        <li><a href="/avpu/">AVPU (AI University)</a></li>
+        <li><a href="/avp-emart/">AVP Emart (Price Radar)</a></li>
+        <li><a href="/sevenforce/">Sevenforce (AI Workforce)</a></li>
+        <li><a href="/comonk-ai/">Comonk AI (Careers)</a></li>
+        <li><a href="/pharmacy/">Decode Pharmacy</a></li>
+        <li><a href="/breakdown/">Breakdown Factor</a></li>
+        <li><a href="/trust/">AVP Charitable Trust</a></li>
+        <li><a href="/rakshak-ai/">Rakshak AI</a></li>
       </ul>
     </div>
     <div class="foot-col">
