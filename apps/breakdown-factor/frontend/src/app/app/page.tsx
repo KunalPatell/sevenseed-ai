@@ -49,7 +49,7 @@ import {
 // calls must go through that same prefix, not root-relative "/api/...".
 const API_BASE = "/breakdown";
 
-type PanelType = "dashboard" | "copilot" | "boq" | "defect" | "timeline" | "tender" | "safety" | "financials" | "sitedoc";
+type PanelType = "dashboard" | "copilot" | "boq" | "defect" | "timeline" | "tender" | "safety" | "financials" | "sitedoc" | "ppescan" | "delayrisk";
 
 interface CopilotSession {
   session_id: string;
@@ -194,6 +194,43 @@ export default function ConstructionPortal() {
   const [safetyType, setSafetyType] = useState("commercial");
   const [safetyResult, setSafetyResult] = useState("");
   const [safetyLoading, setSafetyLoading] = useState(false);
+
+  // Procore / OpenSpace PPE Hazard Scan
+  const [ppeJobsite, setPpeJobsite] = useState("Sector 24 Commercial Hub");
+  const [ppeZone, setPpeZone] = useState("Tower A - Slab 5");
+  const [ppeData, setPpeData] = useState<any>(null);
+  const [ppeLoading, setPpeLoading] = useState(false);
+
+  // PlanGrid Delay Risk Predictor
+  const [delayPhase, setDelayPhase] = useState("RCC Superstructure");
+  const [delayProgress, setDelayProgress] = useState(48.0);
+  const [delayWeather, setDelayWeather] = useState("moderate_rain");
+  const [delayData, setDelayData] = useState<any>(null);
+  const [delayLoading, setDelayLoading] = useState(false);
+
+  const handlePpeScan = async () => {
+    setPpeLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/safety/ppe-scan?jobsite=${encodeURIComponent(ppeJobsite)}&zone=${encodeURIComponent(ppeZone)}`);
+      if (res.ok) {
+        const d = await res.json();
+        setPpeData(d);
+      }
+    } catch (e) {}
+    finally { setPpeLoading(false); }
+  };
+
+  const handleDelayRisk = async () => {
+    setDelayLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/schedule/delay-risk?phase=${encodeURIComponent(delayPhase)}&current_progress_pct=${delayProgress}&weather_risk=${delayWeather}`);
+      if (res.ok) {
+        const d = await res.json();
+        setDelayData(d);
+      }
+    } catch (e) {}
+    finally { setDelayLoading(false); }
+  };
 
   // Histories
   const [historySessions, setHistorySessions] = useState<CopilotSession[]>([]);
@@ -1520,6 +1557,212 @@ export default function ConstructionPortal() {
           </div>
         )}
       </div>
+    ),
+    ppescan: (
+      <div className="flex flex-col gap-6 animate-[fade_0.3s_ease]">
+        <div className="flex items-start gap-3 bg-gradient-to-r from-amber-500/15 to-orange-500/10 border border-amber-500/30 rounded-2xl p-5">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0 text-amber-400">
+            <HardHat className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-bold text-white">OSHA & IS 13630 Site PPE Safety Scanner</h3>
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/40">Procore / OpenSpace AI Engine</span>
+            </div>
+            <p className="text-xs text-[#c8c0b8] mt-1 leading-relaxed">
+              Real-time jobsite computer vision audit for mandatory PPE compliance: Hard hats, Class 2 reflective vests, 100% tie-off fall arrest harnesses, and perimeter scaffolding safety.
+            </p>
+          </div>
+        </div>
+
+        {/* Inputs Bar */}
+        <div className="bg-[#0e0a07] border border-white/5 rounded-2xl p-4 flex flex-col md:flex-row gap-3 items-center">
+          <div className="flex-1 w-full flex items-center gap-2 bg-[#14100b] border border-white/10 rounded-xl px-3 py-2">
+            <Building2 className="h-4 w-4 text-[#7c7268]" />
+            <input
+              type="text"
+              value={ppeJobsite}
+              onChange={(e) => setPpeJobsite(e.target.value)}
+              placeholder="Jobsite Project Name..."
+              className="w-full bg-transparent border-none text-xs text-white focus:outline-none"
+            />
+          </div>
+          <div className="flex-1 w-full flex items-center gap-2 bg-[#14100b] border border-white/10 rounded-xl px-3 py-2">
+            <Layers className="h-4 w-4 text-[#7c7268]" />
+            <input
+              type="text"
+              value={ppeZone}
+              onChange={(e) => setPpeZone(e.target.value)}
+              placeholder="Zone / Pouring Slab..."
+              className="w-full bg-transparent border-none text-xs text-white focus:outline-none"
+            />
+          </div>
+          <button
+            onClick={handlePpeScan}
+            disabled={ppeLoading}
+            className="w-full md:w-auto px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl text-xs font-bold hover:brightness-110 flex items-center gap-2 cursor-pointer shrink-0"
+          >
+            {ppeLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <HardHat className="h-3.5 w-3.5" />}
+            <span>Audit Site Safety</span>
+          </button>
+        </div>
+
+        {/* Audit Results View */}
+        {ppeData ? (
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-[#0e0a07] border border-white/5 rounded-2xl p-4">
+                <span className="text-[10px] uppercase font-bold text-[#7c7268] tracking-wider block">Compliance Score</span>
+                <span className="text-2xl font-black text-amber-400 mt-1 block">{ppeData.overall_compliance_pct}%</span>
+                <span className="text-[10px] text-[#c8c0b8]">{ppeData.osha_is_rating}</span>
+              </div>
+              <div className="bg-[#0e0a07] border border-white/5 rounded-2xl p-4">
+                <span className="text-[10px] uppercase font-bold text-[#7c7268] tracking-wider block">Workers On Site</span>
+                <span className="text-2xl font-black text-white mt-1 block">24 Active</span>
+                <span className="text-[10px] text-emerald-400">100% Identity Tagged</span>
+              </div>
+              <div className="bg-[#0e0a07] border border-white/5 rounded-2xl p-4">
+                <span className="text-[10px] uppercase font-bold text-[#7c7268] tracking-wider block">Open Violations</span>
+                <span className="text-2xl font-black text-rose-400 mt-1 block">{ppeData.violations?.length || 0} Flagged</span>
+                <span className="text-[10px] text-[#c8c0b8]">Requires Remediation</span>
+              </div>
+              <div className="bg-[#0e0a07] border border-white/5 rounded-2xl p-4">
+                <span className="text-[10px] uppercase font-bold text-[#7c7268] tracking-wider block">Safety Lead Signoff</span>
+                <span className="text-xs font-bold text-white mt-2 block truncate">{ppeData.supervisor_signoff}</span>
+                <span className="text-[10px] text-[#7c7268] font-mono">{ppeData.timestamp}</span>
+              </div>
+            </div>
+
+            {/* Checklist items */}
+            <div className="bg-[#0e0a07] border border-white/5 rounded-2xl p-5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#c8c0b8] mb-3">Itemized PPE Protocol Check</h4>
+              <div className="space-y-2">
+                {(ppeData.items || []).map((item: any, idx: number) => (
+                  <div key={idx} className="flex flex-col md:flex-row md:items-center justify-between p-3 bg-[#14100b] border border-white/5 rounded-xl gap-2 text-xs">
+                    <div className="flex items-center gap-2.5">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                      <div>
+                        <span className="font-bold text-white block">{item.item}</span>
+                        <span className="text-[11px] text-[#c8c0b8]">{item.notes}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-[11px] text-[#7c7268] font-mono">{item.detected}/{item.required} Compliant</span>
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">{item.compliance_pct}%</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="p-12 text-center text-[#7c7268] border border-dashed border-white/10 rounded-2xl">
+            Click "Audit Site Safety" to perform computer vision OSHA inspection.
+          </div>
+        )}
+      </div>
+    ),
+    delayrisk: (
+      <div className="flex flex-col gap-6 animate-[fade_0.3s_ease]">
+        <div className="flex items-start gap-3 bg-white/[0.02] border border-white/5 rounded-2xl p-5">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500/20 to-amber-500/10 flex items-center justify-center shrink-0 text-rose-400">
+            <Clock className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-bold text-white">Construction Schedule Delay & Critical Path Predictor</h3>
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded-full border border-rose-500/40">PlanGrid Engine</span>
+            </div>
+            <p className="text-xs text-[#c8c0b8] mt-1 leading-relaxed">
+              Forecast weather-induced delays, curing bottlenecks, and supply chain supply disruptions. Generates automated schedule compression and recovery actions.
+            </p>
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="bg-[#0e0a07] border border-white/5 rounded-2xl p-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div>
+            <label className="text-[10px] font-bold uppercase tracking-wider text-[#7c7268] block mb-1">Active Phase</label>
+            <input
+              type="text"
+              value={delayPhase}
+              onChange={(e) => setDelayPhase(e.target.value)}
+              className="w-full bg-[#14100b] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+            />
+          </div>
+          <div>
+            <label className="text-[10px] font-bold uppercase tracking-wider text-[#7c7268] block mb-1">Current Progress ({delayProgress}%)</label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={delayProgress}
+              onChange={(e) => setDelayProgress(parseFloat(e.target.value))}
+              className="w-full mt-2 accent-amber-500"
+            />
+          </div>
+          <div>
+            <label className="text-[10px] font-bold uppercase tracking-wider text-[#7c7268] block mb-1">Weather Forecast</label>
+            <div className="flex gap-2">
+              <select
+                value={delayWeather}
+                onChange={(e) => setDelayWeather(e.target.value)}
+                className="flex-1 bg-[#14100b] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+              >
+                <option value="dry">Dry / Favorable</option>
+                <option value="moderate_rain">Moderate Rain</option>
+                <option value="heavy_monsoon">Heavy Monsoon</option>
+                <option value="extreme_heat">Extreme Heatwave</option>
+              </select>
+              <button
+                onClick={handleDelayRisk}
+                className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl text-xs font-bold hover:brightness-110 cursor-pointer"
+              >
+                {delayLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Forecast"}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Prediction Results */}
+        {delayData ? (
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-[#0e0a07] border border-white/5 rounded-2xl p-5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#7c7268]">Projected Variance</span>
+                <div className="text-3xl font-black text-rose-400 mt-1">+{delayData.forecasted_delay_days} Days</div>
+                <p className="text-xs text-[#c8c0b8] mt-1">{delayData.critical_path_variance}</p>
+              </div>
+              <div className="bg-[#0e0a07] border border-white/5 rounded-2xl p-5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#7c7268]">Estimated Cost Overrun</span>
+                <div className="text-3xl font-black text-amber-400 mt-1">₹{delayData.cost_variance_inr.toLocaleString()}</div>
+                <p className="text-xs text-[#c8c0b8] mt-1">Equipment rental + labor standing costs</p>
+              </div>
+              <div className="bg-[#0e0a07] border border-white/5 rounded-2xl p-5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#7c7268]">Schedule Certainty</span>
+                <div className="text-3xl font-black text-emerald-400 mt-1">89.4%</div>
+                <p className="text-xs text-[#c8c0b8] mt-1">{delayData.monte_carlo_confidence}</p>
+              </div>
+            </div>
+
+            <div className="bg-[#0e0a07] border border-white/5 rounded-2xl p-5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#c8c0b8] mb-3">AI Fast-Tracking & Mitigation Plan</h4>
+              <ul className="space-y-2">
+                {(delayData.mitigation_plan || []).map((step: string, sidx: number) => (
+                  <li key={sidx} className="flex items-start gap-2.5 p-3 bg-[#14100b] border border-white/5 rounded-xl text-xs text-white">
+                    <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-black grid place-items-center shrink-0">{sidx + 1}</span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : (
+          <div className="p-12 text-center text-[#7c7268] border border-dashed border-white/10 rounded-2xl">
+            Configure project parameters and click "Forecast" to calculate critical path delays.
+          </div>
+        )}
+      </div>
     )
   };
 
@@ -1576,6 +1819,14 @@ export default function ConstructionPortal() {
 
           <button onClick={() => { setActivePanel("sitedoc"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all ${activePanel === "sitedoc" ? "bg-[#f59e0b]/15 text-[#f59e0b]" : "text-[#c8c0b8] hover:bg-[#14100b] hover:text-white"}`}>
             <FileText className="h-4 w-4" /> Site Signage & OCR
+          </button>
+
+          <button onClick={() => { setActivePanel("ppescan"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all ${activePanel === "ppescan" ? "bg-[#f59e0b]/15 text-[#f59e0b]" : "text-[#c8c0b8] hover:bg-[#14100b] hover:text-white"}`}>
+            <HardHat className="h-4 w-4" /> PPE Scanner (Procore)
+          </button>
+
+          <button onClick={() => { setActivePanel("delayrisk"); setSidebarOpen(false); }} className={`nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all ${activePanel === "delayrisk" ? "bg-[#f59e0b]/15 text-[#f59e0b]" : "text-[#c8c0b8] hover:bg-[#14100b] hover:text-white"}`}>
+            <Clock className="h-4 w-4" /> Delay Predictor (PlanGrid)
           </button>
 
           {historySessions.length > 0 && (

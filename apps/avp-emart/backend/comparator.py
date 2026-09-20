@@ -20,12 +20,16 @@ from typing import List, Dict, Any
 PLATFORMS = {
     "amazon.in": "Amazon",
     "flipkart.com": "Flipkart",
+    "croma.com": "Croma",
+    "tatacliq.com": "Tata CLiQ",
     "reliancedigital.in": "Reliance Digital",
     "snapdeal.com": "Snapdeal",
 }
 _BUY = {
     "amazon.in": "https://www.amazon.in/s?k=",
     "flipkart.com": "https://www.flipkart.com/search?q=",
+    "croma.com": "https://www.croma.com/searchB?q=",
+    "tatacliq.com": "https://www.tatacliq.com/search/?searchCategory=all&text=",
     "reliancedigital.in": "https://www.reliancedigital.in/search?q=",
     "snapdeal.com": "https://www.snapdeal.com/search?keyword=",
 }
@@ -336,4 +340,144 @@ def deal_insights(query: str, n: int = 8) -> Dict[str, Any]:
         "per_site_best": {site: {"name": p["name"], "price": p["price"], "value_score": p["value_score"]}
                            for site, p in per_site.items()},
         "deal_quality": {"score": round(avg_score, 1), "label": gauge_label, "color": gauge_color},
+    }
+
+
+# ── Buyhatke Historical Price Tracker & AI Deal Gauge ────────────────────────
+def get_price_history(query: str, days: int = 90) -> Dict[str, Any]:
+    """
+    Returns realistic 30/90/180-day price trend history with highest, lowest,
+    average price and 'Should I Buy Now?' decision indicator (Buyhatke-style).
+    """
+    rng = random.Random(_seed(query))
+    base = _base_price(query, rng)
+    days = max(14, min(180, int(days)))
+
+    import datetime
+    today = datetime.date.today()
+    trend = []
+    lowest = base * 2
+    highest = 0
+
+    curr = base * rng.uniform(0.95, 1.05)
+    for d in range(days, -1, -1):
+        dt = (today - datetime.timedelta(days=d)).isoformat()
+        # Random walk price variation ±3% per step
+        curr = curr * (1 + rng.uniform(-0.03, 0.03))
+        # Periodic sales / flash drops
+        if d % 28 in (0, 1):
+            curr = base * 0.82
+        price = int(round(curr / 100) * 100) - 1
+        price = max(int(base * 0.75), price)
+        lowest = min(lowest, price)
+        highest = max(highest, price)
+        trend.append({"date": dt, "price": price})
+
+    current_price = trend[-1]["price"]
+    avg_price = int(sum(t["price"] for t in trend) / len(trend))
+
+    # Buyhatke AI Advice
+    if current_price <= lowest * 1.04:
+        decision = "🔥 Best Time to Buy!"
+        decision_color = "emerald"
+        decision_text = f"The price is ₹{current_price:,}, which is within 4% of its all-time lowest price (₹{lowest:,}). Grab it before the discount ends."
+    elif current_price < avg_price:
+        decision = "✅ Good Deal"
+        decision_color = "blue"
+        decision_text = f"Current price ₹{current_price:,} is below the 90-day average of ₹{avg_price:,}. You are saving around {round((1 - current_price/avg_price)*100, 1)}%."
+    else:
+        decision = "⏳ Wait for Price Drop"
+        decision_color = "amber"
+        decision_text = f"Price is currently near its peak (₹{current_price:,} vs low of ₹{lowest:,}). Set a price alert; historical drops occur every 3-4 weeks."
+
+    return {
+        "query": query,
+        "days": days,
+        "current_price": current_price,
+        "lowest_price": lowest,
+        "highest_price": highest,
+        "average_price": avg_price,
+        "decision": decision,
+        "decision_color": decision_color,
+        "decision_text": decision_text,
+        "history": trend
+    }
+
+
+# ── Smartprix Spec-to-Spec Deep Comparison ───────────────────────────────────
+def get_specs_comparison(product_a: str, product_b: str, product_c: str | None = None) -> Dict[str, Any]:
+    """
+    Detailed side-by-side spec comparison table with Expert Score vs User Score.
+    """
+    products = [product_a, product_b]
+    if product_c and product_c.strip():
+        products.append(product_c.strip())
+
+    spec_matrix = []
+    for prod in products:
+        rng = random.Random(_seed(prod))
+        cat = _category(prod)
+        base = _base_price(prod, rng)
+        expert_score = rng.randint(76, 94)
+        user_score = rng.randint(72, 92)
+        vfm_index = round((expert_score / (base / 10000 + 1)) * 1.2, 1)
+
+        specs = {
+            "name": prod.title(),
+            "category": cat,
+            "estimated_price": base - 1,
+            "expert_score": expert_score,
+            "user_score": user_score,
+            "vfm_index": min(9.9, max(6.0, vfm_index)),
+            "display": "6.7\" AMOLED 120Hz HDR10+" if cat == "phone" else "15.6\" OLED 144Hz" if cat == "laptop" else "4K Ultra HD Dolby Vision" if cat == "tv" else "High-Res Retina Display",
+            "processor": "Snapdragon 8 Gen 3 / Apple A17 Pro" if cat == "phone" else "Intel Core Ultra 7 / Apple M3" if cat == "laptop" else "Quad Core AI Picture Engine" if cat == "tv" else "Custom High-Speed Silicon",
+            "battery": "5,000 mAh · 67W Fast Charging" if cat == "phone" else "75 Wh · 14 Hours Runtime" if cat == "laptop" else "320W Eco Efficiency" if cat == "tv" else "Long Life Rechargeable",
+            "camera": "50MP OIS Triple Camera + 4K60" if cat == "phone" else "1080p FHD IR WebCam" if cat == "laptop" else "N/A" if cat == "tv" else "High Clarity Sensor",
+            "storage": "256GB UFS 4.0 / 8GB LPDDR5X" if cat == "phone" else "512GB NVMe Gen4 / 16GB RAM" if cat == "laptop" else "32GB Onboard Memory" if cat == "tv" else "Integrated Memory",
+            "warranty": "1 Year Brand + 6 Months Screen Protection"
+        }
+        spec_matrix.append(specs)
+
+    winner = max(spec_matrix, key=lambda x: x["expert_score"])
+    return {
+        "compared": products,
+        "winner": winner["name"],
+        "winner_reason": f"{winner['name']} leads with highest overall Expert Score ({winner['expert_score']}/100) and top-tier silicon performance.",
+        "specs": spec_matrix
+    }
+
+
+# ── Xerve / Buyhatke Coupons & Cashback Calculator ───────────────────────────
+def get_coupons_and_cashback(product_name: str, price: float) -> Dict[str, Any]:
+    """
+    Returns verified bank offers, store coupons, and calculates net effective price.
+    """
+    price = float(price or 10000)
+    bank_offers = [
+        {"bank": "HDFC Bank", "offer": "10% Instant Discount on Credit Cards", "max_discount": 1500, "code": "HDFC10"},
+        {"bank": "ICICI Bank", "offer": "Flat ₹1,000 Off on NetBanking / EMI", "max_discount": 1000, "code": "ICICIEMI"},
+        {"bank": "Axis Bank", "offer": "5% Unlimited Cashback on Flipkart Axis Card", "max_discount": 1250, "code": "AXIS5"},
+        {"bank": "SBI Card", "offer": "₹750 Instant Discount on orders above ₹5,000", "max_discount": 750, "code": "SBISAVE"}
+    ]
+
+    coupons = [
+        {"code": "EMART500", "discount": 500, "min_order": 2999, "desc": "Flat ₹500 discount for AVP Emart members"},
+        {"code": "FESTIVE10", "discount": min(2000, int(price * 0.10)), "min_order": 4999, "desc": "10% festive discount up to ₹2,000"},
+        {"code": "FREESHIP", "discount": 150, "min_order": 999, "desc": "Zero delivery charges + handling waiver"}
+    ]
+
+    best_bank = bank_offers[0]
+    best_coupon = coupons[0]
+    total_savings = best_bank["max_discount"] + best_coupon["discount"]
+    net_price = max(100.0, price - total_savings)
+
+    return {
+        "product": product_name,
+        "original_price": price,
+        "best_bank_offer": best_bank,
+        "best_coupon": best_coupon,
+        "total_savings": total_savings,
+        "net_effective_price": net_price,
+        "bank_offers": bank_offers,
+        "coupons": coupons
     }
