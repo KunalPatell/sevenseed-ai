@@ -84,16 +84,9 @@
 function runCVScan() {
   var t = document.getElementById('cvType').value;
   if(t === 'hazard') {
-    document.getElementById('cvOutput').innerText = '📸 YOLO-v8 VISION ANALYSIS:
-- Detected 4 Workers
-- Hardhat Compliance: 100% [4/4]
-- Safety Vest Compliance: 75% [3/4] ⚠️ ALERT: Worker #3 missing vest in Zone B
-- Inference Time: 28ms';
+    document.getElementById('cvOutput').innerText = '📸 YOLO-v8 VISION ANALYSIS:\n- Detected 4 Workers\n- Hardhat Compliance: 100% [4/4]\n- Safety Vest Compliance: 75% [3/4] ⚠️ ALERT: Worker #3 missing vest in Zone B\n- Inference Time: 28ms';
   } else {
-    document.getElementById('cvOutput').innerText = '📸 STRUCTURAL DEFECT ANALYSIS:
-- Detected 1 Shear Crack (Width: 2.1mm, Severity: Moderate)
-- Location: Beam Joint #14
-- Recommendation: Epoxy pressure injection required before load testing.';
+    document.getElementById('cvOutput').innerText = '📸 STRUCTURAL DEFECT ANALYSIS:\n- Detected 1 Shear Crack (Width: 2.1mm, Severity: Moderate)\n- Location: Beam Joint #14\n- Recommendation: Epoxy pressure injection required before load testing.';
   }
 }
 </script>
@@ -113,7 +106,7 @@ function runCVScan() {
       <ul class="foot-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="../index.html">Sevenseed Hub</a></li>
-        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
     </div>
   </div>

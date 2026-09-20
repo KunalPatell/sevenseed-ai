@@ -423,7 +423,7 @@ document.querySelectorAll('.btn').forEach(function(btn){
     btn.disabled = true;
     var btnText = btn.innerHTML;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-    output.textContent = 'CONNECTING TO AI MODEL SERVER...\\nEXECUTING PIPELINE...\\nPLEASE WAIT...';
+    output.textContent = 'CONNECTING TO AI MODEL SERVER...\nEXECUTING PIPELINE...\nPLEASE WAIT...';
     
     var payload = {};
     var fields = form.querySelectorAll('input, textarea, select');
@@ -473,7 +473,7 @@ document.querySelectorAll('.btn').forEach(function(btn){
           data = { success: true, mode: "Static Preview Mock Output" };
         }
         
-        output.textContent = '💡 DEMO MODE (Preview Output):\\n' + JSON.stringify(data, null, 2) + '\\n\\n💡 To run this live with real LLM inference, configure your free API Keys in BYOK or visit Sevenforce: /sevenforce/';
+        output.textContent = '💡 DEMO MODE (Preview Output):\n' + JSON.stringify(data, null, 2) + '\n\n💡 To run this live with real LLM inference, configure your free API Keys in BYOK or visit Sevenforce: /sevenforce/';
         btn.disabled = false;
         btn.innerHTML = btnText;
       }, 700);
@@ -512,7 +512,7 @@ document.querySelectorAll('.btn').forEach(function(btn){
       output.textContent = JSON.stringify(data, null, 2);
     })
     .catch(function(err){
-      output.textContent = '❌ ERROR EXECUTING MODEL:\\n' + err.message + '\\n\\n💡 Ensure the backend server for this venture is running on its designated port.';
+      output.textContent = '❌ ERROR EXECUTING MODEL:\n' + err.message + '\n\n💡 Ensure the backend server for this venture is running on its designated port.';
     })
     .finally(function(){
       btn.disabled = false;
