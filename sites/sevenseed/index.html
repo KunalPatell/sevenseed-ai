@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Sevenseed — AI Venture Studio & Startup Incubator</title>
   <meta name="description" content="An AI-first startup studio that ideates, incubates, and launches ventures powered by LLM agents, RAG, and computer vision — on a shared AI infrastructure used across the entire portfolio.">
   <meta property="og:type" content="website">
@@ -48,24 +48,24 @@
     <span class="logo-text">Seven <span class="logo-accent">seed</span></span>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="/ecosystem/" style="color:#10b981;font-weight:700;"><i class="fas fa-cubes-stacked" style="color:#10b981"></i> 3000 Platform</a>
-    <a href="/syndicate-ruv/"><i class="fas fa-chart-pie" style="color:var(--accent,#6366f1)"></i> Syndicate &amp; RUV</a>
-    <a href="/market-sizing/"><i class="fas fa-calculator" style="color:var(--accent,#6366f1)"></i> TAM/SAM/SOM</a>
-    <a href="/ventures/"><i class="fas fa-cubes" style="color:var(--accent,#6366f1)"></i> Portfolio</a>
-    <a href="/pricing/"><i class="fas fa-tag" style="color:var(--accent,#6366f1)"></i> Pricing</a>
-    <a href="/byok/"><i class="fas fa-key" style="color:var(--accent,#6366f1)"></i> BYOK Vault</a>
+    <a href="ecosystem/index.html" style="color:#10b981;font-weight:700;"><i class="fas fa-cubes-stacked" style="color:#10b981"></i> 3000 Platform</a>
+    <a href="syndicate-ruv.html"><i class="fas fa-chart-pie" style="color:var(--accent,#6366f1)"></i> Syndicate &amp; RUV</a>
+    <a href="market-sizing.html"><i class="fas fa-calculator" style="color:var(--accent,#6366f1)"></i> TAM/SAM/SOM</a>
+    <a href="ventures.html"><i class="fas fa-cubes" style="color:var(--accent,#6366f1)"></i> Portfolio</a>
+    <a href="pricing.html"><i class="fas fa-tag" style="color:var(--accent,#6366f1)"></i> Pricing</a>
+    <a href="byok.html"><i class="fas fa-key" style="color:var(--accent,#6366f1)"></i> BYOK Vault</a>
     <a href="#feature-suites"><i class="fas fa-flask"></i> Labs</a>
     <a href="#faq"><i class="fas fa-circle-question"></i> FAQ</a>
     <div class="nav-mobile-actions">
-      <a class="btn btn-primary" href="/sevenforce/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+      <a class="btn btn-primary" href="sevenforce/app/index.html"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
       <a class="btn btn-ghost" href="#contact"><i class="fas fa-envelope"></i> Contact Us</a>
     </div>
   </div>
   <div class="nav-right">
     <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
     <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
-    <a class="btn btn-ghost nav-btn-platform" href="/ecosystem/" style="border-color:rgba(16,185,129,0.4);"><i class="fas fa-cubes-stacked" style="color:#10b981;"></i> 3000 Platform</a>
-    <a class="btn btn-primary nav-btn-app" href="/sevenforce/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-ghost nav-btn-platform" href="ecosystem/index.html" style="border-color:rgba(16,185,129,0.4);"><i class="fas fa-cubes-stacked" style="color:#10b981;"></i> 3000 Platform</a>
+    <a class="btn btn-primary nav-btn-app" href="sevenforce/app/index.html"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
     <a class="btn btn-primary nav-btn-contact" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
     <button class="hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
   </div>
@@ -105,10 +105,48 @@
     <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>LLM Agents</span><span>RAG Pipelines</span><span>Computer Vision</span><span>MLOps</span><span>Vector Search</span><span>Automation</span><span>Forecasting</span><span>Fine-Tuning</span><span>Prompt Engineering</span><span>Shared AI Platform</span><span>LLM Agents</span><span>RAG Pipelines</span><span>Computer Vision</span><span>MLOps</span><span>Vector Search</span><span>Automation</span><span>Forecasting</span><span>Fine-Tuning</span><span>Prompt Engineering</span><span>Shared AI Platform</span></div></div>
   </div>
 
-  <div class="hero-3d-stage" id="hero3dStage">
-    <canvas id="hero3dCanvas"></canvas>
-    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · PBR Engine</div>
-    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
+    <div class="hero-3d-stage" id="hero3dStage">
+    <div class="qc-aura"></div>
+    <div class="qc-card">
+      <div class="qc-hud-top">
+        <div class="qc-title-wrap">
+          <span class="qc-status-dot"><span class="qc-ping"></span><span class="qc-solid"></span></span>
+          <span class="qc-title">3D QUANTUM CORE <i class="fas fa-sparkles qc-sparkle"></i></span>
+        </div>
+        <div class="qc-badges">
+          <span class="qc-badge-fps" id="qcFps">60 FPS</span>
+          <span class="qc-badge-webgl">HARDWARE WEBGL</span>
+        </div>
+      </div>
+      <div class="qc-viewport" id="qcViewport">
+        <canvas id="hero3dCanvas" class="qc-canvas"></canvas>
+        <div class="qc-hint-pill">✦ Drag to Orbit • Click to Pulse ✦</div>
+      </div>
+      <div class="qc-hud-bottom">
+        <div class="qc-row-shapes">
+          <div class="qc-shapes-btns" id="qcShapes">
+            <button type="button" class="qc-shape-btn active" data-geom="icosahedron">Seed</button>
+            <button type="button" class="qc-shape-btn" data-geom="torusknot">Torus Knot</button>
+            <button type="button" class="qc-shape-btn" data-geom="tesseract">Tesseract</button>
+            <button type="button" class="qc-shape-btn" data-geom="helix">DNA Helix</button>
+            <button type="button" class="qc-shape-btn" data-geom="octahedron">Crystal</button>
+          </div>
+          <div class="qc-edges-tag" id="qcEdges">30 Edges</div>
+        </div>
+        <div class="qc-row-modes">
+          <div class="qc-modes-group">
+            <span class="qc-modes-label">Mode:</span>
+            <button type="button" class="qc-mode-btn active" data-mode="crystal">Crystal Core</button>
+            <button type="button" class="qc-mode-btn" data-mode="wireframe">Wireframe</button>
+            <button type="button" class="qc-mode-btn" data-mode="synapse">Deep Synapse</button>
+          </div>
+          <div class="qc-satellites-status">
+            <span class="qc-sat-dot"></span>
+            <span>7 Satellites Online</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -143,7 +181,7 @@
         <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">YC TAM / SAM / SOM Calculator</h3>
         <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Bottom-up & top-down market sizing with ARPU, serviceable obtainable market share, and investor pitch deck export.</p>
       </div>
-      <a class="btn btn-primary sm" href="/market-sizing/"><i class="fas fa-calculator"></i> Calculate TAM/SOM →</a>
+      <a class="btn btn-primary sm" href="market-sizing.html"><i class="fas fa-calculator"></i> Calculate TAM/SOM →</a>
     </div>
 
     <div class="border-beam-card">
@@ -152,7 +190,7 @@
         <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Venture Portfolio Showcase</h3>
         <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Explore live metrics, AI stacks, target markets, and interactive features across all 8 incubated studio enterprises.</p>
       </div>
-      <a class="btn btn-primary sm" href="/ventures/"><i class="fas fa-cubes"></i> View Portfolio →</a>
+      <a class="btn btn-primary sm" href="ventures.html"><i class="fas fa-cubes"></i> View Portfolio →</a>
     </div>
 
     <div class="border-beam-card">
@@ -161,7 +199,7 @@
         <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Zero-Margin BYOK Vault</h3>
         <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Client-side AES-GCM encrypted API key manager for Groq, OpenAI, Anthropic, and Gemini with zero SaaS markup.</p>
       </div>
-      <a class="btn btn-primary sm" href="/byok/"><i class="fas fa-key"></i> Open Key Vault →</a>
+      <a class="btn btn-primary sm" href="byok.html"><i class="fas fa-key"></i> Open Key Vault →</a>
     </div>
   </div>
 </section>
@@ -492,47 +530,7 @@
 <script id="ssData" type="application/json">{"site": "Sevenseed", "sector": "AI Venture Studio & Startup Incubator", "summary": "An AI-first startup studio that ideates, incubates, and launches ventures powered by LLM agents, RAG, and computer vision — on a shared AI infrastructure used across the entire portfolio.", "about": "Sevenseed is an AI-native startup studio behind a group of companies across technology, education, healthcare, construction, social impact, and e-commerce. We don't just fund ideas — we engineer them with AI from day one. Every venture plugs into a shared AI backbone — an LLM gateway, vector store, and multi-agent framework — so founders ship intelligent products in weeks, not years, and compound value across the whole portfolio.", "highlights": ["AI-first ventures from day one", "Shared LLM + RAG infrastructure", "Reusable multi-agent workflows", "Hands-on AI engineering support"], "services": [{"name": "AI Venture Ideation", "desc": "LLM-driven market research and idea validation surface high-potential ventures fast."}, {"name": "Shared AI Platform", "desc": "A common backbone — LLM gateway, vector store, and agent framework — reused by every company."}, {"name": "Multi-Agent Automation", "desc": "Reusable agent workflows automate operations, support, and content across the group."}, {"name": "RAG Knowledge Base", "desc": "A shared retrieval-augmented knowledge base connecting data across all ventures."}, {"name": "AI Talent & Tooling", "desc": "Shared AI engineers, MLOps, and tooling so each startup ships AI features quickly."}, {"name": "Portfolio Intelligence", "desc": "AI dashboards forecast growth and surface cross-company synergies automatically."}], "faqs": [{"q": "What makes Sevenseed AI-native?", "a": "Every venture is engineered on a shared AI backbone — LangGraph multi-agent, Groq LLaMA 3.3 70B, and ChromaDB RAG — so AI isn't bolted on, it's the foundation."}, {"q": "Do you invest in external startups?", "a": "We primarily build in-house, but we selectively partner with exceptional AI founders whose ideas fit the portfolio."}, {"q": "Which sectors do you operate in?", "a": "Technology, education, healthcare, construction, social impact, and e-commerce — all AI-powered."}, {"q": "How can I pitch an idea?", "a": "Reach out via our contact section or email — we review every serious AI proposal personally."}], "contact": {"email": "hello@sevenseed.in", "phone": "+91 84908 61586", "location": "Ahmedabad, Gujarat, India"}, "sections": [{"label": "About", "hash": "#about"}, {"label": "AI Tools", "hash": "#services"}, {"label": "Ventures", "hash": "#ventures"}, {"label": "Live Demo", "hash": "#sandbox"}, {"label": "Process", "hash": "#process"}, {"label": "Impact", "hash": "#impact"}, {"label": "Reviews", "hash": "#testimonials"}, {"label": "FAQ", "hash": "#faq"}, {"label": "Enterprise", "hash": "#enterprise"}, {"label": "Contact", "hash": "#contact"}], "ventures": [{"label": "Comonk Technology", "href": "/comonk-ai/"}, {"label": "Sevenforce", "href": "/sevenforce/"}, {"label": "Alpaben Vipulbhai Patel University", "href": "/avpu/"}, {"label": "Decode Forest Pharmacy", "href": "/pharmacy/"}, {"label": "Breakdown Factor Construction", "href": "/breakdown/"}, {"label": "AVP Charitable Trust", "href": "/trust/"}, {"label": "AVP Emart", "href": "/avp-emart/"}, {"label": "Rakshak AI Safety", "href": "/rakshak-ai/"}]}</script>
 <script src="app.js"></script>
 
-<script>
-(function() {
-  // Theme Toggle Handler
-  var tBtn = document.getElementById('themeToggle');
-  if (tBtn) {
-    function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
-    }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('ss-theme', next);
-      updateIcon(next);
-    });
-  }
 
-  // Cursor Ring
-  var ring = document.getElementById('cursorRing');
-  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
-      requestAnimationFrame(renderCursor);
-    }
-    requestAnimationFrame(renderCursor);
-  }
-})();
-</script>
 
 </body>
 </html>
