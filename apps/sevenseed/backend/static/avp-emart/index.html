@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>AVP Emart — AI-Powered E-Commerce & Smart Shopping</title>
   <meta name="description" content="An AI-powered marketplace that compares live prices across Amazon, Flipkart, Reliance Digital, and Snapdeal, scores the best value with ML, and delivers it to your door.">
   <meta property="og:type" content="website">
@@ -44,7 +44,7 @@
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <nav class="nav">
-  <a class="logo" href="#top">
+  <a class="logo" href="/avp-emart/app/">
     <span class="logo-icon"><i class="fas fa-cart-shopping"></i></span>
     <span class="logo-text">AVP <span class="logo-accent">Emart</span></span>
   </a>
@@ -98,10 +98,48 @@
     <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>AI Price Compare</span><span>Best-Value Scoring</span><span>Shopping Assistant</span><span>Smart Recommendations</span><span>Price Forecasting</span><span>Review Intelligence</span><span>Amazon</span><span>Flipkart</span><span>Reliance Digital</span><span>Snapdeal</span><span>AI Price Compare</span><span>Best-Value Scoring</span><span>Shopping Assistant</span><span>Smart Recommendations</span><span>Price Forecasting</span><span>Review Intelligence</span><span>Amazon</span><span>Flipkart</span><span>Reliance Digital</span><span>Snapdeal</span></div></div>
   </div>
 
-  <div class="hero-3d-stage" id="hero3dStage">
-    <canvas id="hero3dCanvas"></canvas>
-    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · PBR Engine</div>
-    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
+    <div class="hero-3d-stage" id="hero3dStage">
+    <div class="qc-aura"></div>
+    <div class="qc-card">
+      <div class="qc-hud-top">
+        <div class="qc-title-wrap">
+          <span class="qc-status-dot"><span class="qc-ping"></span><span class="qc-solid"></span></span>
+          <span class="qc-title">3D QUANTUM CORE <i class="fas fa-sparkles qc-sparkle"></i></span>
+        </div>
+        <div class="qc-badges">
+          <span class="qc-badge-fps" id="qcFps">60 FPS</span>
+          <span class="qc-badge-webgl">HARDWARE WEBGL</span>
+        </div>
+      </div>
+      <div class="qc-viewport" id="qcViewport">
+        <canvas id="hero3dCanvas" class="qc-canvas"></canvas>
+        <div class="qc-hint-pill">✦ Drag to Orbit • Click to Pulse ✦</div>
+      </div>
+      <div class="qc-hud-bottom">
+        <div class="qc-row-shapes">
+          <div class="qc-shapes-btns" id="qcShapes">
+            <button type="button" class="qc-shape-btn active" data-geom="icosahedron">Seed</button>
+            <button type="button" class="qc-shape-btn" data-geom="torusknot">Torus Knot</button>
+            <button type="button" class="qc-shape-btn" data-geom="tesseract">Tesseract</button>
+            <button type="button" class="qc-shape-btn" data-geom="helix">DNA Helix</button>
+            <button type="button" class="qc-shape-btn" data-geom="octahedron">Crystal</button>
+          </div>
+          <div class="qc-edges-tag" id="qcEdges">30 Edges</div>
+        </div>
+        <div class="qc-row-modes">
+          <div class="qc-modes-group">
+            <span class="qc-modes-label">Mode:</span>
+            <button type="button" class="qc-mode-btn active" data-mode="crystal">Crystal Core</button>
+            <button type="button" class="qc-mode-btn" data-mode="wireframe">Wireframe</button>
+            <button type="button" class="qc-mode-btn" data-mode="synapse">Deep Synapse</button>
+          </div>
+          <div class="qc-satellites-status">
+            <span class="qc-sat-dot"></span>
+            <span>7 Satellites Online</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 

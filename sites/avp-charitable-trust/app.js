@@ -61,13 +61,86 @@ if (document.readyState === 'loading') {
 
 document.querySelectorAll('[data-year]').forEach(function(e){ e.textContent = new Date().getFullYear(); });
 
-// Mobile nav
+// Universal Theme Toggle
+(function() {
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn && !tBtn._ssBound) {
+    tBtn._ssBound = true;
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) {
+        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('ss-theme', next); } catch(e){}
+      updateIcon(next);
+    });
+  }
+
+  // Universal Cursor Ring
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window._ssCursorInitialized && !window.matchMedia('(pointer: coarse)').matches) {
+    window._ssCursorInitialized = true;
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+
+
+
+// Mobile nav with overlay backdrop & icon animation
 var ham = document.getElementById('hamburger');
 var navLinks = document.getElementById('navLinks');
+var navOverlay = document.getElementById('navOverlay');
+
+function closeMobileNav() {
+  if (navLinks) navLinks.classList.remove('open');
+  if (navOverlay) navOverlay.classList.remove('open');
+  if (ham) {
+    ham.setAttribute('aria-expanded', 'false');
+    var ic = ham.querySelector('i');
+    if (ic) { ic.className = 'fas fa-bars'; }
+  }
+}
+
+function toggleMobileNav() {
+  if (!navLinks) return;
+  var isOpen = navLinks.classList.toggle('open');
+  if (navOverlay) navOverlay.classList.toggle('open', isOpen);
+  if (ham) {
+    ham.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    var ic = ham.querySelector('i');
+    if (ic) { ic.className = isOpen ? 'fas fa-xmark' : 'fas fa-bars'; }
+  }
+}
+
 if (ham && navLinks) {
-  ham.addEventListener('click', function(){ navLinks.classList.toggle('open'); });
+  ham.addEventListener('click', toggleMobileNav);
+  if (navOverlay) navOverlay.addEventListener('click', closeMobileNav);
   navLinks.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', function(){ navLinks.classList.remove('open'); });
+    a.addEventListener('click', closeMobileNav);
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+      closeMobileNav();
+    }
   });
 }
 
@@ -350,7 +423,7 @@ document.querySelectorAll('.btn').forEach(function(btn){
     btn.disabled = true;
     var btnText = btn.innerHTML;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-    output.textContent = 'CONNECTING TO AI MODEL SERVER...\\nEXECUTING PIPELINE...\\nPLEASE WAIT...';
+    output.textContent = 'CONNECTING TO AI MODEL SERVER...\nEXECUTING PIPELINE...\nPLEASE WAIT...';
     
     var payload = {};
     var fields = form.querySelectorAll('input, textarea, select');
@@ -400,7 +473,7 @@ document.querySelectorAll('.btn').forEach(function(btn){
           data = { success: true, mode: "Static Preview Mock Output" };
         }
         
-        output.textContent = '💡 DEMO MODE (Preview Output):\\n' + JSON.stringify(data, null, 2) + '\\n\\n💡 To run this live with real LLM inference, configure your free API Keys in BYOK or visit Sevenforce: /sevenforce/';
+        output.textContent = '💡 DEMO MODE (Preview Output):\n' + JSON.stringify(data, null, 2) + '\n\n💡 To run this live with real LLM inference, configure your free API Keys in BYOK or visit Sevenforce: /sevenforce/';
         btn.disabled = false;
         btn.innerHTML = btnText;
       }, 700);
@@ -439,7 +512,7 @@ document.querySelectorAll('.btn').forEach(function(btn){
       output.textContent = JSON.stringify(data, null, 2);
     })
     .catch(function(err){
-      output.textContent = '❌ ERROR EXECUTING MODEL:\\n' + err.message + '\\n\\n💡 Ensure the backend server for this venture is running on its designated port.';
+      output.textContent = '❌ ERROR EXECUTING MODEL:\n' + err.message + '\n\n💡 Ensure the backend server for this venture is running on its designated port.';
     })
     .finally(function(){
       btn.disabled = false;
@@ -1139,29 +1212,88 @@ function toast(msg, type){
   drawFluid();
 })();
 
-// ── Master Spline-Grade 3D WebGL Interactive Controller ──
-(function initSplineHero3D(){
+// ── Master Interactive 3D Quantum Core WebGL Controller ──
+// Reference: Portfolio QuantumCore3DWebGL architecture
+(function initQuantumCore3D() {
   if (typeof THREE === 'undefined') return;
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  var canvas = document.getElementById('hero3dCanvas') || document.getElementById('particles');
-  if (!canvas) return;
-  var stage = document.getElementById('hero3dStage') || canvas.parentElement;
+  var stage = document.getElementById('hero3dStage');
+  var existingCanvas = document.getElementById('hero3dCanvas') || document.getElementById('particles');
+  if (!stage && !existingCanvas) return;
+  if (!stage && existingCanvas) stage = existingCanvas.parentElement;
   if (!stage) return;
 
-  var width = stage.clientWidth || 540;
-  var height = stage.clientHeight || 540;
+  // 1. Prepare Cyber HUD container inside stage
+  var card = stage.querySelector('.qc-card');
+  if (!card) {
+    // Dynamically build the Quantum Core Cyber HUD container
+    stage.innerHTML = '';
 
-  var style = getComputedStyle(document.documentElement);
-  var primaryHex = (style.getPropertyValue('--primary') || '#6366f1').trim();
-  var secondaryHex = (style.getPropertyValue('--secondary') || '#a855f7').trim();
-  var primaryColor = new THREE.Color(primaryHex);
-  var secondaryColor = new THREE.Color(secondaryHex);
+    var aura = document.createElement('div');
+    aura.className = 'qc-aura';
+    stage.appendChild(aura);
 
+    card = document.createElement('div');
+    card.className = 'qc-card';
+    card.innerHTML = 
+      '<div class="qc-hud-top">' +
+        '<div class="qc-title-wrap">' +
+          '<span class="qc-status-dot"><span class="qc-ping"></span><span class="qc-solid"></span></span>' +
+          '<span class="qc-title">3D QUANTUM CORE <i class="fas fa-sparkles qc-sparkle"></i></span>' +
+        '</div>' +
+        '<div class="qc-badges">' +
+          '<span class="qc-badge-fps" id="qcFps">60 FPS</span>' +
+          '<span class="qc-badge-webgl">HARDWARE WEBGL</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="qc-viewport" id="qcViewport">' +
+        '<canvas id="hero3dCanvas" class="qc-canvas"></canvas>' +
+        '<div class="qc-hint-pill">✦ Drag to Orbit • Click to Pulse ✦</div>' +
+      '</div>' +
+      '<div class="qc-hud-bottom">' +
+        '<div class="qc-row-shapes">' +
+          '<div class="qc-shapes-btns" id="qcShapes">' +
+            '<button type="button" class="qc-shape-btn active" data-geom="icosahedron">Seed</button>' +
+            '<button type="button" class="qc-shape-btn" data-geom="torusknot">Torus Knot</button>' +
+            '<button type="button" class="qc-shape-btn" data-geom="tesseract">Tesseract</button>' +
+            '<button type="button" class="qc-shape-btn" data-geom="helix">DNA Helix</button>' +
+            '<button type="button" class="qc-shape-btn" data-geom="octahedron">Crystal</button>' +
+          '</div>' +
+          '<div class="qc-edges-tag" id="qcEdges">30 Edges</div>' +
+        '</div>' +
+        '<div class="qc-row-modes">' +
+          '<div class="qc-modes-group">' +
+            '<span class="qc-modes-label">Mode:</span>' +
+            '<button type="button" class="qc-mode-btn active" data-mode="crystal">Crystal Core</button>' +
+            '<button type="button" class="qc-mode-btn" data-mode="wireframe">Wireframe</button>' +
+            '<button type="button" class="qc-mode-btn" data-mode="synapse">Deep Synapse</button>' +
+          '</div>' +
+          '<div class="qc-satellites-status">' +
+            '<span class="qc-sat-dot"></span>' +
+            '<span>7 Satellites Online</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    stage.appendChild(card);
+  }
+
+  var canvas = document.getElementById('hero3dCanvas');
+  var viewport = document.getElementById('qcViewport') || stage;
+  var fpsElem = document.getElementById('qcFps');
+  var edgesElem = document.getElementById('qcEdges');
+  var shapeBtns = card.querySelectorAll('.qc-shape-btn');
+  var modeBtns = card.querySelectorAll('.qc-mode-btn');
+
+  var width = viewport.clientWidth || 460;
+  var height = viewport.clientHeight || 460;
+
+  // Scene & Camera
   var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-  camera.position.set(0, 0, 7.6);
+  var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+  camera.position.set(0, 1.2, 7.2);
 
+  // WebGL Renderer
   var renderer = new THREE.WebGLRenderer({
     canvas: canvas,
     alpha: true,
@@ -1170,385 +1302,421 @@ function toast(msg, type){
   });
   renderer.setSize(width, height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  if (THREE.ACESFilmicToneMapping) {
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+  }
 
-  var variant = document.body.getAttribute('data-variant') || 'bold-centered';
-  var rootGroup = new THREE.Group();
-  scene.add(rootGroup);
+  // Lighting
+  var ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+  scene.add(ambientLight);
 
-  var modelGroup = new THREE.Group();
-  rootGroup.add(modelGroup);
+  var cyanLight = new THREE.PointLight(0x9ed8ff, 3.5, 20);
+  cyanLight.position.set(3, 4, 5);
+  scene.add(cyanLight);
 
-  var pbrPrimary = new THREE.MeshPhysicalMaterial({
-    color: primaryColor,
-    emissive: primaryColor,
-    emissiveIntensity: 0.35,
+  var amberLight = new THREE.PointLight(0xcfae6e, 3.0, 20);
+  amberLight.position.set(-4, -2, 4);
+  scene.add(amberLight);
+
+  var rimLight = new THREE.PointLight(0x38bdf8, 2.0, 15);
+  rimLight.position.set(0, 5, -5);
+  scene.add(rimLight);
+
+  // Core Group
+  var coreGroup = new THREE.Group();
+  scene.add(coreGroup);
+
+  // Geometry generator
+  function createCoreGeometry(type) {
+    switch (type) {
+      case 'icosahedron':
+        return new THREE.IcosahedronGeometry(1.4, 1);
+      case 'torusknot':
+        return new THREE.TorusKnotGeometry(0.95, 0.32, 100, 16, 2, 3);
+      case 'tesseract':
+        return new THREE.BoxGeometry(1.6, 1.6, 1.6);
+      case 'helix':
+        return new THREE.CylinderGeometry(0.8, 0.8, 2.4, 16, 8, true);
+      case 'octahedron':
+        return new THREE.OctahedronGeometry(1.4, 0);
+      default:
+        return new THREE.IcosahedronGeometry(1.4, 1);
+    }
+  }
+
+  var edgeCounts = {
+    icosahedron: 30,
+    torusknot: 120,
+    tesseract: 32,
+    helix: 64,
+    octahedron: 12
+  };
+
+  // Determine starting geometry based on site variant if desirable, else 'icosahedron' (Seed)
+  var variant = document.body.getAttribute('data-variant') || '';
+  var currentGeometry = 'icosahedron';
+  if (variant === 'editorial') currentGeometry = 'octahedron';
+  else if (variant === 'technical-mono') currentGeometry = 'torusknot';
+  else if (variant === 'clinical-clean') currentGeometry = 'helix';
+  else if (variant === 'industrial') currentGeometry = 'tesseract';
+
+  var currentShading = 'crystal';
+
+  // Build Core Mesh
+  var geom = createCoreGeometry(currentGeometry);
+  var innerMat = new THREE.MeshPhysicalMaterial({
+    color: 0x0a1424,
+    emissive: 0x1d3d63,
+    emissiveIntensity: 0.85,
     roughness: 0.15,
     metalness: 0.85,
-    clearcoat: 1.0,
+    clearcoat: 0.9,
     clearcoatRoughness: 0.1,
-    reflectivity: 0.9
-  });
-
-  var pbrGlass = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff,
-    emissive: secondaryColor,
-    emissiveIntensity: 0.2,
-    roughness: 0.08,
-    metalness: 0.1,
-    transmission: 0.82,
-    opacity: 0.9,
     transparent: true,
-    ior: 1.52
+    opacity: 0.92,
+    wireframe: false
   });
+  var innerMesh = new THREE.Mesh(geom, innerMat);
+  coreGroup.add(innerMesh);
 
-  var pbrGold = new THREE.MeshPhysicalMaterial({
-    color: 0xf59e0b,
-    emissive: 0xd97706,
-    emissiveIntensity: 0.4,
-    roughness: 0.18,
-    metalness: 0.95,
-    clearcoat: 1.0
+  // Outer Wireframe Cage
+  var wireGeom = new THREE.WireframeGeometry(geom);
+  var wireMat = new THREE.LineBasicMaterial({
+    color: 0x9ed8ff,
+    transparent: true,
+    opacity: 0.65,
+    blending: THREE.AdditiveBlending
   });
+  var wireMesh = new THREE.LineSegments(wireGeom, wireMat);
+  coreGroup.add(wireMesh);
 
-  var coreMesh, wireMesh;
-  var rings = [];
-  var satellites = [];
-  var customUpdaters = [];
-
-  if (variant === 'editorial') {
-    // 1. AVPU: The Quantum Knowledge Prism
-    var octaGeom = new THREE.OctahedronGeometry(1.2, 0);
-    coreMesh = new THREE.Mesh(octaGeom, pbrPrimary);
-    modelGroup.add(coreMesh);
-
-    var innerWire = new THREE.Mesh(new THREE.IcosahedronGeometry(0.7, 0), new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true }));
-    modelGroup.add(innerWire);
-
-    var ringAngles = [ [Math.PI/3, 0], [-Math.PI/3, Math.PI/4], [0, Math.PI/3] ];
-    ringAngles.forEach(function(ang, idx){
-      var rGeom = new THREE.TorusGeometry(1.85 + idx * 0.28, 0.025, 16, 100);
-      var rMat = new THREE.MeshStandardMaterial({ color: idx % 2 === 0 ? primaryColor : secondaryColor, metalness: 0.8, roughness: 0.2 });
-      var rMesh = new THREE.Mesh(rGeom, rMat);
-      rMesh.rotation.x = ang[0];
-      rMesh.rotation.y = ang[1];
-      modelGroup.add(rMesh);
-      rings.push({ mesh: rMesh, speed: (idx + 1) * 0.008 * (idx % 2 === 0 ? 1 : -1) });
-
-      var sat = new THREE.Mesh(new THREE.SphereGeometry(0.09, 16, 16), new THREE.MeshStandardMaterial({ color: 0x60a5fa, emissive: 0x3b82f6 }));
-      modelGroup.add(sat);
-      satellites.push({ mesh: sat, radius: 1.85 + idx * 0.28, angle: idx * 2, speed: 0.015, rx: ang[0], ry: ang[1] });
+  // 3 Concentric Orbital Rings
+  var pulseRings = [];
+  var ringConfigs = [
+    { radius: 2.15, tube: 0.016, rot: [0.5, 0.2, 0], color: 0x9ed8ff },
+    { radius: 2.45, tube: 0.018, rot: [-0.4, 0.8, 0.3], color: 0xcfae6e },
+    { radius: 2.75, tube: 0.014, rot: [0.9, -0.3, 0.6], color: 0x38bdf8 }
+  ];
+  ringConfigs.forEach(function(cfg) {
+    var rGeom = new THREE.TorusGeometry(cfg.radius, cfg.tube, 16, 100);
+    var rMat = new THREE.MeshBasicMaterial({
+      color: cfg.color,
+      transparent: true,
+      opacity: 0.55,
+      blending: THREE.AdditiveBlending
     });
-
-  } else if (variant === 'market-vibrant') {
-    // 2. AVP E-Mart: The Hyper-Prism Marketplace
-    var diamGeom = new THREE.ConeGeometry(1.3, 1.8, 6);
-    coreMesh = new THREE.Mesh(diamGeom, pbrPrimary);
-    coreMesh.rotation.x = Math.PI;
-    modelGroup.add(coreMesh);
-
-    var topCone = new THREE.Mesh(new THREE.ConeGeometry(1.3, 0.7, 6), pbrGlass);
-    topCone.position.y = 1.0;
-    modelGroup.add(topCone);
-
-    var goldRing = new THREE.Mesh(new THREE.TorusGeometry(2.1, 0.03, 16, 90), pbrGold);
-    goldRing.rotation.x = Math.PI / 3.5;
-    modelGroup.add(goldRing);
-    rings.push({ mesh: goldRing, speed: 0.012 });
-
-    for (var c = 0; c < 5; c++) {
-      var coin = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.04, 16), pbrGold);
-      modelGroup.add(coin);
-      satellites.push({ mesh: coin, radius: 2.1, angle: (c * Math.PI * 2) / 5, speed: 0.014, rx: Math.PI / 3.5, ry: 0 });
-    }
-
-  } else if (variant === 'technical-mono') {
-    // 3. Comonk AI: The Synaptic Neuro-Knot
-    var knotGeom = new THREE.TorusKnotGeometry(1.05, 0.28, 128, 16, 3, 4);
-    coreMesh = new THREE.Mesh(knotGeom, pbrPrimary);
-    modelGroup.add(coreMesh);
-
-    wireMesh = new THREE.Mesh(knotGeom.clone(), new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.4 }));
-    wireMesh.scale.set(1.06, 1.06, 1.06);
-    modelGroup.add(wireMesh);
-
-    var netGroup = new THREE.Group();
-    for (var n = 0; n < 24; n++) {
-      var node = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 8), new THREE.MeshBasicMaterial({ color: 0x0ea5e9 }));
-      node.position.set((Math.random()-0.5)*3.8, (Math.random()-0.5)*3.8, (Math.random()-0.5)*3.8);
-      netGroup.add(node);
-    }
-    modelGroup.add(netGroup);
-    customUpdaters.push(function(){ netGroup.rotation.y += 0.005; });
-
-  } else if (variant === 'dashboard') {
-    // 4. Sevenforce: The Autonomous Multi-Agent Hive
-    var hiveGeom = new THREE.DodecahedronGeometry(1.0, 0);
-    coreMesh = new THREE.Mesh(hiveGeom, pbrPrimary);
-    modelGroup.add(coreMesh);
-
-    wireMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.4, 1), new THREE.MeshBasicMaterial({ color: 0x22d3ee, wireframe: true, transparent: true, opacity: 0.35 }));
-    modelGroup.add(wireMesh);
-
-    var agentColors = [0x22d3ee, 0x34d399, 0xfbbf24, 0xa855f7, 0xf472b6, 0x38bdf8, 0x4ade80];
-    for (var a = 0; a < 7; a++) {
-      var satDrone = new THREE.Mesh(new THREE.OctahedronGeometry(0.12, 0), new THREE.MeshStandardMaterial({ color: agentColors[a], emissive: agentColors[a], emissiveIntensity: 0.5 }));
-      modelGroup.add(satDrone);
-      satellites.push({
-        mesh: satDrone,
-        radius: 2.15,
-        angle: (a * Math.PI * 2) / 7,
-        speed: 0.012 + (a % 3) * 0.004,
-        rx: (a * Math.PI) / 7,
-        ry: (a * Math.PI) / 5
-      });
-    }
-
-  } else if (variant === 'clinical-clean') {
-    // 5. Decode Forest Pharmacy: The Bio-Molecular Helix
-    var helixGroup = new THREE.Group();
-    var hCount = 20;
-    for (var h = 0; h < hCount; h++) {
-      var y = (h - hCount/2) * 0.14;
-      var ang = h * 0.42;
-      var s1 = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x059669 }));
-      var s2 = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), new THREE.MeshStandardMaterial({ color: 0x34d399, emissive: 0x10b981 }));
-      s1.position.set(Math.cos(ang) * 0.9, y, Math.sin(ang) * 0.9);
-      s2.position.set(-Math.cos(ang) * 0.9, y, -Math.sin(ang) * 0.9);
-      helixGroup.add(s1);
-      helixGroup.add(s2);
-
-      var rungGeom = new THREE.CylinderGeometry(0.018, 0.018, 1.8, 8);
-      var rung = new THREE.Mesh(rungGeom, new THREE.MeshBasicMaterial({ color: 0x6ee7b7, transparent: true, opacity: 0.5 }));
-      rung.position.y = y;
-      rung.rotation.z = Math.PI / 2;
-      rung.rotation.y = -ang;
-      helixGroup.add(rung);
-    }
-    modelGroup.add(helixGroup);
-    coreMesh = helixGroup;
-
-  } else if (variant === 'industrial') {
-    // 6. Breakdown Factor: The Structural AEC Tesseract & Laser Scanner
-    var cubeGeom = new THREE.BoxGeometry(1.6, 1.6, 1.6);
-    coreMesh = new THREE.Mesh(cubeGeom, pbrPrimary);
-    modelGroup.add(coreMesh);
-
-    var outerFrame = new THREE.Mesh(new THREE.BoxGeometry(2.1, 2.1, 2.1), new THREE.MeshBasicMaterial({ color: 0xf59e0b, wireframe: true }));
-    modelGroup.add(outerFrame);
-
-    var scanPlane = new THREE.Mesh(new THREE.PlaneGeometry(3.0, 3.0), new THREE.MeshBasicMaterial({ color: 0x10b981, transparent: true, opacity: 0.25, side: THREE.DoubleSide }));
-    scanPlane.rotation.x = Math.PI / 2;
-    modelGroup.add(scanPlane);
-    customUpdaters.push(function(t){ scanPlane.position.y = Math.sin(t * 2.2) * 1.3; });
-
-  } else if (variant === 'humanitarian') {
-    // 7. AVP Charitable Trust: The Lotus of Hope
-    var lotusGroup = new THREE.Group();
-    var petalGeom = new THREE.ConeGeometry(0.5, 1.5, 4);
-    for (var p = 0; p < 8; p++) {
-      var petal = new THREE.Mesh(petalGeom, pbrPrimary);
-      petal.rotation.z = Math.PI / 3.8;
-      petal.rotation.y = (p * Math.PI * 2) / 8;
-      petal.position.y = -0.3;
-      lotusGroup.add(petal);
-    }
-    var heartSphere = new THREE.Mesh(new THREE.SphereGeometry(0.65, 24, 24), pbrGold);
-    lotusGroup.add(heartSphere);
-    modelGroup.add(lotusGroup);
-    coreMesh = lotusGroup;
-
-    var auraRing = new THREE.Mesh(new THREE.TorusGeometry(1.9, 0.025, 16, 90), new THREE.MeshBasicMaterial({ color: 0xfb7185, transparent: true, opacity: 0.6 }));
-    auraRing.rotation.x = Math.PI / 2.5;
-    modelGroup.add(auraRing);
-    rings.push({ mesh: auraRing, speed: 0.01 });
-
-  } else if (variant === 'cyber-defense') {
-    // 8. Rakshak AI: The Cyber Aegis Shield & Radar Scanner
-    var shieldGeom = new THREE.CylinderGeometry(1.2, 0.2, 1.8, 6);
-    coreMesh = new THREE.Mesh(shieldGeom, pbrPrimary);
-    modelGroup.add(coreMesh);
-
-    var radarRing = new THREE.Mesh(new THREE.RingGeometry(1.5, 1.55, 32), new THREE.MeshBasicMaterial({ color: 0xef4444, side: THREE.DoubleSide }));
-    radarRing.rotation.x = Math.PI / 2;
-    modelGroup.add(radarRing);
-
-    var sweepLine = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.04), new THREE.MeshBasicMaterial({ color: 0xffffff }));
-    sweepLine.position.y = 0;
-    modelGroup.add(sweepLine);
-    customUpdaters.push(function(){ sweepLine.rotation.z += 0.04; });
-
-  } else {
-    // 9. Sevenseed (Group Hub): The Genesis Hyper-Icosahedron Core
-    var icoGeom = new THREE.IcosahedronGeometry(1.25, 1);
-    coreMesh = new THREE.Mesh(icoGeom, pbrGold);
-    modelGroup.add(coreMesh);
-
-    wireMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.6, 0), new THREE.MeshBasicMaterial({ color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.55 }));
-    modelGroup.add(wireMesh);
-
-    var r1 = new THREE.Mesh(new THREE.TorusGeometry(2.1, 0.03, 16, 90), pbrPrimary);
-    r1.rotation.x = Math.PI / 3;
-    modelGroup.add(r1);
-    rings.push({ mesh: r1, speed: 0.009 });
-
-    var r2 = new THREE.Mesh(new THREE.TorusGeometry(2.35, 0.02, 16, 90), pbrGlass);
-    r2.rotation.y = Math.PI / 3.5;
-    modelGroup.add(r2);
-    rings.push({ mesh: r2, speed: -0.012 });
-
-    for (var s = 0; s < 6; s++) {
-      var seed = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), pbrGold);
-      modelGroup.add(seed);
-      satellites.push({ mesh: seed, radius: 2.2, angle: (s * Math.PI * 2) / 6, speed: 0.013, rx: Math.PI / 3, ry: 0 });
-    }
-  }
-
-  // ── Cosmic Particle Dust (220 points) ──
-  var pCount = 220;
-  var pGeom = new THREE.BufferGeometry();
-  var pPos = new Float32Array(pCount * 3);
-  var pCols = new Float32Array(pCount * 3);
-  for (var p = 0; p < pCount; p++) {
-    var pr = 2.4 + Math.random() * 5.0;
-    var pT = Math.random() * Math.PI * 2;
-    var pP = Math.acos(2 * Math.random() - 1);
-    pPos[p * 3] = pr * Math.sin(pP) * Math.cos(pT);
-    pPos[p * 3 + 1] = pr * Math.sin(pP) * Math.sin(pT);
-    pPos[p * 3 + 2] = pr * Math.cos(pP);
-    var pCol = Math.random() > 0.5 ? primaryColor : secondaryColor;
-    pCols[p * 3] = pCol.r;
-    pCols[p * 3 + 1] = pCol.g;
-    pCols[p * 3 + 2] = pCol.b;
-  }
-  pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-  pGeom.setAttribute('color', new THREE.BufferAttribute(pCols, 3));
-  var pSystem = new THREE.Points(pGeom, new THREE.PointsMaterial({ size: 0.045, vertexColors: true, transparent: true, opacity: 0.65, blending: THREE.AdditiveBlending }));
-  scene.add(pSystem);
-
-  // ── Dynamic Specular Lighting (The Spline Secret) ──
-  var ambLight = new THREE.AmbientLight(0xffffff, 0.85);
-  scene.add(ambLight);
-
-  var dirLight = new THREE.DirectionalLight(0xffffff, 1.8);
-  dirLight.position.set(5, 8, 6);
-  scene.add(dirLight);
-
-  var fillLight = new THREE.DirectionalLight(secondaryColor, 1.2);
-  fillLight.position.set(-5, -4, 4);
-  scene.add(fillLight);
-
-  var cursorLight = new THREE.PointLight(primaryColor, 3.2, 14);
-  cursorLight.position.set(0, 0, 4);
-  scene.add(cursorLight);
-
-  // ── Spline-Grade Mouse-Look Spring Tracking ──
-  var mouseX = 0, mouseY = 0;
-  var targetRotX = 0, targetRotY = 0;
-  window.addEventListener('mousemove', function(e){
-    var nx = (e.clientX / window.innerWidth) * 2 - 1;
-    var ny = (e.clientY / window.innerHeight) * 2 - 1;
-    targetRotY = nx * 0.55;
-    targetRotX = ny * 0.45;
-
-    cursorLight.position.x += (nx * 4 - cursorLight.position.x) * 0.1;
-    cursorLight.position.y += (-ny * 4 - cursorLight.position.y) * 0.1;
+    var rMesh = new THREE.Mesh(rGeom, rMat);
+    rMesh.rotation.set(cfg.rot[0], cfg.rot[1], cfg.rot[2]);
+    coreGroup.add(rMesh);
+    pulseRings.push(rMesh);
   });
 
-  // ── 360° Drag & Orbit with Inertia ──
+  // 7 Orbiting Satellites with custom glow halos
+  var SATELLITES_DATA = [
+    { name: 'LangGraph', color: 0x9ed8ff, orbitRadius: 2.7, speed: 0.65, tilt: 0.28, phase: 0 },
+    { name: 'YOLOv8', color: 0xcfae6e, orbitRadius: 3.1, speed: 0.48, tilt: -0.35, phase: 0.9 },
+    { name: 'ChromaDB', color: 0x60a5fa, orbitRadius: 3.4, speed: 0.38, tilt: 0.52, phase: 1.8 },
+    { name: 'FastAPI', color: 0x34d399, orbitRadius: 3.8, speed: 0.32, tilt: -0.22, phase: 2.7 },
+    { name: 'n8n', color: 0xf59e0b, orbitRadius: 4.1, speed: 0.25, tilt: 0.41, phase: 3.6 },
+    { name: 'Groq', color: 0xf43f5e, orbitRadius: 4.4, speed: 0.22, tilt: -0.48, phase: 4.5 },
+    { name: 'PyTorch', color: 0xec4899, orbitRadius: 4.7, speed: 0.18, tilt: 0.15, phase: 5.4 }
+  ];
+
+  var satellites = [];
+  SATELLITES_DATA.forEach(function(sat) {
+    var satGroup = new THREE.Group();
+    var satMesh = new THREE.Mesh(
+      new THREE.SphereGeometry(0.12, 16, 16),
+      new THREE.MeshStandardMaterial({
+        color: sat.color,
+        emissive: sat.color,
+        emissiveIntensity: 1.2,
+        roughness: 0.2,
+        metalness: 0.8
+      })
+    );
+    var haloMesh = new THREE.Mesh(
+      new THREE.RingGeometry(0.18, 0.22, 24),
+      new THREE.MeshBasicMaterial({
+        color: sat.color,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.6,
+        blending: THREE.AdditiveBlending
+      })
+    );
+    haloMesh.rotation.x = Math.PI / 2;
+    satGroup.add(satMesh);
+    satGroup.add(haloMesh);
+    scene.add(satGroup);
+    satellites.push({ mesh: satGroup, halo: haloMesh, data: sat });
+  });
+
+  // Cosmic Dust Field (360 points)
+  var starCount = 360;
+  var starPositions = new Float32Array(starCount * 3);
+  var starColors = new Float32Array(starCount * 3);
+  for (var i = 0; i < starCount; i++) {
+    var radius = 2.5 + Math.random() * 4.5;
+    var theta = Math.random() * Math.PI * 2;
+    var phi = Math.acos(Math.random() * 2 - 1);
+    starPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+    starPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+    starPositions[i * 3 + 2] = radius * Math.cos(phi);
+    var isGold = Math.random() > 0.65;
+    starColors[i * 3] = isGold ? 0.81 : 0.62;
+    starColors[i * 3 + 1] = isGold ? 0.68 : 0.85;
+    starColors[i * 3 + 2] = isGold ? 0.43 : 1.0;
+  }
+  var starGeom = new THREE.BufferGeometry();
+  starGeom.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+  starGeom.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
+  var starField = new THREE.Points(
+    starGeom,
+    new THREE.PointsMaterial({
+      size: 0.045,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.75,
+      blending: THREE.AdditiveBlending
+    })
+  );
+  scene.add(starField);
+
+  // Shockwave Pulses
+  var shockwaves = [];
+  var pulseIntensity = 0;
+  function triggerPulse() {
+    pulseIntensity = 1.0;
+    var ringGeom = new THREE.RingGeometry(0.5, 0.65, 48);
+    var ringMat = new THREE.MeshBasicMaterial({
+      color: 0x9ed8ff,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending
+    });
+    var shockRing = new THREE.Mesh(ringGeom, ringMat);
+    shockRing.rotation.x = Math.PI / 2;
+    scene.add(shockRing);
+    shockwaves.push({ mesh: shockRing, life: 1.0 });
+  }
+
+  // Switch Geometry dynamically
+  function setGeometry(type) {
+    currentGeometry = type;
+    var newGeom = createCoreGeometry(type);
+    if (innerMesh) {
+      innerMesh.geometry.dispose();
+      innerMesh.geometry = newGeom;
+    }
+    if (wireMesh) {
+      wireMesh.geometry.dispose();
+      wireMesh.geometry = new THREE.WireframeGeometry(newGeom);
+    }
+    if (edgesElem) {
+      edgesElem.textContent = (edgeCounts[type] || 30) + ' Edges';
+    }
+    shapeBtns.forEach(function(b) {
+      b.classList.toggle('active', b.getAttribute('data-geom') === type);
+    });
+    triggerPulse();
+  }
+
+  // Switch Shading Style dynamically
+  function setShading(style) {
+    currentShading = style;
+    if (!innerMesh || !wireMesh) return;
+    if (style === 'wireframe') {
+      innerMat.wireframe = true;
+      innerMat.opacity = 0.4;
+      wireMat.opacity = 0.85;
+    } else if (style === 'synapse') {
+      innerMat.wireframe = false;
+      innerMat.emissive.setHex(0x38bdf8);
+      innerMat.emissiveIntensity = 1.4;
+      innerMat.opacity = 0.75;
+      wireMat.opacity = 0.95;
+    } else {
+      // crystal
+      innerMat.wireframe = false;
+      innerMat.emissive.setHex(0x1d3d63);
+      innerMat.emissiveIntensity = 0.85;
+      innerMat.opacity = 0.92;
+      wireMat.opacity = 0.65;
+    }
+    modeBtns.forEach(function(b) {
+      b.classList.toggle('active', b.getAttribute('data-mode') === style);
+    });
+  }
+
+  // Bind Switcher Buttons
+  shapeBtns.forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var g = btn.getAttribute('data-geom');
+      if (g) setGeometry(g);
+    });
+  });
+
+  modeBtns.forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var m = btn.getAttribute('data-mode');
+      if (m) setShading(m);
+    });
+  });
+
+  // Apply initial geometry UI
+  setGeometry(currentGeometry);
+  setShading(currentShading);
+
+  // Interaction State
+  var mousePos = { x: 0, y: 0 };
+  var targetRot = { x: 0.2, y: 0.3 };
+  var currentRot = { x: 0.2, y: 0.3 };
   var isDragging = false;
-  var prevPointerX = 0, prevPointerY = 0;
-  var velX = 0, velY = 0;
-  var friction = 0.92;
+  var lastMouse = { x: 0, y: 0 };
+  var isHovered = false;
 
-  stage.addEventListener('pointerdown', function(e){
+  viewport.addEventListener('pointerdown', function(e) {
     isDragging = true;
-    prevPointerX = e.clientX;
-    prevPointerY = e.clientY;
-    velX = 0; velY = 0;
-    stage.setPointerCapture(e.pointerId);
+    lastMouse = { x: e.clientX, y: e.clientY };
+    try { viewport.setPointerCapture(e.pointerId); } catch(err){}
   });
 
-  stage.addEventListener('pointermove', function(e){
-    if (!isDragging) return;
-    var dx = e.clientX - prevPointerX;
-    var dy = e.clientY - prevPointerY;
-    prevPointerX = e.clientX;
-    prevPointerY = e.clientY;
-    modelGroup.rotation.y += dx * 0.008;
-    modelGroup.rotation.x += dy * 0.008;
-    velX = dx * 0.008;
-    velY = dy * 0.008;
+  window.addEventListener('pointermove', function(e) {
+    var rect = viewport.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) {
+      mousePos.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mousePos.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+    }
+    if (isDragging) {
+      var dx = e.clientX - lastMouse.x;
+      var dy = e.clientY - lastMouse.y;
+      targetRot.y += dx * 0.012;
+      targetRot.x += dy * 0.012;
+      lastMouse = { x: e.clientX, y: e.clientY };
+    }
   });
 
-  function endDrag(e){
+  function stopDrag(e) {
     if (isDragging) {
       isDragging = false;
-      try { stage.releasePointerCapture(e.pointerId); } catch(err){}
+      try { viewport.releasePointerCapture(e.pointerId); } catch(err){}
     }
   }
-  stage.addEventListener('pointerup', endDrag);
-  stage.addEventListener('pointercancel', endDrag);
+  window.addEventListener('pointerup', stopDrag);
+  window.addEventListener('pointercancel', stopDrag);
 
-  stage.addEventListener('dblclick', function(){
-    try {
-      var actx = new (window.AudioContext || window.webkitAudioContext)();
-      var osc = actx.createOscillator();
-      var gain = actx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(587.33, actx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(880, actx.currentTime + 0.35);
-      gain.gain.setValueAtTime(0.2, actx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.5);
-      osc.connect(gain);
-      gain.connect(actx.destination);
-      osc.start();
-      osc.stop(actx.currentTime + 0.5);
-    } catch(e){}
-    velX = (Math.random() - 0.5) * 0.12;
-    velY = (Math.random() - 0.5) * 0.1;
+  viewport.addEventListener('mouseenter', function() { isHovered = true; });
+  viewport.addEventListener('mouseleave', function() {
+    isHovered = false;
+    isDragging = false;
+    mousePos.x = 0; mousePos.y = 0;
   });
 
-  window.addEventListener('resize', function(){
-    var nw = stage.clientWidth || 540;
-    var nh = stage.clientHeight || 540;
-    camera.aspect = nw / nh;
+  viewport.addEventListener('click', function() {
+    triggerPulse();
+  });
+
+  // Window resize
+  window.addEventListener('resize', function() {
+    var w = viewport.clientWidth || 460;
+    var h = viewport.clientHeight || 460;
+    camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    renderer.setSize(nw, nh);
+    renderer.setSize(w, h);
   });
 
-  var clock = new THREE.Clock();
-  function animate(){
+  // Animation Loop with FPS Tracking
+  var lastTime = performance.now();
+  var frameCount = 0;
+  var fpsTimer = performance.now();
+  var isVisible = true;
+
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { isVisible = e.isIntersecting; });
+    }, { threshold: 0.05 });
+    obs.observe(stage);
+  }
+
+  function animate(time) {
     requestAnimationFrame(animate);
-    var delta = clock.getDelta();
-    var time = clock.getElapsedTime();
+    if (!isVisible) return;
 
-    if (!isDragging) {
-      velX *= friction;
-      velY *= friction;
-      modelGroup.rotation.y += velX + 0.004;
-      modelGroup.rotation.x += velY;
+    var dt = (time - lastTime) / 1000;
+    if (dt > 0.1) dt = 0.1;
+    lastTime = time;
 
-      rootGroup.rotation.y += (targetRotY - rootGroup.rotation.y) * 0.05;
-      rootGroup.rotation.x += (targetRotX - rootGroup.rotation.x) * 0.05;
+    frameCount++;
+    if (time - fpsTimer >= 1000) {
+      if (fpsElem) fpsElem.textContent = frameCount + ' FPS';
+      frameCount = 0;
+      fpsTimer = time;
     }
 
-    rings.forEach(function(r){ r.mesh.rotation.z += r.speed; });
+    currentRot.x += (targetRot.x - currentRot.x) * 0.07;
+    currentRot.y += (targetRot.y - currentRot.y) * 0.07;
 
-    satellites.forEach(function(s){
-      s.angle += s.speed;
-      s.mesh.position.x = Math.cos(s.angle) * s.radius;
-      s.mesh.position.y = Math.sin(s.angle) * s.radius * Math.sin(s.rx);
-      s.mesh.position.z = Math.sin(s.angle) * s.radius * Math.cos(s.rx);
+    if (coreGroup) {
+      var autoSpin = isHovered ? 0.45 : 0.25;
+      coreGroup.rotation.y += dt * autoSpin;
+      coreGroup.rotation.x = currentRot.x;
+      coreGroup.rotation.z = currentRot.y * 0.4;
+    }
+
+    if (pulseIntensity > 0) {
+      pulseIntensity = Math.max(0, pulseIntensity - dt * 1.5);
+    }
+    var breathe = 1 + Math.sin(time * 0.002) * 0.03 + pulseIntensity * 0.18;
+    if (innerMesh) innerMesh.scale.set(breathe, breathe, breathe);
+    if (wireMesh) {
+      var wireScale = breathe * 1.05;
+      wireMesh.scale.set(wireScale, wireScale, wireScale);
+    }
+
+    pulseRings.forEach(function(ring, idx) {
+      var dir = idx % 2 === 0 ? 1 : -1;
+      ring.rotation.z += dt * (0.35 + idx * 0.12) * dir;
     });
 
-    customUpdaters.forEach(function(fn){ fn(time); });
+    satellites.forEach(function(sat) {
+      var d = sat.data;
+      var t = time * 0.001 * d.speed + d.phase;
+      var x = Math.cos(t) * d.orbitRadius;
+      var z = Math.sin(t) * d.orbitRadius;
+      var y = Math.sin(t * 1.5) * (d.orbitRadius * d.tilt);
+      sat.mesh.position.set(x, y, z);
+      sat.halo.rotation.z += dt * 1.2;
+    });
 
-    pSystem.rotation.y = time * 0.018;
-    pSystem.rotation.x = Math.sin(time * 0.012) * 0.04;
+    for (var sIdx = shockwaves.length - 1; sIdx >= 0; sIdx--) {
+      var sw = shockwaves[sIdx];
+      sw.life -= dt * 1.6;
+      var sScale = 1 + (1 - sw.life) * 4.5;
+      sw.mesh.scale.set(sScale, sScale, sScale);
+      sw.mesh.material.opacity = Math.max(0, sw.life * 0.85);
+      if (sw.life <= 0) {
+        scene.remove(sw.mesh);
+        sw.mesh.geometry.dispose();
+        sw.mesh.material.dispose();
+        shockwaves.splice(sIdx, 1);
+      }
+    }
+
+    starField.rotation.y += dt * 0.04;
+
+    camera.position.x += (mousePos.x * 1.2 - camera.position.x) * 0.05;
+    camera.position.y += (-mousePos.y * 1.0 + 1.2 - camera.position.y) * 0.05;
+    camera.lookAt(0, 0, 0);
 
     renderer.render(scene, camera);
   }
-  animate();
+
+  requestAnimationFrame(animate);
 })();
 
 // ── Aceternity UI 3D Card Physics Tilt & Dynamic Specular Glare ──

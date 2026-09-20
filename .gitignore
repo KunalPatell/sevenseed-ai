@@ -22,6 +22,7 @@ node_modules/
 .next/
 out/
 tsconfig.tsbuildinfo
+frontend/
 
 # ── Local debug output ────────────────────────────────────────────────────────
 _run_log.txt

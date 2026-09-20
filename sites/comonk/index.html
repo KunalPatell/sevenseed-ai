@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Comonk AI — AI Career Intelligence Platform</title>
   <meta name="description" content="Comonk is a free, AI-native career platform for the Ahmedabad/Gandhinagar tech market — resume tailoring, an approval-gated AI application autopilot, mock interviews with real-time scoring, and a full application tracker, all in one place.">
   <meta property="og:type" content="website">
@@ -97,10 +97,48 @@
     <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>Resume AI</span><span>ATS Optimizer</span><span>Mock Interviews</span><span>Job Autopilot</span><span>Salary Insights</span><span>LinkedIn AI</span><span>Application Tracker</span><span>Cover Letters</span><span>Skill Roadmaps</span><span>RAG Job Matching</span><span>Resume AI</span><span>ATS Optimizer</span><span>Mock Interviews</span><span>Job Autopilot</span><span>Salary Insights</span><span>LinkedIn AI</span><span>Application Tracker</span><span>Cover Letters</span><span>Skill Roadmaps</span><span>RAG Job Matching</span></div></div>
   </div>
 
-  <div class="hero-3d-stage" id="hero3dStage">
-    <canvas id="hero3dCanvas"></canvas>
-    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · PBR Engine</div>
-    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
+    <div class="hero-3d-stage" id="hero3dStage">
+    <div class="qc-aura"></div>
+    <div class="qc-card">
+      <div class="qc-hud-top">
+        <div class="qc-title-wrap">
+          <span class="qc-status-dot"><span class="qc-ping"></span><span class="qc-solid"></span></span>
+          <span class="qc-title">3D QUANTUM CORE <i class="fas fa-sparkles qc-sparkle"></i></span>
+        </div>
+        <div class="qc-badges">
+          <span class="qc-badge-fps" id="qcFps">60 FPS</span>
+          <span class="qc-badge-webgl">HARDWARE WEBGL</span>
+        </div>
+      </div>
+      <div class="qc-viewport" id="qcViewport">
+        <canvas id="hero3dCanvas" class="qc-canvas"></canvas>
+        <div class="qc-hint-pill">✦ Drag to Orbit • Click to Pulse ✦</div>
+      </div>
+      <div class="qc-hud-bottom">
+        <div class="qc-row-shapes">
+          <div class="qc-shapes-btns" id="qcShapes">
+            <button type="button" class="qc-shape-btn active" data-geom="icosahedron">Seed</button>
+            <button type="button" class="qc-shape-btn" data-geom="torusknot">Torus Knot</button>
+            <button type="button" class="qc-shape-btn" data-geom="tesseract">Tesseract</button>
+            <button type="button" class="qc-shape-btn" data-geom="helix">DNA Helix</button>
+            <button type="button" class="qc-shape-btn" data-geom="octahedron">Crystal</button>
+          </div>
+          <div class="qc-edges-tag" id="qcEdges">30 Edges</div>
+        </div>
+        <div class="qc-row-modes">
+          <div class="qc-modes-group">
+            <span class="qc-modes-label">Mode:</span>
+            <button type="button" class="qc-mode-btn active" data-mode="crystal">Crystal Core</button>
+            <button type="button" class="qc-mode-btn" data-mode="wireframe">Wireframe</button>
+            <button type="button" class="qc-mode-btn" data-mode="synapse">Deep Synapse</button>
+          </div>
+          <div class="qc-satellites-status">
+            <span class="qc-sat-dot"></span>
+            <span>7 Satellites Online</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 

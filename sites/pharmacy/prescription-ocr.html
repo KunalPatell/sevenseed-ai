@@ -3,7 +3,7 @@
 <head>
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Prescription OCR & Dosage Extractor — Decode Pharmacy</title>
   <meta name="description" content="Extract medications, dosage schedules, and precautions from doctor prescriptions.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -81,18 +81,7 @@
 </div>
 <script>
 function scanPrescription() {
-  document.getElementById('rxOutput').innerText = '💊 OCR EXTRACTION RESULTS:
-
-1. Amlodipine 5mg
-   - Dosage: 1 Tablet Daily (Morning)
-   - Purpose: Blood Pressure Management
-
-2. Atorvastatin 20mg
-   - Dosage: 1 Tablet Daily (Night after dinner)
-   - Purpose: Cholesterol
-
-✅ 0 Critical Interactions Detected.
-💰 Generic Substitution Savings: 48% cheaper generic available!';
+  document.getElementById('rxOutput').innerText = '💊 OCR EXTRACTION RESULTS:\n\n1. Amlodipine 5mg\n   - Dosage: 1 Tablet Daily (Morning)\n   - Purpose: Blood Pressure Management\n\n2. Atorvastatin 20mg\n   - Dosage: 1 Tablet Daily (Night after dinner)\n   - Purpose: Cholesterol\n\n✅ 0 Critical Interactions Detected.\n💰 Generic Substitution Savings: 48% cheaper generic available!';
 }
 </script>
 
@@ -111,7 +100,7 @@ function scanPrescription() {
       <ul class="foot-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="../index.html">Sevenseed Hub</a></li>
-        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
     </div>
   </div>

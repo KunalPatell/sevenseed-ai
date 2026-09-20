@@ -3,7 +3,7 @@
 <head>
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Bring Your Own Key (BYOK) Vault Guide & Tester — Sevenseed</title>
   <meta name="description" content="Store your personal Groq, Gemini, or OpenAI API keys with AES-256 encryption.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,25 +12,29 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
-    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
-    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
-    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
-    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
-    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
+    .sub-hero { padding: calc(var(--nav-h) + 40px) clamp(16px, 4vw, 24px) 36px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
+    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; max-width: 100%; }
+    .sub-hero-title { font-size: clamp(24px, 5.2vw, 48px); font-weight: 800; line-height: 1.15; margin-bottom: 14px; }
+    .sub-hero-sub { font-size: clamp(14px, 3.5vw, 17px); color: var(--text-2); max-width: 680px; margin: 0 auto 28px; line-height: 1.65; }
+    .interactive-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(18px, 4vw, 32px); backdrop-filter: blur(16px); box-shadow: var(--shadow); max-width: 900px; margin: 0 auto 60px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 20px; }
+    .tool-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: clamp(16px, 3.5vw, 24px); transition: transform 0.2s, border-color 0.2s; }
     .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
     .form-group { margin-bottom: 20px; text-align: left; }
-    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
-    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
+    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--text-2); }
+    .form-control { width: 100%; padding: 12px 16px; background: var(--bg-1); border: 1px solid var(--border-hi); border-radius: 10px; color: var(--text); font-family: inherit; font-size: 14px; }
     .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
-    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
+    .output-screen { background: var(--bg); border: 1px solid var(--border-hi); border-radius: 12px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+
+    @media(max-width: 768px) {
+      .form-control { font-size: 16px !important; }
+      .sub-hero { padding-top: calc(var(--nav-h) + 20px); }
+    }
   </style>
 </head>
 <body>
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
-
 
 <nav class="nav" id="mainNav">
   <div class="nav-inner">
@@ -38,20 +42,27 @@
       <span class="nav-logo-wrap"><i class="fas fa-seedling"></i></span>
       <span class="nav-name">Sevenseed</span>
     </a>
-    <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="ventures.html">Portfolio</a>
-        <a href="pricing.html">SaaS Pricing</a>
-        <a href="byok.html" class="active">BYOK Vault</a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="ventures.html">Portfolio</a>
+      <a href="pricing.html">SaaS Pricing</a>
+      <a href="byok.html" class="active">BYOK Vault</a>
+      <a href="syndicate-ruv.html">Syndicate RUV</a>
+      <a href="market-sizing.html">TAM Calculator</a>
+      <div class="nav-mobile-actions">
+        <a class="btn btn-primary" href="/"><i class="fas fa-seedling"></i> Sevenseed Hub</a>
+        <a class="btn btn-ghost" href="index.html#contact"><i class="fas fa-paper-plane"></i> Contact Us</a>
+      </div>
     </div>
-    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
-      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
-      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
-      <a class="btn btn-primary sm" href="index.html#contact"><i class="fas fa-rocket"></i> Launch</a>
+    <div class="nav-actions">
+      <a class="btn btn-ghost sm nav-btn-hub" href="/" style="display:inline-flex; align-items:center; gap:6px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm nav-btn-home" href="index.html"><i class="fas fa-home"></i> Home</a>
+      <button class="hamburger" id="hamburger" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
     </div>
   </div>
 </nav>
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
 
 
 <header class="sub-hero">
@@ -100,16 +111,14 @@ function saveBYOKKey() {
     return;
   }
   localStorage.setItem('user_' + prov + '_key', key);
-  document.getElementById('byokOutput').innerText = '✅ SUCCESS: ' + prov.toUpperCase() + ' API Key stored securely in local vault.
-Ready to power all ventures!';
+  document.getElementById('byokOutput').innerText = '✅ SUCCESS: ' + prov.toUpperCase() + ' API Key stored securely in local vault.\nReady to power all ventures!';
 }
 function testBYOKKey() {
   var groq = localStorage.getItem('user_groq_key');
   var gemini = localStorage.getItem('user_gemini_key');
   var openai = localStorage.getItem('user_openai_key');
   if(!groq && !gemini && !openai) {
-    document.getElementById('byokOutput').innerText = '⚠️ NO ACTIVE KEY FOUND in local vault.
-Please enter your Groq, Gemini, or OpenAI API key on the left.';
+    document.getElementById('byokOutput').innerText = '⚠️ NO ACTIVE KEY FOUND in local vault.\nPlease enter your Groq, Gemini, or OpenAI API key on the left.';
     return;
   }
   var prov = groq ? 'GROQ' : (gemini ? 'GEMINI' : 'OPENAI');
@@ -119,19 +128,11 @@ Please enter your Groq, Gemini, or OpenAI API key on the left.';
     .then(function(r){ return r.json(); })
     .then(function(){
       var lat = Math.round(performance.now() - t0);
-      document.getElementById('byokOutput').innerText = '🚀 TEST PASSED:
-Active Provider: ' + prov + '
-Status: VALID & CONNECTED
-Round-Trip Latency: ' + lat + 'ms
-Token Cost: $0.00 (Self-Provided Zero-Markup)';
+      document.getElementById('byokOutput').innerText = '🚀 TEST PASSED:\nActive Provider: ' + prov + '\nStatus: VALID & CONNECTED\nRound-Trip Latency: ' + lat + 'ms\nToken Cost: $0.00 (Self-Provided Zero-Markup)';
     })
     .catch(function(){
       var lat = Math.round(performance.now() - t0);
-      document.getElementById('byokOutput').innerText = '🚀 TEST PASSED:
-Active Provider: ' + prov + '
-Status: LOCAL VAULT READY
-Client Latency: ' + lat + 'ms
-Token Cost: $0.00 (Self-Provided)';
+      document.getElementById('byokOutput').innerText = '🚀 TEST PASSED:\nActive Provider: ' + prov + '\nStatus: LOCAL VAULT READY\nClient Latency: ' + lat + 'ms\nToken Cost: $0.00 (Self-Provided)';
     });
 }
 </script>
@@ -150,8 +151,8 @@ Token Cost: $0.00 (Self-Provided)';
       <h4>Navigation</h4>
       <ul class="foot-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="../index.html">Sevenseed Hub</a></li>
-        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="index.html">Sevenseed Hub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
     </div>
   </div>
