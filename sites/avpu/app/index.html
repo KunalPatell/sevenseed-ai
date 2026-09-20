@@ -40,5 +40,64 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+<!-- Cold-Start Resilience Banner & Health Poller -->
+<div id="cold-start-banner" style="display:none; position:fixed; top:0; left:0; right:0; z-index:99999; background:linear-gradient(90deg, #f59e0b, #d97706); color:#020617; font-size:12px; font-weight:700; text-align:center; padding:8px 16px; box-shadow:0 4px 12px rgba(0,0,0,0.3); font-family:system-ui,-apple-system,sans-serif;">
+  <span style="display:inline-flex; align-items:center; gap:8px;">
+    <svg style="animation:cs-spin 1s linear infinite; width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"></circle></svg>
+    Waking up the AI backend (free-tier cold start, ~15-30s)... <span id="cs-countdown">Connecting</span>
+  </span>
+</div>
+<style>@keyframes cs-spin { 100% { transform: rotate(360deg); } }</style>
+<script>
+(function() {
+  var pathPrefix = window.location.pathname.split('/')[1] || '';
+  if (!pathPrefix || pathPrefix === 'app') return;
+  var healthUrl = '/' + pathPrefix + '/api/health';
+  var banner = document.getElementById('cold-start-banner');
+  var countdown = document.getElementById('cs-countdown');
+  var attempts = 0;
+  var maxAttempts = 15;
+  var startTime = Date.now();
+
+  function checkHealth() {
+    attempts++;
+    var elapsed = Math.round((Date.now() - startTime) / 1000);
+    if (countdown) countdown.textContent = '(' + elapsed + 's)';
+    
+    fetch(healthUrl, { method: 'GET', cache: 'no-store' })
+      .then(function(res) {
+        if (res.ok) {
+          if (banner) {
+            banner.style.background = 'linear-gradient(90deg, #10b981, #059669)';
+            banner.style.color = '#ffffff';
+            banner.innerHTML = 'AI backend ready! Connected.';
+            setTimeout(function() { banner.style.display = 'none'; }, 1500);
+          }
+          window.dispatchEvent(new CustomEvent('backend-ready', { detail: { prefix: pathPrefix } }));
+        } else if (attempts < maxAttempts) {
+          if (banner) banner.style.display = 'block';
+          setTimeout(checkHealth, 2500);
+        } else {
+          if (banner) {
+            banner.style.background = '#ef4444';
+            banner.style.color = '#ffffff';
+            banner.innerHTML = 'Backend wake-up taking longer than usual. Please refresh in a moment.';
+          }
+        }
+      })
+      .catch(function() {
+        if (attempts < maxAttempts) {
+          if (banner) banner.style.display = 'block';
+          setTimeout(checkHealth, 2500);
+        } else if (banner) {
+          banner.style.display = 'none';
+        }
+      });
+  }
+
+  setTimeout(checkHealth, 1000);
+})();
+</script>
+
 </body>
 </html>
