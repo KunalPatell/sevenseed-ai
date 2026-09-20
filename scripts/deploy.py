@@ -63,6 +63,11 @@ def main():
             for f in hub_dir.iterdir():
                 if f.is_file():
                     shutil.copy2(f, static_hub / f.name)
+            hub_sub = static_hub / "sevenseed"
+            hub_sub.mkdir(parents=True, exist_ok=True)
+            for f in hub_dir.iterdir():
+                if f.is_file():
+                    shutil.copy2(f, hub_sub / f.name)
         
         # 2. Sync all venture sub-directories
         ventures = ["sevenforce", "comonk", "breakdown-factor", "decode-forest-pharmacy", 
