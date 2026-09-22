@@ -5,41 +5,99 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Farnam Street Mental Models Decision Engine — AVPU</title>
-  <meta name="description" content="Master 30+ mental models from Farnam Street including Inversion, First Principles, and Second-Order Thinking with an interactive problem solver.">
+  <meta name="description" content="Master 48+ foundational mental models from Farnam Street across General Thinking, Physics, Biology, Systems, Economics, and Psychology. Includes interactive decision simulator and bookmarking.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .mm-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
-    .mm-header { text-align: center; margin-bottom: 32px; }
-    .mm-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
-    .mm-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .mm-container { max-width: 1320px; margin: 0 auto; padding: 100px 24px 80px; }
+    .mm-hero { text-align: center; margin-bottom: 36px; }
+    .mm-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+    .mm-title { font-size: clamp(30px, 4.5vw, 48px); font-weight: 900; line-height: 1.15; margin-bottom: 12px; letter-spacing: -0.02em; }
+    .mm-sub { color: var(--text-2); max-width: 760px; margin: 0 auto 24px; font-size: 16px; line-height: 1.6; }
 
-    /* Interactive Solver */
-    .solver-box { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 48px; box-shadow: var(--shadow); }
-    .solver-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    @media(max-width: 900px) { .solver-grid { grid-template-columns: 1fr; } }
+    /* Quick Stats Bar */
+    .mm-stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-bottom: 36px; }
+    .stat-pill { display: flex; align-items: center; gap: 10px; background: var(--bg-1); border: 1px solid var(--border); padding: 8px 18px; border-radius: 999px; font-size: 13px; color: var(--text-2); }
+    .stat-pill strong { color: #34d399; font-weight: 700; }
+
+    /* Simulator Box */
+    .solver-box { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 48px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+    .solver-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6); }
+    .solver-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 28px; }
+    @media(max-width: 960px) { .solver-grid { grid-template-columns: 1fr; } }
 
     .form-group { margin-bottom: 18px; }
     .form-group label { display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
-    .form-control { width: 100%; padding: 12px 16px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
+    .form-control { width: 100%; padding: 12px 16px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s; }
     .form-control:focus { border-color: #10b981; }
 
-    .solution-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 24px; font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.65; color: #e2e8f0; min-height: 280px; overflow-y: auto; }
-    .solution-screen h4 { color: #34d399; font-size: 16px; margin-bottom: 12px; font-weight: 700; }
+    .solution-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 24px; font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.65; color: #e2e8f0; min-height: 290px; max-height: 380px; overflow-y: auto; }
+    .solution-screen h4 { color: #34d399; font-size: 15px; margin-bottom: 10px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     .solution-screen ul { padding-left: 20px; list-style: disc; margin-bottom: 14px; }
     .solution-screen li { margin-bottom: 6px; }
 
-    /* Mental Models Cards Grid */
-    .mm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
-    .mm-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; }
-    .mm-card:hover { transform: translateY(-4px); border-color: rgba(16,185,129,0.4); }
-    .mm-origin { font-size: 11px; text-transform: uppercase; font-weight: 700; color: #34d399; margin-bottom: 8px; letter-spacing: 0.05em; }
-    .mm-name { font-size: 19px; font-weight: 700; color: #fff; margin-bottom: 10px; }
-    .mm-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; margin-bottom: 16px; flex: 1; }
-    .mm-example { background: var(--bg-2); border-left: 3px solid #10b981; padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 12px; color: #cbd5e1; }
+    /* Filter & Search Bar */
+    .filter-section { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 32px; }
+    .search-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+    .search-input-wrap { position: relative; flex: 1; min-width: 280px; }
+    .search-input-wrap i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-3); font-size: 15px; }
+    .search-input-wrap input { width: 100%; padding: 12px 18px 12px 44px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
+    .search-input-wrap input:focus { border-color: #10b981; }
+    .search-shortcut { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 11px; padding: 2px 7px; background: var(--bg-3); border-radius: 4px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; }
+
+    .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .f-pill { padding: 8px 16px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .f-pill:hover { border-color: #10b981; color: #fff; }
+    .f-pill.active { background: #10b981; color: #022c22; border-color: #10b981; font-weight: 700; }
+    .f-pill .count { font-size: 11px; opacity: 0.85; padding: 1px 6px; background: rgba(0,0,0,0.25); border-radius: 10px; }
+
+    /* Cards Grid */
+    .mm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px; }
+    .mm-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; position: relative; cursor: pointer; }
+    .mm-card:hover { transform: translateY(-4px); border-color: rgba(16,185,129,0.5); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+    
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .category-tag { font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; padding: 3px 8px; border-radius: 4px; }
+    .cat-general { background: rgba(59,130,246,0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
+    .cat-physics { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+    .cat-biology { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+    .cat-systems { background: rgba(139,92,246,0.15); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.3); }
+    .cat-economics { background: rgba(236,72,153,0.15); color: #f472b6; border: 1px solid rgba(236,72,153,0.3); }
+    .cat-psychology { background: rgba(20,184,166,0.15); color: #5eead4; border: 1px solid rgba(20,184,166,0.3); }
+
+    .star-btn { background: none; border: none; color: var(--text-3); font-size: 16px; cursor: pointer; transition: color 0.2s; padding: 4px; }
+    .star-btn:hover, .star-btn.active { color: #fbbf24; }
+
+    .mm-origin { font-size: 12px; color: var(--text-3); margin-bottom: 8px; font-weight: 500; }
+    .mm-name { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 10px; line-height: 1.3; }
+    .mm-desc { font-size: 13.5px; color: var(--text-2); line-height: 1.6; margin-bottom: 16px; flex: 1; }
+
+    .mm-formula-preview { background: var(--bg-2); border-left: 3px solid #10b981; padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 12px; color: #cbd5e1; margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; }
+    
+    .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 14px; margin-top: auto; }
+    .card-footer span { font-size: 12px; color: #34d399; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    .tags-preview { display: flex; gap: 4px; }
+    .tag-chip { font-size: 10px; padding: 2px 6px; background: var(--bg-2); border-radius: 4px; color: var(--text-3); }
+
+    /* Modal Backdrop & Dialog */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-backdrop.open { display: flex; }
+    .modal-dialog { background: var(--bg-1); border: 1px solid var(--border-hi); border-radius: var(--radius); width: 100%; max-width: 780px; max-height: 88vh; overflow-y: auto; padding: 36px; position: relative; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
+    .modal-close { position: absolute; right: 20px; top: 20px; background: var(--bg-2); border: 1px solid var(--border); width: 36px; height: 36px; border-radius: 50%; color: var(--text); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+    .modal-close:hover { background: #ef4444; color: #fff; border-color: #ef4444; }
+
+    .modal-origin { font-size: 13px; color: var(--text-3); font-weight: 600; margin-bottom: 6px; }
+    .modal-title { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+    .modal-summary { font-size: 15px; line-height: 1.65; color: #e2e8f0; margin-bottom: 24px; }
+
+    .modal-section { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 18px; }
+    .modal-section h4 { font-size: 13px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; color: #34d399; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .modal-section p { font-size: 13.5px; line-height: 1.6; color: var(--text-2); margin: 0; }
+
+    .modal-actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
   </style>
 </head>
 <body>
@@ -54,12 +112,11 @@
     <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
       <a href="index.html">Home</a>
       <a href="courses.html">Courses</a>
-      <a href="learn-dag.html">DAG Graph</a>
-      <a href="duo-league.html">Duo League</a>
-      <a href="code-lab.html">Code Lab</a>
+      <a href="100-day-challenge.html">100-Day Challenge</a>
+      <a href="certifications.html">Certifications</a>
       <a href="laws-of-ux.html">Laws of UX</a>
+      <a href="learn-dag.html">DAG Graph</a>
       <a href="marketing-teardowns.html">Teardowns</a>
-      <a href="challenge-100days.html">100 Days AI</a>
       <a href="mental-models.html" style="color:var(--primary-l); font-weight:600;">Mental Models</a>
     </div>
     <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
@@ -71,167 +128,1226 @@
 </nav>
 
 <div class="mm-container">
-  <div class="mm-header">
-    <div class="mm-badge"><i class="fas fa-lightbulb"></i> Inspired by Farnam Street (FS.blog)</div>
+  <!-- Hero Section -->
+  <div class="mm-hero">
+    <div class="mm-badge"><i class="fas fa-lightbulb"></i> Inspired by Farnam Street (FS.blog) & Charlie Munger</div>
     <h1 class="mm-title">Mental Models Decision Engine</h1>
-    <p style="color:var(--text-2); max-width:720px; margin:0 auto;">Upgrade your cognitive toolkit. Run difficult business dilemmas or technical challenges through Inversion, First Principles, and Second-Order consequence modeling.</p>
+    <p class="mm-sub">Upgrade your cognitive operating system. Explore 48+ multidisciplinary mental models spanning Physics, Biology, Systems, Economics, and Psychology, complete with Indian startup case studies.</p>
+    
+    <div class="mm-stats">
+      <div class="stat-pill"><i class="fas fa-cubes" style="color:#34d399;"></i> <strong>48</strong> Mental Models</div>
+      <div class="stat-pill"><i class="fas fa-layer-group" style="color:#60a5fa;"></i> <strong>6</strong> Disciplines</div>
+      <div class="stat-pill"><i class="fas fa-flag" style="color:#fbbf24;"></i> <strong>40+</strong> Indian Startup Cases</div>
+      <div class="stat-pill"><i class="fas fa-star" style="color:#f472b6;"></i> <strong id="favCount">0</strong> Saved in Bookmarks</div>
+    </div>
   </div>
 
   <!-- Interactive Problem Solver -->
   <div class="solver-box">
     <h2 style="font-size:20px; font-weight:800; color:#fff; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
-      <i class="fas fa-magic" style="color:#10b981;"></i> Mental Model Decision Simulator
+      <i class="fas fa-magic" style="color:#10b981;"></i> Interactive Decision Simulator
     </h2>
     <div class="solver-grid">
       <div>
         <div class="form-group">
-          <label>Describe your Dilemma or Engineering Challenge</label>
+          <label for="dilemmaInput">Describe your Business Dilemma or Engineering Challenge</label>
           <textarea id="dilemmaInput" class="form-control" rows="4" placeholder="e.g. How do we increase user retention on our AI platform without spending thousands on paid ads?"></textarea>
         </div>
         <div class="form-group">
-          <label>Choose Mental Model Framework</label>
+          <label for="modelSelect">Choose Mental Model Framework</label>
           <select id="modelSelect" class="form-control">
             <option value="inversion">Inversion (Carl Jacobi: Invert, Always Invert)</option>
             <option value="first_principles">First Principles (Boil down to fundamental truths)</option>
-            <option value="second_order">Second-Order Thinking (And then what?)</option>
-            <option value="margin_safety">Margin of Safety (Buffer against unknowns)</option>
+            <option value="second_order">Second-Order Thinking (And then what happens?)</option>
+            <option value="margin_safety">Margin of Safety (Buffer against extreme volatility)</option>
+            <option value="bottlenecks">Theory of Constraints (Solve the single slowest bottleneck)</option>
+            <option value="asymmetric">Asymmetric Upside (Capped downside, infinite convex gain)</option>
           </select>
         </div>
-        <button class="btn btn-primary" onclick="solveDilemma()"><i class="fas fa-cogs"></i> Run Mental Model Analysis</button>
+        <button class="btn btn-primary" onclick="solveDilemma()" style="width:100%; justify-content:center;"><i class="fas fa-cogs"></i> Run Mental Model Analysis</button>
       </div>
 
       <div>
         <div class="solution-screen" id="solutionOutput">
-          <p style="color:var(--text-3);">// Select a framework and input your problem to view the structured mental model decomposition...</p>
+          <p style="color:var(--text-3); font-style:italic;">// Type your dilemma on the left or select a framework to generate a structured mental model decomposition...</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Mental Models Cards Directory -->
-  <h2 style="font-size:24px; font-weight:800; margin-bottom:20px; display:flex; align-items:center; gap:10px;">
-    <i class="fas fa-th-large" style="color:#10b981;"></i> The Core Mental Models Index
-  </h2>
-
-  <div class="mm-grid">
-    <div class="mm-card">
-      <div class="mm-origin">Mathematics & Logic · Carl Jacobi</div>
-      <h3 class="mm-name">Inversion</h3>
-      <p class="mm-desc">Instead of asking how to achieve positive goals, invert the question: what would guarantee utter failure? Avoid that failure point systematically.</p>
-      <div class="mm-example"><strong>Example:</strong> Rather than "How do I build a viral product?", ask "What would make users instantly uninstall?"</div>
+  <!-- Filter & Search Toolbar -->
+  <div class="filter-section">
+    <div class="search-row">
+      <div class="search-input-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search mental models by name, thinker, concept, or tag (e.g. 'Inversion', 'UPI', 'Entropy')...">
+        <span class="search-shortcut">/</span>
+      </div>
+      <button class="btn btn-ghost sm" onclick="showFavoritesOnly()" id="favToggleBtn" style="border: 1px solid var(--border);"><i class="fas fa-star" style="color:#fbbf24;"></i> <span id="favBtnLabel">My Saved (0)</span></button>
     </div>
 
-    <div class="mm-card">
-      <div class="mm-origin">Physics & Philosophy · Aristotle</div>
-      <h3 class="mm-name">First Principles Thinking</h3>
-      <p class="mm-desc">Boil a situation down to the most foundational truths that cannot be deduced any further, and reason up from there instead of by analogy.</p>
-      <div class="mm-example"><strong>Example:</strong> What does a battery really cost? Raw materials on the London Metal Exchange cost $80/kWh, not $600/kWh.</div>
+    <div class="filter-pills" id="filterPills">
+      <button class="f-pill active" data-cat="all">All Models <span class="count">48</span></button>
+      <button class="f-pill" data-cat="general">General Thinking <span class="count">8</span></button>
+      <button class="f-pill" data-cat="physics">Physics & Chemistry <span class="count">8</span></button>
+      <button class="f-pill" data-cat="biology">Biology & Evolution <span class="count">8</span></button>
+      <button class="f-pill" data-cat="systems">Systems & Engineering <span class="count">8</span></button>
+      <button class="f-pill" data-cat="economics">Economics & Strategy <span class="count">8</span></button>
+      <button class="f-pill" data-cat="psychology">Psychology & Human Nature <span class="count">8</span></button>
+    </div>
+  </div>
+
+  <!-- Grid of Mental Model Cards -->
+  <div class="mm-grid" id="modelsGrid"></div>
+</div>
+
+<!-- Deep Dive Detail Modal -->
+<div class="modal-backdrop" id="detailModal" onclick="handleBackdropClick(event)">
+  <div class="modal-dialog" id="modalDialog">
+    <button class="modal-close" onclick="closeModal()" title="Close (Esc)"><i class="fas fa-times"></i></button>
+    
+    <div class="modal-origin" id="mOrigin"></div>
+    <h2 class="modal-title" id="mTitle"></h2>
+    <div id="mCategoryTag" style="margin-bottom:16px;"></div>
+    <p class="modal-summary" id="mSummary"></p>
+
+    <div class="modal-section">
+      <h4><i class="fas fa-square-root-alt"></i> Core Rule / Heuristic Formula</h4>
+      <p id="mFormula" style="font-family:'JetBrains Mono', monospace; color:#cbd5e1;"></p>
     </div>
 
-    <div class="mm-card">
-      <div class="mm-origin">Economics & Strategy · Howard Marks</div>
-      <h3 class="mm-name">Second-Order Thinking</h3>
-      <p class="mm-desc">First-order thinking considers only immediate consequences ("This feels good now"). Second-order thinking asks: "And then what happens?"</p>
-      <div class="mm-example"><strong>Example:</strong> First-order: Slashing prices increases sales. Second-order: Slashing prices attracts low-LTV churners and destroys margins.</div>
+    <div class="modal-section">
+      <h4><i class="fas fa-building"></i> Real-World Indian Startup & Tech Case</h4>
+      <p id="mExample"></p>
     </div>
 
-    <div class="mm-card">
-      <div class="mm-origin">Philosophy & Science · William of Ockham</div>
-      <h3 class="mm-name">Occam's Razor</h3>
-      <p class="mm-desc">Among competing hypotheses, the one with the fewest assumptions is usually the correct one. Avoid over-engineering solutions.</p>
-      <div class="mm-example"><strong>Example:</strong> If an API is returning 500 errors, check database connection credentials before suspecting a kernel bug.</div>
+    <div class="modal-section">
+      <h4><i class="fas fa-tools"></i> How to Apply in Engineering & Business</h4>
+      <p id="mApplication"></p>
     </div>
 
-    <div class="mm-card">
-      <div class="mm-origin">Engineering & Investing · Benjamin Graham</div>
-      <h3 class="mm-name">Margin of Safety</h3>
-      <p class="mm-desc">Always design structures and financial plans to withstand significantly more stress than predicted. Expect unexpected variance.</p>
-      <div class="mm-example"><strong>Example:</strong> If a bridge needs to hold 10-ton trucks, build it to support 30 tons.</div>
-    </div>
-
-    <div class="mm-card">
-      <div class="mm-origin">Mathematics · Albert Einstein</div>
-      <h3 class="mm-name">Compounding</h3>
-      <p class="mm-desc">Small consistent gains of 1% every day yield 37x improvements over a year. The greatest results occur in the late tail of the curve.</p>
-      <div class="mm-example"><strong>Example:</strong> Writing 1 high-signal blog post or open-source commit per day builds unmatched domain authority over 3 years.</div>
+    <div class="modal-actions">
+      <button class="btn btn-primary sm" id="mSimulateBtn" onclick="loadIntoSimulator()"><i class="fas fa-magic"></i> Test in Decision Simulator</button>
+      <button class="btn btn-ghost sm" id="mCopyBtn" onclick="copyModelSummary()"><i class="fas fa-copy"></i> Copy Summary</button>
+      <button class="btn btn-ghost sm" id="mStarBtn" onclick="toggleModalStar()"><i class="fas fa-star"></i> Save to Bookmarks</button>
     </div>
   </div>
 </div>
 
 <script>
+const MODELS = [
+  {
+    "id": "inversion",
+    "name": "Inversion",
+    "category": "general",
+    "categoryLabel": "General Thinking",
+    "origin": "Carl Jacobi (Mathematician) & Charlie Munger",
+    "summary": "Instead of asking how to achieve success, ask what would guarantee utter failure, then systematically avoid those failure modes.",
+    "formula": "To succeed at X, rigorously enumerate and eliminate all causes of NOT-X.",
+    "example": "Zerodha bootstrap: Instead of asking 'how to raise $100M VC and spend on billboards', Nithin Kamath asked 'what kills brokers?' (high churn, leverage risks, aggressive sales calls, opaque fees). By eliminating all four, Zerodha became India's most profitable brokerage without outside capital.",
+    "application": "When launching a feature, run a 'Pre-Mortem': Assume it failed completely 6 months from now. Why did it fail? Fix those 3 fatal risks today.",
+    "tags": [
+      "risk",
+      "pre-mortem",
+      "strategy"
+    ]
+  },
+  {
+    "id": "first-principles",
+    "name": "First Principles Thinking",
+    "category": "general",
+    "categoryLabel": "General Thinking",
+    "origin": "Aristotle & Elon Musk",
+    "summary": "Boil a situation down to the most fundamental, immutable truths and reason up from there, rather than reasoning by analogy.",
+    "formula": "Break down to irreducible components -> calculate true cost/limit -> build unique solution.",
+    "example": "ISRO's Mars Orbiter Mission (Mangalyaan): Rather than copying NASA's $671M Maven mission architecture, ISRO calculated raw material, fuel, and payload physics from scratch, delivering the Mars probe for $74M (cheaper than the movie Gravity).",
+    "application": "Question every layer of existing tech debt or pricing: 'Is this cost driven by laws of physics or industry conventions?'",
+    "tags": [
+      "innovation",
+      "physics",
+      "cost"
+    ]
+  },
+  {
+    "id": "second-order",
+    "name": "Second-Order Thinking",
+    "category": "general",
+    "categoryLabel": "General Thinking",
+    "origin": "Howard Marks & Garrett Hardin",
+    "summary": "First-order thinking asks 'What happens next?'. Second-order thinking asks 'And then what happens, and what are the systemic consequences?'",
+    "formula": "Action A -> Direct Effect B -> Systemic Behavioral Response C (often opposite of intent).",
+    "example": "Free food delivery coupon wars: First-order effect: GMV spikes 50% from new users. Second-order effect: Users develop zero brand loyalty, un-install when discounts end, restaurant margins get crushed, and delivery partner burnout surges.",
+    "application": "Always map out 1st, 2nd, and 3rd order impacts before changing compensation, pricing, or product incentives.",
+    "tags": [
+      "consequences",
+      "incentives",
+      "systems"
+    ]
+  },
+  {
+    "id": "occams-razor",
+    "name": "Occam's Razor",
+    "category": "general",
+    "categoryLabel": "General Thinking",
+    "origin": "William of Ockham",
+    "summary": "When presented with competing hypotheses or engineering architectures, the one requiring the fewest assumptions is usually right.",
+    "formula": "Complexity penalty: Minimize unwarranted assumptions and superfluous dependencies.",
+    "example": "UPI (Unified Payments Interface): Instead of creating heavy proprietary wallet walled gardens (like early Paytm/Mobikwik), NPCI built a simple stateless virtual payment address layer directly over IMPS banking rails.",
+    "application": "Before adding microservices, Kubernetes clusters, or complex state stores, ask: Can a simple PostgreSQL table and single monolith solve this?",
+    "tags": [
+      "simplicity",
+      "architecture",
+      "debugging"
+    ]
+  },
+  {
+    "id": "hanlons-razor",
+    "name": "Hanlon's Razor",
+    "category": "general",
+    "categoryLabel": "General Thinking",
+    "origin": "Robert J. Hanlon",
+    "summary": "Never attribute to malice that which is adequately explained by neglect, misunderstanding, or incompetence.",
+    "formula": "Observed negative outcome = Usually lack of context or bad incentives, not malicious sabotage.",
+    "example": "API integration failure with vendor: Assume their webhook payload had a null field due to an unhandled schema migration, rather than them deliberately dropping partner traffic.",
+    "application": "When collaborating across cross-functional tech teams, assume missing requirements stem from communication gaps rather than bad faith.",
+    "tags": [
+      "empathy",
+      "teamwork",
+      "debugging"
+    ]
+  },
+  {
+    "id": "circle-of-competence",
+    "name": "Circle of Competence",
+    "category": "general",
+    "categoryLabel": "General Thinking",
+    "origin": "Warren Buffett & Charlie Munger",
+    "summary": "Knowing the boundaries of what you truly understand is far more valuable than having a vast, shallow domain of partial knowledge.",
+    "formula": "Competitive Advantage = Operating exclusively within your verified domain boundaries.",
+    "example": "Zoho's Sridhar Vembu: Resisted chasing consumer app hype for 25+ years, staying obsessively within B2B SaaS software and bootstrapped profitability, building a multi-billion dollar enterprise powerhouse.",
+    "application": "In engineering, choose boring, proven tech stacks that your team understands deeply rather than chasing untested trending frameworks on Hacker News.",
+    "tags": [
+      "focus",
+      "mastery",
+      "strategy"
+    ]
+  },
+  {
+    "id": "map-territory",
+    "name": "The Map is Not the Territory",
+    "category": "general",
+    "categoryLabel": "General Thinking",
+    "origin": "Alfred Korzybski",
+    "summary": "Models, spreadsheets, financial forecasts, and system architectures are abstractions of reality\u2014never confuse the abstraction with the messy reality.",
+    "formula": "Mental Model != Reality. Validate continuously against ground-truth feedback.",
+    "example": "E-commerce delivery in Tier 3 India: Google Maps shows a road, but the delivery partner encounters an unpaved lane, seasonal waterlogging, or landmarks known only by local chai stalls.",
+    "application": "Don't judge product health purely from Mixpanel dashboards; talk directly to 5 churning users every single Friday.",
+    "tags": [
+      "ground-truth",
+      "abstractions",
+      "customer-interviews"
+    ]
+  },
+  {
+    "id": "thought-experiment",
+    "name": "Thought Experiments",
+    "category": "general",
+    "categoryLabel": "General Thinking",
+    "origin": "Albert Einstein & Erwin Schr\u00f6dinger",
+    "summary": "Testing physical or economic hypotheses entirely in imagination when physical constraints make live experimentation dangerous or impossible.",
+    "formula": "Hypothetical Scenario + Rigid Logic Deductions -> Counter-Intuitive Breakthrough.",
+    "example": "Tata Nano development: Ratan Tata observed a family of four balancing on a single scooter in Mumbai monsoon rain. The thought experiment: 'What is the absolute minimum cost to put a roof and four wheels over an Indian family safely?'",
+    "application": "Run '10x constraint' thought experiments: 'If we could only ship 1 feature this quarter, what would it be?' or 'What if cloud hosting budget was cut 90%?'",
+    "tags": [
+      "creativity",
+      "constraints",
+      "physics"
+    ]
+  },
+  {
+    "id": "thermodynamics-entropy",
+    "name": "Entropy & Second Law of Thermodynamics",
+    "category": "physics",
+    "categoryLabel": "Physics & Chemistry",
+    "origin": "Rudolf Clausius & Ludwig Boltzmann",
+    "summary": "In any closed system, disorder and entropy naturally increase over time. High order requires continuous infusion of external energy.",
+    "formula": "\u0394S_universe >= 0. Disorder is automatic; order demands active maintenance.",
+    "example": "Software Codebases: Without disciplined refactoring, documentation, and dependency upgrades, any clean codebase inevitably degrades into spaghettified unmaintainable chaos.",
+    "application": "Schedule bi-weekly 'Refactoring Fridays' to pay down entropy before it paralyzes velocity.",
+    "tags": [
+      "entropy",
+      "code-quality",
+      "maintenance"
+    ]
+  },
+  {
+    "id": "velocity-vs-speed",
+    "name": "Velocity vs Speed",
+    "category": "physics",
+    "categoryLabel": "Physics & Chemistry",
+    "origin": "Classical Mechanics (Isaac Newton)",
+    "summary": "Speed is a scalar (how fast you are moving). Velocity is a vector (speed WITH directional intent). Going fast in the wrong direction is wasted work.",
+    "formula": "Velocity = Speed \u00d7 Directional Vector Alignment.",
+    "example": "Startup Burn Rate: A team shipping 15 features a week with zero customer validation has high speed but near-zero velocity toward Product-Market Fit.",
+    "application": "Align OKRs weekly so that every PR merged points directly toward the primary north star metric, not just vanity ticket completion.",
+    "tags": [
+      "focus",
+      "alignment",
+      "metrics"
+    ]
+  },
+  {
+    "id": "critical-mass",
+    "name": "Critical Mass & Chain Reaction",
+    "category": "physics",
+    "categoryLabel": "Physics & Chemistry",
+    "origin": "Nuclear Physics (Enrico Fermi)",
+    "summary": "The minimum amount of fissile material needed to sustain a self-propagating nuclear chain reaction.",
+    "formula": "Below Critical Mass = Decay / Fizzle. At or Above = Exponential Self-Sustaining Reaction.",
+    "example": "Blinkit / Zepto 10-Minute Grocery: A dark store needs critical order density (e.g. 1,000 orders/sq km/day) to justify dedicated riders and keep unit economics profitable.",
+    "application": "Focus hyperlocal expansion on winning 1 city or 1 campus completely before spreading marketing capital thinly across 10 regions.",
+    "tags": [
+      "network-effects",
+      "density",
+      "scalability"
+    ]
+  },
+  {
+    "id": "catalysts",
+    "name": "Catalysts & Activation Energy",
+    "category": "physics",
+    "categoryLabel": "Physics & Chemistry",
+    "origin": "J\u00f6ns Jacob Berzelius (Chemistry)",
+    "summary": "A substance that dramatically lowers the activation energy barrier required for a chemical reaction to occur, without being consumed itself.",
+    "formula": "Reaction Rate without Catalyst = Slow/Blocked. With Catalyst = Instantaneous.",
+    "example": "Jio 4G rollout (2016): Free high-speed mobile data acted as the ultimate catalyst for India's entire digital economy\u2014fueling UPI payments, Hotstar streaming, Swiggy food delivery, and EdTech.",
+    "application": "Find the catalyst in your UX flow: Removing credit card requirement on signup lowers activation barrier by 70%.",
+    "tags": [
+      "onboarding",
+      "growth",
+      "friction"
+    ]
+  },
+  {
+    "id": "leverage-fulcrums",
+    "name": "Leverage & Mechanical Advantage",
+    "category": "physics",
+    "categoryLabel": "Physics & Chemistry",
+    "origin": "Archimedes",
+    "summary": "'Give me a lever long enough and a fulcrum on which to place it, and I shall move the world.' Small force amplified through mechanical advantage.",
+    "formula": "Output Force = Input Force \u00d7 (Distance to Effort / Distance to Load).",
+    "example": "Naval Ravikant's 4 Levers: Labor, Capital, Code, and Media. Code and media have zero marginal cost of reproduction, giving solo engineers unprecedented leverage.",
+    "application": "Automate repetitive workflows with CI/CD and AI tools rather than hiring headcount to manually click buttons.",
+    "tags": [
+      "automation",
+      "scale",
+      "productivity"
+    ]
+  },
+  {
+    "id": "half-life",
+    "name": "Half-Life of Information",
+    "category": "physics",
+    "categoryLabel": "Physics & Chemistry",
+    "origin": "Ernest Rutherford (Radioactivity)",
+    "summary": "The time required for half of a quantity to decay. In knowledge work, transient news decays in hours, while foundational mental models have half-lives of centuries.",
+    "formula": "N(t) = N0 \u00d7 (1/2)^(t / t_half).",
+    "example": "Twitter hot takes have a half-life of 6 hours; Javascript framework tutorials have a half-life of 2 years; Euclid's geometry and Shakespeare's psychological insights have half-lives of 2,000+ years.",
+    "application": "Invest 80% of your reading time in books and foundational computer science principles that will still be true 30 years from now.",
+    "tags": [
+      "learning",
+      "longevity",
+      "signal-to-noise"
+    ]
+  },
+  {
+    "id": "activation-energy",
+    "name": "Activation Energy",
+    "category": "physics",
+    "categoryLabel": "Physics & Chemistry",
+    "origin": "Svante Arrhenius (Physical Chemistry)",
+    "summary": "The minimum quantity of energy that the reacting species must possess in order to undergo a specified reaction.",
+    "formula": "High Activation Barrier = Inaction. Low Activation Barrier = Spontaneous Habit Adoption.",
+    "example": "Duolingo: Lowered language learning activation energy from 'register for a $500 college night class' to 'tap 3 buttons on your phone during subway commute for 2 minutes'.",
+    "application": "Make the first step absurdly small: 1-click Google auth, auto-generated sandbox workspace, pre-filled default data.",
+    "tags": [
+      "ux",
+      "onboarding",
+      "habits"
+    ]
+  },
+  {
+    "id": "surface-area-luck",
+    "name": "Surface Area of Luck",
+    "category": "physics",
+    "categoryLabel": "Physics & Chemistry",
+    "origin": "Jason Roberts (Expanded by Swyx / Coding Career)",
+    "summary": "The amount of serendipity and fortuitous luck you experience is directly proportional to how much valuable work you do multiplied by how widely you broadcast it.",
+    "formula": "Luck = Doing (Creation) \u00d7 Telling (Distribution / Public Artifacts).",
+    "example": "Building in Public on X / GitHub: Developers who publish open-source tools, write teardowns, and share learnings publicly attract job offers, co-founders, and angel checks without outbound cold outreach.",
+    "application": "Publish every project teardown, write up tricky bug fixes on your tech blog, and tweet your weekly progress.",
+    "tags": [
+      "serendipity",
+      "networking",
+      "career"
+    ]
+  },
+  {
+    "id": "natural-selection",
+    "name": "Natural Selection & Survival of the Fittest",
+    "category": "biology",
+    "categoryLabel": "Biology & Evolution",
+    "origin": "Charles Darwin",
+    "summary": "Organisms best adapted to their local ecological environment survive, reproduce, and pass on their advantages, while maladapted variants die off.",
+    "formula": "Variation + Heredity + Differential Reproductive Success = Adaptive Evolution.",
+    "example": "Flipkart vs Amazon India: Flipkart's introduction of Cash on Delivery (COD) in 2010 was an evolutionary adaptation tailored to Indian consumer trust deficits that foreign competitors hadn't adapted to.",
+    "application": "Test variations aggressively with multivariate A/B tests; let real customer purchasing behavior select winning landing pages.",
+    "tags": [
+      "adaptation",
+      "testing",
+      "survival"
+    ]
+  },
+  {
+    "id": "red-queen-effect",
+    "name": "The Red Queen Effect",
+    "category": "biology",
+    "categoryLabel": "Biology & Evolution",
+    "origin": "Leigh Van Valen & Lewis Carroll (Through the Looking-Glass)",
+    "summary": "'Now, here, you see, it takes all the running you can do, to keep in the same place.' In competitive co-evolving ecosystems, standing still guarantees extinction.",
+    "formula": "Relative Fitness = Your Adaptation Rate - Competitors' Adaptation Rate.",
+    "example": "Fintech Fraud vs Defense: As UPI fraudsters evolve AI voice clones and OTP bypasses, fraud prevention algorithms must continuously retrain neural models just to maintain the same baseline loss rate.",
+    "application": "Continuous innovation is table stakes just to maintain existing market share; differentiation requires running twice as fast.",
+    "tags": [
+      "competition",
+      "adaptation",
+      "velocity"
+    ]
+  },
+  {
+    "id": "niches-specialization",
+    "name": "Niches & Competitive Exclusion",
+    "category": "biology",
+    "categoryLabel": "Biology & Evolution",
+    "origin": "G.F. Gause (Principle of Competitive Exclusion)",
+    "summary": "Two species competing for the exact same limited ecological resource cannot coexist indefinitely if other ecological factors remain constant.",
+    "formula": "Same Niche + Direct Competition -> One Extinction or Speciation.",
+    "example": "Postman: Instead of building an entire generic IDE competing with Microsoft Visual Studio, Postman carved out an undisputed global monopoly in the specialized API testing and documentation niche.",
+    "application": "When competing against tech giants, do not compete head-on. Own a narrow, underserved niche so completely that you become the default standard.",
+    "tags": [
+      "positioning",
+      "niche",
+      "moats"
+    ]
+  },
+  {
+    "id": "antifragility",
+    "name": "Antifragility",
+    "category": "biology",
+    "categoryLabel": "Biology & Evolution",
+    "origin": "Nassim Nicholas Taleb",
+    "summary": "Some things benefit from shocks, stressors, randomness, and volatility. Fragile breaks; robust resists; antifragile gets stronger.",
+    "formula": "Gains from disorder > Losses from disorder (Convex payoff profile).",
+    "example": "Netflix Chaos Monkey: Deliberately injects random server crashes and network partitions into live production clusters so the architecture evolves to heal automatically under stress.",
+    "application": "Design software architectures with circuit breakers, auto-scaling groups, and automated chaos testing so failures reveal and repair weak points early.",
+    "tags": [
+      "resilience",
+      "chaos-engineering",
+      "antifragility"
+    ]
+  },
+  {
+    "id": "symbiosis-cooperation",
+    "name": "Symbiosis & Mutualism",
+    "category": "biology",
+    "categoryLabel": "Biology & Evolution",
+    "origin": "Heinrich Anton de Bary & Lynn Margulis",
+    "summary": "Close and long-term biological interactions between different species where both organisms derive reciprocal net benefits.",
+    "formula": "Symbiosis = Shared Infrastructure + Specialized Division of Labor > Solo Sum.",
+    "example": "Shopify & App Store Ecosystem: Shopify provides the commerce backbone, while independent SaaS developers build specialized inventory, tax, and review plugins, creating a self-reinforcing flywheel.",
+    "application": "Expose clean public APIs and developer SDKs so third-party builders create value for your customers for free.",
+    "tags": [
+      "platform",
+      "apis",
+      "ecosystem"
+    ]
+  },
+  {
+    "id": "feedback-loops",
+    "name": "Homeostasis & Feedback Loops",
+    "category": "biology",
+    "categoryLabel": "Biology & Evolution",
+    "origin": "Claude Bernard & Walter Cannon",
+    "summary": "Biological systems maintain stable equilibrium through negative feedback loops (cooling sweat) and explosive transitions through positive feedback loops (childbirth).",
+    "formula": "Negative Loop = Stability & Equilibrium. Positive Loop = Exponential Acceleration or Death Spiral.",
+    "example": "Zomato Restaurant Discovery: Positive feedback: More diners review restaurants -> better recommendations -> more diners visit -> more restaurants list -> more revenue.",
+    "application": "Identify the primary feedback loop in your product engine and eliminate any bottlenecks that dampen the flywheel.",
+    "tags": [
+      "flywheel",
+      "equilibrium",
+      "metrics"
+    ]
+  },
+  {
+    "id": "mimicry-aposematism",
+    "name": "Evolutionary Mimicry",
+    "category": "biology",
+    "categoryLabel": "Biology & Evolution",
+    "origin": "Henry Walter Bates & Fritz M\u00fcller",
+    "summary": "An organism evolves superficial resemblances to another species or environment to secure protective, aggressive, or reproductive advantages.",
+    "formula": "Familiar Visual Pattern = Instant Trust / Avoidance without verified testing.",
+    "example": "Jakob's Law in UX: Users spend most of their time on other sites. Using standard shopping cart icons, swipe-to-dismiss gestures, and clean top navigation leverages established mental shortcuts.",
+    "application": "Never reinvent standard UI controls (like search inputs or checkout flows). Match user muscle memory to slash cognitive friction.",
+    "tags": [
+      "ux",
+      "heuristics",
+      "psychology"
+    ]
+  },
+  {
+    "id": "allometry-scaling",
+    "name": "Allometric Scaling & Kleiber's Law",
+    "category": "biology",
+    "categoryLabel": "Biology & Evolution",
+    "origin": "Max Kleiber & Geoffrey West",
+    "summary": "As living organisms scale in mass, metabolic rate scales to the 3/4 power rather than linearly. Large organisms are dramatically more energy-efficient per gram.",
+    "formula": "Metabolic Rate = M^(0.75). Sublinear scaling yields structural efficiency.",
+    "example": "Amazon AWS & Cloud Hyperscalers: Doubling datacenter capacity doesn't double power or cooling costs; economies of scale create insurmountable cost advantages over private on-prem servers.",
+    "application": "When evaluating infrastructure costs, look for sublinear cost curves where marginal cost per active user asymptotically approaches zero.",
+    "tags": [
+      "scale",
+      "unit-economics",
+      "infrastructure"
+    ]
+  },
+  {
+    "id": "margin-of-safety",
+    "name": "Margin of Safety",
+    "category": "systems",
+    "categoryLabel": "Systems & Engineering",
+    "origin": "Benjamin Graham (Investing) & Civil Engineering",
+    "summary": "Designing structures and financial models to withstand significantly higher loads and adverse conditions than the maximum forecast expects.",
+    "formula": "Design Capacity = Max Expected Load \u00d7 Factor of Safety (typically 2x - 3x).",
+    "example": "Diwali Big Billion Days Sale (Flipkart): Engineering teams provision 5x normal peak server capacity, cache static assets across edge CDNs, and institute database read replicas to absorb traffic surges.",
+    "application": "Always calculate server capacities, financial runway, and launch timelines with a 50% buffer to survive unexpected variance.",
+    "tags": [
+      "reliability",
+      "capacity-planning",
+      "buffer"
+    ]
+  },
+  {
+    "id": "bottlenecks-constraints",
+    "name": "Theory of Constraints & Bottlenecks",
+    "category": "systems",
+    "categoryLabel": "Systems & Engineering",
+    "origin": "Eliyahu M. Goldratt (The Goal)",
+    "summary": "Any manageable system is limited in achieving more of its goals by at least one constraint. Optimizing non-bottlenecks is a pure illusion of progress.",
+    "formula": "System Throughput = Throughput of the Single Slowest Bottleneck.",
+    "example": "Machine Learning Training Pipeline: Having 100 H100 GPUs means nothing if the network data loader is bottlenecked on a slow disk drive feeding images at 20MB/s.",
+    "application": "Find the single slowest step in your conversion funnel or database query pipeline. Focus 100% of engineering effort on relieving that specific chokepoint.",
+    "tags": [
+      "throughput",
+      "optimization",
+      "performance"
+    ]
+  },
+  {
+    "id": "redundancy-fail-safes",
+    "name": "Redundancy & Fail-Safes",
+    "category": "systems",
+    "categoryLabel": "Systems & Engineering",
+    "origin": "Aerospace & High-Reliability Engineering",
+    "summary": "The inclusion of duplicate critical components or standby mechanisms to ensure system survival in case of unexpected component failure.",
+    "formula": "System Failure Probability = P(A) \u00d7 P(B). If P(A)=0.01 and P(B)=0.01, P(Total)=0.0001.",
+    "example": "Dual-Write Database Pattern in Sevenseed: When writing contact messages or founder pitches, write to primary cloud Supabase PostgreSQL and fall back silently to local SQLite if cloud network drops.",
+    "application": "Always configure automated API key rotation and multi-provider failover (e.g. Mistral -> OpenRouter -> Gemini) for mission-critical AI services.",
+    "tags": [
+      "high-availability",
+      "database",
+      "failover"
+    ]
+  },
+  {
+    "id": "technical-debt",
+    "name": "Technical Debt",
+    "category": "systems",
+    "categoryLabel": "Systems & Engineering",
+    "origin": "Ward Cunningham",
+    "summary": "Shipping quick-and-dirty code is like taking out a financial loan: it accelerates current velocity, but incurs compounding interest in maintenance overhead until repaid.",
+    "formula": "Development Speed = Baseline Velocity - Accumulated Technical Debt Interest.",
+    "example": "Hardcoding configurations and skipping unit tests to hit a demo deadline: fine for day 1, but by month 6, every new feature release breaks 3 unrelated payment webhooks.",
+    "application": "Borrow technical debt intentionally for prototypes, but budget an explicit 20% of every sprint to pay down high-interest debt.",
+    "tags": [
+      "refactoring",
+      "software-design",
+      "velocity"
+    ]
+  },
+  {
+    "id": "normal-accidents",
+    "name": "Normal Accidents & Complex Coupling",
+    "category": "systems",
+    "categoryLabel": "Systems & Engineering",
+    "origin": "Charles Perrow",
+    "summary": "In tightly coupled systems with interactive complexity, catastrophic failures are not anomalies\u2014they are inevitable emergent properties of the system design.",
+    "formula": "Tightly Coupled + Complex Interactions = Unpredictable Cascading Failures.",
+    "example": "Cloudflare / AWS Global Outages: A single typo in a BGP routing table cascades across DNS resolvers, causing health checks to fail, which triggers thundering herd traffic, crashing auth servers globally.",
+    "application": "Decouple services with asynchronous message queues (RabbitMQ/Kafka) and bulkhead patterns so a crash in billing never takes down user login.",
+    "tags": [
+      "fault-tolerance",
+      "distributed-systems",
+      "resilience"
+    ]
+  },
+  {
+    "id": "local-vs-global-optima",
+    "name": "Local vs Global Optima",
+    "category": "systems",
+    "categoryLabel": "Systems & Engineering",
+    "origin": "Mathematical Optimization & Computer Science",
+    "summary": "Optimizing a local hill can trap you on a small peak, preventing you from crossing the valley of temporary decline required to reach the towering global summit.",
+    "formula": "Gradient Descent Risk = Settling in a suboptimal local valley without stochastic exploration.",
+    "example": "Blockbuster vs Netflix: Blockbuster optimized the local peak of late fees and retail store merchandising, refusing to sacrifice immediate profits to cross into video streaming.",
+    "application": "Do not let micro A/B testing on button colors distract you from foundational product pivots that unlock 100x market opportunities.",
+    "tags": [
+      "strategy",
+      "pivot",
+      "algorithms"
+    ]
+  },
+  {
+    "id": "gall-law",
+    "name": "Gall's Law",
+    "category": "systems",
+    "categoryLabel": "Systems & Engineering",
+    "origin": "John Gall (Systemantics)",
+    "summary": "A complex system that works is invariably found to have evolved from a simple system that worked. A complex system designed from scratch never works.",
+    "formula": "Working Complex System = Working Simple System + Evolutionary Iteration.",
+    "example": "The World Wide Web: Began as plain text HTML with hyperlinks across CERN physics papers, gradually evolving CSS, JS, WebSockets, and WebGL over three decades.",
+    "application": "Never attempt a multi-month rewrite of a working monolith into 20 microservices from scratch. Incrementally peel off endpoints using the Strangler Fig pattern.",
+    "tags": [
+      "mvp",
+      "evolution",
+      "architecture"
+    ]
+  },
+  {
+    "id": "amdahls-law",
+    "name": "Amdahl's Law",
+    "category": "systems",
+    "categoryLabel": "Systems & Engineering",
+    "origin": "Gene Amdahl (Computer Architecture)",
+    "summary": "The theoretical speedup of a program using multiple processors is strictly limited by the sequential portion of the algorithm that cannot be parallelized.",
+    "formula": "Speedup = 1 / ((1 - P) + (P / N)), where P is parallel fraction and N is processors.",
+    "example": "Database Transactions: Adding 64 CPU cores to a server will not speed up your write queries if all transactions must sequentially wait for a single global lock on the WAL log.",
+    "application": "Benchmark code to identify sequential non-parallelizable bottlenecks before burning money upgrading cloud VM tiers.",
+    "tags": [
+      "concurrency",
+      "performance",
+      "scalability"
+    ]
+  },
+  {
+    "id": "opportunity-cost",
+    "name": "Opportunity Cost",
+    "category": "economics",
+    "categoryLabel": "Economics & Strategy",
+    "origin": "Friedrich von Wieser & Economics",
+    "summary": "The true cost of choosing any option is the value of the next best alternative forgone by making that choice.",
+    "formula": "Opportunity Cost = Return on Best Alternative - Return on Chosen Option.",
+    "example": "Senior Engineer building internal CRM: Building custom invoicing software saves $200/mo in SaaS fees, but costs $30,000 in senior engineer opportunity cost that could have shipped the core revenue feature.",
+    "application": "Always ask: 'What are we explicitly saying NO to by committing our best engineers to this project?'",
+    "tags": [
+      "prioritization",
+      "resource-allocation",
+      "finance"
+    ]
+  },
+  {
+    "id": "asymmetric-upside",
+    "name": "Asymmetric Upside (Convexity)",
+    "category": "economics",
+    "categoryLabel": "Economics & Strategy",
+    "origin": "Nassim Nicholas Taleb & Venture Capital",
+    "summary": "A bet where the maximum downside is strictly capped and small, while the potential upside is virtually unbounded.",
+    "formula": "Downside = 1x (Limited Loss). Upside = 100x - 10,000x (Convex Payoff).",
+    "example": "Angel Investing & Writing Open Source: Writing a library takes 20 hours of time (downside = 20 hours). If it goes viral, upside = job offers, consulting deals, and global reputational capital for 10 years.",
+    "application": "Structure your engineering side-projects and product experiments so failure costs little, but winning changes your company trajectory.",
+    "tags": [
+      "venture-capital",
+      "convexity",
+      "risk-reward"
+    ]
+  },
+  {
+    "id": "economic-moats",
+    "name": "Economic Moats & Defensibility",
+    "category": "economics",
+    "categoryLabel": "Economics & Strategy",
+    "origin": "Warren Buffett",
+    "summary": "A company's sustainable competitive advantage that prevents competitors from eroding its profits and market share over time.",
+    "formula": "Moat Types: Network Effects, High Switching Costs, Cost Advantages, Intangible Assets (Brand/Patents).",
+    "example": "Razorpay in India: High switching costs and regulatory compliance (RBI payment aggregator license, banking integrations, merchant reconciliation workflows) make swapping payment gateways excruciatingly painful.",
+    "application": "Software features can be cloned in weeks. Build structural moats through proprietary workflow integrations, user data persistence, and high switching friction.",
+    "tags": [
+      "defensibility",
+      "moats",
+      "strategy"
+    ]
+  },
+  {
+    "id": "network-effects",
+    "name": "Network Effects (Metcalfe's Law)",
+    "category": "economics",
+    "categoryLabel": "Economics & Strategy",
+    "origin": "Robert Metcalfe",
+    "summary": "A product or service becomes exponentially more valuable to every existing user as each new user joins the network.",
+    "formula": "Value of Network V ~ n^2 (proportional to square of connected nodes).",
+    "example": "WhatsApp in India: Even if a competing messenger has slicker stickers or better themes, nobody switches because your family, landlord, vegetable vendor, and work group are already on WhatsApp.",
+    "application": "Incentivize multi-player workflows and collaborative features (like Google Docs or Figma multiplayer) so user retention grows with every team invite.",
+    "tags": [
+      "virality",
+      "growth",
+      "metcalfe"
+    ]
+  },
+  {
+    "id": "economies-of-scale",
+    "name": "Economies of Scale",
+    "category": "economics",
+    "categoryLabel": "Economics & Strategy",
+    "origin": "Adam Smith (Wealth of Nations)",
+    "summary": "The cost advantage that arises with increased output of a product. Fixed overhead costs are spread across a larger volume of units.",
+    "formula": "Average Cost per Unit = (Fixed Costs / Output Quantity) + Variable Cost per Unit.",
+    "example": "Reliance Jio: Laid 250,000 km of subterranean fiber optics at massive upfront fixed capex. Once built, delivering an extra gigabyte of mobile data costs fractions of a paisa.",
+    "application": "Build software platforms where 95% of costs are upfront engineering, allowing you to serve 1,000,000 customers at near-zero marginal infrastructure cost.",
+    "tags": [
+      "unit-economics",
+      "scale",
+      "pricing"
+    ]
+  },
+  {
+    "id": "switching-costs",
+    "name": "Switching Costs & Lock-in",
+    "category": "economics",
+    "categoryLabel": "Economics & Strategy",
+    "origin": "Industrial Organization Economics",
+    "summary": "The monetary, operational, and psychological obstacles a customer incurs by abandoning one supplier in favor of a rival.",
+    "formula": "Net Value to Switch = (New Competitor Value - Current Value) - Switching Costs.",
+    "example": "Apple iCloud Ecosystem: Moving from iPhone/Mac to Android requires migrating photo libraries, losing iMessage groups, re-buying apps, and losing AirDrop seamlessness.",
+    "application": "Deepen integration with your customer's mission-critical data: when your app is the source of truth for their accounting or CRM, churn drops to near zero.",
+    "tags": [
+      "retention",
+      "churn",
+      "lock-in"
+    ]
+  },
+  {
+    "id": "tragedy-of-the-commons",
+    "name": "Tragedy of the Commons",
+    "category": "economics",
+    "categoryLabel": "Economics & Strategy",
+    "origin": "William Forster Lloyd & Garrett Hardin",
+    "summary": "Individual users, acting independently and rationally in their own self-interest, deplete or spoil a shared resource, spoiling it for everyone.",
+    "formula": "Private Benefit > Private Cost, but Shared Externalized Cost leads to System Collapse.",
+    "example": "Unmetered Public API Endpoints: When an AI provider offers free unauthenticated API tiers, bot scrapers overwhelm compute clusters, degrading latency for legitimate developers.",
+    "application": "Implement token bucket rate-limiting (e.g. 60 requests/minute) and require authenticated API keys to protect shared server pools from abusive depletion.",
+    "tags": [
+      "rate-limiting",
+      "apis",
+      "governance"
+    ]
+  },
+  {
+    "id": "greshams-law",
+    "name": "Gresham's Law",
+    "category": "economics",
+    "categoryLabel": "Economics & Strategy",
+    "origin": "Sir Thomas Gresham",
+    "summary": "'Bad money drives out good.' When legally equalized, people hoard the intrinsically valuable asset and spend the debased one.",
+    "formula": "Debased Currency Circulates; High-Quality Asset is Hoarded.",
+    "example": "Online Community Forums: When an open forum fails to moderate spam, low-effort link drops and troll comments drive out top thinkers, leaving only bad content.",
+    "application": "Aggressively curate and gate your community or educational discussion boards so high-signal contributors do not abandon the space.",
+    "tags": [
+      "community",
+      "quality",
+      "moderation"
+    ]
+  },
+  {
+    "id": "loss-aversion",
+    "name": "Loss Aversion & Prospect Theory",
+    "category": "psychology",
+    "categoryLabel": "Psychology & Human Nature",
+    "origin": "Daniel Kahneman & Amos Tversky",
+    "summary": "The psychological pain of losing something is approximately twice as intense as the joy of gaining the equivalent amount.",
+    "formula": "Negative Utility(-$100) \u2248 2x to 2.5x Positive Utility(+$100).",
+    "example": "Duolingo Streak Freeze: Learners will practice Spanish at 11:58 PM not out of joy, but out of agonizing terror of losing their hard-earned 450-day streak badge.",
+    "application": "Frame retention notifications around loss prevention: 'Your 14-day study streak will expire in 2 hours!' instead of 'Come learn today!'",
+    "tags": [
+      "gamification",
+      "streaks",
+      "retention"
+    ]
+  },
+  {
+    "id": "social-proof",
+    "name": "Social Proof & Informational Cascades",
+    "category": "psychology",
+    "categoryLabel": "Psychology & Human Nature",
+    "origin": "Robert Cialdini (Influence)",
+    "summary": "When people are uncertain about what action to take, they look to the actions and behaviors of others to guide their own decisions.",
+    "formula": "Uncertainty + Large Number of Peers Acting = Rapid Compliance.",
+    "example": "CRED: Early exclusivity was driven by screenshotting invitations on Twitter and displaying member credit scores, creating viral FOMO across tech professionals.",
+    "application": "Display live proof metrics on checkout pages: 'Joined by 12,400+ engineers from Google, Amazon, and Zerodha' alongside verified testimonial quotes.",
+    "tags": [
+      "conversion",
+      "copywriting",
+      "trust"
+    ]
+  },
+  {
+    "id": "confirmation-bias",
+    "name": "Confirmation Bias",
+    "category": "psychology",
+    "categoryLabel": "Psychology & Human Nature",
+    "origin": "Peter Wason & Cognitive Psychology",
+    "summary": "The tendency to search for, interpret, favor, and recall information in a way that confirms one's preexisting beliefs while ignoring contrary evidence.",
+    "formula": "Incoming Data Filtered by Existing Worldview -> Reinforces Prior Conviction.",
+    "example": "Startup Founder in Denial: A founder convinced their product is revolutionary ignores a 90% Day-7 churn rate, focusing only on the 1 flattering email from their college roommate.",
+    "application": "Appoint an official 'Devil's Advocate' in design reviews whose sole job is to argue why the user will hate the proposed feature.",
+    "tags": [
+      "bias",
+      "decision-making",
+      "user-research"
+    ]
+  },
+  {
+    "id": "incentive-caused-bias",
+    "name": "Incentive-Caused Bias & Skinner Box",
+    "category": "psychology",
+    "categoryLabel": "Psychology & Human Nature",
+    "origin": "Charlie Munger & B.F. Skinner",
+    "summary": "'Show me the incentive and I will show you the outcome.' People systematically blind themselves to moral or logical truths if their compensation depends on it.",
+    "formula": "System Behavior = Function(Exact Compensation & Metrics Measured).",
+    "example": "Wells Fargo Account Scandal: Branch employees were measured on cross-selling 8 accounts per customer, resulting in millions of unauthorized accounts opened fraudulently.",
+    "application": "If you reward software teams solely on lines of code written or Jira tickets closed, you will get bloated, buggy code that solves trivial problems.",
+    "tags": [
+      "incentives",
+      "management",
+      "alignment"
+    ]
+  },
+  {
+    "id": "anchoring",
+    "name": "Anchoring Effect",
+    "category": "psychology",
+    "categoryLabel": "Psychology & Human Nature",
+    "origin": "Amos Tversky & Daniel Kahneman",
+    "summary": "The common human tendency to rely too heavily on the first piece of information offered (the 'anchor') when making subsequent decisions.",
+    "formula": "Initial Anchor Value Distorts Subsequent Perception of Value.",
+    "example": "SaaS Pricing Tiers: Showing an Enterprise Plan at $999/month first makes the Pro Plan at $99/month feel like an irresistible bargain.",
+    "application": "On pricing tables, position your premium tier first or show the original retail price crossed out next to the annual subscription discount.",
+    "tags": [
+      "pricing",
+      "conversion",
+      "negotiation"
+    ]
+  },
+  {
+    "id": "dunning-kruger",
+    "name": "Dunning-Kruger Effect",
+    "category": "psychology",
+    "categoryLabel": "Psychology & Human Nature",
+    "origin": "David Dunning & Justin Kruger",
+    "summary": "People with low ability at a task overestimate their competence, while true experts tend to underestimate their relative expertise.",
+    "formula": "Zero Knowledge -> Peak of Mt. Stupid -> Valley of Despair -> Slope of Enlightenment.",
+    "example": "Junior Dev with 2 weeks of ChatGPT prompting: 'Software engineering is obsolete; I can build Twitter in an afternoon.' Senior dev: 'Distributing consensus state across nodes is terrifying.'",
+    "application": "In curriculum design, give beginners quick early wins to build confidence, followed immediately by rigorous challenges that reveal depth.",
+    "tags": [
+      "learning",
+      "humility",
+      "mastery"
+    ]
+  },
+  {
+    "id": "commitment-consistency",
+    "name": "Commitment & Consistency",
+    "category": "psychology",
+    "categoryLabel": "Psychology & Human Nature",
+    "origin": "Robert Cialdini",
+    "summary": "Once people make a choice, take a public stand, or invest effort, they experience powerful internal pressure to behave consistently with that commitment.",
+    "formula": "Small Public Micro-Commitment -> Compulsion to Follow Through with Macro-Action.",
+    "example": "100-Day AI Challenge on AVPU: Prompting a student to tweet their Day 1 badge increases their 30-day course completion rate by 340% due to public social accountability.",
+    "application": "Start onboarding with micro-questions (e.g. 'What is your primary learning goal?') before asking for account registration.",
+    "tags": [
+      "onboarding",
+      "retention",
+      "habits"
+    ]
+  },
+  {
+    "id": "availability-heuristic",
+    "name": "Availability Heuristic",
+    "category": "psychology",
+    "categoryLabel": "Psychology & Human Nature",
+    "origin": "Amos Tversky & Daniel Kahneman",
+    "summary": "People evaluate the frequency or likelihood of an event based on how easily recent, vivid examples come to mind, rather than statistical probabilities.",
+    "formula": "Salience & Recency in Memory = Overestimated Real-World Probability.",
+    "example": "Plane crashes make international front-page headlines; people fear flying despite car trips being statistically 65x more lethal per kilometer traveled.",
+    "application": "When debugging system bugs, do not jump to the conclusion that 'it must be the same bug we saw yesterday' without examining logs and data objectively.",
+    "tags": [
+      "statistics",
+      "debugging",
+      "risk"
+    ]
+  }
+];
+
+let currentCategory = 'all';
+let searchQuery = '';
+let showingFavoritesOnly = false;
+let activeModalModel = null;
+
+// Favorites in localStorage
+function getFavorites() {
+  try {
+    return JSON.parse(localStorage.getItem('avpu_fav_models') || '[]');
+  } catch(e) {
+    return [];
+  }
+}
+
+function saveFavorites(favs) {
+  localStorage.setItem('avpu_fav_models', JSON.stringify(favs));
+  updateFavBadge();
+}
+
+function toggleFavorite(id, e) {
+  if (e) e.stopPropagation();
+  let favs = getFavorites();
+  if (favs.includes(id)) {
+    favs = favs.filter(x => x !== id);
+  } else {
+    favs.push(id);
+  }
+  saveFavorites(favs);
+  renderModels();
+  if (activeModalModel && activeModalModel.id === id) {
+    updateModalStarBtn(favs.includes(id));
+  }
+}
+
+function updateFavBadge() {
+  const favs = getFavorites();
+  const el = document.getElementById('favCount');
+  if (el) el.textContent = favs.length;
+  const btnLabel = document.getElementById('favBtnLabel');
+  if (btnLabel) btnLabel.textContent = `My Saved (${favs.length})`;
+}
+
+function showFavoritesOnly() {
+  showingFavoritesOnly = !showingFavoritesOnly;
+  const btn = document.getElementById('favToggleBtn');
+  if (showingFavoritesOnly) {
+    btn.style.background = 'rgba(251,191,36,0.2)';
+    btn.style.borderColor = '#fbbf24';
+  } else {
+    btn.style.background = '';
+    btn.style.borderColor = 'var(--border)';
+  }
+  renderModels();
+}
+
+// Category Class Helper
+function getCatClass(cat) {
+  return 'cat-' + cat;
+}
+
+// Render Grid Cards
+function renderModels() {
+  const container = document.getElementById('modelsGrid');
+  const favs = getFavorites();
+  
+  const q = searchQuery.toLowerCase().trim();
+  
+  const filtered = MODELS.filter(m => {
+    if (showingFavoritesOnly && !favs.includes(m.id)) return false;
+    if (currentCategory !== 'all' && m.category !== currentCategory) return false;
+    if (!q) return true;
+    
+    return m.name.toLowerCase().includes(q) ||
+           m.origin.toLowerCase().includes(q) ||
+           m.summary.toLowerCase().includes(q) ||
+           m.example.toLowerCase().includes(q) ||
+           m.tags.some(t => t.toLowerCase().includes(q));
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1/-1; text-align:center; padding: 60px 20px; background:var(--bg-1); border:1px dashed var(--border); border-radius:12px;">
+        <i class="fas fa-search" style="font-size:32px; color:var(--text-3); margin-bottom:14px; display:block;"></i>
+        <h3 style="font-size:18px; color:#fff; margin-bottom:8px;">No mental models matched your filter</h3>
+        <p style="color:var(--text-2); font-size:14px;">Try searching for different terms like "risk", "UPI", "systems", or switch category filter.</p>
+        <button class="btn btn-ghost sm" onclick="resetFilters()" style="margin-top:16px;">Reset All Filters</button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered.map(m => {
+    const isFav = favs.includes(m.id);
+    return `
+      <div class="mm-card" onclick="openModal('${m.id}')">
+        <div class="card-top">
+          <span class="category-tag ${getCatClass(m.category)}">${m.categoryLabel}</span>
+          <button class="star-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${m.id}', event)" title="${isFav ? 'Remove from saved' : 'Save to bookmarks'}">
+            <i class="${isFav ? 'fas fa-star' : 'far fa-star'}"></i>
+          </button>
+        </div>
+        <div class="mm-origin">${m.origin}</div>
+        <h3 class="mm-name">${m.name}</h3>
+        <p class="mm-desc">${m.summary}</p>
+        <div class="mm-formula-preview">📐 ${m.formula.length > 75 ? m.formula.substring(0, 72) + '...' : m.formula}</div>
+        <div class="card-footer">
+          <span>Explore deep dive <i class="fas fa-arrow-right"></i></span>
+          <div class="tags-preview">
+            ${m.tags.slice(0,2).map(t => `<span class="tag-chip">#${t}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function resetFilters() {
+  currentCategory = 'all';
+  searchQuery = '';
+  showingFavoritesOnly = false;
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.f-pill').forEach(p => p.classList.toggle('active', p.dataset.cat === 'all'));
+  document.getElementById('favToggleBtn').style.background = '';
+  document.getElementById('favToggleBtn').style.borderColor = 'var(--border)';
+  renderModels();
+}
+
+// Modal Handlers
+function openModal(id) {
+  const model = MODELS.find(m => m.id === id);
+  if (!model) return;
+  activeModalModel = model;
+
+  document.getElementById('mOrigin').textContent = model.origin;
+  document.getElementById('mTitle').textContent = model.name;
+  document.getElementById('mCategoryTag').innerHTML = `<span class="category-tag ${getCatClass(model.category)}">${model.categoryLabel}</span>`;
+  document.getElementById('mSummary').textContent = model.summary;
+  document.getElementById('mFormula').textContent = model.formula;
+  document.getElementById('mExample').textContent = model.example;
+  document.getElementById('mApplication').textContent = model.application;
+
+  const favs = getFavorites();
+  updateModalStarBtn(favs.includes(model.id));
+
+  const modal = document.getElementById('detailModal');
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  const modal = document.getElementById('detailModal');
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+  activeModalModel = null;
+}
+
+function handleBackdropClick(e) {
+  if (e.target.id === 'detailModal') {
+    closeModal();
+  }
+}
+
+function updateModalStarBtn(isFav) {
+  const btn = document.getElementById('mStarBtn');
+  btn.innerHTML = isFav ? '<i class="fas fa-star" style="color:#fbbf24;"></i> Saved' : '<i class="far fa-star"></i> Save to Bookmarks';
+}
+
+function toggleModalStar() {
+  if (!activeModalModel) return;
+  toggleFavorite(activeModalModel.id);
+  const favs = getFavorites();
+  updateModalStarBtn(favs.includes(activeModalModel.id));
+}
+
+function copyModelSummary() {
+  if (!activeModalModel) return;
+  const text = `${activeModalModel.name} (${activeModalModel.origin})\nCategory: ${activeModalModel.categoryLabel}\n\nSummary: ${activeModalModel.summary}\nFormula: ${activeModalModel.formula}\nExample: ${activeModalModel.example}\nApplication: ${activeModalModel.application}\n\nVia AVPU Mental Models Engine`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('mCopyBtn');
+    btn.innerHTML = '<i class="fas fa-check" style="color:#34d399;"></i> Copied!';
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fas fa-copy"></i> Copy Summary';
+    }, 2000);
+  });
+}
+
+function loadIntoSimulator() {
+  if (!activeModalModel) return;
+  closeModal();
+  
+  // Set simulator model if present in select, or map to closest
+  const sel = document.getElementById('modelSelect');
+  let matched = false;
+  for (let opt of sel.options) {
+    if (opt.value === activeModalModel.id || opt.text.toLowerCase().includes(activeModalModel.name.toLowerCase())) {
+      sel.value = opt.value;
+      matched = true;
+      break;
+    }
+  }
+  if (!matched) {
+    // Add dynamically
+    const newOpt = document.createElement('option');
+    newOpt.value = activeModalModel.id;
+    newOpt.text = `${activeModalModel.name} (${activeModalModel.origin})`;
+    sel.add(newOpt);
+    sel.value = activeModalModel.id;
+  }
+  
+  const box = document.querySelector('.solver-box');
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  solveDilemma();
+}
+
+// Simulator Logic
 function solveDilemma() {
-  const dilemma = document.getElementById('dilemmaInput').value.trim() || 'How to increase user retention on our AI platform';
-  const model = document.getElementById('modelSelect').value;
+  const dilemma = document.getElementById('dilemmaInput').value.trim() || 'How to increase user retention on our platform without spending on paid ads';
+  const modelKey = document.getElementById('modelSelect').value;
   const out = document.getElementById('solutionOutput');
 
-  if (model === 'inversion') {
+  // Find model details
+  const foundModel = MODELS.find(m => m.id === modelKey || m.id.replace(/-/g, '_') === modelKey);
+
+  if (modelKey === 'inversion' || (foundModel && foundModel.id === 'inversion')) {
     out.innerHTML = `
-      <h4>🔄 INVERSION ANALYSIS (How to Guarantee Failure):</h4>
-      <p>If your goal was to completely destroy retention and ensure 100% of users churn, you would:</p>
+      <h4><i class="fas fa-undo" style="color:#f87171;"></i> INVERSION DECOMPOSITION:</h4>
+      <p style="font-size:13px; color:#cbd5e1; margin-bottom:8px;"><strong>Question inverted:</strong> "What actions would guarantee 100% utter failure for '${dilemma}'?"</p>
       <ul>
-        <li>Introduce high latency (waiting 8+ seconds for AI generation).</li>
-        <li>Hide value behind a 10-step mandatory onboarding modal.</li>
-        <li>Deliver generic, hallucinated answers with zero factual citations.</li>
-        <li>Send spammy irrelevant emails 3 times a day.</li>
+        <li>Introduce high latency (&gt;6s response time) with zero progress indicators.</li>
+        <li>Trap value behind a mandatory 8-field registration form on first visit.</li>
+        <li>Spam users with generic, irrelevant push notifications 4 times a day.</li>
+        <li>Fail to provide clear error messages when API integrations fail.</li>
       </ul>
-      <h4 style="color:#60a5fa; margin-top:16px;">💡 INVERTED ACTION PLAN:</h4>
-      <p>1. Stream AI tokens in &lt;100ms via edge web sockets.<br>2. Eliminate signup friction: Allow instant 1-click guest sandbox.<br>3. Ground answers with RAG source document chips.</p>
+      <h4 style="color:#34d399; margin-top:14px;"><i class="fas fa-check-circle"></i> SYSTEMATIC PREVENTION ROADMAP:</h4>
+      <p style="font-size:13px; color:#cbd5e1;">1. Ensure time-to-first-value is &lt;10 seconds with zero-friction guest sessions.<br>2. Ruthlessly kill notifications that do not deliver direct user value.<br>3. Provide instant failover and friendly error diagnostics.</p>
     `;
-  } else if (model === 'first_principles') {
+  } else if (modelKey === 'first_principles' || (foundModel && foundModel.id === 'first-principles')) {
     out.innerHTML = `
-      <h4>🧱 FIRST PRINCIPLES DECOMPOSITION:</h4>
-      <p>Stripping away analogies and conventional industry dogma to absolute physical constraints:</p>
+      <h4><i class="fas fa-cube" style="color:#60a5fa;"></i> FIRST PRINCIPLES DECOMPOSITION:</h4>
+      <p style="font-size:13px; color:#cbd5e1; margin-bottom:8px;">Stripping conventional industry assumptions down to physical and economic truths:</p>
       <ul>
-        <li><strong>Atomic Truth 1:</strong> A user stays when the value received exceeds the cognitive effort expended.</li>
-        <li><strong>Atomic Truth 2:</strong> Value = (Accuracy × Speed × Relevance).</li>
-        <li><strong>Atomic Truth 3:</strong> Friction = (Clicks + Waiting Time + Learning Curve).</li>
+        <li><strong>Atomic Truth 1:</strong> Value = (Speed × Accuracy × Relevance) / Cognitive Effort.</li>
+        <li><strong>Atomic Truth 2:</strong> Users churn when the perceived return on time invested drops below alternative leisure activities.</li>
+        <li><strong>Atomic Truth 3:</strong> Paid advertising masks product flaws; organic retention is the only true measure of PMF.</li>
       </ul>
-      <h4 style="color:#60a5fa; margin-top:16px;">💡 FIRST-PRINCIPLES ACTION PLAN:</h4>
-      <p>Focus 100% of engineering bandwidth on reducing TTFT (Time To First Token) and eliminating unnecessary clicks. When latency drops below 200ms, perceived product quality jumps 400%.</p>
+      <h4 style="color:#34d399; margin-top:14px;"><i class="fas fa-check-circle"></i> FIRST-PRINCIPLES ACTION PLAN:</h4>
+      <p style="font-size:13px; color:#cbd5e1;">Cut cognitive steps by 50%. Focus 100% of engineering bandwidth on reducing latency and improving core feature output quality before spending a single dollar on growth hacks.</p>
     `;
-  } else if (model === 'second_order') {
+  } else if (modelKey === 'second_order' || (foundModel && foundModel.id === 'second-order')) {
     out.innerHTML = `
-      <h4>🎯 SECOND-ORDER CONSEQUENCE MAPPING:</h4>
-      <p>Tracing subsequent ripples beyond initial impressions:</p>
+      <h4><i class="fas fa-project-diagram" style="color:#fbbf24;"></i> SECOND-ORDER CONSEQUENCE MAPPING:</h4>
+      <p style="font-size:13px; color:#cbd5e1; margin-bottom:8px;">Tracing subsequent ripples for: "${dilemma}"</p>
       <ul>
-        <li><strong>First Order:</strong> You give away free credits to retain users. Immediate result: User logins spike 25%.</li>
-        <li><strong>Second Order:</strong> Free-tier hoarders saturate GPU inference nodes, causing latency to spike for paying customers.</li>
-        <li><strong>Third Order:</strong> High-paying enterprise customers churn due to latency degradations, permanently harming ARR.</li>
+        <li><strong>1st Order Effect:</strong> Offering large discounts or free tokens spikes immediate signups and DAU by 35%.</li>
+        <li><strong>2nd Order Effect:</strong> Free users flood support queues and saturate compute nodes, increasing latency for paying enterprise accounts.</li>
+        <li><strong>3rd Order Effect:</strong> High-margin paying customers churn, while free signups un-install the moment discounts end.</li>
       </ul>
-      <h4 style="color:#60a5fa; margin-top:16px;">💡 SECOND-ORDER ACTION PLAN:</h4>
-      <p>Do not offer blanket free compute. Instead, gate priority GPU lanes for active learners who demonstrate streak milestones or bring their own API keys.</p>
+      <h4 style="color:#34d399; margin-top:14px;"><i class="fas fa-check-circle"></i> SECOND-ORDER ACTION PLAN:</h4>
+      <p style="font-size:13px; color:#cbd5e1;">Never incentivize behavior with blanket free giveaways. Reward specific high-retention habits (like completing 3 assignments or inviting a collaborator).</p>
+    `;
+  } else if (modelKey === 'margin_safety' || (foundModel && foundModel.id === 'margin-of-safety')) {
+    out.innerHTML = `
+      <h4><i class="fas fa-shield-alt" style="color:#34d399;"></i> MARGIN OF SAFETY ARCHITECTURE:</h4>
+      <p style="font-size:13px; color:#cbd5e1; margin-bottom:8px;">Stress-testing assumptions against catastrophic shocks for: "${dilemma}"</p>
+      <ul>
+        <li><strong>Capacity Stress:</strong> Assume database traffic spikes 4x overnight. Will locks cascade? Provision automated horizontal read-replicas.</li>
+        <li><strong>Vendor Dependency:</strong> If primary LLM provider API goes down for 6 hours, failover automatically to secondary providers.</li>
+        <li><strong>Runway Buffer:</strong> Maintain at least 6 months of cloud compute and developer runway in reserve.</li>
+      </ul>
+    `;
+  } else if (modelKey === 'bottlenecks' || (foundModel && foundModel.id === 'bottlenecks-constraints')) {
+    out.innerHTML = `
+      <h4><i class="fas fa-filter" style="color:#c084fc;"></i> THEORY OF CONSTRAINTS ANALYSIS:</h4>
+      <p style="font-size:13px; color:#cbd5e1; margin-bottom:8px;">Locating the single binding constraint limiting throughput:</p>
+      <ul>
+        <li><strong>Identification:</strong> Where do 80% of users drop off in the conversion funnel? Is it signup, onboarding step 2, or first search?</li>
+        <li><strong>Exploitation:</strong> Do not optimize non-bottlenecks (e.g. rewriting CSS or adding dark mode) until the bottleneck step is solved.</li>
+        <li><strong>Subordination:</strong> Align all marketing, product copy, and tech velocity to elevate that specific single step.</li>
+      </ul>
     `;
   } else {
+    // Generic dynamic breakdown for any model
+    const m = foundModel || MODELS[0];
     out.innerHTML = `
-      <h4>🛡️ MARGIN OF SAFETY ARCHITECTURE:</h4>
-      <p>Stress-testing assumptions against unexpected shocks:</p>
+      <h4><i class="fas fa-lightbulb" style="color:#34d399;"></i> ${m.name.toUpperCase()} FRAMEWORK APPLICATION:</h4>
+      <p style="font-size:13px; color:#cbd5e1; margin-bottom:8px;"><strong>Core Concept:</strong> ${m.summary}</p>
+      <div style="background:#0f172a; border-left:3px solid #10b981; padding:8px 12px; border-radius:4px; font-size:12px; margin-bottom:12px; font-family:'JetBrains Mono',monospace;">
+        ${m.formula}
+      </div>
+      <h4 style="color:#60a5fa; font-size:14px; margin-bottom:6px;">Target Dilemma: "${dilemma}"</h4>
       <ul>
-        <li><strong>Assumed Capacity:</strong> What if upstream LLM provider API goes down for 4 hours?</li>
-        <li><strong>Mitigation:</strong> Implement automated fallback failover from Groq to Anthropic/OpenAI.</li>
-        <li><strong>Financial Buffer:</strong> Maintain 6 months of cloud compute runway in reserve.</li>
+        <li><strong>Key Diagnostic:</strong> ${m.application}</li>
+        <li><strong>Reference Case:</strong> ${m.example}</li>
       </ul>
     `;
   }
 }
-</script>
 
+// Keyboard shortcuts & Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+  renderModels();
+  updateFavBadge();
 
-<script>
-(function() {
-  // Theme Toggle Handler
-  var tBtn = document.getElementById('themeToggle');
+  // Search input handler
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', (e) => {
+    searchQuery = e.target.value;
+    renderModels();
+  });
+
+  // Quick '/' shortcut to focus search
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== searchInput && document.activeElement.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      searchInput.focus();
+    }
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
+
+  // Filter Pill buttons
+  document.getElementById('filterPills').addEventListener('click', (e) => {
+    const pill = e.target.closest('.f-pill');
+    if (!pill) return;
+    document.querySelectorAll('.f-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    currentCategory = pill.dataset.cat;
+    renderModels();
+  });
+
+  // Theme Toggle
+  const tBtn = document.getElementById('themeToggle');
   if (tBtn) {
     function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
+      const ic = tBtn.querySelector('i');
+      if (ic) ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
     }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
+    updateIcon(document.documentElement.getAttribute('data-theme') || 'dark');
+    tBtn.addEventListener('click', () => {
+      const now = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = now === 'light' ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('ss-theme', next);
       updateIcon(next);
@@ -239,24 +1355,23 @@ function solveDilemma() {
   }
 
   // Cursor Ring
-  var ring = document.getElementById('cursorRing');
+  const ring = document.getElementById('cursorRing');
   if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
+    let mouseX = -100, mouseY = -100;
+    let ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
     });
     function renderCursor() {
       ringX += (mouseX - ringX) * 0.2;
       ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      ring.style.transform = `translate3d(${ringX - 18}px, ${ringY - 18}px, 0)`;
       requestAnimationFrame(renderCursor);
     }
     requestAnimationFrame(renderCursor);
   }
-})();
+});
 </script>
-
 </body>
 </html>

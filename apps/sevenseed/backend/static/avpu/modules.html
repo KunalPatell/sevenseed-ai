@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AVPU Varsity — AI Engineering Curriculum Browser</title>
+  <meta name="description" content="In-depth, chapter-by-chapter AI engineering curriculum inspired by Zerodha Varsity and Swayam. Complete with progress tracking, interactive quizzes, and downloadable notes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .varsity-container { max-width: 1400px; margin: 0 auto; padding: 88px 24px 80px; }
+    
+    /* Breadcrumb Header */
+    .varsity-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 14px; }
+    .varsity-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-3); }
+    .varsity-breadcrumb a { color: var(--text-2); text-decoration: none; }
+    .varsity-breadcrumb a:hover { color: var(--primary-l); }
+    .varsity-breadcrumb span.curr { color: var(--primary-l); font-weight: 600; }
+
+    .varsity-progress-wrap { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-2); }
+    .progress-bar-bg { width: 140px; height: 8px; background: var(--bg-2); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #10b981); width: 0%; transition: width 0.3s; }
+
+    /* Layout: Left Sidebar + Reader Stage */
+    .varsity-layout { display: grid; grid-template-columns: 340px 1fr; gap: 32px; align-items: start; }
+    @media(max-width: 960px) { .varsity-layout { grid-template-columns: 1fr; } }
+
+    /* Sidebar Navigation */
+    .varsity-sidebar { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto; }
+    .sidebar-search-box { position: relative; margin-bottom: 18px; }
+    .sidebar-search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-3); font-size: 13px; }
+    .sidebar-search-box input { width: 100%; padding: 8px 12px 8px 34px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
+    .sidebar-search-box input:focus { border-color: var(--primary); }
+
+    .mod-block { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
+    .mod-header { padding: 12px 14px; background: var(--bg-3); font-size: 13px; font-weight: 700; color: #fff; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+    .mod-header:hover { color: var(--primary-l); }
+    .mod-header i.chev { font-size: 11px; transition: transform 0.2s; }
+    .mod-header.open i.chev { transform: rotate(180deg); }
+
+    .chapter-list { display: none; padding: 6px 0; background: var(--bg-1); }
+    .chapter-list.open { display: block; }
+    .ch-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; font-size: 12.5px; color: var(--text-2); text-decoration: none; transition: all 0.15s; border-left: 2px solid transparent; }
+    .ch-item:hover, .ch-item.active { background: rgba(59,130,246,0.12); color: #fff; border-left-color: var(--primary); }
+    .ch-check { width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--border-hi); display: inline-flex; align-items: center; justify-content: center; font-size: 10px; color: transparent; cursor: pointer; }
+    .ch-check.done { background: #10b981; border-color: #10b981; color: #fff; }
+
+    /* Reader Main Stage */
+    .varsity-reader { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; }
+    .reader-header { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .reader-tag { font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--primary-l); letter-spacing: 0.05em; margin-bottom: 6px; }
+    .reader-title { font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; color: #fff; margin-bottom: 8px; line-height: 1.25; }
+    .reader-meta { display: flex; gap: 16px; font-size: 13px; color: var(--text-3); align-items: center; flex-wrap: wrap; }
+
+    .reader-actions { display: flex; gap: 10px; margin-top: 14px; }
+
+    .reader-body { font-size: 15px; line-height: 1.75; color: #cbd5e1; margin-bottom: 40px; }
+    .reader-body h3 { color: #fff; font-size: 20px; margin-top: 28px; margin-bottom: 10px; font-weight: 700; }
+    .reader-body p { margin-bottom: 16px; }
+    .reader-body code { font-family: 'JetBrains Mono', monospace; font-size: 13px; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; color: #93c5fd; }
+    .reader-body ul { padding-left: 20px; margin-bottom: 18px; list-style: disc; }
+    .reader-body li { margin-bottom: 6px; }
+
+    /* Quiz Box at End of Chapter */
+    .quiz-card { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 26px; margin-bottom: 32px; }
+    .quiz-title { font-size: 16px; font-weight: 800; color: #34d399; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .q-item { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #1e293b; }
+    .q-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .q-text { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 10px; }
+    .q-opt { display: block; padding: 10px 14px; background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--text-2); margin-bottom: 6px; cursor: pointer; transition: all 0.2s; }
+    .q-opt:hover { background: var(--bg-2); color: #fff; }
+    .q-opt.correct { background: rgba(16,185,129,0.2); border-color: #10b981; color: #86efac; font-weight: 600; }
+    .q-opt.wrong { background: rgba(239,68,68,0.2); border-color: #ef4444; color: #fca5a5; }
+    .q-expl { font-size: 12px; margin-top: 8px; color: #94a3b8; display: none; line-height: 1.5; }
+    .q-expl.show { display: block; }
+
+    /* Reader Navigation Footer */
+    .reader-foot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 24px; flex-wrap: wrap; gap: 14px; }
+
+    @media print {
+      .nav, .varsity-sidebar, .varsity-topbar, .reader-actions, .reader-foot, .quiz-card { display: none !important; }
+      .varsity-container { padding: 0 !important; }
+      .varsity-layout { display: block !important; }
+      .varsity-reader { border: none !important; background: #fff !important; color: #000 !important; }
+      .reader-title, .reader-body h3 { color: #000 !important; }
+      .reader-body { color: #222 !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-graduation-cap"></i></span>
+      <span style="font-weight:700; font-size:18px;">AVPU</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="modules.html" style="color:var(--primary-l); font-weight:600;">Varsity Modules</a>
+      <a href="100-day-challenge.html">100-Day Challenge</a>
+      <a href="certifications.html">Certifications</a>
+      <a href="mental-models.html">Mental Models</a>
+      <a href="laws-of-ux.html">Laws of UX</a>
+      <a href="learn-dag.html">DAG Graph</a>
+    </div>
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm" href="courses.html"><i class="fas fa-arrow-left"></i> All Courses</a>
+    </div>
+  </div>
+</nav>
+
+<div class="varsity-container">
+  <!-- Topbar Breadcrumb & Progress -->
+  <div class="varsity-topbar">
+    <div class="varsity-breadcrumb">
+      <a href="index.html"><i class="fas fa-home"></i> AVPU</a>
+      <span>/</span>
+      <a href="modules.html">Varsity</a>
+      <span>/</span>
+      <span id="bcModule">Module 1</span>
+      <span>/</span>
+      <span class="curr" id="bcChapter">Chapter 1</span>
+    </div>
+
+    <div class="varsity-progress-wrap">
+      <span>Curriculum Progress:</span>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progFill"></div></div>
+      <strong id="progText">0 / 6 completed</strong>
+    </div>
+  </div>
+
+  <div class="varsity-layout">
+    <!-- Left Navigation Sidebar -->
+    <aside class="varsity-sidebar">
+      <div class="sidebar-search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="chSearch" placeholder="Search chapters...">
+      </div>
+
+      <div id="moduleNavList"></div>
+    </aside>
+
+    <!-- Main Reader -->
+    <main class="varsity-reader">
+      <div class="reader-header">
+        <div class="reader-tag" id="rTag">Module 1 · Foundations</div>
+        <h1 class="reader-title" id="rTitle">From Symbolic AI to Deep Learning</h1>
+        <div class="reader-meta">
+          <span><i class="fas fa-clock"></i> <span id="rTime">7 min read</span></span>
+          <span><i class="fas fa-certificate" style="color:#10b981;"></i> Peer-Reviewed Curriculum</span>
+        </div>
+        <div class="reader-actions">
+          <button class="btn btn-ghost sm" onclick="window.print()"><i class="fas fa-print"></i> Print / Download PDF</button>
+          <button class="btn btn-ghost sm" id="markDoneBtn" onclick="toggleChapterDone()"><i class="fas fa-check"></i> Mark Complete</button>
+        </div>
+      </div>
+
+      <div class="reader-body" id="rBody"></div>
+
+      <!-- Chapter Quiz Checkpoint -->
+      <div class="quiz-card" id="quizCard">
+        <div class="quiz-title"><i class="fas fa-clipboard-check"></i> Check Your Understanding Checkpoint</div>
+        <div id="quizContent"></div>
+      </div>
+
+      <!-- Navigation Footer -->
+      <div class="reader-foot">
+        <button class="btn btn-ghost sm" id="prevBtn" onclick="navigateChapter(-1)"><i class="fas fa-arrow-left"></i> Previous Chapter</button>
+        <button class="btn btn-primary sm" id="nextBtn" onclick="navigateChapter(1)">Next Chapter <i class="fas fa-arrow-right"></i></button>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+const MODULES = [
+  {
+    "id": "mod-1",
+    "title": "Module 1: Foundations of Modern AI & Transformers",
+    "badge": "Beginner \u00b7 7 Chapters",
+    "desc": "Understand the architectural foundations of modern LLMs, self-attention mechanics, tokenization, and decoding parameters.",
+    "chapters": [
+      {
+        "id": "ch-1",
+        "number": 1,
+        "title": "From Symbolic AI to Deep Learning",
+        "readTime": "7 min",
+        "summary": "Trace the historic shift from hand-coded rule engines (expert systems) to statistical representation learning and deep neural networks.",
+        "content": "\n<h3>1. The Breakdown of Expert Systems</h3>\n<p>For four decades (1950s\u20131990s), artificial intelligence research was dominated by symbolic reasoning and rule-based expert systems (like MYCIN or Cyc). Knowledge engineers manually wrote thousands of <code>IF-THEN</code> rules. However, these systems suffered from combinatorial explosion: the messy real world contains too many edge cases to enumerate by hand.</p>\n\n<div style=\"background:var(--bg-2); border-left:3px solid var(--primary); padding:12px 16px; border-radius:0 8px 8px 0; margin:16px 0;\">\n  <strong>\ud83d\udca1 Core Principle:</strong> In classical programming, humans write Rules + Data to get Answers. In Machine Learning, we feed Data + Answers into algorithms, and the model infers the underlying mathematical Rules.\n</div>\n\n<h3>2. The Universal Approximation Theorem</h3>\n<p>The foundation of deep learning rests on the Universal Approximation Theorem (Hornik, 1989), which proves that a feed-forward neural network with a single hidden layer and non-linear activation functions (like ReLU or GELU) can approximate any continuous function to arbitrary precision, given sufficient parameters.</p>\n\n<h3>3. Real-World Indian Case: UPI Fraud Detection</h3>\n<p>NPCI (National Payments Corporation of India) processes over 14 billion transactions monthly. Hand-crafted rules cannot identify shifting fraud patterns. Modern deep learning models evaluate 200+ telemetry signals in under 25 milliseconds before approving a bank transfer.</p>\n                ",
+        "quiz": [
+          {
+            "q": "What is the primary limitation of symbolic expert systems?",
+            "options": [
+              "Too cheap to maintain",
+              "Combinatorial explosion of manual IF-THEN rules",
+              "Lack of CPU chips",
+              "They required quantum computers"
+            ],
+            "answer": 1,
+            "expl": "Manual rule systems fail because human developers cannot enumerate all edge cases of messy real-world data."
+          },
+          {
+            "q": "What does the Universal Approximation Theorem prove?",
+            "options": [
+              "Quantum computers are required for AI",
+              "Neural networks with non-linear activations can approximate any continuous function",
+              "Deep learning models never make errors",
+              "Transformers are obsolete"
+            ],
+            "answer": 1,
+            "expl": "Given non-linear activations and sufficient parameters, a neural network can approximate any continuous mathematical function."
+          }
+        ]
+      },
+      {
+        "id": "ch-2",
+        "number": 2,
+        "title": "How Backpropagation & Gradient Descent Actually Work",
+        "readTime": "9 min",
+        "summary": "Demystify loss functions, the chain rule of calculus, and how billion-parameter weights adjust during training.",
+        "content": "\n<h3>1. The Optimization Landscape</h3>\n<p>Training a neural network is an optimization problem in high-dimensional space. We define a <strong>Loss Function</strong> (such as Cross-Entropy Loss for next-token prediction) that quantifies the difference between the model's predicted probability distribution and the ground truth token.</p>\n\n<div style=\"background:#0f172a; border-radius:8px; padding:14px; font-family:'JetBrains Mono', monospace; font-size:13px; color:#93c5fd; margin:16px 0;\">\n# Cross Entropy Loss for Token Prediction\nL = -log(P(target_token | context))\n# Weight Update via Stochastic Gradient Descent (SGD)\nW_new = W_old - (learning_rate * dL/dW)\n</div>\n\n<h3>2. The Chain Rule & Automatic Differentiation</h3>\n<p>Backpropagation is an efficient application of the calculus chain rule, propagating error gradients backward from the final loss output layer through every intermediate matrix multiplication. Frameworks like PyTorch build dynamic computational graphs to compute these derivatives automatically.</p>\n\n<h3>3. The Vanishing & Exploding Gradient Dilemma</h3>\n<p>In deep recurrent networks, multiplying gradients through hundreds of layers caused gradients to either vanish to zero or explode to infinity. Modern architectures solved this with <strong>Residual Connections (Skip Connections)</strong> and <strong>Layer Normalization</strong>.</p>\n                ",
+        "quiz": [
+          {
+            "q": "What is the primary role of the learning rate in gradient descent?",
+            "options": [
+              "To calculate dataset size",
+              "To control the step size taken along the negative gradient vector",
+              "To compress the model weights into 8-bit integers",
+              "To prevent overfitting on the test set"
+            ],
+            "answer": 1,
+            "expl": "The learning rate dictates how large of a step is taken along the gradient direction to minimize the loss function."
+          }
+        ]
+      },
+      {
+        "id": "ch-3",
+        "number": 3,
+        "title": "The Transformer Revolution: Attention Is All You Need",
+        "readTime": "10 min",
+        "summary": "Why RNNs and LSTMs hit a wall, and how Vaswani et al. (2017) unlocked massively parallelized sequence modeling.",
+        "content": "\n<h3>1. The Death of Recurrent Neural Networks (RNNs)</h3>\n<p>Before 2017, natural language processing relied on sequential models like RNNs, GRUs, and LSTMs. Because RNNs process words sequentially (token <i>t</i> depends on hidden state <i>h_{t-1}</i>), they could not be parallelized on GPU clusters. Furthermore, long-range dependencies degraded over 50+ tokens due to information bottlenecking.</p>\n\n<h3>2. The Core Transformer Innovation: Self-Attention</h3>\n<p>Vaswani et al. eliminated recurrence entirely. The model looks at all tokens simultaneously. Every token generates three vectors:</p>\n<ul>\n  <li><strong>Query (Q):</strong> What the token is looking for.</li>\n  <li><strong>Key (K):</strong> What the token contains / offers.</li>\n  <li><strong>Value (V):</strong> The actual semantic payload transferred when Query and Key match.</li>\n</ul>\n\n<div style=\"background:#0f172a; border-radius:8px; padding:14px; font-family:'JetBrains Mono', monospace; font-size:13px; color:#34d399; margin:16px 0;\">\nAttention(Q, K, V) = softmax( (Q * K^T) / sqrt(d_k) ) * V\n</div>\n\n<h3>3. Why Divide by sqrt(d_k)?</h3>\n<p>As the dimension <code>d_k</code> grows large, the dot product values grow in magnitude, pushing the softmax function into regions with near-zero gradients. Scaling by <code>1 / sqrt(d_k)</code> stabilizes training dynamics.</p>\n                ",
+        "quiz": [
+          {
+            "q": "Why could Recurrent Neural Networks (RNNs) not scale effectively on GPU clusters?",
+            "options": [
+              "They were written in Python",
+              "Sequential dependency: token t strictly requires token t-1, preventing parallelization",
+              "They required too much RAM",
+              "GPUs did not exist in 2015"
+            ],
+            "answer": 1,
+            "expl": "RNNs require sequential step-by-step processing, which leaves thousands of GPU parallel streaming multiprocessors idle."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mod-2",
+    "title": "Module 2: Prompt Engineering & In-Context Reasoning",
+    "badge": "Intermediate \u00b7 7 Chapters",
+    "desc": "Master chain-of-thought, tool calling, structured JSON output enforcement, and LLM defense mechanisms.",
+    "chapters": [
+      {
+        "id": "ch-8",
+        "number": 8,
+        "title": "Zero-Shot vs Few-Shot Chain-of-Thought (CoT)",
+        "readTime": "8 min",
+        "summary": "How forcing models to generate intermediate reasoning tokens drastically boosts accuracy on logic, math, and coding benchmarks.",
+        "content": "\n<h3>1. The Working Memory of Language Models</h3>\n<p>An LLM is a next-token prediction engine. If you ask it a complex 5-step math riddle in a zero-shot prompt, it must predict the final answer immediately in its very first generated token. By instructing the model: <code>'Think step by step before answering'</code>, you force it to generate tokens that serve as working scratchpad memory.</p>\n\n<h3>2. Wei et al. (2022) Benchmark Results</h3>\n<p>On the GSM8K math benchmark, standard prompting yielded 18% accuracy on 540B PaLM. Adding Chain-of-Thought examples skyrocketed accuracy to 58% with zero fine-tuning.</p>\n\n<h3>3. Production Implementation: Pydantic Structured CoT</h3>\n<p>In production applications, separate the reasoning scratchpad from the final client-facing answer using XML tags or structured JSON schemas:</p>\n<pre style=\"background:#0f172a; padding:12px; border-radius:8px; color:#cbd5e1; font-family:'JetBrains Mono', monospace; font-size:12px;\">\n&lt;thinking&gt;\n1. Analyze user account status: user has 14-day trial active.\n2. Check feature flag: export_csv is restricted to Pro tier.\n3. Formulate polite refusal with upgrade link.\n&lt;/thinking&gt;\n&lt;response&gt;\nCSV Export is exclusive to our Pro tier. Would you like to upgrade?\n&lt;/response&gt;\n</pre>\n                ",
+        "quiz": [
+          {
+            "q": "Why does Chain-of-Thought (CoT) prompting improve reasoning accuracy?",
+            "options": [
+              "It increases GPU clock speeds",
+              "Intermediate reasoning tokens act as working memory for subsequent token predictions",
+              "It fine-tunes the model weights at inference time",
+              "It uses WebSockets"
+            ],
+            "answer": 1,
+            "expl": "Generated intermediate tokens become part of the input context for each subsequent token, allowing complex reasoning to unfold step-by-step."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mod-3",
+    "title": "Module 3: Retrieval-Augmented Generation (RAG) & Vector DBs",
+    "badge": "Advanced \u00b7 7 Chapters",
+    "desc": "Architect production RAG systems with dense vector embeddings, HNSW indexing, reciprocal rank fusion, and cross-encoders.",
+    "chapters": [
+      {
+        "id": "ch-15",
+        "number": 15,
+        "title": "Why RAG Exists: Hallucinations vs Factual Grounding",
+        "readTime": "8 min",
+        "summary": "Compare parametric memory (weights) vs non-parametric memory (external retrieval) and understand why RAG is indispensable for enterprise AI.",
+        "content": "\n<h3>1. Parametric vs Non-Parametric Memory</h3>\n<p>An LLM's weights are <strong>Parametric Memory</strong>: static, frozen at training cutoff, and prone to probabilistic hallucinations when asked about niche private documents. RAG introduces <strong>Non-Parametric Memory</strong>: dynamically querying external databases and injecting exact factual context into the prompt.</p>\n\n<h3>2. The Three-Phase RAG Pipeline</h3>\n<ul>\n  <li><strong>Indexing:</strong> Document extraction -> Semantic chunking -> Dense embedding generation -> Storage in Vector DB (Chroma, Pinecone, pgvector).</li>\n  <li><strong>Retrieval:</strong> User query embedded -> Cosine similarity search across index -> Top-K candidate chunks fetched.</li>\n  <li><strong>Generation:</strong> LLM synthesizes answer strictly grounded in retrieved evidence with citation anchors.</li>\n</ul>\n\n<h3>3. Indian FinTech Case Study</h3>\n<p>Zerodha Varsity uses vector RAG to answer complex tax and derivative trading questions. When a user asks: 'How are capital gains taxed on unlisted ESOPs under Budget 2024?', RAG retrieves the exact income tax circular, preventing fabricated tax advice.</p>\n                ",
+        "quiz": [
+          {
+            "q": "What is the primary advantage of non-parametric memory (RAG) over parametric memory (model weights)?",
+            "options": [
+              "It costs nothing to train",
+              "Real-time updates without retraining and verifiable factual grounding in source documents",
+              "It eliminates the need for GPUs",
+              "It replaces SQL completely"
+            ],
+            "answer": 1,
+            "expl": "RAG enables instant updates to the knowledge base without expensive retraining and grounds answers in verifiable source documents."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mod-4",
+    "title": "Module 4: Multi-Agent Systems & LangGraph Choreography",
+    "badge": "Enterprise \u00b7 7 Chapters",
+    "desc": "Design cyclical agent graphs, supervisor-worker protocols, human-in-the-loop checkpoints, and tool calling.",
+    "chapters": [
+      {
+        "id": "ch-22",
+        "number": 22,
+        "title": "From Single Agent to Orchestrated Workforces",
+        "readTime": "9 min",
+        "summary": "Why single monolithic prompts break down on complex workflows, and how specialized multi-agent graphs solve multi-step problems.",
+        "content": "\n<h3>1. The Limits of the Monolithic Prompt</h3>\n<p>Asking a single LLM to 'research competitors, write code, run unit tests, and format a PDF report' leads to catastrophic context drift and hallucinations. Multi-agent architecture applies the software engineering principle of <strong>Single Responsibility (SOLID)</strong> to AI agents.</p>\n\n<h3>2. Directed Acyclic Graphs (DAGs) vs Cyclical State Machines</h3>\n<p>Linear chains (like early LangChain) could only execute sequentially: A -> B -> C. If step C failed, the entire chain died. Modern frameworks like <strong>LangGraph</strong> introduce cyclical graphs with loops: a Coder node writes code, a Tester node runs it, and if tests fail, an edge routes back to the Coder with the stack trace for self-correction.</p>\n\n<div style=\"background:#0f172a; border-radius:8px; padding:14px; font-family:'JetBrains Mono', monospace; font-size:12px; color:#c084fc; margin:16px 0;\">\n# LangGraph Conditional Routing Pattern\ndef should_continue(state):\n    if state[\"test_passed\"]:\n        return \"deploy_node\"\n    elif state[\"retry_count\"] < 3:\n        return \"refactor_node\"\n    return \"human_approval_node\"\n</div>\n                ",
+        "quiz": [
+          {
+            "q": "What is the primary advantage of cyclical state graphs (LangGraph) over linear chains?",
+            "options": [
+              "Cheaper tokens",
+              "Ability to create feedback loops where agents evaluate output and self-correct upon errors",
+              "Does not need Python",
+              "Faster internet connection"
+            ],
+            "answer": 1,
+            "expl": "Cyclical graphs enable self-healing and iterative refinement, allowing critic agents to send errors back for correction."
+          }
+        ]
+      }
+    ]
+  }
+];
+
+// Flatten chapters for easy indexing
+let allChapters = [];
+MODULES.forEach(m => {
+  m.chapters.forEach(c => {
+    allChapters.push({
+      ...c,
+      moduleId: m.id,
+      moduleTitle: m.title
+    });
+  });
+});
+
+let currentChapterId = allChapters[0].id;
+
+function getCompleted() {
+  try {
+    return JSON.parse(localStorage.getItem('avpu_varsity_done') || '[]');
+  } catch(e) {
+    return [];
+  }
+}
+
+function saveCompleted(arr) {
+  localStorage.setItem('avpu_varsity_done', JSON.stringify(arr));
+  updateProgressUI();
+}
+
+function toggleChapterDone(id) {
+  const target = id || currentChapterId;
+  let done = getCompleted();
+  if (done.includes(target)) {
+    done = done.filter(x => x !== target);
+  } else {
+    done.push(target);
+  }
+  saveCompleted(done);
+  renderSidebar();
+  updateDoneBtn();
+}
+
+function updateDoneBtn() {
+  const done = getCompleted();
+  const isDone = done.includes(currentChapterId);
+  const btn = document.getElementById('markDoneBtn');
+  if (isDone) {
+    btn.innerHTML = '<i class="fas fa-check-circle" style="color:#10b981;"></i> Completed';
+    btn.style.background = 'rgba(16,185,129,0.15)';
+    btn.style.borderColor = '#10b981';
+  } else {
+    btn.innerHTML = '<i class="far fa-check-circle"></i> Mark Complete';
+    btn.style.background = '';
+    btn.style.borderColor = 'var(--border)';
+  }
+}
+
+function updateProgressUI() {
+  const done = getCompleted();
+  const total = allChapters.length;
+  const pct = Math.round((done.length / total) * 100);
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progText').textContent = `${done.length} / ${total} completed (${pct}%)`;
+}
+
+function renderSidebar() {
+  const container = document.getElementById('moduleNavList');
+  const done = getCompleted();
+  const q = (document.getElementById('chSearch')?.value || '').toLowerCase().trim();
+
+  container.innerHTML = MODULES.map((m, mIdx) => {
+    const hasActive = m.chapters.some(c => c.id === currentChapterId);
+    return `
+      <div class="mod-block">
+        <div class="mod-header ${hasActive ? 'open' : ''}" onclick="toggleModAccordion(this)">
+          <span>${m.title}</span>
+          <i class="fas fa-chevron-down chev"></i>
+        </div>
+        <div class="chapter-list ${hasActive ? 'open' : ''}">
+          ${m.chapters.filter(c => !q || c.title.toLowerCase().includes(q) || c.summary.toLowerCase().includes(q)).map(c => {
+            const isDone = done.includes(c.id);
+            const isActive = c.id === currentChapterId;
+            return `
+              <div class="ch-item ${isActive ? 'active' : ''}" onclick="loadChapter('${c.id}')">
+                <span><strong>Ch ${c.number}:</strong> ${c.title}</span>
+                <span class="ch-check ${isDone ? 'done' : ''}" onclick="event.stopPropagation(); toggleChapterDone('${c.id}')" title="${isDone ? 'Mark as incomplete' : 'Mark as complete'}">
+                  <i class="fas fa-check"></i>
+                </span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleModAccordion(el) {
+  el.classList.toggle('open');
+  const list = el.nextElementSibling;
+  list.classList.toggle('open');
+}
+
+function loadChapter(id) {
+  const ch = allChapters.find(x => x.id === id);
+  if (!ch) return;
+  currentChapterId = id;
+
+  // Breadcrumbs
+  document.getElementById('bcModule').textContent = ch.moduleTitle.split(':')[0];
+  document.getElementById('bcChapter').textContent = `Chapter ${ch.number}`;
+
+  // Reader Content
+  document.getElementById('rTag').textContent = `${ch.moduleTitle.split(':')[0]} · Chapter ${ch.number}`;
+  document.getElementById('rTitle').textContent = ch.title;
+  document.getElementById('rTime').textContent = ch.readTime;
+  document.getElementById('rBody').innerHTML = ch.content;
+
+  // Quiz
+  const qContainer = document.getElementById('quizContent');
+  if (ch.quiz && ch.quiz.length > 0) {
+    document.getElementById('quizCard').style.display = 'block';
+    qContainer.innerHTML = ch.quiz.map((q, qIdx) => `
+      <div class="q-item">
+        <div class="q-text">${qIdx + 1}. ${q.q}</div>
+        ${q.options.map((opt, optIdx) => `
+          <div class="q-opt" onclick="answerQuiz(this, ${optIdx}, ${q.answer}, 'expl-${qIdx}')">
+            ${opt}
+          </div>
+        `).join('')}
+        <div class="q-expl" id="expl-${qIdx}">💡 <strong>Explanation:</strong> ${q.expl}</div>
+      </div>
+    `).join('');
+  } else {
+    document.getElementById('quizCard').style.display = 'none';
+  }
+
+  // Update Footer Prev/Next
+  const curIdx = allChapters.findIndex(x => x.id === id);
+  document.getElementById('prevBtn').disabled = curIdx === 0;
+  document.getElementById('nextBtn').disabled = curIdx === allChapters.length - 1;
+
+  updateDoneBtn();
+  renderSidebar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function answerQuiz(el, selected, correct, explId) {
+  const parent = el.closest('.q-item');
+  const opts = parent.querySelectorAll('.q-opt');
+  opts.forEach(o => o.style.pointerEvents = 'none');
+
+  if (selected === correct) {
+    el.classList.add('correct');
+  } else {
+    el.classList.add('wrong');
+    opts[correct].classList.add('correct');
+  }
+  document.getElementById(explId).classList.add('show');
+}
+
+function navigateChapter(delta) {
+  const curIdx = allChapters.findIndex(x => x.id === currentChapterId);
+  const nextIdx = curIdx + delta;
+  if (nextIdx >= 0 && nextIdx < allChapters.length) {
+    loadChapter(allChapters[nextIdx].id);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderSidebar();
+  loadChapter(currentChapterId);
+  updateProgressUI();
+
+  document.getElementById('chSearch').addEventListener('input', () => {
+    renderSidebar();
+  });
+
+  // Theme Toggle
+  const tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      const ic = tBtn.querySelector('i');
+      if (ic) ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    updateIcon(document.documentElement.getAttribute('data-theme') || 'dark');
+    tBtn.addEventListener('click', () => {
+      const now = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+});
+</script>
+</body>
+</html>

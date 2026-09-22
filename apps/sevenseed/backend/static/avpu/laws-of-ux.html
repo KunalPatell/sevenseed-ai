@@ -41,13 +41,43 @@
     .hicks-btn.target-choice { border-color: #f59e0b; box-shadow: 0 0 14px rgba(245,158,11,0.3); }
 
     /* 21 Laws Cards Grid */
+    .laws-filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .law-filter-chip { padding: 7px 16px; border-radius: 999px; background: var(--bg-1); border: 1px solid var(--border); color: var(--text-2); font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.18s; }
+    .law-filter-chip:hover { border-color: rgba(168,85,247,0.5); color: #c084fc; }
+    .law-filter-chip.active { background: rgba(168,85,247,0.15); border-color: #a855f7; color: #c084fc; }
+    .laws-count { font-size: 13px; color: var(--text-2); margin-bottom: 16px; }
+    .laws-count strong { color: var(--text); }
     .laws-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-    .law-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; }
-    .law-card:hover { transform: translateY(-4px); border-color: rgba(168,85,247,0.4); }
+    .law-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; cursor: pointer; position: relative; overflow: hidden; }
+    .law-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(168,85,247,0.06), transparent 60%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .law-card:hover { transform: translateY(-4px); border-color: rgba(168,85,247,0.4); box-shadow: 0 12px 40px rgba(168,85,247,0.1); }
+    .law-card:hover::before { opacity: 1; }
+    .law-card.hidden { display: none; }
     .law-category { font-size: 11px; text-transform: uppercase; font-weight: 700; color: #c084fc; margin-bottom: 8px; letter-spacing: 0.05em; }
     .law-name { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; }
     .law-summary { font-size: 13px; color: var(--text-2); line-height: 1.6; margin-bottom: 16px; flex: 1; }
     .law-takeaway { background: var(--bg-2); border-left: 3px solid #a855f7; padding: 8px 12px; border-radius: 0 6px 6px 0; font-size: 12px; color: #cbd5e1; }
+    .law-deep-btn { display: inline-flex; align-items: center; gap: 5px; margin-top: 12px; font-size: 11px; font-weight: 700; color: #a855f7; opacity: 0; transition: opacity 0.2s; }
+    .law-card:hover .law-deep-btn { opacity: 1; }
+
+    /* Deep-Dive Modal */
+    .law-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .law-modal-bg.open { display: flex; }
+    .law-modal { background: var(--bg-1); border: 1px solid rgba(168,85,247,0.3); border-radius: 20px; max-width: 640px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 32px; position: relative; box-shadow: 0 24px 80px rgba(168,85,247,0.2); }
+    .modal-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 8px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .modal-close:hover { color: #fff; background: var(--bg-3); }
+    .modal-cat { font-size: 10px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.1em; color: #a855f7; margin-bottom: 8px; }
+    .modal-title { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 16px; line-height: 1.2; }
+    .modal-desc { font-size: 15px; color: var(--text-2); line-height: 1.7; margin-bottom: 20px; }
+    .modal-formula { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 14px 18px; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #38bdf8; margin-bottom: 20px; }
+    .modal-formula-label { font-size: 10px; text-transform: uppercase; font-weight: 800; color: rgba(255,255,255,0.35); margin-bottom: 6px; font-family: inherit; display: block; }
+    .modal-section-title { font-size: 12px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.06em; color: rgba(255,255,255,0.4); margin-bottom: 10px; }
+    .modal-examples { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .modal-example { background: var(--bg-2); border-radius: 10px; padding: 12px 16px; font-size: 13px; color: var(--text-2); line-height: 1.6; display: flex; gap: 10px; }
+    .modal-example-icon { color: #a855f7; font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .modal-takeaway { background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.25); border-radius: 10px; padding: 14px 18px; font-size: 14px; color: #ddd6fe; margin-bottom: 20px; line-height: 1.6; }
+    .modal-takeaway strong { color: #c084fc; }
+    .modal-footer { display: flex; gap: 10px; }
   </style>
 </head>
 <body>
@@ -147,144 +177,198 @@
   </div>
 
   <!-- 21 Laws of UX Directory -->
-  <h2 style="font-size:24px; font-weight:800; margin-bottom:20px; display:flex; align-items:center; gap:10px;">
+  <h2 style="font-size:24px; font-weight:800; margin-bottom:16px; display:flex; align-items:center; gap:10px;">
     <i class="fas fa-book-open" style="color:#a855f7;"></i> The 21 Core Laws of UX
   </h2>
 
-  <div class="laws-grid">
-    <div class="law-card">
-      <div class="law-category">Heuristic & Principle</div>
+  <!-- Category Filter Bar — inspired by lawsofux.com -->
+  <div class="laws-filter-bar" id="lawsFilter">
+    <button class="law-filter-chip active" onclick="filterLaws('all',this)">All Laws <span style="margin-left:4px;opacity:.6;">21</span></button>
+    <button class="law-filter-chip" onclick="filterLaws('Cognitive Principle',this)">Cognitive</button>
+    <button class="law-filter-chip" onclick="filterLaws('Memory',this)">Memory</button>
+    <button class="law-filter-chip" onclick="filterLaws('Gestalt',this)">Gestalt</button>
+    <button class="law-filter-chip" onclick="filterLaws('Visual',this)">Visual</button>
+    <button class="law-filter-chip" onclick="filterLaws('Motivation',this)">Motivation</button>
+    <button class="law-filter-chip" onclick="filterLaws('Heuristic',this)">Heuristic</button>
+  </div>
+  <p class="laws-count"><strong id="lawsVisible">21</strong> laws</p>
+
+  <div class="laws-grid" id="lawsGrid">
+    <div class="law-card" data-cat="Heuristic" onclick="openLawModal(0)">
+      <div class="law-category">Heuristic &amp; Principle</div>
       <h3 class="law-name">Fitts's Law</h3>
       <p class="law-summary">The time to acquire a target is a function of the distance to and size of the target. Fast-action buttons should be large and pinned close to thumb reach.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Make primary CTAs large and position them along screen edges or thumb zones.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
 
-    <div class="law-card">
+    <div class="law-card" data-cat="Cognitive Principle" onclick="openLawModal(1)">
       <div class="law-category">Cognitive Principle</div>
       <h3 class="law-name">Hick's Law</h3>
       <p class="law-summary">The time it takes to make a decision increases with the number and complexity of options. Minimize choices in checkouts, nav menus, and pricing tiers.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Break complex workflows into multi-step wizards with 3 or fewer choices per step.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
 
-    <div class="law-card">
+    <div class="law-card" data-cat="Memory" onclick="openLawModal(2)">
       <div class="law-category">Memory &amp; Perception</div>
       <h3 class="law-name">Miller's Law</h3>
       <p class="law-summary">The average person can hold only 7 (±2) chunks of information in working memory simultaneously.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Chunk phone numbers, credit cards, and dashboard metrics into clusters of 3-4 items.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
 
-    <div class="law-card">
+    <div class="law-card" data-cat="Heuristic" onclick="openLawModal(3)">
       <div class="law-category">Expectation Principle</div>
       <h3 class="law-name">Jakob's Law</h3>
       <p class="law-summary">Users spend most of their time on other sites. They expect your site to function identically to familiar mental models (e.g. cart on top right, logo on top left).</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Innovate on core value, not on foundational navigation conventions.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
 
-    <div class="law-card">
+    <div class="law-card" data-cat="Memory" onclick="openLawModal(4)">
       <div class="law-category">Memory Biases</div>
       <h3 class="law-name">Peak-End Rule</h3>
       <p class="law-summary">People judge an experience based on how they felt at its emotional peak and at its conclusion, rather than the average sum of every moment.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Celebrate key milestones with confetti animations and ensure checkout ends on a high note.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
 
-    <div class="law-card">
+    <div class="law-card" data-cat="Motivation" onclick="openLawModal(5)">
       <div class="law-category">Task Motivation</div>
       <h3 class="law-name">Zeigarnik Effect</h3>
       <p class="law-summary">People remember uncompleted or interrupted tasks significantly better than completed tasks. Incomplete progress bars create psychological tension to finish.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Show "75% profile completed" badges to trigger completion drive.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
 
-    <div class="law-card">
+    <div class="law-card" data-cat="Visual" onclick="openLawModal(6)">
       <div class="law-category">Visual Perception</div>
       <h3 class="law-name">Aesthetic-Usability Effect</h3>
       <p class="law-summary">Users perceive aesthetically pleasing designs as significantly more usable and are more forgiving of minor usability hiccups.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Premium micro-interactions and harmonious color palettes build immediate trust.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
 
-    <div class="law-card">
+    <div class="law-card" data-cat="Visual" onclick="openLawModal(7)">
       <div class="law-category">Visual Hierarchy</div>
       <h3 class="law-name">Von Restorff Effect</h3>
       <p class="law-summary">When multiple similar objects are present, the one that differs from the rest is most likely to be remembered.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Highlight "Recommended" pricing tiers with high-contrast colored borders.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
 
-    <div class="law-card">
+    <div class="law-card" data-cat="Motivation" onclick="openLawModal(8)">
       <div class="law-category">Cognitive Principle</div>
       <h3 class="law-name">Goal-Gradient Effect</h3>
       <p class="law-summary">The tendency to approach a goal increases with proximity to the goal. Users accelerate action as the finish line comes in sight.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Start loyalty cards with 2 pre-stamped bonus stars to create perceived initial momentum.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
-    <div class="law-card">
+    <div class="law-card" data-cat="Heuristic" onclick="openLawModal(9)">
       <div class="law-category">Interaction Principle</div>
       <h3 class="law-name">Doherty Threshold</h3>
       <p class="law-summary">Productivity soars when a system responds to the user within 400ms, keeping both in flow with neither waiting on the other.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Show an optimistic UI update immediately, then reconcile with the server response.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
-    <div class="law-card">
+    <div class="law-card" data-cat="Heuristic" onclick="openLawModal(10)">
       <div class="law-category">Decision Principle</div>
       <h3 class="law-name">Occam's Razor</h3>
       <p class="law-summary">Among competing designs that solve the problem equally well, the one with the fewest steps or elements should be chosen.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Before shipping a flow, try to delete a step — if nothing breaks, leave it deleted.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
-    <div class="law-card">
+    <div class="law-card" data-cat="Heuristic" onclick="openLawModal(11)">
       <div class="law-category">Statistical Principle</div>
       <h3 class="law-name">Pareto Principle</h3>
       <p class="law-summary">Roughly 80% of outcomes come from 20% of causes — a small set of features usually drives most of the value users get.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Identify your top 20% of features by usage and give them the most prominent placement.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
-    <div class="law-card">
+    <div class="law-card" data-cat="Memory" onclick="openLawModal(12)">
       <div class="law-category">Memory &amp; Perception</div>
       <h3 class="law-name">Serial Position Effect</h3>
       <p class="law-summary">Users best remember the first and last items in a list or sequence, with middle items fading fastest from memory.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Put your most important nav items or pricing tiers at the start and end of a row.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
-    <div class="law-card">
+    <div class="law-card" data-cat="Heuristic" onclick="openLawModal(13)">
       <div class="law-category">Systems Principle</div>
       <h3 class="law-name">Tesler's Law</h3>
       <p class="law-summary">Every system has an irreducible amount of complexity — the only question is whether the user or the developer absorbs it.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Push complexity into smart defaults and backend logic rather than onto the user's screen.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
-    <div class="law-card">
+    <div class="law-card" data-cat="Cognitive Principle" onclick="openLawModal(14)">
       <div class="law-category">Cognitive Principle</div>
       <h3 class="law-name">Cognitive Load</h3>
       <p class="law-summary">The amount of mental effort required to use an interface — every extra decision, label, or field adds to it.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Remove or hide any field, toggle, or choice that isn't needed for the current task.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
-    <div class="law-card">
+    <div class="law-card" data-cat="Memory" onclick="openLawModal(15)">
       <div class="law-category">Memory &amp; Perception</div>
       <h3 class="law-name">Chunking</h3>
       <p class="law-summary">Grouping individual pieces of information into larger, more meaningful units makes them easier to process and recall.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Break long forms and numbers into labeled groups of 3-4 fields instead of one long list.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
-    <div class="law-card">
+    <div class="law-card" data-cat="Gestalt" onclick="openLawModal(16)">
       <div class="law-category">Gestalt Principle</div>
       <h3 class="law-name">Law of Proximity</h3>
       <p class="law-summary">Objects placed near each other are perceived as more related than objects placed further apart.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Tighten spacing between a label and its input; widen spacing between unrelated field groups.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
-    <div class="law-card">
+    <div class="law-card" data-cat="Gestalt" onclick="openLawModal(17)">
       <div class="law-category">Gestalt Principle</div>
       <h3 class="law-name">Law of Similarity</h3>
       <p class="law-summary">Elements that share visual traits — color, shape, size — are perceived as more related than elements that don't.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Use one consistent button style for every primary action across the product.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
-    <div class="law-card">
+    <div class="law-card" data-cat="Cognitive Principle" onclick="openLawModal(18)">
       <div class="law-category">Cognitive Principle</div>
       <h3 class="law-name">Mental Model</h3>
       <p class="law-summary">Users carry expectations from other products into yours, based on what they already believe about how systems like it work.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Match established conventions (cart icon, hamburger menu) unless you have a strong reason to diverge.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
-    <div class="law-card">
+    <div class="law-card" data-cat="Cognitive Principle" onclick="openLawModal(19)">
       <div class="law-category">Attention Principle</div>
       <h3 class="law-name">Selective Attention</h3>
       <p class="law-summary">Users filter out most of what's on screen and focus only on what's relevant to their current goal.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Mute or remove secondary UI while a user is mid-task, like during checkout.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
     </div>
-    <div class="law-card">
+    <div class="law-card" data-cat="Motivation" onclick="openLawModal(20)">
       <div class="law-category">Motivation Principle</div>
       <h3 class="law-name">Flow</h3>
       <p class="law-summary">The mental state of complete immersion in a task, reached when challenge and skill are closely matched.</p>
       <div class="law-takeaway"><strong>Design Rule:</strong> Ramp difficulty or complexity gradually so users stay challenged without hitting frustration.</div>
+      <span class="law-deep-btn"><i class="fas fa-expand"></i> Deep Dive</span>
+    </div>
+  </div>
+</div>
+
+<!-- Deep-Dive Modal -->
+<div class="law-modal-bg" id="lawModal">
+  <div class="law-modal">
+    <button class="modal-close" onclick="closeLawModal()"><i class="fas fa-times"></i></button>
+    <div class="modal-cat" id="modalCat"></div>
+    <h2 class="modal-title" id="modalTitle"></h2>
+    <p class="modal-desc" id="modalDesc"></p>
+    <div class="modal-formula" id="modalFormula" style="display:none;">
+      <span class="modal-formula-label">Formula / Equation</span>
+      <span id="modalFormulaText"></span>
+    </div>
+    <div class="modal-section-title">Real-World Examples</div>
+    <div class="modal-examples" id="modalExamples"></div>
+    <div class="modal-takeaway" id="modalTakeaway"></div>
+    <div class="modal-footer">
+      <a class="btn btn-primary" id="modalLabLink" href="#" style="display:none;"><i class="fas fa-flask"></i> Try Experiment</a>
+      <button class="btn btn-ghost" onclick="closeLawModal()">Close</button>
     </div>
   </div>
 </div>
@@ -383,6 +467,68 @@ function startMillerTest() {
 
 // Init
 setHicksMode(4);
+
+// --- LAWS FILTER ---
+function filterLaws(cat, btn) {
+  document.querySelectorAll('.law-filter-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('.law-card');
+  let count = 0;
+  cards.forEach(c => {
+    const show = cat === 'all' || (c.dataset.cat || '').includes(cat);
+    c.classList.toggle('hidden', !show);
+    if (show) count++;
+  });
+  document.getElementById('lawsVisible').textContent = count;
+}
+
+// --- DEEP DIVE MODAL DATA ---
+const LAWS_DATA = [
+  { cat: 'Heuristic', name: "Fitts's Law", desc: "The time required to rapidly move to a target area is a function of the ratio between the distance to the target and the width of the target. Smaller, distant buttons are harder and slower to click.", formula: "MT = a + b \u00b7 log\u2082(2D / W)", examples: ["Large 'Add to Cart' buttons on mobile are positioned within easy thumb reach at the bottom of the screen.","Touch keyboards make the most frequent letters (AEIOU) larger than rare ones.","macOS Dock autohides and expands targets at the screen edge — using infinite target width."], takeaway: "<strong>Design Rule:</strong> Primary CTAs must be large AND close to where the user's pointer naturally rests. Screen edges are infinitely large.", lab: '#' },
+  { cat: 'Cognitive', name: "Hick's Law", desc: "The time it takes to make a decision increases with the number and complexity of choices presented. This is a logarithmic relationship, not linear.", formula: "RT = b \u00b7 log\u2082(n + 1)", examples: ["Netflix uses a 3-tier pricing page instead of 12 feature toggles per plan.","Apple offers 3 iPhone models — not 12 — at the point of decision.","Stripe's pricing page hides advanced API options under a toggle to reduce initial cognitive overload."], takeaway: "<strong>Design Rule:</strong> Break complex decisions into multi-step wizards. Present 3 or fewer meaningful options at each decision point.", lab: 'javascript:switchLab("hicks")' },
+  { cat: 'Memory', name: "Miller's Law", desc: "The average person can only keep 7 (plus or minus 2) items in their immediate working memory. Chunking information into small groups dramatically improves recall.", formula: "WM Capacity = 7 \u00b1 2 chunks", examples: ["Phone numbers are split: (080) 2345-6789 instead of 08023456789.","Credit card fields chunk 16 digits into 4 groups of 4.","Dashboard KPIs are grouped into 3 cards per row maximum."], takeaway: "<strong>Design Rule:</strong> Never show more than 5-7 items in a flat list. Group them into labeled clusters of 3-4.", lab: 'javascript:switchLab("millers")' },
+  { cat: 'Heuristic', name: "Jakob's Law", desc: "Users spend most of their time on other sites. They form expectations about how your site should work based on accumulated experience with other products.", formula: null, examples: ["Cart icon is always top-right — Flipkart, Amazon, Meesho all follow this convention.","Hamburger menu ≡ is universally understood as navigation on mobile.","Logo top-left is the 'home' convention across 98% of the web."], takeaway: "<strong>Design Rule:</strong> Innovate on core product value, not on navigation conventions. Novel patterns create friction and distrust.", lab: null },
+  { cat: 'Memory', name: "Peak-End Rule", desc: "People judge an experience based almost entirely on how they felt at the most intense emotional moment (peak) and at the end — not the average quality of all moments.", formula: null, examples: ["Zomato shows confetti and a 'You're a star!' animation at order confirmation (positive peak).","Apple unboxing is engineered to be the most premium moment of the ownership journey.","Airlines that have great boarding and terrible landing are remembered negatively."], takeaway: "<strong>Design Rule:</strong> Engineer the emotional peak (first success moment) and the ending (success screen, onboarding complete) to be exceptional.", lab: null },
+  { cat: 'Motivation', name: "Zeigarnik Effect", desc: "People remember uncompleted or interrupted tasks better than completed ones. Incomplete progress creates psychological tension that motivates continuation.", formula: null, examples: ["LinkedIn's '75% profile complete' bar keeps users adding information until full.","Duolingo's daily goal widget shows a half-filled ring all day — not a full one.","Coursera emails 'You're 3 videos away from your certificate' to re-engage lapsed learners."], takeaway: "<strong>Design Rule:</strong> Show progress bars that start slightly filled. Never show 0% — always give users something to protect.", lab: null },
+  { cat: 'Visual', name: "Aesthetic-Usability Effect", desc: "Aesthetically pleasing designs are perceived as more usable, even when functionality is identical. Users are more forgiving of minor usability issues in beautiful designs.", formula: null, examples: ["Apple's premium packaging is perceived as being more valuable than identical products in plain boxes.","Linear's dark-mode UI is considered 'best-in-class UX' primarily because of its design quality.","Notion's clean typography makes complex databases feel approachable."], takeaway: "<strong>Design Rule:</strong> Invest in visual quality first. Users will forgive 10% less feature coverage if the remaining 90% looks and feels premium.", lab: null },
+  { cat: 'Visual', name: "Von Restorff Effect", desc: "When multiple similar objects are present, the one that differs from the rest is most likely to be remembered and noticed. Visual isolation drives attention.", formula: null, examples: ["Pricing pages highlight the middle 'Pro' tier with a colored border and 'Most Popular' badge.","Swiggy's red 'Bestseller' tag on one item in a restaurant menu draws 3x more orders.","Gmail's 'Primary' inbox tab is white; Promotions is grey — primary gets all the attention."], takeaway: "<strong>Design Rule:</strong> Use one high-contrast element on a page to draw attention. If everything is highlighted, nothing is.", lab: null },
+  { cat: 'Motivation', name: "Goal-Gradient Effect", desc: "The tendency to accelerate toward a goal increases as you get closer to completing it. Pre-loaded progress creates perceived momentum.", formula: null, examples: ["Coffee loyalty cards with 2 stamps already filled get completed 2x faster than empty cards.","GitHub contribution graphs show 'current streak' to trigger completion drive.","Amazon Prime video shows percentage watched to encourage finishing."], takeaway: "<strong>Design Rule:</strong> Start loyalty or progress systems with 15-20% pre-filled progress. Users won't abandon what they've already invested in.", lab: null },
+  { cat: 'Heuristic', name: "Doherty Threshold", desc: "Productivity and engagement soar when a computer responds to user input within 400 milliseconds. Delays longer than this break flow and cost user satisfaction.", formula: "Target: Response Time < 400ms", examples: ["Google Search returns results in <200ms — slower results lead to 20% fewer searches per session.","Figma shows local optimistic updates instantly; server sync happens in background.","Razorpay's payment confirmation plays a sound in <200ms even before server confirmation."], takeaway: "<strong>Design Rule:</strong> Use optimistic UI updates — show the success state immediately, reconcile with the server in the background. Never make the user wait for a spinner on simple actions.", lab: null },
+  { cat: 'Heuristic', name: "Occam's Razor", desc: "Among competing designs of equivalent functionality, the simplest one should be chosen. Complexity without purpose degrades experience.", formula: null, examples: ["Google's homepage has only one input — despite Google having 100+ products.","Stripe's original pricing was 2.9% + $0.30. No tiers, no sliding scale.","Duolingo's lesson UI has exactly 3 elements: question, options, progress."], takeaway: "<strong>Design Rule:</strong> Before shipping, try deleting a UI element. If users don't notice, remove it permanently. Simplification is a feature.", lab: null },
+  { cat: 'Heuristic', name: "Pareto Principle", desc: "Approximately 80% of the effects in a system come from 20% of causes. In UX, a small set of features drives most user value.", formula: "80% outcomes ← 20% causes", examples: ["Instagram's core loop is just 3 actions: scroll, like, comment — the rest of the app is secondary.","WhatsApp: 80% of time spent in 3 features: send message, view status, make call.","Notion users spend 80% of time in pages and databases — despite 40+ block types."], takeaway: "<strong>Design Rule:</strong> Identify your top 3 features by usage analytics. Give them the highest visual prominence, fastest load path, and easiest discoverability.", lab: null },
+  { cat: 'Memory', name: "Serial Position Effect", desc: "In a sequence of items, users best remember the first (primacy) and last (recency) items. Middle items fade fastest from recall.", formula: "Recall: First + Last > Middle", examples: ["Pricing tiers: put the cheapest and most expensive at the ends — the 'recommended' one in the middle gets most attention due to contrast.","Navigation menus: most important links first and last. Secondary pages in the middle.","Email subjects: put the key word at the beginning or very end of the subject line."], takeaway: "<strong>Design Rule:</strong> In any list or sequence, put your most critical items at position 1 and position N. Never bury the most important option in the middle.", lab: null },
+  { cat: 'Heuristic', name: "Tesler's Law", desc: "Every application has an inherent amount of irreducible complexity. The question is only who bears it: the user or the developer. Good UX means the developer absorbs it.", formula: null, examples: ["Gmail's smart compose suggests completions so users don't type full sentences.","Figma auto-aligns elements so designers don't manually calculate x,y coordinates.","Stripe handles PCI compliance complexity entirely invisibly from the merchant."], takeaway: "<strong>Design Rule:</strong> Every time you add a form field or a setting for users to configure, ask: 'Can we infer this from existing data or make a smart default instead?'", lab: null },
+  { cat: 'Cognitive', name: "Cognitive Load", desc: "Cognitive load is the total mental effort being used in working memory. Every unnecessary option, label, or visual element adds to it and increases error rates.", formula: null, examples: ["Checkout flows that remove the nav bar reduce cognitive load and increase completion by 30%.","Calendly shows only available time slots — not all 24 hours with blocked ones greyed out.","Google Forms hides complex logic conditions from form respondents entirely."], takeaway: "<strong>Design Rule:</strong> Apply 'progressive disclosure' — show only what's needed for the current task. Advanced options should be hidden under toggles, not upfront.", lab: null },
+  { cat: 'Memory', name: "Chunking", desc: "Grouping individual pieces of information into larger units (chunks) reduces cognitive load and makes information easier to process and remember.", formula: null, examples: ["Aadhaar numbers are displayed as 1234 5678 9012 — not 123456789012.","Complex medical forms break 20 fields into 5 labeled groups of 4.","Figma's property panel groups typography controls together, spacing controls together."], takeaway: "<strong>Design Rule:</strong> Never show a flat list of more than 7 items. Always group with clear labels. Apply chunking to numbers, fields, and navigation.", lab: null },
+  { cat: 'Gestalt', name: "Law of Proximity", desc: "Elements placed close together are perceived as related. This principle governs how users group and interpret related content without any labels.", formula: null, examples: ["In forms, labels are placed immediately above (not beside) their input to create tight proximity.","Card-based UIs group title, description, and CTA within one container separated by whitespace from adjacent cards.","Figma's toolbar keeps object-specific controls close to the selected object."], takeaway: "<strong>Design Rule:</strong> Tighten the spacing between related elements to 8px or less. Add 24-40px of space between unrelated groups. Let spacing communicate structure.", lab: null },
+  { cat: 'Gestalt', name: "Law of Similarity", desc: "Elements sharing visual properties (color, shape, size, texture) are perceived as more related than dissimilar elements — even if physically separated.", formula: null, examples: ["All primary buttons across Stripe's UI are the same purple — regardless of section or page.","Disabled form fields are consistently grey across all platforms — universally understood.","Error states are always red across Google's product suite — Docs, Gmail, Drive."], takeaway: "<strong>Design Rule:</strong> Create a design system with one consistent visual treatment per interaction type: primary, secondary, danger, disabled. Never deviate.", lab: null },
+  { cat: 'Cognitive', name: "Mental Model", desc: "Users bring pre-existing mental models from their prior experiences with similar products. When your interface matches their model, learning is instant. When it breaks it, friction spikes.", formula: null, examples: ["E-commerce sites put the cart in the top-right because that's where users' mental model places it.","The trash/bin icon universally means 'delete' — even though a literal bin has nothing to do with digital deletion.","File folders in desktop GUIs mirror physical office folder metaphors."], takeaway: "<strong>Design Rule:</strong> Before designing a novel interaction, research how competing products solve the same problem. Users' mental models are formed by incumbents.", lab: null },
+  { cat: 'Cognitive', name: "Selective Attention", desc: "Users filter out most of what appears on screen and focus only on elements relevant to their current task goal. Everything else is invisible to them during task mode.", formula: null, examples: ["Users on a checkout page don't notice the header navigation — they're fully task-focused.","The 'gorilla in the room' experiment: participants watching a basketball video miss a man in a gorilla suit.","Hotjar heatmaps show that 90% of scroll stops below the fold on a product page are on the CTA, not decorative images."], takeaway: "<strong>Design Rule:</strong> During high-intent user flows (checkout, signup), remove ALL secondary navigation, ads, and decorative elements. Eliminate competing attention targets.", lab: null },
+  { cat: 'Motivation', name: "Flow", desc: "Flow is the psychological state of complete immersion and energized focus in an activity. It occurs when challenge level closely matches skill level — not too easy, not too hard.", formula: "Flow = Challenge level ≈ Skill level", examples: ["Duolingo gradually introduces new vocab — 2 new words per lesson, not 20.","Coding games like CodeCombat increase difficulty as the player's skill grows.","Notion's empty state shows an inspiring template immediately rather than a blank page."], takeaway: "<strong>Design Rule:</strong> Design for gradual complexity ramp. Show beginners simple defaults; unlock advanced settings only as they demonstrate proficiency.", lab: null }
+];
+
+function openLawModal(idx) {
+  event.stopPropagation();
+  const d = LAWS_DATA[idx];
+  if (!d) return;
+  document.getElementById('modalCat').textContent = d.cat;
+  document.getElementById('modalTitle').textContent = d.name;
+  document.getElementById('modalDesc').textContent = d.desc;
+  const fEl = document.getElementById('modalFormula');
+  if (d.formula) { fEl.style.display = 'block'; document.getElementById('modalFormulaText').textContent = d.formula; } else { fEl.style.display = 'none'; }
+  document.getElementById('modalExamples').innerHTML = d.examples.map(e => `<div class="modal-example"><i class="fas fa-circle-check modal-example-icon"></i><span>${e}</span></div>`).join('');
+  document.getElementById('modalTakeaway').innerHTML = d.takeaway;
+  const labLink = document.getElementById('modalLabLink');
+  if (d.lab) { labLink.style.display = 'inline-flex'; labLink.href = d.lab; } else { labLink.style.display = 'none'; }
+  document.getElementById('lawModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLawModal() {
+  document.getElementById('lawModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('lawModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeLawModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLawModal(); });
 </script>
 
 
