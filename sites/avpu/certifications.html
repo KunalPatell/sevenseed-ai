@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Certifications - AVPU by Sevenseed</title>
+  <meta name="description" content="Earn verifiable AI, UX, and growth certifications for free. Project-gated, portfolio-ready, inspired by freeCodeCamp. Built for Indian builders.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body{background:#060609;color:#eeeef8;font-family:"Inter",sans-serif;}
+    .page{max-width:1100px;margin:0 auto;padding:88px 24px 80px;}
+    .hero{text-align:center;padding:48px 0 40px;position:relative;}
+    .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(16,185,129,.14),transparent 70%);pointer-events:none;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:#34d399;font-size:13px;font-weight:700;margin-bottom:20px;}
+    .hero h1{font-size:clamp(32px,5vw,56px);font-weight:900;line-height:1.15;background:linear-gradient(135deg,#fff 30%,#6ee7b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;}
+    .hero p{font-size:16px;color:#9aa0b8;max-width:520px;margin:0 auto 28px;line-height:1.7;}
+    .cert-stats{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;}
+    .cert-stat{background:#0d0d16;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px 24px;text-align:center;}
+    .cert-stat-val{font-size:24px;font-weight:900;color:#fff;display:block;}
+    .cert-stat-label{font-size:12px;color:#9aa0b8;font-weight:600;margin-top:2px;}
+
+    /* Certs Grid */
+    .certs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px;margin-bottom:48px;}
+    .cert-card{background:#0d0d16;border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;transition:transform .2s,border-color .2s;display:flex;flex-direction:column;}
+    .cert-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3);}
+    .cert-card.locked-cert{opacity:.7;}
+    .cert-header{padding:24px;display:flex;align-items:flex-start;gap:16px;border-bottom:1px solid rgba(255,255,255,.06);}
+    .cert-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+    .cert-meta{flex:1;}
+    .cert-track{font-size:10px;text-transform:uppercase;font-weight:800;letter-spacing:.08em;margin-bottom:4px;}
+    .cert-name{font-size:18px;font-weight:800;color:#fff;line-height:1.2;}
+    .cert-time{font-size:12px;color:#9aa0b8;margin-top:4px;}
+    .cert-body{padding:20px;flex:1;display:flex;flex-direction:column;}
+    .cert-desc{font-size:13px;color:#9aa0b8;line-height:1.6;margin-bottom:16px;}
+    .cert-projects-title{font-size:10px;text-transform:uppercase;font-weight:800;color:rgba(255,255,255,.35);letter-spacing:.08em;margin-bottom:10px;}
+    .cert-projects{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
+    .cert-project-item{display:flex;align-items:center;gap:10px;font-size:13px;color:#9aa0b8;}
+    .proj-check{width:18px;height:18px;border-radius:4px;border:1.5px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+    .proj-check.done{background:#10b981;border-color:#10b981;color:#fff;}
+    .cert-progress-bar{background:#12121e;border-radius:999px;height:6px;overflow:hidden;margin-bottom:16px;}
+    .cert-progress-fill{height:100%;border-radius:999px;transition:width .4s;}
+    .cert-footer{display:flex;gap:10px;margin-top:auto;}
+    .btn-cert{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;border:none;font-family:inherit;transition:all .2s;}
+    .btn-cert-primary{color:#fff;}
+    .btn-cert-ghost{background:rgba(255,255,255,.06);color:#9aa0b8;border:1px solid rgba(255,255,255,.08);}
+    .btn-cert-ghost:hover{background:rgba(255,255,255,.1);color:#fff;}
+    .cert-badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;display:inline-flex;align-items:center;gap:4px;}
+
+    /* Certificate Preview Modal */
+    .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
+    .modal-bg.open{display:flex;}
+    .cert-preview{background:#0d0d16;border:1px solid rgba(255,255,255,.1);border-radius:20px;max-width:600px;width:100%;padding:0;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.4);}
+    .cert-preview-header{padding:32px;text-align:center;border-bottom:1px solid rgba(255,255,255,.07);}
+    .cert-seal{width:80px;height:80px;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:36px;}
+    .cert-preview-title{font-size:13px;text-transform:uppercase;font-weight:800;letter-spacing:.1em;color:#9aa0b8;margin-bottom:8px;}
+    .cert-preview-name{font-size:28px;font-weight:900;color:#fff;margin-bottom:8px;}
+    .cert-preview-sub{font-size:14px;color:#9aa0b8;margin-bottom:16px;}
+    .cert-preview-issued{font-size:12px;color:rgba(255,255,255,.35);}
+    .cert-preview-body{padding:24px 32px;}
+    .verify-box{background:#12121e;border-radius:10px;padding:14px 18px;font-family:"JetBrains Mono",monospace;font-size:12px;color:#6ee7b7;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+    .modal-footer{display:flex;gap:10px;justify-content:flex-end;}
+
+    /* Roadmap section */
+    .roadmap{background:#0d0d16;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:28px;margin-bottom:48px;}
+    .roadmap-title{font-size:18px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+    .roadmap-path{display:flex;flex-direction:column;gap:0;}
+    .roadmap-step{display:flex;gap:20px;position:relative;}
+    .roadmap-step-line{display:flex;flex-direction:column;align-items:center;padding-bottom:20px;}
+    .roadmap-step-line:last-child{padding-bottom:0;}
+    .roadmap-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:800;}
+    .roadmap-connector{width:2px;flex:1;min-height:20px;background:rgba(255,255,255,.06);}
+    .roadmap-content{flex:1;padding-bottom:20px;}
+    .roadmap-step-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px;}
+    .roadmap-step-desc{font-size:13px;color:#9aa0b8;line-height:1.6;}
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav style="position:fixed;top:0;left:0;right:0;z-index:100;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,9,.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.07);">
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#eeeef8;font-weight:800;font-size:17px;">
+    <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;"><i class="fas fa-graduation-cap"></i></div>
+    AVPU
+  </a>
+  <div style="display:flex;gap:18px;font-size:14px;">
+    <a href="index.html" style="color:#9aa0b8;text-decoration:none;">Hub</a>
+    <a href="100-day-challenge.html" style="color:#9aa0b8;text-decoration:none;">100-Day Challenge</a>
+    <a href="laws-of-ux.html" style="color:#9aa0b8;text-decoration:none;">Laws of UX</a>
+    <a href="mental-models.html" style="color:#9aa0b8;text-decoration:none;">Mental Models</a>
+    <a href="certifications.html" style="color:#fff;text-decoration:none;font-weight:700;">Certifications</a>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button id="themeToggle" style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07);color:#9aa0b8;cursor:pointer;"><i class="fas fa-moon"></i></button>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="hero">
+    <div class="hero-badge"><i class="fas fa-certificate"></i> Free forever. Project-gated. Verifiable.</div>
+    <h1>Earn Certifications<br>That Actually Matter</h1>
+    <p>Complete real projects to unlock verified certificates. No MCQ-only exams. No paywalls. Portfolio-ready credentials for Indian builders.</p>
+  </div>
+
+  <div class="cert-stats">
+    <div class="cert-stat"><span class="cert-stat-val">5</span><span class="cert-stat-label">Certificates Available</span></div>
+    <div class="cert-stat"><span class="cert-stat-val">100%</span><span class="cert-stat-label">Free Forever</span></div>
+    <div class="cert-stat"><span class="cert-stat-val">25</span><span class="cert-stat-label">Required Projects</span></div>
+    <div class="cert-stat"><span class="cert-stat-val">Blockchain</span><span class="cert-stat-label">Verification (Coming)</span></div>
+  </div>
+
+  <div class="certs-grid">
+
+    <!-- Cert 1: AI Fundamentals -->
+    <div class="cert-card" style="--accent:#10b981;">
+      <div class="cert-header" style="border-left:3px solid #10b981;">
+        <div class="cert-icon" style="background:rgba(16,185,129,.15);">&#x1F9E0;</div>
+        <div class="cert-meta">
+          <div class="cert-track" style="color:#34d399;">Track 1</div>
+          <div class="cert-name">AI Fundamentals Certificate</div>
+          <div class="cert-time"><i class="fas fa-clock" style="font-size:10px;"></i> ~80 hours &bull; 5 projects</div>
+        </div>
+        <span class="cert-badge" style="background:rgba(16,185,129,.12);color:#34d399;border:1px solid rgba(16,185,129,.25);"><i class="fas fa-unlock"></i> Unlocked</span>
+      </div>
+      <div class="cert-body">
+        <p class="cert-desc">Master Python for data science, EDA, and your first ML models. Build 5 real projects using Indian datasets (cricket, stocks, agriculture).</p>
+        <div class="cert-projects-title">Required Projects (0/5)</div>
+        <div class="cert-projects">
+          <div class="cert-project-item"><div class="proj-check"><i class="fas fa-check"></i></div> IPL Match Winner Predictor</div>
+          <div class="cert-project-item"><div class="proj-check"></div> House Price Estimator (Mumbai data)</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Crop Yield Forecaster</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Customer Churn Analyzer</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Stock Trend Classifier</div>
+        </div>
+        <div class="cert-progress-bar"><div class="cert-progress-fill" style="width:0%;background:linear-gradient(90deg,#10b981,#34d399);"></div></div>
+        <div class="cert-footer">
+          <button class="btn-cert btn-cert-primary" style="background:linear-gradient(135deg,#10b981,#059669);flex:1;" onclick="previewCert('AI Fundamentals','Track 1 — Machine Learning','#10b981','&#x1F9E0;')"><i class="fas fa-play"></i> Start Certification</button>
+          <button class="btn-cert btn-cert-ghost" onclick="previewCert('AI Fundamentals','Track 1 — Machine Learning','#10b981','&#x1F9E0;')"><i class="fas fa-eye"></i> Preview</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cert 2: NLP & LLM -->
+    <div class="cert-card">
+      <div class="cert-header" style="border-left:3px solid #6366f1;">
+        <div class="cert-icon" style="background:rgba(99,102,241,.15);">&#x1F4AC;</div>
+        <div class="cert-meta">
+          <div class="cert-track" style="color:#a5b4fc;">Track 2</div>
+          <div class="cert-name">NLP & Large Language Models</div>
+          <div class="cert-time"><i class="fas fa-clock" style="font-size:10px;"></i> ~100 hours &bull; 5 projects</div>
+        </div>
+        <span class="cert-badge" style="background:rgba(99,102,241,.12);color:#a5b4fc;border:1px solid rgba(99,102,241,.25);"><i class="fas fa-lock"></i> Locked</span>
+      </div>
+      <div class="cert-body">
+        <p class="cert-desc">Build text classifiers, sentiment analyzers, and RAG-based chatbots. Fine-tune a small LLM for an Indian language use-case.</p>
+        <div class="cert-projects-title">Required Projects (0/5)</div>
+        <div class="cert-projects">
+          <div class="cert-project-item"><div class="proj-check"></div> Hindi-English Sentiment API</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Legal Document Summarizer (Indian law)</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Fake News Detector (Indian news)</div>
+          <div class="cert-project-item"><div class="proj-check"></div> RAG Chatbot over custom docs</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Fine-tuned model for code completion</div>
+        </div>
+        <div class="cert-progress-bar"><div class="cert-progress-fill" style="width:0%;background:linear-gradient(90deg,#6366f1,#a855f7);"></div></div>
+        <div class="cert-footer">
+          <button class="btn-cert btn-cert-primary" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);flex:1;opacity:.6;cursor:not-allowed;"><i class="fas fa-lock"></i> Complete Track 1 First</button>
+          <button class="btn-cert btn-cert-ghost" onclick="previewCert('NLP and LLMs','Track 2 — Language AI','#6366f1','&#x1F4AC;')"><i class="fas fa-eye"></i> Preview</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cert 3: Computer Vision -->
+    <div class="cert-card">
+      <div class="cert-header" style="border-left:3px solid #a855f7;">
+        <div class="cert-icon" style="background:rgba(168,85,247,.15);">&#x1F441;</div>
+        <div class="cert-meta">
+          <div class="cert-track" style="color:#c084fc;">Track 3</div>
+          <div class="cert-name">Computer Vision Engineering</div>
+          <div class="cert-time"><i class="fas fa-clock" style="font-size:10px;"></i> ~90 hours &bull; 5 projects</div>
+        </div>
+        <span class="cert-badge" style="background:rgba(168,85,247,.12);color:#c084fc;border:1px solid rgba(168,85,247,.25);"><i class="fas fa-lock"></i> Locked</span>
+      </div>
+      <div class="cert-body">
+        <p class="cert-desc">Build CNN-based classifiers, object detectors, and real-time vision systems. Deploy to edge devices and mobile using TFLite.</p>
+        <div class="cert-projects-title">Required Projects (0/5)</div>
+        <div class="cert-projects">
+          <div class="cert-project-item"><div class="proj-check"></div> Crop Disease Detector (mobile-ready)</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Indian Currency Note Classifier</div>
+          <div class="cert-project-item"><div class="proj-check"></div> License Plate OCR System</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Real-time Gesture Controller</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Medical X-Ray Anomaly Detector</div>
+        </div>
+        <div class="cert-progress-bar"><div class="cert-progress-fill" style="width:0%;background:linear-gradient(90deg,#a855f7,#ec4899);"></div></div>
+        <div class="cert-footer">
+          <button class="btn-cert btn-cert-primary" style="background:linear-gradient(135deg,#a855f7,#ec4899);flex:1;opacity:.6;cursor:not-allowed;"><i class="fas fa-lock"></i> Complete Track 2 First</button>
+          <button class="btn-cert btn-cert-ghost" onclick="previewCert('Computer Vision','Track 3 — Vision AI','#a855f7','&#x1F441;')"><i class="fas fa-eye"></i> Preview</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cert 4: UX Design -->
+    <div class="cert-card">
+      <div class="cert-header" style="border-left:3px solid #f59e0b;">
+        <div class="cert-icon" style="background:rgba(245,158,11,.15);">&#x1F3A8;</div>
+        <div class="cert-meta">
+          <div class="cert-track" style="color:#fbbf24;">Track 4</div>
+          <div class="cert-name">UX Design Principles Certificate</div>
+          <div class="cert-time"><i class="fas fa-clock" style="font-size:10px;"></i> ~60 hours &bull; 5 projects</div>
+        </div>
+        <span class="cert-badge" style="background:rgba(245,158,11,.12);color:#fbbf24;border:1px solid rgba(245,158,11,.25);"><i class="fas fa-unlock"></i> Unlocked</span>
+      </div>
+      <div class="cert-body">
+        <p class="cert-desc">Apply all 21 Laws of UX to real design critiques. Build 5 UX case studies using Indian apps (Swiggy, Zerodha, CRED, Zomato, Myntra).</p>
+        <div class="cert-projects-title">Required Projects (0/5)</div>
+        <div class="cert-projects">
+          <div class="cert-project-item"><div class="proj-check"></div> Swiggy checkout UX teardown + redesign</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Zerodha Kite mobile UX audit</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Accessibility audit: any IRCTC flow</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Design a habit-forming onboarding flow</div>
+          <div class="cert-project-item"><div class="proj-check"></div> A/B test two pricing page designs</div>
+        </div>
+        <div class="cert-progress-bar"><div class="cert-progress-fill" style="width:0%;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div></div>
+        <div class="cert-footer">
+          <button class="btn-cert btn-cert-primary" style="background:linear-gradient(135deg,#f59e0b,#d97706);flex:1;" onclick="previewCert('UX Design Principles','Track 4 — UX and Product','#f59e0b','&#x1F3A8;')"><i class="fas fa-play"></i> Start Certification</button>
+          <button class="btn-cert btn-cert-ghost" onclick="previewCert('UX Design Principles','Track 4 — UX and Product','#f59e0b','&#x1F3A8;')"><i class="fas fa-eye"></i> Preview</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cert 5: Growth Marketing -->
+    <div class="cert-card">
+      <div class="cert-header" style="border-left:3px solid #ef4444;">
+        <div class="cert-icon" style="background:rgba(239,68,68,.15);">&#x1F4C8;</div>
+        <div class="cert-meta">
+          <div class="cert-track" style="color:#fca5a5;">Track 5</div>
+          <div class="cert-name">Growth Marketing Certificate</div>
+          <div class="cert-time"><i class="fas fa-clock" style="font-size:10px;"></i> ~50 hours &bull; 5 projects</div>
+        </div>
+        <span class="cert-badge" style="background:rgba(239,68,68,.12);color:#fca5a5;border:1px solid rgba(239,68,68,.25);"><i class="fas fa-unlock"></i> Unlocked</span>
+      </div>
+      <div class="cert-body">
+        <p class="cert-desc">Implement 18 real marketing tactics from Indian startup case studies. Measure, iterate, and ship a growth experiment with real data.</p>
+        <div class="cert-projects-title">Required Projects (0/5)</div>
+        <div class="cert-projects">
+          <div class="cert-project-item"><div class="proj-check"></div> SEO audit + 10 programmatic pages</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Cold email campaign with 20%+ reply rate</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Referral system design and launch</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Content flywheel: 4 pieces + distribution</div>
+          <div class="cert-project-item"><div class="proj-check"></div> Growth teardown: reverse-engineer one Indian startup</div>
+        </div>
+        <div class="cert-progress-bar"><div class="cert-progress-fill" style="width:0%;background:linear-gradient(90deg,#ef4444,#f97316);"></div></div>
+        <div class="cert-footer">
+          <button class="btn-cert btn-cert-primary" style="background:linear-gradient(135deg,#ef4444,#f97316);flex:1;" onclick="previewCert('Growth Marketing','Track 5 — Growth and Marketing','#ef4444','&#x1F4C8;')"><i class="fas fa-play"></i> Start Certification</button>
+          <button class="btn-cert btn-cert-ghost" onclick="previewCert('Growth Marketing','Track 5 — Growth and Marketing','#ef4444','&#x1F4C8;')"><i class="fas fa-eye"></i> Preview</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LEARNING ROADMAP -->
+  <div class="roadmap">
+    <div class="roadmap-title"><i class="fas fa-road" style="color:#10b981;"></i> Recommended Learning Roadmap</div>
+    <div class="roadmap-path">
+      <div class="roadmap-step">
+        <div class="roadmap-step-line">
+          <div class="roadmap-dot" style="background:rgba(16,185,129,.2);color:#34d399;">1</div>
+          <div class="roadmap-connector"></div>
+        </div>
+        <div class="roadmap-content">
+          <div class="roadmap-step-title">Start with AI Fundamentals or UX Design (both unlocked)</div>
+          <div class="roadmap-step-desc">No prerequisites. Start here if you are new. Both can run in parallel since they use different skills — Python/ML vs design thinking.</div>
+        </div>
+      </div>
+      <div class="roadmap-step">
+        <div class="roadmap-step-line">
+          <div class="roadmap-dot" style="background:rgba(99,102,241,.2);color:#a5b4fc;">2</div>
+          <div class="roadmap-connector"></div>
+        </div>
+        <div class="roadmap-content">
+          <div class="roadmap-step-title">Unlock NLP &amp; LLMs after AI Fundamentals</div>
+          <div class="roadmap-step-desc">Requires the 5 ML projects from Track 1. Takes 100 hours but gives you the most in-demand skill in Indian tech right now.</div>
+        </div>
+      </div>
+      <div class="roadmap-step">
+        <div class="roadmap-step-line">
+          <div class="roadmap-dot" style="background:rgba(168,85,247,.2);color:#c084fc;">3</div>
+          <div class="roadmap-connector"></div>
+        </div>
+        <div class="roadmap-content">
+          <div class="roadmap-step-title">Computer Vision after NLP (or in parallel)</div>
+          <div class="roadmap-step-desc">Vision and NLP share the same PyTorch/DL foundations. After Track 2, you already know 70% of what Track 3 needs.</div>
+        </div>
+      </div>
+      <div class="roadmap-step">
+        <div class="roadmap-step-line">
+          <div class="roadmap-dot" style="background:rgba(245,158,11,.2);color:#fbbf24;">4</div>
+        </div>
+        <div class="roadmap-content" style="padding-bottom:0;">
+          <div class="roadmap-step-title">Add Growth Marketing alongside any track</div>
+          <div class="roadmap-step-desc">Growth is a soft skill that compounds with every technical cert. Ship your AI/UX project, then run real marketing experiments on it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CERTIFICATE PREVIEW MODAL -->
+<div class="modal-bg" id="certModal">
+  <div class="cert-preview">
+    <div class="cert-preview-header">
+      <div class="cert-seal" id="previewSeal" style="background:rgba(16,185,129,.15);">&#x1F9E0;</div>
+      <div class="cert-preview-title">Certificate of Completion</div>
+      <div class="cert-preview-name" id="previewName">AI Fundamentals</div>
+      <div class="cert-preview-sub" id="previewSub">This certifies that [Your Name] has successfully completed all required projects</div>
+      <div class="cert-preview-issued" id="previewIssued">Issued by AVPU &bull; Sevenseed Platform &bull; <span id="previewDate"></span></div>
+    </div>
+    <div class="cert-preview-body">
+      <div class="verify-box"><i class="fas fa-shield-check" style="color:#10b981;font-size:16px;"></i> <span>Verification ID: AVPU-<span id="previewId"></span></span></div>
+      <p style="font-size:13px;color:#9aa0b8;line-height:1.6;margin-bottom:20px;">Complete all 5 required projects to earn and share this certificate. Your LinkedIn profile link, GitHub repo links, and project descriptions will be embedded in the verified credential.</p>
+      <div class="modal-footer">
+        <button class="btn-cert btn-cert-ghost" onclick="closeCertModal()">Close</button>
+        <button class="btn-cert btn-cert-primary" style="background:linear-gradient(135deg,#10b981,#059669);" onclick="closeCertModal()"><i class="fas fa-arrow-right"></i> Start Earning This</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function previewCert(name, sub, color, icon) {
+  document.getElementById("previewName").textContent = name;
+  document.getElementById("previewSub").textContent = "This certifies that [Your Name] has successfully completed all required projects for " + sub;
+  document.getElementById("previewSeal").innerHTML = icon;
+  document.getElementById("previewSeal").style.background = color + "22";
+  document.getElementById("previewDate").textContent = new Date().toLocaleDateString("en-IN", {year:"numeric",month:"long",day:"numeric"});
+  document.getElementById("previewId").textContent = Math.random().toString(36).substr(2,12).toUpperCase();
+  document.getElementById("certModal").classList.add("open");
+}
+function closeCertModal() { document.getElementById("certModal").classList.remove("open"); }
+document.getElementById("certModal").addEventListener("click", e => { if (e.target === e.currentTarget) closeCertModal(); });
+
+(function() {
+  var tBtn = document.getElementById("themeToggle");
+  if (tBtn) {
+    var cur = document.documentElement.getAttribute("data-theme") || "dark";
+    tBtn.querySelector("i").className = cur === "light" ? "fas fa-sun" : "fas fa-moon";
+    tBtn.addEventListener("click", function() {
+      var now = document.documentElement.getAttribute("data-theme") || "dark";
+      var next = now === "light" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("ss-theme", next);
+      tBtn.querySelector("i").className = next === "light" ? "fas fa-sun" : "fas fa-moon";
+    });
+  }
+  var ring = document.getElementById("cursorRing");
+  if (ring && !window.matchMedia("(pointer: coarse)").matches) {
+    var mx = -100, my = -100, rx = -100, ry = -100;
+    window.addEventListener("mousemove", function(e) { mx = e.clientX; my = e.clientY; });
+    (function loop() { rx += (mx-rx)*0.2; ry += (my-ry)*0.2; ring.style.transform = "translate3d("+(rx-18)+"px,"+(ry-18)+"px,0)"; requestAnimationFrame(loop); })();
+  }
+})();
+</script>
+</body>
+</html>
