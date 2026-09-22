@@ -122,11 +122,13 @@
     AVPU
   </a>
   <div style="display:flex;gap:18px;font-size:14px;">
-    <a href="index.html" style="color:#9aa0b8;text-decoration:none;">Hub</a>
-    <a href="laws-of-ux.html" style="color:#9aa0b8;text-decoration:none;">Laws of UX</a>
-    <a href="mental-models.html" style="color:#9aa0b8;text-decoration:none;">Mental Models</a>
-    <a href="certifications.html" style="color:#9aa0b8;text-decoration:none;">Certifications</a>
+    <a href="index.html" style="color:#9aa0b8;text-decoration:none;">Home</a>
+    <a href="modules.html" style="color:#9aa0b8;text-decoration:none;">Varsity</a>
     <a href="100-day-challenge.html" style="color:#fff;text-decoration:none;font-weight:700;">100-Day Challenge</a>
+    <a href="certifications.html" style="color:#9aa0b8;text-decoration:none;">Certifications</a>
+    <a href="mental-models.html" style="color:#9aa0b8;text-decoration:none;">Mental Models</a>
+    <a href="laws-of-ux.html" style="color:#9aa0b8;text-decoration:none;">Laws of UX</a>
+    <a href="learn-dag.html" style="color:#9aa0b8;text-decoration:none;">DAG Graph</a>
   </div>
   <div style="display:flex;gap:10px;">
     <button id="themeToggle" style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07);color:#9aa0b8;cursor:pointer;"><i class="fas fa-moon"></i></button>
@@ -507,7 +509,7 @@ function renderGrid(phaseFilter) {
     else if (isMilestone && !isLocked) cell.classList.add("milestone");
     else cell.classList.add("locked");
     
-    cell.innerHTML = \`<span>\${d}</span><div class="day-tooltip">Day \${d}: \${DAY_TOPICS[d-1] || "Coming soon"}</div>\`;
+    cell.innerHTML = `<span>${d}</span><div class="day-tooltip">Day ${d}: ${DAY_TOPICS[d-1] || "Coming soon"}</div>`;
     cell.onclick = () => openDayModal(d);
     grid.appendChild(cell);
   }
