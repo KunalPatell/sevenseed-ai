@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketing Examples &amp; Growth Teardowns - Comonk Technology</title>
+  <meta name="description" content="Real Indian company marketing tactics filtered by Acquisition, Retention, SEO, Cold Email. Inspired by marketingexamples.com and growthinreverse.com.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body{background:#060609;color:#eeeef8;font-family:'Inter',sans-serif;}
+    .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,9,0.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.07);}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#eeeef8;font-weight:700;font-size:18px;}
+    .nav-brand-ic{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;}
+    .nav-links{display:flex;gap:20px;font-size:14px;}
+    .nav-links a{color:#9aa0b8;text-decoration:none;transition:color .2s;}
+    .nav-links a:hover,.nav-links a.active{color:#eeeef8;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;border:none;font-family:inherit;transition:all .2s;}
+    .btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;}
+    .btn-ghost{background:rgba(255,255,255,.06);color:#9aa0b8;border:1px solid rgba(255,255,255,.07);}
+    .btn-ghost:hover{background:rgba(255,255,255,.1);color:#eeeef8;}
+    .page-wrap{max-width:1300px;margin:0 auto;padding:90px 24px 80px;display:grid;grid-template-columns:220px 1fr;gap:32px;}
+    @media(max-width:900px){.page-wrap{grid-template-columns:1fr;}}
+    .sidebar{position:sticky;top:80px;height:fit-content;}
+    .sidebar-logo h1{font-size:22px;font-weight:800;line-height:1.2;}
+    .sidebar-logo p{font-size:12px;color:#9aa0b8;margin-top:4px;margin-bottom:28px;}
+    .filter-section-title{font-size:10px;text-transform:uppercase;font-weight:800;letter-spacing:.1em;color:#9aa0b8;margin-bottom:8px;padding-left:4px;}
+    .filter-btn{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border-radius:8px;background:none;border:none;color:#9aa0b8;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;text-align:left;}
+    .filter-btn:hover{background:rgba(255,255,255,.05);color:#eeeef8;}
+    .filter-btn.active{background:rgba(245,158,11,.1);color:#fbbf24;}
+    .filter-count{margin-left:auto;font-size:11px;background:rgba(255,255,255,.07);border-radius:999px;padding:1px 7px;color:#9aa0b8;}
+    .main-header{margin-bottom:20px;}
+    .main-header h2{font-size:26px;font-weight:800;}
+    .main-header p{font-size:14px;color:#9aa0b8;margin-top:4px;}
+    .cards-count{font-size:13px;color:#9aa0b8;margin-bottom:16px;}
+    .cards-count strong{color:#eeeef8;}
+    .search-wrap{position:relative;margin-bottom:20px;}
+    .search-input{width:100%;padding:12px 16px 12px 42px;background:#0d0d16;border:1px solid rgba(255,255,255,.07);border-radius:10px;color:#eeeef8;font-family:inherit;font-size:14px;outline:none;transition:border-color .2s;}
+    .search-input:focus{border-color:rgba(245,158,11,.4);}
+    .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#9aa0b8;font-size:14px;}
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;}
+    .me-card{background:#0d0d16;border:1px solid rgba(255,255,255,.07);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,border-color .2s;}
+    .me-card:hover{transform:translateY(-4px);border-color:rgba(245,158,11,.3);box-shadow:0 12px 40px rgba(0,0,0,.3);}
+    .me-card.hidden{display:none;}
+    .me-topbar{padding:12px 18px;background:#12121e;border-bottom:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;}
+    .me-category{font-size:10px;text-transform:uppercase;font-weight:800;letter-spacing:.08em;color:#fbbf24;}
+    .me-lift{font-size:12px;font-weight:700;color:#34d399;background:rgba(16,185,129,.12);padding:2px 8px;border-radius:4px;}
+    .me-body{padding:20px;flex:1;display:flex;flex-direction:column;}
+    .me-company{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+    .me-company-dot{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+    .me-company-name{font-size:12px;font-weight:700;color:#9aa0b8;}
+    .me-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:14px;line-height:1.4;}
+    .ba-box{background:#060609;border:1px solid rgba(255,255,255,.05);border-radius:10px;overflow:hidden;margin-bottom:16px;}
+    .ba-pane{padding:10px 14px;font-size:13px;line-height:1.5;}
+    .ba-before{border-bottom:1px solid rgba(255,255,255,.05);background:rgba(239,68,68,.05);color:#fca5a5;}
+    .ba-after{background:rgba(16,185,129,.05);color:#86efac;font-weight:600;}
+    .ba-label{font-size:9px;text-transform:uppercase;font-weight:800;letter-spacing:.1em;margin-bottom:4px;display:block;opacity:.6;}
+    .me-lesson{font-size:13px;color:#9aa0b8;line-height:1.6;margin-top:auto;}
+    .me-lesson strong{color:#fff;}
+    .me-steal{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:12px;font-weight:600;color:#fbbf24;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:6px;padding:6px 12px;cursor:pointer;transition:all .2s;}
+    .me-steal:hover{background:rgba(245,158,11,.15);color:#fff;}
+    .gir-section{margin-top:48px;border-top:1px solid rgba(255,255,255,.07);padding-top:40px;}
+    .gir-title{font-size:22px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+    .gir-sub{font-size:14px;color:#9aa0b8;margin-bottom:24px;}
+    .gir-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;}
+    .gir-card{background:#0d0d16;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:22px;transition:transform .2s,border-color .2s;}
+    .gir-card:hover{transform:translateY(-3px);border-color:rgba(245,158,11,.3);}
+    .gir-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+    .gir-avatar{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;font-size:20px;}
+    .gir-creator{font-size:15px;font-weight:700;}
+    .gir-subs{font-size:12px;color:#fbbf24;font-weight:700;}
+    .gir-flywheel{display:flex;flex-direction:column;gap:8px;}
+    .gir-step{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#9aa0b8;}
+    .gir-step-num{width:20px;height:20px;border-radius:50%;background:rgba(245,158,11,.15);color:#fbbf24;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+    .steal-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;}
+    .steal-modal-bg.open{display:flex;}
+    .steal-modal{background:#0d0d16;border:1px solid rgba(245,158,11,.3);border-radius:18px;padding:28px;max-width:520px;width:100%;}
+    .steal-modal h3{font-size:18px;font-weight:800;margin-bottom:8px;}
+    .steal-modal p{font-size:13px;color:#9aa0b8;margin-bottom:18px;line-height:1.6;}
+    .steal-modal textarea{width:100%;background:#12121e;border:1px solid rgba(255,255,255,.07);border-radius:10px;color:#eeeef8;font-family:inherit;font-size:13px;padding:12px;resize:vertical;min-height:100px;outline:none;}
+    .steal-modal-footer{display:flex;gap:10px;margin-top:14px;justify-content:flex-end;}
+  </style>
+</head>
+<body>
+<nav class="nav">
+  <a class="nav-brand" href="index.html">
+    <div class="nav-brand-ic"><i class="fas fa-briefcase"></i></div>
+    <span>Comonk</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="resume-analyzer.html">Resume</a>
+    <a href="interview-arena.html">Interview</a>
+    <a href="salary-insights.html">Salaries</a>
+    <a href="marketing-examples.html" class="active">Marketing</a>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <a class="btn btn-ghost" href="/" style="font-size:12px;"><i class="fas fa-seedling" style="color:#10b981"></i> Hub</a>
+    <a class="btn btn-primary" href="resume-analyzer.html"><i class="fas fa-wand-magic-sparkles"></i> Try Tools</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <h1>Marketing<br>Examples</h1>
+      <p>Real tactics. Real results. Steal them.</p>
+    </div>
+    <div class="filter-section-title">Category</div>
+    <button class="filter-btn active" onclick="filterCards('all',this)"><i class="fas fa-th-large" style="color:#94a3b8;font-size:12px;"></i> All Examples <span class="filter-count">18</span></button>
+    <button class="filter-btn" onclick="filterCards('acquisition',this)"><i class="fas fa-magnet" style="color:#f59e0b;font-size:12px;"></i> Acquisition <span class="filter-count">5</span></button>
+    <button class="filter-btn" onclick="filterCards('retention',this)"><i class="fas fa-heart" style="color:#ef4444;font-size:12px;"></i> Retention <span class="filter-count">3</span></button>
+    <button class="filter-btn" onclick="filterCards('seo',this)"><i class="fas fa-search" style="color:#3b82f6;font-size:12px;"></i> SEO <span class="filter-count">4</span></button>
+    <button class="filter-btn" onclick="filterCards('content',this)"><i class="fas fa-pen-nib" style="color:#a855f7;font-size:12px;"></i> Content <span class="filter-count">3</span></button>
+    <button class="filter-btn" onclick="filterCards('referral',this)"><i class="fas fa-share-nodes" style="color:#10b981;font-size:12px;"></i> Referral <span class="filter-count">2</span></button>
+    <button class="filter-btn" onclick="filterCards('email',this)"><i class="fas fa-envelope" style="color:#06b6d4;font-size:12px;"></i> Cold Email <span class="filter-count">1</span></button>
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.07);">
+      <div class="filter-section-title">Quick Nav</div>
+      <button class="filter-btn" onclick="document.querySelector('.gir-section').scrollIntoView({behavior:'smooth'})"><i class="fas fa-chart-line" style="color:#fbbf24;font-size:12px;"></i> Growth Teardowns</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="main-header">
+      <h2 id="mainTitle">All Marketing Examples</h2>
+      <p>Real tactics from Indian startups with measurable results you can steal.</p>
+    </div>
+    <div class="search-wrap">
+      <i class="fas fa-search search-icon"></i>
+      <input class="search-input" id="searchInput" placeholder="Search tactics, companies, results..." oninput="searchCards(this.value)">
+    </div>
+    <p class="cards-count"><strong id="visibleCount">18</strong> examples</p>
+
+    <div class="cards-grid" id="cardsGrid">
+
+      <div class="me-card" data-cat="acquisition">
+        <div class="me-topbar"><span class="me-category">Acquisition</span><span class="me-lift">+340% signups</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(245,158,11,.15);">&#x1F98A;</div><span class="me-company-name">Zepto</span></div>
+          <div class="me-title">10-minute delivery promise as the entire headline</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Get groceries delivered to your home in under an hour with Zepto.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Groceries in 10 minutes. Or we try again.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> One hyper-specific time-bound promise beats vague value props every time.</p>
+          <span class="me-steal" onclick="openSteal('Zepto 10-min headline','Groceries in 10 minutes. Or we try again.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="acquisition">
+        <div class="me-topbar"><span class="me-category">Acquisition</span><span class="me-lift">+2.1M installs</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(59,130,246,.15);">&#x1F4B8;</div><span class="me-company-name">CRED</span></div>
+          <div class="me-title">Exclusivity + Status: invite-only CIBIL-gated onboarding</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Generic invite emails with discount codes.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Invite-only with CIBIL gate. Users shared the invite like a status symbol.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> A gate makes your product aspirational, not just useful.</p>
+          <span class="me-steal" onclick="openSteal('CRED exclusivity invite','You are 1 of [N] worthy members invited to [product].')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="acquisition">
+        <div class="me-topbar"><span class="me-category">Acquisition</span><span class="me-lift">+180% CTR</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(168,85,247,.15);">&#x1F4F1;</div><span class="me-company-name">Meesho</span></div>
+          <div class="me-title">WhatsApp-native product sharing - zero app install barrier</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Download the app to see products.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Products pre-formatted for WhatsApp forward with price embedded in image.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Meet users on platforms they already use. Remove every barrier first.</p>
+          <span class="me-steal" onclick="openSteal('WhatsApp-native share','Pre-format your product for WhatsApp forward. Embed price and CTA in the image itself.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="acquisition">
+        <div class="me-topbar"><span class="me-category">Acquisition</span><span class="me-lift">300K followers in 90d</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(16,185,129,.15);">&#x1F91D;</div><span class="me-company-name">Razorpay</span></div>
+          <div class="me-title">Developer-first: open GitHub and real API example threads</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Payment gateway for businesses.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Open repos, dev docs, Twitter threads showing real API calls. Devs trust code, not claims.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Code examples are better CTAs than Sign Up Free for developer audiences.</p>
+          <span class="me-steal" onclick="openSteal('Developer-first positioning','Share a working code snippet, not a feature list. Let the API speak for itself.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="acquisition">
+        <div class="me-topbar"><span class="me-category">Acquisition</span><span class="me-lift">+60% trial conversions</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(245,158,11,.15);">&#x1F4CA;</div><span class="me-company-name">Zoho</span></div>
+          <div class="me-title">Free-forever tier: the best lead magnet</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>30-day free trial, no credit card required.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Free-forever plan for 3 users. Users build habits before the paywall appears.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Free-forever converts 3x better than time-limited trials. Users get addicted first.</p>
+          <span class="me-steal" onclick="openSteal('Free-forever tier','Launch a genuinely free tier. Limit by seats, not time. Let users build habits.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="retention">
+        <div class="me-topbar"><span class="me-category">Retention</span><span class="me-lift">+45% 30-day retention</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(59,130,246,.15);">&#x1F3B5;</div><span class="me-company-name">Spotify India</span></div>
+          <div class="me-title">Wrapped: usage data turned into shareable status art</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Here is your listening summary.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Top 0.1% listener of [Artist] card. 100M+ shares in December every year.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Make usage data a status symbol. Personalization plus shareability creates viral loops.</p>
+          <span class="me-steal" onclick="openSteal('Wrapped year-in-review','Build a year-in-review with your user most impressive personal stat. Make it shareable.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="retention">
+        <div class="me-topbar"><span class="me-category">Retention</span><span class="me-lift">+38% DAU</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(16,185,129,.15);">&#x1F525;</div><span class="me-company-name">Duolingo</span></div>
+          <div class="me-title">Streak freeze: protect your streak, feel the loss</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Users quit when they broke a streak.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Streak freeze (earnable, not free) made users feel ownership. Churn dropped 22%.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Loss aversion beats gain seeking. Give users something to protect, not just earn.</p>
+          <span class="me-steal" onclick="openSteal('Loss-aversion retention','Add a loss-aversion mechanic. Give users something to protect, not just earn.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="retention">
+        <div class="me-topbar"><span class="me-category">Retention</span><span class="me-lift">-42% return rate</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(239,68,68,.15);">&#x1F6D2;</div><span class="me-company-name">Myntra</span></div>
+          <div class="me-title">Fit Finder AI quiz: 89% size accuracy, 42% fewer returns</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Standard size chart. 31% return rate.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>5-question fit quiz with 89% size accuracy. Returns fell dramatically.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> A 2-minute quiz that saves hours of returns builds trust faster than any loyalty program.</p>
+          <span class="me-steal" onclick="openSteal('Preference quiz','Build a 5-question quiz that personalizes first experience and reduces buyer regret.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="seo">
+        <div class="me-topbar"><span class="me-category">SEO</span><span class="me-lift">+4.2M organic visits/mo</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(59,130,246,.15);">&#x1F3E0;</div><span class="me-company-name">NoBroker</span></div>
+          <div class="me-title">City x BHK x Budget: 3,200 programmatic SEO pages</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>One homepage targeting rent apartments India.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>3,200 pages like 2BHK Koramangala under 25k. Each ranking #1-3 on Google.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Programmatic SEO at city x category intersections captures high-intent searches at zero ad spend.</p>
+          <span class="me-steal" onclick="openSteal('Programmatic SEO','Build [City] + [Category] + [Price Range] pages. Template content, vary the data.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="seo">
+        <div class="me-topbar"><span class="me-category">SEO</span><span class="me-lift">#1 rank: how to invest</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(168,85,247,.15);">&#x1F4C8;</div><span class="me-company-name">Zerodha Varsity</span></div>
+          <div class="me-title">Free education library as the world's best SEO moat</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Open a Demat account ads competing on price.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>60+ free finance modules. Every finance query lands on Varsity and drives account opens.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Best SEO content teaches the skill your product helps with, not the product itself.</p>
+          <span class="me-steal" onclick="openSteal('Education SEO moat','Build a free knowledge library adjacent to your product. Teach first, convert second.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="seo">
+        <div class="me-topbar"><span class="me-category">SEO</span><span class="me-lift">+680% organic traffic</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(245,158,11,.15);">&#x1F355;</div><span class="me-company-name">Swiggy</span></div>
+          <div class="me-title">Dish x Area pages: biryani near Bandra</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Targeting food delivery app India - too competitive.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>10,000+ pages like chicken biryani near Koramangala and pizza near Juhu at 2am.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> 10,000 x 300 visits beats 1 page with 3M competitors. Long-tail compounds.</p>
+          <span class="me-steal" onclick="openSteal('Local SEO pages','Build [Dish] near [Area] pages. Use real data. Template and automate the process.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="seo">
+        <div class="me-topbar"><span class="me-category">SEO</span><span class="me-lift">32M monthly organic visits</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(16,185,129,.15);">&#x1F3E5;</div><span class="me-company-name">Practo</span></div>
+          <div class="me-title">Doctor x Speciality x City: 500K+ profile pages as SEO assets</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Search ads for dermatologist Mumbai at 180 rupees per click.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Each doctor gets an optimized profile page. User lands and books on Practo.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Turn every entity in your database into a high-intent SEO landing page.</p>
+          <span class="me-steal" onclick="openSteal('Supply-side SEO','Every item in your database deserves its own optimized landing page.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="content">
+        <div class="me-topbar"><span class="me-category">Content</span><span class="me-lift">+2.1M LinkedIn followers</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(59,130,246,.15);">&#x1F454;</div><span class="me-company-name">Nikhil Kamath</span></div>
+          <div class="me-title">Founder-led build in public content</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Press releases and company blog posts.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Personal LinkedIn posts showing revenue numbers and failed experiments. 3-4x engagement vs brand page.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Founder face on content multiplies reach 5-10x versus a brand handle.</p>
+          <span class="me-steal" onclick="openSteal('Founder-led content','Post one honest behind-the-scenes number per week from personal profile. Revenue, failure, churn.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="content">
+        <div class="me-topbar"><span class="me-category">Content</span><span class="me-lift">12M YouTube subscribers</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(239,68,68,.15);">&#x1F4F9;</div><span class="me-company-name">Unacademy</span></div>
+          <div class="me-title">Free lectures on YouTube, sell community and live access</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Best UPSC coaching at X rupees per month.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Full free lectures on YouTube. Liked this? Join Plus for live sessions with this educator.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Give away the lecture. Sell the community, live access, and accountability wrapper.</p>
+          <span class="me-steal" onclick="openSteal('YouTube top-of-funnel','Publish full free content on YouTube. Sell the live version and community.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="content">
+        <div class="me-topbar"><span class="me-category">Content</span><span class="me-lift">52% newsletter open rate</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(245,158,11,.15);">&#x1F4F0;</div><span class="me-company-name">The Ken</span></div>
+          <div class="me-title">One deeply-researched story per day</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>5 headlines per day. Open rate 18%. Annual churn 40%.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>1 story per day. Open rate 52%. Readers say I read every word.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> In a world of volume, depth is the moat. Fewer pieces times more substance equals higher trust.</p>
+          <span class="me-steal" onclick="openSteal('Depth-over-volume newsletter','Send one excellent piece per week instead of five average ones. Depth is the competitive moat.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="referral">
+        <div class="me-topbar"><span class="me-category">Referral</span><span class="me-lift">40% new users via referral</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(16,185,129,.15);">&#x1F4B0;</div><span class="me-company-name">PhonePe</span></div>
+          <div class="me-title">Referral that feels like a gift, not an ad</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Refer a friend, get 10 rupees after they transact 500 rupees.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Send them 51 rupees right now. They will love you for it. You both win.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Frame referrals as generosity. The referrer becomes a hero, not a salesperson.</p>
+          <span class="me-steal" onclick="openSteal('Referral as gift','Reframe your referral as the referrer giving a gift to a friend, not selling your product.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="referral">
+        <div class="me-topbar"><span class="me-category">Referral</span><span class="me-lift">500K users in 6 months</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(168,85,247,.15);">&#x2601;</div><span class="me-company-name">Dropbox India</span></div>
+          <div class="me-title">Storage-as-reward: refer and get more of your core value</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Refer a friend, get 200 rupees Amazon voucher.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Refer a friend, get 500MB free storage. The reward IS the product.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Referral reward should be more of your core value proposition, not cash.</p>
+          <span class="me-steal" onclick="openSteal('Product as referral reward','Your referral reward should be more of your core value proposition, not generic cash or vouchers.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+      <div class="me-card" data-cat="email">
+        <div class="me-topbar"><span class="me-category">Cold Email</span><span class="me-lift">42% reply rate</span></div>
+        <div class="me-body">
+          <div class="me-company"><div class="me-company-dot" style="background:rgba(6,182,212,.15);">&#x2709;</div><span class="me-company-name">Comonk Template</span></div>
+          <div class="me-title">The I noticed something specific cold email</div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Hi Name, I wanted to introduce you to our AI recruiting tool that helps companies hire faster and cheaper.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Hi Priya, noticed you are hiring 3 ML engineers. Your JD is 2 pages. Here is a 1-line fix that doubled our response rate.</div></div>
+          <p class="me-lesson"><strong>Lesson:</strong> Best cold email: specific, shows homework, leads with value not your company name.</p>
+          <span class="me-steal" onclick="openSteal('Specific cold email opener','Hi [Name], noticed [specific thing]. Here is [specific insight] that helped [specific result].')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="gir-section" id="growthTeardowns">
+      <h2 class="gir-title"><span>&#x1F4CA;</span> Growth In Reverse Teardowns</h2>
+      <p class="gir-sub">Reverse-engineering how top Indian companies grew to millions of users</p>
+      <div class="gir-grid">
+        <div class="gir-card">
+          <div class="gir-header"><div class="gir-avatar">&#x1F3E6;</div><div><div class="gir-creator">Zerodha</div><div class="gir-subs">10M+ Demat accounts</div></div></div>
+          <div class="gir-flywheel">
+            <div class="gir-step"><div class="gir-step-num">1</div><span>Built Varsity (free education) ranked #1 for every finance query</span></div>
+            <div class="gir-step"><div class="gir-step-num">2</div><span>Educated users = loyal users. Lowest churn in industry at 2.1%</span></div>
+            <div class="gir-step"><div class="gir-step-num">3</div><span>Zero salespeople. Product and education drive all acquisition</span></div>
+            <div class="gir-step"><div class="gir-step-num">4</div><span>Profitable from Day 1. No VC burn, no discount flywheel</span></div>
+          </div>
+        </div>
+        <div class="gir-card">
+          <div class="gir-header"><div class="gir-avatar">&#x1F457;</div><div><div class="gir-creator">Bewakoof</div><div class="gir-subs">300Cr+ revenue</div></div></div>
+          <div class="gir-flywheel">
+            <div class="gir-step"><div class="gir-step-num">1</div><span>Started with pop culture T-shirts for hyper-niche college crowd</span></div>
+            <div class="gir-step"><div class="gir-step-num">2</div><span>UGC-first: customers posting outfits gave organic reach at zero cost</span></div>
+            <div class="gir-step"><div class="gir-step-num">3</div><span>WhatsApp catalog selling before Instagram shopping existed</span></div>
+            <div class="gir-step"><div class="gir-step-num">4</div><span>Expanded to full wardrobe once loyalists trusted the brand</span></div>
+          </div>
+        </div>
+        <div class="gir-card">
+          <div class="gir-header"><div class="gir-avatar">&#x1F4F1;</div><div><div class="gir-creator">Internshala</div><div class="gir-subs">15M+ students</div></div></div>
+          <div class="gir-flywheel">
+            <div class="gir-step"><div class="gir-step-num">1</div><span>IIT Delhi portal grew via word-of-mouth to tier-2 colleges</span></div>
+            <div class="gir-step"><div class="gir-step-num">2</div><span>Campus ambassador program: 5000 students became 5000 marketers</span></div>
+            <div class="gir-step"><div class="gir-step-num">3</div><span>Free internships for students. Companies pay for premium placement</span></div>
+            <div class="gir-step"><div class="gir-step-num">4</div><span>Added training courses on top of the two-sided marketplace</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="steal-modal-bg" id="stealModal">
+  <div class="steal-modal">
+    <h3>&#x1FA84; Steal this tactic</h3>
+    <p id="stealDesc">Customize for your business:</p>
+    <textarea id="stealText"></textarea>
+    <div class="steal-modal-footer">
+      <button class="btn btn-ghost" onclick="closeSteal()">Close</button>
+      <button class="btn btn-primary" id="copyBtn" onclick="copySteal()"><i class="fas fa-copy"></i> Copy</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function filterCards(cat,btn){
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('mainTitle').textContent=cat==='all'?'All Marketing Examples':cat.charAt(0).toUpperCase()+cat.slice(1)+' Examples';
+  var cards=document.querySelectorAll('.me-card'),count=0;
+  cards.forEach(function(c){var show=cat==='all'||c.dataset.cat===cat;c.classList.toggle('hidden',!show);if(show)count++;});
+  document.getElementById('visibleCount').textContent=count;
+}
+function searchCards(q){
+  q=q.toLowerCase().trim();
+  var cards=document.querySelectorAll('.me-card'),count=0;
+  cards.forEach(function(c){var show=!q||c.textContent.toLowerCase().includes(q);c.classList.toggle('hidden',!show);if(show)count++;});
+  document.getElementById('visibleCount').textContent=count;
+}
+function openSteal(title,template){
+  document.getElementById('stealDesc').textContent='Customize "'+title+'" for your product:';
+  document.getElementById('stealText').value=template;
+  document.getElementById('stealModal').classList.add('open');
+}
+function closeSteal(){document.getElementById('stealModal').classList.remove('open');}
+function copySteal(){
+  var text=document.getElementById('stealText').value;
+  if(navigator.clipboard){navigator.clipboard.writeText(text).then(function(){var b=document.getElementById('copyBtn');b.textContent='Copied!';setTimeout(function(){b.innerHTML='<i class="fas fa-copy"></i> Copy';},2000);});}
+}
+document.getElementById('stealModal').addEventListener('click',function(e){if(e.target===e.currentTarget)closeSteal();});
+</script>
+</body>
+</html>

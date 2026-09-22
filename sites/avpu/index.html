@@ -21,6 +21,151 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    /* ── "I Want to Learn ___" Command Palette ─────────────────────── */
+    .learn-search-wrap {
+      margin: 28px auto 0;
+      max-width: 620px;
+      text-align: left;
+    }
+    .learn-search-label {
+      font-size: clamp(20px, 3vw, 30px);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .learn-search-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      border-radius: 14px;
+      padding: 14px 18px;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .learn-search-box:focus-within {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.18), 0 8px 32px rgba(59,130,246,0.12);
+    }
+    .learn-search-icon { color: rgba(255,255,255,0.4); font-size: 16px; flex-shrink: 0; }
+    .learn-search-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 17px;
+      font-family: inherit;
+      font-weight: 500;
+    }
+    .learn-search-input::placeholder { color: rgba(255,255,255,0.3); }
+    .learn-search-kbd {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      font-family: inherit;
+      flex-shrink: 0;
+    }
+    .learn-suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .learn-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.25);
+      color: #93c5fd;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .learn-chip:hover {
+      background: rgba(59,130,246,0.22);
+      border-color: #3b82f6;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .learn-results {
+      margin-top: 8px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(59,130,246,0.25);
+      border-radius: 14px;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+    }
+    .learn-result-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .learn-result-item:last-child { border-bottom: none; }
+    .learn-result-item:hover { background: rgba(59,130,246,0.1); }
+    .learn-result-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(59,130,246,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .learn-result-text { flex: 1; }
+    .learn-result-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    .learn-result-desc { font-size: 12px; color: rgba(255,255,255,0.45); }
+    .learn-result-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(59,130,246,0.15); color: #60a5fa; font-weight: 700; flex-shrink: 0; }
+
+    /* ── Global Streak Widget (fixed bottom-right) ─────────────────── */
+    .streak-widget {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: rgba(15,23,42,0.92);
+      border: 1px solid rgba(249,115,22,0.35);
+      border-radius: 16px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 8px 32px rgba(249,115,22,0.15), 0 2px 8px rgba(0,0,0,0.4);
+      backdrop-filter: blur(16px);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      min-width: 160px;
+    }
+    .streak-widget:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(249,115,22,0.25), 0 4px 12px rgba(0,0,0,0.4);
+    }
+    .streak-fire { font-size: 22px; animation: streakPulse 2s infinite; }
+    @keyframes streakPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+    .streak-info { flex: 1; }
+    .streak-days { font-size: 18px; font-weight: 800; color: #f97316; line-height: 1; }
+    .streak-sub { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+    .streak-xp { font-size: 12px; font-weight: 700; color: #fbbf24; background: rgba(251,191,36,0.1); padding: 3px 8px; border-radius: 6px; }
+    .streak-widget.hidden { display: none; }
+  </style>
 </head>
 <body data-variant="editorial" style="--font-display:'Fraunces', Georgia, serif">
 <span id="top"></span>
@@ -84,7 +229,28 @@
     <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI Tutors · Adaptive Learning · LangGraph Agents</span></div>
     <h1 class="hero-title" data-blur-in style="--i:1">AI-powered education that adapts<br>to <span class="grad">every learner</span></h1>
     <p class="hero-sub" data-blur-in style="--i:2">A future-ready university where AI tutors, adaptive learning paths, and intelligent placement engines help every student learn faster, build real skills, and graduate career-ready.</p>
-    <div class="hero-actions" data-blur-in style="--i:3">
+
+    <!-- "I want to learn ___" Command Palette — inspired by learn-anything.xyz -->
+    <div class="learn-search-wrap" data-blur-in style="--i:3">
+      <div class="learn-search-label">I want to learn</div>
+      <div class="learn-search-box" id="learnSearchBox">
+        <i class="fas fa-magnifying-glass learn-search-icon"></i>
+        <input type="text" id="learnSearchInput" class="learn-search-input" placeholder="machine learning, Python, UX design…" autocomplete="off" spellcheck="false">
+        <kbd class="learn-search-kbd">⏎</kbd>
+      </div>
+      <div class="learn-suggestions" id="learnSuggestions">
+        <div class="learn-chip" onclick="setLearnTopic('Machine Learning')"><i class="fas fa-brain"></i> Machine Learning</div>
+        <div class="learn-chip" onclick="setLearnTopic('Python Programming')"><i class="fas fa-code"></i> Python</div>
+        <div class="learn-chip" onclick="setLearnTopic('UX Design')"><i class="fas fa-palette"></i> UX Design</div>
+        <div class="learn-chip" onclick="setLearnTopic('Data Science')"><i class="fas fa-chart-bar"></i> Data Science</div>
+        <div class="learn-chip" onclick="setLearnTopic('Web Development')"><i class="fas fa-globe"></i> Web Dev</div>
+        <div class="learn-chip" onclick="setLearnTopic('AI Agents')"><i class="fas fa-robot"></i> AI Agents</div>
+      </div>
+      <!-- Results dropdown -->
+      <div class="learn-results" id="learnResults" style="display:none;"></div>
+    </div>
+
+    <div class="hero-actions" data-blur-in style="--i:4">
       <a class="btn btn-primary lg" href="#contact"><i class="fas fa-paper-plane"></i> Enquire About Admissions</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
     </div>
     <div class="stats-row" data-blur-in style="--i:4">
@@ -571,6 +737,117 @@
       requestAnimationFrame(renderCursor);
     }
     requestAnimationFrame(renderCursor);
+  }
+})();
+</script>
+
+<!-- ── Global Streak Widget ──────────────────────────────────────────── -->
+<div class="streak-widget" id="streakWidget" onclick="window.location='duo-league.html'" title="Your learning streak">
+  <span class="streak-fire">🔥</span>
+  <div class="streak-info">
+    <div class="streak-days" id="swDays">0</div>
+    <div class="streak-sub">day streak</div>
+  </div>
+  <div class="streak-xp" id="swXp">0 XP</div>
+</div>
+
+<script>
+// ── "I Want to Learn ___" Command Palette ──────────────────────────────
+(function() {
+  const LEARN_DB = [
+    { icon: 'fa-brain', title: 'Machine Learning', desc: 'Neural networks, sklearn, PyTorch fundamentals', tag: 'AI', url: 'learn-dag.html' },
+    { icon: 'fa-code', title: 'Python Programming', desc: 'Variables, functions, OOP, data structures', tag: 'Dev', url: 'code-lab.html' },
+    { icon: 'fa-palette', title: 'UX Design Principles', desc: '21 cognitive laws: Fitts, Hick, Miller & more', tag: 'Design', url: 'laws-of-ux.html' },
+    { icon: 'fa-chart-bar', title: 'Data Science', desc: 'Pandas, visualization, statistical analysis', tag: 'AI', url: 'learn-dag.html' },
+    { icon: 'fa-globe', title: 'Web Development', desc: 'HTML, CSS, JS — build real projects fast', tag: 'Dev', url: 'code-lab.html' },
+    { icon: 'fa-robot', title: 'AI Agents & LangGraph', desc: 'Build autonomous multi-agent pipelines', tag: 'AI', url: 'learn-dag.html' },
+    { icon: 'fa-lightbulb', title: 'Mental Models', desc: 'First principles, inversion, second-order thinking', tag: 'Think', url: 'mental-models.html' },
+    { icon: 'fa-calendar-check', title: '100 Days AI Challenge', desc: '15-min/day structured AI mastery curriculum', tag: 'Challenge', url: 'challenge-100days.html' },
+    { icon: 'fa-trophy', title: 'Gamified Learning', desc: 'XP leagues, streaks, daily challenges', tag: 'Game', url: 'duo-league.html' },
+    { icon: 'fa-bullseye', title: 'Digital Marketing', desc: 'Copywriting, SEO, growth teardowns', tag: 'Marketing', url: 'marketing-teardowns.html' },
+    { icon: 'fa-graduation-cap', title: 'Engineering Courses', desc: 'CSE, IT, ECE with AI-enhanced syllabus', tag: 'Degree', url: 'courses.html' },
+    { icon: 'fa-award', title: 'Certifications', desc: 'Industry-recognized free certs in AI, DS, Web', tag: 'Cert', url: 'courses.html' },
+  ];
+
+  const input = document.getElementById('learnSearchInput');
+  const results = document.getElementById('learnResults');
+  if (!input || !results) return;
+
+  window.setLearnTopic = function(topic) {
+    input.value = topic;
+    input.focus();
+    renderResults(topic);
+  };
+
+  function renderResults(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) { results.style.display = 'none'; return; }
+    const filtered = LEARN_DB.filter(item =>
+      item.title.toLowerCase().includes(q) ||
+      item.desc.toLowerCase().includes(q) ||
+      item.tag.toLowerCase().includes(q)
+    ).slice(0, 5);
+
+    if (!filtered.length) { results.style.display = 'none'; return; }
+    results.innerHTML = filtered.map(item => `
+      <div class="learn-result-item" onclick="window.location='${item.url}'">
+        <div class="learn-result-icon"><i class="fas ${item.icon}"></i></div>
+        <div class="learn-result-text">
+          <div class="learn-result-title">${item.title}</div>
+          <div class="learn-result-desc">${item.desc}</div>
+        </div>
+        <div class="learn-result-tag">${item.tag}</div>
+      </div>
+    `).join('');
+    results.style.display = 'block';
+  }
+
+  input.addEventListener('input', () => renderResults(input.value));
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const first = results.querySelector('.learn-result-item');
+      if (first) first.click();
+    }
+    if (e.key === 'Escape') { results.style.display = 'none'; }
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.learn-search-wrap')) results.style.display = 'none';
+  });
+})();
+
+// ── Global Streak + XP System ─────────────────────────────────────────
+(function() {
+  const KEY_STREAK = 'avpu_streak_days';
+  const KEY_LAST = 'avpu_streak_last';
+  const KEY_XP = 'avpu_total_xp';
+
+  let streak = parseInt(localStorage.getItem(KEY_STREAK) || '0');
+  let xp = parseInt(localStorage.getItem(KEY_XP) || '0');
+  const lastVisit = localStorage.getItem(KEY_LAST);
+  const today = new Date().toDateString();
+
+  if (lastVisit !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (lastVisit === yesterday) {
+      streak += 1; // continued streak
+    } else if (!lastVisit) {
+      streak = 1; // first visit
+    } else {
+      streak = 1; // streak broken, restart
+    }
+    xp += 10; // +10 XP for visiting today
+    localStorage.setItem(KEY_STREAK, streak);
+    localStorage.setItem(KEY_LAST, today);
+    localStorage.setItem(KEY_XP, xp);
+  }
+
+  const widget = document.getElementById('streakWidget');
+  const daysEl = document.getElementById('swDays');
+  const xpEl = document.getElementById('swXp');
+  if (widget && daysEl && xpEl) {
+    daysEl.textContent = streak;
+    xpEl.textContent = xp + ' XP';
+    if (streak === 0) widget.classList.add('hidden');
   }
 })();
 </script>
