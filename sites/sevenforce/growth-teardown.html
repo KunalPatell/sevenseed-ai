@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Growth in Reverse — Startup Flywheel Teardowns | Sevenforce</title>
+  <meta name="description" content="Reverse-engineered growth flywheels, acquisition playbooks, and stealable tactics from 10 iconic startups including Zerodha, CRED, Zomato, Postman, Duolingo, and Notion.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --accent: #06b6d4;
+      --accent-l: #67e8f9;
+      --accent-glow: rgba(6,182,212,0.25);
+    }
+    body {
+      font-family: 'Manrope', 'Inter', system-ui, sans-serif;
+    }
+    .gd-container { max-width: 1320px; margin: 0 auto; padding: 100px 24px 80px; }
+    .gd-hero { text-align: center; margin-bottom: 40px; }
+    .gd-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 999px; background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.3); color: var(--accent-l); font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+    .gd-title { font-size: clamp(32px, 4.5vw, 50px); font-weight: 900; line-height: 1.15; margin-bottom: 14px; letter-spacing: -0.02em; }
+    .gd-sub { color: var(--text-2); max-width: 780px; margin: 0 auto 28px; font-size: 16px; line-height: 1.6; }
+
+    /* Hero Stats */
+    .gd-stats { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
+    .stat-pill { display: flex; align-items: center; gap: 10px; background: var(--bg-1); border: 1px solid var(--border); padding: 8px 18px; border-radius: 999px; font-size: 13px; color: var(--text-2); }
+    .stat-pill strong { color: var(--accent-l); font-weight: 700; }
+
+    /* Strategy Reverse-Engineering Simulator */
+    .sim-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 48px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+    .sim-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #06b6d4, #3b82f6, #8b5cf6); }
+    .sim-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 32px; }
+    @media(max-width: 960px) { .sim-grid { grid-template-columns: 1fr; } }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
+    .form-control { width: 100%; padding: 12px 16px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    .form-control:focus { border-color: var(--accent); }
+
+    .sim-output { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 24px; font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.65; color: #e2e8f0; min-height: 310px; max-height: 420px; overflow-y: auto; }
+    .sim-output h4 { color: var(--accent-l); font-size: 15px; margin-bottom: 10px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .sim-output ul { padding-left: 20px; list-style: disc; margin-bottom: 14px; }
+    .sim-output li { margin-bottom: 6px; }
+
+    /* Filter & Search Toolbar */
+    .filter-section { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 32px; }
+    .search-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+    .search-wrap { position: relative; flex: 1; min-width: 280px; }
+    .search-wrap i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-3); font-size: 15px; }
+    .search-wrap input { width: 100%; padding: 12px 18px 12px 44px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
+    .search-wrap input:focus { border-color: var(--accent); }
+
+    .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .f-pill { padding: 8px 16px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .f-pill:hover { border-color: var(--accent); color: #fff; }
+    .f-pill.active { background: var(--accent); color: #022c22; border-color: var(--accent); font-weight: 700; }
+    .f-pill .count { font-size: 11px; opacity: 0.85; padding: 1px 6px; background: rgba(0,0,0,0.25); border-radius: 10px; }
+
+    /* Teardown Cards Grid */
+    .td-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 28px; }
+    @media(max-width: 640px) { .td-grid { grid-template-columns: 1fr; } }
+
+    .td-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; cursor: pointer; }
+    .td-card:hover { transform: translateY(-4px); border-color: rgba(6,182,212,0.5); box-shadow: 0 16px 36px rgba(0,0,0,0.35); }
+
+    .td-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+    .td-brand { display: flex; align-items: center; gap: 12px; }
+    .td-logo { font-size: 28px; width: 48px; height: 48px; border-radius: 12px; background: var(--bg-2); display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); }
+    .td-name { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 2px; }
+    .td-founder { font-size: 12px; color: var(--text-3); }
+
+    .td-badge { font-size: 11px; text-transform: uppercase; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(6,182,212,0.15); color: var(--accent-l); border: 1px solid rgba(6,182,212,0.3); }
+
+    .td-metric-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 12.5px; color: #cbd5e1; display: flex; justify-content: space-between; align-items: center; }
+    .td-metric-box strong { color: #34d399; }
+
+    .td-tagline { font-size: 15px; font-weight: 700; color: var(--accent-l); margin-bottom: 8px; line-height: 1.35; }
+    .td-summary { font-size: 13.5px; color: var(--text-2); line-height: 1.6; margin-bottom: 20px; flex: 1; }
+
+    /* Flywheel Steps in Card */
+    .card-flywheel-preview { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 14px; margin-bottom: 18px; }
+    .fw-step { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #94a3b8; margin-bottom: 6px; }
+    .fw-step:last-child { margin-bottom: 0; }
+    .fw-num { width: 18px; height: 18px; border-radius: 50%; background: rgba(6,182,212,0.2); color: var(--accent-l); font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+
+    .td-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 14px; margin-top: auto; }
+    .td-footer span { font-size: 13px; color: var(--accent-l); font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+
+    /* Deep Dive Modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-backdrop.open { display: flex; }
+    .modal-dialog { background: var(--bg-1); border: 1px solid var(--border-hi); border-radius: var(--radius); width: 100%; max-width: 860px; max-height: 88vh; overflow-y: auto; padding: 36px; position: relative; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
+    .modal-close { position: absolute; right: 20px; top: 20px; background: var(--bg-2); border: 1px solid var(--border); width: 36px; height: 36px; border-radius: 50%; color: var(--text); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+    .modal-close:hover { background: #ef4444; color: #fff; border-color: #ef4444; }
+
+    .m-top { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+    .m-logo { font-size: 38px; width: 64px; height: 64px; border-radius: 16px; background: var(--bg-2); display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); }
+    .m-title { font-size: 30px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .m-sub { font-size: 13px; color: var(--text-3); }
+
+    .flywheel-container { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 24px; margin-bottom: 24px; }
+    .flywheel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+    .fw-card-stage { background: rgba(15,23,42,0.8); border: 1px solid #334155; border-radius: 10px; padding: 14px; }
+    .fw-card-stage h5 { font-size: 11px; text-transform: uppercase; color: var(--accent-l); font-weight: 800; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .fw-card-stage h6 { font-size: 13px; color: #fff; font-weight: 700; margin-bottom: 6px; }
+    .fw-card-stage p { font-size: 11.5px; color: #94a3b8; line-height: 1.5; margin: 0; }
+
+    .modal-sec { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+    .modal-sec h4 { font-size: 13px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; color: var(--accent-l); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .modal-sec ul { padding-left: 20px; list-style: disc; margin: 0; }
+    .modal-sec li { font-size: 13px; line-height: 1.6; color: var(--text-2); margin-bottom: 8px; }
+    .modal-sec li:last-child { margin-bottom: 0; }
+
+    .channel-bars { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .c-bar-row { display: flex; align-items: center; gap: 12px; font-size: 12px; }
+    .c-name { width: 140px; color: #cbd5e1; font-weight: 600; }
+    .c-track { flex: 1; height: 10px; background: var(--bg-3); border-radius: 5px; overflow: hidden; }
+    .c-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #3b82f6); border-radius: 5px; }
+    .c-pct { width: 40px; text-align: right; color: var(--accent-l); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body data-variant="dashboard" style="--font-display:'Manrope', system-ui, -apple-system, sans-serif">
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="logo" href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+      <span class="logo-icon" style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--accent,#06b6d4),#3b82f6); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-users-gear"></i></span>
+      <span class="logo-text" style="font-weight:700; font-size:18px; color:#fff;">Seven <span class="logo-accent" style="color:var(--accent,#06b6d4);">force</span></span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="workflows.html">LangGraph Studio</a>
+      <a href="devin-terminal.html">Devin Terminal</a>
+      <a href="employees.html">AI Employees</a>
+      <a href="pricing.html">Pricing & ROI</a>
+      <a href="growth-teardown.html" style="color:var(--accent-l); font-weight:600;">Growth Teardowns</a>
+    </div>
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm" href="workflows.html"><i class="fas fa-bolt"></i> Launch Workflows</a>
+    </div>
+  </div>
+</nav>
+
+<div class="gd-container">
+  <!-- Hero Section -->
+  <div class="gd-hero">
+    <div class="gd-badge"><i class="fas fa-chart-line"></i> Inspired by GrowthInReverse.com & MarketingExamples.com</div>
+    <h1 class="gd-title">Startup Growth in Reverse</h1>
+    <p class="gd-sub">How did 10 legendary startups scale to millions of users? We reverse-engineered their 4-phase growth flywheels, acquisition channels, and the exact tactics you can steal for your venture.</p>
+
+    <div class="gd-stats">
+      <div class="stat-pill"><i class="fas fa-layer-group" style="color:var(--accent-l);"></i> <strong>10</strong> Complete Teardowns</div>
+      <div class="stat-pill"><i class="fas fa-sync-alt" style="color:#34d399;"></i> <strong>40</strong> Flywheel Phases</div>
+      <div class="stat-pill"><i class="fas fa-indian-rupee-sign" style="color:#fbbf24;"></i> <strong>$50B+</strong> Combined Market Cap</div>
+      <div class="stat-pill"><i class="fas fa-brain" style="color:#f472b6;"></i> <strong>Zero</strong> Fluff Playbooks</div>
+    </div>
+  </div>
+
+  <!-- Interactive AI Strategy Reverse-Engineering Simulator -->
+  <div class="sim-card">
+    <h2 style="font-size:20px; font-weight:800; color:#fff; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+      <i class="fas fa-wand-magic-sparkles" style="color:var(--accent);"></i> Reverse-Engineer Any Company Strategy
+    </h2>
+    <div class="sim-grid">
+      <div>
+        <div class="form-group">
+          <label for="companyInput">Target Company Name or Website Domain</label>
+          <input type="text" id="companyInput" class="form-control" placeholder="e.g. Swiggy, Zerodha, Airbnb, or your startup URL" value="Zerodha">
+        </div>
+        <div class="form-group">
+          <label for="industrySelect">Primary Business Model</label>
+          <select id="industrySelect" class="form-control">
+            <option value="b2c_fintech">B2C FinTech / Brokerage</option>
+            <option value="b2b_saas">B2B SaaS / Dev Tools</option>
+            <option value="edtech">EdTech & Vernacular Learning</option>
+            <option value="marketplace">Hyperlocal Marketplace / Delivery</option>
+            <option value="gamified">Gamified Consumer App</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="runSimulation()" style="width:100%; justify-content:center;"><i class="fas fa-microchip"></i> Deconstruct Growth Flywheel</button>
+      </div>
+
+      <div>
+        <div class="sim-output" id="simOutput">
+          <p style="color:var(--text-3); font-style:italic;">// Enter any company name and click deconstruct to view reverse-engineered channel mix and 4-phase flywheel...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter & Search Section -->
+  <div class="filter-section">
+    <div class="search-row">
+      <div class="search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search teardowns by company, founder, tactic, or channel (e.g. 'Zerodha', 'Varsity', 'BOGO', 'SEO')...">
+      </div>
+    </div>
+
+    <div class="filter-pills" id="filterPills">
+      <button class="f-pill active" data-cat="all">All Teardowns <span class="count">10</span></button>
+      <button class="f-pill" data-cat="plg">Product-Led Growth <span class="count">4</span></button>
+      <button class="f-pill" data-cat="content">Content & Community <span class="count">3</span></button>
+      <button class="f-pill" data-cat="viral">Viral Loops & Gating <span class="count">1</span></button>
+      <button class="f-pill" data-cat="retention">Retention & Gamification <span class="count">1</span></button>
+      <button class="f-pill" data-cat="pricing">Pricing & Omnichannel <span class="count">1</span></button>
+    </div>
+  </div>
+
+  <!-- Teardowns Grid -->
+  <div class="td-grid" id="teardownsGrid"></div>
+</div>
+
+<!-- Deep Dive Detail Modal -->
+<div class="modal-backdrop" id="teardownModal" onclick="handleBackdropClick(event)">
+  <div class="modal-dialog">
+    <button class="modal-close" onclick="closeModal()" title="Close (Esc)"><i class="fas fa-times"></i></button>
+
+    <div class="m-top">
+      <div class="m-logo" id="mLogo"></div>
+      <div>
+        <h2 class="m-title" id="mCompany"></h2>
+        <div class="m-sub" id="mFounder"></div>
+      </div>
+    </div>
+
+    <div class="td-metric-box" style="margin-bottom:20px;">
+      <span>Valuation / Scale: <strong id="mValuation"></strong></span>
+      <span>Key Metric: <strong id="mMetric"></strong></span>
+    </div>
+
+    <div class="td-tagline" id="mTagline"></div>
+    <p style="font-size:14px; line-height:1.65; color:#cbd5e1; margin-bottom:24px;" id="mSummary"></p>
+
+    <!-- 4-Phase Flywheel Visualizer -->
+    <div class="flywheel-container">
+      <h4 style="font-size:13px; text-transform:uppercase; font-weight:800; color:var(--accent-l); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-sync-alt"></i> The 4-Phase Growth Flywheel
+      </h4>
+      <div class="flywheel-grid" id="mFlywheelGrid"></div>
+    </div>
+
+    <div class="modal-sec">
+      <h4><i class="fas fa-chart-pie"></i> Estimated Customer Acquisition Channel Mix</h4>
+      <div class="channel-bars" id="mChannelBars"></div>
+    </div>
+
+    <div class="modal-sec">
+      <h4><i class="fas fa-lightbulb"></i> What You Can Steal For Your Venture</h4>
+      <ul id="mStealList"></ul>
+    </div>
+
+    <div class="modal-sec">
+      <h4><i class="fas fa-bullseye"></i> Critical Bottleneck Overcome</h4>
+      <p id="mBottleneck" style="font-size:13.5px; line-height:1.6; color:var(--text-2); margin:0;"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+const TEARDOWNS = [
+  {
+    "id": "zerodha",
+    "company": "Zerodha",
+    "category": "plg",
+    "categoryLabel": "Product-Led Growth",
+    "logo": "\ud83d\udcc8",
+    "founder": "Nithin & Nikhil Kamath",
+    "hq": "Bengaluru, India",
+    "valuation": "$3.6B+ (Bootstrapped)",
+    "metric": "14M+ Active Clients \u00b7 \u20b92,900 Cr Profit",
+    "tagline": "The $0 Marketing Bootstrapped FinTech Empire",
+    "summary": "Built India's largest retail brokerage with zero VC funding and zero ad spend by replacing opaque broker percentage cuts with a flat \u20b920 fee and creating Varsity, the world's most comprehensive free financial literacy encyclopedia.",
+    "flywheel": [
+      {
+        "phase": "Acquisition",
+        "title": "Zero Ad Spend Content Authority",
+        "desc": "Varsity educational modules rank #1 on Google India for virtually every stock market search term, driving 10M+ organic visitors/month."
+      },
+      {
+        "phase": "Activation",
+        "title": "Kite Fast Web/Mobile Terminal",
+        "desc": "Clean, lightning-fast UI built on minimalist web tech with instant Aadhaar e-KYC signup, turning curious learners into funded accounts in 5 minutes."
+      },
+      {
+        "phase": "Retention",
+        "title": "Flat \u20b920 Pricing & Long-Term Loyalty",
+        "desc": "Free equity delivery and flat \u20b920 F&O brokerage removes anxiety of hidden commissions. Users never feel exploited by trading churn."
+      },
+      {
+        "phase": "Referral",
+        "title": "Rainmatter Ecosystem & 10% Lifetime Cut",
+        "desc": "Rainmatter fund incubates health and wealth startups (Smallcase, Sensibull, GoldenPi) while offering users a 10% brokerage sharing referral for life."
+      }
+    ],
+    "channelMix": {
+      "Content / SEO": 60,
+      "Word of Mouth": 30,
+      "Ecosystem Apps": 10,
+      "Paid Ads": 0
+    },
+    "stealableTactics": [
+      "Create the definitive free university for your industry (Varsity). Education generates 100x more goodwill and organic backlink equity than banner ads.",
+      "Eliminate variable percentage fees in favor of flat micro-pricing to align your incentives directly with user peace of mind.",
+      "Seed an ecosystem fund (Rainmatter) that builds complementary products that plug into your platform APIs rather than building everything in-house."
+    ],
+    "bottleneckSolved": "Traditional legacy brokers (ICICI Direct, Sharekhan) charged 0.5% on every transaction and pushed high-commission churn tips. Zerodha inverted this by offering flat fees and zero advisory spam."
+  },
+  {
+    "id": "cred",
+    "company": "CRED",
+    "category": "viral",
+    "categoryLabel": "Viral Loops & Gating",
+    "logo": "\ud83d\udcb3",
+    "founder": "Kunal Shah",
+    "hq": "Bengaluru, India",
+    "valuation": "$6.4B",
+    "metric": "13M+ High-Trust Members \u00b7 30% of Credit Card Volume",
+    "tagline": "Status-Signaling Gated Club for India's Top 1%",
+    "summary": "Engineered an exclusive community by restricting admission strictly to credit card holders with a 750+ Experian/CRIF credit score, leveraging high-status FOMO, nostalgic 90s celebrity IPL commercials, and gamified coin jackpots.",
+    "flywheel": [
+      {
+        "phase": "Acquisition",
+        "title": "High-Status Gating & IPL Cultural Ads",
+        "desc": "Users must prove 750+ credit score to unlock the app. Unlocking it is celebrated with shareable status screenshots. IPL ads feature iconic 90s icons (Rahul Dravid 'Indiranagar ka Gunda')."
+      },
+      {
+        "phase": "Activation",
+        "title": "Instant Hidden Fee Scanner",
+        "desc": "CRED scans credit card email statements, instantly exposing hidden fees, inflated interest rates, and duplicate merchant charges, generating sudden trust."
+      },
+      {
+        "phase": "Retention",
+        "title": "Gamified Coin Spins & Cred Pay",
+        "desc": "Paying bills on time rewards CRED Coins redeemable for luxury brand rewards (CRED Store) and 1-click checkout across top D2C merchants via CRED Pay."
+      },
+      {
+        "phase": "Referral",
+        "title": "Exclusive Member Invites & Gems",
+        "desc": "Members invite high-credit peers with personalized referral passes, earning cash rewards and unlocked lottery vaults."
+      }
+    ],
+    "channelMix": {
+      "Brand / Cultural TV": 45,
+      "Status Referrals": 35,
+      "In-App Gamification": 15,
+      "Performance": 5
+    },
+    "stealableTactics": [
+      "Use selective gating: Making your product slightly hard to access increases perceived prestige and creates natural bragging rights.",
+      "Surprise users with immediate utility: Scan their existing assets or statements to reveal hidden money or costs they didn't know they had.",
+      "Turn utility tasks (paying bills) into a tactile, satisfying dopamine loop with custom physics-driven wheel spins and sound design."
+    ],
+    "bottleneckSolved": "Credit card users routinely missed bill due dates and suffered compounding 42% APR interest and hidden penalty charges across multiple bank cards."
+  },
+  {
+    "id": "zomato",
+    "company": "Zomato",
+    "category": "content",
+    "categoryLabel": "Content & Community",
+    "logo": "\ud83c\udf54",
+    "founder": "Deepinder Goyal",
+    "hq": "Gurugram, India",
+    "valuation": "$25B+ (Public - NSE)",
+    "metric": "18M+ Monthly Transacting Customers \u00b7 Quick-Commerce Leader",
+    "tagline": "The Hyperlocal Notification & Cultural Meme Flywheel",
+    "summary": "Transformed from an offline restaurant menu directory into India's dominant food and quick-commerce duopoly through witty pop-culture push notifications, hyperlocal programmatic SEO, and the Zomato Gold membership moat.",
+    "flywheel": [
+      {
+        "phase": "Acquisition",
+        "title": "Programmatic Hyperlocal SEO & Menu Indexing",
+        "desc": "Indexed millions of restaurant menus, geo-location query landing pages ('best biryani in Koramangala'), and billboard witty puns that went viral on Twitter and LinkedIn."
+      },
+      {
+        "phase": "Activation",
+        "title": "Seamless 3-Tap Checkout & Real-Time GPS Tracking",
+        "desc": "Instant UPI intent checkout and live map showing delivery rider progress down to the exact traffic turn with ETA countdown."
+      },
+      {
+        "phase": "Retention",
+        "title": "Zomato Gold Subscription Moat",
+        "desc": "Gold members receive free delivery within 10 km and VIP dining discounts, increasing user annual order frequency by over 3.2x."
+      },
+      {
+        "phase": "Referral",
+        "title": "Year-End Wrapped & Meme Social Shares",
+        "desc": "Zomato Rewind cards ('You ordered 312 biryanis this year!') trigger massive organic Instagram story sharing across millions of users."
+      }
+    ],
+    "channelMix": {
+      "Push Notifications / Memes": 40,
+      "Programmatic SEO": 35,
+      "Zomato Gold Flywheel": 20,
+      "Paid Channels": 5
+    },
+    "stealableTactics": [
+      "Treat push notifications as editorial comedy content rather than generic discount spam. Make people laugh when they check their lock screen.",
+      "Introduce a membership tier (Gold) where the upfront fee incentivizes users to concentrate 100% of their spending with you to break even.",
+      "Create personalized annual data summaries ('Spotify Wrapped' style) that give customers a reason to boast on social media."
+    ],
+    "bottleneckSolved": "Users hated calling noisy restaurant landlines to place takeaway orders without knowing prices, reviews, or delivery arrival times."
+  },
+  {
+    "id": "postman",
+    "company": "Postman",
+    "category": "plg",
+    "categoryLabel": "Product-Led Growth",
+    "logo": "\ud83d\ude80",
+    "founder": "Abhinav Asthana, Ankit Sobti, Abhijit Kane",
+    "hq": "San Francisco / Bengaluru",
+    "valuation": "$5.6B",
+    "metric": "30M+ Developers \u00b7 98% of Fortune 500",
+    "tagline": "The Bottom-Up Developer Tool Trojan Horse",
+    "summary": "Started as a simple Chrome browser extension to test HTTP REST API requests. Grew into the global standard API platform by letting solo engineers share collections, quietly expanding bottom-up into enterprise engineering budgets.",
+    "flywheel": [
+      {
+        "phase": "Acquisition",
+        "title": "Free Desktop Client & Public API Network",
+        "desc": "Solo devs download the free app to test endpoints without writing curl scripts; public API collections for Stripe, Twitter, AWS drive massive web traffic."
+      },
+      {
+        "phase": "Activation",
+        "title": "Send Request -> Instant JSON Pretty Response",
+        "desc": "Under 60 seconds from download to sending a GET request with syntax highlighting, auth headers, and automated code generation snippets in 10 languages."
+      },
+      {
+        "phase": "Retention",
+        "title": "Team Workspaces & Environment Sync",
+        "desc": "Sharing API collections and environment variables across dev teams makes Postman the collaborative single source of truth for engineering orgs."
+      },
+      {
+        "phase": "Referral",
+        "title": "'Run in Postman' Embed Buttons",
+        "desc": "Third-party developer docs embed the 'Run in Postman' button, converting every SaaS API documentation site into a distributor for Postman."
+      }
+    ],
+    "channelMix": {
+      "Product Virality": 50,
+      "Developer Documentation": 30,
+      "Public API Network": 15,
+      "Enterprise Outbound": 5
+    },
+    "stealableTactics": [
+      "The Trojan Horse Strategy: Win the solo individual contributor for free, then charge their VP of Engineering when team collaboration requires shared state.",
+      "Create an embeddable badge or button ('Run in Postman') that other SaaS companies proudly paste onto their own documentation.",
+      "Auto-generate code in every programming language: remove all mental friction for developers implementing your payloads."
+    ],
+    "bottleneckSolved": "Developers had to maintain brittle terminal bash curl scripts or write custom throwaway scripts just to test if a backend API route returned the right JSON keys."
+  },
+  {
+    "id": "zoho",
+    "company": "Zoho",
+    "category": "plg",
+    "categoryLabel": "Product-Led Growth",
+    "logo": "\ud83d\udee1\ufe0f",
+    "founder": "Sridhar Vembu",
+    "hq": "Chennai / Tenkasi, India",
+    "valuation": "$5B+ (Bootstrapped)",
+    "metric": "100M+ Users \u00b7 55+ Integrated SaaS Apps",
+    "tagline": "The Rural Bootstrapped SaaS Fortress",
+    "summary": "Bootstrapped for 28 years with zero VC capital. Built an integrated suite of 55+ business applications by establishing engineering hubs in rural Tamil Nadu (Zoho Schools of Learning), slashing cost structures and passing the savings to SMBs.",
+    "flywheel": [
+      {
+        "phase": "Acquisition",
+        "title": "Free Single-Utility Tools & Organic Search",
+        "desc": "Free invoice generators, expense calculators, and entry-tier CRM apps rank for thousands of SMB search terms globally."
+      },
+      {
+        "phase": "Activation",
+        "title": "Zoho One Master Suite Integration",
+        "desc": "Once an SMB uses Zoho Books or CRM, switching on HR, Mail, Desk, or Analytics takes 1 click without third-party Zapier sync pipelines."
+      },
+      {
+        "phase": "Retention",
+        "title": "Extreme Switching Costs & Cost Advantage",
+        "desc": "Pricing Zoho One at a fraction of Salesforce/Workday while storing entire operational company history makes leaving financially irrational."
+      },
+      {
+        "phase": "Referral",
+        "title": "Global Partner & Consultant Network",
+        "desc": "Thousands of local IT consultants and chartered accountants earn commissions implementing Zoho for small business clients."
+      }
+    ],
+    "channelMix": {
+      "Organic Search / Free Tools": 45,
+      "Suite Expansion (Cross-Sell)": 35,
+      "Accountant / Partner Network": 20,
+      "Paid Ads": 0
+    },
+    "stealableTactics": [
+      "Build an internal university (Zoho Schools): Train non-traditional talent from scratch to lower engineering cost structure while creating lifelong loyalty.",
+      "Provide free standalone micro-tools (like free invoice generators) as zero-CAC lead generation funnels for your flagship product.",
+      "Cross-sell adjacency: Once you have a customer's core workflow, build the 5 tools immediately adjacent to it so they never need third-party vendors."
+    ],
+    "bottleneckSolved": "SMBs were forced to pay $150/user/month for Salesforce, another $50 for Zendesk, and $40 for QuickBooks, then spend thousands configuring brittle API syncs between them."
+  },
+  {
+    "id": "physicswallah",
+    "company": "PhysicsWallah (PW)",
+    "category": "content",
+    "categoryLabel": "Content & Community",
+    "logo": "\u269b\ufe0f",
+    "founder": "Alakh Pandey & Prateek Maheshwari",
+    "hq": "Noida, India",
+    "valuation": "$2.8B (Profitable)",
+    "metric": "10M+ Enrolled Students \u00b7 150+ Offline Tech Centres",
+    "tagline": "The Cult-Like Vernacular EdTech Phenomenon",
+    "summary": "While VC-funded EdTech giants burned billions on Bollywood celebrity TV ads and aggressive tele-callers before collapsing, Alakh Pandey built a fanatical YouTube following with Hindi-medium Physics lectures, pricing courses at \u20b94,000 instead of \u20b91,00,000.",
+    "flywheel": [
+      {
+        "phase": "Acquisition",
+        "title": "12M+ Subscriber YouTube Classroom",
+        "desc": "Years of free high-energy, relatable Hindi video lectures breaking down complex JEE/NEET physics concepts built intense emotional devotion."
+      },
+      {
+        "phase": "Activation",
+        "title": "PW App Crash: \u20b93,999 Lakshya Batches",
+        "desc": "When the PW mobile app launched, course pricing was 90% below legacy Kota coaching institutes, triggering servers to crash under 500,000 concurrent signups."
+      },
+      {
+        "phase": "Retention",
+        "title": "Daily Practice Problems & Doubt Engines",
+        "desc": "Affordable daily mock test series, live chat doubt solving, and structured batch timetables maintained student discipline throughout the exam year."
+      },
+      {
+        "phase": "Referral",
+        "title": "National Rank 1 Board Toppers & Word of Mouth",
+        "desc": "Students openly crediting PW on social media and school WhatsApp groups for top JEE/NEET ranks created an unstoppable grassroots referral tidal wave."
+      }
+    ],
+    "channelMix": {
+      "YouTube Organic Content": 60,
+      "Student Word of Mouth": 25,
+      "Hybrid Vidyapeeth Centers": 15,
+      "Telemarketing": 0
+    },
+    "stealableTactics": [
+      "Radical Affordability: Competing at a 10x lower price point expands the addressable market by 100x and eliminates marketing resistance.",
+      "Founder Personal Brand: Authentic, relatable communication in local vernacular resonates infinitely deeper than polished corporate advertising.",
+      "Never use predatory sales calls: Earn student trust by allowing them to buy entirely self-serve on digital terms without pushy sales reps."
+    ],
+    "bottleneckSolved": "Families in Tier 2/3 Indian towns had to take crushing bank loans or sell land to pay \u20b91.5\u20132 lakh fees for offline Kota coaching institutes."
+  },
+  {
+    "id": "duolingo",
+    "company": "Duolingo",
+    "category": "retention",
+    "categoryLabel": "Retention & Gamification",
+    "logo": "\ud83e\udd89",
+    "founder": "Luis von Ahn & Severin Hacker",
+    "hq": "Pittsburgh, USA",
+    "valuation": "$8B+ (NASDAQ: DUOL)",
+    "metric": "100M+ Monthly Active Users \u00b7 5.8M Paying Subscribers",
+    "tagline": "The Retention, Streak & Loss-Aversion Machine",
+    "summary": "Pioneered educational gamification by treating language acquisition like Candy Crush: 3-minute bite-sized lessons, streak flame counters that exploit loss aversion, push notifications from an unhinged green owl, and 10 competitive leagues.",
+    "flywheel": [
+      {
+        "phase": "Acquisition",
+        "title": "Viral TikTok Owl Mascot & Organic PR",
+        "desc": "Duo the Owl mascot became a chaotic TikTok sensation with 10M+ followers, driving zero-CAC Gen-Z app store downloads worldwide."
+      },
+      {
+        "phase": "Activation",
+        "title": "30-Second First Lesson Win",
+        "desc": "New users translate their first word ('El gato es negro') within 30 seconds of install with zero grammar jargon or signup barrier."
+      },
+      {
+        "phase": "Retention",
+        "title": "Loss-Aversion Streaks & Diamond Leagues",
+        "desc": "30-person weekly leaderboards and streak freeze mechanics create acute psychological pain if a user contemplates skipping a day."
+      },
+      {
+        "phase": "Referral",
+        "title": "Friends Quests & Family Plans",
+        "desc": "Collaborative weekly quests with real-life friends and discounted family plans incentivize members to recruit peers to maintain mutual progress."
+      }
+    ],
+    "channelMix": {
+      "Organic / Viral Social": 55,
+      "Push Retention Loops": 30,
+      "Word of Mouth": 10,
+      "Performance Marketing": 5
+    },
+    "stealableTactics": [
+      "Make the time-to-first-win under 60 seconds: Never make users read tutorials; let them interact and win immediately.",
+      "Harness loss aversion: The fear of losing a 30-day streak is 2x more motivating than the reward of gaining day 31.",
+      "Embrace humor and irreverence in brand marketing: Unhinged, self-aware social content outperforms sanitized corporate PR every single time."
+    ],
+    "bottleneckSolved": "Traditional language courses required memorizing boring grammar tables and attending 2-hour classes, leading to a 95% dropout rate within 2 weeks."
+  },
+  {
+    "id": "lenskart",
+    "company": "Lenskart",
+    "category": "pricing",
+    "categoryLabel": "Pricing & Omnichannel",
+    "logo": "\ud83d\udc53",
+    "founder": "Peyush Bansal",
+    "hq": "Faridabad / Gurugram, India",
+    "valuation": "$5B+",
+    "metric": "2,000+ Omnichannel Stores \u00b7 10M+ Eyewear Units/Year",
+    "tagline": "The Omnichannel Eyewear & Gold Membership Engine",
+    "summary": "Disrupted the fragmented Indian optical market by roboticizing eyewear manufacturing to slash costs, inventing 3D face scan virtual try-on, opening 2,000+ franchise stores, and monetizing through Lenskart Gold membership.",
+    "flywheel": [
+      {
+        "phase": "Acquisition",
+        "title": "3D Virtual Try-On & Free Eye Checkup",
+        "desc": "Facial analysis maps 10,000 facial points to recommend frame shapes, while in-store computerized optometrists offer 100% free eye tests."
+      },
+      {
+        "phase": "Activation",
+        "title": "First Frame Free / Buy 1 Get 1 Hook",
+        "desc": "Introductory offer gives new customers their first frame free (just pay lens cost) or Buy 1 Get 1 Free on all eyewear via Gold pass."
+      },
+      {
+        "phase": "Retention",
+        "title": "Lenskart Gold Family Membership",
+        "desc": "Gold pass allows an entire family or friend group to share Buy 1 Get 1 benefits across sunglasses, contact lenses, and spectacles for 2 years."
+      },
+      {
+        "phase": "Referral",
+        "title": "BOGO Second Pair Gifting",
+        "desc": "Buy-One-Get-One naturally prompts customers to bring a sibling, spouse, or friend along to claim the free second pair of glasses."
+      }
+    ],
+    "channelMix": {
+      "Omnichannel Physical Footprint": 45,
+      "Gold Member Referrals": 30,
+      "Digital AR Try-On Ads": 20,
+      "Print / Direct": 5
+    },
+    "stealableTactics": [
+      "Turn your core discount (Buy 1 Get 1) into a shared social activity where customers physically recruit friends to claim the reward.",
+      "Use free preventative diagnostics (free eye tests) as the un-refusable foot-in-the-door for high-margin physical retail traffic.",
+      "Vertically integrate manufacturing: Automated European robotics in Rajasthan slashed per-unit lens production costs by 60%."
+    ],
+    "bottleneckSolved": "Unorganized local optical shops sold unbranded frames at arbitrary marked-up prices without standardized vision testing equipment or return warranties."
+  },
+  {
+    "id": "razorpay",
+    "company": "Razorpay",
+    "category": "plg",
+    "categoryLabel": "Product-Led Growth",
+    "logo": "\u26a1",
+    "founder": "Harshil Mathur & Shashank Kumar",
+    "hq": "Bengaluru, India",
+    "valuation": "$7.5B",
+    "metric": "$100B+ TPV \u00b7 10M+ Businesses Powered",
+    "tagline": "The Developer-First Payment Infrastructure Standard",
+    "summary": "While legacy Indian payment gateways took 4 weeks of paperwork and cumbersome Java code to set up, Razorpay made payments integration as simple as pasting 5 lines of clean JavaScript and offering automated digital KYC approval.",
+    "flywheel": [
+      {
+        "phase": "Acquisition",
+        "title": "Developer Documentation & 1-Line JS Checkout",
+        "desc": "Crystal-clear documentation, copy-paste React/Node/Python snippets, and instant test keys allowed developers to take test payments in 15 minutes."
+      },
+      {
+        "phase": "Activation",
+        "title": "Paperless Instant Digital Onboarding",
+        "desc": "Automated GST/PAN verification and MCA registry lookups approved small businesses to accept live customer funds in under 24 hours."
+      },
+      {
+        "phase": "Retention",
+        "title": "RazorpayX Neobanking & Payroll Suite",
+        "desc": "Expanding from payment checkout into vendor payouts, corporate cards, and 1-click automated Indian payroll made Razorpay the central financial OS."
+      },
+      {
+        "phase": "Referral",
+        "title": "Powered by Razorpay Footer & Partner Rev-Share",
+        "desc": "Checkout modal displays 'Secured by Razorpay', while web agencies and freelancers earn recurring revenue share integrating clients on Razorpay."
+      }
+    ],
+    "channelMix": {
+      "Developer Word of Mouth": 40,
+      "Agency / Dev Partners": 30,
+      "Checkout Modal Branding": 20,
+      "Enterprise Sales": 10
+    },
+    "stealableTactics": [
+      "Delight the implementer: The person writing the code to integrate your product is your best champion\u2014make their experience magical.",
+      "Turn your transactional output into distribution: Add a tasteful 'Secured by [Your Brand]' badge on every client-facing screen.",
+      "Expand from collections to disbursements: Once you capture inbound revenue, automate outbound payroll and vendor bills to lock in the account."
+    ],
+    "bottleneckSolved": "Legacy gateways (CCAvenue, BillDesk) had 30-day manual document submission cycles, ugly non-responsive payment pages, and catastrophic 30% failure rates on mobile."
+  },
+  {
+    "id": "notion",
+    "company": "Notion",
+    "category": "content",
+    "categoryLabel": "Content & Community",
+    "logo": "\ud83d\udcdd",
+    "founder": "Ivan Zhao & Simon Last",
+    "hq": "San Francisco, USA",
+    "valuation": "$10B+",
+    "metric": "35M+ Users \u00b7 80% Organic Adoption",
+    "tagline": "The Creator Template & Community Flywheel",
+    "summary": "Rescued from near bankruptcy by stripping the product down to a clean, tactile blank canvas of slash-command blocks. Fueled an explosive organic creator economy where influencers sell thousands of custom Notion templates, fueling global viral adoption.",
+    "flywheel": [
+      {
+        "phase": "Acquisition",
+        "title": "Template Marketplace & Creator Economy",
+        "desc": "Third-party creators build aesthetic Notion dashboards for students, engineers, and creators, posting YouTube setup tours that drive millions of signups."
+      },
+      {
+        "phase": "Activation",
+        "title": "Duplicate Template in 1 Click",
+        "desc": "A new user doesn't need to build from scratch; they click 'Duplicate' and inherit a fully functional second-brain operating system in 2 seconds."
+      },
+      {
+        "phase": "Retention",
+        "title": "Relational Databases & Knowledge Graph",
+        "desc": "Linking daily journals, task boards, company wikis, and roadmap tables makes the workspace increasingly indispensable over time."
+      },
+      {
+        "phase": "Referral",
+        "title": "Team Invites & Public Page Sharing",
+        "desc": "Every published document ('Share to Web') acts as a public advertisement for Notion, while team projects require inviting coworkers."
+      }
+    ],
+    "channelMix": {
+      "Community Templates": 45,
+      "Public Shared Pages": 30,
+      "Social / YouTube Demos": 20,
+      "Paid Ads": 5
+    },
+    "stealableTactics": [
+      "Enable user monetization: When third parties can make a full-time living selling templates or plugins for your tool, they become your most passionate salesforce.",
+      "Turn blank canvases into 1-click duplicated recipes so beginners bypass the fear of the empty page.",
+      "Make every shared public link a high-converting billboard for your product with a clean, unobtrusive 'Duplicate to Notion' header."
+    ],
+    "bottleneckSolved": "Knowledge workers were drowning across 6 disconnected tools: Google Docs for notes, Trello for tasks, Airtable for databases, and Confluence for company wikis."
+  }
+];
+
+let currentCategory = 'all';
+let searchQuery = '';
+let activeModalTeardown = null;
+
+function renderTeardowns() {
+  const container = document.getElementById('teardownsGrid');
+  const q = searchQuery.toLowerCase().trim();
+
+  const filtered = TEARDOWNS.filter(t => {
+    if (currentCategory !== 'all' && t.category !== currentCategory) return false;
+    if (!q) return true;
+    return t.company.toLowerCase().includes(q) ||
+           t.founder.toLowerCase().includes(q) ||
+           t.tagline.toLowerCase().includes(q) ||
+           t.summary.toLowerCase().includes(q) ||
+           t.stealableTactics.some(s => s.toLowerCase().includes(q));
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1/-1; text-align:center; padding: 60px 20px; background:var(--bg-1); border:1px dashed var(--border); border-radius:12px;">
+        <i class="fas fa-search" style="font-size:32px; color:var(--text-3); margin-bottom:14px; display:block;"></i>
+        <h3 style="font-size:18px; color:#fff; margin-bottom:8px;">No teardowns match your query</h3>
+        <p style="color:var(--text-2); font-size:14px;">Try searching for different terms like "Zerodha", "BOGO", "SEO", or clear the filter.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered.map(t => {
+    return `
+      <div class="td-card" onclick="openModal('${t.id}')">
+        <div class="td-header">
+          <div class="td-brand">
+            <div class="td-logo">${t.logo}</div>
+            <div>
+              <h3 class="td-name">${t.company}</h3>
+              <div class="td-founder">${t.founder} · ${t.hq}</div>
+            </div>
+          </div>
+          <span class="td-badge">${t.categoryLabel}</span>
+        </div>
+
+        <div class="td-metric-box">
+          <span>${t.valuation}</span>
+          <strong>${t.metric.split('·')[0].trim()}</strong>
+        </div>
+
+        <div class="td-tagline">${t.tagline}</div>
+        <p class="td-summary">${t.summary.substring(0, 150)}...</p>
+
+        <div class="card-flywheel-preview">
+          ${t.flywheel.map((step, idx) => `
+            <div class="fw-step">
+              <span class="fw-num">${idx + 1}</span>
+              <span><strong>${step.phase}:</strong> ${step.title}</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="td-footer">
+          <span>Inspect Full Flywheel <i class="fas fa-arrow-right"></i></span>
+          <span style="font-size:11px; color:var(--text-3);">${Object.keys(t.channelMix)[0]}: ${Object.values(t.channelMix)[0]}%</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openModal(id) {
+  const t = TEARDOWNS.find(x => x.id === id);
+  if (!t) return;
+  activeModalTeardown = t;
+
+  document.getElementById('mLogo').textContent = t.logo;
+  document.getElementById('mCompany').textContent = t.company;
+  document.getElementById('mFounder').textContent = `${t.founder} · ${t.hq}`;
+  document.getElementById('mValuation').textContent = t.valuation;
+  document.getElementById('mMetric').textContent = t.metric;
+  document.getElementById('mTagline').textContent = t.tagline;
+  document.getElementById('mSummary').textContent = t.summary;
+  document.getElementById('mBottleneck').textContent = t.bottleneckSolved;
+
+  // Flywheel stages
+  const fwGrid = document.getElementById('mFlywheelGrid');
+  fwGrid.innerHTML = t.flywheel.map((fw, idx) => `
+    <div class="fw-card-stage">
+      <h5>Phase ${idx + 1}: ${fw.phase}</h5>
+      <h6>${fw.title}</h6>
+      <p>${fw.desc}</p>
+    </div>
+  `).join('');
+
+  // Channel bars
+  const cBars = document.getElementById('mChannelBars');
+  cBars.innerHTML = Object.entries(t.channelMix).map(([name, pct]) => `
+    <div class="c-bar-row">
+      <div class="c-name">${name}</div>
+      <div class="c-track">
+        <div class="c-fill" style="width: ${pct}%;"></div>
+      </div>
+      <div class="c-pct">${pct}%</div>
+    </div>
+  `).join('');
+
+  // Stealable Tactics
+  const sList = document.getElementById('mStealList');
+  sList.innerHTML = t.stealableTactics.map(s => `<li>${s}</li>`).join('');
+
+  const modal = document.getElementById('teardownModal');
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  const modal = document.getElementById('teardownModal');
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+  activeModalTeardown = null;
+}
+
+function handleBackdropClick(e) {
+  if (e.target.id === 'teardownModal') {
+    closeModal();
+  }
+}
+
+// Simulator
+function runSimulation() {
+  const company = document.getElementById('companyInput').value.trim() || 'Your Startup';
+  const model = document.getElementById('industrySelect').value;
+  const out = document.getElementById('simOutput');
+
+  out.innerHTML = `
+    <h4><i class="fas fa-check-circle" style="color:#34d399;"></i> REVERSE-ENGINEERED FLYWHEEL FOR: ${company.toUpperCase()}</h4>
+    <div style="background:#0f172a; border-left:3px solid var(--accent); padding:10px 14px; border-radius:6px; margin-bottom:14px; font-size:13px;">
+      <strong>Core Acquisition Engine:</strong> Zero-CAC Authority Content + Organic Programmatic SEO
+    </div>
+    <ul>
+      <li><strong>1. Acquisition:</strong> Build a high-utility free tool or encyclopedia (like Zerodha Varsity or Postman Collections) to capture high-intent organic search volume without paying Google ad auctions.</li>
+      <li><strong>2. Activation:</strong> Cut time-to-first-value to &lt;60 seconds with self-serve guest onboarding and zero credit card gate.</li>
+      <li><strong>3. Retention:</strong> Institute a high-switching-cost repository or membership moat (like Zomato Gold or Notion Relational DBs) where value compounds with usage.</li>
+      <li><strong>4. Referral Flywheel:</strong> Embed user monetization or social gifting (like Lenskart BOGO or Duolingo Friends Quests) that organically pulls in their colleagues.</li>
+    </ul>
+    <h4 style="color:#60a5fa; font-size:13px; margin-top:14px;"><i class="fas fa-shield-alt"></i> DEFENSIVE MOAT RECOMMENDATION:</h4>
+    <p style="font-size:12.5px; color:#cbd5e1; margin:0;">Do not compete on linear feature checklists. Own an exclusive, high-retention workflow and pass structural cost efficiencies directly to the customer.</p>
+  `;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderTeardowns();
+  runSimulation();
+
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    searchQuery = e.target.value;
+    renderTeardowns();
+  });
+
+  document.getElementById('filterPills').addEventListener('click', (e) => {
+    const pill = e.target.closest('.f-pill');
+    if (!pill) return;
+    document.querySelectorAll('.f-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    currentCategory = pill.dataset.cat;
+    renderTeardowns();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // Theme Toggle
+  const tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      const ic = tBtn.querySelector('i');
+      if (ic) ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    updateIcon(document.documentElement.getAttribute('data-theme') || 'dark');
+    tBtn.addEventListener('click', () => {
+      const now = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+});
+</script>
+</body>
+</html>
