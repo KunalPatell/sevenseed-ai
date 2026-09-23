@@ -1,0 +1,190 @@
+{
+  "teardowns": [
+    {
+      "id": "zerodha",
+      "company": "Zerodha",
+      "founder": "Nithin Kamath",
+      "founded": 2010,
+      "valuation": "$3.6 Billion",
+      "category": "fintech",
+      "logo": "📈",
+      "hq": "Bangalore, India",
+      "tagline": "The broker that killed brokerage fees",
+      "metric": "5M+ active clients · Zero VC funding · ₹2,907 Cr profit FY23",
+      "bottleneck_solved": "Indian retail investors were paying 0.5–1% per trade as brokerage. Zerodha introduced flat ₹20 per order — saving investors ₹15,000+ crore annually.",
+      "zero_cac_engine": "Zerodha Varsity — 500+ free financial education modules that rank #1 on Google for every investing query. Zero paid ads needed.",
+      "summary": "Zerodha became India's largest stockbroker without a single rupee of VC funding, by inverting the brokerage model: free equity delivery, ₹20 flat F&O, and a free education platform that acquires customers at zero cost.",
+      "flywheel": [
+        {"phase": "Attract", "title": "Varsity SEO Engine", "desc": "500+ free financial education articles rank #1 on Google. Every search for 'how to invest in India' leads to Zerodha."},
+        {"phase": "Convert", "title": "Self-Serve Account Opening", "desc": "10-minute KYC + account opening. No broker calls, no branch visits. First trade possible in 24 hours."},
+        {"phase": "Retain", "title": "Free Tools Moat", "desc": "Kite (trading platform), Coin (MF platform), Console (analytics) — all free. Switching costs compound daily."},
+        {"phase": "Refer", "title": "Word-of-Mouth Authority", "desc": "Varsity-educated users trust Zerodha. They evangelize to friends and family. No affiliate fees paid."},
+        {"phase": "Revenue", "title": "F&O Volume Monetization", "desc": "80% revenue from F&O flat fee. The more educated the user, the more they trade. Education IS the acquisition funnel."}
+      ],
+      "channelMix": {"Organic/Varsity": 55, "Word of Mouth": 28, "PR & Brand": 12, "Paid": 5},
+      "stealableTactics": [
+        "Build a free education platform (like Varsity) around your core product's knowledge domain — it becomes your cheapest and highest-quality acquisition channel",
+        "Price-invert the market: identify the biggest customer pain point in cost and eliminate it entirely (flat fee vs % brokerage)",
+        "Measure annual contribution per customer, not just monthly revenue — Zerodha users compound in value year over year",
+        "Build internal tools so good that users share screenshots — Kite's clean UI was shared virally on trading forums"
+      ],
+      "moat": "Varsity's SEO authority + 5M+ users' behavioral data + deep banking integrations (CDSL, NSE APIs) create a flywheel that a new entrant would need 8+ years to replicate.",
+      "keyNumber": "₹0 VC raised → ₹2,907 Cr profit → 5M+ clients — India's most profitable startup per rupee invested"
+    },
+    {
+      "id": "cred",
+      "company": "CRED",
+      "founder": "Kunal Shah",
+      "founded": 2018,
+      "valuation": "$6.4 Billion",
+      "category": "fintech",
+      "logo": "💳",
+      "hq": "Bangalore, India",
+      "tagline": "Made creditworthy Indians feel special",
+      "metric": "12M+ members · 750K+ brands · $810M raised",
+      "bottleneck_solved": "India's 50M+ credit card holders had no reward for responsible financial behavior. CRED created the first trust-based exclusivity club for the creditworthy.",
+      "zero_cac_engine": "Delta 4 theory in action: The first CRED invite was so aspirational that early users evangelized aggressively. 750K waitlist before launch — zero paid ads.",
+      "summary": "CRED built India's largest creditworthy consumer platform by making credit card bill payment aspirational. Exclusivity (750+ score only) turned users into evangelists, creating a zero-CAC acquisition engine.",
+      "flywheel": [
+        {"phase": "Gate", "title": "750+ Credit Score Exclusivity", "desc": "Only creditworthy Indians can join. This exclusivity creates immediate aspiration and social proof."},
+        {"phase": "Hook", "title": "Reward Every Bill Payment", "desc": "Every ₹1 paid = CRED coins. Gamification makes the mundane act of bill payment rewarding."},
+        {"phase": "Expand", "title": "CRED Store & Travel", "desc": "High-intent, high-income users see premium brand offers. Brands pay premium CPM for this audience."},
+        {"phase": "Monetize", "title": "CRED Money & Pay", "desc": "Trusted high-credit users are ideal for instant personal loans, rent payments, P2P transfers."},
+        {"phase": "Flywheel", "title": "Data Moat", "desc": "12M+ transactions give CRED the richest financial behavior dataset in India for credit underwriting."}
+      ],
+      "channelMix": {"Referral & Invites": 60, "PR & Brand": 25, "Partnerships": 10, "Paid": 5},
+      "stealableTactics": [
+        "Use exclusivity as an acquisition channel — a waitlist with a filter converts aspirational users into evangelists who recruit for you",
+        "Apply the Delta 4 framework: find a behavior so common (bill payment) and make your version so much better (+4 stars) that switching feels irrational",
+        "Build for a premium demographic first even if smaller — 12M creditworthy Indians are worth 10x more to brands than 120M random users",
+        "Make every core action rewarding — CRED turned the most boring financial task (bill payment) into a daily habit loop"
+      ],
+      "moat": "12M verified creditworthy Indians with full financial behavior data is an underwriting moat no new entrant can buy. Brands pay 10x CPM for CRED's audience vs. standard digital ads.",
+      "keyNumber": "₹2,000 Cr+ in brand deals in FY23 with 12M members who pay their bills on time every single month"
+    },
+    {
+      "id": "razorpay",
+      "company": "Razorpay",
+      "founder": "Harshil Mathur & Shashank Kumar",
+      "founded": 2014,
+      "valuation": "$7.5 Billion",
+      "category": "fintech",
+      "logo": "⚡",
+      "hq": "Bangalore, India",
+      "tagline": "Made payments invisible for Indian internet companies",
+      "metric": "$90B+ payments processed · 8M+ businesses · 3,000+ banks integrated",
+      "bottleneck_solved": "Indian businesses needed 6-8 weeks and 47 documents to set up a payment gateway. Razorpay reduced this to 2 days with a developer-first API.",
+      "zero_cac_engine": "GitHub repositories, developer documentation, and Razorpay community tutorials — developers discover Razorpay organically while building products, then convince their companies.",
+      "summary": "Razorpay cracked B2B distribution by making developers the buyers. Its developer-first API, 5-minute sandbox, and free documentation became the zero-CAC acquisition engine that signed 8M+ businesses.",
+      "flywheel": [
+        {"phase": "Discover", "title": "Developer Community & Docs", "desc": "Developers find Razorpay through GitHub, Stack Overflow, and tutorials. No enterprise sales needed."},
+        {"phase": "Activate", "title": "5-Minute Test Mode", "desc": "Working payment integration in 5 minutes with test credentials. Developers become advocates before going live."},
+        {"phase": "Expand", "title": "Full Financial Stack", "desc": "Payments → Payroll → Business Banking → Lending. Every product adds a new revenue stream from the same customer."},
+        {"phase": "Lock-in", "title": "Deep Integrations", "desc": "Razorpay connects to 500+ SaaS tools. Once embedded, switching cost exceeds any competitor discount offer."},
+        {"phase": "Refer", "title": "Developer Advocacy", "desc": "Satisfied developers write tutorials and share integrations — creating a content flywheel at zero cost."}
+      ],
+      "channelMix": {"Developer Organic": 45, "Product-Led Growth": 30, "Partnerships": 15, "Enterprise Sales": 10},
+      "stealableTactics": [
+        "Make your API the easiest to implement in the market — a 5-minute working demo beats any sales deck",
+        "Target the person who recommends the tool, not the person who signs the check (developer advocacy is more powerful than enterprise sales in B2B SaaS)",
+        "Expand horizontally from a proven wedge — Razorpay went Payments → Payroll → Banking by solving the NEXT problem the same customer had",
+        "Publish open SDKs and sample code for every major framework — free developer education is your highest-ROI marketing channel"
+      ],
+      "moat": "3,000+ banking integrations, 8M business relationships, and deep UPI/NEFT/RTGS rails access make Razorpay's infrastructure impossible to replicate quickly.",
+      "keyNumber": "$90B+ annual payment volume processed with 8M+ businesses on a single platform built in India"
+    },
+    {
+      "id": "physicswallah",
+      "company": "PhysicsWallah",
+      "founder": "Alakh Pandey",
+      "founded": 2020,
+      "valuation": "$2.8 Billion",
+      "category": "edtech",
+      "logo": "🎓",
+      "hq": "Noida, India",
+      "tagline": "Made IIT/NEET prep affordable for every Indian student",
+      "metric": "10M+ YouTube subscribers · 100M+ learners · Profitable at $2.8B valuation",
+      "bottleneck_solved": "JEE/NEET coaching cost ₹1.5-3 Lakhs/year at FIITJEE/Allen. PhysicsWallah delivers the same quality for ₹1,999-5,000/year — a 95% price reduction.",
+      "zero_cac_engine": "YouTube with 10M+ subscribers — full free JEE content generates 50M+ monthly views and acquires students before they ever pay a rupee.",
+      "summary": "PW democratized India's most competitive exam preparation by building a massive free YouTube audience first, then converting a fraction to ₹1,999 courses. The result: India's fastest EdTech unicorn.",
+      "flywheel": [
+        {"phase": "Free", "title": "YouTube Free Content", "desc": "Full JEE/NEET syllabus available free on YouTube. 10M+ subscribers create trust before any purchase."},
+        {"phase": "Convert", "title": "₹1,999 Annual Subscription", "desc": "Premium content + tests + doubt solving at 1/100th the price of offline coaching — conversion is a no-brainer."},
+        {"phase": "Community", "title": "PW Community App", "desc": "Students form study groups, share notes, solve doubts peer-to-peer. Retention soars when friends are on the same platform."},
+        {"phase": "Expand", "title": "Offline Vidyapeeth Centers", "desc": "PW opened 100+ offline centers for students who need hybrid learning — capturing the offline coaching market from inside."},
+        {"phase": "Brand", "title": "Student Success Stories", "desc": "PW students cracking IIT/NEET with ₹2K courses go viral — more credible than any advertisement."}
+      ],
+      "channelMix": {"YouTube Organic": 65, "Student Referral": 20, "Offline Centers": 10, "Paid": 5},
+      "stealableTactics": [
+        "Give away 90% of your content free and charge only for the accountability layer (tests, doubt-solving, certificates) — conversion rate from a warm audience is 10x higher",
+        "Price at 1/10th of the offline alternative and capture the anxiety of parents who want quality at reasonable cost",
+        "Build a community app that makes students feel they're studying with friends — social learning reduces churn by 60%+",
+        "Put the founder face on the product — Alakh Pandey's personal brand IS PhysicsWallah, creating emotional lock-in"
+      ],
+      "moat": "10M+ subscriber YouTube audience, 100M+ learner data points for adaptive learning, and Alakh Pandey's personal brand trust with Tier 2-3 India families.",
+      "keyNumber": "₹1,999 vs ₹1.5 Lakh competitor price — 75x cheaper, yet profitable at $2.8B valuation"
+    },
+    {
+      "id": "postman",
+      "company": "Postman",
+      "founder": "Abhinav Asthana",
+      "founded": 2014,
+      "valuation": "$5.6 Billion",
+      "category": "saas",
+      "logo": "📮",
+      "hq": "San Francisco (Founded in Bangalore)",
+      "tagline": "The API platform every developer already uses",
+      "metric": "30M+ developers · 500K+ companies · Made in Bangalore",
+      "bottleneck_solved": "API testing required complex curl commands or enterprise tools costing $50K+/year. Postman made it a free, visual, one-click workflow.",
+      "zero_cac_engine": "Sharing Postman collections — every API documented in Postman and shared becomes a viral marketing moment that recruits the next user.",
+      "summary": "Postman grew to 30M developers by making the free tier so valuable that every API integration naturally ended with 'here's the Postman collection' — turning product usage into a viral distribution channel.",
+      "flywheel": [
+        {"phase": "Use", "title": "Free Individual Tier", "desc": "Individual developers use Postman free. No friction, no credit card, full functionality."},
+        {"phase": "Share", "title": "Collection Sharing Goes Viral", "desc": "Every shared Postman collection is a product demo that recruits the recipient as a new user."},
+        {"phase": "Team", "title": "Team Collaboration Upsell", "desc": "When 3+ teammates use Postman, the team plan ($12/user/month) becomes obvious — triggered by the product itself."},
+        {"phase": "API Hub", "title": "Public API Network", "desc": "30M+ developers publishing APIs create Postman's defensible network effect — it becomes the LinkedIn of APIs."},
+        {"phase": "Enterprise", "title": "Enterprise Governance", "desc": "Fortune 500 companies pay $50K-$500K for Postman's enterprise governance, monitoring, and compliance features."}
+      ],
+      "channelMix": {"Product Viral (Collections)": 50, "Developer Community": 30, "Enterprise Sales": 15, "Paid": 5},
+      "stealableTactics": [
+        "Design your sharing feature as a growth mechanism — every Postman collection shared is a product demo to a new potential user",
+        "Let individual usage drive team adoption: make the individual experience so good that users naturally want their whole team on the platform",
+        "Build a public network that creates value the more people join it — Postman's public API network is more valuable than any individual feature",
+        "Convert bottom-up individual usage into top-down enterprise deals — document the ROI in dev hours saved for the CFO"
+      ],
+      "moat": "30M developer network effect, public API catalog, and deep CI/CD integrations make switching from Postman a 6-month engineering project.",
+      "keyNumber": "30M developers across 500K companies — India's most globally successful developer tool, bootstrapped from Bangalore"
+    },
+    {
+      "id": "darwinbox",
+      "company": "Darwinbox",
+      "founder": "Jayant Paleti, Rohit Chennamaneni, Chaitanya Peddi",
+      "founded": 2015,
+      "valuation": "$950 Million",
+      "category": "saas",
+      "logo": "🏢",
+      "hq": "Hyderabad, India",
+      "tagline": "The HR software built for Asian enterprises",
+      "metric": "800+ enterprise clients · 2M+ employees managed · 11 countries",
+      "bottleneck_solved": "SAP SuccessFactors and Workday cost ₹5,000-15,000 per employee per year and had zero India/Asia localization. Darwinbox delivers superior UX at ₹1,500-3,000/employee/year.",
+      "zero_cac_engine": "CHRO network effect — each HR head who switches to Darwinbox becomes a reference for 3-4 peers at industry events and WhatsApp communities.",
+      "summary": "Darwinbox disrupted Oracle and SAP in Asian enterprises by building mobile-first HR software that actually understands India's compliance complexity (PF, ESI, Gratuity) — at 60% lower cost.",
+      "flywheel": [
+        {"phase": "Win", "title": "SAP/Workday Replacement Play", "desc": "Target enterprises already paying $10M+ for SAP. Darwinbox wins on UX, price, and Asia localization."},
+        {"phase": "Expand", "title": "Full Talent Suite", "desc": "Recruit → Onboard → Manage → Pay → Offboard — every HR workflow on one platform locks in multi-year contracts."},
+        {"phase": "Network", "title": "CHRO Reference Network", "desc": "Each enterprise win creates a CHRO reference. India's CHRO community is tight-knit and heavily peer-influenced."},
+        {"phase": "Deepen", "title": "Compliance Moat", "desc": "India's PF/ESI/Gratuity/TDS rules are complex. Darwinbox's compliance engine is a 5-year R&D moat."},
+        {"phase": "Geography", "title": "Southeast Asia Expansion", "desc": "Every new Asian country's labor law complexity is a competitive barrier that Darwinbox converts into a moat."}
+      ],
+      "channelMix": {"Enterprise Sales": 45, "CHRO Referrals": 30, "Events & Community": 15, "Inbound": 10},
+      "stealableTactics": [
+        "Target the local compliance complexity that global players ignore — India's PF/ESI rules are a moat that SAP hasn't properly solved in 20 years",
+        "Build a CHRO or buyer community (CHRO Club) that makes your customers talk about your product to peers without you in the room",
+        "Win on UX against legacy enterprise software — in any B2B vertical, the software employees actually enjoy using wins long-term",
+        "Price at 40-60% of the global competitor and use that budget difference as your enterprise sales team's ammunition"
+      ],
+      "moat": "Deep Indian compliance engine (PF/ESI/TDS/Gratuity), 800+ Asian enterprise client relationships, and 8 years of localization R&D that global players cannot replicate quickly.",
+      "keyNumber": "800+ enterprises managing 2M+ employees — beating SAP, Workday, and Oracle in their own territory across 11 Asian countries"
+    }
+  ]
+}

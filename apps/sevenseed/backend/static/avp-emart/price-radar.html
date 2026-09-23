@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-Store Price Radar & Webhook Engine - AVP Emart</title>
+  <meta name="description" content="Production-grade multi-store price comparison and automated price-drop webhook simulator inspired by Buyhatke and Smartprix.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --emerald: #10b981;
+      --emerald-rgb: 16, 185, 129;
+      --emerald-l: #6ee7b7;
+      --purple: #a855f7;
+      --gold: #f59e0b;
+      --cyan: #06b6d4;
+      --rose: #f43f5e;
+    }
+    body {
+      background: #060908;
+      color: #eeeef8;
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+    .page-wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 92px 24px 80px;
+    }
+
+    /* Hero */
+    .hero-radar {
+      position: relative;
+      text-align: center;
+      padding: 56px 20px 44px;
+      border-radius: 24px;
+      background: radial-gradient(circle at 50% 0%, rgba(16,185,129,0.18) 0%, rgba(6,9,8,0) 70%), #080d0a;
+      border: 1px solid rgba(16,185,129,0.25);
+      margin-bottom: 40px;
+      overflow: hidden;
+    }
+    .hero-radar::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(16,185,129,0.8), transparent);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(16,185,129,0.12);
+      border: 1px solid rgba(16,185,129,0.3);
+      color: var(--emerald-l);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .hero-radar h1 {
+      font-size: clamp(34px, 5.2vw, 60px);
+      font-weight: 900;
+      line-height: 1.12;
+      background: linear-gradient(135deg, #ffffff 40%, var(--emerald-l) 95%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 18px;
+      letter-spacing: -0.03em;
+    }
+    .hero-radar p {
+      font-size: clamp(15px, 2vw, 18px);
+      color: #9aa0b8;
+      max-width: 680px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+
+    /* Live Ticker Banner */
+    .price-ticker {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      padding-bottom: 16px;
+      margin-bottom: 32px;
+    }
+    .price-ticker::-webkit-scrollbar {
+      height: 4px;
+    }
+    .price-ticker::-webkit-scrollbar-thumb {
+      background: rgba(16,185,129,0.3);
+      border-radius: 99px;
+    }
+    .ticker-card {
+      background: #0d1410;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 12px 18px;
+      min-width: 220px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .ticker-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ticker-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+    }
+    .drop-tag {
+      color: #34d399;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Main Grid */
+    .radar-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 960px) {
+      .radar-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Panel Card */
+    .radar-panel {
+      background: #090e0c;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .panel-head h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Comparison Rows */
+    .store-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .store-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0f1612;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 14px 18px;
+      transition: all 0.2s;
+    }
+    .store-item:hover {
+      border-color: rgba(16,185,129,0.3);
+      transform: translateX(3px);
+    }
+    .store-item.best-deal {
+      border-color: #10b981;
+      background: rgba(16,185,129,0.08);
+    }
+    .store-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      color: #fff;
+    }
+    .store-price-box {
+      text-align: right;
+    }
+    .store-price {
+      font-size: 16px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+    }
+    .store-shipping {
+      font-size: 11px;
+      color: #9aa0b8;
+    }
+
+    /* Webhook Simulator Form */
+    .webhook-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .field-group label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #9aa0b8;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .field-input {
+      width: 100%;
+      background: #050807;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+    }
+    .field-input:focus {
+      border-color: var(--emerald);
+    }
+    .btn-alert {
+      padding: 12px 20px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-alert:hover {
+      box-shadow: 0 4px 20px rgba(16,185,129,0.4);
+      transform: translateY(-1px);
+    }
+
+    /* Simulated Mobile Push Alert */
+    .push-card {
+      background: #111a14;
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 14px;
+      padding: 18px;
+      display: none;
+      margin-top: 20px;
+      animation: pushSlide 0.3s ease;
+    }
+    @keyframes pushSlide {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .push-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: var(--emerald-l);
+      font-weight: 700;
+    }
+    .push-body {
+      font-size: 13px;
+      color: #e2e8f0;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    /* Canvas Chart */
+    #priceChartCanvas {
+      width: 100%;
+      height: 240px;
+      border-radius: 8px;
+      background: #050807;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<!-- Navigation -->
+<nav style="position:fixed;top:0;left:0;right:0;z-index:100;padding:0 clamp(16px,4vw,36px);height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,9,8,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(16,185,129,.15);">
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#eeeef8;font-weight:800;font-size:17px;">
+    <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;color:#fff;"><i class="fas fa-cart-shopping"></i></div>
+    AVP Emart
+  </a>
+  <div style="display:flex;gap:18px;font-size:14px;align-items:center;">
+    <a href="index.html" style="color:#9aa0b8;text-decoration:none;">Home</a>
+    <a href="deal-hunter.html" style="color:#9aa0b8;text-decoration:none;">Deal Hunter</a>
+    <a href="price-radar.html" style="color:#fff;text-decoration:none;font-weight:700;">Price Radar</a>
+    <a href="spec-compare.html" style="color:#9aa0b8;text-decoration:none;">Smartprix Specs</a>
+    <a href="qcommerce.html" style="color:#9aa0b8;text-decoration:none;">Quick Commerce</a>
+    <a href="coupon-tester.html" style="color:#9aa0b8;text-decoration:none;">Coupon Tester</a>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button id="themeToggle" style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07);color:#9aa0b8;cursor:pointer;"><i class="fas fa-moon"></i></button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <!-- Hero -->
+  <section class="hero-radar">
+    <div class="hero-badge"><i class="fas fa-satellite-dish"></i> Buyhatke & Smartprix Inspired &bull; Multi-Store Price Telemetry</div>
+    <h1>Multi-Store Price Radar & Webhook Engine</h1>
+    <p>Track real-time prices across Amazon, Flipkart, Croma, and Reliance Digital. Set automated price drop webhooks to trigger instant push notifications the second an item hits your target buy price.</p>
+  </section>
+
+  <!-- Live Drops Ticker -->
+  <div class="price-ticker">
+    <div class="ticker-card">
+      <div class="ticker-title">Apple iPhone 15 (128GB)</div>
+      <div class="ticker-meta"><span>Amazon</span> <span class="drop-tag">&#8377;54,999 (-21%)</span></div>
+    </div>
+    <div class="ticker-card">
+      <div class="ticker-title">Sony WH-1000XM5 ANC</div>
+      <div class="ticker-meta"><span>Flipkart</span> <span class="drop-tag">&#8377;24,990 (-28%)</span></div>
+    </div>
+    <div class="ticker-card">
+      <div class="ticker-title">MacBook Air M2 (16GB)</div>
+      <div class="ticker-meta"><span>Croma</span> <span class="drop-tag">&#8377;89,990 (-18%)</span></div>
+    </div>
+    <div class="ticker-card">
+      <div class="ticker-title">Samsung Galaxy S24 Ultra</div>
+      <div class="ticker-meta"><span>Reliance</span> <span class="drop-tag">&#8377;1,18,999 (-11%)</span></div>
+    </div>
+  </div>
+
+  <!-- Radar Grid -->
+  <div class="radar-grid">
+    <!-- Left Column: Multi-Store Comparator -->
+    <div class="radar-panel">
+      <div class="panel-head">
+        <h2><i class="fas fa-scale-balanced" style="color:var(--emerald);"></i> Multi-Store Price Engine</h2>
+        <span style="font-size:12px; color:#34d399; font-weight:700;"><i class="fas fa-rotate"></i> Live Scrape Cache</span>
+      </div>
+
+      <div style="font-size:15px; font-weight:800; color:#fff; margin-bottom:16px;">
+        Tracking: <span style="color:var(--emerald-l);">Apple iPhone 15 (128GB, Black)</span>
+      </div>
+
+      <div class="store-list">
+        <div class="store-item best-deal">
+          <div class="store-brand">
+            <i class="fab fa-amazon" style="font-size:22px; color:#ff9900;"></i>
+            <div>
+              <div>Amazon India</div>
+              <span style="font-size:11px; padding:2px 8px; border-radius:4px; background:#10b981; color:#fff; font-weight:700;">LOWEST PRICE</span>
+            </div>
+          </div>
+          <div class="store-price-box">
+            <div class="store-price" style="color:#34d399;">&#8377;54,999</div>
+            <div class="store-shipping">Prime Free Delivery &bull; In Stock</div>
+          </div>
+        </div>
+
+        <div class="store-item">
+          <div class="store-brand">
+            <i class="fas fa-shopping-bag" style="font-size:20px; color:#2874f0;"></i>
+            <div>Flipkart</div>
+          </div>
+          <div class="store-price-box">
+            <div class="store-price">&#8377;57,999</div>
+            <div class="store-shipping">+ &#8377;99 Secure Packaging</div>
+          </div>
+        </div>
+
+        <div class="store-item">
+          <div class="store-brand">
+            <i class="fas fa-store" style="font-size:20px; color:#00e676;"></i>
+            <div>Croma Retail</div>
+          </div>
+          <div class="store-price-box">
+            <div class="store-price">&#8377;58,490</div>
+            <div class="store-shipping">Free In-Store Pickup</div>
+          </div>
+        </div>
+
+        <div class="store-item">
+          <div class="store-brand">
+            <i class="fas fa-laptop" style="font-size:20px; color:#e11d48;"></i>
+            <div>Reliance Digital</div>
+          </div>
+          <div class="store-price-box">
+            <div class="store-price">&#8377;59,900</div>
+            <div class="store-shipping">Express 3-Hour Delivery</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:12px; font-weight:700; color:#9aa0b8; margin-bottom:8px;">
+        30-DAY HISTORICAL PRICE TREND
+      </div>
+      <canvas id="priceChartCanvas" width="560" height="240"></canvas>
+    </div>
+
+    <!-- Right Column: Webhook Simulator -->
+    <div class="radar-panel">
+      <div class="panel-head">
+        <h2><i class="fas fa-bell" style="color:var(--gold);"></i> Price Drop Webhook Simulator</h2>
+      </div>
+
+      <div class="webhook-form">
+        <div class="field-group">
+          <label>Target Trigger Price (&#8377;)</label>
+          <input type="number" id="targetPriceInput" class="field-input" value="55000">
+        </div>
+        <div class="field-group">
+          <label>Notification Channel</label>
+          <select id="channelSelect" class="field-input">
+            <option value="whatsapp">WhatsApp Webhook (+91)</option>
+            <option value="telegram">Telegram Bot Dispatch</option>
+            <option value="push">Browser Desktop Push</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Recipient Handle / Webhook Endpoint</label>
+          <input type="text" id="endpointInput" class="field-input" value="https://api.telegram.org/bot192847/sendMessage">
+        </div>
+
+        <button class="btn-alert" onclick="simulatePriceDrop()">
+          <i class="fas fa-bolt"></i> Simulate Real-Time Price Drop Event
+        </button>
+
+        <!-- Simulated Notification Card -->
+        <div class="push-card" id="pushNotificationCard">
+          <div class="push-header">
+            <span><i class="fas fa-circle-check"></i> WEBHOOK DISPATCHED (200 OK)</span>
+            <span style="font-family:'JetBrains Mono',monospace;">Just now</span>
+          </div>
+          <div class="push-body" id="pushBodyText">
+            🚨 <strong>PRICE DROP ALERT:</strong> iPhone 15 just dropped to ₹54,999 on Amazon! That's ₹3,001 below your threshold of ₹55,000.
+          </div>
+          <a href="deal-hunter.html" class="btn-alert" style="padding:8px 14px; font-size:12px; text-decoration:none;">
+            <i class="fas fa-cart-shopping"></i> Instant Buy & Apply Coupon &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Draw 30-Day Historical Price Chart
+function drawPriceHistory() {
+  const canvas = document.getElementById('priceChartCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  // 30 days price history simulated
+  const prices = [
+    69900, 69900, 68500, 67990, 67990, 66490, 65990, 65990, 64999, 64999,
+    64490, 63990, 63500, 62990, 62990, 61990, 61490, 60990, 59999, 59999,
+    58990, 58490, 57999, 57490, 56990, 56490, 55990, 55490, 54999, 54999
+  ];
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background Grid Lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  for (let i = 1; i <= 4; i++) {
+    const y = (H / 5) * i;
+    ctx.beginPath();
+    ctx.moveTo(40, y);
+    ctx.lineTo(W - 20, y);
+    ctx.stroke();
+  }
+
+  const maxPrice = 72000;
+  const minPrice = 52000;
+  const padX = 50;
+  const padY = 30;
+  const plotW = W - padX - 30;
+  const plotH = H - padY * 2;
+
+  // Gradient Fill
+  const grad = ctx.createLinearGradient(0, padY, 0, H - padY);
+  grad.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
+  grad.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+  ctx.beginPath();
+  prices.forEach((p, idx) => {
+    const x = padX + (plotW / (prices.length - 1)) * idx;
+    const y = (H - padY) - ((p - minPrice) / (maxPrice - minPrice)) * plotH;
+    if (idx === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.lineTo(padX + plotW, H - padY);
+  ctx.lineTo(padX, H - padY);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Stroke Line
+  ctx.beginPath();
+  prices.forEach((p, idx) => {
+    const x = padX + (plotW / (prices.length - 1)) * idx;
+    const y = (H - padY) - ((p - minPrice) / (maxPrice - minPrice)) * plotH;
+    if (idx === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // Highlight lowest price point (Last point)
+  const lastX = padX + plotW;
+  const lastY = (H - padY) - ((prices[prices.length - 1] - minPrice) / (maxPrice - minPrice)) * plotH;
+  ctx.fillStyle = '#34d399';
+  ctx.beginPath();
+  ctx.arc(lastX, lastY, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#6ee7b7';
+  ctx.font = 'bold 10px JetBrains Mono';
+  ctx.textAlign = 'right';
+  ctx.fillText('All-Time Low: ₹54,999', lastX - 10, lastY - 8);
+}
+
+function simulatePriceDrop() {
+  const target = document.getElementById('targetPriceInput').value;
+  const channel = document.getElementById('channelSelect').value;
+  const card = document.getElementById('pushNotificationCard');
+
+  card.style.display = 'block';
+  document.getElementById('pushBodyText').innerHTML = `
+    🚨 <strong>WEBHOOK FIRED VIA ${channel.toUpperCase()}:</strong><br>
+    Target product <em>Apple iPhone 15</em> dropped to <strong>₹54,999</strong> (Threshold was ₹${Number(target).toLocaleString()}). Price matches all-time lowest historical benchmark!
+  `;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  drawPriceHistory();
+});
+</script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1531,3 +1531,89 @@ document.addEventListener('mousemove', function(e) {
     });
   });
 })();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MOTIONSITES.AI SCROLL CHOREOGRAPHY & NUMBER TICKERS
+// ═══════════════════════════════════════════════════════════════════════════
+(function initMotionSitesScrollEngine() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // 1. Scroll-driven reveal observer
+  var targets = document.querySelectorAll('.sec-head, .bento-showcase, .svc-card, .border-beam-card, .metric, .about-card, .proc-step, .reveal-on-scroll');
+  if ('IntersectionObserver' in window && targets.length > 0) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    targets.forEach(function(el) {
+      el.classList.add('reveal-on-scroll');
+      observer.observe(el);
+    });
+  }
+
+  // 2. Animated kinetic number counter
+  var numEls = document.querySelectorAll('.stat-num, .metric-num, .sum-num, [data-counter]');
+  if ('IntersectionObserver' in window && numEls.length > 0) {
+    var numObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var el = entry.target;
+          var raw = el.textContent.trim();
+          var match = raw.match(/^([₹$€£]?)\s*([\d,]+(\.\d+)?)\s*(\S*)$/);
+          if (match) {
+            var prefix = match[1] || '';
+            var numStr = match[2].replace(/,/g, '');
+            var suffix = match[4] || '';
+            var targetVal = parseFloat(numStr);
+            if (!isNaN(targetVal) && targetVal > 0) {
+              var startVal = 0;
+              var duration = 1200;
+              var startTime = null;
+              function animateNum(now) {
+                if (!startTime) startTime = now;
+                var progress = Math.min(1, (now - startTime) / duration);
+                var ease = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+                var current = Math.floor(startVal + (targetVal - startVal) * ease);
+                el.textContent = prefix + current.toLocaleString('en-IN') + suffix;
+                if (progress < 1) {
+                  requestAnimationFrame(animateNum);
+                } else {
+                  el.textContent = raw;
+                }
+              }
+              requestAnimationFrame(animateNum);
+            }
+          }
+          numObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    numEls.forEach(function(el) {
+      numObserver.observe(el);
+    });
+  }
+
+  // 3. Magnetic cursor attraction physics
+  var magneticBtns = document.querySelectorAll('.btn-primary, .btn-ghost, .btn-shimmer');
+  magneticBtns.forEach(function(btn) {
+    btn.classList.add('magnetic-btn');
+    btn.addEventListener('mousemove', function(e) {
+      var rect = btn.getBoundingClientRect();
+      var x = e.clientX - rect.left - rect.width / 2;
+      var y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = 'translate(' + (x * 0.16).toFixed(1) + 'px, ' + (y * 0.16).toFixed(1) + 'px)';
+    });
+    btn.addEventListener('mouseleave', function() {
+      btn.style.transform = 'translate(0px, 0px)';
+    });
+  });
+})();
+

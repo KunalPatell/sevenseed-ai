@@ -1,0 +1,212 @@
+{
+  "tracks": [
+    {
+      "name": "AI Foundations",
+      "color": "#3b82f6",
+      "icon": "🧠",
+      "courses": [
+        {
+          "id": "python-for-ai",
+          "title": "Python for AI Engineers",
+          "level": "Beginner",
+          "duration": "18 hours",
+          "modules": 10,
+          "students": "28.4K",
+          "rating": 4.9,
+          "instructor": "Priya Nair",
+          "description": "Build your Python foundation specifically for AI/ML workflows. Master NumPy, Pandas, and data manipulation with real Indian dataset examples.",
+          "topics": ["Python Basics", "NumPy & Pandas", "Data Visualization", "OOP for ML", "Environment Setup"],
+          "badge": "🐍",
+          "xp": 400,
+          "free": true
+        },
+        {
+          "id": "math-for-ml",
+          "title": "Mathematics for Machine Learning",
+          "level": "Beginner",
+          "duration": "22 hours",
+          "modules": 12,
+          "students": "19.2K",
+          "rating": 4.8,
+          "instructor": "Dr. Arjun Sharma",
+          "description": "Master Linear Algebra, Calculus, Probability and Statistics — the mathematical foundation every ML engineer must own. IIT-level content made accessible.",
+          "topics": ["Linear Algebra", "Calculus & Gradients", "Probability Theory", "Statistics", "Optimization"],
+          "badge": "📐",
+          "xp": 500,
+          "free": true
+        },
+        {
+          "id": "prompt-engineering-101",
+          "title": "Prompt Engineering Mastery",
+          "level": "Beginner",
+          "duration": "12 hours",
+          "modules": 8,
+          "students": "41.7K",
+          "rating": 4.9,
+          "instructor": "Kavya Reddy",
+          "description": "Go from basic ChatGPT user to professional prompt engineer. Learn chain-of-thought, few-shot prompting, and system prompt design for production AI apps.",
+          "topics": ["Zero-shot Prompting", "Chain-of-Thought", "Few-shot Learning", "System Prompts", "Prompt Injection Defense"],
+          "badge": "✨",
+          "xp": 350,
+          "free": true
+        }
+      ]
+    },
+    {
+      "name": "Deep Learning & LLMs",
+      "color": "#8b5cf6",
+      "icon": "⚡",
+      "courses": [
+        {
+          "id": "transformers-deep-dive",
+          "title": "Transformers: From Attention to GPT-4",
+          "level": "Intermediate",
+          "duration": "28 hours",
+          "modules": 14,
+          "students": "14.8K",
+          "rating": 4.9,
+          "instructor": "Dr. Rohit Verma",
+          "description": "Implement the Transformer architecture from scratch in PyTorch. Understand self-attention, multi-head attention, positional encoding, and BERT/GPT architectures at the code level.",
+          "topics": ["Self-Attention Mechanism", "Multi-Head Attention", "BERT & GPT Architecture", "Fine-tuning LLMs", "PyTorch Implementation"],
+          "badge": "🤖",
+          "xp": 750,
+          "free": false
+        },
+        {
+          "id": "rag-systems",
+          "title": "RAG Systems: Build Production LLM Apps",
+          "level": "Intermediate",
+          "duration": "20 hours",
+          "modules": 11,
+          "students": "11.3K",
+          "rating": 4.8,
+          "instructor": "Ananya Krishnan",
+          "description": "Build production-ready Retrieval-Augmented Generation pipelines. Combine vector databases, embedding models, and LLMs to create AI apps that know your data.",
+          "topics": ["Vector Databases", "Embedding Models", "RAG Pipeline Design", "Pinecone & Weaviate", "LangChain Integration"],
+          "badge": "🔍",
+          "xp": 650,
+          "free": false
+        },
+        {
+          "id": "langgraph-agents",
+          "title": "AI Agents with LangGraph",
+          "level": "Intermediate",
+          "duration": "24 hours",
+          "modules": 12,
+          "students": "8.6K",
+          "rating": 4.9,
+          "instructor": "Vikram Mehta",
+          "description": "Build stateful, multi-step AI agents using LangGraph. Create autonomous systems that can plan, execute tools, and adapt to real-world feedback loops.",
+          "topics": ["LangGraph Architecture", "Tool Calling", "Agent State Management", "Multi-Agent Systems", "Production Deployment"],
+          "badge": "🕸️",
+          "xp": 800,
+          "free": false
+        }
+      ]
+    },
+    {
+      "name": "MLOps & Production",
+      "color": "#10b981",
+      "icon": "🚀",
+      "courses": [
+        {
+          "id": "mlops-pipeline",
+          "title": "MLOps: Deploy AI to Production",
+          "level": "Advanced",
+          "duration": "32 hours",
+          "modules": 16,
+          "students": "7.2K",
+          "rating": 4.8,
+          "instructor": "Suresh Kumar",
+          "description": "Build end-to-end ML pipelines with CI/CD, model monitoring, and automated retraining. Deploy models on AWS/GCP used by Indian SaaS companies.",
+          "topics": ["Docker & Kubernetes", "CI/CD for ML", "MLflow & DVC", "Model Monitoring", "A/B Testing"],
+          "badge": "⚙️",
+          "xp": 900,
+          "free": false
+        },
+        {
+          "id": "vector-db-mastery",
+          "title": "Vector Databases & Semantic Search",
+          "level": "Advanced",
+          "duration": "18 hours",
+          "modules": 9,
+          "students": "5.8K",
+          "rating": 4.7,
+          "instructor": "Nisha Patel",
+          "description": "Master Pinecone, Weaviate, Chroma, and pgvector. Build semantic search, recommendation engines, and knowledge bases for enterprise AI applications.",
+          "topics": ["Embedding Strategies", "Pinecone & Weaviate", "ANN Algorithms", "Hybrid Search", "Production Scaling"],
+          "badge": "🗄️",
+          "xp": 700,
+          "free": false
+        },
+        {
+          "id": "llm-fine-tuning",
+          "title": "Fine-Tuning & RLHF for LLMs",
+          "level": "Advanced",
+          "duration": "26 hours",
+          "modules": 13,
+          "students": "4.1K",
+          "rating": 4.9,
+          "instructor": "Dr. Aditya Bose",
+          "description": "Fine-tune Llama 3, Mistral, and Gemma using LoRA, QLoRA, and RLHF. Build domain-specific AI models for Indian language understanding and business applications.",
+          "topics": ["LoRA & QLoRA", "RLHF Pipeline", "Dataset Curation", "Evaluation Metrics", "Inference Optimization"],
+          "badge": "🎯",
+          "xp": 1000,
+          "free": false
+        }
+      ]
+    },
+    {
+      "name": "AI for Business",
+      "color": "#f59e0b",
+      "icon": "💼",
+      "courses": [
+        {
+          "id": "ai-product-management",
+          "title": "AI Product Management",
+          "level": "Beginner",
+          "duration": "16 hours",
+          "modules": 10,
+          "students": "22.5K",
+          "rating": 4.8,
+          "instructor": "Meera Joshi",
+          "description": "Learn to define, prioritize, and ship AI features as a product manager. Understand model capabilities, bias risks, and how to write AI specs for engineering teams.",
+          "topics": ["AI Product Strategy", "Writing AI PRDs", "Evaluating Models", "Ethics & Bias", "AI Metrics"],
+          "badge": "📊",
+          "xp": 500,
+          "free": true
+        },
+        {
+          "id": "ai-for-startups",
+          "title": "Building AI Startups in India",
+          "level": "Beginner",
+          "duration": "14 hours",
+          "modules": 8,
+          "students": "16.8K",
+          "rating": 4.9,
+          "instructor": "Rajesh Agarwal",
+          "description": "From idea to investor pitch: how to build defensible AI startups in the Indian market. Includes funding landscape, DPIIT registration, and GTM for Bharat.",
+          "topics": ["AI Startup Ideation", "Indian VC Landscape", "Product-Market Fit", "DPIIT & Startup India", "GTM for India"],
+          "badge": "🌱",
+          "xp": 450,
+          "free": true
+        },
+        {
+          "id": "ai-automation-business",
+          "title": "AI Automation for Business Leaders",
+          "level": "Intermediate",
+          "duration": "10 hours",
+          "modules": 7,
+          "students": "31.2K",
+          "rating": 4.7,
+          "instructor": "Deepa Srinivasan",
+          "description": "Automate business workflows using no-code/low-code AI tools. Build internal chatbots, automate reports, and integrate AI into existing enterprise systems without coding.",
+          "topics": ["No-Code AI Tools", "Workflow Automation", "Internal Chatbots", "AI ROI Measurement", "Change Management"],
+          "badge": "🔄",
+          "xp": 380,
+          "free": false
+        }
+      ]
+    }
+  ]
+}

@@ -4,20 +4,25 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Autonomous Engineer Sandbox Terminal — Sevenforce</title>
-  <meta name="description" content="Devin-inspired autonomous AI software engineer terminal with live sandboxed shell, diff viewer, and automated test fixes.">
+  <title>Autonomous Engineer Sandbox Terminal & PR Bot — Sevenforce</title>
+  <meta name="description" content="Devin-inspired autonomous AI software engineer terminal with multi-repo task selector, live sandboxed shell, interactive git diffs, and auto PR generator.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .dev-container { max-width: 1360px; margin: 0 auto; padding: 100px 24px 60px; }
-    .dev-header { text-align: center; margin-bottom: 32px; }
+    .dev-container { max-width: 1400px; margin: 0 auto; padding: 100px 24px 60px; }
+    .dev-header { text-align: center; margin-bottom: 28px; }
     .dev-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3); color: #818cf8; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
     .dev-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
 
+    /* Task Selector Chips */
+    .task-chips { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+    .task-chip { padding: 8px 16px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+    .task-chip.active, .task-chip:hover { background: rgba(99,102,241,0.18); border-color: #818cf8; color: #a5b4fc; }
+
     /* Terminal Workspace */
-    .dev-workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; min-height: 640px; }
+    .dev-workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; min-height: 660px; }
     @media(max-width: 1024px) { .dev-workspace { grid-template-columns: 1fr; } }
 
     /* Shell Pane */
@@ -27,14 +32,16 @@
     .dot { width: 10px; height: 10px; border-radius: 50%; }
     .dot-r { background: #ef4444; } .dot-y { background: #f59e0b; } .dot-g { background: #10b981; }
 
-    .shell-body { flex: 1; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #a5b4fc; line-height: 1.6; overflow-y: auto; max-height: 480px; white-space: pre-wrap; }
+    .shell-body { flex: 1; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #a5b4fc; line-height: 1.6; overflow-y: auto; max-height: 520px; white-space: pre-wrap; }
 
     /* Diff & Action Pane */
-    .diff-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+    .diff-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow); }
     .diff-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
-    .diff-viewer { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; margin-bottom: 20px; max-height: 380px; }
+    .diff-viewer { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; margin-bottom: 20px; max-height: 420px; }
     .diff-add { color: #34d399; background: rgba(16,185,129,0.1); display: block; }
     .diff-del { color: #f87171; background: rgba(239,68,68,0.1); display: block; }
+
+    .pr-badge { font-size: 12px; font-weight: 700; color: #34d399; background: rgba(16,185,129,0.12); padding: 4px 10px; border-radius: 6px; }
   </style>
 </head>
 <body>
@@ -52,7 +59,7 @@
       <a href="workflows.html">Agent Studio</a>
       <a href="devin-terminal.html" style="color:#818cf8; font-weight:600;">Devin Terminal</a>
       <a href="pricing.html">Pricing</a>
-        <a href="growth-teardown.html">Growth Teardowns</a>
+      <a href="growth-teardown.html">Growth Teardowns</a>
     </div>
     <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
       <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
@@ -64,9 +71,17 @@
 
 <div class="dev-container">
   <div class="dev-header">
-    <div class="dev-badge"><i class="fas fa-terminal"></i> Inspired by Devin AI / Cognition</div>
+    <div class="dev-badge"><i class="fas fa-terminal"></i> Inspired by Devin AI (Cognition Labs)</div>
     <h1 class="dev-title">Autonomous AI Engineer Terminal & Sandbox</h1>
-    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Give high-level engineering tasks to an autonomous AI agent that clones repos, plans architecture, runs bash commands in Docker, and generates pull requests.</p>
+    <p style="color:var(--text-2); max-width:760px; margin:0 auto;">Instruct an autonomous software engineer agent to clone repositories, isolate failing unit tests in sandboxed Docker, generate zero-regression git patches, and publish clean GitHub Pull Requests.</p>
+  </div>
+
+  <!-- Task Selector Chips -->
+  <div class="task-chips">
+    <button class="task-chip active" onclick="switchTask('jwt')"><i class="fas fa-key"></i> Task #1: JWT Clock Skew Flake</button>
+    <button class="task-chip" onclick="switchTask('sql')"><i class="fas fa-database"></i> Task #2: Postgres N+1 Query Optimization</button>
+    <button class="task-chip" onclick="switchTask('redis')"><i class="fas fa-lock"></i> Task #3: Redis Redlock Concurrency</button>
+    <button class="task-chip" onclick="switchTask('metrics')"><i class="fas fa-chart-line"></i> Task #4: Prometheus Latency Histograms</button>
   </div>
 
   <div class="dev-workspace">
@@ -78,19 +93,11 @@
           <div class="dot dot-y"></div>
           <div class="dot dot-g"></div>
         </div>
-        <span style="font-size:12px; color:var(--text-3); font-family:'JetBrains Mono';">bash — sandboxed-docker-instance</span>
+        <span style="font-size:12px; color:var(--text-3); font-family:'JetBrains Mono';" id="shellBranch">bash — container: devin-worker-04</span>
       </div>
 
       <div class="shell-body" id="shellLog">
-$ git clone https://github.com/sevenseed/api-gateway.git
-Cloning into 'api-gateway'...
-remote: Enumerating objects: 142, done.
-$ cd api-gateway && pytest tests/
-==================== test session starts ====================
-FAILED tests/test_auth.py::test_jwt_expiration - TokenExpiredError: Signature has expired
-==================== 1 failed in 0.42s ====================
-
-[Devin AI] Investigating test failure. Analyzing jwt_handler.py line 48...
+        <!-- Rendered dynamically -->
       </div>
     </div>
 
@@ -99,24 +106,17 @@ FAILED tests/test_auth.py::test_jwt_expiration - TokenExpiredError: Signature ha
       <div>
         <div class="diff-title">
           <span>Proposed Git Patch (Diff)</span>
-          <span style="font-size:12px; color:#34d399;"><i class="fas fa-code-branch"></i> fix/jwt-leeway</span>
+          <span class="pr-badge" id="branchBadge"><i class="fas fa-code-branch"></i> fix/jwt-leeway</span>
         </div>
 
-        <div class="diff-viewer">
---- a/app/core/jwt_handler.py
-+++ b/app/core/jwt_handler.py
-@@ -45,7 +45,7 @@ def verify_token(token: str):
-     try:
-<span class="diff-del">-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])</span>
-<span class="diff-add">+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM], leeway=timedelta(seconds=60))</span>
-     except jwt.ExpiredSignatureError:
-         raise HTTPException(status_code=401, detail="Token has expired")
+        <div class="diff-viewer" id="diffViewer">
+          <!-- Rendered dynamically -->
         </div>
       </div>
 
       <div>
         <button class="btn btn-primary" id="applyFixBtn" style="width:100%; justify-content:center;" onclick="applyAutoFix()">
-          <i class="fas fa-wrench"></i> Apply Automated Fix & Re-run Pytest
+          <i class="fas fa-wrench"></i> Apply Patch & Verify CI/CD Test Suite
         </button>
       </div>
     </div>
@@ -124,41 +124,89 @@ FAILED tests/test_auth.py::test_jwt_expiration - TokenExpiredError: Signature ha
 </div>
 
 <script>
+const TASKS = {
+  jwt: {
+    branch: "fix/jwt-leeway",
+    initialLog: `$ git clone https://github.com/sevenseed/api-gateway.git\nCloning into 'api-gateway'...\nremote: Enumerating objects: 142, done.\n$ cd api-gateway && pytest tests/test_auth.py\n==================== test session starts ====================\nFAILED tests/test_auth.py::test_jwt_expiration - TokenExpiredError: Signature has expired\n==================== 1 failed in 0.42s ====================\n\n[Devin AI] Investigating test failure. Analyzing jwt_handler.py line 48...\nIdentified clock skew vulnerability across distributed microservices. Synthesizing fix with 60s leeway...`,
+    diff: `--- a/app/core/jwt_handler.py\n+++ b/app/core/jwt_handler.py\n@@ -45,7 +45,7 @@ def verify_token(token: str):\n     try:\n<span class="diff-del">-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])</span>\n<span class="diff-add">+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM], leeway=timedelta(seconds=60))</span>\n     except jwt.ExpiredSignatureError:\n         raise HTTPException(status_code=401, detail="Token has expired")`,
+    commitMsg: "fix(auth): add 60s leeway for distributed clock skew",
+    prTitle: "Pull Request #42: fix(auth): clock skew leeway"
+  },
+  sql: {
+    branch: "perf/order-eager-load",
+    initialLog: `$ git clone https://github.com/sevenseed/order-service.git\nCloning into 'order-service'...\n$ pytest tests/test_orders.py::test_order_list_latency\n==================== test session starts ====================\nFAILED tests/test_orders.py::test_order_list_latency - LatencyExceeded: 480ms > 50ms limit (124 queries)\n==================== 1 failed in 0.61s ====================\n\n[Devin AI] Detected N+1 query loop fetching customer profiles sequentially.\nRefactoring SQLAlchemy query to use selectinload()...`,
+    diff: `--- a/app/services/orders.py\n+++ b/app/services/orders.py\n@@ -28,4 +28,4 @@ async def get_active_orders(db: AsyncSession):\n<span class="diff-del">-    result = await db.execute(select(Order).where(Order.status == 'active'))</span>\n<span class="diff-add">+    result = await db.execute(select(Order).options(selectinload(Order.customer)).where(Order.status == 'active'))</span>\n     return result.scalars().all()`,
+    commitMsg: "perf(db): eliminate N+1 queries using selectinload",
+    prTitle: "Pull Request #43: perf(db): eager load order relations"
+  },
+  redis: {
+    branch: "fix/inventory-redlock",
+    initialLog: `$ git clone https://github.com/sevenseed/inventory-engine.git\nCloning into 'inventory-engine'...\n$ pytest tests/concurrency/test_oversell.py\n==================== test session starts ====================\nFAILED tests/concurrency/test_oversell.py::test_race_condition - StockDeficit: -3 items remaining\n==================== 1 failed in 0.88s ====================\n\n[Devin AI] Race condition detected: concurrent threads bypass stock check before decrement.\nImplementing Redis Redlock distributed mutex lock around checkout transaction...`,
+    diff: `--- a/app/inventory/checkout.py\n+++ b/app/inventory/checkout.py\n@@ -12,3 +12,5 @@ async def reserve_stock(item_id: str, qty: int):\n<span class="diff-add">+    async with redis_lock(f"lock:stock:{item_id}", timeout=5):\n+        stock = await get_stock(item_id)\n+        if stock < qty: raise OutOfStockException()</span>\n<span class="diff-del">-        return await decrement_stock(item_id, qty)</span>\n<span class="diff-add">+        return await decrement_stock(item_id, qty)</span>`,
+    commitMsg: "fix(concurrency): acquire distributed Redlock during checkout",
+    prTitle: "Pull Request #44: fix(concurrency): prevent stock overselling"
+  },
+  metrics: {
+    branch: "feat/prometheus-histograms",
+    initialLog: `$ git clone https://github.com/sevenseed/fastapi-gateway.git\nCloning into 'fastapi-gateway'...\n$ pytest tests/test_telemetry.py\n==================== test session starts ====================\nFAILED tests/test_telemetry.py::test_p99_metrics - MissingMetricError: 'http_request_duration_seconds' not exported\n==================== 1 failed in 0.35s ====================\n\n[Devin AI] Middleware lacks Prometheus Histogram buckets for p90, p95, p99 SLO monitoring.\nAdding Starlette middleware with customized latency buckets...`,
+    diff: `--- a/app/middleware/telemetry.py\n+++ b/app/middleware/telemetry.py\n@@ -18,2 +18,6 @@ LATENCY_HISTOGRAM = Histogram(\n<span class="diff-del">-    'http_request_duration_seconds', 'HTTP latency', ['method', 'endpoint']</span>\n<span class="diff-add">+    'http_request_duration_seconds', 'HTTP latency', ['method', 'endpoint'],\n+    buckets=[0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5]</span>\n )`,
+    commitMsg: "feat(telemetry): add Prometheus histogram buckets for p99 SLOs",
+    prTitle: "Pull Request #45: feat(telemetry): add latency histogram"
+  }
+};
+
+let currentTaskKey = 'jwt';
+
+function switchTask(key) {
+  currentTaskKey = key;
+  document.querySelectorAll('.task-chip').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+
+  const t = TASKS[key];
+  document.getElementById('branchBadge').innerHTML = `<i class="fas fa-code-branch"></i> ${t.branch}`;
+  document.getElementById('shellLog').innerText = t.initialLog;
+  document.getElementById('diffViewer').innerHTML = t.diff;
+
+  const btn = document.getElementById('applyFixBtn');
+  btn.disabled = false;
+  btn.style.background = '';
+  btn.innerHTML = '<i class="fas fa-wrench"></i> Apply Patch & Verify CI/CD Test Suite';
+}
+
 function applyAutoFix() {
+  const t = TASKS[currentTaskKey];
   const btn = document.getElementById('applyFixBtn');
   btn.disabled = true;
-  btn.innerText = 'Applying patch and re-executing test runner...';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sandboxed Docker CI/CD Executing...';
 
   const shell = document.getElementById('shellLog');
-  shell.innerText += '\n$ git apply fix-leeway.patch\n';
-  shell.innerText += '$ pytest tests/\n';
+  shell.innerText += '\n\n$ git apply patch-automated.diff\n';
+  shell.innerText += '$ pytest tests/ --verbose\n';
 
   setTimeout(() => {
     shell.innerText += '==================== test session starts ====================\n';
-    shell.innerText += 'tests/test_auth.py::test_jwt_expiration PASSED [100%]\n';
-    shell.innerText += '==================== 1 passed in 0.18s ====================\n\n';
-    shell.innerText += '$ git commit -m "fix(auth): add 60s leeway for clock skew"\n';
-    shell.innerText += '$ git push origin fix/jwt-leeway\n';
-    shell.innerText += '[Devin AI] Pull Request #42 created successfully on GitHub!';
+    shell.innerText += 'PASSED [100%] — All 12 test assertions verified with 0 regressions.\n';
+    shell.innerText += '==================== 1 passed in 0.14s ====================\n\n';
+    shell.innerText += `$ git commit -m "${t.commitMsg}"\n`;
+    shell.innerText += `$ git push origin ${t.branch}\n`;
+    shell.innerText += `[Devin AI] ${t.prTitle} opened on GitHub! CI pipeline passed green ✅.`;
 
     btn.disabled = false;
-    btn.innerText = 'Pull Request #42 Created!';
+    btn.innerHTML = `<i class="fas fa-check"></i> ${t.prTitle} Created!`;
     btn.style.background = '#10b981';
-  }, 900);
+  }, 800);
 }
-</script>
 
+switchTask('jwt');
+</script>
 
 <script>
 (function() {
-  // Theme Toggle Handler
   var tBtn = document.getElementById('themeToggle');
   if (tBtn) {
     function updateIcon(theme) {
       var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
+      if (ic) ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
     }
     var cur = document.documentElement.getAttribute('data-theme') || 'dark';
     updateIcon(cur);
@@ -171,7 +219,6 @@ function applyAutoFix() {
     });
   }
 
-  // Cursor Ring
   var ring = document.getElementById('cursorRing');
   if (ring && !window.matchMedia('(pointer: coarse)').matches) {
     var mouseX = -100, mouseY = -100;
@@ -190,6 +237,5 @@ function applyAutoFix() {
   }
 })();
 </script>
-
 </body>
 </html>

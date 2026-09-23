@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Medicine Refill & Dose Reminder — Decode Pharmacy</title>
+  <meta name="description" content="Track your daily prescription doses, receive automated refill alerts, and discover Jan Aushadhi generic alternatives. 100% Free.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .mr-container { max-width: 1100px; margin: 0 auto; padding: 100px 24px 60px; }
+    .mr-header { text-align: center; margin-bottom: 32px; }
+    .mr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .mr-title { font-size: clamp(28px, 4vw, 42px); font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
+    .mr-sub { color: var(--text-2); font-size: 15px; max-width: 620px; margin: 0 auto; line-height: 1.6; }
+
+    /* Summary Cards */
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .sum-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow); }
+    .sum-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .sum-num { font-size: 24px; font-weight: 800; font-family: 'JetBrains Mono', monospace; line-height: 1.1; }
+    .sum-lbl { font-size: 12px; color: var(--text-3); font-weight: 500; }
+
+    /* Add Form */
+    .add-form-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
+    .form-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 12px; align-items: center; }
+    @media(max-width: 900px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+    @media(max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+    
+    .form-input { width: 100%; padding: 11px 14px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
+    .form-input:focus { border-color: #10b981; }
+
+    /* Reminders List */
+    .reminders-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    .reminders-header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-2); }
+    .rem-row { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 20px; transition: background 0.2s; }
+    .rem-row:hover { background: var(--bg-2); }
+    @media(max-width: 768px) { .rem-row { flex-direction: column; align-items: flex-start; gap: 14px; } }
+
+    .rem-info { flex: 1; }
+    .rem-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .rem-meta { font-size: 12px; color: var(--text-3); display: flex; gap: 12px; font-family: 'JetBrains Mono', monospace; flex-wrap: wrap; }
+    
+    .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+    .badge-overdue { background: rgba(239,68,68,0.18); border: 1px solid #ef4444; color: #f87171; animation: pulseAlert 1.5s infinite; }
+    @keyframes pulseAlert { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+    .badge-ok { background: rgba(16,185,129,0.18); border: 1px solid #10b981; color: #34d399; }
+    
+    .generic-alt-chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 6px; background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; font-size: 11px; margin-top: 6px; }
+  </style>
+</head>
+<body>
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#10b981,#059669); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-prescription-bottle-medical"></i></span>
+      <span style="font-weight:700; font-size:18px;">Decode Pharmacy</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="generic-finder.html"><i class="fas fa-pills" style="color:#10b981;"></i> Generic Salt Finder</a>
+      <a href="interaction-checker.html"><i class="fas fa-triangle-exclamation" style="color:#f59e0b;"></i> Drug Interactions</a>
+      <a href="prescription-ocr.html"><i class="fas fa-file-prescription" style="color:#60a5fa;"></i> Prescription OCR</a>
+      <a href="hospital-finder.html"><i class="fas fa-hospital" style="color:#f43f5e;"></i> Hospital Radar</a>
+      <a href="medicine-reminders.html" class="active"><i class="fas fa-bell" style="color:#34d399;"></i> Dose Reminders</a>
+      <a href="health-wiki.html"><i class="fas fa-book-medical" style="color:#a78bfa;"></i> Clinical Wiki</a>
+    </div>
+  </div>
+</nav>
+
+<div class="mr-container">
+  <div class="mr-header">
+    <div class="mr-badge"><i class="fas fa-pills"></i> Clinical Dose & Jan Aushadhi Refill Radar</div>
+    <h1 class="mr-title">Medicine Refill & Dose Reminders</h1>
+    <p class="mr-sub">Keep your daily prescriptions on track. Receive automated audio chimes for dosage schedules and discover bio-equivalent Jan Aushadhi generic alternatives.</p>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-grid">
+    <div class="sum-card">
+      <div class="sum-icon" style="background:rgba(16,185,129,0.15); color:#10b981;"><i class="fas fa-capsules"></i></div>
+      <div>
+        <div class="sum-num" id="statTotal">3</div>
+        <div class="sum-lbl">Active Prescriptions</div>
+      </div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-icon" style="background:rgba(239,68,68,0.15); color:#ef4444;"><i class="fas fa-clock"></i></div>
+      <div>
+        <div class="sum-num" id="statOverdue" style="color:#f87171;">1</div>
+        <div class="sum-lbl">Doses Due / Overdue</div>
+      </div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-icon" style="background:rgba(56,189,248,0.15); color:#38bdf8;"><i class="fas fa-hand-holding-dollar"></i></div>
+      <div>
+        <div class="sum-num" id="statSavings" style="color:#38bdf8;">₹1,450 / mo</div>
+        <div class="sum-lbl">Generic Switch Savings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Medicine Form -->
+  <div class="add-form-card">
+    <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:14px;"><i class="fas fa-plus-circle" style="color:#10b981;"></i> Schedule New Prescription Dose</h3>
+    <form class="form-grid" onsubmit="addReminder(event)">
+      <input type="text" class="form-input" id="inpMedName" required placeholder="Medicine Name (e.g. Lipitor, Metformin, Telmisartan)">
+      <input type="text" class="form-input" id="inpMedDosage" required placeholder="Dosage (e.g. 500mg, 1 tab)">
+      <select class="form-input" id="inpFrequency">
+        <option value="1">Once Daily (Every 24h)</option>
+        <option value="2">Twice Daily (Every 12h)</option>
+        <option value="3">Thrice Daily (Every 8h)</option>
+        <option value="7">Once Weekly</option>
+      </select>
+      <select class="form-input" id="inpTiming">
+        <option value="Morning (After Breakfast)">Morning (After Breakfast)</option>
+        <option value="Afternoon (After Lunch)">Afternoon (After Lunch)</option>
+        <option value="Night (Before Bed)">Night (Before Bed)</option>
+        <option value="Empty Stomach (Morning)">Empty Stomach (Morning)</option>
+      </select>
+      <button type="submit" class="btn btn-primary" style="padding:11px 20px;"><i class="fas fa-plus"></i> Schedule</button>
+    </form>
+  </div>
+
+  <!-- Reminders List -->
+  <div class="reminders-card">
+    <div class="reminders-header">
+      <span style="font-size:14px; font-weight:700; color:#fff;"><i class="fas fa-calendar-check"></i> Today's Prescription Schedule</span>
+      <span style="font-size:12px; color:var(--text-3); font-family:'JetBrains Mono';">Local Time: <span id="clockNow"></span></span>
+    </div>
+    <div id="remindersContainer">
+      <!-- Injected via JavaScript -->
+    </div>
+  </div>
+</div>
+
+<script>
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playChime(freq, duration = 0.25) {
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch(e){}
+}
+
+const STORAGE_KEY = "pharmacy_medicine_reminders_v1";
+
+const GENERIC_MAP = {
+  "lipitor": { generic: "Atorvastatin 10mg", savings: "Save ₹145/strip" },
+  "metformin": { generic: "Metformin 500mg PR", savings: "Jan Aushadhi: ₹12/strip" },
+  "telmisartan": { generic: "Telmisartan 40mg", savings: "Save ₹85/strip" },
+  "pan 40": { generic: "Pantoprazole 40mg", savings: "Save ₹98/strip" },
+  "augmentin": { generic: "Amoxicillin + Clavulanic Acid 625mg", savings: "Save ₹180/strip" }
+};
+
+const DEFAULT_REMINDERS = [
+  { id: "r1", name: "Metformin 500mg", dosage: "500mg (1 tablet)", frequency: 1, timing: "Morning (After Breakfast)", lastTaken: new Date(Date.now() - 26 * 3600 * 1000).toISOString() },
+  { id: "r2", name: "Lipitor (Atorvastatin)", dosage: "10mg (1 tablet)", frequency: 1, timing: "Night (Before Bed)", lastTaken: new Date(Date.now() - 10 * 3600 * 1000).toISOString() },
+  { id: "r3", name: "Vitamin D3 (Calcirol)", dosage: "60,000 IU", frequency: 7, timing: "Morning (After Breakfast)", lastTaken: new Date(Date.now() - 5 * 24 * 3600 * 1000).toISOString() }
+];
+
+let reminders = [];
+
+function updateClock() {
+  const d = new Date();
+  document.getElementById('clockNow').textContent = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+function loadReminders() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    reminders = saved ? JSON.parse(saved) : DEFAULT_REMINDERS;
+  } catch(e) {
+    reminders = DEFAULT_REMINDERS;
+  }
+  renderReminders();
+}
+
+function saveReminders() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(reminders));
+  } catch(e){}
+  renderReminders();
+}
+
+function renderReminders() {
+  const container = document.getElementById('remindersContainer');
+  container.innerHTML = '';
+
+  let overdueCount = 0;
+  const now = Date.now();
+
+  reminders.forEach(r => {
+    const last = new Date(r.lastTaken).getTime();
+    const intervalHours = (r.frequency === 7 ? 168 : (24 / r.frequency));
+    const nextDue = last + intervalHours * 3600 * 1000;
+    const isOverdue = now >= nextDue;
+    if (isOverdue) overdueCount++;
+
+    const medLower = r.name.toLowerCase();
+    let genMatch = null;
+    for (let key in GENERIC_MAP) {
+      if (medLower.includes(key)) {
+        genMatch = GENERIC_MAP[key];
+        break;
+      }
+    }
+
+    const row = document.createElement('div');
+    row.className = 'rem-row';
+    row.innerHTML = `
+      <div class="rem-info">
+        <div class="rem-name">
+          <i class="fas fa-pills" style="color:#10b981;"></i>
+          ${r.name}
+          <span style="font-size:12px; font-weight:normal; color:var(--text-3);">· ${r.dosage}</span>
+        </div>
+        <div class="rem-meta">
+          <span><i class="fas fa-clock"></i> ${r.timing}</span>
+          <span>·</span>
+          <span>Last taken: ${new Date(r.lastTaken).toLocaleDateString()} ${new Date(r.lastTaken).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+        </div>
+        ${genMatch ? `
+          <div class="generic-alt-chip">
+            <i class="fas fa-leaf"></i> <strong>PMBJP Generic Salt Equivalent:</strong> ${genMatch.generic} (${genMatch.savings})
+          </div>
+        ` : ''}
+      </div>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <div>
+          ${isOverdue 
+            ? `<span class="status-badge badge-overdue"><i class="fas fa-exclamation-circle"></i> Dose Overdue</span>`
+            : `<span class="status-badge badge-ok"><i class="fas fa-check"></i> Next dose scheduled</span>`
+          }
+        </div>
+        <button class="btn btn-primary sm" onclick="markDoseTaken('${r.id}')" style="background:#10b981; color:#000;">
+          <i class="fas fa-check"></i> Take Dose
+        </button>
+        <button onclick="removeReminder('${r.id}')" style="background:none; border:none; color:var(--text-3); font-size:16px; cursor:pointer;" title="Delete prescription">
+          <i class="fas fa-trash-can"></i>
+        </button>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+
+  document.getElementById('statTotal').textContent = reminders.length;
+  document.getElementById('statOverdue').textContent = overdueCount;
+}
+
+function addReminder(e) {
+  e.preventDefault();
+  const name = document.getElementById('inpMedName').value.trim();
+  const dosage = document.getElementById('inpMedDosage').value.trim();
+  const freq = Number(document.getElementById('inpFrequency').value);
+  const timing = document.getElementById('inpTiming').value;
+
+  if (!name || !dosage) return;
+
+  reminders.unshift({
+    id: `rem-${Date.now()}`,
+    name: name,
+    dosage: dosage,
+    frequency: freq,
+    timing: timing,
+    lastTaken: new Date().toISOString()
+  });
+
+  saveReminders();
+  document.getElementById('inpMedName').value = '';
+  document.getElementById('inpMedDosage').value = '';
+  playChime(660);
+}
+
+function markDoseTaken(id) {
+  const rem = reminders.find(r => r.id === id);
+  if (rem) {
+    rem.lastTaken = new Date().toISOString();
+    saveReminders();
+    playChime(880, 0.3);
+  }
+}
+
+function removeReminder(id) {
+  reminders = reminders.filter(r => r.id !== id);
+  saveReminders();
+}
+
+loadReminders();
+</script>
+</body>
+</html>

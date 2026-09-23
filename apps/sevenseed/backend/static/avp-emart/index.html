@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AVP Emart — AI-Powered E-Commerce & Smart Shopping</title>
   <meta name="description" content="An AI-powered marketplace that compares live prices across Amazon, Flipkart, Reliance Digital, and Snapdeal, scores the best value with ML, and delivers it to your door.">
   <meta property="og:type" content="website">
@@ -44,7 +44,7 @@
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <nav class="nav">
-  <a class="logo" href="/avp-emart/app/">
+  <a class="logo" href="#top">
     <span class="logo-icon"><i class="fas fa-cart-shopping"></i></span>
     <span class="logo-text">AVP <span class="logo-accent">Emart</span></span>
   </a>
@@ -59,7 +59,7 @@
   <div class="nav-right">
     <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
     <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
-    <a class="btn btn-ghost" href="/avp-emart/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-ghost" href="/avp-emart/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
     <a class="btn btn-primary" href="https://price-com-7.streamlit.app/" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch</a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
   </div>
@@ -77,7 +77,7 @@
     <span class="meteor" style="--top:16%; --left:52%; --delay:0.7s; --duration:5.5s;"></span>
   </div>
   <div class="hero-glow"></div>
-  <div class="hero-grid"></div>
+  <div class="hero-grid" data-scroll-parallax style="--depth:.55"></div>
   
   <div class="hero-content">
     <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI Price Comparison · Best-Value Scoring · LLM Shopping Assistant</span></div>
@@ -98,48 +98,10 @@
     <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>AI Price Compare</span><span>Best-Value Scoring</span><span>Shopping Assistant</span><span>Smart Recommendations</span><span>Price Forecasting</span><span>Review Intelligence</span><span>Amazon</span><span>Flipkart</span><span>Reliance Digital</span><span>Snapdeal</span><span>AI Price Compare</span><span>Best-Value Scoring</span><span>Shopping Assistant</span><span>Smart Recommendations</span><span>Price Forecasting</span><span>Review Intelligence</span><span>Amazon</span><span>Flipkart</span><span>Reliance Digital</span><span>Snapdeal</span></div></div>
   </div>
 
-    <div class="hero-3d-stage" id="hero3dStage">
-    <div class="qc-aura"></div>
-    <div class="qc-card">
-      <div class="qc-hud-top">
-        <div class="qc-title-wrap">
-          <span class="qc-status-dot"><span class="qc-ping"></span><span class="qc-solid"></span></span>
-          <span class="qc-title">3D QUANTUM CORE <i class="fas fa-sparkles qc-sparkle"></i></span>
-        </div>
-        <div class="qc-badges">
-          <span class="qc-badge-fps" id="qcFps">60 FPS</span>
-          <span class="qc-badge-webgl">HARDWARE WEBGL</span>
-        </div>
-      </div>
-      <div class="qc-viewport" id="qcViewport">
-        <canvas id="hero3dCanvas" class="qc-canvas"></canvas>
-        <div class="qc-hint-pill">✦ Drag to Orbit • Click to Pulse ✦</div>
-      </div>
-      <div class="qc-hud-bottom">
-        <div class="qc-row-shapes">
-          <div class="qc-shapes-btns" id="qcShapes">
-            <button type="button" class="qc-shape-btn active" data-geom="icosahedron">Seed</button>
-            <button type="button" class="qc-shape-btn" data-geom="torusknot">Torus Knot</button>
-            <button type="button" class="qc-shape-btn" data-geom="tesseract">Tesseract</button>
-            <button type="button" class="qc-shape-btn" data-geom="helix">DNA Helix</button>
-            <button type="button" class="qc-shape-btn" data-geom="octahedron">Crystal</button>
-          </div>
-          <div class="qc-edges-tag" id="qcEdges">30 Edges</div>
-        </div>
-        <div class="qc-row-modes">
-          <div class="qc-modes-group">
-            <span class="qc-modes-label">Mode:</span>
-            <button type="button" class="qc-mode-btn active" data-mode="crystal">Crystal Core</button>
-            <button type="button" class="qc-mode-btn" data-mode="wireframe">Wireframe</button>
-            <button type="button" class="qc-mode-btn" data-mode="synapse">Deep Synapse</button>
-          </div>
-          <div class="qc-satellites-status">
-            <span class="qc-sat-dot"></span>
-            <span>7 Satellites Online</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="hero-3d-stage" id="hero3dStage">
+    <canvas id="hero3dCanvas"></canvas>
+    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · PBR Engine</div>
+    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
   </div>
 </header>
 
@@ -511,48 +473,5 @@
 
 <script id="ssData" type="application/json">{"site": "AVP Emart", "sector": "AI-Powered E-Commerce & Smart Shopping", "summary": "An AI-powered marketplace that compares live prices across Amazon, Flipkart, Reliance Digital, and Snapdeal, scores the best value with ML, and delivers it to your door.", "about": "AVP Emart is a smart-shopping platform powered by AI. Our engine checks Amazon, Flipkart, Reliance Digital, and Snapdeal in real time, then a weighted ML algorithm scores each product by price, ratings, and reviews. Ask our LLM shopping assistant in plain language, get personalised recommendations, and let AI summarise thousands of reviews into a quick verdict — then we deliver your best-value pick to your door.", "highlights": ["Live AI price compare, 4 platforms", "Best-value ML scoring", "LLM shopping assistant", "AI review summaries & trends"], "services": [{"name": "AI Price Comparison", "desc": "Real-time AI compares prices, ratings, and reviews across four platforms at once."}, {"name": "Best-Value Scoring", "desc": "A weighted ML algorithm ranks products by price, ratings, and reviews."}, {"name": "LLM Shopping Assistant", "desc": "Ask in plain language — an AI assistant finds exactly the right product."}, {"name": "Smart Recommendations", "desc": "Personalised product recommendations tuned to your preferences."}, {"name": "Price-Trend Forecasting", "desc": "AI predicts price movements so you buy at exactly the right time."}, {"name": "Review Intelligence", "desc": "NLP summarises thousands of reviews into a fast, trustworthy verdict."}], "faqs": [{"q": "How does the AI comparison work?", "a": "Our engine aggregates live listings from Amazon, Flipkart, Reliance Digital, and Snapdeal, then a weighted ML algorithm scores each by price, ratings, and reviews."}, {"q": "What is the AI shopping assistant?", "a": "A Groq LLaMA-powered assistant that understands plain-language requests and finds the right product and best price for you."}, {"q": "Is there a live demo?", "a": "Yes — try our live AI price comparator to search any product and compare instantly across all four platforms."}, {"q": "Do you deliver?", "a": "Yes — we integrate with delivery partners like Shiprocket and Delhivery for fast, reliable fulfilment."}], "contact": {"email": "shop@avpemart.com", "phone": "+91 84908 61586", "location": "Ahmedabad, Gujarat, India"}, "sections": [{"label": "About", "hash": "#about"}, {"label": "AI Tools", "hash": "#services"}, {"label": "Live Demo", "hash": "#sandbox"}, {"label": "Process", "hash": "#process"}, {"label": "Impact", "hash": "#impact"}, {"label": "Reviews", "hash": "#testimonials"}, {"label": "FAQ", "hash": "#faq"}, {"label": "Enterprise", "hash": "#enterprise"}, {"label": "Contact", "hash": "#contact"}], "ventures": [{"label": "Comonk Technology", "href": "/comonk-ai/"}, {"label": "Sevenseed", "href": "/"}, {"label": "Sevenforce", "href": "/sevenforce/"}, {"label": "Alpaben Vipulbhai Patel University", "href": "/avpu/"}, {"label": "Decode Forest Pharmacy", "href": "/pharmacy/"}, {"label": "Breakdown Factor Construction", "href": "/breakdown/"}, {"label": "AVP Charitable Trust", "href": "/trust/"}, {"label": "Rakshak AI Safety", "href": "/rakshak-ai/"}]}</script>
 <script src="app.js"></script>
-
-<script>
-(function() {
-  // Theme Toggle Handler
-  var tBtn = document.getElementById('themeToggle');
-  if (tBtn) {
-    function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
-    }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('ss-theme', next);
-      updateIcon(next);
-    });
-  }
-
-  // Cursor Ring
-  var ring = document.getElementById('cursorRing');
-  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
-      requestAnimationFrame(renderCursor);
-    }
-    requestAnimationFrame(renderCursor);
-  }
-})();
-</script>
-
 </body>
 </html>

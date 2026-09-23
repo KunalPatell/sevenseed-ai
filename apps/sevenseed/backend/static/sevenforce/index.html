@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seven force — AI Workforce & Business Automation</title>
   <meta name="description" content="Sevenforce gives every business a team of specialised AI employees — for marketing, sales, hiring, meetings, documents, and data — all running on Sevenseed's shared AI stack.">
   <meta property="og:type" content="website">
@@ -44,16 +44,15 @@
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <nav class="nav">
-  <a class="logo" href="/sevenforce/app/">
+  <a class="logo" href="#top">
     <span class="logo-icon"><i class="fas fa-users-gear"></i></span>
     <span class="logo-text">Seven <span class="logo-accent">force</span></span>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="workflows.html"><i class="fas fa-diagram-project" style="color:var(--accent,#06b6d4)"></i> LangGraph Studio</a>
+        <a href="workflows.html"><i class="fas fa-diagram-project" style="color:var(--accent,#06b6d4)"></i> LangGraph Studio</a>
     <a href="devin-terminal.html"><i class="fas fa-terminal" style="color:var(--accent,#06b6d4)"></i> Devin AI Terminal</a>
     <a href="employees.html"><i class="fas fa-users-gear" style="color:var(--accent,#06b6d4)"></i> 7 AI Employees</a>
     <a href="pricing.html"><i class="fas fa-calculator" style="color:var(--accent,#06b6d4)"></i> ROI & Pricing</a>
-    <a href="growth-teardown.html"><i class="fas fa-chart-line" style="color:var(--accent,#06b6d4)"></i> Growth Teardowns</a>
     <a href="#feature-suites">Labs</a>
     <a href="#faq">FAQ</a>
   </div>
@@ -78,7 +77,7 @@
     <span class="meteor" style="--top:16%; --left:52%; --delay:0.7s; --duration:5.5s;"></span>
   </div>
   <div class="hero-glow"></div>
-  <div class="hero-grid"></div>
+  <div class="hero-grid" data-scroll-parallax style="--depth:.55"></div>
   
   <div class="hero-content">
     <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">7 AI Employees · Growth AI · Agency AI</span></div>
@@ -99,48 +98,10 @@
     <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>Content AI</span><span>Social AI</span><span>WhatsApp AI</span><span>Proposals & BRD</span><span>Meeting Notes</span><span>AI Recruiter</span><span>Ask-Your-Data</span><span>Campaigns</span><span>Test Cases</span><span>Automation</span><span>Content AI</span><span>Social AI</span><span>WhatsApp AI</span><span>Proposals & BRD</span><span>Meeting Notes</span><span>AI Recruiter</span><span>Ask-Your-Data</span><span>Campaigns</span><span>Test Cases</span><span>Automation</span></div></div>
   </div>
 
-    <div class="hero-3d-stage" id="hero3dStage">
-    <div class="qc-aura"></div>
-    <div class="qc-card">
-      <div class="qc-hud-top">
-        <div class="qc-title-wrap">
-          <span class="qc-status-dot"><span class="qc-ping"></span><span class="qc-solid"></span></span>
-          <span class="qc-title">3D QUANTUM CORE <i class="fas fa-sparkles qc-sparkle"></i></span>
-        </div>
-        <div class="qc-badges">
-          <span class="qc-badge-fps" id="qcFps">60 FPS</span>
-          <span class="qc-badge-webgl">HARDWARE WEBGL</span>
-        </div>
-      </div>
-      <div class="qc-viewport" id="qcViewport">
-        <canvas id="hero3dCanvas" class="qc-canvas"></canvas>
-        <div class="qc-hint-pill">✦ Drag to Orbit • Click to Pulse ✦</div>
-      </div>
-      <div class="qc-hud-bottom">
-        <div class="qc-row-shapes">
-          <div class="qc-shapes-btns" id="qcShapes">
-            <button type="button" class="qc-shape-btn active" data-geom="icosahedron">Seed</button>
-            <button type="button" class="qc-shape-btn" data-geom="torusknot">Torus Knot</button>
-            <button type="button" class="qc-shape-btn" data-geom="tesseract">Tesseract</button>
-            <button type="button" class="qc-shape-btn" data-geom="helix">DNA Helix</button>
-            <button type="button" class="qc-shape-btn" data-geom="octahedron">Crystal</button>
-          </div>
-          <div class="qc-edges-tag" id="qcEdges">30 Edges</div>
-        </div>
-        <div class="qc-row-modes">
-          <div class="qc-modes-group">
-            <span class="qc-modes-label">Mode:</span>
-            <button type="button" class="qc-mode-btn active" data-mode="crystal">Crystal Core</button>
-            <button type="button" class="qc-mode-btn" data-mode="wireframe">Wireframe</button>
-            <button type="button" class="qc-mode-btn" data-mode="synapse">Deep Synapse</button>
-          </div>
-          <div class="qc-satellites-status">
-            <span class="qc-sat-dot"></span>
-            <span>7 Satellites Online</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="hero-3d-stage" id="hero3dStage">
+    <canvas id="hero3dCanvas"></canvas>
+    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · PBR Engine</div>
+    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
   </div>
 </header>
 
@@ -194,15 +155,6 @@
         <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Transparent pricing tiers, per-seat unit economics, and interactive ROI calculator showing headcount cost displacement.</p>
       </div>
       <a class="btn btn-primary sm" href="pricing.html"><i class="fas fa-calculator"></i> Calculate ROI →</a>
-    </div>
-
-    <div class="border-beam-card">
-      <div>
-        <div style="font-size:32px; margin-bottom:12px;">🚀</div>
-        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Growth in Reverse Teardowns</h3>
-        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">10 reverse-engineered growth flywheels from Zerodha, CRED, Zomato, Postman, Duolingo, and Notion with AI strategy simulator.</p>
-      </div>
-      <a class="btn btn-primary sm" href="growth-teardown.html"><i class="fas fa-chart-line"></i> Explore Teardowns →</a>
     </div>
   </div>
 </section>
@@ -518,48 +470,5 @@
 
 <script id="ssData" type="application/json">{"site": "Seven force", "sector": "AI Workforce & Business Automation", "summary": "Sevenforce gives every business a team of specialised AI employees — for marketing, sales, hiring, meetings, documents, and data — all running on Sevenseed's shared AI stack.", "about": "Sevenforce turns AI into your team. Instead of juggling a dozen disconnected tools, you hire specialised AI employees — each an expert at one job — that work together from a single dashboard, around the clock. Two suites cover the whole business: Growth AI runs your content, social media, and campaigns, while Agency AI handles proposals, documents, meetings, hiring, and data — every agent powered by Sevenseed's shared AI backbone.", "highlights": ["7 specialised AI employees", "Growth AI: content, social & campaigns", "Agency AI: proposals, meetings & hiring", "One dashboard, always on"], "services": [{"name": "Maya — Content & SEO", "desc": "Builds a brand profile from any URL, then generates SEO topics and full long-form articles."}, {"name": "Vibe — Social Media", "desc": "Writes platform-perfect captions and posts, schedules them, and tracks engagement."}, {"name": "Wave — Sales & Comms", "desc": "Runs WhatsApp broadcasts, an auto-reply chatbot, and personalised bulk-email campaigns."}, {"name": "Nova — Business Analyst", "desc": "Turns a brief into proposals, BRD/PRD docs (Word export), user stories and test cases."}, {"name": "Echo — Meeting Assistant", "desc": "Turns any transcript into a clean summary, decisions, and owner-tagged action items."}, {"name": "Scout — AI Recruiter", "desc": "Screens resumes, generates interview questions, and scores answers on seven dimensions."}, {"name": "Sage — Data Analyst", "desc": "Answers questions about your data in plain English with a safe, instant NL-to-SQL engine."}], "faqs": [{"q": "What is Sevenforce?", "a": "An AI workforce platform — hire specialised AI employees for marketing, sales, hiring, meetings, documents and data, all from one dashboard."}, {"q": "What are the Growth AI and Agency AI suites?", "a": "Growth AI covers content, social and campaigns (Maya, Vibe, Wave). Agency AI covers proposals & docs, meetings, hiring and data (Nova, Echo, Scout, Sage)."}, {"q": "Do I have to hire all seven?", "a": "No — start with the AI employees you need most and add more anytime. Each works on its own or together with the rest."}, {"q": "What powers Sevenforce?", "a": "Sevenseed's shared AI backbone — LangGraph multi-agent orchestration, Groq LLaMA 3.3 70B, RAG, and a safe NL-to-SQL engine."}], "contact": {"email": "hello@sevenforce.ai", "phone": "+91 84908 61586", "location": "Ahmedabad, Gujarat, India"}, "sections": [{"label": "About", "hash": "#about"}, {"label": "AI Tools", "hash": "#services"}, {"label": "Live Demo", "hash": "#sandbox"}, {"label": "Process", "hash": "#process"}, {"label": "Impact", "hash": "#impact"}, {"label": "Reviews", "hash": "#testimonials"}, {"label": "FAQ", "hash": "#faq"}, {"label": "Enterprise", "hash": "#enterprise"}, {"label": "Contact", "hash": "#contact"}], "ventures": [{"label": "Comonk Technology", "href": "/comonk-ai/"}, {"label": "Sevenseed", "href": "/"}, {"label": "Alpaben Vipulbhai Patel University", "href": "/avpu/"}, {"label": "Decode Forest Pharmacy", "href": "/pharmacy/"}, {"label": "Breakdown Factor Construction", "href": "/breakdown/"}, {"label": "AVP Charitable Trust", "href": "/trust/"}, {"label": "AVP Emart", "href": "/avp-emart/"}, {"label": "Rakshak AI Safety", "href": "/rakshak-ai/"}]}</script>
 <script src="app.js"></script>
-
-<script>
-(function() {
-  // Theme Toggle Handler
-  var tBtn = document.getElementById('themeToggle');
-  if (tBtn) {
-    function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
-    }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('ss-theme', next);
-      updateIcon(next);
-    });
-  }
-
-  // Cursor Ring
-  var ring = document.getElementById('cursorRing');
-  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
-      requestAnimationFrame(renderCursor);
-    }
-    requestAnimationFrame(renderCursor);
-  }
-})();
-</script>
-
 </body>
 </html>

@@ -1,0 +1,175 @@
+{
+  "updated_at": "2026-09-23",
+  "tracks": [
+    {
+      "id": "ai-engineer",
+      "title": "AI & Deep Learning Engineer",
+      "category": "Artificial Intelligence",
+      "salary_range": {
+        "fresher": "₹12 - ₹18 LPA",
+        "mid": "₹22 - ₹38 LPA",
+        "senior": "₹45 - ₹85 LPA",
+        "us_remote": "$120,000 - $190,000"
+      },
+      "demand_index": 98,
+      "growth_rate": "+44% YoY",
+      "icon": "🧠",
+      "description": "Architects neural networks, fine-tunes open-source LLMs (Llama 3, Mistral), and integrates high-throughput inference systems with vector databases.",
+      "skills_required": [
+        "PyTorch / JAX",
+        "Transformers & HuggingFace",
+        "vLLM & TensorRT-LLM",
+        "Vector DBs (Qdrant, Milvus, Pinecone)",
+        "LoRA / QLoRA Fine-tuning",
+        "CUDA Basics & Quantization (GGUF, AWQ)"
+      ],
+      "roadmap_90days": [
+        {"week": "Weeks 1-2", "focus": "Deep Math & PyTorch Autograd from Scratch", "project": "Custom Multi-Head Attention layer"},
+        {"week": "Weeks 3-5", "focus": "LLM Architecture & Fine-Tuning", "project": "Fine-tune Mistral 7B on domain-specific medical dataset with Unsloth"},
+        {"week": "Weeks 6-8", "focus": "Production RAG & Agentic Workflows", "project": "Hybrid BM25 + dense search pipeline with LangGraph & reranker"},
+        {"week": "Weeks 9-12", "focus": "Inference Optimization & Deployment", "project": "Self-hosted Dockerized vLLM cluster with Triton Inference Server"}
+      ],
+      "resume_bullets": [
+        "Engineered end-to-end RAG system indexing 1.2M technical documents using Qdrant and Cohere rerank, improving answer accuracy from 64% to 94.2%.",
+        "Fine-tuned Mistral-7B using QLoRA for automated SQL generation, reducing query drafting time by 68% for non-technical team members.",
+        "Deployed low-latency LLM inference cluster with vLLM and continuous batching on 4x A100 GPUs, slashing p99 latency by 53% while doubling throughput.",
+        "Implemented real-time guardrails with Llama-Guard and NeMo, cutting hallucination and prompt-injection vulnerabilities to <0.4%."
+      ],
+      "interview_questions": [
+        {
+          "question": "What is the difference between RoPE (Rotary Position Embedding) and ALiBi, and how does RoPE extrapolate to longer context windows?",
+          "difficulty": "Hard",
+          "key_points": "Complex rotation of 2D pairs, dot-product property preserving relative distance, YaRN / NTK-aware scaling for length extrapolation."
+        },
+        {
+          "question": "Walk me through how FlashAttention v2 achieves 2-4x speedup over standard scaled dot-product attention.",
+          "difficulty": "Hard",
+          "key_points": "Tiling, avoiding materialization of full N x N matrix in HBM, online softmax normalization, SRAM memory hierarchy exploitation."
+        }
+      ]
+    },
+    {
+      "id": "genai-architect",
+      "title": "Generative AI Systems Architect",
+      "category": "Enterprise Systems",
+      "salary_range": {
+        "fresher": "₹14 - ₹20 LPA",
+        "mid": "₹28 - ₹45 LPA",
+        "senior": "₹55 - ₹1.1 Cr LPA",
+        "us_remote": "$150,000 - $240,000"
+      },
+      "demand_index": 96,
+      "growth_rate": "+58% YoY",
+      "icon": "⚡",
+      "description": "Designs scalable enterprise architectures combining autonomous agents, multi-modal pipelines, governance, and cost-efficient LLM routing.",
+      "skills_required": [
+        "LangChain / LangGraph / AutoGen",
+        "Semantic Caching (GPTCache, Redis)",
+        "Prompt Routing & Cascade Models",
+        "Evaluation Frameworks (Ragas, TruLens)",
+        "Distributed Tracing (Arize, Phoenix)",
+        "Enterprise Security & Data Redaction"
+      ],
+      "roadmap_90days": [
+        {"week": "Weeks 1-3", "focus": "Agent Orchestration & State Machines", "project": "Hierarchical multi-agent research analyst with human-in-the-loop approval"},
+        {"week": "Weeks 4-6", "focus": "RAG Evaluation & Synthetic Benchmarking", "project": "CI/CD automated regression testing using Ragas metrics"},
+        {"week": "Weeks 7-9", "focus": "Cost Optimization & Smart Model Routing", "project": "Dynamic router directing 70% of prompts to 8B models and 30% to Frontier models"},
+        {"week": "Weeks 10-12", "focus": "Governance & Compliance Pipeline", "project": "PII redaction and SOC2-compliant logging sidecar"}
+      ],
+      "resume_bullets": [
+        "Architected multi-model gateway handling 4.5M monthly API calls, using cascade routing to save $34,000/month in OpenAI API spend.",
+        "Built resilient multi-agent automation workflow using LangGraph that parsed 50,000 legal contracts with 99.1% extraction accuracy.",
+        "Set up comprehensive automated evaluation pipeline evaluating answer relevance, context recall, and faithfulness across every PR build."
+      ],
+      "interview_questions": [
+        {
+          "question": "How do you mitigate cascading error degradation in multi-step agentic workflows?",
+          "difficulty": "Hard",
+          "key_points": "State checkpoints, structured JSON schemas, validator agents, self-reflection loops, and deterministic fallback fall-throughs."
+        }
+      ]
+    },
+    {
+      "id": "mlops-engineer",
+      "title": "MLOps & AI Infrastructure Engineer",
+      "category": "DevOps & Cloud",
+      "salary_range": {
+        "fresher": "₹10 - ₹16 LPA",
+        "mid": "₹20 - ₹34 LPA",
+        "senior": "₹40 - ₹75 LPA",
+        "us_remote": "$130,000 - $210,000"
+      },
+      "demand_index": 93,
+      "growth_rate": "+38% YoY",
+      "icon": "🛠️",
+      "description": "Builds and operates scalable GPU infrastructure, automated training pipelines, model registries, and zero-downtime canary deployment systems.",
+      "skills_required": [
+        "Kubernetes & KubeFlow / Ray",
+        "Terraform & AWS/GCP/RunPod",
+        "Triton Inference Server",
+        "MLflow / Weights & Biases",
+        "CI/CD for ML (GitHub Actions, DVC)",
+        "Prometheus & Grafana GPU metrics"
+      ],
+      "roadmap_90days": [
+        {"week": "Weeks 1-3", "focus": "Distributed Computing with Ray", "project": "Ray Train cluster fine-tuning multi-GPU checkpointed model"},
+        {"week": "Weeks 4-6", "focus": "K8s & GPU Operator", "project": "Deploy automated autoscaling GPU cluster with spot instance preemption handlers"},
+        {"week": "Weeks 7-9", "focus": "Model Monitoring & Drift Detection", "project": "Prometheus exporter monitoring GPU memory, KV cache utilization, and embedding drift"},
+        {"week": "Weeks 10-12", "focus": "Canary Rollouts & Shadow Deployments", "project": "Istio traffic-split routing 5% shadow traffic to candidate LLM"}
+      ],
+      "resume_bullets": [
+        "Orchestrated Ray cluster on AWS EKS with GPU spot instances, reducing model training infrastructure costs by 52%.",
+        "Built automated CI/CD pipeline triggering model evaluation on fresh test sets, maintaining zero regression across 24 production releases.",
+        "Instrumented deep observability dashboards with Prometheus/Grafana tracking KV cache eviction rate, TTFT (time-to-first-token), and tokens/sec."
+      ],
+      "interview_questions": [
+        {
+          "question": "Explain PagedAttention and how it solves memory fragmentation in LLM serving.",
+          "difficulty": "Hard",
+          "key_points": "Dynamic allocation of non-contiguous physical memory blocks for KV cache, virtual memory concept adapted for GPU VRAM, 2-4x higher batch sizes."
+        }
+      ]
+    },
+    {
+      "id": "fullstack-ai",
+      "title": "Full-Stack AI Application Engineer",
+      "category": "Software Engineering",
+      "salary_range": {
+        "fresher": "₹8 - ₹14 LPA",
+        "mid": "₹18 - ₹30 LPA",
+        "senior": "₹35 - ₹65 LPA",
+        "us_remote": "$110,000 - $175,000"
+      },
+      "demand_index": 95,
+      "growth_rate": "+41% YoY",
+      "icon": "💻",
+      "description": "Builds reactive real-time web applications with streaming AI responses, optimistic UI updates, web workers, and rock-solid backend services.",
+      "skills_required": [
+        "Next.js 15 (App Router, Server Actions)",
+        "TypeScript & React 19",
+        "FastAPI & WebSockets / SSE",
+        "PostgreSQL & pgvector",
+        "Tailwind CSS / Glassmorphism UI",
+        "Vercel AI SDK & IndexedDB Local Caching"
+      ],
+      "roadmap_90days": [
+        {"week": "Weeks 1-3", "focus": "Streaming Protocols & SSE", "project": "Real-time canvas with streaming token rendering and diff viewer"},
+        {"week": "Weeks 4-6", "focus": "pgvector & Local-First Architecture", "project": "Offline-capable semantic search using WebGPU transformers in browser"},
+        {"week": "Weeks 7-9", "focus": "Authentication & Usage Metering", "project": "Stripe + token usage metering gateway with Redis rate limiting"},
+        {"week": "Weeks 10-12", "focus": "Full Enterprise SaaS Suite", "project": "Production-grade collaborative AI document editor"}
+      ],
+      "resume_bullets": [
+        "Developed high-concurrency streaming AI interface using Next.js 15 and Server-Sent Events, achieving sub-200ms perceived latency.",
+        "Integrated pgvector with HNSW index for sub-5ms similarity searches across 300,000 user embeddings in PostgreSQL.",
+        "Constructed client-side local caching engine using IndexedDB, reducing repeated API calls by 41% and speeding up page reloads by 8x."
+      ],
+      "interview_questions": [
+        {
+          "question": "How do Server-Sent Events (SSE) differ from WebSockets when delivering streaming LLM completions?",
+          "difficulty": "Medium",
+          "key_points": "Unidirectional vs bidirectional, HTTP/2 multiplexing, automatic reconnects, simpler firewall/proxy traversal."
+        }
+      ]
+    }
+  ]
+}

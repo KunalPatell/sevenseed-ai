@@ -164,6 +164,17 @@
     </div>
   </div>
 
+  <!-- Visual Hero Banner Image -->
+  <div style="max-width:1320px; margin:0 auto 36px; border-radius:16px; overflow:hidden; border:1px solid rgba(6,182,212,0.3); box-shadow:0 20px 50px rgba(0,0,0,0.5); position:relative;">
+    <img src="img/teardown-hero.jpg" alt="Sevenforce Startup Growth Flywheel Teardowns" style="width:100%; height:auto; max-height:420px; object-fit:cover; display:block;">
+    <div style="position:absolute; inset:0; background:linear-gradient(180deg, transparent 40%, rgba(2,6,23,0.95) 100%); display:flex; align-items:flex-end; padding:24px 32px;">
+      <div style="color:#fff; font-size:18px; font-weight:700; display:flex; align-items:center; gap:10px;">
+        <i class="fas fa-arrows-spin" style="color:#67e8f9;"></i>
+        <span>Reverse-Engineered Indian Startup Growth Flywheels · Zerodha, Swiggy, Razorpay, CRED, Meesho</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Interactive AI Strategy Reverse-Engineering Simulator -->
   <div class="sim-card">
     <h2 style="font-size:20px; font-weight:800; color:#fff; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
@@ -866,26 +877,110 @@ function handleBackdropClick(e) {
   }
 }
 
-// Simulator
-function runSimulation() {
+// ─── Real AI Growth Teardown Engine ───────────────────────────────────────
+const GD_PROVIDERS = [
+  { name: 'Gemini', key: () => localStorage.getItem('ss_key_gemini') || localStorage.getItem('ss_apikey_gemini'),
+    call: async (key, prompt) => {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.8,maxOutputTokens:1000}})
+      });
+      if(!r.ok){const e=await r.json();throw new Error(e.error?.message);}
+      const d=await r.json();
+      return d.candidates?.[0]?.content?.parts?.[0]?.text;
+    }
+  },
+  { name: 'GPT-4o', key: () => localStorage.getItem('ss_key_openai') || localStorage.getItem('ss_apikey_openai'),
+    call: async (key, prompt) => {
+      const r = await fetch('https://api.openai.com/v1/chat/completions',{
+        method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+        body:JSON.stringify({model:'gpt-4o',messages:[{role:'user',content:prompt}],max_tokens:1000,temperature:0.8})
+      });
+      if(!r.ok){const e=await r.json();throw new Error(e.error?.message);}
+      const d=await r.json();
+      return d.choices?.[0]?.message?.content;
+    }
+  },
+  { name: 'Mistral', key: () => localStorage.getItem('ss_key_m1') || localStorage.getItem('ss_apikey_mistral1'),
+    call: async (key, prompt) => {
+      const r = await fetch('https://api.mistral.ai/v1/chat/completions',{
+        method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+        body:JSON.stringify({model:'mistral-large-latest',messages:[{role:'user',content:prompt}],max_tokens:1000})
+      });
+      if(!r.ok){const e=await r.json();throw new Error(e.error?.message);}
+      const d=await r.json();
+      return d.choices?.[0]?.message?.content;
+    }
+  }
+];
+
+async function callGrowthAI(prompt) {
+  for (const p of GD_PROVIDERS) {
+    const key = p.key();
+    if (!key) continue;
+    try {
+      const text = await p.call(key, prompt);
+      return { text, provider: p.name };
+    } catch(e) { console.warn(p.name + ' failed:', e.message); }
+  }
+  return { text: null, provider: null };
+}
+
+async function runSimulation() {
   const company = document.getElementById('companyInput').value.trim() || 'Your Startup';
   const model = document.getElementById('industrySelect').value;
   const out = document.getElementById('simOutput');
+  const btn = document.querySelector('button[onclick="runSimulation()"]');
 
-  out.innerHTML = `
-    <h4><i class="fas fa-check-circle" style="color:#34d399;"></i> REVERSE-ENGINEERED FLYWHEEL FOR: ${company.toUpperCase()}</h4>
-    <div style="background:#0f172a; border-left:3px solid var(--accent); padding:10px 14px; border-radius:6px; margin-bottom:14px; font-size:13px;">
-      <strong>Core Acquisition Engine:</strong> Zero-CAC Authority Content + Organic Programmatic SEO
-    </div>
-    <ul>
-      <li><strong>1. Acquisition:</strong> Build a high-utility free tool or encyclopedia (like Zerodha Varsity or Postman Collections) to capture high-intent organic search volume without paying Google ad auctions.</li>
-      <li><strong>2. Activation:</strong> Cut time-to-first-value to &lt;60 seconds with self-serve guest onboarding and zero credit card gate.</li>
-      <li><strong>3. Retention:</strong> Institute a high-switching-cost repository or membership moat (like Zomato Gold or Notion Relational DBs) where value compounds with usage.</li>
-      <li><strong>4. Referral Flywheel:</strong> Embed user monetization or social gifting (like Lenskart BOGO or Duolingo Friends Quests) that organically pulls in their colleagues.</li>
-    </ul>
-    <h4 style="color:#60a5fa; font-size:13px; margin-top:14px;"><i class="fas fa-shield-alt"></i> DEFENSIVE MOAT RECOMMENDATION:</h4>
-    <p style="font-size:12.5px; color:#cbd5e1; margin:0;">Do not compete on linear feature checklists. Own an exclusive, high-retention workflow and pass structural cost efficiencies directly to the customer.</p>
-  `;
+  // Show loading
+  out.innerHTML = `<div style="display:flex;align-items:center;gap:12px;color:#67e8f9;">
+    <i class="fas fa-spinner fa-spin" style="font-size:20px;"></i>
+    <span>Reverse-engineering growth flywheel for <strong>${company}</strong>...</span>
+  </div>`;
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...'; }
+
+  const prompt = `You are a growth strategy expert. Reverse-engineer the growth flywheel for a startup with these details:
+- Company Name: ${company}
+- Business Model / Industry: ${model}
+
+Provide a structured teardown with EXACTLY this format (use HTML-friendly structure, no markdown backticks):
+
+<h4>🚀 GROWTH FLYWHEEL: ${company.toUpperCase()}</h4>
+<div style="background:#0f172a;border-left:3px solid #06b6d4;padding:10px 14px;border-radius:6px;margin-bottom:14px;font-size:13px;">
+  <strong>Core Acquisition Engine:</strong> [1-line description of the primary zero-CAC or low-CAC engine]
+</div>
+<ul>
+  <li><strong>1. Acquisition:</strong> [Specific tactic for ${company} to get first 1,000 users with minimal spend]</li>
+  <li><strong>2. Activation:</strong> [How to get users to their first "aha moment" within 60 seconds]</li>
+  <li><strong>3. Retention:</strong> [The specific habit loop or switching cost moat]</li>
+  <li><strong>4. Referral:</strong> [A specific viral or referral mechanic that makes sense for this business]</li>
+  <li><strong>5. Revenue:</strong> [The most logical monetization model and pricing anchor]</li>
+</ul>
+<h4 style="color:#60a5fa;font-size:13px;margin-top:14px;">🛡️ DEFENSIVE MOAT:</h4>
+<p style="font-size:12.5px;color:#cbd5e1;margin:0;">[2 sentences on how ${company} can build a durable, defensible position in the ${model} market]</p>
+<h4 style="color:#a78bfa;font-size:13px;margin-top:14px;">⚡ 30-DAY QUICK WIN:</h4>
+<p style="font-size:12.5px;color:#cbd5e1;margin:0;">[One specific, immediately actionable tactic ${company} can execute this month with under ₹50,000 budget]</p>`;
+
+  const result = await callGrowthAI(prompt);
+
+  if (result.text) {
+    out.innerHTML = result.text + `<div style="font-size:10px;color:#475569;margin-top:16px;font-family:JetBrains Mono,monospace;">⚡ Powered by ${result.provider}</div>`;
+  } else {
+    out.innerHTML = `<div style="color:#f87171;">
+      <h4><i class="fas fa-key"></i> No API Key Found</h4>
+      <p style="font-size:13px;">Add your Gemini, OpenAI, or Mistral key in the <a href="/byok.html" style="color:#06b6d4;">BYOK API Vault</a> to unlock AI-powered growth teardowns.</p>
+      <p style="font-size:13px;margin-top:8px;">Meanwhile, here is a sample framework for <strong>${company}</strong> in <strong>${model}</strong>:</p>
+      <ul>
+        <li><strong>1. Acquisition:</strong> Build a free utility tool or content hub to capture organic search with zero ad spend.</li>
+        <li><strong>2. Activation:</strong> Cut time-to-value to under 60 seconds with self-serve onboarding.</li>
+        <li><strong>3. Retention:</strong> Build a data moat where the product gets smarter and stickier with every use.</li>
+        <li><strong>4. Referral:</strong> Add a social sharing mechanic that lets users show off their results.</li>
+        <li><strong>5. Revenue:</strong> Free tier → paid upgrade triggered by hitting a natural usage limit.</li>
+      </ul>
+    </div>`;
+  }
+
+  if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-bolt"></i> Re-Generate Flywheel'; }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

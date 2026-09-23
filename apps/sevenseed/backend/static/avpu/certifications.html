@@ -4,366 +4,1334 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Free Certifications - AVPU by Sevenseed</title>
-  <meta name="description" content="Earn verifiable AI, UX, and growth certifications for free. Project-gated, portfolio-ready, inspired by freeCodeCamp. Built for Indian builders.">
+  <title>Free Verifiable Certifications - AVPU by Sevenseed</title>
+  <meta name="description" content="Earn verifiable AI, Full-Stack, UX, and Growth Engineering certifications for free. Project-gated, instant canvas verification, LinkedIn credential integration. Inspired by freeCodeCamp.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    body{background:#060609;color:#eeeef8;font-family:"Inter",sans-serif;}
-    .page{max-width:1100px;margin:0 auto;padding:88px 24px 80px;}
-    .hero{text-align:center;padding:48px 0 40px;position:relative;}
-    .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(16,185,129,.14),transparent 70%);pointer-events:none;}
-    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:#34d399;font-size:13px;font-weight:700;margin-bottom:20px;}
-    .hero h1{font-size:clamp(32px,5vw,56px);font-weight:900;line-height:1.15;background:linear-gradient(135deg,#fff 30%,#6ee7b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;}
-    .hero p{font-size:16px;color:#9aa0b8;max-width:520px;margin:0 auto 28px;line-height:1.7;}
-    .cert-stats{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;}
-    .cert-stat{background:#0d0d16;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px 24px;text-align:center;}
-    .cert-stat-val{font-size:24px;font-weight:900;color:#fff;display:block;}
-    .cert-stat-label{font-size:12px;color:#9aa0b8;font-weight:600;margin-top:2px;}
+    :root {
+      --accent: #6366f1;
+      --accent-rgb: 99, 102, 241;
+      --accent-l: #a5b4fc;
+      --gold: #f59e0b;
+      --gold-rgb: 245, 158, 11;
+      --emerald: #10b981;
+    }
+    body {
+      background: #060609;
+      color: #eeeef8;
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 92px 24px 80px;
+    }
 
-    /* Certs Grid */
-    .certs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px;margin-bottom:48px;}
-    .cert-card{background:#0d0d16;border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;transition:transform .2s,border-color .2s;display:flex;flex-direction:column;}
-    .cert-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3);}
-    .cert-card.locked-cert{opacity:.7;}
-    .cert-header{padding:24px;display:flex;align-items:flex-start;gap:16px;border-bottom:1px solid rgba(255,255,255,.06);}
-    .cert-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-    .cert-meta{flex:1;}
-    .cert-track{font-size:10px;text-transform:uppercase;font-weight:800;letter-spacing:.08em;margin-bottom:4px;}
-    .cert-name{font-size:18px;font-weight:800;color:#fff;line-height:1.2;}
-    .cert-time{font-size:12px;color:#9aa0b8;margin-top:4px;}
-    .cert-body{padding:20px;flex:1;display:flex;flex-direction:column;}
-    .cert-desc{font-size:13px;color:#9aa0b8;line-height:1.6;margin-bottom:16px;}
-    .cert-projects-title{font-size:10px;text-transform:uppercase;font-weight:800;color:rgba(255,255,255,.35);letter-spacing:.08em;margin-bottom:10px;}
-    .cert-projects{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
-    .cert-project-item{display:flex;align-items:center;gap:10px;font-size:13px;color:#9aa0b8;}
-    .proj-check{width:18px;height:18px;border-radius:4px;border:1.5px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
-    .proj-check.done{background:#10b981;border-color:#10b981;color:#fff;}
-    .cert-progress-bar{background:#12121e;border-radius:999px;height:6px;overflow:hidden;margin-bottom:16px;}
-    .cert-progress-fill{height:100%;border-radius:999px;transition:width .4s;}
-    .cert-footer{display:flex;gap:10px;margin-top:auto;}
-    .btn-cert{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;border:none;font-family:inherit;transition:all .2s;}
-    .btn-cert-primary{color:#fff;}
-    .btn-cert-ghost{background:rgba(255,255,255,.06);color:#9aa0b8;border:1px solid rgba(255,255,255,.08);}
-    .btn-cert-ghost:hover{background:rgba(255,255,255,.1);color:#fff;}
-    .cert-badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;display:inline-flex;align-items:center;gap:4px;}
+    /* Hero Banner */
+    .cert-hero {
+      position: relative;
+      text-align: center;
+      padding: 56px 20px 44px;
+      border-radius: 24px;
+      background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.18) 0%, rgba(6,6,9,0) 70%), #0a0a12;
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 40px;
+      overflow: hidden;
+    }
+    .cert-hero::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(99,102,241,0.8), transparent);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(99,102,241,0.12);
+      border: 1px solid rgba(99,102,241,0.3);
+      color: #a5b4fc;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .cert-hero h1 {
+      font-size: clamp(34px, 5.4vw, 62px);
+      font-weight: 900;
+      line-height: 1.12;
+      background: linear-gradient(135deg, #ffffff 40%, #a5b4fc 90%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 18px;
+      letter-spacing: -0.03em;
+    }
+    .cert-hero p {
+      font-size: clamp(15px, 2vw, 18px);
+      color: #9aa0b8;
+      max-width: 660px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .hero-metrics {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .metric-pill {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #c5c8de;
+    }
+    .metric-pill i {
+      color: var(--accent-l);
+    }
+    .metric-pill strong {
+      color: #fff;
+    }
 
-    /* Certificate Preview Modal */
-    .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
-    .modal-bg.open{display:flex;}
-    .cert-preview{background:#0d0d16;border:1px solid rgba(255,255,255,.1);border-radius:20px;max-width:600px;width:100%;padding:0;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.4);}
-    .cert-preview-header{padding:32px;text-align:center;border-bottom:1px solid rgba(255,255,255,.07);}
-    .cert-seal{width:80px;height:80px;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:36px;}
-    .cert-preview-title{font-size:13px;text-transform:uppercase;font-weight:800;letter-spacing:.1em;color:#9aa0b8;margin-bottom:8px;}
-    .cert-preview-name{font-size:28px;font-weight:900;color:#fff;margin-bottom:8px;}
-    .cert-preview-sub{font-size:14px;color:#9aa0b8;margin-bottom:16px;}
-    .cert-preview-issued{font-size:12px;color:rgba(255,255,255,.35);}
-    .cert-preview-body{padding:24px 32px;}
-    .verify-box{background:#12121e;border-radius:10px;padding:14px 18px;font-family:"JetBrains Mono",monospace;font-size:12px;color:#6ee7b7;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
-    .modal-footer{display:flex;gap:10px;justify-content:flex-end;}
+    /* Grid of Tracks */
+    .tracks-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .tracks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+    .track-card {
+      background: #0d0d16;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .track-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(99,102,241,0.4);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 20px rgba(99,102,241,0.15);
+    }
+    .track-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      width: fit-content;
+    }
+    .track-card h3 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    .track-desc {
+      font-size: 13px;
+      color: #9aa0b8;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+    .track-curriculum {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 22px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .curr-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #c5c8de;
+    }
+    .curr-item i {
+      color: var(--emerald);
+      font-size: 11px;
+    }
+    .track-footer {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn-track {
+      flex: 1;
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-exam {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+    }
+    .btn-exam:hover {
+      box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+      transform: translateY(-1px);
+    }
+    .btn-preview {
+      background: rgba(255,255,255,0.06);
+      color: #9aa0b8;
+      border: 1px solid rgba(255,255,255,0.08);
+      width: 42px;
+      padding: 0;
+      height: 40px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+    }
+    .btn-preview:hover {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+    }
 
-    /* Roadmap section */
-    .roadmap{background:#0d0d16;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:28px;margin-bottom:48px;}
-    .roadmap-title{font-size:18px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
-    .roadmap-path{display:flex;flex-direction:column;gap:0;}
-    .roadmap-step{display:flex;gap:20px;position:relative;}
-    .roadmap-step-line{display:flex;flex-direction:column;align-items:center;padding-bottom:20px;}
-    .roadmap-step-line:last-child{padding-bottom:0;}
-    .roadmap-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:800;}
-    .roadmap-connector{width:2px;flex:1;min-height:20px;background:rgba(255,255,255,.06);}
-    .roadmap-content{flex:1;padding-bottom:20px;}
-    .roadmap-step-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px;}
-    .roadmap-step-desc{font-size:13px;color:#9aa0b8;line-height:1.6;}
+    /* Live Certificate Generator Studio */
+    .studio-section {
+      background: #0a0a14;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 24px;
+      padding: 36px 30px;
+      margin-bottom: 56px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    }
+    .studio-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .studio-head h2 {
+      font-size: 24px;
+      font-weight: 900;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .studio-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+      background: #11111e;
+      padding: 20px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .control-group label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #9aa0b8;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .control-input {
+      width: 100%;
+      background: #08080e;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .control-input:focus {
+      border-color: #6366f1;
+    }
+
+    /* Canvas Stage */
+    .canvas-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      background: #050508;
+      border: 1px dashed rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 24px 16px;
+      overflow-x: auto;
+    }
+    #certCanvas {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.8), 0 0 30px rgba(99,102,241,0.15);
+    }
+    .canvas-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+    }
+    .btn-act {
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-act-primary {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(16,185,129,0.3);
+    }
+    .btn-act-primary:hover {
+      box-shadow: 0 8px 30px rgba(16,185,129,0.45);
+      transform: translateY(-1px);
+    }
+    .btn-act-linkedin {
+      background: #0a66c2;
+      color: #fff;
+    }
+    .btn-act-linkedin:hover {
+      background: #004182;
+      transform: translateY(-1px);
+    }
+    .btn-act-ghost {
+      background: rgba(255,255,255,0.06);
+      color: #c5c8de;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-act-ghost:hover {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+    }
+
+    /* Exam Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .exam-modal {
+      background: #0d0d18;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+    }
+    .exam-head {
+      padding: 22px 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #111122;
+    }
+    .exam-head h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-close {
+      background: transparent;
+      border: none;
+      color: #9aa0b8;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .exam-body {
+      padding: 28px;
+      flex: 1;
+    }
+    .q-step {
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #a5b4fc;
+      margin-bottom: 8px;
+    }
+    .q-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .opt-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #151524;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #d1d5eb;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .opt-label:hover {
+      background: #1c1c30;
+      border-color: rgba(99,102,241,0.4);
+    }
+    .opt-label.selected {
+      background: rgba(99,102,241,0.18);
+      border-color: #6366f1;
+      color: #fff;
+    }
+    .exam-foot {
+      padding: 18px 28px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #111122;
+    }
+    .exam-score-bar {
+      height: 6px;
+      background: #1a1a2e;
+      border-radius: 999px;
+      overflow: hidden;
+      flex: 1;
+      margin-right: 20px;
+    }
+    .exam-score-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #10b981);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #10b981;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      z-index: 9999;
+      animation: toastIn 0.3s ease;
+    }
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
   </style>
 </head>
 <body>
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
-<nav style="position:fixed;top:0;left:0;right:0;z-index:100;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,9,.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.07);">
+<!-- Navigation -->
+<nav style="position:fixed;top:0;left:0;right:0;z-index:100;padding:0 clamp(16px,4vw,36px);height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,9,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.07);">
   <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#eeeef8;font-weight:800;font-size:17px;">
     <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;"><i class="fas fa-graduation-cap"></i></div>
     AVPU
   </a>
-  <div style="display:flex;gap:18px;font-size:14px;">
+  <div style="display:flex;gap:18px;font-size:14px;align-items:center;">
     <a href="index.html" style="color:#9aa0b8;text-decoration:none;">Home</a>
+    <a href="ai-learning-path.html" style="color:#9aa0b8;text-decoration:none;"><i class="fas fa-route" style="color:#6366f1;"></i> AI Path</a>
     <a href="modules.html" style="color:#9aa0b8;text-decoration:none;">Varsity</a>
-    <a href="100-day-challenge.html" style="color:#9aa0b8;text-decoration:none;">100-Day Challenge</a>
+    <a href="100-day-challenge.html" style="color:#9aa0b8;text-decoration:none;">100 Days AI</a>
     <a href="certifications.html" style="color:#fff;text-decoration:none;font-weight:700;">Certifications</a>
-    <a href="mental-models.html" style="color:#9aa0b8;text-decoration:none;">Mental Models</a>
     <a href="laws-of-ux.html" style="color:#9aa0b8;text-decoration:none;">Laws of UX</a>
-    <a href="learn-dag.html" style="color:#9aa0b8;text-decoration:none;">DAG Graph</a>
   </div>
   <div style="display:flex;gap:10px;">
     <button id="themeToggle" style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07);color:#9aa0b8;cursor:pointer;"><i class="fas fa-moon"></i></button>
   </div>
 </nav>
 
-<div class="page">
-  <div class="hero">
-    <div class="hero-badge"><i class="fas fa-certificate"></i> Free forever. Project-gated. Verifiable.</div>
-    <h1>Earn Certifications<br>That Actually Matter</h1>
-    <p>Complete real projects to unlock verified certificates. No MCQ-only exams. No paywalls. Portfolio-ready credentials for Indian builders.</p>
+<div class="page-wrap">
+  <!-- Hero -->
+  <section class="cert-hero">
+    <div class="hero-badge"><i class="fas fa-certificate"></i> FreeCodeCamp Inspired &bull; Verifiable Credential Engine</div>
+    <h1>Industry-Standard Free Certifications</h1>
+    <p>Demonstrate real technical proof-of-work. Pass interactive assessments in AI, Full-Stack Architecture, UX Psychology, and Growth Engineering to earn digitally verifiable credentials.</p>
+    
+    <div class="hero-metrics">
+      <div class="metric-pill"><i class="fas fa-shield-halved"></i> <span><strong>100% Free</strong> Forever</span></div>
+      <div class="metric-pill"><i class="fas fa-qrcode"></i> <span><strong>Instant QR</strong> Verification</span></div>
+      <div class="metric-pill"><i class="fab fa-linkedin"></i> <span><strong>1-Click LinkedIn</strong> Add</span></div>
+      <div class="metric-pill"><i class="fas fa-user-graduate"></i> <span><strong>14,280+</strong> Certified</span></div>
+    </div>
+  </section>
+
+  <!-- Certification Tracks Grid -->
+  <div class="tracks-title">
+    <span>Available Certification Tracks</span>
+    <span style="font-size:13px; color:#9aa0b8; font-weight:500;">Pass score threshold: 80%</span>
   </div>
 
-  <div class="cert-stats">
-    <div class="cert-stat"><span class="cert-stat-val">5</span><span class="cert-stat-label">Certificates Available</span></div>
-    <div class="cert-stat"><span class="cert-stat-val">100%</span><span class="cert-stat-label">Free Forever</span></div>
-    <div class="cert-stat"><span class="cert-stat-val">25</span><span class="cert-stat-label">Required Projects</span></div>
-    <div class="cert-stat"><span class="cert-stat-val">Blockchain</span><span class="cert-stat-label">Verification (Coming)</span></div>
+  <div class="tracks-grid">
+    <!-- Track 1: AI Systems -->
+    <div class="track-card">
+      <div class="track-badge" style="background:rgba(99,102,241,0.15); color:#a5b4fc; border:1px solid rgba(99,102,241,0.3);"><i class="fas fa-brain"></i> Track AVPU-AIE</div>
+      <h3>AI Systems & Prompt Engineering</h3>
+      <p class="track-desc">Master RAG pipelines, context window management, few-shot prompting, embeddings, vector indexing, and autonomous LLM agents.</p>
+      <div class="track-curriculum">
+        <div class="curr-item"><i class="fas fa-check"></i> Vector Embeddings & Cosine Search</div>
+        <div class="curr-item"><i class="fas fa-check"></i> RAG Chunking & Re-ranking Strategies</div>
+        <div class="curr-item"><i class="fas fa-check"></i> LangGraph & Multi-Agent Swarms</div>
+      </div>
+      <div class="track-footer">
+        <button class="btn-track btn-exam" onclick="startExam('ai')"><i class="fas fa-pen-nib"></i> Take Assessment</button>
+        <button class="btn-preview" title="Preview Certificate" onclick="loadTrackPreview('AI Systems & Prompt Engineering', 'AVPU-AIE-9402')"><i class="fas fa-eye"></i></button>
+      </div>
+    </div>
+
+    <!-- Track 2: Full-Stack Web -->
+    <div class="track-card">
+      <div class="track-badge" style="background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3);"><i class="fas fa-code"></i> Track AVPU-FSD</div>
+      <h3>Full-Stack Web Architecture & UI</h3>
+      <p class="track-desc">Engineered for production web systems: hydration mechanics, server-side rendering, WebGL animations, and distributed database indexing.</p>
+      <div class="track-curriculum">
+        <div class="curr-item"><i class="fas fa-check"></i> Modern DOM & Reactivity Patterns</div>
+        <div class="curr-item"><i class="fas fa-check"></i> Aceternity / Spline 3D Shaders & Canvas</div>
+        <div class="curr-item"><i class="fas fa-check"></i> REST & WebSocket Realtime Telemetry</div>
+      </div>
+      <div class="track-footer">
+        <button class="btn-track btn-exam" style="background:linear-gradient(135deg,#10b981,#059669);" onclick="startExam('web')"><i class="fas fa-pen-nib"></i> Take Assessment</button>
+        <button class="btn-preview" title="Preview Certificate" onclick="loadTrackPreview('Full-Stack Web Architecture & UI', 'AVPU-FSD-4819')"><i class="fas fa-eye"></i></button>
+      </div>
+    </div>
+
+    <!-- Track 3: UX Architecture -->
+    <div class="track-card">
+      <div class="track-badge" style="background:rgba(168,85,247,0.15); color:#d8b4fe; border:1px solid rgba(168,85,247,0.3);"><i class="fas fa-layer-group"></i> Track AVPU-UXD</div>
+      <h3>UX Architecture & Cognitive Heuristics</h3>
+      <p class="track-desc">Psychology-backed interface engineering: Fitts's law, Hick's decision latency, Miller's cognitive chunks, and micro-interaction ergonomics.</p>
+      <div class="track-curriculum">
+        <div class="curr-item"><i class="fas fa-check"></i> 21 Cognitive Laws of UX in Practice</div>
+        <div class="curr-item"><i class="fas fa-check"></i> Information Architecture & User Journeys</div>
+        <div class="curr-item"><i class="fas fa-check"></i> Friction Audits & Usability Benchmarking</div>
+      </div>
+      <div class="track-footer">
+        <button class="btn-track btn-exam" style="background:linear-gradient(135deg,#a855f7,#7c3aed);" onclick="startExam('ux')"><i class="fas fa-pen-nib"></i> Take Assessment</button>
+        <button class="btn-preview" title="Preview Certificate" onclick="loadTrackPreview('UX Architecture & Cognitive Heuristics', 'AVPU-UXD-3182')"><i class="fas fa-eye"></i></button>
+      </div>
+    </div>
+
+    <!-- Track 4: Growth Engineering -->
+    <div class="track-card">
+      <div class="track-badge" style="background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);"><i class="fas fa-chart-line"></i> Track AVPU-GEM</div>
+      <h3>Growth Engineering & Metrics</h3>
+      <p class="track-desc">Scientific startup growth: CAC-to-LTV payback velocity, cohort retention heatmaps, viral k-factors, and funnel drop-off diagnostics.</p>
+      <div class="track-curriculum">
+        <div class="curr-item"><i class="fas fa-check"></i> Retention Curves & Churn Prevention</div>
+        <div class="curr-item"><i class="fas fa-check"></i> A/B Hypothesis Testing & Significance</div>
+        <div class="curr-item"><i class="fas fa-check"></i> Product-Led Growth & Viral Loops</div>
+      </div>
+      <div class="track-footer">
+        <button class="btn-track btn-exam" style="background:linear-gradient(135deg,#f59e0b,#d97706);" onclick="startExam('growth')"><i class="fas fa-pen-nib"></i> Take Assessment</button>
+        <button class="btn-preview" title="Preview Certificate" onclick="loadTrackPreview('Growth Engineering & Metrics', 'AVPU-GEM-8910')"><i class="fas fa-eye"></i></button>
+      </div>
+    </div>
   </div>
 
-  <div class="certs-grid">
+  <!-- Certificate Canvas Studio -->
+  <section class="studio-section" id="certStudio">
+    <div class="studio-head">
+      <h2><i class="fas fa-award" style="color:var(--gold);"></i> Certificate Verification Studio</h2>
+      <div style="font-size:13px; color:#9aa0b8;">Rendered with high-resolution HTML5 Canvas &bull; 1200 &times; 800 HD</div>
+    </div>
 
-    <!-- Cert 1: AI Fundamentals -->
-    <div class="cert-card" style="--accent:#10b981;">
-      <div class="cert-header" style="border-left:3px solid #10b981;">
-        <div class="cert-icon" style="background:rgba(16,185,129,.15);">&#x1F9E0;</div>
-        <div class="cert-meta">
-          <div class="cert-track" style="color:#34d399;">Track 1</div>
-          <div class="cert-name">AI Fundamentals Certificate</div>
-          <div class="cert-time"><i class="fas fa-clock" style="font-size:10px;"></i> ~80 hours &bull; 5 projects</div>
-        </div>
-        <span class="cert-badge" style="background:rgba(16,185,129,.12);color:#34d399;border:1px solid rgba(16,185,129,.25);"><i class="fas fa-unlock"></i> Unlocked</span>
+    <div class="studio-controls">
+      <div class="control-group">
+        <label>Recipient Full Name</label>
+        <input type="text" id="certName" class="control-input" value="Kunal Patel" oninput="renderCertificate()">
       </div>
-      <div class="cert-body">
-        <p class="cert-desc">Master Python for data science, EDA, and your first ML models. Build 5 real projects using Indian datasets (cricket, stocks, agriculture).</p>
-        <div class="cert-projects-title">Required Projects (0/5)</div>
-        <div class="cert-projects">
-          <div class="cert-project-item"><div class="proj-check"><i class="fas fa-check"></i></div> IPL Match Winner Predictor</div>
-          <div class="cert-project-item"><div class="proj-check"></div> House Price Estimator (Mumbai data)</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Crop Yield Forecaster</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Customer Churn Analyzer</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Stock Trend Classifier</div>
-        </div>
-        <div class="cert-progress-bar"><div class="cert-progress-fill" style="width:0%;background:linear-gradient(90deg,#10b981,#34d399);"></div></div>
-        <div class="cert-footer">
-          <button class="btn-cert btn-cert-primary" style="background:linear-gradient(135deg,#10b981,#059669);flex:1;" onclick="previewCert('AI Fundamentals','Track 1 — Machine Learning','#10b981','&#x1F9E0;')"><i class="fas fa-play"></i> Start Certification</button>
-          <button class="btn-cert btn-cert-ghost" onclick="previewCert('AI Fundamentals','Track 1 — Machine Learning','#10b981','&#x1F9E0;')"><i class="fas fa-eye"></i> Preview</button>
-        </div>
+      <div class="control-group">
+        <label>Certification Track</label>
+        <select id="certTrackSelect" class="control-input" onchange="onTrackSelectChange()">
+          <option value="AI Systems & Prompt Engineering" data-id="AVPU-AIE-9402">AI Systems & Prompt Engineering</option>
+          <option value="Full-Stack Web Architecture & UI" data-id="AVPU-FSD-4819">Full-Stack Web Architecture & UI</option>
+          <option value="UX Architecture & Cognitive Heuristics" data-id="AVPU-UXD-3182">UX Architecture & Cognitive Heuristics</option>
+          <option value="Growth Engineering & Metrics" data-id="AVPU-GEM-8910">Growth Engineering & Metrics</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Issue Date</label>
+        <input type="text" id="certDate" class="control-input" value="September 23, 2026" oninput="renderCertificate()">
+      </div>
+      <div class="control-group">
+        <label>Credential Verification ID</label>
+        <input type="text" id="certId" class="control-input" value="AVPU-AIE-9402" readonly style="color:#6ee7b7; font-family:'JetBrains Mono',monospace;">
       </div>
     </div>
 
-    <!-- Cert 2: NLP & LLM -->
-    <div class="cert-card">
-      <div class="cert-header" style="border-left:3px solid #6366f1;">
-        <div class="cert-icon" style="background:rgba(99,102,241,.15);">&#x1F4AC;</div>
-        <div class="cert-meta">
-          <div class="cert-track" style="color:#a5b4fc;">Track 2</div>
-          <div class="cert-name">NLP & Large Language Models</div>
-          <div class="cert-time"><i class="fas fa-clock" style="font-size:10px;"></i> ~100 hours &bull; 5 projects</div>
-        </div>
-        <span class="cert-badge" style="background:rgba(99,102,241,.12);color:#a5b4fc;border:1px solid rgba(99,102,241,.25);"><i class="fas fa-lock"></i> Locked</span>
-      </div>
-      <div class="cert-body">
-        <p class="cert-desc">Build text classifiers, sentiment analyzers, and RAG-based chatbots. Fine-tune a small LLM for an Indian language use-case.</p>
-        <div class="cert-projects-title">Required Projects (0/5)</div>
-        <div class="cert-projects">
-          <div class="cert-project-item"><div class="proj-check"></div> Hindi-English Sentiment API</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Legal Document Summarizer (Indian law)</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Fake News Detector (Indian news)</div>
-          <div class="cert-project-item"><div class="proj-check"></div> RAG Chatbot over custom docs</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Fine-tuned model for code completion</div>
-        </div>
-        <div class="cert-progress-bar"><div class="cert-progress-fill" style="width:0%;background:linear-gradient(90deg,#6366f1,#a855f7);"></div></div>
-        <div class="cert-footer">
-          <button class="btn-cert btn-cert-primary" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);flex:1;opacity:.6;cursor:not-allowed;"><i class="fas fa-lock"></i> Complete Track 1 First</button>
-          <button class="btn-cert btn-cert-ghost" onclick="previewCert('NLP and LLMs','Track 2 — Language AI','#6366f1','&#x1F4AC;')"><i class="fas fa-eye"></i> Preview</button>
-        </div>
+    <div class="canvas-stage">
+      <canvas id="certCanvas" width="1200" height="800"></canvas>
+      
+      <div class="canvas-actions">
+        <button class="btn-act btn-act-primary" onclick="downloadCertificate()"><i class="fas fa-download"></i> Download High-Res PNG</button>
+        <button class="btn-act btn-act-linkedin" onclick="shareToLinkedIn()"><i class="fab fa-linkedin"></i> Add to LinkedIn Profile</button>
+        <button class="btn-act btn-act-ghost" onclick="printCertificate()"><i class="fas fa-print"></i> Print to PDF</button>
+        <button class="btn-act btn-act-ghost" onclick="copyVerificationLink()"><i class="fas fa-link"></i> Copy Verification Link</button>
       </div>
     </div>
+  </section>
+</div>
 
-    <!-- Cert 3: Computer Vision -->
-    <div class="cert-card">
-      <div class="cert-header" style="border-left:3px solid #a855f7;">
-        <div class="cert-icon" style="background:rgba(168,85,247,.15);">&#x1F441;</div>
-        <div class="cert-meta">
-          <div class="cert-track" style="color:#c084fc;">Track 3</div>
-          <div class="cert-name">Computer Vision Engineering</div>
-          <div class="cert-time"><i class="fas fa-clock" style="font-size:10px;"></i> ~90 hours &bull; 5 projects</div>
-        </div>
-        <span class="cert-badge" style="background:rgba(168,85,247,.12);color:#c084fc;border:1px solid rgba(168,85,247,.25);"><i class="fas fa-lock"></i> Locked</span>
-      </div>
-      <div class="cert-body">
-        <p class="cert-desc">Build CNN-based classifiers, object detectors, and real-time vision systems. Deploy to edge devices and mobile using TFLite.</p>
-        <div class="cert-projects-title">Required Projects (0/5)</div>
-        <div class="cert-projects">
-          <div class="cert-project-item"><div class="proj-check"></div> Crop Disease Detector (mobile-ready)</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Indian Currency Note Classifier</div>
-          <div class="cert-project-item"><div class="proj-check"></div> License Plate OCR System</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Real-time Gesture Controller</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Medical X-Ray Anomaly Detector</div>
-        </div>
-        <div class="cert-progress-bar"><div class="cert-progress-fill" style="width:0%;background:linear-gradient(90deg,#a855f7,#ec4899);"></div></div>
-        <div class="cert-footer">
-          <button class="btn-cert btn-cert-primary" style="background:linear-gradient(135deg,#a855f7,#ec4899);flex:1;opacity:.6;cursor:not-allowed;"><i class="fas fa-lock"></i> Complete Track 2 First</button>
-          <button class="btn-cert btn-cert-ghost" onclick="previewCert('Computer Vision','Track 3 — Vision AI','#a855f7','&#x1F441;')"><i class="fas fa-eye"></i> Preview</button>
-        </div>
-      </div>
+<!-- Assessment Modal -->
+<div class="modal-overlay" id="examModal">
+  <div class="exam-modal">
+    <div class="exam-head">
+      <h3 id="modalExamTitle"><i class="fas fa-brain"></i> AI Systems Assessment</h3>
+      <button class="btn-close" onclick="closeExam()">&times;</button>
     </div>
-
-    <!-- Cert 4: UX Design -->
-    <div class="cert-card">
-      <div class="cert-header" style="border-left:3px solid #f59e0b;">
-        <div class="cert-icon" style="background:rgba(245,158,11,.15);">&#x1F3A8;</div>
-        <div class="cert-meta">
-          <div class="cert-track" style="color:#fbbf24;">Track 4</div>
-          <div class="cert-name">UX Design Principles Certificate</div>
-          <div class="cert-time"><i class="fas fa-clock" style="font-size:10px;"></i> ~60 hours &bull; 5 projects</div>
-        </div>
-        <span class="cert-badge" style="background:rgba(245,158,11,.12);color:#fbbf24;border:1px solid rgba(245,158,11,.25);"><i class="fas fa-unlock"></i> Unlocked</span>
-      </div>
-      <div class="cert-body">
-        <p class="cert-desc">Apply all 21 Laws of UX to real design critiques. Build 5 UX case studies using Indian apps (Swiggy, Zerodha, CRED, Zomato, Myntra).</p>
-        <div class="cert-projects-title">Required Projects (0/5)</div>
-        <div class="cert-projects">
-          <div class="cert-project-item"><div class="proj-check"></div> Swiggy checkout UX teardown + redesign</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Zerodha Kite mobile UX audit</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Accessibility audit: any IRCTC flow</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Design a habit-forming onboarding flow</div>
-          <div class="cert-project-item"><div class="proj-check"></div> A/B test two pricing page designs</div>
-        </div>
-        <div class="cert-progress-bar"><div class="cert-progress-fill" style="width:0%;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div></div>
-        <div class="cert-footer">
-          <button class="btn-cert btn-cert-primary" style="background:linear-gradient(135deg,#f59e0b,#d97706);flex:1;" onclick="previewCert('UX Design Principles','Track 4 — UX and Product','#f59e0b','&#x1F3A8;')"><i class="fas fa-play"></i> Start Certification</button>
-          <button class="btn-cert btn-cert-ghost" onclick="previewCert('UX Design Principles','Track 4 — UX and Product','#f59e0b','&#x1F3A8;')"><i class="fas fa-eye"></i> Preview</button>
-        </div>
-      </div>
+    <div class="exam-body">
+      <div class="q-step" id="qCounter">Question 1 of 5</div>
+      <div class="q-text" id="qPrompt">Loading assessment question...</div>
+      <div class="options-list" id="optionsBox"></div>
     </div>
-
-    <!-- Cert 5: Growth Marketing -->
-    <div class="cert-card">
-      <div class="cert-header" style="border-left:3px solid #ef4444;">
-        <div class="cert-icon" style="background:rgba(239,68,68,.15);">&#x1F4C8;</div>
-        <div class="cert-meta">
-          <div class="cert-track" style="color:#fca5a5;">Track 5</div>
-          <div class="cert-name">Growth Marketing Certificate</div>
-          <div class="cert-time"><i class="fas fa-clock" style="font-size:10px;"></i> ~50 hours &bull; 5 projects</div>
-        </div>
-        <span class="cert-badge" style="background:rgba(239,68,68,.12);color:#fca5a5;border:1px solid rgba(239,68,68,.25);"><i class="fas fa-unlock"></i> Unlocked</span>
+    <div class="exam-foot">
+      <div class="exam-score-bar">
+        <div class="exam-score-fill" id="examProgress"></div>
       </div>
-      <div class="cert-body">
-        <p class="cert-desc">Implement 18 real marketing tactics from Indian startup case studies. Measure, iterate, and ship a growth experiment with real data.</p>
-        <div class="cert-projects-title">Required Projects (0/5)</div>
-        <div class="cert-projects">
-          <div class="cert-project-item"><div class="proj-check"></div> SEO audit + 10 programmatic pages</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Cold email campaign with 20%+ reply rate</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Referral system design and launch</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Content flywheel: 4 pieces + distribution</div>
-          <div class="cert-project-item"><div class="proj-check"></div> Growth teardown: reverse-engineer one Indian startup</div>
-        </div>
-        <div class="cert-progress-bar"><div class="cert-progress-fill" style="width:0%;background:linear-gradient(90deg,#ef4444,#f97316);"></div></div>
-        <div class="cert-footer">
-          <button class="btn-cert btn-cert-primary" style="background:linear-gradient(135deg,#ef4444,#f97316);flex:1;" onclick="previewCert('Growth Marketing','Track 5 — Growth and Marketing','#ef4444','&#x1F4C8;')"><i class="fas fa-play"></i> Start Certification</button>
-          <button class="btn-cert btn-cert-ghost" onclick="previewCert('Growth Marketing','Track 5 — Growth and Marketing','#ef4444','&#x1F4C8;')"><i class="fas fa-eye"></i> Preview</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- LEARNING ROADMAP -->
-  <div class="roadmap">
-    <div class="roadmap-title"><i class="fas fa-road" style="color:#10b981;"></i> Recommended Learning Roadmap</div>
-    <div class="roadmap-path">
-      <div class="roadmap-step">
-        <div class="roadmap-step-line">
-          <div class="roadmap-dot" style="background:rgba(16,185,129,.2);color:#34d399;">1</div>
-          <div class="roadmap-connector"></div>
-        </div>
-        <div class="roadmap-content">
-          <div class="roadmap-step-title">Start with AI Fundamentals or UX Design (both unlocked)</div>
-          <div class="roadmap-step-desc">No prerequisites. Start here if you are new. Both can run in parallel since they use different skills — Python/ML vs design thinking.</div>
-        </div>
-      </div>
-      <div class="roadmap-step">
-        <div class="roadmap-step-line">
-          <div class="roadmap-dot" style="background:rgba(99,102,241,.2);color:#a5b4fc;">2</div>
-          <div class="roadmap-connector"></div>
-        </div>
-        <div class="roadmap-content">
-          <div class="roadmap-step-title">Unlock NLP &amp; LLMs after AI Fundamentals</div>
-          <div class="roadmap-step-desc">Requires the 5 ML projects from Track 1. Takes 100 hours but gives you the most in-demand skill in Indian tech right now.</div>
-        </div>
-      </div>
-      <div class="roadmap-step">
-        <div class="roadmap-step-line">
-          <div class="roadmap-dot" style="background:rgba(168,85,247,.2);color:#c084fc;">3</div>
-          <div class="roadmap-connector"></div>
-        </div>
-        <div class="roadmap-content">
-          <div class="roadmap-step-title">Computer Vision after NLP (or in parallel)</div>
-          <div class="roadmap-step-desc">Vision and NLP share the same PyTorch/DL foundations. After Track 2, you already know 70% of what Track 3 needs.</div>
-        </div>
-      </div>
-      <div class="roadmap-step">
-        <div class="roadmap-step-line">
-          <div class="roadmap-dot" style="background:rgba(245,158,11,.2);color:#fbbf24;">4</div>
-        </div>
-        <div class="roadmap-content" style="padding-bottom:0;">
-          <div class="roadmap-step-title">Add Growth Marketing alongside any track</div>
-          <div class="roadmap-step-desc">Growth is a soft skill that compounds with every technical cert. Ship your AI/UX project, then run real marketing experiments on it.</div>
-        </div>
-      </div>
+      <button class="btn-track btn-exam" id="btnNextQ" style="flex:none; padding:10px 20px;" onclick="nextQuestion()">Next Question &rarr;</button>
     </div>
   </div>
 </div>
 
-<!-- CERTIFICATE PREVIEW MODAL -->
-<div class="modal-bg" id="certModal">
-  <div class="cert-preview">
-    <div class="cert-preview-header">
-      <div class="cert-seal" id="previewSeal" style="background:rgba(16,185,129,.15);">&#x1F9E0;</div>
-      <div class="cert-preview-title">Certificate of Completion</div>
-      <div class="cert-preview-name" id="previewName">AI Fundamentals</div>
-      <div class="cert-preview-sub" id="previewSub">This certifies that [Your Name] has successfully completed all required projects</div>
-      <div class="cert-preview-issued" id="previewIssued">Issued by AVPU &bull; Sevenseed Platform &bull; <span id="previewDate"></span></div>
-    </div>
-    <div class="cert-preview-body">
-      <div class="verify-box"><i class="fas fa-shield-check" style="color:#10b981;font-size:16px;"></i> <span>Verification ID: AVPU-<span id="previewId"></span></span></div>
-      <p style="font-size:13px;color:#9aa0b8;line-height:1.6;margin-bottom:20px;">Complete all 5 required projects to earn and share this certificate. Your LinkedIn profile link, GitHub repo links, and project descriptions will be embedded in the verified credential.</p>
-      <div class="modal-footer">
-        <button class="btn-cert btn-cert-ghost" onclick="closeCertModal()">Close</button>
-        <button class="btn-cert btn-cert-primary" style="background:linear-gradient(135deg,#10b981,#059669);" onclick="closeCertModal()"><i class="fas fa-arrow-right"></i> Start Earning This</button>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="toast" id="toastBox"><i class="fas fa-check-circle"></i> <span id="toastMsg">Action completed!</span></div>
 
 <script>
-function previewCert(name, sub, color, icon) {
-  document.getElementById("previewName").textContent = name;
-  document.getElementById("previewSub").textContent = "This certifies that [Your Name] has successfully completed all required projects for " + sub;
-  document.getElementById("previewSeal").innerHTML = icon;
-  document.getElementById("previewSeal").style.background = color + "22";
-  document.getElementById("previewDate").textContent = new Date().toLocaleDateString("en-IN", {year:"numeric",month:"long",day:"numeric"});
-  document.getElementById("previewId").textContent = Math.random().toString(36).substr(2,12).toUpperCase();
-  document.getElementById("certModal").classList.add("open");
-}
-function closeCertModal() { document.getElementById("certModal").classList.remove("open"); }
-document.getElementById("certModal").addEventListener("click", e => { if (e.target === e.currentTarget) closeCertModal(); });
+// Assessment Questions Database
+const EXAM_BANKS = {
+  ai: [
+    {
+      q: "What is the primary technical purpose of Reciprocal Rank Fusion (RRF) in modern RAG systems?",
+      opts: [
+        "To combine and rank results from dense vector search and BM25 sparse keyword search",
+        "To compress the context window length by 50% without loss of token embeddings",
+        "To fine-tune attention weights inside Transformer decoder layers",
+        "To quantize 16-bit floating point weights into 4-bit integer representations"
+      ],
+      correct: 0,
+      expl: "RRF merges ranked retrieval lists from disparate retrieval methods (like vector embeddings and BM25) into a unified scoring mechanism."
+    },
+    {
+      q: "When designing high-precision prompt engineering pipelines, what does 'Few-Shot CoT' provide over zero-shot prompting?",
+      opts: [
+        "It caches system prompts to reduce TTFT (Time To First Token) to zero",
+        "It provides step-by-step reasoning exemplars that guide the LLM's latent intermediate tokens",
+        "It bypasses token rate limits via speculative decoding",
+        "It eliminates the need for vector databases entirely"
+      ],
+      correct: 1,
+      expl: "Few-Shot Chain of Thought (CoT) equips the model with concrete demonstrations of intermediate rationales, dramatically reducing hallucinations in multi-step deduction."
+    },
+    {
+      q: "Which vector distance metric is invariant to the absolute magnitude of embedding vectors and focuses purely on orientation?",
+      opts: [
+        "Euclidean Distance (L2 norm)",
+        "Manhattan Distance (L1 norm)",
+        "Cosine Similarity",
+        "Minkowski Distance"
+      ],
+      correct: 2,
+      expl: "Cosine similarity calculates the cosine of the angle between two multi-dimensional vectors, normalizing for magnitude."
+    },
+    {
+      q: "In LangGraph multi-agent choreography, what represents the shared state passed between supervisor and worker nodes?",
+      opts: [
+        "Typed StateDict / Messages State",
+        "Raw stdout buffer strings",
+        "Unserialized binary blobs",
+        "Browser cookies"
+      ],
+      correct: 0,
+      expl: "LangGraph relies on a strongly typed State dictionary (such as MessagesState) that nodes receive, update, and return via reducers."
+    },
+    {
+      q: "What happens during 'Lost in the Middle' phenomena in long-context LLMs (e.g. 128k+ tokens)?",
+      opts: [
+        "Tokens in the middle of long contexts suffer from decreased attention retrieval accuracy compared to the beginning and end",
+        "The model automatically terminates generation with a context error",
+        "The embedding dimensions drop to zero midway through generation",
+        "The temperature parameter increases exponentially"
+      ],
+      correct: 0,
+      expl: "Research shows LLMs are most effective at utilizing information placed at the absolute start or end of the input context, often ignoring facts in the middle."
+    }
+  ],
+  web: [
+    {
+      q: "In modern browser rendering pipelines, which CSS properties avoid both Layout and Paint and trigger only Compositing?",
+      opts: [
+        "transform and opacity",
+        "top, left, and margin",
+        "width, height, and display",
+        "background-color and border-radius"
+      ],
+      correct: 0,
+      expl: "transform and opacity can be handled entirely by the GPU compositor thread without triggering expensive reflow (layout) or repaint."
+    },
+    {
+      q: "What is the primary benefit of React Server Components (RSC) compared to traditional client-side hydration?",
+      opts: [
+        "Zero bundle impact on the client for server-only dependencies and direct database access during render",
+        "Instant elimination of CSS and JavaScript on mobile browsers",
+        "Automatic conversion of all JavaScript code into WebAssembly",
+        "Full backward compatibility with Internet Explorer 8"
+      ],
+      correct: 0,
+      expl: "RSC components render exclusively on the server, sending pre-rendered virtual DOM trees without shipping their underlying npm libraries to client bundles."
+    },
+    {
+      q: "Which Web API enables non-blocking background data processing without freezing the 60fps main UI thread?",
+      opts: [
+        "Web Workers API",
+        "localStorage synchronous API",
+        "document.write()",
+        "alert() prompt loop"
+      ],
+      correct: 0,
+      expl: "Web Workers execute heavy computations in isolated OS threads, leaving the main UI thread free to handle scrolling and animations at 60/120fps."
+    },
+    {
+      q: "When using HTML5 Canvas for real-time 3D or particle simulations, what API ensures frames sync with the monitor's refresh rate?",
+      opts: [
+        "requestAnimationFrame()",
+        "setInterval(fn, 16)",
+        "setTimeout(fn, 0)",
+        "while(true) loop"
+      ],
+      correct: 0,
+      expl: "requestAnimationFrame() pauses when the tab is backgrounded and syncs precisely with VSYNC for maximum battery and frame smoothness."
+    },
+    {
+      q: "In modern CSS, what does the 'content-visibility: auto' property achieve?",
+      opts: [
+        "Skips rendering of off-screen elements until they approach the viewport, boosting initial page load speed",
+        "Hides text from screen readers",
+        "Automatically translates HTML content into regional languages",
+        "Encrypts DOM elements with AES-256"
+      ],
+      correct: 0,
+      expl: "content-visibility: auto allows the browser to skip layout and painting for elements that aren't currently visible on screen."
+    }
+  ],
+  ux: [
+    {
+      q: "According to Fitts's Law, what two factors dictate the time required to rapidly move to a target area?",
+      opts: [
+        "Distance to the target and the target's width/size",
+        "Color contrast ratio and font weight",
+        "Screen brightness and device RAM",
+        "Number of clicks required in the purchase funnel"
+      ],
+      correct: 0,
+      expl: "Fitts's Law models movement time as a function of the distance (amplitude) to target and the target's bounding width."
+    },
+    {
+      q: "Hick's Law states that decision time increases logarithmically with:",
+      opts: [
+        "The number and complexity of choices presented to the user",
+        "The speed of the user's internet connection",
+        "The physical weight of the smartphone",
+        "The length of the terms of service document"
+      ],
+      correct: 0,
+      expl: "Hick's Law proves that cognitive processing time increases as users are faced with more options, underscoring the need for progressive disclosure."
+    },
+    {
+      q: "What is Miller's Law regarding short-term working memory capacity?",
+      opts: [
+        "The average person can hold roughly 7 (plus or minus 2) chunks of information in working memory",
+        "Users only read 20% of words on a web page",
+        "Images are remembered 60,000 times faster than text",
+        "Users make aesthetic judgements in under 50 milliseconds"
+      ],
+      correct: 0,
+      expl: "George Miller's landmark 1956 research demonstrated human working memory capacity limits to 7 ± 2 chunks."
+    },
+    {
+      q: "What is the Peak-End Rule in psychological UX evaluation?",
+      opts: [
+        "Users judge an experience largely based on how they felt at its peak (most intense point) and at its end, rather than the total sum",
+        "Users always remember the very first page they landed on",
+        "Checkout funnels must always conclude with confetti",
+        "Mobile websites should peak in data usage during nighttime"
+      ],
+      correct: 0,
+      expl: "The Peak-End Rule (Kahneman) shows users recall the emotional apex and the conclusion of an experience above all else."
+    },
+    {
+      q: "In Gestalt psychology, what does the Law of Common Region state?",
+      opts: [
+        "Elements tend to be perceived into groups if they share an area with a clearly defined boundary",
+        "All buttons must be rectangular with 8px radius",
+        "Users in the same geographical region share identical taste",
+        "Text and icons must always be vertically aligned"
+      ],
+      correct: 0,
+      expl: "Common Region demonstrates that placing related items within a card container or background fill instantly communicates their functional grouping."
+    }
+  ],
+  growth: [
+    {
+      q: "What is the standard formula for viral coefficient (k-factor)?",
+      opts: [
+        "k = (Number of invitations sent per active user) × (Conversion rate of each invitation)",
+        "k = Total Revenue ÷ Total Advertising Spend",
+        "k = Monthly Active Users ÷ Daily Active Users",
+        "k = Churn Rate × Average Contract Value"
+      ],
+      correct: 0,
+      expl: "Viral K-factor measures how many new users each existing user brings in through referral mechanics. When k > 1, growth is self-sustaining."
+    },
+    {
+      q: "Why is Cohort Retention Analysis superior to aggregate overall churn metrics?",
+      opts: [
+        "It isolates users by onboarding date, revealing whether product improvements are actually making newer users stickier over time",
+        "It is required by the Reserve Bank of India",
+        "It eliminates the need for customer support",
+        "It guarantees 100% renewal on annual software contracts"
+      ],
+      correct: 0,
+      expl: "Aggregate churn can mask bleeding cohorts with top-of-funnel acquisition spikes; cohort grids reveal the true long-term retention curve."
+    },
+    {
+      q: "What defines an effective 'North Star Metric' (NSM) for a technology venture?",
+      opts: [
+        "The single metric that best captures the core value your product delivers to customers while driving sustainable business revenue",
+        "Total gross funding raised in Seed and Series A rounds",
+        "Number of registered accounts created regardless of activity",
+        "Number of pull requests merged per week"
+      ],
+      correct: 0,
+      expl: "A true North Star metric reflects genuine customer value realized (e.g. Spotify: time spent listening, Airbnb: nights booked)."
+    },
+    {
+      q: "If a SaaS company spends ₹6,000 to acquire a customer who pays ₹1,000 monthly margin, what is the CAC Payback Period?",
+      opts: [
+        "6 Months",
+        "12 Months",
+        "18 Months",
+        "3 Months"
+      ],
+      correct: 0,
+      expl: "CAC Payback Period = CAC / Monthly Gross Profit = ₹6,000 / ₹1,000 = 6 months."
+    },
+    {
+      q: "In modern Product-Led Growth (PLG), what is the 'Time to Value' (TTV)?",
+      opts: [
+        "The duration between a user first signing up and experiencing their primary 'Aha!' moment of utility",
+        "The time it takes for an enterprise sales rep to reply to an email",
+        "The depreciation schedule of company server hardware",
+        "The time taken to close a venture capital investment round"
+      ],
+      correct: 0,
+      expl: "TTV measures how fast a user experiences core product value; reducing TTV is the single highest leverage lever for activation rates."
+    }
+  ]
+};
 
-(function() {
-  var tBtn = document.getElementById("themeToggle");
-  if (tBtn) {
-    var cur = document.documentElement.getAttribute("data-theme") || "dark";
-    tBtn.querySelector("i").className = cur === "light" ? "fas fa-sun" : "fas fa-moon";
-    tBtn.addEventListener("click", function() {
-      var now = document.documentElement.getAttribute("data-theme") || "dark";
-      var next = now === "light" ? "dark" : "light";
-      document.documentElement.setAttribute("data-theme", next);
-      localStorage.setItem("ss-theme", next);
-      tBtn.querySelector("i").className = next === "light" ? "fas fa-sun" : "fas fa-moon";
-    });
+let currentTrack = 'ai';
+let currentQIdx = 0;
+let userAnswers = [];
+let examActive = false;
+
+function startExam(track) {
+  currentTrack = track;
+  currentQIdx = 0;
+  userAnswers = [];
+  examActive = true;
+
+  const titles = {
+    ai: '<i class="fas fa-brain"></i> AI Systems & Prompt Engineering Exam',
+    web: '<i class="fas fa-code"></i> Full-Stack Web Architecture Exam',
+    ux: '<i class="fas fa-layer-group"></i> UX Architecture & Cognitive Design Exam',
+    growth: '<i class="fas fa-chart-line"></i> Growth Engineering & Metrics Exam'
+  };
+  document.getElementById('modalExamTitle').innerHTML = titles[track] || 'Professional Assessment';
+  document.getElementById('examModal').classList.add('open');
+  renderQuestion();
+}
+
+function closeExam() {
+  document.getElementById('examModal').classList.remove('open');
+  examActive = false;
+}
+
+function renderQuestion() {
+  const bank = EXAM_BANKS[currentTrack];
+  const qData = bank[currentQIdx];
+  document.getElementById('qCounter').textContent = `Question ${currentQIdx + 1} of ${bank.length}`;
+  document.getElementById('qPrompt').textContent = qData.q;
+  
+  const pct = ((currentQIdx) / bank.length) * 100;
+  document.getElementById('examProgress').style.width = pct + '%';
+
+  const box = document.getElementById('optionsBox');
+  box.innerHTML = '';
+
+  qData.opts.forEach((opt, idx) => {
+    const label = document.createElement('label');
+    label.className = 'opt-label';
+    label.innerHTML = `
+      <input type="radio" name="optRadio" value="${idx}" style="accent-color:#6366f1;">
+      <span>${opt}</span>
+    `;
+    label.onclick = function() {
+      document.querySelectorAll('.opt-label').forEach(l => l.classList.remove('selected'));
+      label.classList.add('selected');
+      const r = label.querySelector('input');
+      r.checked = true;
+    };
+    box.appendChild(label);
+  });
+
+  const nextBtn = document.getElementById('btnNextQ');
+  if (currentQIdx === bank.length - 1) {
+    nextBtn.innerHTML = 'Submit & Grade Exam <i class="fas fa-check"></i>';
+  } else {
+    nextBtn.innerHTML = 'Next Question &rarr;';
   }
-  var ring = document.getElementById("cursorRing");
-  if (ring && !window.matchMedia("(pointer: coarse)").matches) {
-    var mx = -100, my = -100, rx = -100, ry = -100;
-    window.addEventListener("mousemove", function(e) { mx = e.clientX; my = e.clientY; });
-    (function loop() { rx += (mx-rx)*0.2; ry += (my-ry)*0.2; ring.style.transform = "translate3d("+(rx-18)+"px,"+(ry-18)+"px,0)"; requestAnimationFrame(loop); })();
+}
+
+function nextQuestion() {
+  const selected = document.querySelector('input[name="optRadio"]:checked');
+  if (!selected) {
+    showToast('Please select an answer to continue');
+    return;
   }
-})();
+  userAnswers.push(parseInt(selected.value));
+
+  const bank = EXAM_BANKS[currentTrack];
+  if (currentQIdx < bank.length - 1) {
+    currentQIdx++;
+    renderQuestion();
+  } else {
+    gradeExam();
+  }
+}
+
+function gradeExam() {
+  const bank = EXAM_BANKS[currentTrack];
+  let correctCount = 0;
+  userAnswers.forEach((ans, idx) => {
+    if (ans === bank[idx].correct) correctCount++;
+  });
+  const scorePct = Math.round((correctCount / bank.length) * 100);
+
+  if (scorePct >= 80) {
+    closeExam();
+    showToast(`Passed! Score: ${scorePct}%. Unlocking your verified certificate!`);
+
+    // Map track name
+    const trackNames = {
+      ai: 'AI Systems & Prompt Engineering',
+      web: 'Full-Stack Web Architecture & UI',
+      ux: 'UX Architecture & Cognitive Heuristics',
+      growth: 'Growth Engineering & Metrics'
+    };
+    const trackIds = {
+      ai: 'AVPU-AIE-' + Math.floor(1000 + Math.random() * 9000),
+      web: 'AVPU-FSD-' + Math.floor(1000 + Math.random() * 9000),
+      ux: 'AVPU-UXD-' + Math.floor(1000 + Math.random() * 9000),
+      growth: 'AVPU-GEM-' + Math.floor(1000 + Math.random() * 9000)
+    };
+
+    const sel = document.getElementById('certTrackSelect');
+    for (let i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === trackNames[currentTrack]) {
+        sel.selectedIndex = i;
+        break;
+      }
+    }
+    document.getElementById('certId').value = trackIds[currentTrack];
+    renderCertificate();
+    
+    // Smooth scroll to studio
+    document.getElementById('certStudio').scrollIntoView({ behavior: 'smooth' });
+  } else {
+    alert(`Assessment Result: ${scorePct}%\nThreshold is 80% to earn official credential.\n\nReview the course materials and try again!`);
+    closeExam();
+  }
+}
+
+function onTrackSelectChange() {
+  const sel = document.getElementById('certTrackSelect');
+  const opt = sel.options[sel.selectedIndex];
+  document.getElementById('certId').value = opt.getAttribute('data-id') || 'AVPU-CERT-0001';
+  renderCertificate();
+}
+
+function loadTrackPreview(trackName, certId) {
+  const sel = document.getElementById('certTrackSelect');
+  for (let i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].value === trackName) {
+      sel.selectedIndex = i;
+      break;
+    }
+  }
+  document.getElementById('certId').value = certId;
+  renderCertificate();
+  document.getElementById('certStudio').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ─────────────────────────────────────────────────────────────
+// HTML5 Canvas Certificate Generator Engine
+// ─────────────────────────────────────────────────────────────
+function renderCertificate() {
+  const canvas = document.getElementById('certCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const name = document.getElementById('certName').value.trim() || 'Kunal Patel';
+  const track = document.getElementById('certTrackSelect').value;
+  const date = document.getElementById('certDate').value.trim() || 'September 23, 2026';
+  const certId = document.getElementById('certId').value.trim() || 'AVPU-AIE-9402';
+
+  // 1. Background
+  const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+  bgGrad.addColorStop(0, '#090a14');
+  bgGrad.addColorStop(0.5, '#0e0f1e');
+  bgGrad.addColorStop(1, '#070810');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // 2. Subtle Micro Pattern / Guilloche simulation
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,255,255,0.015)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 30) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, H);
+    ctx.stroke();
+  }
+  for (let y = 0; y < H; y += 30) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // 3. Luxury Outer Guilloche Border
+  ctx.save();
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#d4af37'; // Gold
+  ctx.strokeRect(36, 36, W - 72, H - 72);
+
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(212,175,55,0.4)';
+  ctx.strokeRect(44, 44, W - 88, H - 88);
+
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(212,175,55,0.2)';
+  ctx.strokeRect(52, 52, W - 104, H - 104);
+
+  // 4. Corner Ornaments
+  const corners = [
+    [52, 52], [W - 52, 52], [52, H - 52], [W - 52, H - 52]
+  ];
+  ctx.fillStyle = '#d4af37';
+  corners.forEach(([cx, cy]) => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.restore();
+
+  // 5. Header Brand & Shield
+  ctx.save();
+  ctx.textAlign = 'center';
+
+  // AVPU Crest Symbol
+  ctx.fillStyle = '#6366f1';
+  ctx.beginPath();
+  ctx.arc(W / 2, 115, 26, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 22px Inter';
+  ctx.fillText('⚡', W / 2, 122);
+
+  // Title text
+  ctx.font = '800 13px Inter';
+  ctx.fillStyle = '#a5b4fc';
+  ctx.letterSpacing = '0.2em';
+  ctx.fillText('AVP UNIVERSITY &bull; SEEVENSEED ECOSYSTEM', W / 2, 168);
+
+  ctx.font = '900 36px "Cinzel", Georgia, serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('CERTIFICATE OF MASTERY', W / 2, 218);
+
+  // Subtitle
+  ctx.font = '500 15px Inter';
+  ctx.fillStyle = '#9aa0b8';
+  ctx.fillText('This is to certify and officially verify that', W / 2, 265);
+
+  // Student Name
+  ctx.font = 'bold 44px "Cinzel", Georgia, serif';
+  const nameGrad = ctx.createLinearGradient(W/2 - 200, 0, W/2 + 200, 0);
+  nameGrad.addColorStop(0, '#fef08a');
+  nameGrad.addColorStop(0.5, '#ffffff');
+  nameGrad.addColorStop(1, '#fde047');
+  ctx.fillStyle = nameGrad;
+  ctx.fillText(name, W / 2, 335);
+
+  // Underline flourish
+  ctx.strokeStyle = '#d4af37';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(W / 2 - 220, 355);
+  ctx.lineTo(W / 2 + 220, 355);
+  ctx.stroke();
+
+  // Body text
+  ctx.font = '500 16px Inter';
+  ctx.fillStyle = '#c5c8de';
+  ctx.fillText('has demonstrated proven engineering excellence and successfully passed all rigorous modules in', W / 2, 395);
+
+  // Track Name
+  ctx.font = 'bold 26px Inter';
+  ctx.fillStyle = '#38bdf8';
+  ctx.fillText(track, W / 2, 440);
+
+  // Description / Accreditation
+  ctx.font = '13px Inter';
+  ctx.fillStyle = '#9aa0b8';
+  ctx.fillText('Accredited by AVPU autonomous learning standards in accordance with production industry requirements.', W / 2, 480);
+  ctx.restore();
+
+  // 6. Signatures & Seal Section
+  ctx.save();
+  // Left: Dean Signature
+  ctx.textAlign = 'left';
+  ctx.font = 'italic bold 22px "Brush Script MT", cursive, sans-serif';
+  ctx.fillStyle = '#e2e8f0';
+  ctx.fillText('Kunal Patel', 120, 620);
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(120, 630);
+  ctx.lineTo(340, 630);
+  ctx.stroke();
+
+  ctx.font = 'bold 12px Inter';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('FOUNDER & ARCHITECT', 120, 650);
+  ctx.font = '11px Inter';
+  ctx.fillStyle = '#9aa0b8';
+  ctx.fillText('Sevenseed Ecosystem & AVPU', 120, 668);
+
+  // Right: Date & Verification
+  ctx.textAlign = 'right';
+  ctx.font = 'bold 14px "JetBrains Mono", monospace';
+  ctx.fillStyle = '#6ee7b7';
+  ctx.fillText(`ID: ${certId}`, W - 120, 620);
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  ctx.beginPath();
+  ctx.moveTo(W - 340, 630);
+  ctx.lineTo(W - 120, 630);
+  ctx.stroke();
+
+  ctx.font = 'bold 12px Inter';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(`ISSUED: ${date}`, W - 120, 650);
+  ctx.font = '11px Inter';
+  ctx.fillStyle = '#9aa0b8';
+  ctx.fillText('Verify at: avpu.sevenseed.ai/verify', W - 120, 668);
+
+  // Center: Gold Seal Stamp
+  const sealX = W / 2;
+  const sealY = 620;
+
+  // Outer scalloped/cog circle
+  ctx.fillStyle = '#b45309';
+  ctx.beginPath();
+  ctx.arc(sealX, sealY, 52, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#f59e0b';
+  ctx.beginPath();
+  ctx.arc(sealX, sealY, 46, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#d97706';
+  ctx.beginPath();
+  ctx.arc(sealX, sealY, 40, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '900 11px Inter';
+  ctx.fillText('VERIFIED', sealX, sealY - 10);
+  ctx.font = 'bold 14px Inter';
+  ctx.fillText('★ 2026 ★', sealX, sealY + 6);
+  ctx.font = '800 9px Inter';
+  ctx.fillText('EXCELLENCE', sealX, sealY + 20);
+
+  // Simulated QR Code in corner
+  drawSimulatedQR(ctx, W - 100, 100, 52);
+  ctx.restore();
+}
+
+function drawSimulatedQR(ctx, x, y, size) {
+  ctx.save();
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(x - size/2, y - size/2, size, size);
+  ctx.fillStyle = '#060609';
+  
+  // Outer frame
+  ctx.fillRect(x - size/2 + 2, y - size/2 + 2, 14, 14);
+  ctx.fillRect(x + size/2 - 16, y - size/2 + 2, 14, 14);
+  ctx.fillRect(x - size/2 + 2, y + size/2 - 16, 14, 14);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(x - size/2 + 5, y - size/2 + 5, 8, 8);
+  ctx.fillRect(x + size/2 - 13, y - size/2 + 5, 8, 8);
+  ctx.fillRect(x - size/2 + 5, y + size/2 - 13, 8, 8);
+
+  // Data dots
+  ctx.fillStyle = '#060609';
+  const dots = [
+    [0, 0], [4, 4], [-4, -4], [6, -2], [-6, 2], [2, 6], [-2, -6], [0, 8], [8, 0], [-8, 0]
+  ];
+  dots.forEach(([dx, dy]) => {
+    ctx.fillRect(x + dx - 2, y + dy - 2, 4, 4);
+  });
+  ctx.restore();
+}
+
+function downloadCertificate() {
+  const canvas = document.getElementById('certCanvas');
+  const certId = document.getElementById('certId').value.trim() || 'AVPU-CERT';
+  const name = document.getElementById('certName').value.trim().replace(/\s+/g, '_');
+  
+  const link = document.createElement('a');
+  link.download = `${name}_${certId}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast('Certificate PNG downloaded successfully!');
+}
+
+function printCertificate() {
+  const canvas = document.getElementById('certCanvas');
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <html>
+      <head><title>Print Certificate</title></head>
+      <body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#fff;">
+        <img src="${canvas.toDataURL('image/png')}" style="max-width:100%;max-height:100%;" onload="window.print();window.close();" />
+      </body>
+    </html>
+  `);
+  win.document.close();
+}
+
+function shareToLinkedIn() {
+  const track = encodeURIComponent(document.getElementById('certTrackSelect').value);
+  const certId = encodeURIComponent(document.getElementById('certId').value);
+  const certUrl = encodeURIComponent(`https://avpu.sevenseed.ai/verify.html?id=${certId}`);
+  
+  // LinkedIn Add-To-Profile URL standard
+  const url = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${track}&organizationName=AVPU%20by%20Sevenseed&issueYear=2026&issueMonth=9&certUrl=${certUrl}&certId=${certId}`;
+  window.open(url, '_blank');
+}
+
+function copyVerificationLink() {
+  const certId = document.getElementById('certId').value.trim();
+  const name = encodeURIComponent(document.getElementById('certName').value.trim());
+  const track = encodeURIComponent(document.getElementById('certTrackSelect').value);
+  const link = `${window.location.origin}/verify.html?id=${certId}&name=${name}&track=${track}`;
+  
+  navigator.clipboard.writeText(link).then(() => {
+    showToast('Verification link copied to clipboard!');
+  }).catch(() => {
+    showToast('URL: ' + link);
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toastBox');
+  document.getElementById('toastMsg').textContent = msg;
+  t.style.display = 'flex';
+  setTimeout(() => { t.style.display = 'none'; }, 3000);
+}
+
+// Initial Canvas Draw
+window.addEventListener('DOMContentLoaded', () => {
+  renderCertificate();
+});
 </script>
+<script src="app.js"></script>
 </body>
 </html>

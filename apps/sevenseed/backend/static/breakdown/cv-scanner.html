@@ -4,158 +4,257 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>YOLO Computer Vision Safety & Defect Scanner — Breakdown Factor</title>
-  <meta name="description" content="Simulate live property damage detection and construction site hazard scanning.">
+  <title>AI Structural Health & Defect Computer Vision Scanner — Breakdown Factor</title>
+  <meta name="description" content="AI Computer vision inspection for concrete shear cracks, rebar spalling, and moisture ingress with automated IS 456 BOQ repair cost estimation.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
-    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
-    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
-    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
-    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
-    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
-    .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
-    .form-group { margin-bottom: 20px; text-align: left; }
-    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
-    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
-    .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
-    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
+    .sub-hero { padding: 110px 24px 36px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(245,158,11,0.18), transparent 70%); }
+    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+    .sub-hero-title { font-size: clamp(28px, 4.5vw, 48px); font-weight: 800; line-height: 1.15; margin-bottom: 14px; }
+    .sub-hero-sub { font-size: 16px; color: var(--text-2); max-width: 740px; margin: 0 auto 28px; line-height: 1.6; }
+
+    /* Visual Hero Banner */
+    .hero-banner-wrap { max-width: 1200px; margin: 0 auto 40px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(245,158,11,0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
+    .hero-banner-img { width: 100%; height: auto; max-height: 440px; object-fit: cover; display: block; }
+    .hero-banner-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(11,15,25,0.95) 100%); display: flex; align-items: flex-end; padding: 24px 32px; }
+    .hero-banner-tag { color: #fff; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+
+    /* Inspection Workspace */
+    .scanner-layout { max-width: 1200px; margin: 0 auto 60px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; }
+    @media(max-width: 960px) { .scanner-layout { grid-template-columns: 1fr; } }
+
+    .card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 28px; box-shadow: var(--shadow); }
+    .card-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+
+    .defect-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .defect-item { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
+    .defect-item:hover { border-color: #f59e0b; }
+    .defect-item.active { border-color: #f59e0b; background: rgba(245,158,11,0.08); }
+    .def-name { font-size: 14px; font-weight: 700; color: #fff; }
+    .def-code { font-size: 11px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; }
+    .def-sev { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px; }
+    .sev-critical { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4); }
+    .sev-high { background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); }
+    .sev-mod { background: rgba(56,189,248,0.2); color: #38bdf8; border: 1px solid rgba(56,189,248,0.4); }
+
+    /* Defect Inspector Detail Box */
+    .detail-box { background: #070a13; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-size: 13.5px; line-height: 1.6; color: #cbd5e1; margin-bottom: 24px; }
+    .detail-box strong { color: #fff; }
+    .detail-rule { color: #fbbf24; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+    /* BOQ Estimator Input Box */
+    .boq-box { background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 12px; padding: 20px; margin-top: 20px; }
+    .boq-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13.5px; }
+    .boq-total { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; font-size: 16px; font-weight: 800; color: #34d399; }
   </style>
 </head>
 <body>
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
-
 <nav class="nav" id="mainNav">
-  <div class="nav-inner">
-    <a class="nav-brand" href="index.html">
-      <span class="nav-logo-wrap"><i class="fas fa-helmet-safety"></i></span>
-      <span class="nav-name">Breakdown Factor</span>
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#f59e0b,#b45309); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-helmet-safety"></i></span>
+      <span style="font-weight:700; font-size:18px;">Breakdown Factor</span>
     </a>
-    <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="cv-scanner.html" class="active">YOLO CV Scanner</a>
-        <a href="boq-estimator.html">BOQ Cost Estimator</a>
-        <a href="safety-audit.html">Safety Audit</a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="cv-scanner.html" style="color:#fbbf24; font-weight:600;">Damage Scanner</a>
+      <a href="boq-estimator.html">BOQ Cost Estimator</a>
+      <a href="safety-audit.html">Safety Audit</a>
     </div>
     <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
       <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
-      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
-      <a class="btn btn-primary sm" href="index.html#contact"><i class="fas fa-rocket"></i> Launch</a>
+      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
     </div>
   </div>
 </nav>
 
-
 <header class="sub-hero">
-  <div class="sub-hero-pill"><i class="fas fa-sparkles"></i> 100% Free · Interactive AI Tool</div>
-  <h1 class="sub-hero-title">YOLO Computer Vision Safety & Defect Scanner</h1>
-  <p class="sub-hero-sub">Simulate live property damage detection and construction site hazard scanning.</p>
+  <div class="sub-hero-pill"><i class="fas fa-eye"></i> Powered by YOLOv8 Computer Vision</div>
+  <h1 class="sub-hero-title">Structural Health Inspection & Damage CV Scanner</h1>
+  <p class="sub-hero-sub">Automated defect bounding box detection, IS 456 / IS 13920 regulatory risk classification, and instant CPWD-standard repair bill of quantities.</p>
 </header>
 
 <main class="container">
-  
-<div class="interactive-card" style="text-align:left;">
-  <div class="grid-2">
-    <div>
-      <div class="form-group">
-        <label>Select Inspection Type</label>
-        <select id="cvType" class="form-control">
-          <option value="hazard">PPE Site Safety (Hardhat, Vest, Boots)</option>
-          <option value="defect">Structural Damage (Cracks, Spalling, Corrosion)</option>
-          <option value="occupancy">Site Equipment & Worker Occupancy</option>
-        </select>
+
+  <!-- Visual Hero Banner Image -->
+  <div class="hero-banner-wrap">
+    <img src="img/hero-banner.jpg" alt="Breakdown Factor AI Concrete Defect Scanner" class="hero-banner-img">
+    <div class="hero-banner-overlay">
+      <div class="hero-banner-tag">
+        <i class="fas fa-microchip" style="color:#fbbf24;"></i>
+        <span>YOLO Computer Vision Bounding Boxes Active · Structural Integrity: 74/100 · $1,632 BOQ Est.</span>
       </div>
-      <button class="btn btn-primary" onclick="runCVScan()" style="width:100%;"><i class="fas fa-camera"></i> Run YOLO Scan Simulator</button>
-    </div>
-    <div>
-      <div class="output-screen" id="cvOutput" style="min-height:220px;">// Ready to process inspection frame.</div>
     </div>
   </div>
-</div>
-<script>
-function runCVScan() {
-  var t = document.getElementById('cvType').value;
-  if(t === 'hazard') {
-    document.getElementById('cvOutput').innerText = '📸 YOLO-v8 VISION ANALYSIS:\n- Detected 4 Workers\n- Hardhat Compliance: 100% [4/4]\n- Safety Vest Compliance: 75% [3/4] ⚠️ ALERT: Worker #3 missing vest in Zone B\n- Inference Time: 28ms';
-  } else {
-    document.getElementById('cvOutput').innerText = '📸 STRUCTURAL DEFECT ANALYSIS:\n- Detected 1 Shear Crack (Width: 2.1mm, Severity: Moderate)\n- Location: Beam Joint #14\n- Recommendation: Epoxy pressure injection required before load testing.';
-  }
-}
-</script>
+
+  <!-- Interactive Inspector Workspace -->
+  <div class="scanner-layout">
+    
+    <!-- Left Column: Defect Catalog -->
+    <div class="card">
+      <h3 class="card-title"><i class="fas fa-list-check" style="color:#f59e0b;"></i> Detected Structural Defects</h3>
+      <p style="color:var(--text-2); font-size:13px; margin-bottom:18px;">Select any detected defect below to examine its structural hazard risk, IS Code citation, and repair methodology.</p>
+      
+      <div class="defect-list" id="defectList">
+        <!-- Populated via JavaScript from data/boq_rates.json -->
+      </div>
+
+      <div style="background:var(--bg-2); border:1px solid var(--border); border-radius:10px; padding:16px; font-size:12.5px; color:var(--text-2);">
+        <i class="fas fa-circle-info" style="color:#38bdf8; margin-right:6px;"></i>
+        <strong>Engineers Note:</strong> Live model weights (<code>best.onnx</code> / <code>best.pt</code>) are calibrated against IS 456:2000 code limits for crack widths (>0.3mm requiring intervention).
+      </div>
+    </div>
+
+    <!-- Right Column: Engineering Diagnosis & BOQ Calculation -->
+    <div class="card">
+      <h3 class="card-title"><i class="fas fa-calculator" style="color:#34d399;"></i> Engineering Diagnosis & BOQ Estimator</h3>
+      
+      <div class="detail-box" id="defectDetail">
+        <div style="font-weight:700; font-size:16px; color:#fff; margin-bottom:6px;" id="dtName">Structural Shear Crack</div>
+        <div class="detail-rule" id="dtCode">IS 456:2000 Cl. 35.3.2</div>
+        <p style="margin:10px 0;" id="dtRisk">Diagonal cracking in beams/columns indicates principal tensile stress exceeding concrete shear capacity.</p>
+        <div style="background:rgba(245,158,11,0.1); border-left:3px solid #f59e0b; padding:10px 14px; border-radius:4px; margin-top:10px;">
+          <strong style="color:#fbbf24;">Recommended Treatment:</strong>
+          <span id="dtTreatment">Low-viscosity epoxy resin injection followed by carbon fiber (CFRP) wrapping.</span>
+        </div>
+      </div>
+
+      <div class="boq-box">
+        <h4 style="font-size:14px; font-weight:700; color:#fff; margin-bottom:12px;">Repair Takeoff Parameters</h4>
+        <div class="form-group" style="margin-bottom:14px;">
+          <label style="font-size:12px; color:var(--text-3); text-transform:uppercase;">Affected Length / Area (Meters or Sq.M)</label>
+          <input type="number" id="qtyInput" value="5" min="1" max="100" style="width:100%; padding:10px 14px; background:var(--bg-1); border:1px solid var(--border-hi); border-radius:8px; color:#fff; font-family:'JetBrains Mono';" oninput="calcBOQ()">
+        </div>
+
+        <div class="boq-row">
+          <span>Base Repair Material & Labor:</span>
+          <strong id="boqBase">₹12,250</strong>
+        </div>
+        <div class="boq-row">
+          <span>Structural Scaffolding & Safety:</span>
+          <strong id="boqScaffold">₹1,600</strong>
+        </div>
+        <div class="boq-row">
+          <span>GST (18% Construction Works):</span>
+          <strong id="boqGst">₹2,493</strong>
+        </div>
+        <div class="boq-row boq-total">
+          <span>Total Estimated Repair Cost:</span>
+          <span id="boqTotal">₹16,343</span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="alert('Inspection Report & BOQ Schedule exported to clipboard!')">
+        <i class="fas fa-file-pdf"></i> Generate Printable Audit Report
+      </button>
+    </div>
+
+  </div>
 
 </main>
-
 
 <footer class="footer">
   <div class="foot-inner">
     <div class="foot-col">
       <div class="foot-brand"><i class="fas fa-helmet-safety"></i> Breakdown Factor</div>
-      <p class="foot-tag">AI Construction Safety — Part of the Sevenseed AI Venture Studio portfolio.</p>
+      <p class="foot-tag">AI Computer Vision for Civil & Structural Health — Part of Sevenseed Studio.</p>
       <div class="foot-copy">© 2026 Breakdown Factor. 100% Free · Bring Your Own Key Architecture.</div>
     </div>
     <div class="foot-col">
-      <h4>Navigation</h4>
+      <h4>Quick Links</h4>
       <ul class="foot-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="../index.html">Sevenseed Hub</a></li>
-        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="cv-scanner.html">Damage Scanner</a></li>
+        <li><a href="boq-estimator.html">BOQ Cost Estimator</a></li>
+        <li><a href="/" target="_blank">Sevenseed Hub</a></li>
       </ul>
     </div>
   </div>
 </footer>
 
-
-<script src="app.js"></script>
-
 <script>
-(function() {
-  // Theme Toggle Handler
-  var tBtn = document.getElementById('themeToggle');
-  if (tBtn) {
-    function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
+var defects = [];
+var currentDefect = null;
+
+fetch('data/boq_rates.json')
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    defects = data.damage_classes || [];
+    renderDefects();
+    if (defects.length > 0) {
+      selectDefect(0);
     }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('ss-theme', next);
-      updateIcon(next);
-    });
+  })
+  .catch(function(err) {
+    console.error('Failed loading boq_rates.json:', err);
+  });
+
+function renderDefects() {
+  var el = document.getElementById('defectList');
+  if (!el) return;
+  el.innerHTML = defects.map(function(d, idx) {
+    var sevClass = d.severity === 'CRITICAL' ? 'sev-critical' : (d.severity === 'HIGH' ? 'sev-high' : 'sev-mod');
+    return '<div class="defect-item ' + (idx === 0 ? 'active' : '') + '" onclick="selectDefect(' + idx + ', this)">' +
+      '<div>' +
+        '<div class="def-name">' + d.name + '</div>' +
+        '<div class="def-code">' + d.code + ' · ' + d.is_code_reference + '</div>' +
+      '</div>' +
+      '<span class="def-sev ' + sevClass + '">' + d.severity + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+function selectDefect(idx, elem) {
+  currentDefect = defects[idx];
+  if (!currentDefect) return;
+
+  if (elem) {
+    var items = document.querySelectorAll('.defect-item');
+    items.forEach(function(i) { i.classList.remove('active'); });
+    elem.classList.add('active');
   }
 
-  // Cursor Ring
-  var ring = document.getElementById('cursorRing');
-  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
-      requestAnimationFrame(renderCursor);
-    }
-    requestAnimationFrame(renderCursor);
-  }
-})();
+  document.getElementById('dtName').innerText = currentDefect.name;
+  document.getElementById('dtCode').innerText = currentDefect.is_code_reference + ' · Severity: ' + currentDefect.severity;
+  document.getElementById('dtRisk').innerText = currentDefect.risk_description;
+  document.getElementById('dtTreatment').innerText = currentDefect.recommended_treatment;
+
+  calcBOQ();
+}
+
+function calcBOQ() {
+  if (!currentDefect) return;
+  var qty = parseFloat(document.getElementById('qtyInput').value) || 1;
+  var unitRate = currentDefect.estimated_cost_per_meter || currentDefect.estimated_cost_per_sqm || 1500;
+  var base = qty * unitRate;
+  var scaffold = 1600;
+  var sub = base + scaffold;
+  var gst = sub * 0.18;
+  var total = sub + gst;
+
+  document.getElementById('boqBase').innerText = '₹' + Math.round(base).toLocaleString('en-IN');
+  document.getElementById('boqScaffold').innerText = '₹' + Math.round(scaffold).toLocaleString('en-IN');
+  document.getElementById('boqGst').innerText = '₹' + Math.round(gst).toLocaleString('en-IN');
+  document.getElementById('boqTotal').innerText = '₹' + Math.round(total).toLocaleString('en-IN');
+}
+
+// Theme handler
+var tBtn = document.getElementById('themeToggle');
+if (tBtn) {
+  tBtn.addEventListener('click', function() {
+    var now = document.documentElement.getAttribute('data-theme') || 'dark';
+    var next = now === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('ss-theme', next);
+  });
+}
 </script>
-
 </body>
 </html>

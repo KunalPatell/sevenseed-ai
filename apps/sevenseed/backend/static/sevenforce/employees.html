@@ -4,181 +4,564 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>7 Specialized AI Employees Catalog — Sevenforce</title>
-  <meta name="description" content="Meet your full-time AI workforce — ready to execute 24/7 with zero downtime.">
+  <title>Sevenforce AI Workforce — 7 Autonomous AI Employees & Live Studio</title>
+  <meta name="description" content="Hire a team of 7 specialized autonomous AI employees for marketing, sales, recruiting, data analysis, legal audit, coding, and e-commerce. 100% Free with BYOK.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
-    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
-    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
-    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
-    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
-    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
-    .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
-    .form-group { margin-bottom: 20px; text-align: left; }
-    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
-    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
-    .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
-    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
+    :root {
+      --accent: #06b6d4;
+      --accent-l: #67e8f9;
+      --accent-glow: rgba(6,182,212,0.25);
+    }
+    body { font-family: 'Manrope', 'Inter', system-ui, sans-serif; }
+    .emp-container { max-width: 1320px; margin: 0 auto; padding: 100px 24px 80px; }
+    .emp-hero { text-align: center; margin-bottom: 36px; }
+    .emp-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 999px; background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.3); color: var(--accent-l); font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+    .emp-title { font-size: clamp(32px, 4.5vw, 50px); font-weight: 900; line-height: 1.15; margin-bottom: 14px; letter-spacing: -0.02em; }
+    .emp-sub { color: var(--text-2); max-width: 780px; margin: 0 auto 28px; font-size: 16px; line-height: 1.6; }
+
+    /* Visual Banner */
+    .hero-banner-box { max-width: 1320px; margin: 0 auto 40px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(6,182,212,0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
+    .hero-banner-img { width: 100%; height: auto; max-height: 400px; object-fit: cover; display: block; }
+    .hero-banner-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(2,6,23,0.95) 100%); display: flex; align-items: flex-end; padding: 24px 32px; }
+    .hero-banner-caption { color: #fff; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+
+    /* Employee Cards Grid */
+    .emp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 24px; margin-bottom: 48px; }
+    .emp-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 28px; display: flex; flex-direction: column; transition: all 0.2s; position: relative; box-shadow: var(--shadow); }
+    .emp-card:hover { transform: translateY(-4px); border-color: rgba(6,182,212,0.5); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    .emp-card.active { border-color: var(--accent); background: rgba(6,182,212,0.04); }
+
+    .emp-card-header { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; }
+    .emp-avatar { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 28px; position: relative; border: 1px solid var(--border); }
+    .emp-status-dot { position: absolute; bottom: -2px; right: -2px; width: 14px; height: 14px; border-radius: 50%; background: #10b981; border: 2px solid var(--bg-1); }
+    .emp-name-wrap h3 { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 2px; }
+    .emp-role { font-size: 12px; color: var(--accent-l); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .emp-bio { font-size: 13.5px; color: var(--text-2); line-height: 1.6; margin-bottom: 18px; flex: 1; }
+
+    .emp-metric-pill { display: flex; justify-content: space-between; background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #cbd5e1; margin-bottom: 16px; }
+    .emp-metric-pill strong { color: #34d399; font-family: 'JetBrains Mono', monospace; }
+
+    .emp-skills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+    .emp-skill-tag { font-size: 11px; padding: 4px 10px; border-radius: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--text-2); }
+
+    .emp-actions { display: flex; gap: 10px; }
+    .emp-btn-deploy { flex: 1; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; border: none; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--accent); color: #022c22; }
+    .emp-btn-deploy:hover { filter: brightness(1.15); }
+    .emp-btn-sample { padding: 10px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; background: var(--bg-2); border: 1px solid var(--border-hi); color: var(--text); cursor: pointer; }
+    .emp-btn-sample:hover { border-color: var(--accent); }
+
+    /* Interactive Live Execution Terminal */
+    .studio-terminal-wrap { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow); margin-bottom: 48px; }
+    .term-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px; }
+    .term-title { font-size: 20px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px; }
+    .term-badge { font-size: 11px; padding: 4px 12px; border-radius: 99px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); font-weight: 700; }
+
+    .prompt-presets { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .preset-chip { padding: 6px 14px; border-radius: 20px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); font-size: 12px; cursor: pointer; transition: 0.2s; }
+    .preset-chip:hover { border-color: var(--accent); color: #fff; }
+
+    .term-input-row { display: flex; gap: 12px; margin-bottom: 20px; }
+    .term-input { flex: 1; padding: 14px 18px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
+    .term-input:focus { border-color: var(--accent); }
+
+    .term-output-box { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #38bdf8; min-height: 240px; max-height: 480px; overflow-y: auto; white-space: pre-wrap; }
+
+    /* ROI Comparison Slider */
+    .roi-section { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 36px; box-shadow: var(--shadow); margin-bottom: 48px; text-align: center; }
+    .roi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 28px; }
+    .roi-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+    .roi-val { font-size: 44px; font-weight: 900; font-family: 'JetBrains Mono', monospace; margin-bottom: 6px; }
   </style>
 </head>
 <body>
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
-
-<nav class="nav" id="mainNav">
-  <div class="nav-inner">
-    <a class="nav-brand" href="index.html">
-      <span class="nav-logo-wrap"><i class="fas fa-users-gear"></i></span>
-      <span class="nav-name">Sevenforce</span>
+<nav class="nav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="logo" href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+      <span class="logo-icon" style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--accent,#06b6d4),#3b82f6); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-users-gear"></i></span>
+      <span class="logo-text" style="font-weight:700; font-size:18px; color:#fff;">Seven <span class="logo-accent" style="color:var(--accent,#06b6d4);">force</span></span>
     </a>
-    <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="employees.html" class="active">7 AI Employees</a>
-        <a href="workflows.html">Agent Workflows</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="growth-teardown.html">Growth Teardowns</a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="employees.html" style="color:var(--accent-l); font-weight:600;">AI Employees</a>
+      <a href="workflows.html">LangGraph Studio</a>
+      <a href="growth-teardown.html">Growth Teardowns</a>
+      <a href="devin-terminal.html">Devin Terminal</a>
+      <a href="pricing.html">Pricing & ROI</a>
     </div>
     <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
       <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
-      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
-      <a class="btn btn-primary sm" href="index.html#contact"><i class="fas fa-rocket"></i> Launch</a>
+      <a class="btn btn-primary sm" href="workflows.html"><i class="fas fa-bolt"></i> Workflows</a>
     </div>
   </div>
 </nav>
 
+<div class="emp-container">
+  <div class="emp-hero">
+    <div class="emp-badge"><i class="fas fa-robot"></i> Inspired by Sintra.ai & Automusk.ai · 100% Free BYOK</div>
+    <h1 class="emp-title">Meet Your Full-Time Autonomous AI Workforce</h1>
+    <p class="emp-sub">Deploy 7 specialized AI employees configured for growth, sales, hiring, data science, legal audit, full-stack coding, and e-commerce optimization.</p>
+  </div>
 
-<header class="sub-hero">
-  <div class="sub-hero-pill"><i class="fas fa-sparkles"></i> 100% Free · Interactive AI Tool</div>
-  <h1 class="sub-hero-title">7 Specialized AI Employees Catalog</h1>
-  <p class="sub-hero-sub">Meet your full-time AI workforce — ready to execute 24/7 with zero downtime.</p>
-</header>
-
-<main class="container">
-  
-<div class="interactive-card">
-  <div class="grid-3" style="text-align:left;">
-    <div class="tool-box">
-      <div style="font-size:32px; margin-bottom:8px;">📣</div>
-      <h4 style="color:#a855f7;">Ava — Content & Marketing</h4>
-      <p style="color:#94a3b8; font-size:13px; margin:8px 0;">Writes high-converting blogs, SEO campaigns, and social media carousels.</p>
-      <button class="btn btn-ghost sm" onclick="testPersona('Ava', 'Generating 5 viral LinkedIn hook ideas for AI SaaS...')">Deploy Ava</button>
-    </div>
-    <div class="tool-box">
-      <div style="font-size:32px; margin-bottom:8px;">🎯</div>
-      <h4 style="color:#38bdf8;">Liam — Sales & Outreach</h4>
-      <p style="color:#94a3b8; font-size:13px; margin:8px 0;">Drafts tailored cold emails, handles lead qualification, and writes proposals.</p>
-      <button class="btn btn-ghost sm" onclick="testPersona('Liam', 'Drafting cold B2B outreach email for construction tech...')">Deploy Liam</button>
-    </div>
-    <div class="tool-box">
-      <div style="font-size:32px; margin-bottom:8px;">🤝</div>
-      <h4 style="color:#10b981;">Noah — AI Recruiter</h4>
-      <p style="color:#94a3b8; font-size:13px; margin:8px 0;">Parses candidate resumes, ranks applicants, and drafts interview scorecards.</p>
-      <button class="btn btn-ghost sm" onclick="testPersona('Noah', 'Screening 10 Python developer resumes against JD...')">Deploy Noah</button>
-    </div>
-    <div class="tool-box">
-      <div style="font-size:32px; margin-bottom:8px;">📊</div>
-      <h4 style="color:#f59e0b;">Maya — Data Analyst</h4>
-      <p style="color:#94a3b8; font-size:13px; margin:8px 0;">Transforms natural language questions into SQL queries and visual charts.</p>
-      <button class="btn btn-ghost sm" onclick="testPersona('Maya', 'Querying revenue growth and MRR metrics for Q3...')">Deploy Maya</button>
-    </div>
-    <div class="tool-box">
-      <div style="font-size:32px; margin-bottom:8px;">⚖️</div>
-      <h4 style="color:#ef4444;">Ethan — Legal & Compliance</h4>
-      <p style="color:#94a3b8; font-size:13px; margin:8px 0;">Analyzes vendor contracts and highlights indemnity and termination risks.</p>
-      <button class="btn btn-ghost sm" onclick="testPersona('Ethan', 'Reviewing SaaS master service agreement for liability caps...')">Deploy Ethan</button>
-    </div>
-    <div class="tool-box">
-      <div style="font-size:32px; margin-bottom:8px;">💻</div>
-      <h4 style="color:#06b6d4;">Leo — Software Engineer</h4>
-      <p style="color:#94a3b8; font-size:13px; margin:8px 0;">Generates clean FastAPI endpoints, fixes bugs, and drafts unit tests.</p>
-      <button class="btn btn-ghost sm" onclick="testPersona('Leo', 'Writing PyTest suite for Stripe webhook processor...')">Deploy Leo</button>
+  <!-- Hero Visual Banner Image -->
+  <div class="hero-banner-box">
+    <img src="img/teardown-hero.jpg" alt="Sevenforce AI Workforce Platform" class="hero-banner-img">
+    <div class="hero-banner-overlay">
+      <div class="hero-banner-caption">
+        <i class="fas fa-circle-nodes" style="color:var(--accent-l);"></i>
+        <span>7 Specialized Autonomous Agents · 24/7 Zero Latency · $54,000/Yr Human Replacement</span>
+      </div>
     </div>
   </div>
-  
-  <div style="margin-top:32px; text-align:left;">
-    <h4>Agent Execution Terminal</h4>
-    <div class="output-screen" id="personaOutput">// Click 'Deploy' on any AI Employee above to test their execution pipeline.</div>
+
+  <!-- 7 AI Employees Grid -->
+  <div class="emp-grid" id="employeesGrid">
+    
+    <!-- 1. Ava: Marketing & Content -->
+    <div class="emp-card" id="card-Ava">
+      <div class="emp-card-header">
+        <div class="emp-avatar" style="background:rgba(168,85,247,0.15); color:#c084fc;">
+          📣<span class="emp-status-dot"></span>
+        </div>
+        <div class="emp-name-wrap">
+          <h3>Ava</h3>
+          <span class="emp-role">Chief Marketing Agent</span>
+        </div>
+      </div>
+      <p class="emp-bio">Crafts viral social media hooks, SEO long-form teardowns, and multi-channel drip newsletters that scale organic traffic by 4x.</p>
+      <div class="emp-metric-pill">
+        <span>Impact:</span><strong>+340% Organic Engagement</strong>
+      </div>
+      <div class="emp-skills">
+        <span class="emp-skill-tag">SEO Copywriting</span>
+        <span class="emp-skill-tag">LinkedIn Carousels</span>
+        <span class="emp-skill-tag">Viral Hooks</span>
+        <span class="emp-skill-tag">Blog Teardowns</span>
+      </div>
+      <div class="emp-actions">
+        <button class="emp-btn-deploy" onclick="selectAgent('Ava', 'Write a 3-part viral LinkedIn hook sequence for an AI startup launch')"><i class="fas fa-play"></i> Deploy Ava</button>
+        <button class="emp-btn-sample" onclick="previewSample('Ava')">Sample</button>
+      </div>
+    </div>
+
+    <!-- 2. Liam: B2B Sales & Pipeline Closer -->
+    <div class="emp-card" id="card-Liam">
+      <div class="emp-card-header">
+        <div class="emp-avatar" style="background:rgba(56,189,248,0.15); color:#38bdf8;">
+          🎯<span class="emp-status-dot"></span>
+        </div>
+        <div class="emp-name-wrap">
+          <h3>Liam</h3>
+          <span class="emp-role">Head of Outbound Sales</span>
+        </div>
+      </div>
+      <p class="emp-bio">Prospects leads, hyper-personalizes cold emails from public company filings, and drafts enterprise SaaS proposals that convert.</p>
+      <div class="emp-metric-pill">
+        <span>Impact:</span><strong>42% Cold Open Rate</strong>
+      </div>
+      <div class="emp-skills">
+        <span class="emp-skill-tag">Cold Email Sequences</span>
+        <span class="emp-skill-tag">Lead Qualification</span>
+        <span class="emp-skill-tag">Objection Handling</span>
+        <span class="emp-skill-tag">SaaS Proposals</span>
+      </div>
+      <div class="emp-actions">
+        <button class="emp-btn-deploy" onclick="selectAgent('Liam', 'Draft a 3-step high-converting cold email sequence pitching our AI platform to Series A founders')"><i class="fas fa-play"></i> Deploy Liam</button>
+        <button class="emp-btn-sample" onclick="previewSample('Liam')">Sample</button>
+      </div>
+    </div>
+
+    <!-- 3. Maya: Data Science & SQL Analyst -->
+    <div class="emp-card" id="card-Maya">
+      <div class="emp-card-header">
+        <div class="emp-avatar" style="background:rgba(245,158,11,0.15); color:#fbbf24;">
+          📊<span class="emp-status-dot"></span>
+        </div>
+        <div class="emp-name-wrap">
+          <h3>Maya</h3>
+          <span class="emp-role">Principal Data Analyst</span>
+        </div>
+      </div>
+      <p class="emp-bio">Converts plain English business questions into optimized PostgreSQL/ClickHouse queries, cohorts churn, and models LTV/CAC ratios.</p>
+      <div class="emp-metric-pill">
+        <span>Impact:</span><strong>Sub-Second SQL Takeoffs</strong>
+      </div>
+      <div class="emp-skills">
+        <span class="emp-skill-tag">PostgreSQL / BigQuery</span>
+        <span class="emp-skill-tag">Cohort Retention</span>
+        <span class="emp-skill-tag">LTV/CAC Modeling</span>
+        <span class="emp-skill-tag">Chart Generation</span>
+      </div>
+      <div class="emp-actions">
+        <button class="emp-btn-deploy" onclick="selectAgent('Maya', 'Write a PostgreSQL query to calculate monthly recurring revenue (MRR) and net revenue retention (NRR) cohorts')"><i class="fas fa-play"></i> Deploy Maya</button>
+        <button class="emp-btn-sample" onclick="previewSample('Maya')">Sample</button>
+      </div>
+    </div>
+
+    <!-- 4. Noah: Technical Talent Recruiter -->
+    <div class="emp-card" id="card-Noah">
+      <div class="emp-card-header">
+        <div class="emp-avatar" style="background:rgba(16,185,129,0.15); color:#34d399;">
+          🤝<span class="emp-status-dot"></span>
+        </div>
+        <div class="emp-name-wrap">
+          <h3>Noah</h3>
+          <span class="emp-role">AI Talent Scout</span>
+        </div>
+      </div>
+      <p class="emp-bio">Screens hundreds of engineering resumes in seconds, calculates ATS compatibility scores, and designs customized role rubrics.</p>
+      <div class="emp-metric-pill">
+        <span>Impact:</span><strong>95% Screening Time Saved</strong>
+      </div>
+      <div class="emp-skills">
+        <span class="emp-skill-tag">Resume Parsing</span>
+        <span class="emp-skill-tag">ATS Keyword Extraction</span>
+        <span class="emp-skill-tag">Interview Rubrics</span>
+        <span class="emp-skill-tag">Candidate Sourcing</span>
+      </div>
+      <div class="emp-actions">
+        <button class="emp-btn-deploy" onclick="selectAgent('Noah', 'Create a 5-pillar technical interview scorecard for a Senior AI Systems Engineer')"><i class="fas fa-play"></i> Deploy Noah</button>
+        <button class="emp-btn-sample" onclick="previewSample('Noah')">Sample</button>
+      </div>
+    </div>
+
+    <!-- 5. Ethan: Legal & Regulatory Risk Auditor -->
+    <div class="emp-card" id="card-Ethan">
+      <div class="emp-card-header">
+        <div class="emp-avatar" style="background:rgba(239,68,68,0.15); color:#f87171;">
+          ⚖️<span class="emp-status-dot"></span>
+        </div>
+        <div class="emp-name-wrap">
+          <h3>Ethan</h3>
+          <span class="emp-role">Legal & Compliance Auditor</span>
+        </div>
+      </div>
+      <p class="emp-bio">Redlines Master Service Agreements, identifies unfavorable indemnification clauses, and audits SOC2/GDPR regulatory compliance.</p>
+      <div class="emp-metric-pill">
+        <span>Impact:</span><strong>Zero Unflagged Liabilities</strong>
+      </div>
+      <div class="emp-skills">
+        <span class="emp-skill-tag">SaaS MSA Redlining</span>
+        <span class="emp-skill-tag">Indemnity Caps</span>
+        <span class="emp-skill-tag">GDPR / DPDP Compliance</span>
+        <span class="emp-skill-tag">IP Assignment</span>
+      </div>
+      <div class="emp-actions">
+        <button class="emp-btn-deploy" onclick="selectAgent('Ethan', 'Audit standard SaaS Master Service Agreement for liability caps, IP assignment, and unilateral termination clauses')"><i class="fas fa-play"></i> Deploy Ethan</button>
+        <button class="emp-btn-sample" onclick="previewSample('Ethan')">Sample</button>
+      </div>
+    </div>
+
+    <!-- 6. Leo: Full-Stack & Dev Architect -->
+    <div class="emp-card" id="card-Leo">
+      <div class="emp-card-header">
+        <div class="emp-avatar" style="background:rgba(6,182,212,0.15); color:#67e8f9;">
+          💻<span class="emp-status-dot"></span>
+        </div>
+        <div class="emp-name-wrap">
+          <h3>Leo</h3>
+          <span class="emp-role">Full-Stack AI Engineer</span>
+        </div>
+      </div>
+      <p class="emp-bio">Architects clean FastAPI microservices, designs resilient LangGraph stateful loops, and writes end-to-end PyTest suites.</p>
+      <div class="emp-metric-pill">
+        <span>Impact:</span><strong>10x Code Velocity</strong>
+      </div>
+      <div class="emp-skills">
+        <span class="emp-skill-tag">FastAPI & Python</span>
+        <span class="emp-skill-tag">LangGraph Agents</span>
+        <span class="emp-skill-tag">Docker Containers</span>
+        <span class="emp-skill-tag">PyTest Suites</span>
+      </div>
+      <div class="emp-actions">
+        <button class="emp-btn-deploy" onclick="selectAgent('Leo', 'Write an asynchronous FastAPI endpoint with rate limiting and SSE streaming completion for LLM tokens')"><i class="fas fa-play"></i> Deploy Leo</button>
+        <button class="emp-btn-sample" onclick="previewSample('Leo')">Sample</button>
+      </div>
+    </div>
+
+    <!-- 7. Commet: E-Commerce & Conversion Optimizer -->
+    <div class="emp-card" id="card-Commet">
+      <div class="emp-card-header">
+        <div class="emp-avatar" style="background:rgba(236,72,153,0.15); color:#f472b6;">
+          🛒<span class="emp-status-dot"></span>
+        </div>
+        <div class="emp-name-wrap">
+          <h3>Commet</h3>
+          <span class="emp-role">E-Commerce Growth Specialist</span>
+        </div>
+      </div>
+      <p class="emp-bio">Optimizes product landing pages, audits cart abandonment leakages, and formulates high-margin cross-sell bundling strategies.</p>
+      <div class="emp-metric-pill">
+        <span>Impact:</span><strong>+28% Checkout Conversion</strong>
+      </div>
+      <div class="emp-skills">
+        <span class="emp-skill-tag">CRO Landing Pages</span>
+        <span class="emp-skill-tag">Cart Recovery Loops</span>
+        <span class="emp-skill-tag">A/B Test Design</span>
+        <span class="emp-skill-tag">Shopify Growth</span>
+      </div>
+      <div class="emp-actions">
+        <button class="emp-btn-deploy" onclick="selectAgent('Commet', 'Analyze a high-bounce e-commerce checkout flow and formulate 4 high-impact CRO fixes')"><i class="fas fa-play"></i> Deploy Commet</button>
+        <button class="emp-btn-sample" onclick="previewSample('Commet')">Sample</button>
+      </div>
+    </div>
+
   </div>
+
+  <!-- Interactive Live Studio Execution Console -->
+  <div class="studio-terminal-wrap" id="executionStudio">
+    <div class="term-header">
+      <div class="term-title">
+        <i class="fas fa-terminal" style="color:var(--accent);"></i>
+        <span>Autonomous Agent Studio Console</span>
+      </div>
+      <span class="term-badge" id="activeAgentBadge"><i class="fas fa-circle-check"></i> Ava (Content Agent) Ready</span>
+    </div>
+
+    <div class="prompt-presets">
+      <span style="font-size:12px; color:var(--text-3); display:flex; align-items:center;">Preset Directives:</span>
+      <button class="preset-chip" onclick="setDirective('Draft a 3-part viral LinkedIn hook sequence for an AI startup launch')">🚀 Launch Hooks</button>
+      <button class="preset-chip" onclick="setDirective('Draft a 3-step high-converting cold email sequence pitching our AI platform')">📧 Cold Email Drip</button>
+      <button class="preset-chip" onclick="setDirective('Write a PostgreSQL query to calculate monthly recurring revenue (MRR) and net revenue retention (NRR)')">📊 MRR / NRR SQL</button>
+      <button class="preset-chip" onclick="setDirective('Audit standard SaaS Master Service Agreement for liability caps and indemnities')">⚖️ Contract Audit</button>
+      <button class="preset-chip" onclick="setDirective('Write an asynchronous FastAPI endpoint with rate limiting and SSE streaming')">💻 FastAPI Streaming</button>
+    </div>
+
+    <div class="term-input-row">
+      <input type="text" id="directiveInput" class="term-input" placeholder="Type instructions for the assigned AI Employee..." value="Draft a 3-part viral LinkedIn hook sequence for an AI startup launch">
+      <button class="btn btn-primary" onclick="executeAgent()" style="padding:14px 28px;"><i class="fas fa-bolt"></i> Execute Agent</button>
+    </div>
+
+    <div class="term-output-box" id="termOutput">// Select an AI Employee above or click 'Execute Agent' to trigger the autonomous multi-agent pipeline.</div>
+  </div>
+
+  <!-- Cost Comparison & ROI Calculator -->
+  <div class="roi-section">
+    <div class="emp-badge"><i class="fas fa-calculator"></i> Real-World Economics</div>
+    <h2 style="font-size:28px; font-weight:800; color:#fff; margin-bottom:8px;">Human Agency vs Sevenforce AI Workforce</h2>
+    <p style="color:var(--text-2); max-width:680px; margin:0 auto;">Sevenforce provides enterprise-grade autonomous capability at zero platform markup.</p>
+
+    <div class="roi-grid">
+      <div class="roi-box">
+        <div style="font-size:13px; text-transform:uppercase; color:var(--text-3); font-weight:700; margin-bottom:6px;">Traditional Agency / Team (1 Year)</div>
+        <div class="roi-val" style="color:#f87171;">$54,000+</div>
+        <p style="font-size:13px; color:var(--text-2); margin-top:8px;">$4,500/mo retainer + payroll taxes + PTO delays + onboarding ramp.</p>
+      </div>
+      <div class="roi-box" style="border-color:rgba(16,185,129,0.4); background:rgba(16,185,129,0.05);">
+        <div style="font-size:13px; text-transform:uppercase; color:#34d399; font-weight:700; margin-bottom:6px;">Sevenforce (1 Year · BYOK)</div>
+        <div class="roi-val" style="color:#34d399;">$0 Platform Fee</div>
+        <p style="font-size:13px; color:var(--text-2); margin-top:8px;">100% Free · Direct LLM tokens only (~$12/month) · 24/7/365 execution.</p>
+      </div>
+      <div class="roi-box" style="border-color:rgba(6,182,212,0.4);">
+        <div style="font-size:13px; text-transform:uppercase; color:var(--accent-l); font-weight:700; margin-bottom:6px;">Your Annual Capital Saved</div>
+        <div class="roi-val" style="color:var(--accent-l);">$53,856</div>
+        <p style="font-size:13px; color:var(--text-2); margin-top:8px;">Reinvest directly into growth, customer acquisition, and hiring core leadership.</p>
+      </div>
+    </div>
+  </div>
+
 </div>
-<script>
-function testPersona(name, task) {
-  document.getElementById('personaOutput').innerText = '🤖 ASSIGNED AGENT: ' + name + '\n⏳ STATUS: Executing autonomous multi-agent task...\nTASK: ' + task + '\n\n✅ AGENT OUTPUT COMPLETED:\nOutput rendered with 99.4% accuracy. Ready to integrate into your workflow.';
-}
-</script>
-
-</main>
-
 
 <footer class="footer">
   <div class="foot-inner">
     <div class="foot-col">
       <div class="foot-brand"><i class="fas fa-users-gear"></i> Sevenforce</div>
-      <p class="foot-tag">AI Workforce & Automation — Part of the Sevenseed AI Venture Studio portfolio.</p>
+      <p class="foot-tag">Autonomous AI Workforce & Multi-Agent Orchestration — Part of Sevenseed Studio.</p>
       <div class="foot-copy">© 2026 Sevenforce. 100% Free · Bring Your Own Key Architecture.</div>
     </div>
     <div class="foot-col">
       <h4>Navigation</h4>
       <ul class="foot-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="../index.html">Sevenseed Hub</a></li>
-        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="employees.html">AI Employees</a></li>
+        <li><a href="workflows.html">LangGraph Studio</a></li>
+        <li><a href="growth-teardown.html">Growth Teardowns</a></li>
+        <li><a href="/" target="_blank">Sevenseed Hub</a></li>
       </ul>
     </div>
   </div>
 </footer>
 
-
-<script src="app.js"></script>
-
 <script>
-(function() {
-  // Theme Toggle Handler
-  var tBtn = document.getElementById('themeToggle');
-  if (tBtn) {
-    function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
-    }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('ss-theme', next);
-      updateIcon(next);
-    });
+var currentAgent = 'Ava';
+
+var SAMPLE_OUTPUTS = {
+  Ava: "🔥 [AVA OUTPUT] 3-PART VIRAL LINKEDIN HOOK SEQUENCE:\n\n" +
+       "Hook 1 (The Contrarian Reframe):\n" +
+       "\"Most founders think AI will replace developers.\n" +
+       "They're looking at the wrong quadrant.\n" +
+       "AI isn't replacing engineers — it's turning 1 engineer into a 10-person agency overnight.\n" +
+       "Here are 4 workflows our team automated this week: 🧵\"\n\n" +
+       "Hook 2 (The Teardown Proof):\n" +
+       "\"Zerodha did ₹2,907 Cr profit with ZERO external funding and only 33 engineers.\n" +
+       "How? They built a closed-loop tech flywheel instead of hiring an army.\n" +
+       "Here is the breakdown of their 4-phase architectural stack:\"\n\n" +
+       "Hook 3 (The Tactical Framework):\n" +
+       "\"If your SaaS burn is >$30k/mo on agencies, you are subsidizing someone else's margin.\n" +
+       "We replaced 5 agency retainers with autonomous agent chains.\n" +
+       "Total cost? $18/month in raw LLM tokens.\n" +
+       "Save this post for the exact LangGraph blueprint: 📌\"",
+
+  Liam: "📬 [LIAM OUTPUT] 3-STEP HIGH-CONVERTING COLD OUTREACH:\n\n" +
+        "Email 1: Hyper-Specific Hook (Day 1)\n" +
+        "Subject: Quick question re: {{company}} Q3 scaling bottleneck\n\n" +
+        "Hi {{first_name}},\n" +
+        "Saw your recent announcement scaling the engineering team by 40%.\n" +
+        "Most CTOs in your position tell us their biggest drag is onboarding friction and repetitive code reviews.\n" +
+        "We built an autonomous agent layer that handles 70% of PR review linting and unit test generation without SaaS markups.\n" +
+        "Open to a 4-minute demo this Thursday at 2 PM IST?\n\n" +
+        "Best,\nLiam (Sevenforce Outbound Agent)\n\n" +
+        "---\nEmail 2: Value Delivery & Proof (Day 4)\n" +
+        "Subject: {{first_name}}, 2 examples of automated PR workflows\n\n" +
+        "Hi {{first_name}} — wanted to share how a team similar to {{company}} reduced their PR merge latency by 53%.\n" +
+        "Attaching the 1-page architecture teardown here. No pitch, just actionable code.\n\n" +
+        "---\nEmail 3: Breakup with Open Door (Day 8)\n" +
+        "Subject: Closing the loop on this, {{first_name}}\n\n" +
+        "Assuming your current roadmap is fully locked in right now. I won't follow up again,\n" +
+        "but if reducing engineering overhead becomes top of mind in Q4, feel free to grab a time here: [Link]",
+
+  Maya: "📊 [MAYA OUTPUT] POSTGRESQL NRR & MRR COHORT CALCULATION:\n\n" +
+        "WITH monthly_mrr AS (\n" +
+        "    SELECT\n" +
+        "        DATE_TRUNC('month', created_at) AS cohort_month,\n" +
+        "        customer_id,\n" +
+        "        SUM(subscription_amount) AS mrr\n" +
+        "    FROM customer_invoices\n" +
+        "    WHERE status = 'PAID'\n" +
+        "    GROUP BY 1, 2\n" +
+        "),\n" +
+        "cohort_baseline AS (\n" +
+        "    SELECT\n" +
+        "        cohort_month,\n" +
+        "        SUM(mrr) AS baseline_mrr\n" +
+        "    FROM monthly_mrr\n" +
+        "    GROUP BY 1\n" +
+        ")\n" +
+        "SELECT\n" +
+        "    m.cohort_month,\n" +
+        "    b.baseline_mrr,\n" +
+        "    SUM(m.mrr) AS current_mrr,\n" +
+        "    ROUND((SUM(m.mrr)::numeric / b.baseline_mrr) * 100, 2) AS nrr_percentage\n" +
+        "FROM monthly_mrr m\n" +
+        "JOIN cohort_baseline b ON b.cohort_month = m.cohort_month\n" +
+        "GROUP BY m.cohort_month, b.baseline_mrr\n" +
+        "ORDER BY m.cohort_month DESC;\n\n" +
+        "✅ Query Plan: Index scan on customer_invoices(created_at). Execution time: 14ms.",
+
+  Noah: "🤝 [NOAH OUTPUT] 5-PILLAR TECHNICAL INTERVIEW RUBRIC (SENIOR AI SYSTEMS ENGINEER):\n\n" +
+        "1. Distributed Systems & High-Throughput Inference (Weight: 25%)\n" +
+        "   - Rubric: Evaluates vLLM, TensorRT-LLM continuous batching, KV-cache quantization, and GPU memory tiling.\n\n" +
+        "2. RAG Architecture & Vector Indexing (Weight: 25%)\n" +
+        "   - Rubric: Hands-on mastery of HNSW/IVFFlat index tradeoffs, hybrid BM25 + dense search, and cross-encoder rerankers.\n\n" +
+        "3. Stateful Agent Choreography (Weight: 20%)\n" +
+        "   - Rubric: Cyclic state machines (LangGraph), checkpointing, human-in-the-loop pause/resume, and tool rollback.\n\n" +
+        "4. Evaluation & Production Guardrails (Weight: 15%)\n" +
+        "   - Rubric: Automated testing with Ragas/TruLens, hallucination suppression (Llama-Guard), and token leakage prevention.\n\n" +
+        "5. System Reliability & Observability (Weight: 15%)\n" +
+        "   - Rubric: Prometheus metrics for TTFT (time-to-first-token), tokens/sec, and GPU kernel profiling.",
+
+  Ethan: "⚖️ [ETHAN OUTPUT] SAAS MASTER SERVICE AGREEMENT AUDIT REPORT:\n\n" +
+         "⚠️ CRITICAL CLAUSES FLAGGED:\n\n" +
+         "1. Clause 8.2 — Uncapped Indirect Liability:\n" +
+         "   - Risk: Current draft excludes consequential damages cap for data breaches.\n" +
+         "   - Recommendation: Insert strict cap at 12 months fees paid preceding the incident.\n\n" +
+         "2. Clause 11.4 — IP Ownership on AI Deliverables:\n" +
+         "   - Risk: Language implies vendor retains underlying custom fine-tuning weights.\n" +
+         "   - Recommendation: Explicitly stipulate Customer owns all client data, model checkpoints, and derived embeddings.\n\n" +
+         "3. Clause 14.1 — Unilateral Price Adjustment:\n" +
+         "   - Risk: Vendor reserves right to increase annual fees by up to 15% without prior notice.\n" +
+         "   - Recommendation: Cap annual renewal adjustments to CPI (Consumer Price Index) or max 4%.",
+
+  Leo: "💻 [LEO OUTPUT] ASYNCHRONOUS FASTAPI STREAMING SSE ENDPOINT:\n\n" +
+       "from fastapi import FastAPI, Request, HTTPException\n" +
+       "from fastapi.responses import StreamingResponse\n" +
+       "import asyncio, json\n\n" +
+       "app = FastAPI(title=\"Sevenforce Agent Worker\")\n\n" +
+       "async def token_generator(prompt: str):\n" +
+       "    tokens = [\"Thinking...\", \"Retrieving context\", \"from Qdrant...\", \"Generating\", \"production\", \"solution.\"]\n" +
+       "    for token in tokens:\n" +
+       "        await asyncio.sleep(0.08)\n" +
+       "        yield f\"data: {json.dumps({'token': token})}\\n\\n\"\n" +
+       "    yield \"data: [DONE]\\n\\n\"\n\n" +
+       "@app.post(\"/api/v1/stream\")\n" +
+       "async def stream_agent(request: Request):\n" +
+       "    body = await request.json()\n" +
+       "    prompt = body.get(\"prompt\")\n" +
+       "    if not prompt:\n" +
+       "        raise HTTPException(status_code=400, detail=\"Prompt is required\")\n" +
+       "    return StreamingResponse(token_generator(prompt), media_type=\"text/event-stream\")\n\n" +
+       "✅ Unit test suite: 4 passing tests, 100% branch coverage.",
+
+  Commet: "🛒 [COMMET OUTPUT] E-COMMERCE CART RECOVERY & CONVERSION AUDIT:\n\n" +
+          "1. 1-Page Sticky Checkout Elimination:\n" +
+          "   - Drop 4 redundant form fields (Company name, phone confirmation).\n" +
+          "   - Impact: -24% checkout abandonment immediately.\n\n" +
+          "2. Dynamic Free Shipping Progress Bar:\n" +
+          "   - \"Add ₹240 more for Instant Free Delivery today!\"\n" +
+          "   - Impact: Increases Average Order Value (AOV) by 18.5%.\n\n" +
+          "3. Post-Purchase 1-Click Upsell:\n" +
+          "   - Trigger complimentary add-on discount within 5 minutes of order completion before packing.\n" +
+          "   - Impact: +14% immediate revenue expansion with zero additional ad spend."
+};
+
+function selectAgent(name, defaultPrompt) {
+  currentAgent = name;
+  var cards = document.querySelectorAll('.emp-card');
+  cards.forEach(function(c) { c.classList.remove('active'); });
+  var target = document.getElementById('card-' + name);
+  if (target) target.classList.add('active');
+
+  document.getElementById('activeAgentBadge').innerHTML = '<i class="fas fa-circle-check"></i> ' + name + ' Active & Ready';
+  if (defaultPrompt) {
+    document.getElementById('directiveInput').value = defaultPrompt;
   }
 
-  // Cursor Ring
-  var ring = document.getElementById('cursorRing');
-  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
-      requestAnimationFrame(renderCursor);
-    }
-    requestAnimationFrame(renderCursor);
-  }
-})();
+  // Scroll smoothly to terminal
+  document.getElementById('executionStudio').scrollIntoView({ behavior: 'smooth' });
+}
+
+function setDirective(prompt) {
+  document.getElementById('directiveInput').value = prompt;
+}
+
+function previewSample(name) {
+  selectAgent(name, null);
+  document.getElementById('termOutput').innerText = SAMPLE_OUTPUTS[name] || 'Ready for execution.';
+}
+
+function executeAgent() {
+  var prompt = document.getElementById('directiveInput').value.trim();
+  if (!prompt) return;
+
+  var outputEl = document.getElementById('termOutput');
+  outputEl.innerText = "⏳ [DISPATCHING " + currentAgent.toUpperCase() + "]\n" +
+                       "Routing task through LangGraph cyclic execution graph...\n" +
+                       "Invoking model inference with zero-latency guardrails...\n\n";
+
+  setTimeout(function() {
+    outputEl.innerText = SAMPLE_OUTPUTS[currentAgent] || 
+      ("✅ [" + currentAgent.toUpperCase() + " EXECUTION COMPLETE]\nTask: " + prompt + "\n\nResult: Execution finalized with 99.8% precision. Ready for production deployment.");
+  }, 600);
+}
+
+// Theme Handler
+var tBtn = document.getElementById('themeToggle');
+if (tBtn) {
+  tBtn.addEventListener('click', function() {
+    var now = document.documentElement.getAttribute('data-theme') || 'dark';
+    var next = now === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('ss-theme', next);
+  });
+}
 </script>
-
 </body>
 </html>

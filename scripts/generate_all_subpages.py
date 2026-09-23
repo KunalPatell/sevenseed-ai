@@ -46,17 +46,22 @@ NAV_LINKS = {
         ("index.html", "Home"),
         ("prescription-ocr.html", "Prescription OCR"),
         ("interaction-checker.html", "Drug Interactions"),
+        ("medicine-reminders.html", "Dose Reminders"),
         ("hospital-finder.html", "Hospital Finder"),
     ],
     "avpu": [
         ("index.html", "Home"),
+        ("learn-dag.html", "Learn DAG"),
+        ("flashcards.html", "Flashcards"),
         ("courses.html", "AI Courses"),
         ("ai-tutor.html", "Personal AI Tutor"),
         ("scholarships.html", "Scholarships"),
     ],
     "avp-emart": [
         ("index.html", "Home"),
-        ("price-tracker.html", "Price Comparison"),
+        ("spec-compare.html", "Specs Compare"),
+        ("price-tracker.html", "Price History"),
+        ("wishlist.html", "Wishlist Radar"),
         ("deals-radar.html", "Deals Radar"),
     ],
     "avp-charitable-trust": [

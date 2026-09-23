@@ -87,9 +87,11 @@
     </a>
     <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
       <a href="index.html">Home</a>
+      <a href="topic-search.html">Search</a>
       <a href="modules.html">Varsity</a>
       <a href="courses.html">Courses</a>
       <a href="learn-dag.html" style="color:var(--primary-l); font-weight:600;">DAG Graph</a>
+      <a href="review-queue.html">Review Queue</a>
       <a href="duo-league.html">Duo League</a>
       <a href="code-lab.html">Code Lab</a>
       <a href="laws-of-ux.html">Laws of UX</a>
@@ -133,8 +135,8 @@
   <div class="dag-workspace">
     <div class="canvas-stage">
       <div class="stage-stats">
-        <span>Nodes: <strong id="nodeCount">11</strong></span>
-        <span>Mastered: <strong id="masteredCount">0</strong> / 11</span>
+        <span>Nodes: <strong id="nodeCount">—</strong></span>
+        <span>Mastered: <strong id="masteredCount">0</strong> / <strong id="nodeTotal">—</strong></span>
         <span>Graph Flow: <strong>DAG Topological</strong></span>
       </div>
       <canvas id="dagCanvas"></canvas>
@@ -188,21 +190,12 @@
   </div>
 </div>
 
+<script src="data/topics.js"></script>
 <script>
-// --- DAG DATA DEFINITION ---
-const NODES = [
-  { id: 'py', title: 'Python for AI', emoji: '🐍', x: 120, y: 120, cat: 'foundation', tier: 'Beginner', time: '14 Hours', desc: 'Core language syntax, vectorized computing, asynchronous I/O, and typing for AI pipelines.', prereqs: ['Basic Logic'], resources: ['Python 3 Official Docs', 'RealPython NumPy Tutorial'], next: ['math', 'numpy'] },
-  { id: 'math', title: 'Linear Algebra & Calculus', emoji: '📐', x: 340, y: 120, cat: 'foundation', tier: 'Beginner', time: '20 Hours', desc: 'Matrix multiplication, eigenvalues, dot products, partial derivatives, and gradient descent mechanics.', prereqs: ['Python for AI'], resources: ['3Blue1Brown Essence of LinAlg', 'Khan Academy Multivariable Calculus'], next: ['pytorch'] },
-  { id: 'numpy', title: 'NumPy & Pandas Vectorization', emoji: '📊', x: 120, y: 280, cat: 'foundation', tier: 'Beginner', time: '12 Hours', desc: 'Multi-dimensional array slicing, broadcasting rules, memory buffers, and DataFrame transformations.', prereqs: ['Python for AI'], resources: ['100 NumPy Exercises', 'Pandas Cookbook'], next: ['pytorch'] },
-  { id: 'pytorch', title: 'PyTorch & AutoGrad Engine', emoji: '🔥', x: 340, y: 280, cat: 'deep-learning', tier: 'Intermediate', time: '28 Hours', desc: 'Dynamic computational graphs, tensor GPU allocation, backpropagation with autograd, and custom nn.Module architectures.', prereqs: ['Linear Algebra', 'NumPy'], resources: ['PyTorch 60-Minute Blitz', 'Karpathy: Micrograd from Scratch'], next: ['transformers', 'cv'] },
-  { id: 'cv', title: 'Computer Vision & YOLOv8', emoji: '👁️', x: 120, y: 440, cat: 'deep-learning', tier: 'Intermediate', time: '22 Hours', desc: 'Convolutional kernels, spatial convolutions, bounding box regression, and YOLO real-time inference.', prereqs: ['PyTorch & AutoGrad'], resources: ['Ultralytics YOLO Docs', 'CS231n Stanford Notes'], next: ['prod'] },
-  { id: 'transformers', title: 'Attention & Transformers', emoji: '⚡', x: 560, y: 200, cat: 'deep-learning', tier: 'Intermediate', time: '32 Hours', desc: 'Self-attention math: softmax(Q*K^T / sqrt(d))*V, multi-head projection, positional embeddings, and encoder-decoder stacks.', prereqs: ['PyTorch & AutoGrad'], resources: ['Illustrated Transformer by Jay Alammar', 'Attention Is All You Need (Original Paper)'], next: ['rag', 'llm'] },
-  { id: 'rag', title: 'Vector DBs & RAG Architecture', emoji: '🗄️', x: 560, y: 380, cat: 'llm-agents', tier: 'Intermediate', time: '24 Hours', desc: 'Dense passage retrieval, HNSW cosine index, embedding chunking strategies, hybrid keyword-vector search, and ChromaDB.', prereqs: ['Attention & Transformers'], resources: ['Pinecone Vector Search Handbook', 'LangChain Retrieval Strategies'], next: ['agents'] },
-  { id: 'llm', title: 'Fine-Tuning & Quantization (LoRA)', emoji: '🎛️', x: 780, y: 160, cat: 'llm-agents', tier: 'Advanced', time: '30 Hours', desc: 'Parameter-efficient fine-tuning (PEFT), LoRA adapter rank matrices, 4-bit / 8-bit QLoRA, and vLLM serving.', prereqs: ['Attention & Transformers'], resources: ['HuggingFace PEFT Guide', 'Unsloth Fast Fine-Tuning'], next: ['prod'] },
-  { id: 'agents', title: 'LangGraph & Multi-Agent Systems', emoji: '🤖', x: 780, y: 340, cat: 'llm-agents', tier: 'Advanced', time: '35 Hours', desc: 'Cyclic state machines, supervisor routers, tool execution sandboxes, episodic memory buffers, and human-in-the-loop validation.', prereqs: ['RAG Architecture'], resources: ['LangGraph Conceptual Guides', 'CrewAI Production Patterns'], next: ['eval'] },
-  { id: 'eval', title: 'LLM Evaluation & Guardrails', emoji: '🛡️', x: 980, y: 340, cat: 'llm-agents', tier: 'Advanced', time: '18 Hours', desc: 'Ragas evaluation framework (Faithfulness, Answer Relevance), prompt injection defenses, and semantic validation guardrails.', prereqs: ['LangGraph & Multi-Agent Systems'], resources: ['Ragas Metrics Guide', 'NeMo Guardrails'], next: ['prod'] },
-  { id: 'prod', title: 'High-Throughput Serving & Docker', emoji: '🚀', x: 980, y: 180, cat: 'mlops', tier: 'Advanced', time: '25 Hours', desc: 'FastAPI async streaming, continuous batching with vLLM, TensorRT-LLM, Docker multi-stage builds, and Render / AWS deployment.', prereqs: ['LLM Fine-Tuning', 'Multi-Agent Systems'], resources: ['vLLM Architecture Paper', 'Docker for ML Best Practices'], next: [] }
-];
+// --- DAG DATA ---
+// The node graph lives in data/topics.js, shared with topic-search.html so the
+// two views can never disagree about prerequisites.
+const NODES = (window.AVPU_TOPICS && window.AVPU_TOPICS.nodes) || [];
 
 let selectedNodeId = 'transformers';
 let masteredNodes = new Set(JSON.parse(localStorage.getItem('avpu_mastered_dag') || '[]'));
@@ -412,6 +405,7 @@ function updatePanel(node) {
   mBtn.innerHTML = isM ? '<i class="fas fa-check-double"></i> Mastered Concept!' : '<i class="fas fa-check-circle"></i> Mark Node as Mastered';
 
   document.getElementById('masteredCount').innerText = masteredNodes.size;
+  document.getElementById('nodeTotal').innerText = NODES.length;
 }
 
 function toggleMastery() {
@@ -450,8 +444,25 @@ window.addEventListener('keydown', e => {
 });
 
 // Init
+// Deep link: topic-search.html sends the reader here as learn-dag.html#<nodeId>.
+var hashId = (location.hash || '').replace('#', '');
+if (hashId && NODES.some(n => n.id === hashId)) selectedNodeId = hashId;
+
+document.getElementById('nodeCount').innerText = NODES.length;
+document.getElementById('nodeTotal').innerText = NODES.length;
+
 resizeCanvas();
 updatePanel(NODES.find(n => n.id === selectedNodeId));
+
+// Let a later hash change (back/forward, or another in-page link) reselect.
+window.addEventListener('hashchange', function () {
+  var id = (location.hash || '').replace('#', '');
+  var node = NODES.find(n => n.id === id);
+  if (!node) return;
+  selectedNodeId = id;
+  updatePanel(node);
+  drawGraph();
+});
 </script>
 
 

@@ -111,6 +111,8 @@
     </a>
     <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
       <a href="index.html">Home</a>
+      <a href="topic-search.html">Search</a>
+      <a href="review-queue.html">Review Queue</a>
       <a href="modules.html">Varsity</a>
       <a href="courses.html">Courses</a>
       <a href="100-day-challenge.html">100-Day Challenge</a>
@@ -1373,6 +1375,129 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(renderCursor);
   }
 });
+// ─── AI-Powered Decision Simulator ───────────────────────────────────────────
+const MM_MODELS_MAP = {
+  inversion: { name: 'Inversion', desc: 'Carl Jacobi: Invert, Always Invert', prompt: 'Apply the Inversion mental model. First, list 5 specific ways to guarantee this problem FAILS completely. Then, for each failure mode, describe what must be done to prevent it. Structure as: INVERSION ANALYSIS > Failure Modes > Prevention Strategy > Synthesized Action Plan.' },
+  first_principles: { name: 'First Principles Thinking', desc: 'Boil down to fundamental truths', prompt: 'Apply First Principles Thinking. Break the problem down to its most fundamental, irreducible constraints. Identify which barriers are laws of physics/economics vs. industry convention. Build a solution from scratch. Structure as: ASSUMPTIONS TO QUESTION > IRREDUCIBLE TRUTHS > REBUILT SOLUTION.' },
+  second_order: { name: 'Second-Order Thinking', desc: 'And then what happens?', prompt: 'Apply Second-Order Thinking. Map out the first-order effects, then ask "and then what?" to identify second and third-order consequences that are non-obvious. Structure as: 1ST-ORDER EFFECTS > 2ND-ORDER CONSEQUENCES > 3RD-ORDER SURPRISES > OPTIMAL STRATEGY GIVEN ALL ORDERS.' },
+  margin_safety: { name: 'Margin of Safety', desc: 'Buffer against extreme volatility', prompt: 'Apply Margin of Safety thinking. Identify the biggest sources of uncertainty and downside risk. Propose concrete buffers, redundancies, and kill switches. Structure as: IDENTIFIED RISKS > WORST-CASE SCENARIO > SAFETY MARGINS NEEDED > CONSERVATIVE ACTION PLAN.' },
+  bottlenecks: { name: 'Theory of Constraints', desc: 'Solve the single slowest bottleneck', prompt: 'Apply the Theory of Constraints. Identify the single biggest bottleneck preventing progress. Explain why fixing anything else is waste until this constraint is resolved. Propose a focused plan. Structure as: CONSTRAINT IDENTIFICATION > WHY IT LIMITS EVERYTHING > FOCUSED INTERVENTION > EXPECTED THROUGHPUT GAIN.' },
+  asymmetric: { name: 'Asymmetric Upside', desc: 'Capped downside, infinite convex gain', prompt: 'Apply Asymmetric Upside / Convexity thinking. Identify which options have strictly limited downside but massive upside potential. Structure as: DOWNSIDE-CAPPED OPTIONS > UPSIDE SCENARIOS > PORTFOLIO OF BETS > RECOMMENDED HIGHEST-LEVERAGE ACTION.' }
+};
+
+const MM_KEY_PROVIDERS = [
+  { name: 'Gemini', key: () => localStorage.getItem('ss_key_gemini') || localStorage.getItem('ss_apikey_gemini'),
+    call: async (key, prompt) => {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.75,maxOutputTokens:900}})
+      });
+      if(!r.ok){const e=await r.json();throw new Error(e.error?.message);}
+      return (await r.json()).candidates?.[0]?.content?.parts?.[0]?.text;
+    }
+  },
+  { name: 'GPT-4o', key: () => localStorage.getItem('ss_key_openai') || localStorage.getItem('ss_apikey_openai'),
+    call: async (key, prompt) => {
+      const r = await fetch('https://api.openai.com/v1/chat/completions',{
+        method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+        body:JSON.stringify({model:'gpt-4o',messages:[{role:'user',content:prompt}],max_tokens:900,temperature:0.75})
+      });
+      if(!r.ok){const e=await r.json();throw new Error(e.error?.message);}
+      return (await r.json()).choices?.[0]?.message?.content;
+    }
+  },
+  { name: 'Mistral', key: () => localStorage.getItem('ss_key_m1') || localStorage.getItem('ss_apikey_mistral1'),
+    call: async (key, prompt) => {
+      const r = await fetch('https://api.mistral.ai/v1/chat/completions',{
+        method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+        body:JSON.stringify({model:'mistral-large-latest',messages:[{role:'user',content:prompt}],max_tokens:900})
+      });
+      if(!r.ok){const e=await r.json();throw new Error(e.error?.message);}
+      return (await r.json()).choices?.[0]?.message?.content;
+    }
+  }
+];
+
+function formatModelOutput(text) {
+  return text
+    .replace(/```([\s\S]*?)```/g, '<div style="background:#0f172a;border-radius:8px;padding:12px 14px;font-family:JetBrains Mono,monospace;font-size:12px;color:#e2e8f0;margin:10px 0;">$1</div>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^#{1,3}\s(.+)$/gm, '<h4 style="color:#34d399;font-size:14px;margin:14px 0 6px;">$1</h4>')
+    .replace(/^[-•]\s(.+)$/gm, '<li style="margin-bottom:6px;">$1</li>')
+    .replace(/^(\d+\.\s.+)$/gm, '<li style="margin-bottom:6px;">$1</li>')
+    .replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+}
+
+async function solveDilemma() {
+  const dilemma = document.getElementById('dilemmaInput')?.value?.trim();
+  const modelKey = document.getElementById('modelSelect')?.value;
+  const out = document.getElementById('solutionOutput');
+  const btn = document.querySelector('button[onclick="solveDilemma()"]');
+
+  if (!dilemma || dilemma.length < 10) {
+    out.innerHTML = '<p style="color:#f87171;">Please describe your dilemma (at least 10 characters).</p>';
+    return;
+  }
+
+  const model = MM_MODELS_MAP[modelKey] || MM_MODELS_MAP.inversion;
+
+  out.innerHTML = `<div style="display:flex;align-items:center;gap:12px;color:#34d399;">
+    <i class="fas fa-spinner fa-spin" style="font-size:18px;"></i>
+    <span>Applying <strong>${model.name}</strong> to your dilemma...</span>
+  </div>`;
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...'; }
+
+  const fullPrompt = `You are a decision analysis expert at Sevenseed's AVPU Mental Models Engine.
+
+User's Business/Engineering Dilemma:
+"${dilemma}"
+
+Mental Model to Apply: ${model.name} (${model.desc})
+
+${model.prompt}
+
+Be specific and actionable. Reference the exact dilemma stated. Use short paragraphs and bold key insights.`;
+
+  let result = null, providerName = '';
+  for (const p of MM_KEY_PROVIDERS) {
+    const key = p.key();
+    if (!key) continue;
+    try { result = await p.call(key, fullPrompt); providerName = p.name; break; }
+    catch(e) { console.warn(p.name + ' failed:', e.message); }
+  }
+
+  if (result) {
+    out.innerHTML = `
+      <div style="margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.06);">
+        <i class="fas fa-brain" style="color:#34d399;"></i>
+        <strong style="color:#fff;">${model.name} Analysis</strong>
+        <span style="font-size:11px;color:#475569;font-family:JetBrains Mono,monospace;margin-left:auto;">⚡ ${providerName}</span>
+      </div>
+      ${formatModelOutput(result)}`;
+  } else {
+    out.innerHTML = `<div style="color:#f87171;">
+      <h4><i class="fas fa-key"></i> No API Key Found</h4>
+      <p style="font-size:13px;">Add your Gemini, OpenAI, or Mistral key in the <a href="/byok.html" style="color:#34d399;">BYOK API Vault</a> to unlock AI-powered mental model analysis.</p>
+    </div>`;
+  }
+
+  if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-cogs"></i> Run Mental Model Analysis'; }
+}
+
+function loadIntoSimulator() {
+  if (!activeModalModel) return;
+  document.getElementById('dilemmaInput').value = `How should I apply ${activeModalModel.name} to my current project or decision?`;
+  document.getElementById('modelSelect').value = activeModalModel.id === 'first-principles' ? 'first_principles' :
+    activeModalModel.id === 'second-order' ? 'second_order' :
+    activeModalModel.id === 'margin-of-safety' ? 'margin_safety' :
+    activeModalModel.id === 'theory-of-constraints' ? 'bottlenecks' :
+    activeModalModel.id === 'asymmetric-upside' ? 'asymmetric' : 'inversion';
+  closeModal();
+  document.querySelector('.solver-box')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  solveDilemma();
+}
+
+// ─── End AI Decision Simulator ─────────────────────────────────────────────
 </script>
 </body>
 </html>

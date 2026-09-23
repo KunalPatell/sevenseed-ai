@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Leitner Spaced Repetition Flashcards — AVPU</title>
+  <meta name="description" content="Master AI Engineering with Duolingo & Anki-grade Leitner SM-2 spaced repetition memory scheduling. 100% Free.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .fc-container { max-width: 1100px; margin: 0 auto; padding: 100px 24px 60px; }
+    .fc-header { text-align: center; margin-bottom: 28px; }
+    .fc-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.3); color: #60a5fa; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .fc-title { font-size: clamp(28px, 4vw, 42px); font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
+    .fc-sub { color: var(--text-2); font-size: 15px; max-width: 650px; margin: 0 auto 24px; line-height: 1.6; }
+    
+    /* Box Ribbon */
+    .boxes-ribbon {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .box-metric {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .box-metric:hover { border-color: var(--primary); transform: translateY(-2px); }
+    .box-title { font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; color: var(--text-3); margin-bottom: 4px; }
+    .box-count { font-size: 24px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+    .box-sub { font-size: 11px; color: var(--text-3); }
+
+    /* Controls Bar */
+    .deck-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      margin-bottom: 28px;
+    }
+    .deck-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Flashcard Stage */
+    .fc-stage {
+      perspective: 1400px;
+      max-width: 680px;
+      margin: 0 auto 30px;
+      height: 380px;
+      position: relative;
+      cursor: pointer;
+    }
+    .fc-card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.2, 0.85, 0.4, 1.15);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .fc-card.flipped { transform: rotateY(180deg); }
+    
+    .card-face {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid var(--border-hi);
+      background: linear-gradient(145deg, #090e1a, #030712);
+    }
+    .card-face.back {
+      transform: rotateY(180deg);
+      background: linear-gradient(145deg, #061129, #020617);
+      border-color: rgba(59,130,246,0.35);
+    }
+    
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-category {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #60a5fa;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-box-tag {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text-2);
+    }
+    .card-body {
+      text-align: center;
+      margin: auto 0;
+    }
+    .card-prompt {
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.35;
+      margin-bottom: 12px;
+    }
+    .card-answer {
+      font-size: clamp(15px, 2vw, 17px);
+      line-height: 1.65;
+      color: #cbd5e1;
+      max-height: 220px;
+      overflow-y: auto;
+      text-align: left;
+    }
+    .card-code {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #38bdf8;
+      margin-top: 10px;
+      text-align: left;
+      overflow-x: auto;
+    }
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-3);
+    }
+    .tap-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #94a3b8;
+    }
+
+    /* Rating Button Grid */
+    .rating-row {
+      max-width: 680px;
+      margin: 0 auto 30px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    @media(max-width: 640px) { .rating-row { grid-template-columns: repeat(2, 1fr); } }
+    .rate-btn {
+      padding: 14px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-1);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .rate-btn:hover { transform: translateY(-2px); }
+    .rate-again:hover { background: rgba(239,68,68,0.15); border-color: #ef4444; color: #f87171; }
+    .rate-hard:hover { background: rgba(245,158,11,0.15); border-color: #f59e0b; color: #fbbf24; }
+    .rate-good:hover { background: rgba(16,185,129,0.15); border-color: #10b981; color: #34d399; }
+    .rate-easy:hover { background: rgba(59,130,246,0.15); border-color: #3b82f6; color: #60a5fa; }
+    
+    .rate-label { font-size: 14px; font-weight: 700; color: #fff; }
+    .rate-sub { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--text-3); }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px); display: none; align-items: center;
+      justify-content: center; z-index: 1000; padding: 20px;
+    }
+    .modal-card {
+      background: var(--bg-1); border: 1px solid var(--border-hi);
+      border-radius: 20px; width: 100%; max-width: 540px; padding: 28px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    }
+  </style>
+</head>
+<body data-variant="academic">
+<span id="top"></span>
+
+<!-- Top Navigation -->
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-graduation-cap"></i></span>
+    <span class="logo-text">AVPU <span class="logo-accent">University</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="learn-dag.html"><i class="fas fa-project-diagram" style="color:#60a5fa;"></i> Learn DAG</a>
+    <a href="duo-league.html"><i class="fas fa-trophy" style="color:#fbbf24;"></i> Duolingo</a>
+    <a href="flashcards.html" class="active"><i class="fas fa-layer-group" style="color:#38bdf8;"></i> Flashcards</a>
+    <a href="code-lab.html"><i class="fas fa-code" style="color:#34d399;"></i> Code Lab</a>
+    <a href="laws-of-ux.html"><i class="fas fa-brain" style="color:#c084fc;"></i> UX Laws</a>
+    <a href="challenge-100days.html"><i class="fas fa-calendar-check" style="color:#38bdf8;"></i> 100 Days AI</a>
+    <a href="certifications.html"><i class="fas fa-certificate"></i> Certs</a>
+  </div>
+  <div class="nav-right">
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+    <a class="btn btn-ghost" href="learn-dag.html"><i class="fas fa-wand-magic-sparkles"></i> Launch DAG</a>
+    <a class="btn btn-primary" href="index.html#admissions"><i class="fas fa-paper-plane"></i> Apply Free</a>
+  </div>
+</nav>
+
+<div class="fc-container">
+  <div class="fc-header">
+    <div class="fc-badge"><i class="fas fa-brain"></i> SuperMemo SM-2 & Leitner Box Engine</div>
+    <h1 class="fc-title">Spaced Repetition AI Flashcards</h1>
+    <p class="fc-sub">Retain deep neural network architectures, agentic coordination protocols, and computer vision mathematics with scientifically scheduled memory review intervals.</p>
+  </div>
+
+  <!-- Leitner Box Metrics Ribbon -->
+  <div class="boxes-ribbon">
+    <div class="box-metric">
+      <div class="box-title">Box 1: New / Daily</div>
+      <div class="box-count" id="countBox1" style="color:#f87171;">0</div>
+      <div class="box-sub">1-day review interval</div>
+    </div>
+    <div class="box-metric">
+      <div class="box-title">Box 2: Learning</div>
+      <div class="box-count" id="countBox2" style="color:#fbbf24;">0</div>
+      <div class="box-sub">3-day review interval</div>
+    </div>
+    <div class="box-metric">
+      <div class="box-title">Box 3: Reviewing</div>
+      <div class="box-count" id="countBox3" style="color:#60a5fa;">0</div>
+      <div class="box-sub">7-day review interval</div>
+    </div>
+    <div class="box-metric">
+      <div class="box-title">Box 4: Solid</div>
+      <div class="box-count" id="countBox4" style="color:#a78bfa;">0</div>
+      <div class="box-sub">14-day review interval</div>
+    </div>
+    <div class="box-metric">
+      <div class="box-title">Box 5: Mastered</div>
+      <div class="box-count" id="countBox5" style="color:#34d399;">0</div>
+      <div class="box-sub">30-day review interval</div>
+    </div>
+  </div>
+
+  <!-- Deck Filters and Actions Bar -->
+  <div class="deck-bar">
+    <div class="deck-filters" id="deckFilters">
+      <button class="filter-btn active" onclick="setFilter('all')">All Decks</button>
+      <button class="filter-btn" onclick="setFilter('LangGraph Agents')">LangGraph Agents</button>
+      <button class="filter-btn" onclick="setFilter('Transformers & Attention')">Transformers</button>
+      <button class="filter-btn" onclick="setFilter('Vector RAG')">Vector RAG</button>
+      <button class="filter-btn" onclick="setFilter('YOLO Computer Vision')">YOLO Vision</button>
+      <button class="filter-btn" onclick="setFilter('Distributed Systems')">Distributed Systems</button>
+    </div>
+    <div>
+      <button class="btn btn-ghost sm" onclick="openAddModal()"><i class="fas fa-plus"></i> Add Card</button>
+      <button class="btn btn-ghost sm" onclick="resetDeck()"><i class="fas fa-rotate"></i> Reset Progress</button>
+    </div>
+  </div>
+
+  <!-- Interactive 3D Card Stage -->
+  <div class="fc-stage" id="fcStage" onclick="toggleFlip()">
+    <div class="fc-card" id="fcCard">
+      <!-- FRONT -->
+      <div class="card-face front">
+        <div class="card-top">
+          <span class="card-category" id="cardCategory"><i class="fas fa-cube"></i> Concept</span>
+          <span class="card-box-tag" id="cardBoxTag">Box 1 · Daily</span>
+        </div>
+        <div class="card-body">
+          <h2 class="card-prompt" id="cardFrontText">Flashcard Front</h2>
+        </div>
+        <div class="card-bottom">
+          <span class="tap-hint"><i class="fas fa-arrows-rotate"></i> Tap card or hit Space to reveal answer</span>
+          <span id="cardProgressIndex">Card 1 of 12</span>
+        </div>
+      </div>
+
+      <!-- BACK -->
+      <div class="card-face back">
+        <div class="card-top">
+          <span class="card-category" style="color:#34d399;"><i class="fas fa-check-circle"></i> Explanation & Architecture</span>
+          <span class="card-box-tag" style="background:rgba(59,130,246,0.15); color:#60a5fa;" id="cardDueTag">Due in 1 day</span>
+        </div>
+        <div class="card-body">
+          <div class="card-answer" id="cardBackText">Flashcard Back Explanation</div>
+          <div class="card-code" id="cardCodeSnippet" style="display:none;"></div>
+        </div>
+        <div class="card-bottom">
+          <span class="tap-hint"><i class="fas fa-keyboard"></i> Keys: [1] Again · [2] Hard · [3] Good · [4] Easy</span>
+          <span style="color:#60a5fa; font-weight:700;">Rate your recall below ↓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recall Rating Buttons -->
+  <div class="rating-row" id="ratingRow">
+    <button class="rate-btn rate-again" onclick="gradeCard(1)">
+      <span class="rate-label">🔄 Again</span>
+      <span class="rate-sub">&lt; 1 day (Reset)</span>
+    </button>
+    <button class="rate-btn rate-hard" onclick="gradeCard(2)">
+      <span class="rate-label">⚡ Hard</span>
+      <span class="rate-sub">3 days</span>
+    </button>
+    <button class="rate-btn rate-good" onclick="gradeCard(3)">
+      <span class="rate-label">👍 Good</span>
+      <span class="rate-sub">7 days</span>
+    </button>
+    <button class="rate-btn rate-easy" onclick="gradeCard(4)">
+      <span class="rate-label">🚀 Easy</span>
+      <span class="rate-sub">14+ days</span>
+    </button>
+  </div>
+</div>
+
+<!-- Add Custom Card Modal -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <h3 style="font-size:18px; font-weight:700; color:#fff;"><i class="fas fa-plus-circle" style="color:#60a5fa;"></i> Add AI Flashcard</h3>
+      <button onclick="closeAddModal()" style="background:none; border:none; color:var(--text-3); font-size:18px; cursor:pointer;">&times;</button>
+    </div>
+    <form onsubmit="saveCustomCard(event)">
+      <div style="margin-bottom:14px;">
+        <label style="font-size:12px; font-weight:600; color:var(--text-2); display:block; margin-bottom:6px;">Topic Category</label>
+        <select id="newCategory" style="width:100%; padding:10px 14px; background:var(--bg-2); border:1px solid var(--border); border-radius:8px; color:#fff; font-size:13px; outline:none;">
+          <option value="LangGraph Agents">LangGraph Agents</option>
+          <option value="Transformers & Attention">Transformers & Attention</option>
+          <option value="Vector RAG">Vector RAG</option>
+          <option value="YOLO Computer Vision">YOLO Computer Vision</option>
+          <option value="Distributed Systems">Distributed Systems</option>
+        </select>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="font-size:12px; font-weight:600; color:var(--text-2); display:block; margin-bottom:6px;">Front (Concept / Question)</label>
+        <input type="text" id="newFront" required placeholder="e.g. FlashAttention-2 speedup mechanism" style="width:100%; padding:10px 14px; background:var(--bg-2); border:1px solid var(--border); border-radius:8px; color:#fff; font-size:13px; outline:none;">
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="font-size:12px; font-weight:600; color:var(--text-2); display:block; margin-bottom:6px;">Back (Explanation & Architecture)</label>
+        <textarea id="newBack" rows="3" required placeholder="Explains how tiling reduces HBM memory reads from O(N^2) to O(N)..." style="width:100%; padding:10px 14px; background:var(--bg-2); border:1px solid var(--border); border-radius:8px; color:#fff; font-size:13px; outline:none; resize:none;"></textarea>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" class="btn btn-ghost sm" onclick="closeAddModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary sm">Save Card</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// Web Audio Chimes
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playChime(freq, type = 'sine', duration = 0.25) {
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch(e){}
+}
+
+const DEFAULT_CARDS = [
+  {
+    id: "c1",
+    category: "LangGraph Agents",
+    front: "What is the difference between a StateGraph and a standard Directed Acyclic Graph (DAG)?",
+    back: "A standard DAG cannot contain cycles. A LangGraph StateGraph maintains a typed state object passed across nodes and explicitly supports iterative loops, reflection cycles, and human-in-the-loop approvals until a designated END node is evaluated.",
+    code: "workflow = StateGraph(AgentState)\nworkflow.add_node('agent', call_model)\nworkflow.add_edge('agent', should_continue)",
+    box: 1
+  },
+  {
+    id: "c2",
+    category: "Transformers & Attention",
+    front: "Why does standard Scaled Dot-Product Attention scale with O(N²) memory complexity?",
+    back: "The matrix multiplication of Query (N x D) and Key transpose (D x N) computes an N x N attention score matrix. For context length N=128k, storing the unnormalized scores requires 16 billion elements per head per layer.",
+    code: "Attention(Q, K, V) = softmax(Q * K^T / sqrt(d_k)) * V",
+    box: 1
+  },
+  {
+    id: "c3",
+    category: "Vector RAG",
+    front: "What is Cosine Similarity and why is it preferred over Euclidean Distance for dense embeddings?",
+    back: "Cosine similarity measures the angle between two embedding vectors regardless of their magnitude: cos(θ) = (A·B) / (||A|| ||B||). When embeddings are L2-normalized (length = 1.0), Cosine Similarity is linearly equivalent to Dot Product and isolates semantic orientation from text length.",
+    code: "similarity = np.dot(vec_a, vec_b) / (np.linalg.norm(vec_a) * np.linalg.norm(vec_b))",
+    box: 1
+  },
+  {
+    id: "c4",
+    category: "YOLO Computer Vision",
+    front: "What is Intersection-over-Union (IoU) in object detection bounding boxes?",
+    back: "IoU is the ratio of the overlap area between the predicted bounding box and ground truth box divided by their combined union area. Used in Non-Maximum Suppression (NMS) to eliminate duplicate overlapping bounding boxes.",
+    code: "IoU = Area(Overlap) / Area(Union) >= 0.50 (threshold)",
+    box: 1
+  },
+  {
+    id: "c5",
+    category: "Distributed Systems",
+    front: "Explain the CAP Theorem and its real-world implication for vector databases.",
+    back: "In any asynchronous network partition (P), a distributed system can guarantee either Consistency (C - every read gets the most recent write) or Availability (A - every request receives a non-error response), but not both simultaneously. Distributed vector indexes (e.g. Qdrant, Milvus) typically trade strict immediate consistency for eventual consistency to maintain ultra-fast query latency.",
+    code: "Network Partition -> Choose: Strict Consistency (Wait) OR High Availability (Serve)",
+    box: 1
+  },
+  {
+    id: "c6",
+    category: "Transformers & Attention",
+    front: "What is Rotary Position Embedding (RoPE) and why did it replace absolute sinusoidal embeddings?",
+    back: "RoPE encodes relative position by rotating Query and Key vectors in the complex 2D planes of each feature subspace. The dot product (Q·K) naturally incorporates relative token distance (m - n), enabling models like LLaMA and DeepSeek to generalize to context lengths far beyond their training window.",
+    code: "R_Θ,m * x = Rotates 2D coordinates by angle m * θ_i",
+    box: 1
+  }
+];
+
+const STORAGE_KEY = "avpu_flashcards_srs_state_v1";
+let cards = [];
+let currentFilter = "all";
+let currentIndex = 0;
+let isFlipped = false;
+
+function loadCards() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    cards = saved ? JSON.parse(saved) : DEFAULT_CARDS;
+  } catch(e) {
+    cards = DEFAULT_CARDS;
+  }
+  updateBoxes();
+  renderCard();
+}
+
+function saveCards() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+  } catch(e){}
+  updateBoxes();
+}
+
+function updateBoxes() {
+  const b1 = cards.filter(c => c.box === 1).length;
+  const b2 = cards.filter(c => c.box === 2).length;
+  const b3 = cards.filter(c => c.box === 3).length;
+  const b4 = cards.filter(c => c.box === 4).length;
+  const b5 = cards.filter(c => c.box === 5).length;
+  document.getElementById('countBox1').textContent = b1;
+  document.getElementById('countBox2').textContent = b2;
+  document.getElementById('countBox3').textContent = b3;
+  document.getElementById('countBox4').textContent = b4;
+  document.getElementById('countBox5').textContent = b5;
+}
+
+function getFilteredCards() {
+  return currentFilter === "all" ? cards : cards.filter(c => c.category === currentFilter);
+}
+
+function renderCard() {
+  const pool = getFilteredCards();
+  if (pool.length === 0) {
+    document.getElementById('cardFrontText').textContent = "No cards in this deck yet!";
+    document.getElementById('cardCategory').textContent = currentFilter;
+    document.getElementById('cardBackText').textContent = "Click 'Add Card' above to create custom cards for this topic.";
+    document.getElementById('cardCodeSnippet').style.display = 'none';
+    return;
+  }
+  
+  if (currentIndex >= pool.length) currentIndex = 0;
+  const card = pool[currentIndex];
+
+  isFlipped = false;
+  document.getElementById('fcCard').classList.remove('flipped');
+
+  document.getElementById('cardCategory').innerHTML = `<i class="fas fa-cube"></i> ${card.category}`;
+  document.getElementById('cardBoxTag').textContent = `Box ${card.box} · ${getIntervalText(card.box)}`;
+  document.getElementById('cardDueTag').textContent = `Review Interval: ${getIntervalText(card.box)}`;
+  document.getElementById('cardFrontText').textContent = card.front;
+  document.getElementById('cardBackText').textContent = card.back;
+  document.getElementById('cardProgressIndex').textContent = `Card ${currentIndex + 1} of ${pool.length}`;
+
+  const codeEl = document.getElementById('cardCodeSnippet');
+  if (card.code) {
+    codeEl.textContent = card.code;
+    codeEl.style.display = 'block';
+  } else {
+    codeEl.style.display = 'none';
+  }
+}
+
+function getIntervalText(box) {
+  switch(box) {
+    case 1: return "1 day";
+    case 2: return "3 days";
+    case 3: return "7 days";
+    case 4: return "14 days";
+    case 5: return "30 days (Mastered)";
+    default: return "1 day";
+  }
+}
+
+function toggleFlip() {
+  isFlipped = !isFlipped;
+  const card = document.getElementById('fcCard');
+  if (isFlipped) {
+    card.classList.add('flipped');
+    playChime(520, 'sine', 0.15);
+  } else {
+    card.classList.remove('flipped');
+    playChime(380, 'sine', 0.12);
+  }
+}
+
+function gradeCard(grade) {
+  const pool = getFilteredCards();
+  if (pool.length === 0) return;
+  const card = pool[currentIndex];
+
+  if (grade === 1) { // Again
+    card.box = 1;
+    playChime(220, 'triangle', 0.35);
+  } else if (grade === 2) { // Hard
+    card.box = Math.max(1, card.box);
+    playChime(440, 'sine', 0.2);
+  } else if (grade === 3) { // Good
+    card.box = Math.min(5, card.box + 1);
+    playChime(660, 'sine', 0.25);
+  } else if (grade === 4) { // Easy
+    card.box = Math.min(5, card.box + 2);
+    playChime(880, 'sine', 0.3);
+  }
+
+  saveCards();
+  currentIndex = (currentIndex + 1) % pool.length;
+  renderCard();
+}
+
+function setFilter(category) {
+  currentFilter = category;
+  currentIndex = 0;
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.includes(category) || (category === 'all' && btn.textContent === 'All Decks'));
+  });
+  renderCard();
+}
+
+function resetDeck() {
+  if (confirm("Reset all flashcards back to Box 1 (New)?")) {
+    cards.forEach(c => c.box = 1);
+    saveCards();
+    currentIndex = 0;
+    renderCard();
+  }
+}
+
+// Modal handling
+function openAddModal() { document.getElementById('addModal').style.display = 'flex'; }
+function closeAddModal() { document.getElementById('addModal').style.display = 'none'; }
+function saveCustomCard(e) {
+  e.preventDefault();
+  const category = document.getElementById('newCategory').value;
+  const front = document.getElementById('newFront').value.trim();
+  const back = document.getElementById('newBack').value.trim();
+  if (!front || !back) return;
+
+  cards.push({
+    id: `custom-${Date.now()}`,
+    category: category,
+    front: front,
+    back: back,
+    code: "",
+    box: 1
+  });
+
+  saveCards();
+  closeAddModal();
+  document.getElementById('newFront').value = '';
+  document.getElementById('newBack').value = '';
+  renderCard();
+  playChime(784, 'sine', 0.25);
+}
+
+// Keyboard navigation
+window.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.code === 'Space') {
+    e.preventDefault();
+    toggleFlip();
+  } else if (e.key === '1') {
+    gradeCard(1);
+  } else if (e.key === '2') {
+    gradeCard(2);
+  } else if (e.key === '3') {
+    gradeCard(3);
+  } else if (e.key === '4') {
+    gradeCard(4);
+  }
+});
+
+loadCards();
+</script>
+</body>
+</html>

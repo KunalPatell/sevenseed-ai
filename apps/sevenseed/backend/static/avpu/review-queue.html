@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>SM-2 Spaced Repetition Review Queue — AVPU</title>
+  <meta name="description" content="Duolingo-style retention engine for AVPU. Real SuperMemo SM-2 scheduling with ease factors, due-date queues, leech detection, and a 30-day workload forecast.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .srs-container { max-width: 1180px; margin: 0 auto; padding: 100px 24px 60px; }
+    .srs-header { text-align: center; margin-bottom: 28px; }
+    .srs-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.3); color: #93c5fd; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+    .srs-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    .srs-sub { color: var(--text-2); font-size: 16px; max-width: 760px; margin: 0 auto 24px; }
+
+    /* Stat strip */
+    .stat-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 22px; }
+    @media(max-width: 860px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+    .stat-cell { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+    .stat-cell .sc-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-3); font-weight: 700; margin-bottom: 6px; }
+    .stat-cell .sc-val { font-size: 26px; font-weight: 800; line-height: 1; }
+    .sc-due .sc-val { color: #fbbf24; }
+    .sc-new .sc-val { color: #60a5fa; }
+    .sc-mature .sc-val { color: #34d399; }
+    .sc-retention .sc-val { color: #c084fc; }
+    .sc-streak .sc-val { color: #fb923c; }
+    .stat-cell .sc-note { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+
+    /* Deck filters */
+    .deck-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 20px; margin-bottom: 20px; }
+    .deck-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pill-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg-2); color: var(--text-2); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .pill-btn.active, .pill-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .deck-actions { display: flex; gap: 8px; }
+    .mini-btn { padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-hi); background: var(--bg-2); color: var(--text-2); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .mini-btn:hover { border-color: var(--primary); color: var(--text); }
+
+    /* Workspace */
+    .srs-workspace { display: grid; grid-template-columns: 1fr 360px; gap: 20px; align-items: start; }
+    @media(max-width: 960px) { .srs-workspace { grid-template-columns: 1fr; } }
+
+    /* Card stage */
+    .card-stage { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; min-height: 460px; display: flex; flex-direction: column; }
+    .card-meta-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+    .card-deck-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 10px; border-radius: 6px; background: rgba(37,99,235,0.15); color: #93c5fd; border: 1px solid rgba(37,99,235,0.3); }
+    .card-state-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+    .state-new { background: rgba(37,99,235,0.15); color: #60a5fa; border: 1px solid rgba(37,99,235,0.3); }
+    .state-learning { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+    .state-young { background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); }
+    .state-mature { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .state-leech { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+    .card-front { font-size: clamp(20px, 2.6vw, 28px); font-weight: 700; line-height: 1.35; color: var(--text); margin-bottom: 18px; }
+    .card-back { font-size: 15px; line-height: 1.7; color: var(--text-2); border-top: 1px dashed var(--border-hi); padding-top: 18px; margin-bottom: 18px; }
+    .card-back code { font-family: 'JetBrains Mono', monospace; font-size: 13px; background: var(--bg-3); padding: 2px 6px; border-radius: 4px; color: #93c5fd; }
+    .card-back.hidden { display: none; }
+    .card-source { font-size: 12px; color: var(--text-3); margin-bottom: 18px; }
+    .card-source a { color: var(--primary-l); }
+
+    .grade-row { margin-top: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    @media(max-width: 620px) { .grade-row { grid-template-columns: repeat(2, 1fr); } }
+    .grade-btn { padding: 14px 10px; border-radius: 10px; border: 1px solid var(--border-hi); background: var(--bg-2); color: var(--text); font-family: inherit; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.18s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .grade-btn:hover { transform: translateY(-2px); }
+    .grade-btn .g-next { font-size: 11px; font-weight: 500; opacity: 0.75; font-family: 'JetBrains Mono', monospace; }
+    .grade-btn .g-key { font-size: 10px; opacity: 0.55; }
+    .g-again { border-color: rgba(239,68,68,0.45); color: #f87171; }
+    .g-again:hover { background: rgba(239,68,68,0.12); }
+    .g-hard { border-color: rgba(245,158,11,0.45); color: #fbbf24; }
+    .g-hard:hover { background: rgba(245,158,11,0.12); }
+    .g-good { border-color: rgba(16,185,129,0.45); color: #34d399; }
+    .g-good:hover { background: rgba(16,185,129,0.12); }
+    .g-easy { border-color: rgba(56,189,248,0.45); color: #38bdf8; }
+    .g-easy:hover { background: rgba(56,189,248,0.12); }
+
+    .reveal-btn { margin-top: auto; padding: 16px; border-radius: 10px; border: none; background: linear-gradient(120deg, var(--primary), #3b82f6); color: #fff; font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .reveal-btn .g-key { font-size: 11px; opacity: 0.7; font-weight: 500; }
+
+    .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 12px; }
+    .empty-state .es-icon { font-size: 48px; color: #34d399; }
+    .empty-state .es-title { font-size: 22px; font-weight: 700; color: var(--text); }
+    .empty-state .es-sub { font-size: 14px; color: var(--text-2); max-width: 400px; line-height: 1.6; }
+
+    /* Side panel */
+    .side-panel { display: flex; flex-direction: column; gap: 20px; }
+    .panel-box { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .panel-box h3 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-3); margin: 0 0 14px; }
+
+    #forecastCanvas { width: 100%; height: 150px; display: block; }
+    .forecast-legend { font-size: 11px; color: var(--text-3); margin-top: 8px; display: flex; justify-content: space-between; }
+
+    .algo-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+    .algo-row:last-child { border-bottom: none; }
+    .algo-row span:first-child { color: var(--text-3); }
+    .algo-row span:last-child { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--text); }
+
+    .formula { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.7; color: var(--text-2); background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto; }
+    .formula b { color: #93c5fd; font-weight: 600; }
+
+    .session-log { max-height: 180px; overflow-y: auto; font-size: 12px; }
+    .log-line { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); color: var(--text-2); }
+    .log-line:last-child { border-bottom: none; }
+    .log-line em { font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-3); white-space: nowrap; }
+    .log-empty { color: var(--text-3); font-size: 12px; }
+
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(120%); background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--text); z-index: 300; transition: transform 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-graduation-cap"></i></span>
+      <span style="font-weight:700; font-size:18px;">AVPU</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="topic-search.html">Search</a>
+      <a href="modules.html">Varsity</a>
+      <a href="learn-dag.html">DAG Graph</a>
+      <a href="review-queue.html" style="color:var(--primary-l); font-weight:600;">Review Queue</a>
+      <a href="duo-league.html">Duo League</a>
+      <a href="code-lab.html">Code Lab</a>
+      <a href="laws-of-ux.html">Laws of UX</a>
+      <a href="100-day-challenge.html">100 Days AI</a>
+      <a href="certifications.html">Certifications</a>
+      <a href="mental-models.html">Mental Models</a>
+    </div>
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm" href="courses.html"><i class="fas fa-arrow-left"></i> All Courses</a>
+    </div>
+  </div>
+</nav>
+
+<div class="srs-container">
+  <div class="srs-header">
+    <div class="srs-badge"><i class="fas fa-repeat"></i> SuperMemo SM-2 · the retention engine behind Duolingo &amp; Anki</div>
+    <h1 class="srs-title">Spaced Repetition Review Queue</h1>
+    <p class="srs-sub">Every concept you meet across AVPU — DAG nodes, UX laws, mental models, Varsity finance — scheduled by
+      real SM-2 maths. Grade your recall and the algorithm decides the day you next see the card, stretching the interval
+      as recall strengthens and collapsing it the moment it fails.</p>
+  </div>
+
+  <!-- Stat strip -->
+  <div class="stat-strip">
+    <div class="stat-cell sc-due">
+      <div class="sc-lbl">Due Now</div>
+      <div class="sc-val" id="statDue">0</div>
+      <div class="sc-note" id="statDueNote">nothing scheduled</div>
+    </div>
+    <div class="stat-cell sc-new">
+      <div class="sc-lbl">Unseen</div>
+      <div class="sc-val" id="statNew">0</div>
+      <div class="sc-note" id="statNewNote">cards never graded</div>
+    </div>
+    <div class="stat-cell sc-mature">
+      <div class="sc-lbl">Mature</div>
+      <div class="sc-val" id="statMature">0</div>
+      <div class="sc-note">interval ≥ 21 days</div>
+    </div>
+    <div class="stat-cell sc-retention">
+      <div class="sc-lbl">Retention</div>
+      <div class="sc-val" id="statRetention">—</div>
+      <div class="sc-note" id="statRetentionNote">no reviews yet</div>
+    </div>
+    <div class="stat-cell sc-streak">
+      <div class="sc-lbl">Review Streak</div>
+      <div class="sc-val" id="statStreak">0</div>
+      <div class="sc-note">consecutive days</div>
+    </div>
+  </div>
+
+  <!-- Deck bar -->
+  <div class="deck-bar">
+    <div class="deck-pills" id="deckPills">
+      <button class="pill-btn active" data-deck="all">All Decks</button>
+      <button class="pill-btn" data-deck="ai">AI Engineering</button>
+      <button class="pill-btn" data-deck="ux">Laws of UX</button>
+      <button class="pill-btn" data-deck="models">Mental Models</button>
+      <button class="pill-btn" data-deck="finance">Varsity Finance</button>
+    </div>
+    <div class="deck-actions">
+      <button class="mini-btn" id="cramBtn" title="Review everything regardless of due date"><i class="fas fa-bolt"></i> Cram mode</button>
+      <button class="mini-btn" id="resetBtn" title="Erase all scheduling progress"><i class="fas fa-rotate-left"></i> Reset</button>
+    </div>
+  </div>
+
+  <!-- Workspace -->
+  <div class="srs-workspace">
+    <div class="card-stage" id="cardStage">
+      <div class="card-meta-row">
+        <span class="card-deck-tag" id="cardDeckTag">AI Engineering</span>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:12px; color:var(--text-3);" id="queuePos">1 of 1</span>
+          <span class="card-state-tag state-new" id="cardStateTag">New</span>
+        </div>
+      </div>
+
+      <div class="card-front" id="cardFront">Loading deck…</div>
+      <div class="card-back hidden" id="cardBack"></div>
+      <div class="card-source" id="cardSource"></div>
+
+      <button class="reveal-btn" id="revealBtn"><i class="fas fa-eye"></i> Show answer <span class="g-key">(Space)</span></button>
+
+      <div class="grade-row" id="gradeRow" style="display:none;">
+        <button class="grade-btn g-again" data-q="0">Again<span class="g-next" id="nextAgain">&lt;10m</span><span class="g-key">1</span></button>
+        <button class="grade-btn g-hard"  data-q="3">Hard<span class="g-next" id="nextHard">—</span><span class="g-key">2</span></button>
+        <button class="grade-btn g-good"  data-q="4">Good<span class="g-next" id="nextGood">—</span><span class="g-key">3</span></button>
+        <button class="grade-btn g-easy"  data-q="5">Easy<span class="g-next" id="nextEasy">—</span><span class="g-key">4</span></button>
+      </div>
+    </div>
+
+    <aside class="side-panel">
+      <div class="panel-box">
+        <h3>30-Day Workload Forecast</h3>
+        <canvas id="forecastCanvas"></canvas>
+        <div class="forecast-legend"><span>today</span><span id="forecastPeak">peak 0</span><span>+30d</span></div>
+      </div>
+
+      <div class="panel-box">
+        <h3>Current Card Scheduling State</h3>
+        <div class="algo-row"><span>Ease factor (EF)</span><span id="algoEF">2.50</span></div>
+        <div class="algo-row"><span>Repetitions (n)</span><span id="algoReps">0</span></div>
+        <div class="algo-row"><span>Current interval</span><span id="algoInterval">—</span></div>
+        <div class="algo-row"><span>Lapses</span><span id="algoLapses">0</span></div>
+        <div class="algo-row"><span>Next due</span><span id="algoDue">—</span></div>
+      </div>
+
+      <div class="panel-box">
+        <h3>The SM-2 Update Rule</h3>
+        <div class="formula">
+<b>EF'</b> = EF + (0.1 − (5−q)·(0.08 + (5−q)·0.02))
+<b>EF'</b> = max(1.3, EF')
+
+<b>q &lt; 3</b> → n = 0, relearn today, lapses++
+<b>n = 0</b> → I = 1 day
+<b>n = 1</b> → I = 6 days
+<b>n ≥ 2</b> → I = round(I · EF')
+        </div>
+        <p style="font-size:11.5px; color:var(--text-3); line-height:1.6; margin:12px 0 0;">
+          q is your recall grade: Again=0, Hard=3, Good=4, Easy=5. A low grade doesn't just reschedule the card — it
+          permanently lowers that card's ease factor, so genuinely hard material keeps coming back more often forever.
+        </p>
+      </div>
+
+      <div class="panel-box">
+        <h3>This Session</h3>
+        <div class="session-log" id="sessionLog"><div class="log-empty">No cards graded yet this session.</div></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   AVPU Spaced Repetition Review Queue
+   Real SuperMemo SM-2 scheduling, persisted to localStorage.
+   Closes the gap noted in docs/REFERENCE_SITES.md: the Duolingo
+   reference contributed streaks/XP/leagues to duo-league.html but
+   never its actual retention engine.
+   ============================================================ */
+
+const DECK_LABELS = {
+  ai: 'AI Engineering',
+  ux: 'Laws of UX',
+  models: 'Mental Models',
+  finance: 'Varsity Finance'
+};
+
+/* Cards are drawn from content that already exists elsewhere on AVPU, so the
+   queue reinforces the site rather than inventing a parallel curriculum. */
+const CARDS = [
+  // ---- AI Engineering (mirrors the learn-dag.html node graph) ----
+  { id: 'ai1', deck: 'ai', front: 'Write the scaled dot-product attention equation.', back: 'Attention(Q,K,V) = softmax(QKᵀ / √d_k) · V — the √d_k divisor keeps the dot products out of the saturated region of softmax, where gradients would vanish.', src: 'learn-dag.html' },
+  { id: 'ai2', deck: 'ai', front: 'Why does multi-head attention beat a single larger head?', back: 'Each head projects into its own lower-dimensional subspace, so different heads can specialise on different relations (syntax, coreference, position) at the same cost. One wide head has to average all of those into a single attention pattern.', src: 'learn-dag.html' },
+  { id: 'ai3', deck: 'ai', front: 'What does LoRA actually train, and why is it so cheap?', back: 'It freezes the base weights W and learns a low-rank update ΔW = BA, where B is d×r and A is r×k with r ≪ d. You train r(d+k) parameters instead of d·k — typically well under 1% of the model — and can merge or swap adapters at inference.', src: 'learn-dag.html' },
+  { id: 'ai4', deck: 'ai', front: 'In a RAG system, what does HNSW give you over a flat index?', back: 'A navigable small-world graph with logarithmic search instead of a linear scan. You trade exact nearest neighbours for approximate ones, getting sub-linear query time at high recall — the only way vector search stays fast past a few hundred thousand vectors.', src: 'learn-dag.html' },
+  { id: 'ai5', deck: 'ai', front: 'Name the two Ragas metrics that separate a retrieval failure from a generation failure.', back: 'Context Relevance judges what the retriever returned; Faithfulness judges whether the answer is actually grounded in that context. Low context relevance = fix chunking/embedding. High context relevance but low faithfulness = the model is confabulating.', src: 'learn-dag.html' },
+  { id: 'ai6', deck: 'ai', front: 'What makes a LangGraph agent graph different from a plain DAG pipeline?', back: 'It permits cycles. State is an explicit, typed object threaded through nodes, so a supervisor can route back to a worker for another pass — that loop is what lets an agent retry, critique and refine instead of running once top-to-bottom.', src: 'learn-dag.html' },
+  { id: 'ai7', deck: 'ai', front: 'Why does continuous batching beat static batching for LLM serving?', back: 'Generation lengths vary wildly. Static batching makes the whole batch wait for its slowest sequence; continuous batching evicts finished sequences and admits new ones every step, keeping the GPU saturated. This is the core vLLM throughput win.', src: 'learn-dag.html' },
+  { id: 'ai8', deck: 'ai', front: 'What is the purpose of autograd\'s computational graph?', back: 'It records the forward operations as a graph of tensors and grad_fns so the chain rule can be applied in reverse. PyTorch builds it dynamically each forward pass, which is why ordinary Python control flow works inside a model.', src: 'learn-dag.html' },
+  { id: 'ai9', deck: 'ai', front: 'In YOLO, what does the model predict per grid cell?', back: 'Bounding-box offsets relative to anchor/cell coordinates, an objectness score, and class probabilities — all in one forward pass. Single-stage regression is what makes it real-time, versus two-stage detectors that propose regions first.', src: 'learn-dag.html' },
+  { id: 'ai10', deck: 'ai', front: 'Why does 4-bit quantisation barely hurt quality?', back: 'Weights are heavily redundant and roughly normally distributed, so a well-chosen non-uniform grid (e.g. NF4) plus per-block scales preserves most of the information. The loss lands mostly in outlier channels, which is why outlier-aware schemes recover it.', src: 'learn-dag.html' },
+  { id: 'ai11', deck: 'ai', front: 'What is the defining defence against prompt injection?', back: 'Never let retrieved or user-supplied text be interpreted as instructions. Treat it as data, constrain the model\'s available tools, and validate outputs against a schema — filtering for "bad phrases" fails because the attack surface is semantic, not lexical.', src: 'learn-dag.html' },
+  { id: 'ai12', deck: 'ai', front: 'Why is NumPy vectorisation faster than a Python loop over the same array?', back: 'The loop pays Python interpreter and object-boxing overhead per element. A vectorised op dispatches once into a compiled C kernel over a contiguous buffer, which also lets the CPU use SIMD instructions and predictable cache lines.', src: 'learn-dag.html' },
+
+  // ---- Laws of UX ----
+  { id: 'ux1', deck: 'ux', front: 'State Fitts\'s Law and its one practical consequence.', back: 'Time to acquire a target is a function of its distance and size: T = a + b·log₂(2D/W). Consequence: primary actions should be large and near the user\'s current focus — which is why mobile primary buttons belong at the thumb, not the top corner.', src: 'laws-of-ux.html' },
+  { id: 'ux2', deck: 'ux', front: 'State Hick\'s Law.', back: 'Decision time rises logarithmically with the number of choices: T = b·log₂(n+1). Cutting options from 8 to 4 helps much less than from 2 to 1 hurts — so prune aggressively at the top of a funnel, and progressively disclose the rest.', src: 'laws-of-ux.html' },
+  { id: 'ux3', deck: 'ux', front: 'What does Miller\'s Law actually claim — and what does it not?', back: 'Working memory holds about 7±2 *chunks*. It does not justify "7 menu items": chunking is the lever, so a phone number split 3-3-4 is easier than 10 loose digits. Use it to argue for grouping, not for an arbitrary item count.', src: 'laws-of-ux.html' },
+  { id: 'ux4', deck: 'ux', front: 'Jakob\'s Law — and when should you deliberately break it?', back: 'Users expect your site to work like the other sites they know, so conventional patterns cost less to learn. Break it only when the novel pattern is a genuine core differentiator and you can afford to teach it — never for chrome like navigation or checkout.', src: 'laws-of-ux.html' },
+  { id: 'ux5', deck: 'ux', front: 'What is the Peak-End Rule, and where does it pay off most?', back: 'People judge an experience by its most intense moment and its ending, not its average. So invest in the emotional peak and the final screen — a delightful order-confirmation or empty-state does more for recalled satisfaction than shaving milliseconds off the middle.', src: 'laws-of-ux.html' },
+  { id: 'ux6', deck: 'ux', front: 'Define the Aesthetic-Usability Effect.', back: 'Users perceive attractive interfaces as more usable, and will forgive minor usability problems in them. The trap: it masks real problems during testing, so beautiful prototypes can hide defects that surface later at scale.', src: 'laws-of-ux.html' },
+  { id: 'ux7', deck: 'ux', front: 'What does the Doherty Threshold prescribe?', back: 'Keep system response under ~400ms and productivity rises, because the user never drops out of flow waiting. Below that, perceived performance tools — skeletons, optimistic updates — matter more than raw speed.', src: 'laws-of-ux.html' },
+  { id: 'ux8', deck: 'ux', front: 'Tesler\'s Law (the law of conservation of complexity).', back: 'Every system has irreducible complexity; the only question is whether the developer absorbs it or the user does. Good design moves it into the code — smart defaults, inference, validation — rather than exposing it as more configuration.', src: 'laws-of-ux.html' },
+  { id: 'ux9', deck: 'ux', front: 'Law of Proximity vs. Law of Common Region — what\'s the difference?', back: 'Proximity groups by whitespace alone. Common Region groups by a shared visible boundary (a card, a border, a tinted panel) and is the stronger cue — it will override proximity, which is why a border in the wrong place breaks a layout\'s grouping.', src: 'laws-of-ux.html' },
+  { id: 'ux10', deck: 'ux', front: 'Zeigarnik Effect — what interface pattern does it justify?', back: 'People remember interrupted tasks better than completed ones. It is the mechanism behind progress bars, completion meters and "your profile is 60% complete" — an open loop creates tension the user wants to close.', src: 'laws-of-ux.html' },
+  { id: 'ux11', deck: 'ux', front: 'Von Restorff (isolation) effect.', back: 'The item that differs most is the one remembered. Consequence: exactly one element per view may be the visual outlier. Two competing "primary" buttons cancel each other and the emphasis is lost.', src: 'laws-of-ux.html' },
+  { id: 'ux12', deck: 'ux', front: 'Postel\'s Law applied to UI.', back: 'Be liberal in what you accept, conservative in what you send. Accept the phone number with spaces, the date in any sane format, the pasted card number with dashes — then normalise internally instead of rejecting the user.', src: 'laws-of-ux.html' },
+
+  // ---- Mental Models ----
+  { id: 'mm1', deck: 'models', front: 'Inversion: how do you actually apply it?', back: 'Instead of asking how to succeed, ask what would guarantee failure — then systematically avoid those. Often far more tractable, because failure modes are concrete and enumerable where success paths are speculative.', src: 'mental-models.html' },
+  { id: 'mm2', deck: 'models', front: 'Second-order thinking — the question that triggers it.', back: '"And then what?" First-order effects are visible and usually the reason for acting; second-order effects are delayed and frequently reverse the first. Price caps → shortages; safety features → riskier behaviour.', src: 'mental-models.html' },
+  { id: 'mm3', deck: 'models', front: 'What does the Map Is Not the Territory warn against?', back: 'Every model discards detail to be useful, so the discarded detail is exactly where it fails. Ask what this abstraction leaves out, and whether the current situation lives in the omitted part.', src: 'mental-models.html' },
+  { id: 'mm4', deck: 'models', front: 'Circle of Competence — what is the actionable rule?', back: 'Know the boundary of what you genuinely understand, and treat decisions outside it differently: shrink position size, defer to someone inside their circle, or decline. The failure is not ignorance, it is not knowing where the edge is.', src: 'mental-models.html' },
+  { id: 'mm5', deck: 'models', front: 'Hanlon\'s Razor.', back: 'Do not attribute to malice what is adequately explained by incompleteness, incentive or incompetence. Practically: it produces better predictions, because malice is rare and misaligned incentives are everywhere.', src: 'mental-models.html' },
+  { id: 'mm6', deck: 'models', front: 'Explain margin of safety.', back: 'Build in slack proportional to the cost of being wrong and the uncertainty of your estimate. A bridge rated for 3× load, a runway of 24 months not 6. It buys survival through the errors you have not anticipated.', src: 'mental-models.html' },
+  { id: 'mm7', deck: 'models', front: 'Bayesian updating — the core discipline.', back: 'Start from a base rate, then move proportionally to how diagnostic the new evidence is. Most errors are either ignoring the base rate entirely, or updating too hard on weak but vivid evidence.', src: 'mental-models.html' },
+  { id: 'mm8', deck: 'models', front: 'Via negativa.', back: 'Improvement by subtraction. Removing a harmful thing is usually more robust than adding a beneficial one, because you know the downside you are eliminating but not the side effects you are introducing.', src: 'mental-models.html' },
+  { id: 'mm9', deck: 'models', front: 'Opportunity cost — the version people forget.', back: 'The cost of a choice is the best alternative given up, including alternatives you never seriously listed. The commonly missed one: the cost of your own attention, which is the binding constraint far more often than money.', src: 'mental-models.html' },
+  { id: 'mm10', deck: 'models', front: 'Occam\'s Razor, stated carefully.', back: 'Prefer the explanation requiring the fewest unsupported assumptions — not simply the shortest. Simplicity is a tie-breaker between explanations of equal evidential fit, not a reason to reject a complicated but well-evidenced one.', src: 'mental-models.html' },
+
+  // ---- Varsity Finance ----
+  { id: 'fi1', deck: 'finance', front: 'What does a P/E ratio actually tell you?', back: 'The price paid per rupee of current earnings, i.e. roughly how many years of today\'s earnings the market is paying. High P/E means expected growth — or overvaluation. It is meaningless in isolation: compare within a sector and against the company\'s own history.', src: 'modules.html' },
+  { id: 'fi2', deck: 'finance', front: 'Why is ROE misleading on its own?', back: 'Return on equity = net profit / shareholder equity, so leverage inflates it — debt shrinks the denominator. Decompose with DuPont (margin × asset turnover × leverage) to see whether the return comes from operations or borrowing.', src: 'modules.html' },
+  { id: 'fi3', deck: 'finance', front: 'Explain what an option\'s theta costs you.', back: 'Theta is the value the option loses per day from time decay alone, and it accelerates into expiry. An option buyer pays theta every day the underlying does nothing; the seller collects it. It is why being directionally right but slow still loses.', src: 'modules.html' },
+  { id: 'fi4', deck: 'finance', front: 'What is the difference between a stop-loss and a hedge?', back: 'A stop-loss exits the position at a price, so it converts risk into a realised loss and is vulnerable to gaps. A hedge holds an offsetting position, keeping the exposure but capping the loss — costlier, but it survives an overnight gap.', src: 'modules.html' },
+  { id: 'fi5', deck: 'finance', front: 'Why does compounding frequency matter so much over long horizons?', back: 'Because growth is multiplicative: the same nominal rate compounded more often gives a higher effective rate, and the gap widens exponentially with time. It is also why a single large drawdown is so damaging — it removes the base that everything after compounds on.', src: 'modules.html' },
+  { id: 'fi6', deck: 'finance', front: 'What does free cash flow reveal that net profit hides?', back: 'FCF = operating cash flow − capex, so it shows cash actually available after keeping the business running. Profit can be produced by accruals and depreciation choices; FCF is much harder to manufacture, which is why it is the better going-concern signal.', src: 'modules.html' }
+];
+
+const STORE_KEY = 'avpu_srs_state_v1';
+const DAY_MS = 86400000;
+
+let state = loadState();
+let activeDeck = 'all';
+let cramMode = false;
+let queue = [];
+let currentCard = null;
+let revealed = false;
+let sessionLog = [];
+
+/* ---------- persistence ---------- */
+
+function defaultState() {
+  return { cards: {}, history: [], lastReviewDay: null, streak: 0 };
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return defaultState();
+    const parsed = JSON.parse(raw);
+    return Object.assign(defaultState(), parsed);
+  } catch (e) {
+    return defaultState();
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  } catch (e) {
+    /* private mode / quota — the session still works in memory */
+  }
+}
+
+/* ---------- SM-2 ---------- */
+
+function schedOf(cardId) {
+  return state.cards[cardId] || { ef: 2.5, reps: 0, interval: 0, lapses: 0, due: null, lastGrade: null };
+}
+
+/* The SM-2 update rule. q: 0 = Again, 3 = Hard, 4 = Good, 5 = Easy. */
+function applySM2(sched, q) {
+  const next = Object.assign({}, sched);
+
+  // Ease factor moves on every review, including failures — this is what makes
+  // persistently hard cards stay frequent forever.
+  next.ef = Math.max(1.3, next.ef + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)));
+
+  if (q < 3) {
+    next.reps = 0;
+    next.interval = 0;          // relearn: due again in this same session
+    next.lapses = next.lapses + 1;
+    next.due = todayKey();
+  } else {
+    if (next.reps === 0) {
+      next.interval = 1;
+    } else if (next.reps === 1) {
+      next.interval = 6;
+    } else {
+      next.interval = Math.round(next.interval * next.ef);
+    }
+    next.reps = next.reps + 1;
+    next.due = dayKeyFrom(new Date(Date.now() + next.interval * DAY_MS));
+  }
+
+  next.lastGrade = q;
+  return next;
+}
+
+/* What the interval *would* become, used to label the grade buttons honestly. */
+function previewInterval(sched, q) {
+  const projected = applySM2(sched, q);
+  if (q < 3) return '<10m';
+  return projected.interval === 1 ? '1 day' : projected.interval + ' days';
+}
+
+/* ---------- date helpers (local-day granularity) ---------- */
+
+function dayKeyFrom(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function todayKey() { return dayKeyFrom(new Date()); }
+function daysUntil(key) {
+  if (!key) return 0;
+  const parts = key.split('-').map(Number);
+  const target = new Date(parts[0], parts[1] - 1, parts[2]);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((target - today) / DAY_MS);
+}
+
+/* ---------- card classification ---------- */
+
+function cardState(sched) {
+  if (sched.lapses >= 8) return { cls: 'state-leech', label: 'Leech' };
+  if (sched.reps === 0 && !sched.due) return { cls: 'state-new', label: 'New' };
+  if (sched.interval === 0) return { cls: 'state-learning', label: 'Relearning' };
+  if (sched.interval >= 21) return { cls: 'state-mature', label: 'Mature' };
+  return { cls: 'state-young', label: 'Young' };
+}
+
+function isDue(cardId) {
+  const s = schedOf(cardId);
+  if (!s.due) return true;                 // never seen → always available
+  return daysUntil(s.due) <= 0;
+}
+
+function deckCards() {
+  return CARDS.filter(c => activeDeck === 'all' || c.deck === activeDeck);
+}
+
+/* ---------- queue ---------- */
+
+function rebuildQueue() {
+  const pool = deckCards();
+  queue = (cramMode ? pool.slice() : pool.filter(c => isDue(c.id)))
+    // Overdue first, then never-seen, so scheduled work is never starved by new cards.
+    .sort((a, b) => {
+      const sa = schedOf(a.id), sb = schedOf(b.id);
+      const oa = sa.due ? daysUntil(sa.due) : 1;
+      const ob = sb.due ? daysUntil(sb.due) : 1;
+      return oa - ob;
+    });
+  currentCard = queue[0] || null;
+  revealed = false;
+}
+
+/* ---------- rendering ---------- */
+
+function renderStats() {
+  const pool = deckCards();
+  const due = pool.filter(c => { const s = schedOf(c.id); return s.due && daysUntil(s.due) <= 0; }).length;
+  const unseen = pool.filter(c => !schedOf(c.id).due).length;
+  const mature = pool.filter(c => schedOf(c.id).interval >= 21).length;
+
+  document.getElementById('statDue').textContent = due;
+  document.getElementById('statNew').textContent = unseen;
+  document.getElementById('statMature').textContent = mature;
+  document.getElementById('statDueNote').textContent = due === 0 ? 'nothing scheduled' : 'ready to review';
+  document.getElementById('statNewNote').textContent = unseen === 0 ? 'whole deck introduced' : 'cards never graded';
+
+  const reviews = state.history.length;
+  const passed = state.history.filter(h => h.q >= 3).length;
+  const retEl = document.getElementById('statRetention');
+  const retNote = document.getElementById('statRetentionNote');
+  if (reviews === 0) {
+    retEl.textContent = '—';
+    retNote.textContent = 'no reviews yet';
+  } else {
+    retEl.textContent = Math.round((passed / reviews) * 100) + '%';
+    retNote.textContent = passed + ' of ' + reviews + ' recalled';
+  }
+
+  document.getElementById('statStreak').textContent = state.streak;
+}
+
+function renderCard() {
+  const stage = document.getElementById('cardStage');
+  const gradeRow = document.getElementById('gradeRow');
+  const revealBtn = document.getElementById('revealBtn');
+
+  if (!currentCard) {
+    // Empty state — show when the next card is due, which is the whole point of SM-2.
+    const pool = deckCards();
+    const upcoming = pool
+      .map(c => schedOf(c.id).due)
+      .filter(Boolean)
+      .map(daysUntil)
+      .filter(d => d > 0)
+      .sort((a, b) => a - b)[0];
+
+    stage.innerHTML =
+      '<div class="empty-state">' +
+      '<div class="es-icon"><i class="fas fa-circle-check"></i></div>' +
+      '<div class="es-title">Queue clear</div>' +
+      '<div class="es-sub">Nothing is due in this deck. ' +
+      (upcoming ? 'The next card comes back in <strong>' + upcoming + (upcoming === 1 ? ' day' : ' days') + '</strong>.' :
+                  'Grade some cards and the scheduler will start spacing them out.') +
+      ' Use <strong>Cram mode</strong> to drill ahead of schedule without affecting the queue.</div>' +
+      '</div>';
+    // No card selected, so the scheduling panel has nothing to describe.
+    renderSchedPanel({ ef: 2.5, reps: 0, interval: 0, lapses: 0, due: null });
+    renderForecast();
+    return;
+  }
+
+  const sched = schedOf(currentCard.id);
+  const st = cardState(sched);
+
+  stage.innerHTML =
+    '<div class="card-meta-row">' +
+      '<span class="card-deck-tag">' + DECK_LABELS[currentCard.deck] + '</span>' +
+      '<div style="display:flex; align-items:center; gap:10px;">' +
+        '<span style="font-size:12px; color:var(--text-3);">' + (queue.indexOf(currentCard) + 1) + ' of ' + queue.length + '</span>' +
+        '<span class="card-state-tag ' + st.cls + '">' + st.label + '</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="card-front">' + currentCard.front + '</div>' +
+    '<div class="card-back' + (revealed ? '' : ' hidden') + '">' + currentCard.back + '</div>' +
+    (revealed ? '<div class="card-source">Covered in <a href="' + currentCard.src + '">' + currentCard.src + '</a></div>' : '<div class="card-source"></div>') +
+    (revealed
+      ? '<div class="grade-row">' +
+          '<button class="grade-btn g-again" data-q="0">Again<span class="g-next">' + previewInterval(sched, 0) + '</span><span class="g-key">1</span></button>' +
+          '<button class="grade-btn g-hard" data-q="3">Hard<span class="g-next">' + previewInterval(sched, 3) + '</span><span class="g-key">2</span></button>' +
+          '<button class="grade-btn g-good" data-q="4">Good<span class="g-next">' + previewInterval(sched, 4) + '</span><span class="g-key">3</span></button>' +
+          '<button class="grade-btn g-easy" data-q="5">Easy<span class="g-next">' + previewInterval(sched, 5) + '</span><span class="g-key">4</span></button>' +
+        '</div>'
+      : '<button class="reveal-btn" id="revealBtn"><i class="fas fa-eye"></i> Show answer <span class="g-key">(Space)</span></button>');
+
+  wireStage();
+  renderSchedPanel(sched);
+  renderForecast();
+}
+
+function renderSchedPanel(sched) {
+  document.getElementById('algoEF').textContent = sched.ef.toFixed(2);
+  document.getElementById('algoReps').textContent = sched.reps;
+  document.getElementById('algoInterval').textContent =
+    sched.reps === 0 && !sched.due ? 'unseen' : (sched.interval === 0 ? 'relearning' : sched.interval + 'd');
+  document.getElementById('algoLapses').textContent = sched.lapses;
+  if (!sched.due) {
+    document.getElementById('algoDue').textContent = 'now';
+  } else {
+    const d = daysUntil(sched.due);
+    document.getElementById('algoDue').textContent = d <= 0 ? 'now' : 'in ' + d + 'd';
+  }
+}
+
+function renderForecast() {
+  const canvas = document.getElementById('forecastCanvas');
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth;
+  const h = 150;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+
+  // Bucket every scheduled card into the next 30 days.
+  const buckets = new Array(31).fill(0);
+  deckCards().forEach(c => {
+    const s = schedOf(c.id);
+    if (!s.due) return;
+    const d = daysUntil(s.due);
+    if (d <= 0) buckets[0]++;
+    else if (d <= 30) buckets[d]++;
+  });
+
+  const peak = Math.max(1, ...buckets);
+  document.getElementById('forecastPeak').textContent = 'peak ' + peak;
+
+  const barW = w / buckets.length;
+  buckets.forEach((count, i) => {
+    const barH = (count / peak) * (h - 18);
+    const x = i * barW;
+    const y = h - barH;
+    ctx.fillStyle = i === 0 ? '#fbbf24' : 'rgba(96,165,250,0.75)';
+    ctx.beginPath();
+    ctx.roundRect(x + 1, y, Math.max(1, barW - 2), barH, 2);
+    ctx.fill();
+  });
+
+  // baseline
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, h - 0.5);
+  ctx.lineTo(w, h - 0.5);
+  ctx.stroke();
+}
+
+function renderLog() {
+  const el = document.getElementById('sessionLog');
+  if (!sessionLog.length) {
+    el.innerHTML = '<div class="log-empty">No cards graded yet this session.</div>';
+    return;
+  }
+  el.innerHTML = sessionLog.slice().reverse().map(l =>
+    '<div class="log-line"><span>' + l.label + '</span><em>' + l.grade + ' → ' + l.next + '</em></div>'
+  ).join('');
+}
+
+/* ---------- actions ---------- */
+
+function reveal() {
+  if (!currentCard) return;
+  revealed = true;
+  renderCard();
+}
+
+function grade(q) {
+  if (!currentCard || !revealed) return;
+
+  const before = schedOf(currentCard.id);
+  const after = applySM2(before, q);
+  state.cards[currentCard.id] = after;
+  state.history.push({ id: currentCard.id, q: q, at: Date.now() });
+
+  // Review streak: consecutive local days with at least one graded card.
+  const today = todayKey();
+  if (state.lastReviewDay !== today) {
+    const gap = state.lastReviewDay ? daysUntil(state.lastReviewDay) : null;
+    state.streak = (gap === -1) ? state.streak + 1 : 1;   // yesterday → continue, else restart
+    state.lastReviewDay = today;
+  }
+
+  saveState();
+
+  const gradeName = { 0: 'Again', 3: 'Hard', 4: 'Good', 5: 'Easy' }[q];
+  sessionLog.push({
+    label: currentCard.front.length > 46 ? currentCard.front.slice(0, 45) + '…' : currentCard.front,
+    grade: gradeName,
+    next: q < 3 ? 'relearn' : after.interval + 'd'
+  });
+
+  const failed = q < 3;
+  // A failed card goes to the back of the current queue; a passed one leaves it.
+  queue = queue.filter(c => c.id !== currentCard.id);
+  if (failed) queue.push(currentCard);
+
+  currentCard = queue[0] || null;
+  revealed = false;
+
+  renderCard();
+  renderStats();
+  renderLog();
+}
+
+function wireStage() {
+  const rb = document.getElementById('revealBtn');
+  if (rb) rb.onclick = reveal;
+  document.querySelectorAll('.grade-btn').forEach(btn => {
+    btn.onclick = () => grade(Number(btn.getAttribute('data-q')));
+  });
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ---------- controls ---------- */
+
+document.querySelectorAll('#deckPills .pill-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#deckPills .pill-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeDeck = btn.getAttribute('data-deck');
+    rebuildQueue();
+    renderCard();
+    renderStats();
+  });
+});
+
+document.getElementById('cramBtn').addEventListener('click', function () {
+  cramMode = !cramMode;
+  this.style.borderColor = cramMode ? 'var(--primary)' : '';
+  this.style.color = cramMode ? 'var(--text)' : '';
+  toast(cramMode ? 'Cram mode on — grading still updates the schedule' : 'Cram mode off — due cards only');
+  rebuildQueue();
+  renderCard();
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (!confirm('Erase all spaced-repetition progress (ease factors, intervals, streak)? This cannot be undone.')) return;
+  state = defaultState();
+  saveState();
+  sessionLog = [];
+  rebuildQueue();
+  renderCard();
+  renderStats();
+  renderLog();
+  toast('Scheduling progress cleared');
+});
+
+window.addEventListener('keydown', e => {
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+  if (typing) return;
+  if (e.code === 'Space') { e.preventDefault(); revealed ? null : reveal(); return; }
+  if (!revealed) return;
+  const map = { '1': 0, '2': 3, '3': 4, '4': 5 };
+  if (map[e.key] !== undefined) { e.preventDefault(); grade(map[e.key]); }
+});
+
+window.addEventListener('resize', renderForecast);
+
+/* ---------- init ---------- */
+rebuildQueue();
+renderCard();
+renderStats();
+renderLog();
+</script>
+
+<script>
+(function() {
+  // Theme Toggle Handler
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) {
+        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+
+  // Cursor Ring
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+</script>
+
+</body>
+</html>

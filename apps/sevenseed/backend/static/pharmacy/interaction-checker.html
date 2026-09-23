@@ -126,6 +126,14 @@
 
 <script>
 let pills = ['Aspirin (75mg)', 'Warfarin (5mg)', 'Ibuprofen (400mg)'];
+let interactionDB = [];
+
+fetch('data/medicines.json')
+  .then(res => res.json())
+  .then(data => {
+    interactionDB = data.drug_interactions || [];
+  })
+  .catch(err => console.error('Failed loading interactions:', err));
 
 function renderPills() {
   const list = document.getElementById('pillList');
@@ -140,6 +148,7 @@ function renderPills() {
 function removePill(idx) {
   pills.splice(idx, 1);
   renderPills();
+  scanInteractions();
 }
 
 function addPill() {
@@ -149,11 +158,56 @@ function addPill() {
     pills.push(val);
     input.value = '';
     renderPills();
+    scanInteractions();
   }
 }
 
 function scanInteractions() {
-  alert('🔍 Scanning pharmacological database across ' + pills.length + ' medications...\n2 clinically significant interactions identified above.');
+  const pane = document.getElementById('resultsPane');
+  if (!pane) return;
+
+  const pillNames = pills.map(p => p.toLowerCase());
+  const found = [];
+
+  interactionDB.forEach(item => {
+    const d1 = item.pair[0].toLowerCase();
+    const d2 = item.pair[1].toLowerCase();
+    if (pillNames.some(p => p.includes(d1)) && pillNames.some(p => p.includes(d2))) {
+      found.push(item);
+    }
+  });
+
+  if (pillNames.some(p => p.includes('aspirin')) && pillNames.some(p => p.includes('ibuprofen'))) {
+    found.push({
+      pair: ['Aspirin', 'Ibuprofen'],
+      severity: 'MODERATE',
+      message: 'Ibuprofen interferes with cardio-protective platelet inhibition of low-dose aspirin. Take aspirin at least 30 minutes before ibuprofen.'
+    });
+  }
+
+  if (found.length === 0) {
+    pane.innerHTML = `
+      <div style="text-align:center; padding:44px 20px; background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.3); border-radius:12px;">
+        <i class="fas fa-circle-check" style="font-size:42px; color:#34d399; margin-bottom:12px;"></i>
+        <h3 style="font-size:18px; font-weight:800; color:#fff; margin-bottom:6px;">No Dangerous Contraindications Detected</h3>
+        <p style="font-size:13px; color:var(--text-2); max-width:440px; margin:0 auto;">
+          The active ${pills.length} medications show no recorded critical adverse interactions in our pharmacology database.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  pane.innerHTML = found.map(inter => {
+    const isCrit = inter.severity.includes('CRITICAL') || inter.severity.includes('FATAL');
+    return `
+      <div class="alert-card ${isCrit ? 'alert-major' : 'alert-mod'}">
+        <div class="alert-severity ${isCrit ? 'sev-major' : 'sev-mod'}">⚠️ ${inter.severity} INTERACTION DETECTED</div>
+        <h4 class="alert-pair">${inter.pair.join(' + ')}</h4>
+        <p class="alert-desc">${inter.message}</p>
+      </div>
+    `;
+  }).join('');
 }
 </script>
 
