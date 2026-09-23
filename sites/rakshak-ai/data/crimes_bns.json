@@ -1,0 +1,50 @@
+{
+  "updated_at": "2026-09-23",
+  "legislation": "Bharatiya Nyaya Sanhita (BNS) 2023 & BNSS 2023",
+  "offenses": [
+    {
+      "id": "snatching_robbery",
+      "offense_name": "Snatching and Extortion / Robbery",
+      "ipc_section": "Section 379 / 390 / 392 IPC",
+      "bns_section": "Section 304 (Snatching) & Section 309 (Robbery) BNS",
+      "cognizable": true,
+      "bailable": false,
+      "triable_by": "Court of Session / Magistrate First Class",
+      "punishment": "Rigorous imprisonment up to 7 years + Fine",
+      "keywords": ["snatched", "chain", "motorcycle", "bike", "robbed", "weapon", "threatened", "purse", "phone"]
+    },
+    {
+      "id": "cyber_fraud",
+      "offense_name": "Cyber Financial Fraud & Cheating by Personation",
+      "ipc_section": "Section 419 / 420 IPC + 66D IT Act",
+      "bns_section": "Section 318(4) & Section 319 BNS",
+      "cognizable": true,
+      "bailable": false,
+      "triable_by": "Magistrate First Class",
+      "punishment": "Imprisonment up to 7 years + Mandatory Fine + Restitution",
+      "keywords": ["upi", "otp", "phishing", "fraud", "scam", "bank", "hacked", "transferred", "cheated", "fake link"]
+    },
+    {
+      "id": "hit_and_run",
+      "offense_name": "Causing Death / Grevious Hurt by Negligence with Failure to Report (Hit & Run)",
+      "ipc_section": "Section 304A IPC",
+      "bns_section": "Section 106(2) BNS (Non-reporting aggravated clause)",
+      "cognizable": true,
+      "bailable": false,
+      "triable_by": "Court of Session",
+      "punishment": "Imprisonment up to 10 years + Fine",
+      "keywords": ["accident", "hit and run", "rash driving", "speeding", "truck", "car hit", "fled", "unattended"]
+    },
+    {
+      "id": "stalking_trespass",
+      "offense_name": "Electronic Stalking & Criminal Trespass / Intimidation",
+      "ipc_section": "Section 354D / 506 / 447 IPC",
+      "bns_section": "Section 78 (Stalking) & Section 351 (Criminal Intimidation) BNS",
+      "cognizable": true,
+      "bailable": false,
+      "triable_by": "Any Magistrate",
+      "punishment": "Imprisonment up to 5 years + Fine",
+      "keywords": ["stalking", "following", "harassing", "threats", "trespassed", "monitoring", "whatsapp threats"]
+    }
+  ]
+}
