@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AI Deal Hunter &mdash; AVP Emart</title>
+  <meta name="description" content="AVP Emart AI Deal Hunter: track prices across Amazon, Flipkart, Zepto, Blinkit. Set alerts, find best deals, analyze price history, and save money intelligently.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* HERO */
+    .dh-hero { padding:110px 24px 50px; background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(16,185,129,.2) 0%,transparent 70%); text-align:center; }
+    .dh-badge { display:inline-flex; align-items:center; gap:8px; padding:6px 18px; border-radius:999px; background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.35); color:#34d399; font-size:13px; font-weight:600; margin-bottom:18px; }
+    .live-dot { width:8px; height:8px; border-radius:50%; background:#10b981; animation:pdot 2s infinite; display:inline-block; }
+    @keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+    .dh-title { font-size:clamp(30px,4.5vw,52px); font-weight:900; line-height:1.12; letter-spacing:-.03em; margin-bottom:14px; background:linear-gradient(135deg,#fff 0%,#34d399 50%,#10b981 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .dh-sub { font-size:16px; color:var(--text-2); max-width:660px; margin:0 auto 32px; line-height:1.6; }
+
+    /* SAVINGS COUNTER */
+    .savings-banner { background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(6,182,212,.12)); border:1px solid rgba(16,185,129,.3); border-radius:20px; padding:20px 30px; max-width:900px; margin:0 auto 40px; display:grid; grid-template-columns:repeat(4,1fr); gap:20px; text-align:center; }
+    @media(max-width:700px){.savings-banner{grid-template-columns:repeat(2,1fr)}}
+    .sav-item .sav-num { font-size:28px; font-weight:900; color:#34d399; }
+    .sav-item .sav-lbl { font-size:12px; color:var(--text-3); margin-top:2px; }
+
+    /* SEARCH */
+    .dh-search-wrap { max-width:800px; margin:0 auto 50px; }
+    .dh-search-box { display:flex; gap:12px; align-items:center; background:rgba(255,255,255,.04); border:2px solid rgba(16,185,129,.3); border-radius:16px; padding:14px 18px; backdrop-filter:blur(20px); box-shadow:0 8px 32px rgba(0,0,0,.3); transition:border-color .25s,box-shadow .25s; }
+    .dh-search-box:focus-within { border-color:#10b981; box-shadow:0 0 0 4px rgba(16,185,129,.15); }
+    .dh-search-input { flex:1; background:none; border:none; outline:none; color:#fff; font-size:16px; font-family:inherit; font-weight:500; }
+    .dh-search-input::placeholder { color:rgba(255,255,255,.3); }
+    .dh-search-btn { padding:10px 22px; border-radius:12px; border:none; background:linear-gradient(135deg,#10b981,#059669); color:#fff; font-weight:700; font-size:14px; cursor:pointer; display:flex; align-items:center; gap:8px; flex-shrink:0; transition:transform .2s,box-shadow .2s; box-shadow:0 4px 16px rgba(16,185,129,.4); }
+    .dh-search-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(16,185,129,.5); }
+    .dh-search-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+    .cat-chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:14px; }
+    .cat-chip { padding:6px 14px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); color:var(--text-2); font-size:13px; cursor:pointer; transition:all .2s; }
+    .cat-chip:hover { background:rgba(16,185,129,.15); border-color:rgba(16,185,129,.5); color:#fff; }
+
+    /* MAIN */
+    .dh-main { max-width:1300px; margin:0 auto; padding:0 24px 80px; }
+    .dh-layout { display:grid; grid-template-columns:1fr 340px; gap:28px; }
+    @media(max-width:1100px){.dh-layout{grid-template-columns:1fr}}
+
+    /* DEALS GRID */
+    .deals-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+    .deals-header h3 { font-size:18px; font-weight:700; color:#fff; }
+    .filter-row { display:flex; gap:8px; flex-wrap:wrap; }
+    .f-btn { padding:6px 14px; border-radius:8px; background:var(--bg-2); border:1px solid var(--border-hi); color:var(--text-2); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+    .f-btn:hover { background:var(--bg-3); color:#fff; }
+    .f-btn.active { background:#10b981; color:#000; border-color:#10b981; font-weight:700; }
+
+    .deals-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+
+    .deal-card { background:var(--bg-1); border:1px solid var(--border); border-radius:16px; overflow:hidden; transition:transform .2s,border-color .2s,box-shadow .2s; cursor:pointer; position:relative; }
+    .deal-card:hover { transform:translateY(-4px); border-color:rgba(16,185,129,.4); box-shadow:0 12px 32px rgba(0,0,0,.4); }
+    .deal-badge { position:absolute; top:12px; left:12px; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:800; z-index:1; }
+    .badge-hot { background:#ef4444; color:#fff; }
+    .badge-new { background:#8b5cf6; color:#fff; }
+    .badge-expiring { background:#f59e0b; color:#000; }
+    .badge-flash { background:linear-gradient(135deg,#ef4444,#f59e0b); color:#fff; }
+    .deal-img-wrap { height:160px; display:flex; align-items:center; justify-content:center; background:var(--bg-2); font-size:64px; position:relative; }
+    .deal-platform-badge { position:absolute; bottom:8px; right:8px; padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; }
+    .plat-amazon { background:#ff9900; color:#000; }
+    .plat-flipkart { background:#2874f0; color:#fff; }
+    .plat-zepto { background:#6d28d9; color:#fff; }
+    .plat-blinkit { background:#f59e0b; color:#000; }
+    .plat-jiomart { background:#003ea6; color:#fff; }
+    .deal-body { padding:16px; }
+    .deal-name { font-size:14px; font-weight:700; color:#fff; margin-bottom:6px; line-height:1.3; }
+    .deal-category { font-size:11px; color:var(--text-3); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+    .deal-price-row { display:flex; align-items:baseline; gap:10px; margin-bottom:8px; }
+    .deal-price { font-size:22px; font-weight:900; color:#34d399; }
+    .deal-mrp { font-size:14px; color:var(--text-3); text-decoration:line-through; }
+    .deal-discount { font-size:13px; font-weight:800; color:#f59e0b; background:rgba(245,158,11,.12); border:1px solid rgba(245,158,11,.2); border-radius:6px; padding:2px 8px; }
+    .deal-savings { font-size:12px; color:var(--text-2); margin-bottom:12px; }
+    .deal-savings strong { color:#34d399; }
+    .deal-actions { display:flex; gap:8px; }
+    .deal-buy-btn { flex:1; padding:9px 12px; border-radius:10px; border:none; background:linear-gradient(135deg,#10b981,#059669); color:#fff; font-weight:700; font-size:13px; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:6px; }
+    .deal-buy-btn:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(16,185,129,.4); }
+    .deal-alert-btn { width:40px; border-radius:10px; border:1px solid var(--border-hi); background:var(--bg-2); color:var(--text-2); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; transition:all .2s; }
+    .deal-alert-btn:hover { border-color:#f59e0b; color:#fbbf24; }
+    .deal-alert-btn.alerted { border-color:#f59e0b; color:#fbbf24; background:rgba(245,158,11,.1); }
+
+    /* PRICE HISTORY CHART */
+    .ph-chart-wrap { background:var(--bg-2); border-radius:8px; padding:12px; margin-bottom:12px; }
+    .ph-bars { display:flex; align-items:flex-end; gap:3px; height:48px; }
+    .ph-bar { flex:1; border-radius:2px 2px 0 0; min-width:6px; transition:height .4s; }
+
+    /* SIDEBAR */
+    .sidebar-col { display:flex; flex-direction:column; gap:20px; }
+
+    /* ALERT PANEL */
+    .alert-panel { background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius); padding:20px; }
+    .alert-panel h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:16px; display:flex; align-items:center; gap:8px; justify-content:space-between; }
+    .alert-form { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+    .alert-input { padding:10px 14px; background:var(--bg-2); border:1px solid var(--border-hi); border-radius:10px; color:#fff; font-family:inherit; font-size:13px; outline:none; transition:border-color .2s; }
+    .alert-input:focus { border-color:#10b981; }
+    .alert-submit { padding:10px; border-radius:10px; border:none; background:linear-gradient(135deg,#10b981,#059669); color:#fff; font-weight:700; font-size:13px; cursor:pointer; transition:all .2s; }
+    .alert-submit:hover { transform:translateY(-1px); }
+    .alert-list { display:flex; flex-direction:column; gap:8px; }
+    .alert-item { background:var(--bg-2); border:1px solid var(--border); border-radius:10px; padding:10px 12px; display:flex; align-items:center; gap:10px; }
+    .alert-emoji { font-size:18px; }
+    .alert-info { flex:1; }
+    .alert-product { font-size:12px; font-weight:600; color:#fff; }
+    .alert-target { font-size:11px; color:var(--text-3); }
+    .alert-status { font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; }
+    .as-watching { background:rgba(16,185,129,.15); color:#34d399; border:1px solid rgba(16,185,129,.3); }
+    .as-triggered { background:rgba(239,68,68,.15); color:#f87171; border:1px solid rgba(239,68,68,.3); }
+    .alert-del { background:none; border:none; color:var(--text-3); cursor:pointer; font-size:14px; transition:color .2s; }
+    .alert-del:hover { color:#f87171; }
+
+    /* SAVINGS TRACKER */
+    .savings-panel { background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius); padding:20px; }
+    .savings-panel h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:16px; }
+    .sav-stat { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); font-size:13px; }
+    .sav-stat:last-child { border-bottom:none; }
+    .sav-stat-label { color:var(--text-2); }
+    .sav-stat-val { font-weight:700; color:#34d399; }
+
+    /* TRENDING */
+    .trending-panel { background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius); padding:20px; }
+    .trending-panel h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+    .trend-item { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid var(--border); }
+    .trend-item:last-child { border-bottom:none; }
+    .trend-rank { width:24px; font-size:13px; font-weight:800; text-align:center; color:var(--text-3); }
+    .trend-emoji { font-size:20px; }
+    .trend-name { flex:1; font-size:13px; font-weight:600; color:#fff; }
+    .trend-disc { font-size:12px; font-weight:700; color:#34d399; }
+
+    /* TOAST */
+    .green-toast { position:fixed; bottom:24px; right:24px; z-index:9999; background:linear-gradient(135deg,#10b981,#059669); color:#fff; padding:12px 20px; border-radius:12px; font-weight:700; font-size:14px; display:flex; align-items:center; gap:10px; transform:translateY(80px); opacity:0; transition:all .3s; box-shadow:0 8px 24px rgba(16,185,129,.4); }
+    .green-toast.show { transform:translateY(0); opacity:1; }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:22px;">&#128722;</span>
+      <span class="brand-text">AVP Emart</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="price-tracker.html" class="nav-link">Price Tracker</a>
+      <a href="qcommerce.html" class="nav-link">Q-Commerce</a>
+      <a href="coupon-tester.html" class="nav-link">Coupons</a>
+      <button class="btn-theme-toggle" id="themeToggle"><i class="fa-solid fa-circle-half-stroke"></i></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="dh-hero">
+  <div class="dh-badge"><span class="live-dot"></span>AI-Powered &middot; Real-time Prices &middot; 8 Platforms</div>
+  <h1 class="dh-title">AI Deal Hunter</h1>
+  <p class="dh-sub">Never overpay again. Track prices across Amazon, Flipkart, Zepto, Blinkit, and more. Set alerts, catch flash sales, and let AI find the best time to buy.</p>
+
+  <div class="savings-banner">
+    <div class="sav-item"><div class="sav-num">&#8377;12.4L</div><div class="sav-lbl">Saved This Month</div></div>
+    <div class="sav-item"><div class="sav-num">48,200</div><div class="sav-lbl">Active Alerts</div></div>
+    <div class="sav-item"><div class="sav-num">3,400+</div><div class="sav-lbl">Deals Tracked</div></div>
+    <div class="sav-item"><div class="sav-num">8</div><div class="sav-lbl">Platforms Covered</div></div>
+  </div>
+
+  <div class="dh-search-wrap">
+    <div class="dh-search-box">
+      <i class="fa-solid fa-magnifying-glass" style="color:rgba(255,255,255,.3);flex-shrink:0;"></i>
+      <input type="text" class="dh-search-input" id="dhSearch" placeholder="Search products, brands, categories... (e.g. iPhone 16, boAt earbuds, Britannia biscuits)" autocomplete="off">
+      <button class="dh-search-btn" id="dhSearchBtn" onclick="searchDeals()">
+        <i class="fa-solid fa-fire-flame-curved"></i><span id="dhBtnText">Hunt Deals</span>
+      </button>
+    </div>
+    <div class="cat-chips">
+      <span class="cat-chip" onclick="filterDeals('electronics')">&#128241; Electronics</span>
+      <span class="cat-chip" onclick="filterDeals('grocery')">&#127822; Grocery</span>
+      <span class="cat-chip" onclick="filterDeals('fashion')">&#128248; Fashion</span>
+      <span class="cat-chip" onclick="filterDeals('home')">&#127968; Home</span>
+      <span class="cat-chip" onclick="filterDeals('beauty')">&#128132; Beauty</span>
+      <span class="cat-chip" onclick="filterDeals('sports')">&#9917; Sports</span>
+      <span class="cat-chip active" onclick="filterDeals('all')">&#9889; All Deals</span>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="dh-main">
+  <div class="dh-layout">
+    <!-- LEFT: Deals -->
+    <div>
+      <div class="deals-header">
+        <h3>&#128293; Hot Deals Right Now <span id="dealCount" style="font-size:14px;color:var(--text-3);font-weight:500;"></span></h3>
+        <div class="filter-row">
+          <button class="f-btn active" onclick="sortDeals('discount',this)">Top Discount</button>
+          <button class="f-btn" onclick="sortDeals('saving',this)">Max Savings</button>
+          <button class="f-btn" onclick="sortDeals('expiring',this)">Expiring Soon</button>
+          <button class="f-btn" onclick="sortDeals('new',this)">New</button>
+        </div>
+      </div>
+      <div class="deals-grid" id="dealsGrid"></div>
+    </div>
+
+    <!-- RIGHT: Sidebar -->
+    <div class="sidebar-col">
+      <!-- Alert Setter -->
+      <div class="alert-panel">
+        <h3><span>&#128276; Price Alerts</span><span id="alertCount" style="font-size:12px;background:rgba(16,185,129,.15);color:#34d399;border:1px solid rgba(16,185,129,.3);padding:2px 8px;border-radius:999px;font-weight:700;">0 Active</span></h3>
+        <div class="alert-form">
+          <input type="text" class="alert-input" id="alertProduct" placeholder="Product name or URL...">
+          <input type="number" class="alert-input" id="alertPrice" placeholder="Alert me when price drops to &#8377;...">
+          <select class="alert-input" id="alertPlatform">
+            <option value="all">All Platforms</option>
+            <option value="amazon">Amazon India</option>
+            <option value="flipkart">Flipkart</option>
+            <option value="zepto">Zepto</option>
+            <option value="blinkit">Blinkit</option>
+            <option value="jiomart">JioMart</option>
+          </select>
+          <button class="alert-submit" onclick="addAlert()"><i class="fa-solid fa-bell"></i> Set Alert</button>
+        </div>
+        <div class="alert-list" id="alertList"></div>
+      </div>
+
+      <!-- Savings Tracker -->
+      <div class="savings-panel">
+        <h3>&#128200; Your Savings Tracker</h3>
+        <div class="sav-stat"><span class="sav-stat-label">Total Saved (Lifetime)</span><span class="sav-stat-val" id="lifetimeSaving">&#8377;4,820</span></div>
+        <div class="sav-stat"><span class="sav-stat-label">Saved This Month</span><span class="sav-stat-val">&#8377;1,240</span></div>
+        <div class="sav-stat"><span class="sav-stat-label">Deals Clicked</span><span class="sav-stat-val">47</span></div>
+        <div class="sav-stat"><span class="sav-stat-label">Alerts Triggered</span><span class="sav-stat-val">8</span></div>
+        <div class="sav-stat"><span class="sav-stat-label">Best Single Save</span><span class="sav-stat-val">&#8377;6,200 (iPhone 15)</span></div>
+        <div class="sav-stat"><span class="sav-stat-label">Avg Discount Found</span><span class="sav-stat-val">34%</span></div>
+      </div>
+
+      <!-- Trending -->
+      <div class="trending-panel">
+        <h3><i class="fa-solid fa-arrow-trend-up" style="color:#34d399;"></i> Trending Searches</h3>
+        <div id="trendingList"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="green-toast" id="greenToast"><i class="fa-solid fa-check"></i><span id="toastMsg">Alert Set!</span></div>
+
+<script src="app.js"></script>
+<script>
+const deals = [
+  {id:1,name:'boAt Airdopes 131 True Wireless Earbuds',cat:'electronics',emoji:'&#127911;',platform:'amazon',platformLabel:'Amazon',platClass:'plat-amazon',price:799,mrp:1999,saved:1200,discount:60,badge:'hot',history:[1999,1799,1499,1299,999,899,799]},
+  {id:2,name:'Britannia Good Day Butter Cookies 600g',cat:'grocery',emoji:'&#127850;',platform:'zepto',platformLabel:'Zepto',platClass:'plat-zepto',price:89,mrp:120,saved:31,discount:26,badge:'new',history:[120,115,110,105,99,95,89]},
+  {id:3,name:'Fastrack Analog Watch FP9901PP04',cat:'fashion',emoji:'&#8987;',platform:'flipkart',platformLabel:'Flipkart',platClass:'plat-flipkart',price:849,mrp:2295,saved:1446,discount:63,badge:'flash',history:[2295,2000,1799,1499,1099,999,849]},
+  {id:4,name:'Milton Thermosteel Duo DLX 1000ml',cat:'home',emoji:'&#127861;',platform:'amazon',platformLabel:'Amazon',platClass:'plat-amazon',price:499,mrp:1295,saved:796,discount:61,badge:'hot',history:[1295,1100,950,799,699,599,499]},
+  {id:5,name:'Mamaearth Vitamin C Face Wash 100ml',cat:'beauty',emoji:'&#127815;',platform:'blinkit',platformLabel:'Blinkit',platClass:'plat-blinkit',price:149,mrp:249,saved:100,discount:40,badge:'new',history:[249,239,229,219,199,179,149]},
+  {id:6,name:'Nivia Dominator Cricket Bat Full Size',cat:'sports',emoji:'&#129461;',platform:'flipkart',platformLabel:'Flipkart',platClass:'plat-flipkart',price:899,mrp:2500,saved:1601,discount:64,badge:'expiring',history:[2500,2200,1800,1400,1200,999,899]},
+  {id:7,name:'Tata Sampann Tur Dal 1kg',cat:'grocery',emoji:'&#127814;',platform:'jiomart',platformLabel:'JioMart',platClass:'plat-jiomart',price:129,mrp:165,saved:36,discount:22,badge:'new',history:[165,160,155,148,140,135,129]},
+  {id:8,name:'Philips 9W LED Bulb Pack of 4',cat:'home',emoji:'&#128161;',platform:'amazon',platformLabel:'Amazon',platClass:'plat-amazon',price:299,mrp:780,saved:481,discount:62,badge:'hot',history:[780,699,599,499,399,349,299]},
+  {id:9,name:'OnePlus Nord CE 3 Lite 5G 8/128GB',cat:'electronics',emoji:'&#128241;',platform:'flipkart',platformLabel:'Flipkart',platClass:'plat-flipkart',price:14999,mrp:19999,saved:5000,discount:25,badge:'flash',history:[19999,18999,17999,16999,15999,15499,14999]},
+  {id:10,name:'Kelloggs Corn Flakes Original 875g',cat:'grocery',emoji:'&#127757;',platform:'blinkit',platformLabel:'Blinkit',platClass:'plat-blinkit',price:219,mrp:350,saved:131,discount:37,badge:'hot',history:[350,330,310,290,270,249,219]},
+  {id:11,name:'Wrogn Men\'s Slim Fit Jeans',cat:'fashion',emoji:'&#128248;',platform:'flipkart',platformLabel:'Flipkart',platClass:'plat-flipkart',price:599,mrp:1999,saved:1400,discount:70,badge:'flash',history:[1999,1799,1499,1199,899,699,599]},
+  {id:12,name:'Yardley London Charm Body Spray',cat:'beauty',emoji:'&#127800;',platform:'amazon',platformLabel:'Amazon',platClass:'plat-amazon',price:89,mrp:195,saved:106,discount:54,badge:'new',history:[195,185,170,155,140,120,89]},
+];
+
+let alerts = JSON.parse(localStorage.getItem('emart-alerts') || '[]');
+let alertedIds = new Set(JSON.parse(localStorage.getItem('emart-alerted-deals') || '[]'));
+let currentFilter = 'all';
+let currentSort = 'discount';
+
+function getFilteredDeals() {
+  let d = currentFilter === 'all' ? [...deals] : deals.filter(x => x.cat === currentFilter);
+  if (currentSort === 'discount') d.sort((a,b) => b.discount - a.discount);
+  else if (currentSort === 'saving') d.sort((a,b) => b.saved - a.saved);
+  else if (currentSort === 'expiring') d.sort((a,b) => (a.badge==='expiring'?-1:1));
+  else if (currentSort === 'new') d.sort((a,b) => (a.badge==='new'?-1:1));
+  return d;
+}
+
+function drawMiniHistory(history, color) {
+  const max = Math.max(...history), min = Math.min(...history);
+  const range = max - min || 1;
+  return history.map((v,i) => {
+    const h = Math.max(8, ((v - min) / range) * 44 + 4);
+    const isMin = v === min;
+    const bg = isMin ? '#34d399' : (i === history.length-1 ? color : 'rgba(255,255,255,0.12)');
+    return `<div class="ph-bar" style="height:${h}px;background:${bg};flex:1;border-radius:2px 2px 0 0;" title="&#8377;${v}"></div>`;
+  }).join('');
+}
+
+function renderDeals() {
+  const d = getFilteredDeals();
+  document.getElementById('dealCount').textContent = `(${d.length} deals)`;
+  const platColors = {amazon:'#ff9900',flipkart:'#2874f0',zepto:'#6d28d9',blinkit:'#f59e0b',jiomart:'#003ea6'};
+  const platColor = (p) => platColors[p] || '#10b981';
+  document.getElementById('dealsGrid').innerHTML = d.map(deal => {
+    const badgeMap = {hot:'badge-hot',new:'badge-new',expiring:'badge-expiring',flash:'badge-flash'};
+    const badgeLabel = {hot:'&#128293; HOT',new:'&#129395; NEW',expiring:'&#9203; EXPIRING',flash:'&#9889; FLASH'};
+    const isAlerted = alertedIds.has(deal.id);
+    return `<div class="deal-card" id="dc-${deal.id}">
+      <div class="deal-badge ${badgeMap[deal.badge]}">${badgeLabel[deal.badge]}</div>
+      <div class="deal-img-wrap">
+        <span style="font-size:60px;">${deal.emoji}</span>
+        <div class="deal-platform-badge ${deal.platClass}">${deal.platformLabel}</div>
+      </div>
+      <div class="deal-body">
+        <div class="deal-name">${deal.name}</div>
+        <div class="deal-category"><i class="fa-solid fa-tag" style="font-size:10px;"></i> ${deal.cat.charAt(0).toUpperCase()+deal.cat.slice(1)}</div>
+        <div class="ph-chart-wrap">
+          <div style="font-size:10px;color:var(--text-3);margin-bottom:4px;">7-day price history</div>
+          <div class="ph-bars">${drawMiniHistory(deal.history, platColor(deal.platform))}</div>
+        </div>
+        <div class="deal-price-row">
+          <span class="deal-price">&#8377;${deal.price.toLocaleString()}</span>
+          <span class="deal-mrp">&#8377;${deal.mrp.toLocaleString()}</span>
+          <span class="deal-discount">-${deal.discount}%</span>
+        </div>
+        <div class="deal-savings">You save <strong>&#8377;${deal.saved.toLocaleString()}</strong></div>
+        <div class="deal-actions">
+          <button class="deal-buy-btn" onclick="buyDeal(${deal.id})"><i class="fa-solid fa-bolt"></i> Buy Now</button>
+          <button class="deal-alert-btn${isAlerted?' alerted':''}" id="ab-${deal.id}" onclick="toggleDealAlert(${deal.id})" title="Set price alert">
+            <i class="fa-solid fa-bell${isAlerted?' fa-shake':''}"></i>
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterDeals(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  renderDeals();
+}
+
+function sortDeals(mode, btn) {
+  currentSort = mode;
+  document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDeals();
+}
+
+async function searchDeals() {
+  const q = document.getElementById('dhSearch').value.trim().toLowerCase();
+  if (!q) { renderDeals(); return; }
+  const btn = document.getElementById('dhSearchBtn');
+  const btxt = document.getElementById('dhBtnText');
+  btn.disabled = true;
+  btxt.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Hunting...';
+  await new Promise(r => setTimeout(r, 600));
+  // Filter by search
+  const filtered = deals.filter(d => d.name.toLowerCase().includes(q) || d.cat.toLowerCase().includes(q));
+  document.getElementById('dealCount').textContent = `(${filtered.length} results for "${q}")`;
+  const platColor = {amazon:'#ff9900',flipkart:'#2874f0',zepto:'#6d28d9',blinkit:'#f59e0b',jiomart:'#003ea6'};
+  document.getElementById('dealsGrid').innerHTML = filtered.length > 0 ? filtered.map(deal => {
+    const badgeMap = {hot:'badge-hot',new:'badge-new',expiring:'badge-expiring',flash:'badge-flash'};
+    const badgeLabel = {hot:'&#128293; HOT',new:'&#129395; NEW',expiring:'&#9203; EXPIRING',flash:'&#9889; FLASH'};
+    return `<div class="deal-card"><div class="deal-badge ${badgeMap[deal.badge]}">${badgeLabel[deal.badge]}</div><div class="deal-img-wrap"><span style="font-size:60px;">${deal.emoji}</span><div class="deal-platform-badge ${deal.platClass}">${deal.platformLabel}</div></div><div class="deal-body"><div class="deal-name">${deal.name}</div><div class="deal-price-row"><span class="deal-price">&#8377;${deal.price.toLocaleString()}</span><span class="deal-mrp">&#8377;${deal.mrp.toLocaleString()}</span><span class="deal-discount">-${deal.discount}%</span></div><div class="deal-savings">Save <strong>&#8377;${deal.saved.toLocaleString()}</strong></div><div class="deal-actions"><button class="deal-buy-btn" onclick="buyDeal(${deal.id})"><i class="fa-solid fa-bolt"></i> Buy Now</button></div></div></div>`;
+  }).join('') : `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-3);"><i class="fa-solid fa-magnifying-glass" style="font-size:40px;opacity:.3;display:block;margin-bottom:16px;"></i><p>No deals found for "${q}". Try a different search.</p></div>`;
+  btn.disabled = false;
+  btxt.textContent = 'Hunt Deals';
+}
+
+function buyDeal(id) {
+  const deal = deals.find(d => d.id === id);
+  if (!deal) return;
+  const lifetimeSaving = parseInt(localStorage.getItem('emart-saved') || '4820') + deal.saved;
+  localStorage.setItem('emart-saved', lifetimeSaving);
+  document.getElementById('lifetimeSaving').innerHTML = `&#8377;${lifetimeSaving.toLocaleString()}`;
+  showToast(`&#10024; Redirecting to ${deal.platformLabel}... Save &#8377;${deal.saved.toLocaleString()}!`);
+}
+
+function toggleDealAlert(id) {
+  const deal = deals.find(d => d.id === id);
+  if (!deal) return;
+  const btn = document.getElementById(`ab-${id}`);
+  if (alertedIds.has(id)) {
+    alertedIds.delete(id);
+    btn.classList.remove('alerted');
+    btn.innerHTML = '<i class="fa-solid fa-bell"></i>';
+    showToast('Alert removed');
+  } else {
+    alertedIds.add(id);
+    btn.classList.add('alerted');
+    btn.innerHTML = '<i class="fa-solid fa-bell fa-shake"></i>';
+    showToast(`&#128276; Alert set for ${deal.name.slice(0,30)}...`);
+    // Add to alerts list
+    alerts.push({ id: Date.now(), product: deal.name.slice(0,40), target: deal.price - 50, platform: deal.platform, status: 'watching' });
+    localStorage.setItem('emart-alerts', JSON.stringify(alerts));
+    renderAlerts();
+  }
+  localStorage.setItem('emart-alerted-deals', JSON.stringify([...alertedIds]));
+  document.getElementById('alertCount').textContent = `${alertedIds.size + alerts.length} Active`;
+}
+
+function addAlert() {
+  const prod = document.getElementById('alertProduct').value.trim();
+  const price = document.getElementById('alertPrice').value;
+  const plat = document.getElementById('alertPlatform').value;
+  if (!prod || !price) { showToast('&#9888; Please fill product and target price'); return; }
+  alerts.push({ id: Date.now(), product: prod.slice(0,40), target: parseInt(price), platform: plat, status: 'watching' });
+  localStorage.setItem('emart-alerts', JSON.stringify(alerts));
+  document.getElementById('alertProduct').value = '';
+  document.getElementById('alertPrice').value = '';
+  renderAlerts();
+  showToast(`&#128276; Alert set for "${prod.slice(0,20)}..." at &#8377;${price}`);
+  document.getElementById('alertCount').textContent = `${alerts.length + alertedIds.size} Active`;
+}
+
+function removeAlert(id) {
+  alerts = alerts.filter(a => a.id !== id);
+  localStorage.setItem('emart-alerts', JSON.stringify(alerts));
+  renderAlerts();
+  document.getElementById('alertCount').textContent = `${alerts.length + alertedIds.size} Active`;
+}
+
+function renderAlerts() {
+  const platEmojis = {all:'&#127760;',amazon:'&#128241;',flipkart:'&#128722;',zepto:'&#128248;',blinkit:'&#9889;',jiomart:'&#127773;'};
+  document.getElementById('alertList').innerHTML = alerts.length === 0 ? '<p style="font-size:12px;color:var(--text-3);text-align:center;padding:8px;">No alerts set. Add one above!</p>' :
+    alerts.slice(-5).reverse().map(a => `<div class="alert-item">
+      <span class="alert-emoji">${platEmojis[a.platform]||'&#127760;'}</span>
+      <div class="alert-info">
+        <div class="alert-product">${a.product}</div>
+        <div class="alert-target">Target: &#8377;${a.target.toLocaleString()} &middot; ${a.platform === 'all' ? 'All platforms' : a.platform}</div>
+      </div>
+      <span class="alert-status ${a.status==='triggered'?'as-triggered':'as-watching'}">${a.status==='triggered'?'&#9888; Triggered':'&#128064; Watching'}</span>
+      <button class="alert-del" onclick="removeAlert(${a.id})"><i class="fa-solid fa-xmark"></i></button>
+    </div>`).join('');
+}
+
+/* TRENDING */
+const trending = [
+  {rank:1,e:'&#127911;',name:'boAt Airdopes 131',disc:'60% OFF'},{rank:2,e:'&#128241;',name:'OnePlus Nord CE 3 Lite',disc:'25% OFF'},
+  {rank:3,e:'&#127968;',name:'Milton Thermosteel',disc:'61% OFF'},{rank:4,e:'&#127822;',name:'Britannia Cookies',disc:'26% OFF'},
+  {rank:5,e:'&#128248;',name:'Wrogn Slim Fit Jeans',disc:'70% OFF'},{rank:6,e:'&#128132;',name:'Mamaearth Vitamin C',disc:'40% OFF'},
+  {rank:7,e:'&#127814;',name:'Tata Sampann Tur Dal',disc:'22% OFF'},{rank:8,e:'&#128161;',name:'Philips LED Bulb 4pk',disc:'62% OFF'},
+];
+document.getElementById('trendingList').innerHTML = trending.map(t =>
+  `<div class="trend-item"><span class="trend-rank">${t.rank}</span><span class="trend-emoji">${t.e}</span><span class="trend-name">${t.name}</span><span class="trend-disc">${t.disc}</span></div>`
+).join('');
+
+function showToast(msg) {
+  const t = document.getElementById('greenToast');
+  document.getElementById('toastMsg').innerHTML = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+document.getElementById('dhSearch').addEventListener('keydown', e => { if (e.key === 'Enter') searchDeals(); });
+
+/* INIT */
+renderDeals();
+renderAlerts();
+document.getElementById('lifetimeSaving').innerHTML = `&#8377;${parseInt(localStorage.getItem('emart-saved')||'4820').toLocaleString()}`;
+document.getElementById('alertCount').textContent = `${alerts.length + alertedIds.size} Active`;
+</script>
+</body>
+</html>

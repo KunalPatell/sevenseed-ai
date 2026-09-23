@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AI Learning Path Generator — AVPU</title>
+  <meta name="description" content="Tell AVPU what you want to learn and get a personalized AI-generated roadmap with milestones, XP rewards, and curated resources — all powered by Gemini AI.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* HERO */
+    .alp-hero { position:relative; padding:110px 24px 60px; text-align:center; overflow:hidden; }
+    .alp-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99,102,241,0.25) 0%, transparent 70%); pointer-events:none; }
+    #heroParticles { position:absolute; inset:0; pointer-events:none; z-index:0; }
+    .alp-hero-content { position:relative; z-index:1; max-width:780px; margin:0 auto; }
+    .alp-badge { display:inline-flex; align-items:center; gap:8px; padding:6px 18px; border-radius:999px; background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.35); color:#a5b4fc; font-size:13px; font-weight:600; margin-bottom:18px; }
+    .live-dot { width:8px; height:8px; border-radius:50%; background:#6366f1; animation:pdot 2s infinite; display:inline-block; }
+    @keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+    .alp-title { font-size:clamp(32px,5vw,58px); font-weight:900; line-height:1.12; letter-spacing:-.03em; margin-bottom:16px; background:linear-gradient(135deg,#fff 0%,#a5b4fc 50%,#818cf8 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .alp-sub { font-size:17px; color:var(--text-2); line-height:1.65; max-width:620px; margin:0 auto 36px; }
+
+    /* COMMAND PALETTE */
+    .learn-cmd-wrap { max-width:720px; margin:0 auto 16px; }
+    .learn-cmd-box { display:flex; align-items:center; gap:14px; background:rgba(255,255,255,0.04); border:2px solid rgba(99,102,241,0.3); border-radius:18px; padding:16px 20px; backdrop-filter:blur(20px); box-shadow:0 0 40px rgba(99,102,241,.12),0 8px 32px rgba(0,0,0,.3); transition:border-color .25s,box-shadow .25s; }
+    .learn-cmd-box:focus-within { border-color:#6366f1; box-shadow:0 0 0 4px rgba(99,102,241,.15),0 12px 40px rgba(99,102,241,.2); }
+    .cmd-prefix { white-space:nowrap; font-size:18px; font-weight:700; color:#a5b4fc; flex-shrink:0; }
+    .cmd-input { flex:1; background:none; border:none; outline:none; color:#fff; font-size:18px; font-family:inherit; font-weight:500; }
+    .cmd-input::placeholder { color:rgba(255,255,255,.25); }
+    .cmd-btn { flex-shrink:0; padding:10px 22px; border-radius:12px; border:none; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; font-weight:700; font-size:14px; cursor:pointer; display:flex; align-items:center; gap:8px; transition:transform .2s,box-shadow .2s; box-shadow:0 4px 16px rgba(99,102,241,.4); }
+    .cmd-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(99,102,241,.5); }
+    .cmd-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+    .suggestion-chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:48px; }
+    .s-chip { padding:7px 16px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); color:var(--text-2); font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; }
+    .s-chip:hover { background:rgba(99,102,241,.15); border-color:rgba(99,102,241,.5); color:#fff; }
+
+    /* MAIN */
+    .alp-main { max-width:1300px; margin:0 auto; padding:0 24px 80px; }
+    .stats-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:36px; }
+    @media(max-width:768px){.stats-bar{grid-template-columns:repeat(2,1fr)}}
+    .stat-card { background:var(--bg-1); border:1px solid var(--border); border-radius:14px; padding:18px 20px; display:flex; align-items:center; gap:14px; transition:transform .2s,border-color .2s; }
+    .stat-card:hover { transform:translateY(-2px); border-color:var(--border-hi); }
+    .stat-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+    .si-xp { background:rgba(245,158,11,.15); color:#fbbf24; }
+    .si-streak { background:rgba(239,68,68,.15); color:#f87171; }
+    .si-paths { background:rgba(99,102,241,.15); color:#a5b4fc; }
+    .si-skills { background:rgba(16,185,129,.15); color:#34d399; }
+    .stat-num { font-size:26px; font-weight:800; color:#fff; line-height:1; }
+    .stat-lbl { font-size:12px; color:var(--text-3); margin-top:2px; }
+
+    /* LAYOUT */
+    .alp-layout { display:grid; grid-template-columns:1fr 380px; gap:28px; }
+    @media(max-width:1100px){.alp-layout{grid-template-columns:1fr}}
+
+    /* ROADMAP */
+    .roadmap-panel { background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+    .roadmap-toolbar { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+    .roadmap-toolbar h3 { font-size:16px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; }
+    .toolbar-actions { display:flex; gap:8px; }
+    .tb-btn { padding:7px 14px; border-radius:8px; background:var(--bg-2); border:1px solid var(--border-hi); color:var(--text-2); font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all .2s; }
+    .tb-btn:hover { background:var(--bg-3); color:#fff; }
+    .tb-btn.primary { background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; border-color:transparent; }
+    .canvas-empty { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; color:var(--text-3); padding:60px 24px; }
+    .canvas-empty i { font-size:48px; opacity:.3; }
+    .canvas-empty p { font-size:15px; text-align:center; max-width:300px; line-height:1.5; }
+    .canvas-empty.hidden { display:none; }
+    .roadmap-nodes-list { padding:24px; display:flex; flex-direction:column; }
+    .roadmap-nodes-list.hidden { display:none; }
+    .node-card { background:var(--bg-2); border:1px solid var(--border); border-radius:14px; padding:18px 20px; display:flex; gap:16px; align-items:flex-start; transition:all .25s; cursor:pointer; position:relative; overflow:hidden; }
+    .node-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--node-color,#6366f1); border-radius:2px 0 0 2px; }
+    .node-card:hover { transform:translateX(4px); border-color:rgba(99,102,241,.4); background:var(--bg-3); }
+    .node-card.completed { opacity:.65; }
+    .node-num { width:36px; height:36px; border-radius:10px; flex-shrink:0; background:var(--node-color,#6366f1); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; }
+    .node-body { flex:1; }
+    .node-title { font-size:15px; font-weight:700; color:#fff; margin-bottom:4px; }
+    .node-desc { font-size:13px; color:var(--text-2); line-height:1.5; margin-bottom:10px; }
+    .node-meta { display:flex; gap:10px; flex-wrap:wrap; }
+    .node-tag { font-size:11px; font-weight:600; padding:3px 9px; border-radius:6px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); color:var(--text-2); display:flex; align-items:center; gap:4px; }
+    .n-xp { color:#fbbf24!important; }
+    .node-check { width:24px; height:24px; border-radius:7px; flex-shrink:0; border:2px solid var(--border-hi); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px; color:transparent; transition:all .2s; }
+    .node-check:hover { border-color:#6366f1; }
+    .node-check.done { background:#10b981; border-color:#10b981; color:#fff; }
+    .node-connector { width:2px; height:20px; background:linear-gradient(180deg,#6366f1,#8b5cf6); margin:0 auto; opacity:.25; }
+    .roadmap-progress { padding:16px 20px; border-top:1px solid var(--border); display:flex; align-items:center; gap:14px; }
+    .progress-track { flex:1; height:8px; background:var(--bg-2); border-radius:4px; overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,#6366f1,#8b5cf6,#10b981); width:0%; transition:width .5s; border-radius:4px; }
+    .progress-label { font-size:13px; font-weight:600; color:var(--text-2); white-space:nowrap; }
+
+    /* SIDEBAR */
+    .sidebar-col { display:flex; flex-direction:column; gap:20px; }
+    .xp-panel { background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius); padding:22px; position:relative; overflow:hidden; }
+    .xp-panel::before { content:''; position:absolute; top:-20px; right:-20px; width:100px; height:100px; border-radius:50%; background:radial-gradient(circle,rgba(99,102,241,.18) 0%,transparent 70%); }
+    .xp-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+    .xp-header h3 { font-size:15px; font-weight:700; color:#fff; }
+    .level-badge { padding:4px 12px; border-radius:999px; background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#000; font-size:12px; font-weight:800; }
+    .xp-bar-row { display:flex; justify-content:space-between; margin-bottom:6px; font-size:12px; color:var(--text-3); }
+    .xp-bar-bg { height:10px; background:var(--bg-2); border-radius:5px; overflow:hidden; margin-bottom:16px; }
+    .xp-bar-fill { height:100%; background:linear-gradient(90deg,#fbbf24,#f59e0b); transition:width .6s; border-radius:5px; }
+    .streak-row { display:flex; align-items:center; gap:12px; }
+    .streak-num { font-size:32px; font-weight:900; color:#f87171; }
+    .streak-label { font-size:14px; font-weight:600; color:#fff; }
+    .streak-sub { font-size:12px; color:var(--text-3); }
+
+    .heatmap-panel { background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius); padding:20px; }
+    .heatmap-title { font-size:14px; font-weight:700; color:#fff; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+    .heatmap-grid { display:grid; grid-template-columns:repeat(26,1fr); gap:3px; }
+    .hm-cell { aspect-ratio:1; border-radius:2px; cursor:default; transition:transform .15s; }
+    .hm-cell:hover { transform:scale(1.3); }
+    .hm-cell.lv0{background:#1e293b;} .hm-cell.lv1{background:#3730a3;} .hm-cell.lv2{background:#4f46e5;} .hm-cell.lv3{background:#6366f1;} .hm-cell.lv4{background:#818cf8;}
+
+    .resources-panel { background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius); padding:20px; }
+    .resources-panel h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:14px; }
+    .resource-item { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px; background:var(--bg-2); border:1px solid var(--border); margin-bottom:8px; text-decoration:none; transition:all .2s; }
+    .resource-item:hover { border-color:#6366f1; transform:translateX(3px); }
+    .res-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+    .res-title { font-size:13px; font-weight:600; color:#fff; }
+    .res-type { font-size:11px; color:var(--text-3); }
+
+    .leaderboard-panel { background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius); padding:20px; }
+    .leaderboard-panel h3 { font-size:14px; font-weight:700; color:#fff; margin-bottom:14px; }
+    .lb-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
+    .lb-item:last-child { border-bottom:none; }
+    .lb-rank { width:28px; font-size:14px; font-weight:800; text-align:center; }
+    .lb-gold{color:#fbbf24;} .lb-silver{color:#94a3b8;} .lb-bronze{color:#d97706;}
+    .lb-avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; }
+    .lb-name { flex:1; font-size:13px; font-weight:600; color:#fff; }
+    .lb-xp { font-size:12px; color:#fbbf24; font-weight:700; }
+
+    .ai-panel { background:var(--bg-1); border:1px solid rgba(99,102,241,.4); border-radius:var(--radius); padding:22px; display:none; position:relative; overflow:hidden; }
+    .ai-panel.visible { display:block; }
+    .ai-panel::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#6366f1,#8b5cf6,#10b981); }
+    .ai-ph { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .ai-ph i { color:#a5b4fc; font-size:18px; }
+    .ai-ph h3 { font-size:15px; font-weight:700; color:#fff; }
+    .ai-output { font-size:14px; color:var(--text-2); line-height:1.7; white-space:pre-wrap; max-height:260px; overflow-y:auto; }
+    .typing-cursor { display:inline-block; width:2px; height:14px; background:#a5b4fc; margin-left:2px; animation:blink .8s infinite; vertical-align:middle; }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    .xp-toast { position:fixed; bottom:24px; right:24px; z-index:9999; background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#000; padding:12px 20px; border-radius:12px; font-weight:700; font-size:15px; display:flex; align-items:center; gap:10px; transform:translateY(80px); opacity:0; transition:all .3s; box-shadow:0 8px 24px rgba(251,191,36,.4); }
+    .xp-toast.show { transform:translateY(0); opacity:1; }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:22px;">&#127891;</span>
+      <span class="brand-text">AVP University</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="modules.html" class="nav-link">Modules</a>
+      <a href="learn-dag.html" class="nav-link">Knowledge Graph</a>
+      <a href="mental-models.html" class="nav-link">Mental Models</a>
+      <a href="certifications.html" class="nav-link">Certificates</a>
+      <button class="btn-theme-toggle" id="themeToggle" title="Toggle theme"><i class="fa-solid fa-circle-half-stroke"></i></button>
+    </div>
+  </div>
+</nav>
+
+<section class="alp-hero">
+  <canvas id="heroParticles"></canvas>
+  <div class="alp-hero-content">
+    <div class="alp-badge"><span class="live-dot"></span>AI-Powered &middot; Gemini 2.0 &middot; Real-time Roadmaps</div>
+    <h1 class="alp-title">Your Personal AI<br>Learning Architect</h1>
+    <p class="alp-sub">Tell us what you want to master. Our AI builds a custom, step-by-step learning roadmap &mdash; with XP rewards, milestones, curated resources, and daily streak challenges.</p>
+    <div class="learn-cmd-wrap">
+      <div class="learn-cmd-box">
+        <span class="cmd-prefix">I want to learn</span>
+        <input type="text" class="cmd-input" id="learnInput" placeholder="e.g. Machine Learning, Web Dev, Data Science..." autocomplete="off">
+        <button class="cmd-btn" id="generateBtn" onclick="generatePath()">
+          <i class="fa-solid fa-wand-magic-sparkles"></i><span id="btnText">Generate Path</span>
+        </button>
+      </div>
+    </div>
+    <div class="suggestion-chips">
+      <span class="s-chip" onclick="fillAndGenerate('Machine Learning')">&#129302; Machine Learning</span>
+      <span class="s-chip" onclick="fillAndGenerate('Full Stack Web Development')">&#127760; Full Stack Web Dev</span>
+      <span class="s-chip" onclick="fillAndGenerate('Data Science with Python')">&#128202; Data Science</span>
+      <span class="s-chip" onclick="fillAndGenerate('Generative AI')">&#10024; Generative AI</span>
+      <span class="s-chip" onclick="fillAndGenerate('Cybersecurity')">&#128274; Cybersecurity</span>
+      <span class="s-chip" onclick="fillAndGenerate('Product Management')">&#128203; Product Management</span>
+      <span class="s-chip" onclick="fillAndGenerate('Blockchain Development')">&#9939; Blockchain</span>
+      <span class="s-chip" onclick="fillAndGenerate('UI UX Design')">&#127912; UI/UX Design</span>
+    </div>
+  </div>
+</section>
+
+<main class="alp-main">
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-icon si-xp"><i class="fa-solid fa-bolt"></i></div>
+      <div><div class="stat-num" id="totalXP">2,450</div><div class="stat-lbl">Total XP Earned</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon si-streak"><i class="fa-solid fa-fire"></i></div>
+      <div><div class="stat-num" id="streakCount">7</div><div class="stat-lbl">Day Streak &#128293;</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon si-paths"><i class="fa-solid fa-route"></i></div>
+      <div><div class="stat-num" id="pathsCount">3</div><div class="stat-lbl">Paths Generated</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon si-skills"><i class="fa-solid fa-check-double"></i></div>
+      <div><div class="stat-num" id="skillsDone">14</div><div class="stat-lbl">Skills Mastered</div></div>
+    </div>
+  </div>
+
+  <div class="alp-layout">
+    <div>
+      <div class="roadmap-panel">
+        <div class="roadmap-toolbar">
+          <h3><i class="fa-solid fa-map-location-dot" style="color:#a5b4fc;"></i> Learning Roadmap</h3>
+          <div class="toolbar-actions">
+            <button class="tb-btn" onclick="shareRoadmap()"><i class="fa-solid fa-share-nodes"></i> Share</button>
+            <button class="tb-btn primary" onclick="resetRoadmap()"><i class="fa-solid fa-plus"></i> New Path</button>
+          </div>
+        </div>
+        <div class="canvas-empty" id="canvasEmpty">
+          <i class="fa-solid fa-diagram-project"></i>
+          <p>Enter a topic above and click <strong>Generate Path</strong> to see your personalized roadmap</p>
+        </div>
+        <div class="roadmap-nodes-list hidden" id="nodesList"></div>
+        <div class="roadmap-progress" id="roadmapProgress" style="display:none;">
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+          <span class="progress-label" id="progressLabel">0 / 0 completed</span>
+        </div>
+      </div>
+
+      <div class="ai-panel" id="aiPanel" style="margin-top:20px;">
+        <div class="ai-ph"><i class="fa-solid fa-robot"></i><h3>Gemini AI &mdash; Path Analysis</h3></div>
+        <div class="ai-output" id="aiOutput"></div>
+      </div>
+    </div>
+
+    <div class="sidebar-col">
+      <div class="xp-panel">
+        <div class="xp-header"><h3>&#9889; Your Progress</h3><span class="level-badge" id="levelBadge">Level 5</span></div>
+        <div class="xp-bar-row"><span id="xpCurrent">450 / 600 XP</span><span id="xpNext">Level 6</span></div>
+        <div class="xp-bar-bg"><div class="xp-bar-fill" id="xpFill" style="width:75%;"></div></div>
+        <div class="streak-row">
+          <div class="streak-num">&#128293; 7</div>
+          <div><div class="streak-label">Day Streak!</div><div class="streak-sub">Keep learning daily</div></div>
+        </div>
+      </div>
+
+      <div class="heatmap-panel">
+        <div class="heatmap-title"><i class="fa-solid fa-calendar-days" style="color:#a5b4fc;"></i> Activity Heatmap (6 months)</div>
+        <div class="heatmap-grid" id="heatmapGrid"></div>
+      </div>
+
+      <div class="resources-panel" id="resourcesPanel" style="display:none;">
+        <h3>&#128218; Curated Resources</h3>
+        <div id="resourcesList"></div>
+      </div>
+
+      <div class="leaderboard-panel">
+        <h3><i class="fa-solid fa-trophy" style="color:#fbbf24;"></i> Weekly Leaderboard</h3>
+        <div id="leaderboardList"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="xp-toast" id="xpToast"><i class="fa-solid fa-bolt"></i><span id="toastMsg">+50 XP!</span></div>
+
+<script src="app.js"></script>
+<script>
+/* PARTICLES */
+const hc=document.getElementById('heroParticles'),hx=hc.getContext('2d');let hp=[];
+function rsz(){hc.width=hc.offsetWidth;hc.height=hc.offsetHeight;}
+class HP{constructor(){this.r();}r(){this.x=Math.random()*hc.width;this.y=Math.random()*hc.height;this.s=Math.random()*2+.5;this.vx=(Math.random()-.5)*.4;this.vy=-Math.random()*.5-.1;this.o=Math.random()*.5+.1;this.c=Math.random()>.5?'#6366f1':'#a5b4fc';}u(){this.x+=this.vx;this.y+=this.vy;if(this.y<-10||this.x<-10||this.x>hc.width+10)this.r();}d(){hx.save();hx.globalAlpha=this.o;hx.fillStyle=this.c;hx.shadowBlur=6;hx.shadowColor=this.c;hx.beginPath();hx.arc(this.x,this.y,this.s,0,Math.PI*2);hx.fill();hx.restore();}}
+function ihp(){rsz();hp=[];for(let i=0;i<80;i++)hp.push(new HP());(function a(){hx.clearRect(0,0,hc.width,hc.height);hp.forEach(p=>{p.u();p.d();});requestAnimationFrame(a);})();}
+window.addEventListener('resize',()=>{rsz();hp=[];for(let i=0;i<80;i++)hp.push(new HP());});
+ihp();
+
+/* HEATMAP */
+(function(){const g=document.getElementById('heatmapGrid');for(let i=0;i<182;i++){const c=document.createElement('div');c.className='hm-cell';const r=Math.random();c.classList.add(r<.35?'lv0':r<.55?'lv1':r<.72?'lv2':r<.87?'lv3':'lv4');g.appendChild(c);}})();
+
+/* LEADERBOARD */
+const lbData=[{rank:1,name:'Aryan Singh',xp:8420,e:'&#129409;'},{rank:2,name:'Priya Sharma',xp:7891,e:'&#11088;'},{rank:3,name:'Rahul Gupta',xp:7234,e:'&#128293;'},{rank:4,name:'Anjali Verma',xp:6890,e:'&#128142;'},{rank:5,name:'You',xp:2450,e:'&#127919;',y:true}];
+document.getElementById('leaderboardList').innerHTML=lbData.map(u=>{const rc=u.rank===1?'lb-gold':u.rank===2?'lb-silver':u.rank===3?'lb-bronze':'';const rd=u.rank<=3?['&#129351;','&#129352;','&#129353;'][u.rank-1]:`#${u.rank}`;return`<div class="lb-item"${u.y?' style="background:rgba(99,102,241,.08);border-radius:8px;padding:10px 8px;"':''}><span class="lb-rank ${rc}">${rd}</span><div class="lb-avatar" style="background:rgba(99,102,241,.15);">${u.e}</div><span class="lb-name">${u.name}${u.y?' (You)':''}</span><span class="lb-xp">${u.xp.toLocaleString()} XP</span></div>`;}).join('');
+
+/* PATH DB */
+const pathDB={'machine learning':{color:'#6366f1',nodes:[{title:'Python Fundamentals',desc:'Master Python — syntax, data structures, OOP, file handling.',time:'2 weeks',xp:150,level:'Beginner',res:['Python.org Docs','CS50P Harvard','Automate the Boring Stuff']},{title:'Mathematics for ML',desc:'Linear algebra, calculus, probability & statistics.',time:'3 weeks',xp:200,level:'Beginner',res:['3Blue1Brown','Khan Academy Stats','Maths for ML (Deisenroth)']},{title:'NumPy & Pandas',desc:'Numerical computing and data manipulation.',time:'1 week',xp:100,level:'Beginner',res:['NumPy Quickstart','Pandas Docs','Kaggle Pandas']},{title:'Data Visualization',desc:'Matplotlib, Seaborn, Plotly for visual storytelling.',time:'1 week',xp:80,level:'Beginner',res:['Matplotlib Docs','Seaborn Tutorial','Plotly Express']},{title:'Supervised Learning',desc:'Regression, Classification, SVMs, Trees with scikit-learn.',time:'3 weeks',xp:250,level:'Intermediate',res:['Scikit-learn Docs','ISLR Book','Kaggle ML Course']},{title:'Neural Networks & Deep Learning',desc:'CNNs, RNNs using PyTorch and TensorFlow.',time:'4 weeks',xp:350,level:'Advanced',res:['Deep Learning Book','PyTorch Tutorials','fast.ai Course']},{title:'Model Deployment & MLOps',desc:'FastAPI, Docker, MLflow, cloud deployment.',time:'2 weeks',xp:200,level:'Advanced',res:['Full Stack DL','MLflow Docs','AWS SageMaker']},]},'full stack web development':{color:'#10b981',nodes:[{title:'HTML & CSS Foundations',desc:'Semantic HTML5, Flexbox & Grid, responsive design.',time:'2 weeks',xp:120,level:'Beginner',res:['MDN Web Docs','freeCodeCamp','CSS-Tricks']},{title:'JavaScript Fundamentals',desc:'DOM manipulation, async/await, ES6+ features.',time:'3 weeks',xp:180,level:'Beginner',res:['javascript.info','Eloquent JavaScript','YDKJS']},{title:'React.js',desc:'Components, hooks, Context API, React Router.',time:'3 weeks',xp:220,level:'Intermediate',res:['React Docs','Scrimba React','Jack Herrington YT']},{title:'Node.js & Express',desc:'REST APIs, middleware, authentication.',time:'2 weeks',xp:180,level:'Intermediate',res:['Node.js Docs','The Odin Project','Traversy Media']},{title:'Databases',desc:'PostgreSQL, MongoDB, Prisma/Mongoose.',time:'2 weeks',xp:160,level:'Intermediate',res:['PostgreSQL Tutorial','MongoDB University','Prisma Docs']},{title:'DevOps & Deployment',desc:'Docker, CI/CD, Vercel, GitHub Actions.',time:'2 weeks',xp:200,level:'Advanced',res:['Docker Docs','GitHub Actions','Vercel Docs']},{title:'Full Stack Projects',desc:'Build 3 production-ready apps for portfolio.',time:'4 weeks',xp:400,level:'Advanced',res:['Frontend Mentor','Shadcn/ui','T3 Stack']},]},'data science':{color:'#f59e0b',nodes:[{title:'Python for Data Science',desc:'Jupyter, pandas, numpy fundamentals.',time:'1 week',xp:100,level:'Beginner',res:['DataCamp Python','Kaggle Python','Real Python']},{title:'Data Wrangling',desc:'Cleaning, transforming, feature engineering.',time:'2 weeks',xp:160,level:'Beginner',res:['Pandas Cookbook','Kaggle Pandas','Data Cleaning']},{title:'EDA & Visualization',desc:'Statistical summaries, correlation, storytelling.',time:'2 weeks',xp:140,level:'Beginner',res:['Seaborn Gallery','Kaggle EDA','Towards DS']},{title:'Statistical Inference',desc:'Hypothesis testing, A/B testing, Bayesian thinking.',time:'2 weeks',xp:180,level:'Intermediate',res:['Think Stats','StatQuest YT','Khan Academy']},{title:'Machine Learning',desc:'Supervised & unsupervised algorithms, evaluation.',time:'3 weeks',xp:250,level:'Intermediate',res:['Scikit-learn','Hands-On ML','fast.ai']},{title:'SQL for Analysts',desc:'Window functions, CTEs, query optimization.',time:'2 weeks',xp:160,level:'Intermediate',res:['Mode SQL','LeetCode SQL','PostgreSQL Docs']},{title:'Dashboards & Projects',desc:'Streamlit, Plotly, Kaggle competitions.',time:'3 weeks',xp:300,level:'Advanced',res:['Streamlit Docs','Plotly Dash','Kaggle']},]}};
+function getPath(topic){const k=topic.toLowerCase();for(const[key,val] of Object.entries(pathDB)){if(k.includes(key)||key.split(' ').every(w=>k.includes(w)))return val;}const colors=['#6366f1','#10b981','#f59e0b','#ef4444','#06b6d4','#8b5cf6'];const color=colors[Math.floor(Math.random()*colors.length)];return{color,nodes:[{title:`${topic} — Foundations`,desc:`Core concepts and terminology for ${topic}.`,time:'2 weeks',xp:120,level:'Beginner',res:['Official Docs','YouTube Course','Reddit Community']},{title:'Tools & Setup',desc:'Essential tools and environment setup.',time:'1 week',xp:80,level:'Beginner',res:['Getting Started','GitHub Awesome List','Setup Guide']},{title:'Core Techniques',desc:'Fundamental techniques used by professionals.',time:'3 weeks',xp:200,level:'Intermediate',res:['Official Tutorials','Online Courses','Practice Projects']},{title:'Advanced Patterns',desc:'Advanced patterns and best practices.',time:'3 weeks',xp:250,level:'Intermediate',res:['Advanced Books','Conference Talks','Open Source']},{title:'Real-World Projects',desc:'Build portfolio projects and contribute to open source.',time:'4 weeks',xp:350,level:'Advanced',res:['GitHub Projects','Freelance','Community Challenges']},{title:'Specialization',desc:'Deep-dive into a specific subfield.',time:'4 weeks',xp:400,level:'Advanced',res:['Domain Courses','Research Papers','Mentorship']},]};}
+
+let currentPath=null,completedNodes=new Set(),totalXP=parseInt(localStorage.getItem('avpu-xp')||'2450');
+function updStats(){document.getElementById('totalXP').textContent=totalXP.toLocaleString();document.getElementById('skillsDone').textContent=completedNodes.size+14;const lv=Math.floor(totalXP/600)+1,xi=totalXP%600;document.getElementById('levelBadge').textContent=`Level ${lv}`;document.getElementById('xpCurrent').textContent=`${xi} / 600 XP`;document.getElementById('xpNext').textContent=`Level ${lv+1}`;document.getElementById('xpFill').style.width=`${(xi/600)*100}%`;}
+updStats();
+function showToast(msg){const t=document.getElementById('xpToast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function fillAndGenerate(t){document.getElementById('learnInput').value=t;generatePath();}
+async function generatePath(){const inp=document.getElementById('learnInput').value.trim();if(!inp){document.getElementById('learnInput').focus();return;}const btn=document.getElementById('generateBtn'),btxt=document.getElementById('btnText');btn.disabled=true;btxt.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Generating...';document.getElementById('canvasEmpty').classList.add('hidden');await new Promise(r=>setTimeout(r,900));const pd=getPath(inp);currentPath=pd;completedNodes=new Set();document.getElementById('pathsCount').textContent=parseInt(document.getElementById('pathsCount').textContent)+1;renderRoadmap(inp,pd);showAI(inp,pd);showRes(pd.nodes[0]);btn.disabled=false;btxt.textContent='Generate Path';}
+function renderRoadmap(topic,pd){const nl=document.getElementById('nodesList');nl.classList.remove('hidden');document.getElementById('roadmapProgress').style.display='flex';let h='';pd.nodes.forEach((n,i)=>{const lc=n.level==='Beginner'?'#10b981':n.level==='Intermediate'?'#f59e0b':'#ef4444';if(i>0)h+='<div class="node-connector"></div>';h+=`<div class="node-card" id="nc-${i}" style="--node-color:${pd.color};" onclick="selNode(${i})"><div class="node-num">${i+1}</div><div class="node-body"><div class="node-title">${n.title}</div><div class="node-desc">${n.desc}</div><div class="node-meta"><span class="node-tag"><i class="fa-regular fa-clock"></i> ${n.time}</span><span class="node-tag n-xp"><i class="fa-solid fa-bolt"></i> +${n.xp} XP</span><span class="node-tag" style="color:${lc};background:${lc}15;border-color:${lc}30;">${n.level}</span></div></div><div class="node-check" id="chk-${i}" onclick="event.stopPropagation();togNode(${i},${n.xp})"><i class="fa-solid fa-check"></i></div></div>`;});nl.innerHTML=h;updProg(pd.nodes.length);}
+function togNode(i,xp){const c=document.getElementById(`chk-${i}`),d=document.getElementById(`nc-${i}`);if(completedNodes.has(i)){completedNodes.delete(i);c.classList.remove('done');d.classList.remove('completed');}else{completedNodes.add(i);c.classList.add('done');d.classList.add('completed');totalXP+=xp;localStorage.setItem('avpu-xp',totalXP);updStats();showToast(`+${xp} XP Earned! &#127919;`);}updProg(currentPath?currentPath.nodes.length:0);}
+function selNode(i){if(currentPath)showRes(currentPath.nodes[i]);}
+function updProg(total){const done=completedNodes.size;document.getElementById('progressFill').style.width=total>0?`${(done/total)*100}%`:'0%';document.getElementById('progressLabel').textContent=`${done} / ${total} completed`;}
+async function showAI(topic,pd){const p=document.getElementById('aiPanel'),o=document.getElementById('aiOutput');p.classList.add('visible');const tw=pd.nodes.reduce((s,n)=>s+(parseInt(n.time)||2),0),tx=pd.nodes.reduce((s,n)=>s+n.xp,0);const text=`Path Analysis — "${topic}"\n\nDuration: ~${tw} weeks (~${Math.round(tw/4)} months)\nXP Available: ${tx.toLocaleString()} XP\nMilestones: ${pd.nodes.length} checkpoints\nLevel Gain: +${Math.ceil(tx/600)} levels\n\nPath Logic:\nEach milestone builds upon the previous, following proven pedagogy: foundations -> tools -> skills -> projects.\n\nPro Tips:\n- 60-90 min/day for steady progress\n- Build mini-projects at each milestone\n- Join the AVPU Discord community\n- Pair with the Mental Models Library\n\nYou are on a 7-day streak — keep it up!`;o.textContent='';let i=0;const cur=document.createElement('span');cur.className='typing-cursor';o.appendChild(cur);const iv=setInterval(()=>{if(i<text.length){o.insertBefore(document.createTextNode(text[i]),cur);i++;o.scrollTop=o.scrollHeight;}else{clearInterval(iv);cur.remove();}},10);}
+function showRes(node){const p=document.getElementById('resourcesPanel');p.style.display='block';const icons=['&#128216;','&#127909;','&#128187;'],types=['Documentation','Video Course','Interactive'],colors=['#6366f1','#ef4444','#10b981'];document.getElementById('resourcesList').innerHTML=node.res.map((r,i)=>`<a class="resource-item" href="#" onclick="event.preventDefault();"><div class="res-icon" style="background:${colors[i%3]}22;color:${colors[i%3]};">${icons[i%3]}</div><div><div class="res-title">${r}</div><div class="res-type">${types[i%3]}</div></div><i class="fa-solid fa-arrow-up-right-from-square" style="color:var(--text-3);font-size:12px;margin-left:auto;"></i></a>`).join('');}
+function shareRoadmap(){navigator.clipboard.writeText(window.location.href).catch(()=>{});showToast('Link copied! &#128279;');}
+function resetRoadmap(){document.getElementById('learnInput').value='';document.getElementById('nodesList').classList.add('hidden');document.getElementById('roadmapProgress').style.display='none';document.getElementById('aiPanel').classList.remove('visible');document.getElementById('resourcesPanel').style.display='none';document.getElementById('canvasEmpty').classList.remove('hidden');completedNodes=new Set();currentPath=null;updProg(0);}
+document.getElementById('learnInput').addEventListener('keydown',e=>{if(e.key==='Enter')generatePath();});
+</script>
+</body>
+</html>
