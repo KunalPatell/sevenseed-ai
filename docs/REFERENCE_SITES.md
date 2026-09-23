@@ -440,3 +440,61 @@ and a simple fixed-interval drill is a legitimate thing to keep). Instead it now
 
 If you would rather retire the page outright, the banner and the nav entries are the only things to
 remove; git history holds the original either way.
+
+---
+
+## 5. P5 continued — 100-days canonicalised, and two latent regressions found
+
+### The bug this uncovered
+
+`generate_sites.py` rewrites `sites/avpu/index.html` on every run, so anything absent from the
+generator is silently dropped on the next `deploy.py`. Two things were absent:
+
+1. **`CUSTOM_NAVS['avpu']` had no link to `topic-search.html` or `review-queue.html`.** A
+   regeneration would have removed **both new pages from the AVPU index nav** — the work would have
+   quietly reverted at deploy time while the files sat there looking fine.
+2. **The generator's 100-days link pointed at the wrong page.** `challenge-100days.html` is 268
+   lines with 1 inbound link; `100-day-challenge.html` is 578 lines with 17. The generator and the
+   index bento both pointed at the thin one, so a deploy would have *downgraded* the live 100-days
+   entry point.
+
+Both fixed at the generator, then mirrored into the live `index.html` so the two agree now rather
+than only after the next deploy. Verified by rendering the AVPU index from the generator and
+diffing its links against the live file: both now resolve 100-days to `100-day-challenge.html` and
+both carry the two new pages.
+
+### 100 Days: canonical is `100-day-challenge.html`
+
+Decided on inbound links (17 vs 1) and substance (578 lines vs 268). `challenge-100days.html` is
+**not deleted** — existing links and bookmarks keep working — but it now carries a notice saying it
+is the short version and linking the full challenge, the same non-destructive pattern used for
+`flashcards.html`.
+
+### Pharmacy wiki: deliberately NOT decided
+
+`wiki.html` (654 lines) vs `health-wiki.html` (845 lines). Unlike the other two pairs, the evidence
+here points both ways and I am not guessing:
+
+| | `wiki.html` | `health-wiki.html` |
+|---|---|---|
+| lines | 654 | 845 |
+| inbound in `decode-forest-pharmacy/` | 3 | 2 |
+| inbound in `pharmacy/` | 4 | **does not exist there** |
+| linked from the generator bento | no | no |
+
+The more-linked file is the *thinner* one, and the richer one exists in only one of the two
+directories. That second point matters: `pharmacy/` and `decode-forest-pharmacy/` are near-duplicate
+**directories**, so picking a canonical wiki is really a question about whether those directories
+should be merged. That is a bigger call than a page rename and it is not a latent regression — the
+generator links neither file, so nothing degrades on deploy. **Needs a human decision**, ideally
+together with the `comonk/`↔`comonk-ai/`, `trust/`↔`avp-charitable-trust/` and
+`breakdown/`↔`breakdown-factor/` duplication.
+
+### Still open after this round
+
+- **P4** — 15 features live only in the undeployed `frontend/`.
+- **Directory-level duplication** — four venture folders exist under two names each.
+- **Scroll motion breadth** — the primitives ship to all 9 ventures but only `.hero-grid` opts in.
+- **Bento orphans** — `ai-learning-path.html`, `courses.html`, `scholarships.html`, `verify.html`,
+  `evervault-lab.html`, `marketing-teardowns.html`, `ai-tutor.html`, `flashcards.html` are reachable
+  by nav but absent from the AVPU home grid.
