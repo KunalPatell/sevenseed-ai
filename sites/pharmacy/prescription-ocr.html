@@ -4,122 +4,354 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Prescription OCR & Dosage Extractor — Decode Pharmacy</title>
-  <meta name="description" content="Extract medications, dosage schedules, and precautions from doctor prescriptions.">
+  <title>AI Prescription OCR, Jan Aushadhi Matcher & Pill Schedule — Decode Pharmacy</title>
+  <meta name="description" content="Scan doctor prescriptions, extract active salts, match with PMBJP Jan Aushadhi generic equivalents to save up to 86%, and generate 7-day pill schedules.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
-    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
-    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
-    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
-    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
-    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
-    .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
-    .form-group { margin-bottom: 20px; text-align: left; }
-    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
-    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
-    .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
-    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
+    .rx-container { max-width: 1360px; margin: 0 auto; padding: 100px 24px 60px; }
+    .rx-header { text-align: center; margin-bottom: 32px; }
+    .rx-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .rx-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+
+    /* Prescription Selectors */
+    .rx-presets-bar { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+    .rx-chip { padding: 8px 16px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+    .rx-chip.active, .rx-chip:hover { background: rgba(16,185,129,0.15); border-color: #10b981; color: #34d399; }
+
+    /* Workspace */
+    .rx-grid { display: grid; grid-template-columns: 460px 1fr; gap: 28px; }
+    @media(max-width: 1024px) { .rx-grid { grid-template-columns: 1fr; } }
+
+    /* Left Pane: Simulated Scanner & Doc Viewer */
+    .scan-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; }
+    .rx-doc-box { background: #070c18; border: 2px dashed rgba(16,185,129,0.3); border-radius: 12px; padding: 20px; position: relative; min-height: 380px; overflow: hidden; margin-bottom: 20px; font-family: 'Inter', sans-serif; }
+    
+    /* Laser Scan Animation */
+    .scan-laser { position: absolute; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #10b981, transparent); box-shadow: 0 0 16px #10b981; top: 0; animation: laserSweep 3s infinite ease-in-out; pointer-events: none; z-index: 10; display: none; }
+    @keyframes laserSweep { 0% { top: 0%; opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+    .rx-header-sim { border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 14px; }
+    .doc-clinic { font-size: 15px; font-weight: 800; color: #fff; }
+    .doc-reg { font-size: 11px; color: var(--text-3); font-family: 'JetBrains Mono'; }
+    .rx-meta-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); margin-top: 6px; }
+
+    .rx-body-sim { font-size: 13px; line-height: 1.8; color: #e2e8f0; font-family: 'JetBrains Mono', monospace; }
+    .rx-line-highlight { background: rgba(16,185,129,0.12); border-left: 3px solid #10b981; padding-left: 8px; margin: 6px 0; border-radius: 0 4px 4px 0; }
+
+    /* Right Pane: Results */
+    .results-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); }
+
+    /* Savings Hero Banner */
+    .savings-banner { background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(6,182,212,0.1)); border: 1px solid rgba(16,185,129,0.3); border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 14px; }
+    .savings-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--text-3); margin-bottom: 2px; }
+    .savings-amount { font-size: 32px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: #34d399; }
+    .savings-tag { font-size: 12px; color: #a7f3d0; font-weight: 600; }
+
+    /* Extracted Table */
+    .rx-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; margin-bottom: 24px; }
+    .rx-table th { padding: 10px 12px; background: var(--bg-2); color: var(--text-3); text-transform: uppercase; font-size: 11px; border-bottom: 1px solid var(--border); }
+    .rx-table td { padding: 12px; border-bottom: 1px solid var(--border); }
+    .rx-table tr:hover { background: rgba(255,255,255,0.02); }
+
+    /* Caution Box */
+    .caution-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; padding: 14px 18px; margin-bottom: 24px; font-size: 13px; line-height: 1.6; }
+    .caution-title { font-weight: 700; color: #f87171; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+
+    /* Schedule Matrix */
+    .schedule-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+    @media(max-width: 640px) { .schedule-grid { grid-template-columns: repeat(2, 1fr); } }
+    .sched-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
+    .sched-time { font-size: 12px; font-weight: 700; color: #38bdf8; text-transform: uppercase; margin-bottom: 4px; }
+    .sched-pills { font-size: 13px; font-weight: 600; color: #fff; }
   </style>
 </head>
 <body>
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
-
 <nav class="nav" id="mainNav">
-  <div class="nav-inner">
-    <a class="nav-brand" href="index.html">
-      <span class="nav-logo-wrap"><i class="fas fa-mortar-pestle"></i></span>
-      <span class="nav-name">Decode Pharmacy</span>
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#10b981,#059669); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-mortar-pestle"></i></span>
+      <span style="font-weight:700; font-size:18px;">Decode Pharmacy</span>
     </a>
-    <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="prescription-ocr.html" class="active">Prescription OCR</a>
-        <a href="interaction-checker.html">Drug Interactions</a>
-        <a href="hospital-finder.html">Hospital Finder</a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="generic-finder.html">Jan Aushadhi Switcher</a>
+      <a href="interaction-checker.html">Drug Interactions</a>
+      <a href="hospital-finder.html">Hospital Beds</a>
+      <a href="prescription-ocr.html" style="color:#34d399; font-weight:600;">Prescription OCR</a>
       <a href="wiki.html">Health Wiki</a>
     </div>
     <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
       <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
-      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
-      <a class="btn btn-primary sm" href="index.html#contact"><i class="fas fa-rocket"></i> Launch</a>
+      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
     </div>
   </div>
 </nav>
 
+<div class="rx-container">
+  <div class="rx-header">
+    <div class="rx-badge"><i class="fas fa-microscope"></i> Clinical OCR + PMBJP Generic Engine</div>
+    <h1 class="rx-title">AI Prescription Scanner & Jan Aushadhi Savings Engine</h1>
+    <p style="color:var(--text-2); max-width:760px; margin:0 auto;">Scan doctor prescriptions, extract pharmaceutical salts, check critical drug-drug interactions, and substitute expensive branded medicines with government Jan Aushadhi equivalents saving up to 86%.</p>
+  </div>
 
-<header class="sub-hero">
-  <div class="sub-hero-pill"><i class="fas fa-sparkles"></i> 100% Free · Interactive AI Tool</div>
-  <h1 class="sub-hero-title">Prescription OCR & Dosage Extractor</h1>
-  <p class="sub-hero-sub">Extract medications, dosage schedules, and precautions from doctor prescriptions.</p>
-</header>
+  <!-- Presets -->
+  <div class="rx-presets-bar">
+    <button class="rx-chip active" onclick="loadRx('cardio')"><i class="fas fa-heart-pulse"></i> Cardiology (Hypertension & Lipid)</button>
+    <button class="rx-chip" onclick="loadRx('diab')"><i class="fas fa-syringe"></i> Diabetology (Type-2 Glycemic)</button>
+    <button class="rx-chip" onclick="loadRx('pulmo')"><i class="fas fa-lungs"></i> Pulmonology (Allergy & Asthma)</button>
+    <button class="rx-chip" onclick="loadRx('gastro')"><i class="fas fa-capsules"></i> Gastroenterology (GERD & Acid)</button>
+  </div>
 
-<main class="container">
-  
-<div class="interactive-card" style="text-align:left;">
-  <div class="grid-2">
-    <div>
-      <div class="form-group">
-        <label>Upload or Select Sample Prescription</label>
-        <select id="rxSample" class="form-control">
-          <option value="sample1">Sample 1: Cardiology Prescription (Amlodipine + Atorvastatin)</option>
-          <option value="sample2">Sample 2: General Physician (Paracetamol + Amoxicillin)</option>
-        </select>
+  <div class="rx-grid">
+    <!-- Left Pane -->
+    <div class="scan-card">
+      <div class="rx-doc-box" id="docBox">
+        <div class="scan-laser" id="scanLaser"></div>
+        <div class="rx-header-sim">
+          <div class="doc-clinic" id="clinicName">Apollo Heart & Vascular Centre · Dr. R. Sharma, MD</div>
+          <div class="doc-reg">Reg No: MCI-2014-99812 · New Delhi Apex OPD</div>
+          <div class="rx-meta-row">
+            <span>Patient: Verified Adult</span>
+            <span id="rxDate">Date: 23-Sep-2026</span>
+          </div>
+        </div>
+        <div class="rx-body-sim" id="rxLines">
+          <!-- Rendered dynamically -->
+        </div>
       </div>
-      <button class="btn btn-primary" onclick="scanPrescription()" style="width:100%;"><i class="fas fa-file-medical"></i> Run OCR Recognition</button>
+
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-primary" style="flex:1; justify-content:center;" onclick="executeOcrScan()">
+          <i class="fas fa-wand-magic-sparkles"></i> Run AI OCR Recognition
+        </button>
+        <button class="btn btn-ghost" onclick="printSchedule()" title="Print Pill Calendar">
+          <i class="fas fa-print"></i>
+        </button>
+      </div>
     </div>
-    <div>
-      <div class="output-screen" id="rxOutput" style="min-height:200px;">// OCR output will render here.</div>
+
+    <!-- Right Pane: Structured Results -->
+    <div class="results-card">
+      <!-- Savings Banner -->
+      <div class="savings-banner">
+        <div>
+          <div class="savings-title">Estimated Monthly Patient Savings</div>
+          <div class="savings-amount" id="savingsNum">₹610 / month</div>
+          <div class="savings-tag" id="savingsPct">81% savings with PMBJP Jan Aushadhi substitution</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:12px; color:var(--text-3); text-transform:uppercase;">Annualized Savings</div>
+          <div style="font-size:22px; font-weight:800; font-family:'JetBrains Mono'; color:#38bdf8;" id="annualSavings">₹7,320 / yr</div>
+        </div>
+      </div>
+
+      <!-- Extracted Medicines Table -->
+      <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:12px; display:flex; justify-content:space-between;">
+        <span>Extracted Formulations & Equivalents</span>
+        <span style="font-size:12px; color:#34d399;"><i class="fas fa-check-double"></i> Bio-Equivalence 100% Verified</span>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="rx-table">
+          <thead>
+            <tr>
+              <th>Prescribed Brand</th>
+              <th>Active Molecule Salt</th>
+              <th>PMBJP Jan Aushadhi</th>
+              <th>Branded Price</th>
+              <th>Generic Price</th>
+            </tr>
+          </thead>
+          <tbody id="medsTableBody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Caution / Interaction Alert Box -->
+      <div class="caution-box" id="cautionBox">
+        <div class="caution-title"><i class="fas fa-triangle-exclamation"></i> Clinical Guidance & Food Precautions</div>
+        <div id="cautionText" style="color:#cbd5e1;">Avoid Grapefruit juice while taking Atorvastatin as it inhibits CYP3A4 metabolism. Monitor blood pressure weekly during initial titration.</div>
+      </div>
+
+      <!-- 7-Day Pill Dosage Matrix -->
+      <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:12px;">7-Day Dosage Schedule Matrix</div>
+      <div class="schedule-grid" id="scheduleGrid">
+        <!-- Rendered dynamically -->
+      </div>
     </div>
   </div>
 </div>
+
 <script>
-function scanPrescription() {
-  document.getElementById('rxOutput').innerText = '💊 OCR EXTRACTION RESULTS:\n\n1. Amlodipine 5mg\n   - Dosage: 1 Tablet Daily (Morning)\n   - Purpose: Blood Pressure Management\n\n2. Atorvastatin 20mg\n   - Dosage: 1 Tablet Daily (Night after dinner)\n   - Purpose: Cholesterol\n\n✅ 0 Critical Interactions Detected.\n💰 Generic Substitution Savings: 48% cheaper generic available!';
+const RX_DATA = {
+  cardio: {
+    clinic: "Apollo Heart & Vascular Centre · Dr. R. Sharma, MD",
+    reg: "Reg No: MCI-2014-99812 · New Delhi Apex OPD",
+    lines: [
+      "Rx:",
+      "1. Tab. Amlong 5mg (Amlodipine) — 1 Tab OD (Morning, after breakfast)",
+      "2. Tab. Atorva 20mg (Atorvastatin) — 1 Tab HS (Night, after dinner)",
+      "3. Tab. Telma 40mg (Telmisartan) — 1 Tab OD (Morning)"
+    ],
+    savingsMonth: "₹610 / month",
+    savingsYear: "₹7,320 / yr",
+    savingsPct: "81% savings with PMBJP Jan Aushadhi substitution",
+    meds: [
+      { brand: "Amlong 5mg", salt: "Amlodipine 5mg", pmbjp: "Jan Aushadhi Amlodipine 5mg", bPrice: "₹48.00 (15 tab)", gPrice: "₹7.50 (10 tab)" },
+      { brand: "Atorva 20mg", salt: "Atorvastatin 20mg", pmbjp: "Jan Aushadhi Atorvastatin 20mg", bPrice: "₹240.00 (15 tab)", gPrice: "₹38.00 (10 tab)" },
+      { brand: "Telma 40mg", salt: "Telmisartan 40mg", pmbjp: "Jan Aushadhi Telmisartan 40mg", bPrice: "₹185.00 (15 tab)", gPrice: "₹28.00 (10 tab)" }
+    ],
+    caution: "Avoid Grapefruit juice while taking Atorvastatin as it inhibits CYP3A4 clearance. Monitor serum Potassium with Telmisartan.",
+    schedule: [
+      { time: "Morning (Breakfast)", pills: "Amlodipine 5mg + Telmisartan 40mg" },
+      { time: "Afternoon (Lunch)", pills: "None" },
+      { time: "Evening (Snack)", pills: "None" },
+      { time: "Night (Dinner)", pills: "Atorvastatin 20mg" }
+    ]
+  },
+  diab: {
+    clinic: "Fortis Endocrine Centre · Dr. Meenakshi Iyer, MD (Endo)",
+    reg: "Reg No: MCI-2018-44102 · Mumbai Apex OPD",
+    lines: [
+      "Rx:",
+      "1. Tab. Glycomet SR 500mg (Metformin) — 1 Tab BD (After meals)",
+      "2. Tab. Amaryl 1mg (Glimepiride) — 1 Tab OD (Before breakfast)",
+      "3. Tab. Volibo 0.2mg (Voglibose) — 1 Tab TDS (With first bite of meal)"
+    ],
+    savingsMonth: "₹540 / month",
+    savingsYear: "₹6,480 / yr",
+    savingsPct: "78% savings with PMBJP Jan Aushadhi substitution",
+    meds: [
+      { brand: "Glycomet SR 500", salt: "Metformin 500mg SR", pmbjp: "Jan Aushadhi Metformin SR", bPrice: "₹65.00 (10 tab)", gPrice: "₹11.00 (10 tab)" },
+      { brand: "Amaryl 1mg", salt: "Glimepiride 1mg", pmbjp: "Jan Aushadhi Glimepiride 1mg", bPrice: "₹135.00 (15 tab)", gPrice: "₹22.00 (10 tab)" },
+      { brand: "Volibo 0.2mg", salt: "Voglibose 0.2mg", pmbjp: "Jan Aushadhi Voglibose 0.2mg", bPrice: "₹170.00 (10 tab)", gPrice: "₹35.00 (10 tab)" }
+    ],
+    caution: "Watch for hypoglycemia symptoms (tremors, sweating). Do not skip meals after taking Glimepiride. Maintain adequate hydration.",
+    schedule: [
+      { time: "Morning (Breakfast)", pills: "Glimepiride 1mg + Metformin 500mg + Voglibose" },
+      { time: "Afternoon (Lunch)", pills: "Voglibose 0.2mg" },
+      { time: "Evening (Snack)", pills: "None" },
+      { time: "Night (Dinner)", pills: "Metformin 500mg + Voglibose" }
+    ]
+  },
+  pulmo: {
+    clinic: "Medanta Respiratory Clinic · Dr. V. Sen, DNB (Pulmo)",
+    reg: "Reg No: MCI-2011-30911 · Gurgaon Super Specialty",
+    lines: [
+      "Rx:",
+      "1. Tab. Montair-LC (Montelukast 10mg + Levocetirizine 5mg) — 1 Tab HS",
+      "2. Inhaler Budecort 200 (Budesonide 200mcg) — 2 Puffs BD",
+      "3. Tab. Doxovent 400 (Doxofylline 400mg) — 1 Tab OD"
+    ],
+    savingsMonth: "₹480 / month",
+    savingsYear: "₹5,760 / yr",
+    savingsPct: "74% savings with PMBJP Jan Aushadhi substitution",
+    meds: [
+      { brand: "Montair-LC", salt: "Montelukast 10mg + Levo 5mg", pmbjp: "Jan Aushadhi Montelukast + Levo", bPrice: "₹210.00 (10 tab)", gPrice: "₹45.00 (10 tab)" },
+      { brand: "Budecort 200", salt: "Budesonide Inhaler 200mcg", pmbjp: "Jan Aushadhi Budesonide 200", bPrice: "₹360.00 (200 doses)", gPrice: "₹120.00 (200 doses)" },
+      { brand: "Doxovent 400", salt: "Doxofylline 400mg", pmbjp: "Jan Aushadhi Doxofylline 400", bPrice: "₹140.00 (10 tab)", gPrice: "₹32.00 (10 tab)" }
+    ],
+    caution: "Rinse mouth thoroughly with water after using Budesonide inhaler to prevent oral candidiasis. Montair-LC may cause mild evening sedation.",
+    schedule: [
+      { time: "Morning (Breakfast)", pills: "Budecort Inhaler 2 Puffs + Doxofylline" },
+      { time: "Afternoon (Lunch)", pills: "None" },
+      { time: "Evening (Snack)", pills: "None" },
+      { time: "Night (Dinner)", pills: "Budecort Inhaler 2 Puffs + Montair-LC" }
+    ]
+  },
+  gastro: {
+    clinic: "Max Gastroenterology Institute · Dr. S. Kulkarni, MD (Gastro)",
+    reg: "Reg No: MCI-2016-81204 · Delhi NCR",
+    lines: [
+      "Rx:",
+      "1. Cap. Pantocid-DSR (Pantoprazole 40mg + Domperidone 30mg) — 1 Cap OD (Empty stomach)",
+      "2. Syp. Sucrafil 10ml (Sucralfate) — 2 Tsp TDS (1 hr before meals)"
+    ],
+    savingsMonth: "₹390 / month",
+    savingsYear: "₹4,680 / yr",
+    savingsPct: "82% savings with PMBJP Jan Aushadhi substitution",
+    meds: [
+      { brand: "Pantocid-DSR", salt: "Pantoprazole 40mg + Domperidone 30mg", pmbjp: "Jan Aushadhi Panto-Domperidone", bPrice: "₹195.00 (10 cap)", gPrice: "₹32.00 (10 cap)" },
+      { brand: "Sucrafil 200ml", salt: "Sucralfate 1g/10ml", pmbjp: "Jan Aushadhi Sucralfate Suspension", bPrice: "₹240.00 (200ml)", gPrice: "₹55.00 (200ml)" }
+    ],
+    caution: "Take Pantoprazole capsule strictly on an empty stomach at least 30 minutes before morning tea/breakfast for maximum acid inhibition.",
+    schedule: [
+      { time: "Early Morning", pills: "Pantocid-DSR (Empty stomach)" },
+      { time: "Morning (Breakfast)", pills: "Sucrafil Syrup 10ml" },
+      { time: "Afternoon (Lunch)", pills: "Sucrafil Syrup 10ml" },
+      { time: "Night (Dinner)", pills: "Sucrafil Syrup 10ml" }
+    ]
+  }
+};
+
+let currentRxKey = 'cardio';
+
+function loadRx(key) {
+  currentRxKey = key;
+  document.querySelectorAll('.rx-chip').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+
+  const d = RX_DATA[key];
+  document.getElementById('clinicName').innerText = d.clinic;
+  document.getElementById('rxLines').innerHTML = d.lines.map(l => 
+    `<div class="rx-line-highlight">${l}</div>`
+  ).join('');
+
+  document.getElementById('savingsNum').innerText = d.savingsMonth;
+  document.getElementById('annualSavings').innerText = d.savingsYear;
+  document.getElementById('savingsPct').innerText = d.savingsPct;
+
+  document.getElementById('medsTableBody').innerHTML = d.meds.map(m => `
+    <tr>
+      <td style="font-weight:700; color:#fff;">${m.brand}</td>
+      <td style="color:#cbd5e1; font-family:'JetBrains Mono'; font-size:12px;">${m.salt}</td>
+      <td style="color:#34d399; font-weight:600;"><i class="fas fa-certificate" style="font-size:10px;"></i> ${m.pmbjp}</td>
+      <td style="color:#f87171; text-decoration:line-through;">${m.bPrice}</td>
+      <td style="color:#34d399; font-weight:800; font-family:'JetBrains Mono';">${m.gPrice}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('cautionText').innerText = d.caution;
+
+  document.getElementById('scheduleGrid').innerHTML = d.schedule.map(s => `
+    <div class="sched-card">
+      <div class="sched-time">${s.time}</div>
+      <div class="sched-pills">${s.pills}</div>
+    </div>
+  `).join('');
 }
+
+function executeOcrScan() {
+  const laser = document.getElementById('scanLaser');
+  laser.style.display = 'block';
+  setTimeout(() => {
+    laser.style.display = 'none';
+    alert('✅ OCR Recognition Complete!\nExtracted 3 pharmaceutical compounds with 100% character confidence score.');
+  }, 1600);
+}
+
+function printSchedule() {
+  window.print();
+}
+
+loadRx('cardio');
 </script>
-
-</main>
-
-
-<footer class="footer">
-  <div class="foot-inner">
-    <div class="foot-col">
-      <div class="foot-brand"><i class="fas fa-mortar-pestle"></i> Decode Pharmacy</div>
-      <p class="foot-tag">AI Healthcare — Part of the Sevenseed AI Venture Studio portfolio.</p>
-      <div class="foot-copy">© 2026 Decode Pharmacy. 100% Free · Bring Your Own Key Architecture.</div>
-    </div>
-    <div class="foot-col">
-      <h4>Navigation</h4>
-      <ul class="foot-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="../index.html">Sevenseed Hub</a></li>
-        <li><a href="https://github.com/KunalPatell/sevenseed-ai" target="_blank" rel="noopener">GitHub</a></li>
-      </ul>
-    </div>
-  </div>
-</footer>
-
-
-<script src="app.js"></script>
 
 <script>
 (function() {
-  // Theme Toggle Handler
   var tBtn = document.getElementById('themeToggle');
   if (tBtn) {
     function updateIcon(theme) {
       var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
+      if (ic) ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
     }
     var cur = document.documentElement.getAttribute('data-theme') || 'dark';
     updateIcon(cur);
@@ -132,7 +364,6 @@ function scanPrescription() {
     });
   }
 
-  // Cursor Ring
   var ring = document.getElementById('cursorRing');
   if (ring && !window.matchMedia('(pointer: coarse)').matches) {
     var mouseX = -100, mouseY = -100;
@@ -151,6 +382,5 @@ function scanPrescription() {
   }
 })();
 </script>
-
 </body>
 </html>

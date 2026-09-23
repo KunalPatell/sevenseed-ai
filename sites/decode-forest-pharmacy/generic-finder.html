@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Jan Aushadhi Generic Medicine Savings Finder — Decode Pharmacy</title>
-  <meta name="description" content="Compare expensive branded medicines against identical PMBJP Jan Aushadhi generic salts to save 75% to 85% on prescription costs.">
+  <meta name="description" content="Compare expensive branded medicines against identical PMBJP Jan Aushadhi generic salts to save 75% to 86% on prescription costs. 100% Free.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -16,11 +16,21 @@
     .ph-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
     .ph-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
 
+    /* Visual Banner */
+    .hero-banner-box { max-width: 1280px; margin: 0 auto 36px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(16,185,129,0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
+    .hero-banner-img { width: 100%; height: auto; max-height: 380px; object-fit: cover; display: block; }
+    .hero-banner-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(6,11,20,0.95) 100%); display: flex; align-items: flex-end; padding: 24px 32px; }
+    .hero-banner-caption { color: #fff; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+
     /* Search and Stats */
     .ph-search-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 32px; box-shadow: var(--shadow); }
-    .search-row { display: flex; gap: 12px; margin-bottom: 20px; }
+    .search-row { display: flex; gap: 12px; margin-bottom: 16px; }
     .search-input { flex: 1; padding: 12px 18px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; color: #fff; font-size: 14px; outline: none; }
     .search-input:focus { border-color: #10b981; }
+
+    .quick-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .q-chip { padding: 6px 14px; border-radius: 20px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); font-size: 12px; cursor: pointer; transition: 0.2s; }
+    .q-chip:hover { border-color: #10b981; color: #fff; }
 
     /* Comparison Result Card */
     .comp-box { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
@@ -34,8 +44,16 @@
     .side-salt { font-size: 13px; color: var(--text-2); margin-bottom: 12px; }
     .side-price { font-size: 28px; font-weight: 900; font-family: 'JetBrains Mono', monospace; }
 
-    .savings-banner { background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(6,182,212,0.1)); border: 1px solid #10b981; border-radius: 12px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-    .savings-num { font-size: 24px; font-weight: 900; color: #34d399; font-family: 'JetBrains Mono'; }
+    .savings-banner { background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(6,182,212,0.1)); border: 1px solid #10b981; border-radius: 12px; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; }
+    .savings-num { font-size: 26px; font-weight: 900; color: #34d399; font-family: 'JetBrains Mono'; }
+
+    /* Database Table */
+    .sec-h { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 16px; text-align: left; }
+    .table-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; box-shadow: var(--shadow); }
+    .med-table { width: 100%; border-collapse: collapse; text-align: left; min-width: 800px; font-size: 13.5px; }
+    .med-table th, .med-table td { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+    .med-table th { background: var(--bg-2); color: var(--text-2); font-size: 12px; text-transform: uppercase; }
+    .badge-code { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 2px 6px; border-radius: 4px; background: rgba(56,189,248,0.15); color: #38bdf8; }
   </style>
 </head>
 <body>
@@ -49,11 +67,10 @@
     </a>
     <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
       <a href="index.html">Home</a>
-      <a href="prescription-ocr.html">Prescription OCR</a>
+      <a href="generic-finder.html" style="color:#34d399; font-weight:600;">Generic Savings Finder</a>
+      <a href="hospital-finder.html">Hospital Directory</a>
       <a href="interaction-checker.html">Drug Interactions</a>
-      <a href="generic-finder.html" style="color:#34d399; font-weight:600;">Jan Aushadhi Generic</a>
-      <a href="hospital-finder.html">Hospital Finder</a>
-      <a href="wiki.html">Health Wiki</a>
+      <a href="prescription-ocr.html">Prescription OCR</a>
     </div>
     <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
       <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
@@ -65,114 +82,181 @@
 
 <div class="ph-container">
   <div class="ph-header">
-    <div class="ph-badge"><i class="fas fa-pills"></i> Inspired by PMBJP Jan Aushadhi & GoodRx</div>
+    <div class="ph-badge"><i class="fas fa-pills"></i> Inspired by PMBJP Jan Aushadhi & National Health Mission</div>
     <h1 class="ph-title">Jan Aushadhi Generic Medicine Savings Finder</h1>
-    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Search any branded medicine to discover the bio-equivalent PMBJP generic salt. High-potency therapeutic equivalence with 75% to 85% consumer cost savings.</p>
+    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Search any branded medicine to discover the bio-equivalent PMBJP generic salt. WHO-GMP certified therapeutic equivalence with 75% to 86% consumer cost savings.</p>
   </div>
 
+  <!-- Hero Visual Banner -->
+  <div class="hero-banner-box">
+    <img src="img/hero-banner.jpg" alt="Decode Forest Pharmacy Medicine Scanner and Generic Savings" class="hero-banner-img">
+    <div class="hero-banner-overlay">
+      <div class="hero-banner-caption">
+        <i class="fas fa-hand-holding-medical" style="color:#34d399;"></i>
+        <span>Scan Prescription · Verified 75-86% Cost Reduction · PMBJP Jan Aushadhi Certified</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Search Card -->
   <div class="ph-search-card">
     <div class="search-row">
-      <input type="text" id="medSearch" class="search-input" value="Augmentin 625 Duo" placeholder="Search branded medicine (e.g. Augmentin, Pan-D, Glycomet, Lipitor)...">
-      <button class="btn btn-primary" onclick="searchGeneric()"><i class="fas fa-search"></i> Find Generic Salt</button>
+      <input type="text" id="medSearch" class="search-input" value="Dolo 650" placeholder="Search branded medicine (e.g. Dolo 650, Glycomet, Pan 40, Telma 40)..." onkeyup="checkEnter(event)">
+      <button class="btn btn-primary" onclick="searchGeneric()"><i class="fas fa-search"></i> Compare Savings</button>
+    </div>
+
+    <div class="quick-chips">
+      <span style="font-size:12px; color:var(--text-3); display:flex; align-items:center;">Frequent Searches:</span>
+      <button class="q-chip" onclick="setMed('Dolo 650')">Dolo 650</button>
+      <button class="q-chip" onclick="setMed('Glycomet 500 SR')">Glycomet 500 SR</button>
+      <button class="q-chip" onclick="setMed('Pan 40')">Pan 40</button>
+      <button class="q-chip" onclick="setMed('Atorva 10')">Atorva 10</button>
+      <button class="q-chip" onclick="setMed('Telma 40')">Telma 40</button>
+      <button class="q-chip" onclick="setMed('Montair-LC')">Montair-LC</button>
+      <button class="q-chip" onclick="setMed('Azithral 500')">Azithral 500</button>
     </div>
 
     <div class="comp-box">
       <!-- Branded -->
       <div class="brand-side">
         <div class="side-lbl" style="color:#f87171;">Branded Retail Pharmacy</div>
-        <div class="side-name" id="bName">Augmentin 625 Duo (10 Tablets)</div>
-        <div class="side-salt">Active Salt: Amoxicillin (500mg) + Clavulanic Acid (125mg)</div>
-        <div class="side-price" style="color:#f87171;" id="bPrice">₹218.00</div>
+        <div class="side-name" id="bName">Dolo 650 / Calpol 650</div>
+        <div class="side-salt" id="bSalt">Fever, moderate pain, post-vaccination relief</div>
+        <div class="side-price" style="color:#f87171;" id="bPrice">₹34.50</div>
       </div>
 
       <!-- Generic -->
       <div class="generic-side">
-        <div class="side-lbl" style="color:#34d399;">PMBJP Jan Aushadhi Generic</div>
-        <div class="side-name" id="gName">Amoxycillin & Pot. Clavulanate (10 Tabs)</div>
-        <div class="side-salt">100% Bio-Equivalent Salt (WHO-GMP Certified)</div>
-        <div class="side-price" style="color:#34d399;" id="gPrice">₹45.00</div>
+        <div class="side-lbl" style="color:#34d399;">PMBJP Jan Aushadhi Bio-Equivalent</div>
+        <div class="side-name" id="gName">Paracetamol 650mg</div>
+        <div class="side-salt" id="gCode">Jan Aushadhi Code: PMBJP00045 · WHO-GMP Certified</div>
+        <div class="side-price" style="color:#34d399;" id="gPrice">₹6.80</div>
       </div>
     </div>
 
     <div class="savings-banner">
       <div>
-        <div style="font-size:14px; font-weight:700; color:#fff;">Total Prescription Savings:</div>
-        <div style="font-size:12px; color:var(--text-2);">Saves ₹173.00 on every single strip!</div>
+        <div style="font-size:15px; font-weight:700; color:#fff;">Direct Consumer Savings:</div>
+        <div style="font-size:13px; color:var(--text-2);" id="saveDiff">You save ₹27.70 per strip (80% less)!</div>
       </div>
-      <div class="savings-num" id="savePct">79.3% Cheaper</div>
+      <div class="savings-num" id="savePct">80% Cheaper</div>
     </div>
+  </div>
+
+  <!-- Full Common Medicines Benchmark Table -->
+  <h2 class="sec-h">Verified Generic Bio-Equivalent Catalog</h2>
+  <div class="table-card">
+    <table class="med-table">
+      <thead>
+        <tr>
+          <th>Generic Salt</th>
+          <th>Branded Equivalent</th>
+          <th>Branded Price</th>
+          <th>Jan Aushadhi Generic</th>
+          <th>Savings %</th>
+          <th>Primary Use Case</th>
+          <th>PMBJP Code</th>
+        </tr>
+      </thead>
+      <tbody id="medsCatalogBody">
+        <!-- Populated via JavaScript from data/medicines.json -->
+      </tbody>
+    </table>
   </div>
 </div>
 
+<footer class="footer">
+  <div class="foot-inner">
+    <div class="foot-col">
+      <div class="foot-brand"><i class="fas fa-mortar-pestle"></i> Decode Pharmacy</div>
+      <p class="foot-tag">Free Health Advice, Generic Medicines & Emergency Directory — Sevenseed Studio.</p>
+      <div class="foot-copy">© 2026 Decode Pharmacy. 100% Free · Dedicated to Affordable Public Healthcare.</div>
+    </div>
+    <div class="foot-col">
+      <h4>Navigation</h4>
+      <ul class="foot-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="generic-finder.html">Generic Savings Finder</a></li>
+        <li><a href="hospital-finder.html">Emergency Hospitals</a></li>
+        <li><a href="/" target="_blank">Sevenseed Hub</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
 <script>
-const DRUG_DB = {
-  'augmentin': { b: 'Augmentin 625 Duo', bP: 218, g: 'Amoxycillin & Pot. Clavulanate', gP: 45, salt: 'Amoxicillin (500mg) + Clavulanic Acid (125mg)' },
-  'pan': { b: 'Pan-D Capsule (15 Caps)', bP: 245, g: 'Pantoprazole + Domperidone', gP: 38, salt: 'Pantoprazole (40mg) + Domperidone (30mg)' },
-  'glycomet': { b: 'Glycomet GP 1 Tablet', bP: 165, g: 'Metformin + Glimepiride', gP: 28, salt: 'Metformin (500mg) + Glimepiride (1mg)' },
-  'crocin': { b: 'Crocin 650 Advance (15 Tabs)', bP: 35, g: 'Paracetamol 650mg Generic', gP: 8, salt: 'Paracetamol IP (650mg)' }
-};
+var genericList = [];
+
+fetch('data/medicines.json')
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    genericList = data.generic_substitutes || [];
+    renderTable();
+  })
+  .catch(function(err) {
+    console.error('Failed loading medicines.json:', err);
+  });
+
+function renderTable() {
+  var tbody = document.getElementById('medsCatalogBody');
+  if (!tbody) return;
+  tbody.innerHTML = genericList.map(function(m) {
+    return '<tr>' +
+      '<td><strong style="color:#fff;">' + m.generic_name + '</strong></td>' +
+      '<td>' + m.branded_name + '</td>' +
+      '<td style="color:#f87171; text-decoration:line-through; font-family:\'JetBrains Mono\';">₹' + m.branded_price.toFixed(2) + '</td>' +
+      '<td style="color:#34d399; font-weight:800; font-family:\'JetBrains Mono\';">₹' + m.generic_price.toFixed(2) + '</td>' +
+      '<td><strong style="color:#38bdf8;">' + m.savings_pct + '% OFF</strong></td>' +
+      '<td>' + m.use_case + '</td>' +
+      '<td><span class="badge-code">' + m.jan_aushadhi_code + '</span></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function setMed(name) {
+  document.getElementById('medSearch').value = name;
+  searchGeneric();
+}
+
+function checkEnter(e) {
+  if (e.key === 'Enter') searchGeneric();
+}
 
 function searchGeneric() {
-  const q = document.getElementById('medSearch').value.toLowerCase();
-  let found = DRUG_DB['augmentin'];
+  var q = (document.getElementById('medSearch').value || '').toLowerCase().trim();
+  var match = genericList.find(function(m) {
+    return m.branded_name.toLowerCase().includes(q) || m.generic_name.toLowerCase().includes(q);
+  });
 
-  for (let k in DRUG_DB) {
-    if (q.includes(k)) { found = DRUG_DB[k]; break; }
+  if (!match && genericList.length > 0) {
+    match = genericList[0];
   }
 
-  document.getElementById('bName').innerText = found.b;
-  document.getElementById('bPrice').innerText = '₹' + found.bP.toFixed(2);
-  document.getElementById('gName').innerText = found.g;
-  document.getElementById('gPrice').innerText = '₹' + found.gP.toFixed(2);
+  if (match) {
+    document.getElementById('bName').innerText = match.branded_name;
+    document.getElementById('bSalt').innerText = match.use_case;
+    document.getElementById('bPrice').innerText = '₹' + match.branded_price.toFixed(2);
 
-  const diff = found.bP - found.gP;
-  const pct = Math.round((diff / found.bP) * 100);
-  document.getElementById('savePct').innerText = `${pct}% Cheaper`;
+    document.getElementById('gName').innerText = match.generic_name;
+    document.getElementById('gCode').innerText = 'Jan Aushadhi Code: ' + match.jan_aushadhi_code + ' · WHO-GMP Certified';
+    document.getElementById('gPrice').innerText = '₹' + match.generic_price.toFixed(2);
+
+    var diff = match.branded_price - match.generic_price;
+    document.getElementById('saveDiff').innerText = 'You save ₹' + diff.toFixed(2) + ' per strip (' + match.savings_pct + '% less)!';
+    document.getElementById('savePct').innerText = match.savings_pct + '% Cheaper';
+  }
+}
+
+// Theme handler
+var tBtn = document.getElementById('themeToggle');
+if (tBtn) {
+  tBtn.addEventListener('click', function() {
+    var now = document.documentElement.getAttribute('data-theme') || 'dark';
+    var next = now === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('ss-theme', next);
+  });
 }
 </script>
-
-
-<script>
-(function() {
-  // Theme Toggle Handler
-  var tBtn = document.getElementById('themeToggle');
-  if (tBtn) {
-    function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
-    }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('ss-theme', next);
-      updateIcon(next);
-    });
-  }
-
-  // Cursor Ring
-  var ring = document.getElementById('cursorRing');
-  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
-      requestAnimationFrame(renderCursor);
-    }
-    requestAnimationFrame(renderCursor);
-  }
-})();
-</script>
-
 </body>
 </html>

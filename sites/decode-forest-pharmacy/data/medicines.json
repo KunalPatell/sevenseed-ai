@@ -1,0 +1,122 @@
+{
+  "updated_at": "2026-09-23",
+  "generic_substitutes": [
+    {
+      "generic_name": "Paracetamol 650mg",
+      "branded_name": "Dolo 650 / Calpol 650",
+      "branded_price": 34.50,
+      "generic_price": 6.80,
+      "savings_pct": 80,
+      "use_case": "Fever, moderate pain, post-vaccination relief",
+      "jan_aushadhi_code": "PMBJP00045"
+    },
+    {
+      "generic_name": "Metformin Hydrochloride 500mg SR",
+      "branded_name": "Glycomet 500 SR",
+      "branded_price": 48.00,
+      "generic_price": 9.20,
+      "savings_pct": 81,
+      "use_case": "Type 2 Diabetes glycemic control",
+      "jan_aushadhi_code": "PMBJP00112"
+    },
+    {
+      "generic_name": "Atorvastatin 10mg",
+      "branded_name": "Atorva 10 / Lipitor",
+      "branded_price": 95.00,
+      "generic_price": 14.50,
+      "savings_pct": 85,
+      "use_case": "High cholesterol, cardiovascular risk prevention",
+      "jan_aushadhi_code": "PMBJP00219"
+    },
+    {
+      "generic_name": "Telmisartan 40mg",
+      "branded_name": "Telma 40",
+      "branded_price": 128.00,
+      "generic_price": 18.00,
+      "savings_pct": 86,
+      "use_case": "Hypertension (high blood pressure) management",
+      "jan_aushadhi_code": "PMBJP00341"
+    },
+    {
+      "generic_name": "Pantoprazole 40mg",
+      "branded_name": "Pan 40 / Pantocid 40",
+      "branded_price": 110.00,
+      "generic_price": 15.20,
+      "savings_pct": 86,
+      "use_case": "Acid reflux, GERD, gastric ulcers",
+      "jan_aushadhi_code": "PMBJP00184"
+    },
+    {
+      "generic_name": "Azithromycin 500mg (3 Tabs)",
+      "branded_name": "Azithral 500",
+      "branded_price": 125.00,
+      "generic_price": 28.50,
+      "savings_pct": 77,
+      "use_case": "Bacterial respiratory & throat infections",
+      "jan_aushadhi_code": "PMBJP00088"
+    },
+    {
+      "generic_name": "Montelukast 10mg + Levocetirizine 5mg",
+      "branded_name": "Montair-LC",
+      "branded_price": 215.00,
+      "generic_price": 32.00,
+      "savings_pct": 85,
+      "use_case": "Allergic rhinitis, asthma symptoms, seasonal allergies",
+      "jan_aushadhi_code": "PMBJP00427"
+    }
+  ],
+  "drug_interactions": [
+    {
+      "pair": ["Aspirin", "Warfarin"],
+      "severity": "CRITICAL",
+      "message": "Major hemorrhage risk. Both drugs inhibit blood clotting through different pathways. Concurrent use requires immediate physician monitoring."
+    },
+    {
+      "pair": ["Sildenafil", "Nitroglycerin"],
+      "severity": "FATAL CONTRAINDICATION",
+      "message": "Severe life-threatening hypotension (blood pressure crash). Nitrates and PDE-5 inhibitors must never be co-administered."
+    },
+    {
+      "pair": ["Metformin", "Iodinated Contrast Media"],
+      "severity": "HIGH",
+      "message": "Risk of lactic acidosis. Withhold Metformin 48 hours prior to contrast imaging and re-evaluate renal function before resuming."
+    },
+    {
+      "pair": ["Ciprofloxacin", "Antacids (Calcium/Magnesium)"],
+      "severity": "MODERATE",
+      "message": "Chelation reduces Ciprofloxacin absorption by up to 90%. Take antibiotic at least 2 hours before or 6 hours after antacids."
+    }
+  ],
+  "upcoming_free_camps": [
+    {
+      "title": "Mega Free Eye Checkup & Cataract Surgery Camp",
+      "city": "Ahmedabad",
+      "venue": "Community Hall, Satellite Road",
+      "dates": "October 5 - 7, 2026",
+      "services": ["Vision Testing", "Free Eye Drops", "Sponsored Cataract Surgeries", "Prescription Glasses"],
+      "organizer": "AVP Charitable Trust & Civil Hospital Eye Wing",
+      "helpline": "1800-419-7001",
+      "registered_count": 482
+    },
+    {
+      "title": "Statewide Voluntary Blood Donation Drive",
+      "city": "Bengaluru",
+      "venue": "Freedom Park & City Metro Stations",
+      "dates": "October 12, 2026",
+      "services": ["Free Complete Blood Count (CBC)", "Blood Grouping Card", "Donor Health Certificate"],
+      "organizer": "Red Cross Society & Decode Forest Pharmacy",
+      "helpline": "+91-80-22264424",
+      "registered_count": 890
+    },
+    {
+      "title": "Diabetes & Hypertension Free Screening & Medicine Camp",
+      "city": "Mumbai",
+      "venue": "Dadar Community Centre, Parel",
+      "dates": "October 18 - 20, 2026",
+      "services": ["HbA1c Testing", "ECG", "Free 1-Month Generic Diabetes Meds", "Dietitian Consultation"],
+      "organizer": "Jan Aushadhi Kendra & AVP Trust",
+      "helpline": "1800-180-8080",
+      "registered_count": 640
+    }
+  ]
+}

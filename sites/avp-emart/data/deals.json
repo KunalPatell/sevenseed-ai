@@ -1,0 +1,94 @@
+{
+  "updated_at": "2026-09-23",
+  "trending_deals": [
+    {
+      "id": "macbook-m3-pro",
+      "title": "Apple MacBook Pro 14\" (M3 Pro 18GB/512GB Space Black)",
+      "category": "Laptops & Computing",
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400",
+      "lowest_price": 179900,
+      "mrp": 199900,
+      "discount_pct": 10,
+      "best_store": "Croma",
+      "all_time_low": 174990,
+      "prices": [
+        {"store": "Croma", "price": 179900, "in_stock": true, "coupon": "CRMAAPPLE4K", "effective_price": 175900, "delivery": "Same Day"},
+        {"store": "Amazon India", "price": 182900, "in_stock": true, "coupon": "ICICINB1500", "effective_price": 181400, "delivery": "Tomorrow by 11 AM"},
+        {"store": "Reliance Digital", "price": 184900, "in_stock": true, "coupon": "None", "effective_price": 184900, "delivery": "2-3 Days"},
+        {"store": "Flipkart", "price": 186990, "in_stock": true, "coupon": "FKAXIS5PCT", "effective_price": 182990, "delivery": "Tomorrow"}
+      ],
+      "price_history_months": [
+        {"month": "Apr", "price": 199900},
+        {"month": "May", "price": 194900},
+        {"month": "Jun", "price": 189900},
+        {"month": "Jul", "price": 184900},
+        {"month": "Aug", "price": 174990},
+        {"month": "Sep", "price": 175900}
+      ]
+    },
+    {
+      "id": "sony-wh1000xm5",
+      "title": "Sony WH-1000XM5 Wireless Active Noise Canceling Headphones",
+      "category": "Audio & Headphones",
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
+      "lowest_price": 26990,
+      "mrp": 34990,
+      "discount_pct": 23,
+      "best_store": "Amazon India",
+      "all_time_low": 24990,
+      "prices": [
+        {"store": "Amazon India", "price": 26990, "in_stock": true, "coupon": "SONY2000OFF", "effective_price": 24990, "delivery": "Prime Today"},
+        {"store": "Flipkart", "price": 27990, "in_stock": true, "coupon": "HDFCCC1500", "effective_price": 26490, "delivery": "Tomorrow"},
+        {"store": "Reliance Digital", "price": 29990, "in_stock": true, "coupon": "None", "effective_price": 29990, "delivery": "Same Day Pickup"},
+        {"store": "Croma", "price": 28990, "in_stock": true, "coupon": "None", "effective_price": 28990, "delivery": "2 Days"}
+      ],
+      "price_history_months": [
+        {"month": "Apr", "price": 31990},
+        {"month": "May", "price": 29990},
+        {"month": "Jun", "price": 28490},
+        {"month": "Jul", "price": 27990},
+        {"month": "Aug", "price": 24990},
+        {"month": "Sep", "price": 24990}
+      ]
+    },
+    {
+      "id": "samsung-s24-ultra",
+      "title": "Samsung Galaxy S24 Ultra 5G (Titanium Gray, 12GB/256GB)",
+      "category": "Smartphones",
+      "image": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400",
+      "lowest_price": 119999,
+      "mrp": 134999,
+      "discount_pct": 11,
+      "best_store": "Flipkart",
+      "all_time_low": 114999,
+      "prices": [
+        {"store": "Flipkart", "price": 119999, "in_stock": true, "coupon": "SAMSUNGBANK7K", "effective_price": 112999, "delivery": "Tomorrow"},
+        {"store": "Amazon India", "price": 121999, "in_stock": true, "coupon": "HDFCS24U", "effective_price": 114999, "delivery": "Same Day"},
+        {"store": "Samsung Direct", "price": 129999, "in_stock": true, "coupon": "UPGRADE10K", "effective_price": 119999, "delivery": "2-3 Days"},
+        {"store": "Croma", "price": 124999, "in_stock": true, "coupon": "None", "effective_price": 124999, "delivery": "Same Day Pickup"}
+      ],
+      "price_history_months": [
+        {"month": "Apr", "price": 134999},
+        {"month": "May", "price": 129999},
+        {"month": "Jun", "price": 124999},
+        {"month": "Jul", "price": 119999},
+        {"month": "Aug", "price": 114999},
+        {"month": "Sep", "price": 112999}
+      ]
+    }
+  ],
+  "qcommerce_comparison": [
+    {
+      "item": "Amul Taaza Milk 500ml",
+      "blinkit": {"price": 27, "eta_mins": 11, "delivery_fee": 16},
+      "zepto": {"price": 27, "eta_mins": 9, "delivery_fee": 15},
+      "instamart": {"price": 27, "eta_mins": 14, "delivery_fee": 18}
+    },
+    {
+      "item": "Fortune Sunlite Sunflower Oil 1L",
+      "blinkit": {"price": 142, "eta_mins": 11, "delivery_fee": 16},
+      "zepto": {"price": 138, "eta_mins": 9, "delivery_fee": 15},
+      "instamart": {"price": 145, "eta_mins": 14, "delivery_fee": 18}
+    }
+  ]
+}

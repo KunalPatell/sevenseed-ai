@@ -104,6 +104,142 @@
 </div>
 
 <script>
+// ─── Real AI API Engine (reads from BYOK Vault) ───────────────────────────────
+const AVPU_SYSTEM = `You are AVPU's 24/7 AI Academic Tutor — an expert in AI Engineering, Mathematics, and Computer Science.
+You are grounded in AVPU's open curriculum covering: Transformers, RAG, LangGraph, PyTorch, MLOps, Vector DBs, and Linear Algebra.
+Always respond in a structured format:
+• Use **bold** for key terms
+• Use \`code blocks\` for formulas and code
+• Use numbered steps for explanations
+• Be precise, educational, and concise (max 300 words unless a code example is needed)
+If asked about something outside AI/ML/Math, gently redirect to the AVPU curriculum.`;
+
+const PROVIDERS = [
+  { name: 'gemini', keyFn: () => localStorage.getItem('ss_key_gemini') || localStorage.getItem('ss_apikey_gemini') },
+  { name: 'openai', keyFn: () => localStorage.getItem('ss_key_openai') || localStorage.getItem('ss_apikey_openai') },
+  { name: 'mistral', keyFn: () => localStorage.getItem('ss_key_m1') || localStorage.getItem('ss_apikey_mistral1') }
+];
+
+async function callAI(userMessage) {
+  // Try providers in order
+  for (const provider of PROVIDERS) {
+    const key = provider.keyFn();
+    if (!key) continue;
+    try {
+      if (provider.name === 'gemini') {
+        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: AVPU_SYSTEM + '\n\nStudent question: ' + userMessage }] }],
+            generationConfig: { temperature: 0.7, maxOutputTokens: 800 }
+          })
+        });
+        if (!r.ok) { const e = await r.json(); throw new Error(e.error?.message || 'Gemini error'); }
+        const d = await r.json();
+        return { text: d.candidates?.[0]?.content?.parts?.[0]?.text || 'No response', provider: 'Gemini 2.0 Flash' };
+      }
+      if (provider.name === 'openai') {
+        const r = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+          body: JSON.stringify({
+            model: 'gpt-4o',
+            messages: [{ role: 'system', content: AVPU_SYSTEM }, { role: 'user', content: userMessage }],
+            max_tokens: 800, temperature: 0.7
+          })
+        });
+        if (!r.ok) { const e = await r.json(); throw new Error(e.error?.message || 'OpenAI error'); }
+        const d = await r.json();
+        return { text: d.choices?.[0]?.message?.content || 'No response', provider: 'GPT-4o' };
+      }
+      if (provider.name === 'mistral') {
+        const r = await fetch('https://api.mistral.ai/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+          body: JSON.stringify({
+            model: 'mistral-large-latest',
+            messages: [{ role: 'system', content: AVPU_SYSTEM }, { role: 'user', content: userMessage }],
+            max_tokens: 800
+          })
+        });
+        if (!r.ok) { const e = await r.json(); throw new Error(e.error?.message || 'Mistral error'); }
+        const d = await r.json();
+        return { text: d.choices?.[0]?.message?.content || 'No response', provider: 'Mistral Large' };
+      }
+    } catch(e) {
+      console.warn(provider.name + ' failed:', e.message);
+      continue;
+    }
+  }
+  return { text: '⚠️ No API key found. Please visit the [BYOK API Vault](/byok.html) to add your Gemini, OpenAI, or Mistral key. It takes 30 seconds and is stored only in your browser.', provider: 'No Provider' };
+}
+
+function formatAIResponse(text) {
+  return text
+    .replace(/```(\w*)([\s\S]*?)```/g, '<div class="msg-code">$2</div>')
+    .replace(/`([^`]+)`/g, '<code style="background:rgba(59,130,246,0.15);padding:2px 6px;border-radius:4px;color:#93c5fd;font-family:JetBrains Mono,monospace;font-size:12px;">$1</code>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^###\s(.+)$/gm, '<h4 style="color:#38bdf8;margin:12px 0 6px;font-size:14px;">$1</h4>')
+    .replace(/^##\s(.+)$/gm, '<h3 style="color:#67e8f9;margin:14px 0 8px;font-size:15px;">$1</h3>')
+    .replace(/^•\s(.+)$/gm, '<li style="margin-bottom:5px;">$1</li>')
+    .replace(/^-\s(.+)$/gm, '<li style="margin-bottom:5px;">$1</li>')
+    .replace(/^(\d+\.\s.+)$/gm, '<li style="margin-bottom:6px;">$1</li>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+}
+
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  appendMessage('user', text);
+  input.value = '';
+  const sendBtn = document.querySelector('button[onclick="sendMessage()"]');
+  if (sendBtn) { sendBtn.disabled = true; sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Thinking...'; }
+
+  // Show typing indicator
+  const typingId = 'typing-' + Date.now();
+  const box = document.getElementById('chatBox');
+  const typing = document.createElement('div');
+  typing.id = typingId;
+  typing.className = 'msg-bubble msg-assistant';
+  typing.innerHTML = '<span style="display:flex;gap:5px;align-items:center;"><span style="width:7px;height:7px;border-radius:50%;background:#3b82f6;animation:pulse 1s infinite;"></span><span style="width:7px;height:7px;border-radius:50%;background:#3b82f6;animation:pulse 1s 0.2s infinite;"></span><span style="width:7px;height:7px;border-radius:50%;background:#3b82f6;animation:pulse 1s 0.4s infinite;"></span><span style="font-size:12px;color:#64748b;margin-left:6px;">AI is thinking...</span></span>';
+  box.appendChild(typing);
+  box.scrollTop = box.scrollHeight;
+
+  const result = await callAI(text);
+
+  // Remove typing indicator
+  const typingEl = document.getElementById(typingId);
+  if (typingEl) typingEl.remove();
+
+  appendMessage('assistant', formatAIResponse(result.text), result.provider);
+
+  if (sendBtn) { sendBtn.disabled = false; sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send'; }
+}
+
+function sendPreset(promptText) {
+  document.getElementById('userInput').value = promptText;
+  sendMessage();
+}
+
+function appendMessage(sender, html, provider = '') {
+  const box = document.getElementById('chatBox');
+  const div = document.createElement('div');
+  div.className = `msg-bubble msg-${sender}`;
+  div.innerHTML = html;
+  if (provider && sender === 'assistant') {
+    const badge = document.createElement('div');
+    badge.style.cssText = 'font-size:10px;color:#475569;margin-top:8px;font-family:JetBrains Mono,monospace;';
+    badge.textContent = '⚡ ' + provider;
+    div.appendChild(badge);
+  }
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+// ─── Legacy RESPONSES object removed — now using real AI API ────────────────
 const RESPONSES = {
   'attention': `### 📐 Scaled Dot-Product Attention Explained:
 

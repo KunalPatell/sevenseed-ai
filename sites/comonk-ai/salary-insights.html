@@ -4,8 +4,8 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Levels.fyi Real-Time Tech Compensation Benchmark — Comonk AI</title>
-  <meta name="description" content="Explore verified tech compensation percentiles, equity grants, base salaries, and tier levels across leading AI companies.">
+  <title>Levels.fyi Real-Time Tech Compensation & Career Roadmaps — Comonk AI</title>
+  <meta name="description" content="Explore verified tech compensation percentiles in India (₹ LPA) & US ($), 90-day learning roadmaps, and interview question rubrics across leading AI companies.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -15,6 +15,12 @@
     .sal-header { text-align: center; margin-bottom: 32px; }
     .sal-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
     .sal-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+
+    /* Visual Banner */
+    .hero-banner-box { max-width: 1280px; margin: 0 auto 36px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(56,189,248,0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
+    .hero-banner-img { width: 100%; height: auto; max-height: 380px; object-fit: cover; display: block; }
+    .hero-banner-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(8,11,20,0.95) 100%); display: flex; align-items: flex-end; padding: 24px 32px; }
+    .hero-banner-caption { color: #fff; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
 
     /* Interactive Filters */
     .filter-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 32px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
@@ -32,8 +38,33 @@
     .sub-lbl { font-size: 11px; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px; }
     .sub-amt { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #38bdf8; }
 
+    /* Indian Tech Roles Grid */
+    .sec-title-wrap { text-align: center; margin: 48px 0 28px; }
+    .sec-title-wrap h2 { font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .sec-title-wrap p { color: var(--text-2); font-size: 15px; }
+
+    .careers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; margin-bottom: 48px; }
+    .career-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 26px; box-shadow: var(--shadow); display: flex; flex-direction: column; transition: transform 0.2s, border-color 0.2s; }
+    .career-card:hover { transform: translateY(-4px); border-color: rgba(56,189,248,0.5); }
+    
+    .c-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .c-icon { font-size: 28px; }
+    .c-demand { font-size: 11px; padding: 4px 10px; border-radius: 99px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); font-weight: 700; }
+    
+    .c-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .c-desc { font-size: 13px; color: var(--text-2); line-height: 1.55; margin-bottom: 16px; }
+
+    .c-salaries { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+    .sal-tier-row { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 6px; }
+    .sal-tier-row:last-child { margin-bottom: 0; }
+    .sal-tier-row span { color: var(--text-3); }
+    .sal-tier-row strong { color: #38bdf8; font-family: 'JetBrains Mono', monospace; }
+
+    .skill-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+    .sk-tag { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-2); }
+
     /* Comparison Table */
-    .table-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; box-shadow: var(--shadow); }
+    .table-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; box-shadow: var(--shadow); margin-bottom: 40px; }
     .sal-table { width: 100%; border-collapse: collapse; text-align: left; min-width: 800px; }
     .sal-table th, .sal-table td { padding: 16px 20px; border-bottom: 1px solid var(--border); }
     .sal-table th { background: var(--bg-2); color: var(--text-2); font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -66,9 +97,31 @@
 
 <div class="sal-container">
   <div class="sal-header">
-    <div class="sal-badge"><i class="fas fa-chart-bar"></i> Inspired by Levels.fyi</div>
-    <h1 class="sal-title">Real-Time Tech Compensation & Equity Benchmark</h1>
-    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Explore verified salary packages, stock options (RSUs), and performance bonuses across FAANG and premier AI unicorns.</p>
+    <div class="sal-badge"><i class="fas fa-chart-bar"></i> Inspired by Levels.fyi & Indian Tech Market 2026</div>
+    <h1 class="sal-title">Real-Time Tech Compensation & Career Roadmaps</h1>
+    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Explore verified salary packages, stock grants (RSUs), ₹ LPA percentiles in India, and 90-day step-by-step career transition roadmaps.</p>
+  </div>
+
+  <!-- Hero Visual Banner -->
+  <div class="hero-banner-box">
+    <img src="img/careers-hero.jpg" alt="Comonk AI Career Paths and Salary Insights" class="hero-banner-img">
+    <div class="hero-banner-overlay">
+      <div class="hero-banner-caption">
+        <i class="fas fa-arrow-trend-up" style="color:#38bdf8;"></i>
+        <span>AI & ML Engineer Packages: ₹18 - 85 LPA · 90-Day Step-by-Step Curriculum</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Indian Tech Roles Section -->
+  <div class="sec-title-wrap">
+    <div class="sal-badge" style="background:rgba(16,185,129,0.12); color:#34d399; border-color:rgba(16,185,129,0.3);"><i class="fas fa-indian-rupee-sign"></i> Indian Tech Market Benchmark</div>
+    <h2>High-Paying AI Engineering Roles (₹ LPA)</h2>
+    <p>Calibrated against verified compensation at top product startups and US-remote engineering teams.</p>
+  </div>
+
+  <div class="careers-grid" id="careersContainer">
+    <!-- Populated via JavaScript from data/careers.json -->
   </div>
 
   <div class="filter-card">
@@ -176,50 +229,51 @@ function updateComp() {
   document.getElementById('stockSalary').innerText = '$' + data.stock.toLocaleString();
   document.getElementById('bonusSalary').innerText = '$' + data.bonus.toLocaleString();
 }
+
+// Load Careers Data
+fetch('data/careers.json')
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    var tracks = data.tracks || [];
+    var container = document.getElementById('careersContainer');
+    if (!container) return;
+    container.innerHTML = tracks.map(function(t) {
+      var skHtml = (t.skills_required || []).map(function(s) {
+        return '<span class="sk-tag">' + s + '</span>';
+      }).join('');
+
+      return '<div class="career-card">' +
+        '<div class="c-top">' +
+          '<span class="c-icon">' + t.icon + '</span>' +
+          '<span class="c-demand">' + t.growth_rate + ' Demand</span>' +
+        '</div>' +
+        '<h3 class="c-title">' + t.title + '</h3>' +
+        '<p class="c-desc">' + t.description + '</p>' +
+        '<div class="c-salaries">' +
+          '<div class="sal-tier-row"><span>Fresher (0-2 Yrs):</span><strong>' + t.salary_range.fresher + '</strong></div>' +
+          '<div class="sal-tier-row"><span>Mid-Level (3-5 Yrs):</span><strong>' + t.salary_range.mid + '</strong></div>' +
+          '<div class="sal-tier-row"><span>Senior (6+ Yrs):</span><strong style="color:#34d399;">' + t.salary_range.senior + '</strong></div>' +
+          '<div class="sal-tier-row"><span>US Remote:</span><strong style="color:#fbbf24;">' + t.salary_range.us_remote + '</strong></div>' +
+        '</div>' +
+        '<div class="skill-badges">' + skHtml + '</div>' +
+        '<a href="interview-arena.html" class="btn btn-ghost sm" style="width:100%; text-align:center;"><i class="fas fa-play"></i> Practice Role Questions →</a>' +
+      '</div>';
+    }).join('');
+  })
+  .catch(function(err) {
+    console.error('Failed loading careers.json:', err);
+  });
+
+// Theme handler
+var tBtn = document.getElementById('themeToggle');
+if (tBtn) {
+  tBtn.addEventListener('click', function() {
+    var now = document.documentElement.getAttribute('data-theme') || 'dark';
+    var next = now === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('ss-theme', next);
+  });
+}
 </script>
-
-
-<script>
-(function() {
-  // Theme Toggle Handler
-  var tBtn = document.getElementById('themeToggle');
-  if (tBtn) {
-    function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
-    }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('ss-theme', next);
-      updateIcon(next);
-    });
-  }
-
-  // Cursor Ring
-  var ring = document.getElementById('cursorRing');
-  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
-      requestAnimationFrame(renderCursor);
-    }
-    requestAnimationFrame(renderCursor);
-  }
-})();
-</script>
-
 </body>
 </html>

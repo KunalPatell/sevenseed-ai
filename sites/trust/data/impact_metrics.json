@@ -1,0 +1,84 @@
+{
+  "updated_at": "2026-09-23",
+  "summary_metrics": {
+    "total_relief_distributed_inr": "₹4,28,50,000",
+    "free_meals_served": 128450,
+    "free_clinic_consultations": 14280,
+    "free_scholarships_awarded": 1650,
+    "active_health_camps": 142,
+    "lives_impacted": 284000,
+    "admin_overhead_pct": "0.0% (100% of public contributions directly fund beneficiaries)"
+  },
+  "free_initiatives": [
+    {
+      "name": "Sevenseed Free Tech & AI Education Grant",
+      "partner": "AVPU (AI University)",
+      "target": "Underrepresented & rural engineering students across India",
+      "support_provided": "100% free access to all 12 AI & deep learning tracks, cloud GPU credits, and 1-on-1 industry mentorship.",
+      "annual_budget_inr": "₹1,20,00,000",
+      "beneficiaries": 1650
+    },
+    {
+      "name": "Jeevan Jyoti Free Healthcare & Generic Medicine Fund",
+      "partner": "Decode Forest Pharmacy & Jan Aushadhi Kendras",
+      "target": "Families below poverty line and unorganized daily-wage workers",
+      "support_provided": "100% sponsored generic medicines, emergency ambulance coordination, and free multi-specialty diagnosis camps.",
+      "annual_budget_inr": "₹1,45,00,000",
+      "beneficiaries": 38400
+    },
+    {
+      "name": "Annapurna Community Nutrition Drive",
+      "partner": "Community Kitchens & Local Volunteers",
+      "target": "Shelters, government hospital patient attendants, and street children",
+      "support_provided": "Nutritious hot vegetarian meals prepared under hygienic FSSAI-supervised facilities.",
+      "annual_budget_inr": "₹98,50,000",
+      "beneficiaries": 128450
+    },
+    {
+      "name": "Suraksha Structural Safety for Affordable Housing",
+      "partner": "Breakdown Factor Inspection Labs",
+      "target": "Municipal low-cost housing and disaster-prone community buildings",
+      "support_provided": "Free AI-assisted structural crack assessment and complimentary repair material kits.",
+      "annual_budget_inr": "₹65,00,000",
+      "beneficiaries": 8200
+    }
+  ],
+  "transparent_blockchain_ledger": [
+    {
+      "date": "2026-09-21",
+      "tx_id": "ACT-42918",
+      "category": "Medical Supplies",
+      "project": "Ahmedabad Civil Hospital Outreach Camp",
+      "amount_inr": 125000,
+      "vendor": "Jan Aushadhi Medical Logistics Ltd",
+      "blockchain_hash": "0x8a9c3b74e21df90a187c2518e19b5c38947f12"
+    },
+    {
+      "date": "2026-09-19",
+      "tx_id": "ACT-42917",
+      "category": "Education / GPU Compute",
+      "project": "AVPU Rural AI Fellows Cloud Grant",
+      "amount_inr": 184000,
+      "vendor": "HyperCompute Cloud Services",
+      "blockchain_hash": "0x3d4be7281f9a84210c4d2910fa8c37482ea10"
+    },
+    {
+      "date": "2026-09-17",
+      "tx_id": "ACT-42916",
+      "category": "Nutrition Meals",
+      "project": "Dadar Community Kitchen 4,000 Meal Distribution",
+      "amount_inr": 88400,
+      "vendor": "Shree Annapurna Agro Supplies",
+      "blockchain_hash": "0x918f4a27bc180d4629471ab20938f4672901a"
+    },
+    {
+      "date": "2026-09-15",
+      "tx_id": "ACT-42915",
+      "category": "Emergency Medical Kit",
+      "project": "Bengaluru Rural Primary Health Centre Dispensing",
+      "amount_inr": 75000,
+      "vendor": "Karnataka State Drug Logistics",
+      "blockchain_hash": "0x5c72e9014ba8234df612984ac39b8214e8f12"
+    }
+  ]
+}

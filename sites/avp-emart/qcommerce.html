@@ -5,43 +5,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Quick Commerce Multi-Store Cart Optimizer — AVP Emart</title>
-  <meta name="description" content="Compare live cart prices and delivery fees across Blinkit, Zepto, Instamart, and BigBasket Now in real time.">
+  <meta name="description" content="Compare live cart prices, delivery fees, and platform surcharges across Blinkit, Zepto, Swiggy Instamart, and BB Now in real time.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .qc-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
+    .qc-container { max-width: 1360px; margin: 0 auto; padding: 100px 24px 60px; }
     .qc-header { text-align: center; margin-bottom: 32px; }
     .qc-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
     .qc-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
 
     /* Cart Builder Layout */
-    .qc-layout { display: grid; grid-template-columns: 420px 1fr; gap: 28px; }
-    @media(max-width: 960px) { .qc-layout { grid-template-columns: 1fr; } }
+    .qc-layout { display: grid; grid-template-columns: 460px 1fr; gap: 28px; }
+    @media(max-width: 1024px) { .qc-layout { grid-template-columns: 1fr; } }
 
     /* Item Picker */
-    .cart-pane { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .cart-pane { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
     .cart-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-    .item-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
-    .item-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
-    .item-info { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+    .item-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; max-height: 520px; overflow-y: auto; padding-right: 4px; }
+    .item-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; }
+    .item-info { display: flex; align-items: center; gap: 10px; font-weight: 600; color: #fff; }
     .qty-controls { display: flex; align-items: center; gap: 8px; }
-    .qty-btn { width: 26px; height: 26px; border-radius: 6px; background: var(--bg-3); border: 1px solid var(--border); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .qty-btn { width: 28px; height: 28px; border-radius: 6px; background: var(--bg-1); border: 1px solid var(--border); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 800; }
+    .qty-btn:hover { border-color: #f59e0b; color: #fbbf24; }
+    .qty-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; min-width: 18px; text-align: center; }
 
     /* Comparison Stores Grid */
-    .stores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
-    .store-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.2s; }
+    .stores-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    @media(max-width: 720px) { .stores-grid { grid-template-columns: 1fr; } }
+
+    .store-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.2s; box-shadow: var(--shadow); }
     .store-card.winner { border-color: #10b981; box-shadow: 0 0 24px rgba(16,185,129,0.15); }
     .store-card.fastest { border-color: #3b82f6; }
 
-    .store-badge { position: absolute; top: -10px; right: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.05em; }
+    .store-badge { position: absolute; top: -10px; right: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; letter-spacing: 0.05em; }
     .badge-win { background: #10b981; color: #000; }
     .badge-fast { background: #3b82f6; color: #fff; }
 
-    .store-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-    .brand-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #fff; }
+    .store-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .brand-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #fff; }
     .icon-blinkit { background: #facc15; color: #000; }
     .icon-zepto { background: #7c3aed; }
     .icon-instamart { background: #ea580c; }
@@ -53,8 +57,8 @@
     .cost-breakdown { font-size: 13px; color: var(--text-2); display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; border-top: 1px solid var(--border); padding-top: 14px; }
     .cost-line { display: flex; justify-content: space-between; }
 
-    .total-line { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 2px solid var(--border); font-size: 16px; font-weight: 800; color: #fff; }
-    .total-amount { font-size: 22px; color: #34d399; font-family: 'JetBrains Mono', monospace; }
+    .total-line { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 2px solid var(--border); font-size: 15px; font-weight: 800; color: #fff; }
+    .total-amount { font-size: 24px; color: #34d399; font-family: 'JetBrains Mono', monospace; }
   </style>
 </head>
 <body>
@@ -84,141 +88,134 @@
 
 <div class="qc-container">
   <div class="qc-header">
-    <div class="qc-badge"><i class="fas fa-bolt"></i> Inspired by Smartprix Quick Commerce Engine</div>
+    <div class="qc-badge"><i class="fas fa-bolt"></i> Real-Time Hyperlocal Price Comparator</div>
     <h1 class="qc-title">Multi-Store Quick Commerce Cart Optimizer</h1>
-    <p style="color:var(--text-2); max-width:720px; margin:0 auto;">Compare your exact grocery cart across Blinkit, Zepto, Swiggy Instamart, and BB Now. Uncover hidden delivery fees, platform charges, and surge markups in 1 click.</p>
+    <p style="color:var(--text-2); max-width:760px; margin:0 auto;">Compare your full grocery and tech essentials basket across Blinkit, Zepto, Swiggy Instamart, and BB Now. Uncover hidden platform fees, surge markups, and free delivery thresholds.</p>
   </div>
 
   <div class="qc-layout">
     <!-- Item Selector -->
     <div class="cart-pane">
       <div class="cart-title">
-        <span>Your Grocery Basket</span>
-        <span style="font-size:13px; color:#34d399;" id="basketItemCount">4 Items</span>
+        <span>Your Household Basket</span>
+        <span style="font-size:13px; color:#34d399;" id="basketItemCount">5 Items Selected</span>
       </div>
 
-      <div class="item-list">
-        <div class="item-row">
-          <div class="item-info"><span>🥛</span> <span>Amul Taaza Milk (1L)</span></div>
-          <div class="qty-controls">
-            <span class="qty-btn" onclick="updateQty(0, -1)">-</span>
-            <span id="qty-0">1</span>
-            <span class="qty-btn" onclick="updateQty(0, 1)">+</span>
-          </div>
-        </div>
-
-        <div class="item-row">
-          <div class="item-info"><span>🍞</span> <span>Whole Wheat Bread (400g)</span></div>
-          <div class="qty-controls">
-            <span class="qty-btn" onclick="updateQty(1, -1)">-</span>
-            <span id="qty-1">1</span>
-            <span class="qty-btn" onclick="updateQty(1, 1)">+</span>
-          </div>
-        </div>
-
-        <div class="item-row">
-          <div class="item-info"><span>🥚</span> <span>Farm Eggs (Pack of 6)</span></div>
-          <div class="qty-controls">
-            <span class="qty-btn" onclick="updateQty(2, -1)">-</span>
-            <span id="qty-2">1</span>
-            <span class="qty-btn" onclick="updateQty(2, 1)">+</span>
-          </div>
-        </div>
-
-        <div class="item-row">
-          <div class="item-info"><span>🥑</span> <span>Hass Avocados (2 Pcs)</span></div>
-          <div class="qty-controls">
-            <span class="qty-btn" onclick="updateQty(3, -1)">-</span>
-            <span id="qty-3">1</span>
-            <span class="qty-btn" onclick="updateQty(3, 1)">+</span>
-          </div>
-        </div>
+      <div class="item-list" id="itemListContainer">
+        <!-- Rendered dynamically -->
       </div>
 
-      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="calculateStores()">
-        <i class="fas fa-sync-alt"></i> Optimize Multi-Store Pricing
-      </button>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-ghost sm" onclick="resetQuantities()" style="flex:1; justify-content:center;">Reset Basket</button>
+        <button class="btn btn-primary sm" onclick="calculateStores()" style="flex:1; justify-content:center;"><i class="fas fa-sync"></i> Re-Calculate</button>
+      </div>
     </div>
 
     <!-- Store Comparison Cards -->
     <div class="stores-grid">
       <!-- Zepto -->
       <div class="store-card fastest" id="cardZepto">
-        <span class="store-badge badge-fast">⚡ Fastest ETA</span>
+        <span class="store-badge badge-fast">⚡ 9 Mins (Fastest)</span>
         <div>
           <div class="store-brand">
             <div class="brand-icon icon-zepto">Z</div>
             <div>
               <div class="brand-name">Zepto</div>
-              <div class="brand-eta"><i class="fas fa-stopwatch"></i> 9 Mins Delivery</div>
+              <div class="brand-eta"><i class="fas fa-stopwatch"></i> 9 Mins Average ETA</div>
             </div>
           </div>
           <div class="cost-breakdown">
-            <div class="cost-line"><span>Items Subtotal:</span> <span id="zSub">₹310</span></div>
-            <div class="cost-line"><span>Delivery Fee:</span> <span style="color:#34d399;">FREE</span></div>
-            <div class="cost-line"><span>Handling Charge:</span> <span>₹4</span></div>
+            <div class="cost-line"><span>Items Subtotal:</span> <span id="zSub" style="font-family:'JetBrains Mono';">₹448</span></div>
+            <div class="cost-line"><span>Delivery Fee:</span> <span id="zDel" style="font-family:'JetBrains Mono'; color:#34d399;">FREE</span></div>
+            <div class="cost-line"><span>Handling / Bag:</span> <span>₹4</span></div>
             <div class="cost-line"><span>Rain/Night Surge:</span> <span>₹0</span></div>
           </div>
         </div>
         <div>
           <div class="total-line">
             <span>Total Payable:</span>
-            <span class="total-amount" id="zTotal">₹314</span>
+            <span class="total-amount" id="zTotal">₹452</span>
           </div>
-          <button class="btn btn-ghost sm" style="width:100%; justify-content:center; margin-top:12px;" onclick="alert('Redirecting to Zepto Cart...')">Order on Zepto →</button>
+          <button class="btn btn-primary sm" style="width:100%; justify-content:center; margin-top:12px;" onclick="orderRedirect('Zepto')">Checkout on Zepto →</button>
         </div>
       </div>
 
       <!-- Blinkit -->
       <div class="store-card winner" id="cardBlinkit">
-        <span class="store-badge badge-win">🏆 Best Value</span>
+        <span class="store-badge badge-win">🏆 Cheapest Cart</span>
         <div>
           <div class="store-brand">
             <div class="brand-icon icon-blinkit">B</div>
             <div>
               <div class="brand-name">Blinkit</div>
-              <div class="brand-eta"><i class="fas fa-stopwatch"></i> 11 Mins Delivery</div>
+              <div class="brand-eta"><i class="fas fa-stopwatch"></i> 11 Mins Average ETA</div>
             </div>
           </div>
           <div class="cost-breakdown">
-            <div class="cost-line"><span>Items Subtotal:</span> <span id="bSub">₹298</span></div>
-            <div class="cost-line"><span>Delivery Fee:</span> <span style="color:#34d399;">FREE</span></div>
-            <div class="cost-line"><span>Handling Charge:</span> <span>₹4</span></div>
+            <div class="cost-line"><span>Items Subtotal:</span> <span id="bSub" style="font-family:'JetBrains Mono';">₹441</span></div>
+            <div class="cost-line"><span>Delivery Fee:</span> <span id="bDel" style="font-family:'JetBrains Mono'; color:#34d399;">FREE</span></div>
+            <div class="cost-line"><span>Handling / Bag:</span> <span>₹4</span></div>
             <div class="cost-line"><span>Rain/Night Surge:</span> <span>₹0</span></div>
           </div>
         </div>
         <div>
           <div class="total-line">
             <span>Total Payable:</span>
-            <span class="total-amount" id="bTotal">₹302</span>
+            <span class="total-amount" id="bTotal">₹445</span>
           </div>
-          <button class="btn btn-primary sm" style="width:100%; justify-content:center; margin-top:12px;" onclick="alert('Redirecting to Blinkit Cart...')">Order on Blinkit →</button>
+          <button class="btn btn-primary sm" style="width:100%; justify-content:center; margin-top:12px;" onclick="orderRedirect('Blinkit')">Checkout on Blinkit →</button>
         </div>
       </div>
 
-      <!-- Instamart -->
+      <!-- Swiggy Instamart -->
       <div class="store-card" id="cardInstamart">
         <div>
           <div class="store-brand">
             <div class="brand-icon icon-instamart">I</div>
             <div>
               <div class="brand-name">Swiggy Instamart</div>
-              <div class="brand-eta"><i class="fas fa-stopwatch"></i> 14 Mins Delivery</div>
+              <div class="brand-eta"><i class="fas fa-stopwatch"></i> 14 Mins Average ETA</div>
             </div>
           </div>
           <div class="cost-breakdown">
-            <div class="cost-line"><span>Items Subtotal:</span> <span id="iSub">₹315</span></div>
-            <div class="cost-line"><span>Delivery Fee:</span> <span>₹15</span></div>
-            <div class="cost-line"><span>Handling Charge:</span> <span>₹5</span></div>
+            <div class="cost-line"><span>Items Subtotal:</span> <span id="iSub" style="font-family:'JetBrains Mono';">₹455</span></div>
+            <div class="cost-line"><span>Delivery Fee:</span> <span id="iDel" style="font-family:'JetBrains Mono';">₹15</span></div>
+            <div class="cost-line"><span>Handling / Bag:</span> <span>₹5</span></div>
             <div class="cost-line"><span>Rain/Night Surge:</span> <span>₹0</span></div>
           </div>
         </div>
         <div>
           <div class="total-line">
             <span>Total Payable:</span>
-            <span class="total-amount" id="iTotal">₹335</span>
+            <span class="total-amount" id="iTotal">₹475</span>
           </div>
-          <button class="btn btn-ghost sm" style="width:100%; justify-content:center; margin-top:12px;" onclick="alert('Redirecting to Swiggy Instamart...')">Order on Instamart →</button>
+          <button class="btn btn-ghost sm" style="width:100%; justify-content:center; margin-top:12px;" onclick="orderRedirect('Swiggy Instamart')">Checkout on Instamart →</button>
+        </div>
+      </div>
+
+      <!-- BigBasket Now -->
+      <div class="store-card" id="cardBigBasket">
+        <div>
+          <div class="store-brand">
+            <div class="brand-icon icon-bigbasket">BB</div>
+            <div>
+              <div class="brand-name">BB Now (Tata)</div>
+              <div class="brand-eta"><i class="fas fa-stopwatch"></i> 18 Mins Delivery</div>
+            </div>
+          </div>
+          <div class="cost-breakdown">
+            <div class="cost-line"><span>Items Subtotal:</span> <span id="bbSub" style="font-family:'JetBrains Mono';">₹450</span></div>
+            <div class="cost-line"><span>Delivery Fee:</span> <span id="bbDel" style="font-family:'JetBrains Mono'; color:#34d399;">FREE</span></div>
+            <div class="cost-line"><span>Handling / Bag:</span> <span>₹3</span></div>
+            <div class="cost-line"><span>Rain/Night Surge:</span> <span>₹0</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="total-line">
+            <span>Total Payable:</span>
+            <span class="total-amount" id="bbTotal">₹453</span>
+          </div>
+          <button class="btn btn-ghost sm" style="width:100%; justify-content:center; margin-top:12px;" onclick="orderRedirect('BigBasket Now')">Checkout on BB Now →</button>
         </div>
       </div>
     </div>
@@ -226,14 +223,32 @@
 </div>
 
 <script>
-const BASE_PRICES = [
-  { blinkit: 54, zepto: 56, instamart: 55 }, // Milk
-  { blinkit: 45, zepto: 45, instamart: 48 }, // Bread
-  { blinkit: 59, zepto: 62, instamart: 62 }, // Eggs
-  { blinkit: 140, zepto: 147, instamart: 150 } // Avocados
+const CATALOG = [
+  { name: "Amul Taaza Milk (1L)", icon: "🥛", blinkit: 54, zepto: 54, instamart: 55, bb: 54 },
+  { name: "Whole Wheat Bread (400g)", icon: "🍞", blinkit: 45, zepto: 45, instamart: 48, bb: 46 },
+  { name: "Farm Fresh Eggs (Pack of 6)", icon: "🥚", blinkit: 59, zepto: 62, instamart: 62, bb: 60 },
+  { name: "Hass Avocados (2 Pcs)", icon: "🥑", blinkit: 140, zepto: 145, instamart: 148, bb: 139 },
+  { name: "Maggi Masala Noodles (Pack of 4)", icon: "🍜", blinkit: 56, zepto: 56, instamart: 58, bb: 56 },
+  { name: "Coca-Cola Zero Can (300ml)", icon: "🥤", blinkit: 40, zepto: 40, instamart: 40, bb: 40 },
+  { name: "Surf Excel Liquid Detergent (1L)", icon: "🧴", blinkit: 220, zepto: 215, instamart: 225, bb: 218 },
+  { name: "Anker USB-C Fast Cable (1m)", icon: "🔌", blinkit: 399, zepto: 410, instamart: 420, bb: 399 }
 ];
 
-const quantities = [1, 1, 1, 1];
+let quantities = [1, 1, 1, 1, 1, 0, 0, 0];
+
+function renderItemList() {
+  const container = document.getElementById('itemListContainer');
+  container.innerHTML = CATALOG.map((item, i) => `
+    <div class="item-row">
+      <div class="item-info"><span>${item.icon}</span> <span>${item.name}</span></div>
+      <div class="qty-controls">
+        <span class="qty-btn" onclick="updateQty(${i}, -1)">-</span>
+        <span class="qty-num" id="qty-${i}">${quantities[i]}</span>
+        <span class="qty-btn" onclick="updateQty(${i}, 1)">+</span>
+      </div>
+    </div>
+  `).join('');
+}
 
 function updateQty(idx, delta) {
   quantities[idx] = Math.max(0, quantities[idx] + delta);
@@ -241,48 +256,80 @@ function updateQty(idx, delta) {
   calculateStores();
 }
 
+function resetQuantities() {
+  quantities = [1, 1, 1, 0, 0, 0, 0, 0];
+  renderItemList();
+  calculateStores();
+}
+
 function calculateStores() {
-  let bSub = 0, zSub = 0, iSub = 0;
+  let bSub = 0, zSub = 0, iSub = 0, bbSub = 0;
   quantities.forEach((qty, i) => {
-    bSub += qty * BASE_PRICES[i].blinkit;
-    zSub += qty * BASE_PRICES[i].zepto;
-    iSub += qty * BASE_PRICES[i].instamart;
+    bSub += qty * CATALOG[i].blinkit;
+    zSub += qty * CATALOG[i].zepto;
+    iSub += qty * CATALOG[i].instamart;
+    bbSub += qty * CATALOG[i].bb;
   });
 
-  const bDel = bSub >= 199 ? 0 : 25;
-  const zDel = zSub >= 199 ? 0 : 25;
-  const iDel = iSub >= 199 ? 15 : 35;
+  // Free delivery threshold: ₹199
+  const bDel = bSub >= 199 || bSub === 0 ? 0 : 25;
+  const zDel = zSub >= 199 || zSub === 0 ? 0 : 25;
+  const iDel = iSub >= 199 || iSub === 0 ? 15 : 35;
+  const bbDel = bbSub >= 199 || bbSub === 0 ? 0 : 20;
 
-  const bTotal = bSub + bDel + 4;
-  const zTotal = zSub + zDel + 4;
-  const iTotal = iSub + iDel + 5;
+  const bTotal = bSub > 0 ? bSub + bDel + 4 : 0;
+  const zTotal = zSub > 0 ? zSub + zDel + 4 : 0;
+  const iTotal = iSub > 0 ? iSub + iDel + 5 : 0;
+  const bbTotal = bbSub > 0 ? bbSub + bbDel + 3 : 0;
 
   document.getElementById('bSub').innerText = '₹' + bSub;
   document.getElementById('zSub').innerText = '₹' + zSub;
   document.getElementById('iSub').innerText = '₹' + iSub;
+  document.getElementById('bbSub').innerText = '₹' + bbSub;
+
+  document.getElementById('bDel').innerText = bDel === 0 ? 'FREE' : '₹' + bDel;
+  document.getElementById('zDel').innerText = zDel === 0 ? 'FREE' : '₹' + zDel;
+  document.getElementById('iDel').innerText = iDel === 0 ? 'FREE' : '₹' + iDel;
+  document.getElementById('bbDel').innerText = bbDel === 0 ? 'FREE' : '₹' + bbDel;
 
   document.getElementById('bTotal').innerText = '₹' + bTotal;
   document.getElementById('zTotal').innerText = '₹' + zTotal;
   document.getElementById('iTotal').innerText = '₹' + iTotal;
+  document.getElementById('bbTotal').innerText = '₹' + bbTotal;
+
+  // Highlight Cheapest Cart
+  const totals = [
+    { id: 'cardBlinkit', val: bTotal },
+    { id: 'cardZepto', val: zTotal },
+    { id: 'cardInstamart', val: iTotal },
+    { id: 'cardBigBasket', val: bbTotal }
+  ].filter(x => x.val > 0);
+
+  if (totals.length > 0) {
+    totals.sort((a, b) => a.val - b.val);
+    document.querySelectorAll('.store-card').forEach(c => c.classList.remove('winner'));
+    document.getElementById(totals[0].id).classList.add('winner');
+  }
 
   const totalItems = quantities.reduce((a, b) => a + b, 0);
-  document.getElementById('basketItemCount').innerText = `${totalItems} Items`;
+  document.getElementById('basketItemCount').innerText = `${totalItems} Items Selected`;
 }
 
+function orderRedirect(store) {
+  alert(`🛒 Redirecting to ${store} checkout with ${quantities.reduce((a,b)=>a+b,0)} items added to cart...`);
+}
+
+renderItemList();
 calculateStores();
 </script>
 
-
 <script>
 (function() {
-  // Theme Toggle Handler
   var tBtn = document.getElementById('themeToggle');
   if (tBtn) {
     function updateIcon(theme) {
       var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
+      if (ic) ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
     }
     var cur = document.documentElement.getAttribute('data-theme') || 'dark';
     updateIcon(cur);
@@ -295,7 +342,6 @@ calculateStores();
     });
   }
 
-  // Cursor Ring
   var ring = document.getElementById('cursorRing');
   if (ring && !window.matchMedia('(pointer: coarse)').matches) {
     var mouseX = -100, mouseY = -100;
@@ -314,6 +360,5 @@ calculateStores();
   }
 })();
 </script>
-
 </body>
 </html>

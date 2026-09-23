@@ -4,8 +4,8 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Charity Navigator 4-Star Transparency & Fund Ledger — AVP Trust</title>
-  <meta name="description" content="100% verified financial transparency ledger with 88% direct program allocation and live audited impact milestones.">
+  <title>Humanitarian Impact & Verified Blockchain Ledger — AVP Charitable Trust</title>
+  <meta name="description" content="100% transparent public welfare ledger with ₹4.2 Cr+ direct relief distributed, audited blockchain verification hashes, and active health camps across India.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -16,22 +16,34 @@
     .imp-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(236,72,153,0.12); border: 1px solid rgba(236,72,153,0.3); color: #f472b6; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
     .imp-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
 
+    /* Visual Hero Banner */
+    .hero-banner-box { max-width: 1280px; margin: 0 auto 36px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(236,72,153,0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
+    .hero-banner-img { width: 100%; height: auto; max-height: 420px; object-fit: cover; display: block; }
+    .hero-banner-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(10,14,23,0.95) 100%); display: flex; align-items: flex-end; padding: 24px 32px; }
+    .hero-banner-caption { color: #fff; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+
     /* Allocation Metrics */
     .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 36px; }
     .metric-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; box-shadow: var(--shadow); }
     .metric-num { font-size: 42px; font-weight: 900; font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
     .metric-title { font-size: 13px; color: var(--text-2); font-weight: 600; }
 
-    /* Fund Allocation Bar */
-    .allocation-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 36px; }
-    .alloc-bar-wrap { height: 28px; width: 100%; border-radius: 999px; display: flex; overflow: hidden; margin: 20px 0; }
-    .bar-prog { background: #10b981; width: 88%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #000; }
-    .bar-adm { background: #f59e0b; width: 7%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #000; }
-    .bar-fund { background: #6366f1; width: 5%; }
+    /* Initiatives Grid */
+    .sec-heading { font-size: 24px; font-weight: 800; color: #fff; margin: 40px 0 20px; text-align: center; }
+    .init-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .init-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 24px; box-shadow: var(--shadow); }
+    .init-title { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .init-partner { font-size: 11px; text-transform: uppercase; color: #f472b6; font-weight: 700; margin-bottom: 12px; }
+    .init-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; margin-bottom: 14px; }
+    .init-stats { display: flex; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 12px; font-size: 12.5px; }
+    .init-stats strong { color: #34d399; font-family: 'JetBrains Mono', monospace; }
 
-    .alloc-legend { display: flex; gap: 24px; flex-wrap: wrap; font-size: 13px; color: var(--text-2); }
-    .legend-item { display: flex; align-items: center; gap: 8px; }
-    .leg-box { width: 12px; height: 12px; border-radius: 3px; }
+    /* Blockchain Ledger Table */
+    .ledger-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); overflow-x: auto; margin-bottom: 40px; }
+    .ledger-table { width: 100%; border-collapse: collapse; text-align: left; min-width: 800px; font-size: 13.5px; }
+    .ledger-table th, .ledger-table td { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+    .ledger-table th { background: var(--bg-2); color: var(--text-2); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .hash-badge { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 3px 8px; border-radius: 4px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); display: inline-flex; align-items: center; gap: 6px; }
   </style>
 </head>
 <body>
@@ -59,87 +71,139 @@
 
 <div class="imp-container">
   <div class="imp-header">
-    <div class="imp-badge"><i class="fas fa-star"></i> Charity Navigator 4-Star Transparency Standard</div>
-    <h1 class="imp-title">Live Transparency & Fund Allocation Ledger</h1>
-    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Audited accountability. 88% of every single rupee donated goes directly into on-the-ground beneficiaries, scholarships, and free rural health camps.</p>
+    <div class="imp-badge"><i class="fas fa-certificate"></i> 100% Free · Verified Transparent Philanthropy</div>
+    <h1 class="imp-title">Live Transparency & Cryptographic Impact Ledger</h1>
+    <p style="color:var(--text-2); max-width:720px; margin:0 auto;">All Sevenseed platforms are funded without charging end users. Every rupee disbursed is timestamped with cryptographic hashes on an open public audit trail.</p>
   </div>
 
+  <!-- Hero Visual Banner -->
+  <div class="hero-banner-box">
+    <img src="img/hero-banner.jpg" alt="AVP Charitable Trust Humanitarian Impact Dashboard" class="hero-banner-img">
+    <div class="hero-banner-overlay">
+      <div class="hero-banner-caption">
+        <i class="fas fa-hand-holding-medical" style="color:#f472b6;"></i>
+        <span>₹4.28 Cr Deployed · 128,450 Meals · 14,280 Clinic Consultations · 142 Active Health Camps</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Metric Cards -->
   <div class="metrics-row">
     <div class="metric-card">
-      <div class="metric-num" style="color:#34d399;">₹4.2 Cr+</div>
-      <div class="metric-title">Total Capital Disbursed</div>
+      <div class="metric-num" style="color:#34d399;">₹4.28 Cr</div>
+      <div class="metric-title">Verified Funds Deployed</div>
     </div>
     <div class="metric-card">
-      <div class="metric-num" style="color:#fbbf24;">1,420+</div>
-      <div class="metric-title">Full AI Scholarships Funded</div>
+      <div class="metric-num" style="color:#fbbf24;">128,450+</div>
+      <div class="metric-title">Free Meals Served</div>
     </div>
     <div class="metric-card">
-      <div class="metric-num" style="color:#f472b6;">28,500+</div>
-      <div class="metric-title">Patients Treated in Health Camps</div>
+      <div class="metric-num" style="color:#f472b6;">14,280+</div>
+      <div class="metric-title">Free Clinic Consultations</div>
     </div>
     <div class="metric-card">
-      <div class="metric-num" style="color:#60a5fa;">88%</div>
-      <div class="metric-title">Direct Program Expense Ratio</div>
+      <div class="metric-num" style="color:#60a5fa;">0.0%</div>
+      <div class="metric-title">Admin Overhead (100% to Cause)</div>
     </div>
   </div>
 
-  <div class="allocation-card">
-    <h3 style="font-size:18px; font-weight:700; color:#fff;">Audited Expense Breakdown</h3>
-    <div class="alloc-bar-wrap">
-      <div class="bar-prog">88% Direct Program Execution</div>
-      <div class="bar-adm">7% Admin</div>
-      <div class="bar-fund"></div>
-    </div>
-    <div class="alloc-legend">
-      <div class="legend-item"><span class="leg-box" style="background:#10b981;"></span> <strong>88% Direct Programs</strong> (Scholarships, Medicines, Medical Staff)</div>
-      <div class="legend-item"><span class="leg-box" style="background:#f59e0b;"></span> <strong>7% Administrative</strong> (Legal Compliance, Audit, Infrastructure)</div>
-      <div class="legend-item"><span class="leg-box" style="background:#6366f1;"></span> <strong>5% Fundraising</strong> (Payment Gateway Fees, Platform Maintenance)</div>
-    </div>
+  <!-- Initiatives Grid -->
+  <h2 class="sec-heading">Sponsored Free Public Initiatives</h2>
+  <div class="init-grid" id="initiativesList">
+    <!-- Populated from data/impact_metrics.json -->
+  </div>
+
+  <!-- Blockchain Audit Ledger -->
+  <h2 class="sec-heading">Verified Open Financial Ledger (Cryptographic Hashes)</h2>
+  <div class="ledger-card">
+    <table class="ledger-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Transaction ID</th>
+          <th>Disbursement Purpose</th>
+          <th>Vendor / Recipient</th>
+          <th>Amount (INR)</th>
+          <th>Audit Verification Hash</th>
+        </tr>
+      </thead>
+      <tbody id="ledgerBody">
+        <!-- Populated from data/impact_metrics.json -->
+      </tbody>
+    </table>
   </div>
 </div>
 
+<footer class="footer">
+  <div class="foot-inner">
+    <div class="foot-col">
+      <div class="foot-brand"><i class="fas fa-hand-holding-heart"></i> AVP Charitable Trust</div>
+      <p class="foot-tag">Humanitarian Welfare & Open Philanthropy — Under Sevenseed Foundation.</p>
+      <div class="foot-copy">© 2026 AVP Charitable Trust. 100% Free · All Services Non-Profit.</div>
+    </div>
+    <div class="foot-col">
+      <h4>Navigation</h4>
+      <ul class="foot-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="impact-tracker.html">Impact Ledger</a></li>
+        <li><a href="health-camps.html">Free Health Camps</a></li>
+        <li><a href="/" target="_blank">Sevenseed Hub</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
 
 <script>
-(function() {
-  // Theme Toggle Handler
-  var tBtn = document.getElementById('themeToggle');
-  if (tBtn) {
-    function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
+fetch('data/impact_metrics.json')
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    // Render initiatives
+    var inits = data.free_initiatives || [];
+    var iContainer = document.getElementById('initiativesList');
+    if (iContainer) {
+      iContainer.innerHTML = inits.map(function(item) {
+        return '<div class="init-card">' +
+          '<div class="init-partner">' + item.partner + '</div>' +
+          '<h3 class="init-title">' + item.name + '</h3>' +
+          '<p class="init-desc">' + item.support_provided + '</p>' +
+          '<div class="init-stats">' +
+            '<span>Budget: <strong>' + item.annual_budget_inr + '</strong></span>' +
+            '<span>Impact: <strong style="color:#60a5fa;">' + item.beneficiaries.toLocaleString() + ' Beneficiaries</strong></span>' +
+          '</div>' +
+        '</div>';
+      }).join('');
     }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('ss-theme', next);
-      updateIcon(next);
-    });
-  }
 
-  // Cursor Ring
-  var ring = document.getElementById('cursorRing');
-  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
-      requestAnimationFrame(renderCursor);
+    // Render Ledger
+    var ledger = data.transparent_blockchain_ledger || [];
+    var lBody = document.getElementById('ledgerBody');
+    if (lBody) {
+      lBody.innerHTML = ledger.map(function(tx) {
+        return '<tr>' +
+          '<td>' + tx.date + '</td>' +
+          '<td><strong style="color:#fff;">' + tx.tx_id + '</strong></td>' +
+          '<td>' + tx.project + '</td>' +
+          '<td>' + tx.vendor + '</td>' +
+          '<td><strong style="color:#34d399; font-family:\'JetBrains Mono\';">₹' + tx.amount_inr.toLocaleString('en-IN') + '</strong></td>' +
+          '<td><span class="hash-badge"><i class="fas fa-shield"></i> ' + tx.blockchain_hash.substring(0, 10) + '...' + tx.blockchain_hash.slice(-4) + '</span></td>' +
+        '</tr>';
+      }).join('');
     }
-    requestAnimationFrame(renderCursor);
-  }
-})();
+  })
+  .catch(function(err) {
+    console.error('Failed loading impact_metrics.json:', err);
+  });
+
+// Theme handler
+var tBtn = document.getElementById('themeToggle');
+if (tBtn) {
+  tBtn.addEventListener('click', function() {
+    var now = document.documentElement.getAttribute('data-theme') || 'dark';
+    var next = now === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('ss-theme', next);
+  });
+}
 </script>
-
 </body>
 </html>

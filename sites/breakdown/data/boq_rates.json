@@ -1,0 +1,66 @@
+{
+  "updated_at": "2026-09-23",
+  "damage_classes": [
+    {
+      "code": "CRACK_SHEAR",
+      "name": "Structural Shear / Diagonal Crack",
+      "severity": "CRITICAL",
+      "is_code_reference": "IS 456:2000 Cl. 35.3.2",
+      "risk_description": "Diagonal cracking in beams/columns indicates principal tensile stress exceeding concrete shear capacity. Immediate shoring required.",
+      "recommended_treatment": "Low-viscosity epoxy resin injection under 0.2-0.4 MPa pressure followed by carbon fiber (CFRP) wrapping.",
+      "estimated_cost_per_meter": 2450.00
+    },
+    {
+      "code": "SPALLING_REBAR",
+      "name": "Spalling with Exposed Corroded Rebar",
+      "severity": "HIGH",
+      "is_code_reference": "IS 13920:2016",
+      "risk_description": "Carbonation or chloride ingress has depassivated reinforcing steel, leading to volumetric expansion (rust) popping off concrete cover.",
+      "recommended_treatment": "Chipping loose concrete, sandblasting rebar, zinc-rich anti-corrosion primer coating, polymer-modified structural mortar (PMM) rebuilding.",
+      "estimated_cost_per_sqm": 3800.00
+    },
+    {
+      "code": "WATER_INGRESS",
+      "name": "Severe Moisture Ingress & Efflorescence",
+      "severity": "MODERATE",
+      "is_code_reference": "IS 3067:1988",
+      "risk_description": "Hydrostatic pressure causing dampness, leaching calcium hydroxide crystals, deteriorating internal plaster and embedded conduit lines.",
+      "recommended_treatment": "Negative-side crystalline waterproofing slurry coat + polyurethane (PU) flexible injection grouting.",
+      "estimated_cost_per_sqm": 1250.00
+    },
+    {
+      "code": "HONEYCOMBING",
+      "name": "Honeycombing / Consolidation Voids",
+      "severity": "HIGH",
+      "is_code_reference": "IS 456:2000 Cl. 13.3",
+      "risk_description": "Poor compaction during casting leaving coarse aggregate pockets with zero cement matrix, drastically diminishing compressive strength.",
+      "recommended_treatment": "Pressure grouting with non-shrink high-strength micro-concrete (M60 grade).",
+      "estimated_cost_per_sqm": 2900.00
+    },
+    {
+      "code": "HAIRLINE_SURFACE",
+      "name": "Plastic Shrinkage Hairline Cracks (<0.3mm)",
+      "severity": "LOW",
+      "is_code_reference": "IS 456:2000 Cl. 35.3.2 (Acceptable limit)",
+      "risk_description": "Early-age thermal or moisture shrinkage cracks confined to surface layer. No immediate structural danger but allows moisture ingress if unsealed.",
+      "recommended_treatment": "Elastomeric acrylic micro-crack sealer and protective anti-carbonation topcoat.",
+      "estimated_cost_per_meter": 420.00
+    }
+  ],
+  "boq_schedule_of_rates": {
+    "currency": "INR",
+    "gst_rate_pct": 18,
+    "labor_rates": {
+      "skilled_mason_per_day": 1100.00,
+      "civil_engineer_inspection_per_hr": 850.00,
+      "scaffolding_per_sqm_per_month": 160.00
+    },
+    "material_rates": {
+      "epoxy_injection_resin_kg": 950.00,
+      "polymer_modified_mortar_25kg_bag": 1450.00,
+      "zinc_rich_rebar_primer_litre": 820.00,
+      "cfrp_laminate_strip_per_meter": 2800.00,
+      "pu_grout_chemical_kg": 650.00
+    }
+  }
+}
