@@ -402,12 +402,41 @@ Untouched. Still the unresolved architecture decision in
 `flashcards.html` vs `review-queue.html`. Note the live AVPU index links `100-day-challenge.html`
 while the generator links `challenge-100days.html` — the live index has diverged from its generator.
 
-### Reachability gaps found while wiring this up
+### Reachability
 
 Both new pages are linked from the AVPU home (generator **and** live `index.html`) and from the nav
-of 11 hand-written AVPU pages. Five AVPU pages **have no site navigation at all** —
-`100-day-challenge.html`, `certifications.html`, `ai-learning-path.html`, `verify.html`,
-`evervault-lab.html` — so a reader who lands on one has no way back. `flashcards.html` has a nav of
-a different shape and was left alone pending the P1 duplication decision. Several pages are also
-orphaned from the index entirely: `ai-learning-path.html`, `courses.html`, `scholarships.html`,
-`verify.html`, `evervault-lab.html`, `marketing-teardowns.html`, `ai-tutor.html`, `flashcards.html`.
+of **16** hand-written AVPU pages.
+
+> **Correction to an earlier draft of this section.** It claimed five AVPU pages had "no site
+> navigation at all". That was wrong — an artefact of grepping for the `nav-links` class, which
+> those pages do not use. `100-day-challenge.html`, `certifications.html`, `ai-learning-path.html`,
+> `verify.html` and `evervault-lab.html` all have a working nav and a link home; they simply use
+> their own inline-styled markup. Nobody was ever stranded.
+
+Those pages now carry the two new links too, each insertion cloning that page's own link styling
+(plain inline-styled anchors, `.nav-link`, or the icon-link pattern on `flashcards.html`).
+`verify.html` is **deliberately excluded**: it is a single-purpose public certificate-verification
+page and its minimal chrome is correct — adding lab navigation would only dilute it.
+
+Still open: several pages remain orphaned from the AVPU home's bento grid, reachable only via nav —
+`ai-learning-path.html`, `courses.html`, `scholarships.html`, `verify.html`, `evervault-lab.html`,
+`marketing-teardowns.html`, `ai-tutor.html`, `flashcards.html`.
+
+### P5 follow-up — the SRS duplication now has a canonical winner
+
+`review-queue.html` is canonical. It was already the de facto answer — 16 navs and the home bento
+point at it — and it adapts per card where the other page cannot.
+
+`flashcards.html` was **not deleted** (the handoff is explicit about not destroying concurrent work,
+and a simple fixed-interval drill is a legitimate thing to keep). Instead it now:
+
+- States plainly that it is the simple fixed-interval drill, and links
+  `review-queue.html` as the adaptive scheduler AVPU uses by default;
+- Warns that the two pages keep **separate progress stores**
+  (`avpu_flashcards_srs_state_v1` vs `avpu_srs_state_v1`), so a learner should pick one;
+- No longer claims **"SuperMemo SM-2"** in its badge. The code is pure Leitner — five boxes on
+  fixed 1/3/7/14/30-day intervals, with no ease factor anywhere in the file. The badge now reads
+  "Leitner 5-Box Engine". This was the same class of overclaim the 2026-09-21 audit swept for.
+
+If you would rather retire the page outright, the banner and the nav entries are the only things to
+remove; git history holds the original either way.
