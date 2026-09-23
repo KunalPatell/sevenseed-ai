@@ -1795,3 +1795,87 @@ body[data-variant="clinical-grid"] .svc-card .svc-tag{flex-shrink:0}
     max-width: 100% !important;
   }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACETERNITY & 21ST.DEV MOTION FRAMEWORK
+   Spotlight Card, 3D Perspective Tilt, Shimmer Buttons & Modern Bento Grid
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Aceternity UI Spotlight Card ── */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(
+    420px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    rgba(var(--primary-rgb, 99, 102, 241), 0.24),
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+/* ── Aceternity Shimmer Moving Border Button ── */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(110deg, #0d0d16 45%, #262640 55%, #0d0d16);
+  background-size: 200% 100%;
+  animation: shimmerBorder 2.5s linear infinite;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: var(--radius-sm, 10px);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.btn-shimmer:hover {
+  border-color: rgba(var(--primary-rgb, 99, 102, 241), 0.5);
+  box-shadow: 0 0 20px rgba(var(--primary-rgb, 99, 102, 241), 0.25);
+}
+@keyframes shimmerBorder {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── 3D Perspective Tilt ── */
+.card-3d-wrap {
+  perspective: 1000px;
+}
+.card-3d, [data-tilt] {
+  transition: transform 0.15s ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* ── Modern Bento Grid System ── */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+}
+.bento-col-4 { grid-column: span 4; }
+.bento-col-6 { grid-column: span 6; }
+.bento-col-8 { grid-column: span 8; }
+.bento-col-12 { grid-column: span 12; }
+@media (max-width: 960px) {
+  .bento-col-4, .bento-col-6, .bento-col-8 {
+    grid-column: span 12;
+  }
+}

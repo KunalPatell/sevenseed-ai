@@ -1495,3 +1495,39 @@ function toast(msg, type){
   });
 })();
 
+
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ACETERNITY & 21ST.DEV INTERACTION HOOKS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Aceternity UI Spotlight Mouse Tracker
+document.addEventListener('mousemove', function(e) {
+  var cards = document.querySelectorAll('.spotlight-card');
+  for (var i = 0; i < cards.length; i++) {
+    var rect = cards[i].getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    var y = e.clientY - rect.top;
+    cards[i].style.setProperty('--mouse-x', x + 'px');
+    cards[i].style.setProperty('--mouse-y', y + 'px');
+  }
+});
+
+// 3D Perspective Tilt Tracker
+(function() {
+  document.querySelectorAll('[data-tilt]').forEach(function(el) {
+    el.addEventListener('mousemove', function(e) {
+      var rect = el.getBoundingClientRect();
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+      var centerX = rect.width / 2;
+      var centerY = rect.height / 2;
+      var rotateX = ((y - centerY) / centerY) * -7;
+      var rotateY = ((x - centerX) / centerX) * 7;
+      el.style.transform = 'perspective(1000px) rotateX(' + rotateX.toFixed(2) + 'deg) rotateY(' + rotateY.toFixed(2) + 'deg) scale3d(1.02, 1.02, 1.02)';
+    });
+    el.addEventListener('mouseleave', function() {
+      el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    });
+  });
+})();
