@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growth Flywheel & Unit Economics Simulator - Sevenforce</title>
+  <meta name="description" content="Interactive startup growth flywheel simulator and unit economics calculator. Model CAC, LTV, churn, viral k-factors, and 12-month ARR projections. Inspired by GrowthInReverse.com.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --cyan: #06b6d4;
+      --cyan-rgb: 6, 182, 212;
+      --cyan-l: #67e8f9;
+      --blue: #3b82f6;
+      --purple: #8b5cf6;
+      --emerald: #10b981;
+      --gold: #f59e0b;
+      --rose: #f43f5e;
+    }
+    body {
+      background: #060910;
+      color: #eeeef8;
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+    .page-wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 92px 24px 80px;
+    }
+
+    /* Hero */
+    .hero-flywheel {
+      position: relative;
+      text-align: center;
+      padding: 56px 20px 44px;
+      border-radius: 24px;
+      background: radial-gradient(circle at 50% 0%, rgba(6,182,212,0.18) 0%, rgba(6,9,16,0) 70%), #080d1a;
+      border: 1px solid rgba(6,182,212,0.2);
+      margin-bottom: 40px;
+      overflow: hidden;
+    }
+    .hero-flywheel::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(6,182,212,0.8), transparent);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(6,182,212,0.12);
+      border: 1px solid rgba(6,182,212,0.3);
+      color: var(--cyan-l);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .hero-flywheel h1 {
+      font-size: clamp(34px, 5.2vw, 60px);
+      font-weight: 900;
+      line-height: 1.12;
+      background: linear-gradient(135deg, #ffffff 40%, var(--cyan-l) 95%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 18px;
+      letter-spacing: -0.03em;
+    }
+    .hero-flywheel p {
+      font-size: clamp(15px, 2vw, 18px);
+      color: #9aa0b8;
+      max-width: 700px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+
+    /* Preset Buttons */
+    .preset-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .btn-preset {
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: #0d1527;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #9aa0b8;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-preset:hover {
+      border-color: var(--cyan);
+      color: #fff;
+    }
+    .btn-preset.active {
+      background: rgba(6,182,212,0.2);
+      border-color: var(--cyan);
+      color: var(--cyan-l);
+    }
+
+    /* Main Grid */
+    .sim-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 992px) {
+      .sim-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Card Panels */
+    .sim-panel {
+      background: #090e1c;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    }
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .panel-head h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Sliders */
+    .control-group {
+      margin-bottom: 22px;
+    }
+    .control-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .control-name {
+      color: #9aa0b8;
+      font-weight: 600;
+    }
+    .control-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--cyan-l);
+      font-size: 14px;
+    }
+    .slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: #172036;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 12px rgba(6,182,212,0.8);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* Scorecards Row */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .kpi-box {
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+    .kpi-val {
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .kpi-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #9aa0b8;
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    /* Canvas Stages */
+    .canvas-card {
+      background: #050811;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    #chartCanvas {
+      width: 100%;
+      height: 260px;
+      border-radius: 8px;
+    }
+    #flywheelCanvas {
+      width: 100%;
+      height: 280px;
+      border-radius: 8px;
+    }
+
+    /* Flywheel Node Details */
+    .nodes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .node-card {
+      background: #090e1c;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+    .node-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(6,182,212,0.4);
+    }
+    .node-step {
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--cyan);
+      margin-bottom: 6px;
+    }
+    .node-card h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .node-card p {
+      font-size: 12px;
+      color: #9aa0b8;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<!-- Navigation -->
+<nav style="position:fixed;top:0;left:0;right:0;z-index:100;padding:0 clamp(16px,4vw,36px);height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,9,16,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(6,182,212,.15);">
+  <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#eeeef8;font-weight:800;font-size:17px;">
+    <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#06b6d4,#0284c7);display:flex;align-items:center;justify-content:center;color:#fff;"><i class="fas fa-bolt"></i></div>
+    Sevenforce
+  </a>
+  <div style="display:flex;gap:18px;font-size:14px;align-items:center;">
+    <a href="index.html" style="color:#9aa0b8;text-decoration:none;">Home</a>
+    <a href="company-intel.html" style="color:#9aa0b8;text-decoration:none;">Company Intel</a>
+    <a href="growth-teardown.html" style="color:#9aa0b8;text-decoration:none;">Teardowns</a>
+    <a href="flywheel-simulator.html" style="color:#fff;text-decoration:none;font-weight:700;">Flywheel Lab</a>
+    <a href="devin-terminal.html" style="color:#9aa0b8;text-decoration:none;">Devin AI</a>
+    <a href="workflows.html" style="color:#9aa0b8;text-decoration:none;">LangGraph</a>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button id="themeToggle" style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07);color:#9aa0b8;cursor:pointer;"><i class="fas fa-moon"></i></button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <!-- Hero -->
+  <section class="hero-flywheel">
+    <div class="hero-badge"><i class="fas fa-rotate"></i> GrowthInReverse.com Inspired &bull; Venture Unit Economics Engine</div>
+    <h1>Growth Flywheel & Unit Economics Simulator</h1>
+    <p>Simulate how customer acquisition costs, churn rates, viral loops, and organic referral flywheels compound over 12 months. Model venture scale before writing a line of code.</p>
+
+    <!-- Industry Presets -->
+    <div class="preset-row">
+      <button class="btn-preset active" onclick="loadPreset('saas', this)">B2B SaaS (Razorpay)</button>
+      <button class="btn-preset" onclick="loadPreset('creator', this)">Creator / Newsletter (Lenny)</button>
+      <button class="btn-preset" onclick="loadPreset('qcommerce', this)">Quick Commerce (Zepto)</button>
+      <button class="btn-preset" onclick="loadPreset('edtech', this)">Autonomous EdTech (AVPU)</button>
+    </div>
+  </section>
+
+  <!-- Interactive Simulator Grid -->
+  <div class="sim-grid">
+    <!-- Left Column: Controls -->
+    <div class="sim-panel">
+      <div class="panel-head">
+        <h2><i class="fas fa-sliders" style="color:var(--cyan);"></i> Unit Economic Levers</h2>
+        <span style="font-size:12px; color:#9aa0b8;">Real-time update</span>
+      </div>
+
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-name">Customer Acquisition Cost (CAC)</span>
+          <span class="control-val" id="valCac">&#8377;4,500</span>
+        </div>
+        <input type="range" class="slider" id="sliderCac" min="500" max="25000" step="250" value="4500" oninput="updateSim()">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-name">Monthly ARPU (Revenue / User)</span>
+          <span class="control-val" id="valArpu">&#8377;1,200</span>
+        </div>
+        <input type="range" class="slider" id="sliderArpu" min="200" max="10000" step="100" value="1200" oninput="updateSim()">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-name">Monthly Gross Churn Rate</span>
+          <span class="control-val" id="valChurn">3.5%</span>
+        </div>
+        <input type="range" class="slider" id="sliderChurn" min="0.5" max="15.0" step="0.5" value="3.5" oninput="updateSim()">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-name">Viral Coefficient (K-Factor)</span>
+          <span class="control-val" id="valK">0.45</span>
+        </div>
+        <input type="range" class="slider" id="sliderK" min="0.05" max="2.0" step="0.05" value="0.45" oninput="updateSim()">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label-row">
+          <span class="control-name">Monthly Marketing Budget</span>
+          <span class="control-val" id="valBudget">&#8377;2,50,000</span>
+        </div>
+        <input type="range" class="slider" id="sliderBudget" min="50000" max="2000000" step="50000" value="250000" oninput="updateSim()">
+      </div>
+
+      <div class="canvas-card">
+        <div style="font-size:12px; font-weight:700; color:#9aa0b8; margin-bottom:8px; align-self:flex-start;">
+          <i class="fas fa-arrows-spin" style="color:var(--cyan);"></i> LIVE 5-NODE GROWTH FLYWHEEL
+        </div>
+        <canvas id="flywheelCanvas" width="400" height="280"></canvas>
+      </div>
+    </div>
+
+    <!-- Right Column: Results & Projections -->
+    <div class="sim-panel">
+      <div class="panel-head">
+        <h2><i class="fas fa-chart-line" style="color:var(--emerald);"></i> 12-Month ARR Projection</h2>
+        <span class="kpi-val" id="resHealth" style="font-size:12px; padding:4px 10px; border-radius:6px; background:rgba(16,185,129,0.15); color:#34d399;">Venture Grade</span>
+      </div>
+
+      <!-- KPI Scorecards -->
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <div class="kpi-val" id="resLtv" style="color:#38bdf8;">&#8377;34,285</div>
+          <div class="kpi-label">Customer LTV</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-val" id="resRatio" style="color:#10b981;">7.6x</div>
+          <div class="kpi-label">LTV : CAC</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-val" id="resPayback" style="color:#fbbf24;">3.8 Mo</div>
+          <div class="kpi-label">Payback Period</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-val" id="resArr" style="color:#c084fc;">&#8377;1.84 Cr</div>
+          <div class="kpi-label">Month 12 ARR</div>
+        </div>
+      </div>
+
+      <!-- Live Canvas Projection Chart -->
+      <div class="canvas-card">
+        <div style="font-size:12px; font-weight:700; color:#9aa0b8; margin-bottom:12px; width:100%; display:flex; justify-content:space-between;">
+          <span>MONTHLY RECURRING REVENUE (MRR) RUNWAY</span>
+          <span style="color:#38bdf8;"><i class="fas fa-circle" style="font-size:8px;"></i> Projected MRR Curve</span>
+        </div>
+        <canvas id="chartCanvas" width="600" height="260"></canvas>
+      </div>
+
+      <!-- Key Insights Teardown -->
+      <div style="background:#050811; border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:18px; font-size:13px; line-height:1.6; color:#9aa0b8;">
+        <div style="font-weight:700; color:#fff; margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-lightbulb" style="color:var(--gold);"></i> Growth In Reverse Diagnosis
+        </div>
+        <span id="resInsight">With an LTV:CAC ratio above 5x and a payback period of under 6 months, this model can aggressively reinvest cashflow into top-of-funnel acquisition loops without venture dilution.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- The 5 Flywheel Stages Teardown -->
+  <div class="nodes-grid">
+    <div class="node-card">
+      <div class="node-step">Stage 1</div>
+      <h3>1. Acquisition</h3>
+      <p>Content-led authority, programmatic SEO, and high-conversion lead magnets driving qualified traffic.</p>
+    </div>
+    <div class="node-card">
+      <div class="node-step">Stage 2</div>
+      <h3>2. Activation</h3>
+      <p>Sub-60 second Time-to-Value (TTV) onboarding guiding users to their immediate "Aha!" milestone.</p>
+    </div>
+    <div class="node-card">
+      <div class="node-step">Stage 3</div>
+      <h3>3. Retention</h3>
+      <p>Habit loops and workflow lock-in driving gross logo retention and flattening cohort churn curves.</p>
+    </div>
+    <div class="node-card">
+      <div class="node-step">Stage 4</div>
+      <h3>4. Referral</h3>
+      <p>Built-in viral incentives and word-of-mouth driving a compounding K-factor without incremental ad spend.</p>
+    </div>
+    <div class="node-card">
+      <div class="node-step">Stage 5</div>
+      <h3>5. Reinvestment</h3>
+      <p>High gross margins recycled directly back into hiring AI employees and scaling product capabilities.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Simulator Logic
+let angle = 0;
+
+function updateSim() {
+  const cac = parseFloat(document.getElementById('sliderCac').value);
+  const arpu = parseFloat(document.getElementById('sliderArpu').value);
+  const churn = parseFloat(document.getElementById('sliderChurn').value) / 100;
+  const k = parseFloat(document.getElementById('sliderK').value);
+  const budget = parseFloat(document.getElementById('sliderBudget').value);
+
+  // Label updates
+  document.getElementById('valCac').textContent = '₹' + cac.toLocaleString();
+  document.getElementById('valArpu').textContent = '₹' + arpu.toLocaleString();
+  document.getElementById('valChurn').textContent = (churn * 100).toFixed(1) + '%';
+  document.getElementById('valK').textContent = k.toFixed(2);
+  document.getElementById('valBudget').textContent = '₹' + budget.toLocaleString();
+
+  // Core Unit Economics:
+  // LTV = ARPU / Churn
+  const ltv = Math.round(arpu / churn);
+  const ratio = (ltv / cac).toFixed(1);
+  const payback = (cac / arpu).toFixed(1);
+
+  // 12-Month Simulation
+  let users = 100; // starting base
+  const mrrHistory = [];
+
+  for (let m = 1; m <= 12; m++) {
+    const paidNew = Math.floor(budget / cac);
+    const viralNew = Math.floor(users * k * 0.2);
+    const totalNew = paidNew + viralNew;
+    const churned = Math.floor(users * churn);
+    users = Math.max(0, users + totalNew - churned);
+    mrrHistory.push(users * arpu);
+  }
+
+  const finalArr = mrrHistory[11] * 12;
+
+  // Formatting results
+  document.getElementById('resLtv').textContent = '₹' + ltv.toLocaleString();
+  document.getElementById('resRatio').textContent = ratio + 'x';
+  document.getElementById('resPayback').textContent = payback + ' Mo';
+  
+  if (finalArr >= 10000000) {
+    document.getElementById('resArr').textContent = '₹' + (finalArr / 10000000).toFixed(2) + ' Cr';
+  } else {
+    document.getElementById('resArr').textContent = '₹' + (finalArr / 100000).toFixed(2) + ' L';
+  }
+
+  const health = document.getElementById('resHealth');
+  const insight = document.getElementById('resInsight');
+  if (ratio >= 5 && payback <= 6) {
+    health.textContent = 'World Class (Scale-Up)';
+    health.style.color = '#34d399';
+    health.style.background = 'rgba(16,185,129,0.15)';
+    insight.textContent = `High-efficiency engine! LTV:CAC of ${ratio}x and rapid ${payback} month payback allows aggressive self-funded expansion with strong viral multiplier (k=${k.toFixed(2)}).`;
+  } else if (ratio >= 3) {
+    health.textContent = 'Healthy Venture';
+    health.style.color = '#38bdf8';
+    health.style.background = 'rgba(56,189,248,0.15)';
+    insight.textContent = `Sustainable unit economics. Focus on optimizing activation and reducing churn from ${(churn*100).toFixed(1)}% to unlock exponential flywheel velocity.`;
+  } else {
+    health.textContent = 'High Burn Risk';
+    health.style.color = '#f43f5e';
+    health.style.background = 'rgba(244,63,94,0.15)';
+    insight.textContent = `Warning: High CAC relative to LTV. Payback exceeds ${payback} months. Prioritize retention and organic distribution before scaling paid marketing budget.`;
+  }
+
+  drawProjectionChart(mrrHistory);
+}
+
+// Preset Loader
+function loadPreset(type, btn) {
+  document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  if (type === 'saas') {
+    document.getElementById('sliderCac').value = 6000;
+    document.getElementById('sliderArpu').value = 1800;
+    document.getElementById('sliderChurn').value = 2.5;
+    document.getElementById('sliderK').value = 0.4;
+    document.getElementById('sliderBudget').value = 300000;
+  } else if (type === 'creator') {
+    document.getElementById('sliderCac').value = 800;
+    document.getElementById('sliderArpu').value = 450;
+    document.getElementById('sliderChurn').value = 4.0;
+    document.getElementById('sliderK').value = 0.85;
+    document.getElementById('sliderBudget').value = 100000;
+  } else if (type === 'qcommerce') {
+    document.getElementById('sliderCac').value = 1200;
+    document.getElementById('sliderArpu').value = 800;
+    document.getElementById('sliderChurn').value = 8.0;
+    document.getElementById('sliderK').value = 1.1;
+    document.getElementById('sliderBudget').value = 1000000;
+  } else {
+    document.getElementById('sliderCac').value = 2500;
+    document.getElementById('sliderArpu').value = 1200;
+    document.getElementById('sliderChurn').value = 1.5;
+    document.getElementById('sliderK').value = 0.7;
+    document.getElementById('sliderBudget').value = 250000;
+  }
+  updateSim();
+}
+
+// Draw 12-Month Runway Projection Chart
+function drawProjectionChart(history) {
+  const canvas = document.getElementById('chartCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  for (let i = 1; i <= 4; i++) {
+    const y = (H / 5) * i;
+    ctx.beginPath();
+    ctx.moveTo(40, y);
+    ctx.lineTo(W - 20, y);
+    ctx.stroke();
+  }
+
+  const maxVal = Math.max(...history, 100000);
+  const padX = 50;
+  const padY = 30;
+  const plotW = W - padX - 30;
+  const plotH = H - padY * 2;
+
+  // Draw Area Gradient Fill
+  const areaGrad = ctx.createLinearGradient(0, padY, 0, H - padY);
+  areaGrad.addColorStop(0, 'rgba(6, 182, 212, 0.35)');
+  areaGrad.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
+
+  ctx.beginPath();
+  history.forEach((val, i) => {
+    const x = padX + (plotW / 11) * i;
+    const y = (H - padY) - (val / maxVal) * plotH;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.lineTo(padX + plotW, H - padY);
+  ctx.lineTo(padX, H - padY);
+  ctx.closePath();
+  ctx.fillStyle = areaGrad;
+  ctx.fill();
+
+  // Draw Stroke Line
+  ctx.beginPath();
+  history.forEach((val, i) => {
+    const x = padX + (plotW / 11) * i;
+    const y = (H - padY) - (val / maxVal) * plotH;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = '#06b6d4';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Draw Dots and Labels
+  history.forEach((val, i) => {
+    const x = padX + (plotW / 11) * i;
+    const y = (H - padY) - (val / maxVal) * plotH;
+
+    ctx.fillStyle = '#06b6d4';
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Month label
+    ctx.fillStyle = '#64748b';
+    ctx.font = '10px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText('M' + (i + 1), x, H - 10);
+  });
+}
+
+// Live Rotating 5-Node Flywheel Animation
+function animateFlywheel() {
+  const canvas = document.getElementById('flywheelCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+  const cx = W / 2;
+  const cy = H / 2;
+  const radius = 90;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Outer orbital ring
+  ctx.strokeStyle = 'rgba(6,182,212,0.18)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 6]);
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Central Core Node
+  ctx.fillStyle = '#0e172a';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 34, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#06b6d4';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 10px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText('FLYING', cx, cy - 4);
+  ctx.fillStyle = '#67e8f9';
+  ctx.fillText('WHEEL', cx, cy + 9);
+
+  // 5 Nodes
+  const nodes = ['Acquisition', 'Activation', 'Retention', 'Referral', 'Reinvest'];
+  const colors = ['#38bdf8', '#a855f7', '#10b981', '#f59e0b', '#06b6d4'];
+
+  for (let i = 0; i < 5; i++) {
+    const theta = angle + (i * Math.PI * 2) / 5;
+    const nx = cx + radius * Math.cos(theta);
+    const ny = cy + radius * Math.sin(theta);
+
+    // Node glow
+    ctx.fillStyle = colors[i];
+    ctx.beginPath();
+    ctx.arc(nx, ny, 14, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Node Label
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = 'bold 9px Inter';
+    ctx.fillText(nodes[i], nx, ny + 22);
+  }
+
+  angle += 0.008;
+  requestAnimationFrame(animateFlywheel);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  updateSim();
+  animateFlywheel();
+});
+</script>
+<script src="app.js"></script>
+</body>
+</html>
