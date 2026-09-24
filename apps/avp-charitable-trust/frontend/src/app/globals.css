@@ -220,3 +220,358 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
 }
+
+/* SEVENSEED_PORTAL_ENHANCEMENT_AVP-CHARITABLE-TRUST */
+/* ═══════════════════════════════════════════════════════════════════════════
+   SEVENSEED PORTAL SYSTEM v3.0 — AVP CHARITABLE TRUST
+   Next-Gen Glassmorphism • Aceternity Glow • Responsive Modern Workspace
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Brand Tokens */
+  --portal-primary:       #f43f5e;
+  --portal-primary-rgb:   244, 63, 94;
+  --portal-secondary:     #fb7185;
+  --portal-secondary-rgb: 251, 113, 133;
+  --portal-accent:        #8b5cf6;
+  --portal-danger:        #f87171;
+  --portal-success:       #10b981;
+  --portal-warning:       #f59e0b;
+
+  /* Surfaces & Glassmorphism */
+  --portal-bg:            #0b0307;
+  --portal-panel:         rgba(10, 16, 32, 0.72);
+  --portal-panel-hi:      rgba(18, 28, 54, 0.88);
+  --portal-glass:         rgba(255, 255, 255, 0.04);
+  --portal-glass-hover:   rgba(255, 255, 255, 0.08);
+
+  /* Lines & Borders */
+  --portal-line:          rgba(255, 255, 255, 0.08);
+  --portal-line-hover:    rgba(244, 63, 94, 0.45);
+  --portal-line-glow:     rgba(244, 63, 94, 0.25);
+
+  /* Typography */
+  --portal-tx:            #f8fafc;
+  --portal-tx-2:          #94a3b8;
+  --portal-tx-3:          #64748b;
+
+  /* Gradients */
+  --portal-grd-brand:     linear-gradient(135deg, #f43f5e 0%, #fb7185 100%);
+  --portal-grd-glow:      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(244, 63, 94, 0.22) 0%, rgba(251, 113, 133, 0.08) 50%, transparent 75%);
+  --portal-grd-btn:       linear-gradient(135deg, #f43f5e 0%, #fb7185 100%);
+
+  /* Shadows */
+  --portal-shadow-sm:     0 4px 14px rgba(0, 0, 0, 0.35);
+  --portal-shadow-md:     0 10px 30px rgba(0, 0, 0, 0.5);
+  --portal-shadow-glow:   0 0 28px rgba(244, 63, 94, 0.32);
+
+  /* Dimensions & Radius */
+  --portal-radius-sm:     8px;
+  --portal-radius-md:     14px;
+  --portal-radius-lg:     20px;
+  --portal-radius-full:   9999px;
+  --portal-ease:          cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Global Base Enhancements ────────────────────────────────────────────── */
+html, body {
+  background-color: var(--portal-bg) !important;
+  color: var(--portal-tx) !important;
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 480px;
+  background: var(--portal-grd-glow);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 99px;
+  transition: background .2s;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--portal-primary);
+}
+
+/* ── App Shell & Layout ─────────────────────────────────────────────────── */
+.app-shell, .layout {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Sidebar System ─────────────────────────────────────────────────────── */
+.sidebar, aside.sidebar {
+  background: rgba(6, 10, 22, 0.85) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border-right: 1px solid var(--portal-line) !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4) !important;
+  transition: transform 0.3s var(--portal-ease), width 0.3s var(--portal-ease);
+  z-index: 50;
+}
+
+/* Logo Brand Header */
+.side-logo, .console-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+.side-logo .logo-icon, .console-brand-em {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 10px !important;
+  display: grid !important;
+  place-items: center !important;
+  background: var(--portal-grd-brand) !important;
+  box-shadow: 0 4px 16px rgba(244, 63, 94, 0.4) !important;
+  font-size: 16px !important;
+  color: #ffffff !important;
+}
+
+/* Navigation Items */
+.nav-item, .sidebar-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 10px 14px !important;
+  border-radius: var(--portal-radius-md) !important;
+  color: var(--portal-tx-2) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  transition: all 0.22s var(--portal-ease) !important;
+  text-decoration: none !important;
+  position: relative !important;
+}
+
+.nav-item:hover, .sidebar-item:hover {
+  color: #ffffff !important;
+  background: var(--portal-glass-hover) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  transform: translateX(3px) !important;
+}
+
+.nav-item.active, .sidebar-item.active,
+.nav-item[class*="border-[#6366f1]"], .nav-item[class*="bg-[#6366f1]"] {
+  background: rgba(244, 63, 94, 0.15) !important;
+  color: #ffffff !important;
+  border-color: rgba(244, 63, 94, 0.5) !important;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.2) !important;
+}
+.nav-item.active::before, .sidebar-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18%;
+  bottom: 18%;
+  width: 3.5px;
+  border-radius: 4px;
+  background: var(--portal-primary);
+  box-shadow: 0 0 10px var(--portal-primary);
+}
+
+/* Sidebar Foot & Back Link */
+.side-foot, .sidebar-foot {
+  border-top: 1px solid var(--portal-line) !important;
+  padding-top: 16px !important;
+}
+
+.side-back {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--portal-tx-2) !important;
+  padding: 8px 12px !important;
+  border-radius: var(--portal-radius-sm) !important;
+  border: 1px solid var(--portal-line) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  text-decoration: none !important;
+  transition: all 0.2s var(--portal-ease) !important;
+}
+.side-back:hover {
+  color: #ffffff !important;
+  border-color: var(--portal-primary) !important;
+  background: rgba(244, 63, 94, 0.12) !important;
+  box-shadow: 0 0 14px rgba(244, 63, 94, 0.25) !important;
+  transform: translateX(-2px) !important;
+}
+
+/* ── Topbar Navigation ──────────────────────────────────────────────────── */
+.topbar, header.topbar {
+  background: rgba(6, 10, 22, 0.78) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border-bottom: 1px solid var(--portal-line) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 40 !important;
+}
+
+/* ── Workstation Panels & Cards ─────────────────────────────────────────── */
+.console-panel, .form-card, .result-card, .tool-card, .agent-card, .glow-card,
+.stat-card, div[class*="bg-[#12121e]"], div[class*="bg-[#0e1320]"] {
+  background: var(--portal-panel) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid var(--portal-line) !important;
+  border-radius: var(--portal-radius-md) !important;
+  box-shadow: var(--portal-shadow-sm) !important;
+  transition: all 0.25s var(--portal-ease) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.console-panel:hover, .form-card:hover, .result-card:hover, .tool-card:hover,
+.agent-card:hover, .glow-card:hover, .stat-card:hover {
+  border-color: var(--portal-line-hover) !important;
+  box-shadow: var(--portal-shadow-md), 0 0 24px rgba(244, 63, 94, 0.14) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Top Gradient Line Accent on Hover */
+.console-panel::before, .form-card::before, .stat-card::before, .agent-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--portal-grd-brand);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.console-panel:hover::before, .form-card:hover::before, .stat-card:hover::before, .agent-card:hover::before {
+  opacity: 1;
+}
+
+/* ── Buttons & Action Elements ──────────────────────────────────────────── */
+.btn, button.btn-primary, .modal-submit, .demo-banner-btn,
+button[class*="bg-gradient-to-r"], button[class*="bg-[#6366f1]"] {
+  background: var(--portal-grd-btn) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border: 0 !important;
+  border-radius: var(--portal-radius-sm) !important;
+  padding: 10px 20px !important;
+  box-shadow: 0 4px 18px rgba(244, 63, 94, 0.35) !important;
+  cursor: pointer !important;
+  transition: all 0.22s var(--portal-ease) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  text-decoration: none !important;
+}
+
+.btn:hover, button.btn-primary:hover, .modal-submit:hover, .demo-banner-btn:hover,
+button[class*="bg-gradient-to-r"]:hover, button[class*="bg-[#6366f1]"]:hover {
+  box-shadow: 0 8px 28px rgba(244, 63, 94, 0.55) !important;
+  transform: translateY(-2px) !important;
+  filter: brightness(1.08) !important;
+}
+.btn:active, button.btn-primary:active, .modal-submit:active {
+  transform: scale(0.98) !important;
+}
+
+.btn-ghost, button[class*="border-white/10"] {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid var(--portal-line) !important;
+  color: var(--portal-tx) !important;
+  transition: all 0.2s var(--portal-ease) !important;
+}
+.btn-ghost:hover, button[class*="border-white/10"]:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+}
+
+/* ── Form Inputs & Controls ─────────────────────────────────────────────── */
+input[type="text"], input[type="email"], input[type="password"], input[type="number"],
+textarea, select {
+  background: rgba(4, 8, 20, 0.6) !important;
+  border: 1px solid var(--portal-line) !important;
+  border-radius: var(--portal-radius-sm) !important;
+  color: var(--portal-tx) !important;
+  padding: 11px 14px !important;
+  font-size: 13.5px !important;
+  outline: none !important;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--portal-primary) !important;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.22) !important;
+}
+
+/* ── Metric Stat Cards ──────────────────────────────────────────────────── */
+.stat-val, [class*="text-3xl font-black"], [class*="text-2xl font-bold text-white"] {
+  background: var(--portal-grd-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  font-weight: 900 !important;
+}
+
+/* ── Status Pills & Badges ──────────────────────────────────────────────── */
+.sysbadge, .key-badge, span[class*="rounded-full"][class*="border"] {
+  border-radius: var(--portal-radius-full) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 4px 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+/* ── Micro-Animations ───────────────────────────────────────────────────── */
+@keyframes portal-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes portal-glow-pulse {
+  0%, 100% { box-shadow: 0 0 16px rgba(244, 63, 94, 0.25); }
+  50%      { box-shadow: 0 0 32px rgba(244, 63, 94, 0.55); }
+}
+
+/* ── Mobile Drawer Support ──────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .sidebar, aside.sidebar {
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    width: 270px !important;
+    height: 100vh !important;
+    transform: translateX(-105%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    z-index: 150 !important;
+    box-shadow: 8px 0 40px rgba(0, 0, 0, 0.7) !important;
+  }
+  .sidebar.open, aside.sidebar.open,
+  .sidebar[class*="translate-x-0"], aside.sidebar[class*="translate-x-0"] {
+    transform: translateX(0) !important;
+  }
+  .main {
+    padding: 14px !important;
+  }
+}
