@@ -475,6 +475,12 @@ if config.STATIC_DIR.exists():
                 app.mount(f"/{alias_name}", StaticFiles(directory=str(target_sub), html=True), name=f"alias_{alias_name}")
                 mounted.add(alias_name)
 
+    # Sevenseed hub /app redirect
+    @app.get("/sevenseed/app", include_in_schema=False)
+    @app.get("/sevenseed/app/", include_in_schema=False)
+    def _sevenseed_app_redirect():
+        return RedirectResponse(url="/app/", status_code=307)
+
     # Mount root landing page last
     app.mount("/", StaticFiles(directory=str(config.STATIC_DIR), html=True), name="frontend")
 else:
