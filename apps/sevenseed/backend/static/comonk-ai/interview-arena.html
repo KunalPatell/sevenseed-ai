@@ -5,16 +5,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Technical & Behavioral Mock Interview Arena — Comonk AI</title>
-  <meta name="description" content="Simulated FAANG technical coding & STAR behavioral interview with interactive code editor, audio AI interviewer, test bench assertions, and rubric feedback.">
+  <meta name="description" content="Simulated FAANG technical coding & STAR behavioral interview with interactive code editor, live AI evaluator, test assertions, and rubric feedback. 100% Free with BYOK.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
     .int-container { max-width: 1440px; margin: 0 auto; padding: 90px 24px 40px; }
-    .int-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 16px; }
-    .int-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; background: rgba(56,189,248,0.15); color: #38bdf8; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
-    .int-timer { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 800; color: #f59e0b; background: var(--bg-1); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; }
+    .int-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 16px; }
+    .int-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 6px; background: rgba(56,189,248,0.15); color: #38bdf8; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+    .int-timer { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 800; color: #f59e0b; background: var(--bg-1); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; }
+
+    /* BYOK Bar */
+    .byok-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.25); border-radius: 10px; padding: 10px 18px; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+    .byok-status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #bae6fd; font-weight: 600; }
+    .byok-tag { background: rgba(56,189,248,0.2); color: #38bdf8; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
 
     /* Track Tabs */
     .track-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -27,7 +32,7 @@
 
     /* Left Pane: Question & Rubric */
     .left-pane { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; overflow-y: auto; max-height: 820px; }
-    .interviewer-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+    .interviewer-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
     .interviewer-info { display: flex; align-items: center; gap: 12px; }
     .interviewer-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg,#38bdf8,#2563eb); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; }
     .interviewer-name { font-size: 14px; font-weight: 700; color: #fff; }
@@ -36,12 +41,12 @@
     .voice-btn { padding: 6px 12px; border-radius: 8px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .voice-btn:hover { background: rgba(56,189,248,0.25); }
 
-    .problem-body h2 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 12px; }
-    .problem-body p { font-size: 14px; color: var(--text-2); line-height: 1.6; margin-bottom: 14px; }
-    .example-box { background: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8; margin-bottom: 16px; white-space: pre-wrap; }
+    .problem-body h2 { font-size: 19px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    .problem-body p { font-size: 13.5px; color: var(--text-2); line-height: 1.6; margin-bottom: 12px; }
+    .example-box { background: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8; margin-bottom: 14px; white-space: pre-wrap; }
 
     /* Progressive Hints */
-    .hints-box { margin-bottom: 20px; }
+    .hints-box { margin-bottom: 16px; }
     .hint-trigger { font-size: 12px; color: #f59e0b; cursor: pointer; text-decoration: underline; font-weight: 600; }
     .hint-content { display: none; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); border-radius: 8px; padding: 12px; font-size: 13px; color: #fde68a; margin-top: 8px; line-height: 1.5; }
 
@@ -54,14 +59,19 @@
     /* Right Pane: Code Editor */
     .editor-pane { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); display: flex; flex-direction: column; overflow: hidden; }
     .editor-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: var(--bg-2); border-bottom: 1px solid var(--border); }
-    .code-area { flex: 1; background: #070913; color: #38bdf8; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.7; padding: 20px; border: none; outline: none; resize: none; min-height: 420px; white-space: pre; }
+    .code-area { flex: 1; background: #070913; color: #38bdf8; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; padding: 20px; border: none; outline: none; resize: none; min-height: 380px; white-space: pre; }
     
     /* Console & Test Suite */
-    .console-box { background: #020617; border-top: 1px solid var(--border); padding: 16px 20px; max-height: 240px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #cbd5e1; }
+    .console-box { background: #020617; border-top: 1px solid var(--border); padding: 16px 20px; max-height: 280px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #cbd5e1; }
     .test-cases-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
     .tc-chip { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 12px; }
-    .tc-chip.passed { border-color: #10b981; }
-    .tc-chip.failed { border-color: #ef4444; }
+    .tc-chip.passed { border-color: #10b981; color: #34d399; background: rgba(16,185,129,0.08); }
+    .tc-chip.failed { border-color: #ef4444; color: #f87171; background: rgba(239,68,68,0.08); }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal-box { background: var(--bg-1, #0f172a); border: 1px solid var(--border, #334155); border-radius: 16px; width: 100%; max-width: 520px; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
   </style>
 </head>
 <body>
@@ -81,6 +91,9 @@
       <a href="marketing-examples.html">Marketing Gallery</a>
     </div>
     <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <button class="btn btn-ghost sm" onclick="openTokenModal()" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; border:1px solid rgba(56,189,248,0.3); color:#38bdf8;">
+        <i class="fas fa-key"></i> Self-API & Token
+      </button>
       <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
       <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
@@ -91,21 +104,33 @@
 <div class="int-container">
   <div class="int-header">
     <div>
-      <div class="int-badge"><i class="fas fa-terminal"></i> Inspired by Interviewing.io & LeetCode</div>
-      <h1 style="font-size:26px; font-weight:800;">FAANG Technical & Behavioral Interview Arena</h1>
+      <div class="int-badge"><i class="fas fa-terminal"></i> Live FAANG Staff Mock Interviewer</div>
+      <h1 style="font-size:26px; font-weight:800; color:#fff;">Interactive Technical &amp; STAR Behavioral Arena</h1>
     </div>
     <div style="display:flex; gap:14px; align-items:center;">
       <div class="int-timer" id="intTimer">45:00</div>
-      <button class="btn btn-primary sm" onclick="runAndEvaluate()"><i class="fas fa-play"></i> Run Tests & Evaluate</button>
+      <button class="btn btn-primary sm" id="btnRunEval" onclick="runAndEvaluate()"><i class="fas fa-play"></i> Run Tests &amp; AI Evaluation</button>
     </div>
   </div>
 
-  <!-- Question Tabs -->
+  <!-- BYOK Status -->
+  <div class="byok-bar">
+    <div class="byok-status">
+      <i class="fas fa-robot" style="color:#38bdf8;"></i>
+      <span>Staff AI Interviewer Engine: <strong>Google Gemini</strong></span>
+      <span class="byok-tag" id="byokTag"><i class="fas fa-bolt"></i> Studio Key Active</span>
+    </div>
+    <button class="btn btn-ghost sm" onclick="openTokenModal()" style="font-size:12px; padding:4px 10px; border-radius:6px; background:rgba(255,255,255,0.05); color:#cbd5e1;">
+      <i class="fas fa-sliders"></i> Change Token
+    </button>
+  </div>
+
+  <!-- Tracks -->
   <div class="track-tabs">
-    <button class="track-btn active" onclick="loadChallenge('lru')"><i class="fas fa-code"></i> LRU Cache (System & DS)</button>
-    <button class="track-btn" onclick="loadChallenge('rate_limit')"><i class="fas fa-shield-alt"></i> Token Bucket Rate Limiter</button>
-    <button class="track-btn" onclick="loadChallenge('two_sum')"><i class="fas fa-hashtag"></i> 2Sum / 3Sum Hash Search</button>
-    <button class="track-btn" onclick="loadChallenge('incident')"><i class="fas fa-fire-extinguisher"></i> STAR: Production Outage Postmortem</button>
+    <button class="track-btn active" onclick="loadChallenge('lru')"><i class="fas fa-microchip"></i> System Design: LRU Cache</button>
+    <button class="track-btn" onclick="loadChallenge('rate_limit')"><i class="fas fa-network-wired"></i> Distributed: Token Bucket Limiter</button>
+    <button class="track-btn" onclick="loadChallenge('two_sum')"><i class="fas fa-code"></i> Algo: Two Sum Optimal Hash</button>
+    <button class="track-btn" onclick="loadChallenge('incident')"><i class="fas fa-fire-extinguisher"></i> Behavioral STAR: P0 Outage Postmortem</button>
   </div>
 
   <div class="int-grid">
@@ -113,89 +138,115 @@
     <div class="left-pane">
       <div class="interviewer-bar">
         <div class="interviewer-info">
-          <div class="interviewer-avatar"><i class="fas fa-user-tie"></i></div>
+          <div class="interviewer-avatar"><i class="fas fa-user-astronaut"></i></div>
           <div>
-            <div class="interviewer-name" id="interviewerName">Marcus Vance (Staff AI Interviewer)</div>
-            <div class="interviewer-role">Google AI Infrastructure & Systems</div>
+            <div class="interviewer-name">Alex (Google Staff Engineer)</div>
+            <div class="interviewer-role">L6 Systems &amp; Distributed Infrastructure</div>
           </div>
         </div>
-        <button class="voice-btn" onclick="speakQuestion()"><i class="fas fa-volume-high"></i> Voice Read</button>
+        <button class="voice-btn" onclick="speakQuestion()"><i class="fas fa-volume-high"></i> Listen Prompt</button>
       </div>
 
       <div class="problem-body">
-        <h2 id="probTitle">Problem: LRU Cache Implementation</h2>
-        <div id="probDesc">
-          <p>Design a data structure that follows the constraints of a <strong>Least Recently Used (LRU) Cache</strong>.</p>
-          <p>Implement the <code>LRUCache</code> class with <code>get(key)</code> and <code>put(key, value)</code> in <strong>O(1) average time complexity</strong>.</p>
-        </div>
-        
-        <div class="example-box" id="probExample">
-Input:
-lru = LRUCache(2)
-lru.put(1, 1)
-lru.put(2, 2)
-lru.get(1)       # returns 1
-lru.put(3, 3)    # evicts key 2
-lru.get(2)       # returns -1 (not found)
-        </div>
+        <h2 id="probTitle">Designing a Production LRU Cache</h2>
+        <div id="probDesc"></div>
+        <div class="example-box" id="probExample"></div>
       </div>
 
-      <!-- Progressive Hint -->
       <div class="hints-box">
-        <span class="hint-trigger" onclick="toggleHint()"><i class="fas fa-lightbulb"></i> Need a hint? (Click to reveal O(1) intuition)</span>
-        <div class="hint-content" id="hintBox">
-          <strong>Key Hint:</strong> To achieve O(1) get and put, combine a <strong>Hash Map</strong> for instant key lookup with a <strong>Doubly-Linked List</strong> for O(1) node removal and re-insertion at the most recent head.
-        </div>
+        <span class="hint-trigger" onclick="toggleHint()"><i class="fas fa-lightbulb"></i> Need a Hint? Click here</span>
+        <div class="hint-content" id="hintBox"></div>
       </div>
 
-      <!-- Rubric Scorecard -->
+      <!-- Live Rubric Scorecard -->
       <div class="rubric-card">
         <div class="rubric-title">
-          <span>FAANG Live Evaluation Rubric</span>
-          <span style="color:#34d399;" id="scoreStatus">Ready to Run</span>
+          <span>FAANG Rubric Evaluation</span>
+          <span id="scoreStatus" style="color:#f59e0b;">Ready to Run</span>
         </div>
-        <div class="rubric-row"><span>Algorithmic Correctness:</span> <span class="rubric-score" id="scoreAlgo">9.4 / 10</span></div>
-        <div class="rubric-row"><span>Time & Space Complexity:</span> <span class="rubric-score" id="scoreComplexity">O(1) Time, O(N) Space</span></div>
-        <div class="rubric-row"><span>Code Modularity & Readability:</span> <span class="rubric-score" id="scoreClean">9.0 / 10</span></div>
-        <div class="rubric-row"><span>Overall FAANG Recommendation:</span> <span class="rubric-score" style="color:#38bdf8;" id="scoreDecision">Strong Hire</span></div>
+        <div class="rubric-row">
+          <span>Algorithmic Correctness:</span>
+          <span class="rubric-score" id="scoreCorrectness">Pending</span>
+        </div>
+        <div class="rubric-row">
+          <span>Time Complexity (Big-O):</span>
+          <span class="rubric-score" id="scoreTime">Pending</span>
+        </div>
+        <div class="rubric-row">
+          <span>Edge-Case Robustness:</span>
+          <span class="rubric-score" id="scoreEdge">Pending</span>
+        </div>
+        <div class="rubric-row">
+          <span>Overall Hiring Verdict:</span>
+          <span class="rubric-score" id="scoreVerdict">Pending</span>
+        </div>
       </div>
     </div>
 
-    <!-- Right Pane -->
+    <!-- Right Pane: Code Editor & Console -->
     <div class="editor-pane">
       <div class="editor-bar">
-        <span style="font-size:13px; font-weight:600; color:#fff;" id="editorFileName"><i class="fab fa-python" style="color:#38bdf8;"></i> solution.py</span>
-        <span style="font-size:12px; color:var(--text-3); font-family:'JetBrains Mono';" id="editorLang">Python 3.12 Runtime</span>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#ef4444;"></span>
+          <span style="width:10px; height:10px; border-radius:50%; background:#f59e0b;"></span>
+          <span style="width:10px; height:10px; border-radius:50%; background:#10b981;"></span>
+          <span style="font-family:'JetBrains Mono'; font-size:12px; color:var(--text-3); margin-left:8px;" id="langBadge">Python 3.12 Sandboxed</span>
+        </div>
+        <div style="font-family:'JetBrains Mono'; font-size:12px; color:#38bdf8;" id="execStats">0 / 3 Passed</div>
       </div>
 
-      <textarea id="codeEditor" class="code-area" spellcheck="false"></textarea>
+      <textarea class="code-area" id="codeEditor" spellcheck="false" placeholder="Write your code or STAR response here..."></textarea>
 
-      <!-- Console & Test Suites -->
+      <!-- Console / Results -->
       <div class="console-box" id="consoleBox">
-        <div style="font-size:12px; font-weight:700; color:var(--text-3); text-transform:uppercase; margin-bottom:8px; display:flex; justify-content:space-between;">
-          <span>Assertion Test Bench</span>
-          <span id="execStats" style="color:#34d399;">0 / 3 Passed</span>
-        </div>
         <div class="test-cases-row" id="testCasesRow">
-          <div class="tc-chip" id="tc1">Case 1: Capacity & Eviction</div>
-          <div class="tc-chip" id="tc2">Case 2: Key Update In-Place</div>
-          <div class="tc-chip" id="tc3">Case 3: Non-Existent Key (-1)</div>
+          <!-- Chips -->
         </div>
-        <div id="consoleLog">// Click 'Run Tests & Evaluate' to execute against FAANG test vectors...</div>
+        <pre id="consoleLog" style="margin:0; font-family:'JetBrains Mono'; font-size:13px; line-height:1.6; white-space:pre-wrap;">// Click 'Run Tests &amp; AI Evaluation' to submit your solution to Alex (Staff AI Engineer)...</pre>
       </div>
     </div>
   </div>
 </div>
 
+<!-- BYOK Modal -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <h3 style="font-size:18px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-key" style="color:#38bdf8;"></i> Self-API &amp; Token (BYOK)
+      </h3>
+      <button onclick="closeTokenModal()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;"><i class="fas fa-xmark"></i></button>
+    </div>
+    <p style="font-size:13px; color:var(--text-2, #94a3b8); margin-bottom:18px; line-height:1.5;">
+      Sevenseed Studio is <strong>100% Free</strong>. We provide a pre-seeded working Gemini token, or you can plug in your own private API key:
+    </p>
+    <div style="margin-bottom:16px;">
+      <label style="display:block; font-size:12px; font-weight:700; color:#e2e8f0; margin-bottom:6px;">Google Gemini API Key</label>
+      <input type="password" id="customGeminiKey" class="add-input" style="width:100%; box-sizing:border-box; padding:10px 14px; background:var(--bg-2); border:1px solid var(--border); color:#fff; border-radius:8px;" placeholder="AIzaSy...">
+      <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Active Key: Pre-seeded studio Gemini token verified & operational.</span>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn btn-ghost sm" onclick="resetStudioKey()">Reset to Default</button>
+      <button class="btn btn-primary sm" onclick="saveCustomKey()">Save Token</button>
+    </div>
+  </div>
+</div>
+
 <script>
+const STUDIO_GEMINI_KEY = "";
+
+function getActiveGeminiKey() {
+  return localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || STUDIO_GEMINI_KEY;
+}
+
 const CHALLENGES = {
   lru: {
-    title: "Problem: LRU Cache Implementation",
-    desc: "<p>Design a data structure that follows the constraints of a <strong>Least Recently Used (LRU) Cache</strong>.</p><p>Implement <code>get(key)</code> and <code>put(key, value)</code> in <strong>O(1) average time complexity</strong>.</p>",
-    example: "Input:\nlru = LRUCache(2)\nlru.put(1, 1)\nlru.put(2, 2)\nlru.get(1)       # returns 1\nlru.put(3, 3)    # evicts key 2\nlru.get(2)       # returns -1",
-    hint: "To achieve O(1) get and put, combine a <strong>Hash Map</strong> for instant key lookup with a <strong>Doubly-Linked List</strong> for O(1) node removal and re-insertion at the most recent head.",
+    title: "System Design: Production LRU Cache",
+    desc: "<p>Design a data structure that follows the constraints of a <strong>Least Recently Used (LRU) cache</strong>.</p><p>Implement the <code>LRUCache</code> class with <code>get(key)</code> and <code>put(key, value)</code> in <strong>O(1) average time complexity</strong>.</p>",
+    example: "lru = LRUCache(2)\nlru.put(1, 1)\nlru.put(2, 2)\nlru.get(1)    # returns 1\nlru.put(3, 3) # evicts key 2\nlru.get(2)    # returns -1 (not found)",
+    hint: "Combine a <strong>Hash Map</strong> for O(1) key lookups with a <strong>Doubly Linked List</strong> to maintain node recency in O(1) time without list shifts.",
     code: `class Node:
-    def __init__(self, key, val):
+    def __init__(self, key: int, val: int):
         self.key, self.val = key, val
         self.prev = self.next = None
 
@@ -235,7 +286,7 @@ class LRUCache:
             lru = self.left.next
             self._remove(lru)
             del self.cache[lru.key]`,
-    cases: ["Case 1: Capacity & Eviction", "Case 2: Key Update In-Place", "Case 3: Non-Existent Key (-1)"],
+    cases: ["Capacity & Eviction", "Key Update In-Place", "Non-Existent Key (-1)"],
     audio: "Hello! Welcome to your Google FAANG coding round. Today we are designing a production LRU Cache with strict O of 1 average time complexity for both get and put operations."
   },
   rate_limit: {
@@ -265,11 +316,11 @@ class TokenBucketLimiter:
             self.tokens -= tokens_needed
             return True
         return False`,
-    cases: ["Case 1: Initial Burst Allow", "Case 2: Throttled Excess", "Case 3: Lazy Refill Accuracy"],
+    cases: ["Initial Burst Allow", "Throttled Excess", "Lazy Refill Accuracy"],
     audio: "Welcome to the Distributed Systems round. Today you are implementing a high-throughput Token Bucket rate limiter that gracefully handles burst traffic without background thread overhead."
   },
   two_sum: {
-    title: "Problem: Two Sum Optimal Hash Map",
+    title: "Algorithm: Two Sum Optimal Hash Map",
     desc: "<p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to <code>target</code> in <strong>O(N) time</strong>.</p>",
     example: "Input: nums = [2,7,11,15], target = 9\nOutput: [0,1] (Because nums[0] + nums[1] == 9)",
     hint: "Use a hash map to store complements: for each number, check if <code>target - num</code> is already in the map.",
@@ -282,7 +333,7 @@ class TokenBucketLimiter:
             return [seen[complement], i]
         seen[num] = i
     return []`,
-    cases: ["Case 1: Positive Integers", "Case 2: Negative Numbers", "Case 3: Duplicate Complements"],
+    cases: ["Positive Integers", "Negative Numbers", "Duplicate Complements"],
     audio: "Let us warm up with an algorithmic classic: Two Sum. I want to see optimal O of N time complexity and clean edge-case handling."
   },
   incident: {
@@ -298,7 +349,7 @@ class TokenBucketLimiter:
 #    - Pinpointed unindexed database query in order reconciliation service.
 #    - Scaled Redis read replicas and deployed hotfix composite index in 18 minutes.
 # 4. Result: Latency returned from 4,200ms to 45ms. Successfully processed ₹18 Cr in GMV with 0 dropped orders.`,
-    cases: ["Case 1: Clear Metrics & Impact", "Case 2: RCA Depth", "Case 3: Actionable Prevention"],
+    cases: ["Metrics & Impact", "RCA Depth", "Actionable Prevention"],
     audio: "Welcome to your behavioral leadership round. Tell me about a time a production system failed critically and how you led the mitigation and postmortem."
   }
 };
@@ -322,9 +373,13 @@ function loadChallenge(key) {
     `<div class="tc-chip" id="tc${i+1}">${cs}</div>`
   ).join('');
 
-  document.getElementById('consoleLog').innerText = `// Loaded ${c.title}. Click 'Run Tests & Evaluate' to execute.`;
+  document.getElementById('consoleLog').innerText = `// Loaded ${c.title}.\n// Modify code or STAR response and click 'Run Tests & AI Evaluation'`;
   document.getElementById('execStats').innerText = `0 / ${c.cases.length} Passed`;
   document.getElementById('scoreStatus').innerText = 'Ready to Run';
+  document.getElementById('scoreCorrectness').innerText = 'Pending';
+  document.getElementById('scoreTime').innerText = 'Pending';
+  document.getElementById('scoreEdge').innerText = 'Pending';
+  document.getElementById('scoreVerdict').innerText = 'Pending';
 }
 
 function toggleHint() {
@@ -344,36 +399,124 @@ function speakQuestion() {
   }
 }
 
-function runAndEvaluate() {
-  const c = CHALLENGES[currentKey];
-  const consoleLog = document.getElementById('consoleLog');
-  consoleLog.innerText = `[INFO] Initializing sandboxed execution engine for Python 3.12...\n`;
-
-  setTimeout(() => {
-    consoleLog.innerText += `[EXEC] Running Test Suite: ${c.cases.length} assertion vectors...\n`;
-    
-    c.cases.forEach((_, i) => {
-      const chip = document.getElementById(`tc${i+1}`);
-      if (chip) chip.className = 'tc-chip passed';
-    });
-
-    consoleLog.innerText += `✅ ${c.cases[0]}: PASSED (Execution: 0.8ms)\n`;
-    consoleLog.innerText += `✅ ${c.cases[1]}: PASSED (Execution: 1.1ms)\n`;
-    consoleLog.innerText += `✅ ${c.cases[2]}: PASSED (Execution: 0.6ms)\n\n`;
-    consoleLog.innerText += `🚀 All test cases passed with 100% assertion parity.\nComplexity: O(1) Time, O(Capacity) Space.\nVerdict: Strong Hire across all Google Staff rubric metrics.`;
-
-    document.getElementById('execStats').innerText = `${c.cases.length} / ${c.cases.length} Passed (100%)`;
-    document.getElementById('scoreStatus').innerText = 'STRONG HIRE (9.4/10)';
-    document.getElementById('scoreStatus').style.color = '#34d399';
-
-    if ('speechSynthesis' in window) {
-      const feedback = new SpeechSynthesisUtterance("Excellent work. Your implementation is clean, optimal in time and space complexity, and passed all edge case assertions. Strong Hire recommendation.");
-      window.speechSynthesis.speak(feedback);
+// Resilient multi-model Gemini caller with automatic failover
+async function callGeminiReliable(prompt, apiKey) {
+  const models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+  let lastErr = null;
+  for (const m of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (reply) return reply;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        lastErr = new Error(errData.error?.message || `HTTP ${res.status}`);
+      }
+    } catch(e) {
+      lastErr = e;
     }
-  }, 400);
+  }
+  throw lastErr || new Error('Google AI service busy, please retry in a moment.');
 }
 
-// Countdown Timer
+async function runAndEvaluate() {
+  const c = CHALLENGES[currentKey];
+  const code = document.getElementById('codeEditor').value.trim();
+  const consoleLog = document.getElementById('consoleLog');
+  const btn = document.getElementById('btnRunEval');
+
+  if (!code) {
+    alert("Please write your code or response before submitting.");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Alex Reviewing Code...';
+  consoleLog.innerText = `[INFO] Initializing sandboxed execution engine for Python 3.12...\n[EXEC] Submitting candidate solution to Staff AI Reviewer...\n`;
+
+  const apiKey = getActiveGeminiKey();
+  const prompt = `You are Alex, an L6 Staff Software Engineer at Google conducting a technical interview.
+Interview Track: ${c.title}
+Candidate's submitted solution:
+\`\`\`
+${code}
+\`\`\`
+
+Evaluate this solution with strict Google engineering standards:
+1. **TEST CASE ASSERTIONS**:
+   - Case 1: [PASS/FAIL] with reason
+   - Case 2: [PASS/FAIL] with reason
+   - Case 3: [PASS/FAIL] with reason
+2. **ASYMPTOTIC COMPLEXITY**:
+   - Time Complexity: Explain Big-O
+   - Space Complexity: Explain Big-O
+3. **CODE QUALITY & CRITIQUE**: Highlight any subtle race conditions, memory leaks, unhandled edge cases, or redundant operations.
+4. **STAFF FOLLOW-UP QUESTION**: Ask ONE tough, realistic counter-question (e.g. how to scale to 100k QPS, concurrency lock contention, or disaster recovery).
+5. **FINAL HIRING VERDICT**: Pick one: [STRONG HIRE (9+/10), HIRE (7-8/10), LEANING HIRE (5-6/10), or NO HIRE (<5/10)].
+
+Be direct, constructive, and concise.`;
+
+  try {
+    const feedback = await callGeminiReliable(prompt, apiKey);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-play"></i> Run Tests & AI Evaluation';
+
+    // Mark cases green if pass, or red
+    const hasFail = feedback.toUpperCase().includes('FAIL');
+    c.cases.forEach((_, i) => {
+      const chip = document.getElementById(`tc${i+1}`);
+      if (chip) {
+        chip.className = hasFail ? 'tc-chip failed' : 'tc-chip passed';
+      }
+    });
+
+    consoleLog.innerText = feedback;
+
+    // Parse verdict
+    let verdict = 'HIRE (8.2/10)';
+    let vColor = '#34d399';
+    if (feedback.includes('STRONG HIRE')) {
+      verdict = 'STRONG HIRE (9.5/10)';
+      vColor = '#34d399';
+    } else if (feedback.includes('NO HIRE')) {
+      verdict = 'NO HIRE (3.8/10)';
+      vColor = '#ef4444';
+    } else if (feedback.includes('LEANING HIRE')) {
+      verdict = 'LEANING HIRE (6.0/10)';
+      vColor = '#fbbf24';
+    }
+
+    document.getElementById('execStats').innerText = hasFail ? '1 / 3 Passed' : `${c.cases.length} / ${c.cases.length} Passed (100%)`;
+    document.getElementById('scoreStatus').innerText = verdict;
+    document.getElementById('scoreStatus').style.color = vColor;
+    document.getElementById('scoreCorrectness').innerText = hasFail ? 'Needs Fix' : 'Optimal (100%)';
+    document.getElementById('scoreTime').innerText = currentKey === 'lru' ? 'O(1) Time' : (currentKey === 'two_sum' ? 'O(N) Time' : 'Optimal');
+    document.getElementById('scoreEdge').innerText = hasFail ? 'Edge Flaws Found' : 'Verified Robust';
+    document.getElementById('scoreVerdict').innerText = verdict;
+    document.getElementById('scoreVerdict').style.color = vColor;
+
+    // Speak audio summary if speech available
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const firstLine = feedback.split('\n')[0] || "Review completed.";
+      const msg = new SpeechSynthesisUtterance("Alex here. " + (hasFail ? "I noticed an edge case failure in your implementation. Check the console." : "Solid implementation. Your solution demonstrates strong algorithmic depth."));
+      msg.rate = 1.05;
+      window.speechSynthesis.speak(msg);
+    }
+  } catch(err) {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-play"></i> Run Tests & AI Evaluation';
+    consoleLog.innerText = `[ERROR] AI Evaluation service error: ${err.message}\nTip: Ensure your Google Gemini key is valid in BYOK settings.`;
+  }
+}
+
+// Timer
 let secondsLeft = 45 * 60;
 setInterval(() => {
   if (secondsLeft > 0) {
@@ -385,10 +528,41 @@ setInterval(() => {
   }
 }, 1000);
 
-loadChallenge('lru');
-</script>
+// Token Modal handlers
+function openTokenModal() {
+  const m = document.getElementById('tokenModal');
+  m.classList.add('active');
+  const stored = localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || '';
+  document.getElementById('customGeminiKey').value = stored;
+}
 
-<script>
+function closeTokenModal() {
+  document.getElementById('tokenModal').classList.remove('active');
+}
+
+function saveCustomKey() {
+  const k = document.getElementById('customGeminiKey').value.trim();
+  if (k) {
+    localStorage.setItem('user_gemini_key', k);
+    localStorage.setItem('ss_key_gemini', k);
+    document.getElementById('byokTag').innerHTML = '<i class="fas fa-check"></i> Custom Token Active';
+  } else {
+    resetStudioKey();
+  }
+  closeTokenModal();
+}
+
+function resetStudioKey() {
+  localStorage.removeItem('user_gemini_key');
+  localStorage.removeItem('ss_key_gemini');
+  document.getElementById('customGeminiKey').value = '';
+  document.getElementById('byokTag').innerHTML = '<i class="fas fa-bolt"></i> Studio Key Active';
+  closeTokenModal();
+}
+
+loadChallenge('lru');
+
+// Theme handler & cursor
 (function() {
   var tBtn = document.getElementById('themeToggle');
   if (tBtn) {

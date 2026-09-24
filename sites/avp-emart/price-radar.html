@@ -311,11 +311,14 @@
     <a href="index.html" style="color:#9aa0b8;text-decoration:none;">Home</a>
     <a href="deal-hunter.html" style="color:#9aa0b8;text-decoration:none;">Deal Hunter</a>
     <a href="price-radar.html" style="color:#fff;text-decoration:none;font-weight:700;">Price Radar</a>
+    <a href="price-tracker.html" style="color:#9aa0b8;text-decoration:none;">Price Tracker</a>
     <a href="spec-compare.html" style="color:#9aa0b8;text-decoration:none;">Smartprix Specs</a>
     <a href="qcommerce.html" style="color:#9aa0b8;text-decoration:none;">Quick Commerce</a>
     <a href="coupon-tester.html" style="color:#9aa0b8;text-decoration:none;">Coupon Tester</a>
+    <a href="wishlist.html" style="color:#9aa0b8;text-decoration:none;">Wishlist</a>
   </div>
-  <div style="display:flex;gap:10px;">
+  <div style="display:flex;gap:10px;align-items:center;">
+    <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px; border-radius:999px; border:1px solid rgba(16,185,129,0.3); color:#10b981; text-decoration:none;"><i class="fas fa-seedling"></i> Sevenseed Hub</a>
     <button id="themeToggle" style="width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07);color:#9aa0b8;cursor:pointer;"><i class="fas fa-moon"></i></button>
   </div>
 </nav>
@@ -460,6 +463,26 @@
       </div>
     </div>
   </div>
+
+  <!-- AI Price Prediction & Deal Timing Advisor -->
+  <div style="background:#090e0c; border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:28px; margin-bottom:40px; box-shadow:0 16px 40px rgba(0,0,0,0.5);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+      <h2 style="font-size:18px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-chart-line" style="color:#10b981;"></i> AI Deal Timing &amp; Price Prediction Engine
+      </h2>
+      <span style="font-size:11px; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3); padding:4px 12px; border-radius:999px; font-family:'JetBrains Mono'; font-weight:700;">
+        <i class="fas fa-bolt"></i> Live Gemini AI
+      </span>
+    </div>
+    <p style="font-size:13.5px; color:#94a3b8; margin-bottom:16px;">Ask our pricing intelligence model whether to buy now or wait for upcoming sales (Amazon Great Indian Festival, Flipkart Big Billion Days, Independence Day, Republic Day).</p>
+    <div style="display:flex; gap:10px; margin-bottom:14px;">
+      <input type="text" id="dealQuery" placeholder="e.g. Should I buy Sony WH-1000XM5 now at ₹26,990 or wait for festival sales?" style="flex:1; padding:12px 18px; background:#121815; border:1px solid rgba(255,255,255,0.12); border-radius:10px; color:#fff; font-size:14px; outline:none;">
+      <button onclick="askDealAi()" style="padding:12px 22px; background:linear-gradient(135deg,#10b981,#059669); color:#fff; font-weight:800; border:none; border-radius:10px; cursor:pointer; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-wand-magic-sparkles"></i> Predict Price
+      </button>
+    </div>
+    <div id="dealAiResult" style="display:none; background:#060a08; border:1px solid rgba(16,185,129,0.25); border-radius:12px; padding:18px; font-size:14px; color:#cbd5e1; line-height:1.7; white-space:pre-wrap;"></div>
+  </div>
 </div>
 
 <script>
@@ -551,6 +574,45 @@ function simulatePriceDrop() {
     🚨 <strong>WEBHOOK FIRED VIA ${channel.toUpperCase()}:</strong><br>
     Target product <em>Apple iPhone 15</em> dropped to <strong>₹54,999</strong> (Threshold was ₹${Number(target).toLocaleString()}). Price matches all-time lowest historical benchmark!
   `;
+}
+
+async function askDealAi() {
+  const q = (document.getElementById('dealQuery')?.value || '').trim();
+  if (!q) { alert('Please enter a product or price prediction question.'); return; }
+
+  const resBox = document.getElementById('dealAiResult');
+  resBox.style.display = 'block';
+  resBox.innerHTML = '<i class="fas fa-spinner fa-spin" style="color:#10b981; margin-right:8px;"></i> Analyzing Indian e-commerce price history, bank card offers, and sale trends via Gemini AI...';
+
+  const apiKey = localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || '';
+  const prompt = `You are the Lead E-Commerce Deal Strategist and Price Prediction AI for AVP Emart (India).
+User inquiry: "${q}"
+
+Provide a crisp, data-backed buying strategy:
+1. 💡 Buy Decision: "BUY NOW" vs "WAIT FOR SALE" (with expected discount % and bottom price range).
+2. 🗓️ Best Upcoming Timing: Mention specific Indian sale events (e.g. Great Indian Festival, BBD, Diwali, Republic Day).
+3. 💳 Stackable Bank & Card Hacks: (HDFC, ICICI, SBI card offers, exchange bonuses, SuperCoins).
+4. ⚡ Bottom-line Recommendation in 1 sentence.`;
+
+  const models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+  for (const m of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (reply) {
+          resBox.innerHTML = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+          return;
+        }
+      }
+    } catch(e) {}
+  }
+  resBox.innerHTML = '<span style="color:#f87171;">Deal prediction engine is currently busy. Recommended strategy: Set a target price drop alert above to get notified automatically.</span>';
 }
 
 window.addEventListener('DOMContentLoaded', () => {

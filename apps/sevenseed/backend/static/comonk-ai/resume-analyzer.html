@@ -311,9 +311,37 @@ function runAtsScan() {
   ).join('') || '<span style="color:#34d399; font-size:12px;"><i class="fas fa-trophy"></i> 100% of target keywords present!</span>';
 }
 
-function generateSpecificBullet(skill) {
-  document.getElementById('rewriteText').innerHTML = 
-    `"Deployed production-grade <strong>${skill}</strong> integration within cloud architecture, increasing pipeline throughput by 38% and reducing error rates across mission-critical services."`;
+async function generateSpecificBullet(skill) {
+  const el = document.getElementById('rewriteText');
+  el.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:#0ea5e9; margin-right:6px;"></i> Generating high-signal quantified bullet for <strong>${skill}</strong> via Gemini AI...`;
+  
+  const jd = (document.getElementById('jdInput')?.value || '').trim();
+  const apiKey = localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || '';
+  const prompt = `You are an elite Tech Recruiter and Resume Writer for Comonk AI.
+Write 1 powerful, ATS-optimized, quantified resume bullet point demonstrating hands-on experience in: "${skill}".
+Target Role Context: "${jd.slice(0, 300)}".
+Follow Google's XYZ formula: "Accomplished [X], as measured by [Y], by doing [Z]".
+Return ONLY the single bullet point text with the skill in bold and realistic production numbers.`;
+
+  const models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+  for (const m of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) {
+          el.innerHTML = text.trim().replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+          return;
+        }
+      }
+    } catch(e) {}
+  }
+  el.innerHTML = `"Engineered production-grade <strong>${skill}</strong> pipelines, improving execution throughput by 38% and reducing error rates across mission-critical services."`;
 }
 
 function copyRewrite() {

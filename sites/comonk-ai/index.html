@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Comonk AI — AI Career Intelligence Platform</title>
   <meta name="description" content="Comonk is a free, AI-native career platform for the Ahmedabad/Gandhinagar tech market — resume tailoring, an approval-gated AI application autopilot, mock interviews with real-time scoring, and a full application tracker, all in one place.">
   <meta property="og:type" content="website">
@@ -44,23 +44,22 @@
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <nav class="nav">
-  <a class="logo" href="/comonk/app/">
+  <a class="logo" href="#top">
     <span class="logo-icon"><i class="fas fa-brain"></i></span>
     <span class="logo-text">Comonk <span class="logo-accent">AI</span></span>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="resume-analyzer.html"><i class="fas fa-file-lines" style="color:var(--accent,#0ea5e9)"></i> ATS Optimizer</a>
+        <a href="resume-analyzer.html"><i class="fas fa-file-lines" style="color:var(--accent,#0ea5e9)"></i> ATS Optimizer</a>
     <a href="interview-arena.html"><i class="fas fa-terminal" style="color:var(--accent,#0ea5e9)"></i> Mock Interview</a>
     <a href="salary-insights.html"><i class="fas fa-money-bill-trend-up" style="color:var(--accent,#0ea5e9)"></i> Salary Intel</a>
-    <a href="job-challenge.html"><i class="fas fa-calendar-check" style="color:var(--accent,#0ea5e9)"></i> 100-Day Sprint</a>
-    <a href="marketing-examples.html"><i class="fas fa-bullhorn" style="color:var(--accent,#0ea5e9)"></i> Marketing Gallery</a>
     <a href="#feature-suites">Labs</a>
     <a href="#faq">FAQ</a>
   </div>
   <div class="nav-right">
     <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
     <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
-    <a class="btn btn-ghost" href="/comonk/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px; border-radius:999px; border:1px solid rgba(16,185,129,0.3); color:#10b981;"><i class="fas fa-seedling"></i> Sevenseed Hub</a>
+    <a class="btn btn-ghost" href="interview-arena.html"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
     <a class="btn btn-primary" href="https://comonk-ai.onrender.com" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch</a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
   </div>
@@ -78,7 +77,7 @@
     <span class="meteor" style="--top:16%; --left:52%; --delay:0.7s; --duration:5.5s;"></span>
   </div>
   <div class="hero-glow"></div>
-  <div class="hero-grid"></div>
+  <div class="hero-grid" data-scroll-parallax style="--depth:.55"></div>
   
   <div class="hero-content">
     <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI Career Copilot · LangGraph Agents · 100% Free</span></div>
@@ -99,48 +98,10 @@
     <div class="hero-marquee" data-blur-in style="--i:5"><div class="marquee-track"><span>Resume AI</span><span>ATS Optimizer</span><span>Mock Interviews</span><span>Job Autopilot</span><span>Salary Insights</span><span>LinkedIn AI</span><span>Application Tracker</span><span>Cover Letters</span><span>Skill Roadmaps</span><span>RAG Job Matching</span><span>Resume AI</span><span>ATS Optimizer</span><span>Mock Interviews</span><span>Job Autopilot</span><span>Salary Insights</span><span>LinkedIn AI</span><span>Application Tracker</span><span>Cover Letters</span><span>Skill Roadmaps</span><span>RAG Job Matching</span></div></div>
   </div>
 
-    <div class="hero-3d-stage" id="hero3dStage">
-    <div class="qc-aura"></div>
-    <div class="qc-card">
-      <div class="qc-hud-top">
-        <div class="qc-title-wrap">
-          <span class="qc-status-dot"><span class="qc-ping"></span><span class="qc-solid"></span></span>
-          <span class="qc-title">3D QUANTUM CORE <i class="fas fa-sparkles qc-sparkle"></i></span>
-        </div>
-        <div class="qc-badges">
-          <span class="qc-badge-fps" id="qcFps">60 FPS</span>
-          <span class="qc-badge-webgl">HARDWARE WEBGL</span>
-        </div>
-      </div>
-      <div class="qc-viewport" id="qcViewport">
-        <canvas id="hero3dCanvas" class="qc-canvas"></canvas>
-        <div class="qc-hint-pill">✦ Drag to Orbit • Click to Pulse ✦</div>
-      </div>
-      <div class="qc-hud-bottom">
-        <div class="qc-row-shapes">
-          <div class="qc-shapes-btns" id="qcShapes">
-            <button type="button" class="qc-shape-btn active" data-geom="icosahedron">Seed</button>
-            <button type="button" class="qc-shape-btn" data-geom="torusknot">Torus Knot</button>
-            <button type="button" class="qc-shape-btn" data-geom="tesseract">Tesseract</button>
-            <button type="button" class="qc-shape-btn" data-geom="helix">DNA Helix</button>
-            <button type="button" class="qc-shape-btn" data-geom="octahedron">Crystal</button>
-          </div>
-          <div class="qc-edges-tag" id="qcEdges">30 Edges</div>
-        </div>
-        <div class="qc-row-modes">
-          <div class="qc-modes-group">
-            <span class="qc-modes-label">Mode:</span>
-            <button type="button" class="qc-mode-btn active" data-mode="crystal">Crystal Core</button>
-            <button type="button" class="qc-mode-btn" data-mode="wireframe">Wireframe</button>
-            <button type="button" class="qc-mode-btn" data-mode="synapse">Deep Synapse</button>
-          </div>
-          <div class="qc-satellites-status">
-            <span class="qc-sat-dot"></span>
-            <span>7 Satellites Online</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="hero-3d-stage" id="hero3dStage">
+    <canvas id="hero3dCanvas"></canvas>
+    <div class="aura-telemetry left"><span class="aura-dot"></span> 120 FPS WebGL · PBR Engine</div>
+    <div class="aura-telemetry right"><i class="fas fa-arrows-spin"></i> 360° Drag & Orbit</div>
   </div>
 </header>
 
@@ -185,15 +146,6 @@
         <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Accurate compensation breakdown by Base, Stock, and Bonus percentiles across Indian startups, MNC GCCs, and US remote roles.</p>
       </div>
       <a class="btn btn-primary" href="salary-insights.html"><i class="fas fa-money-bill-trend-up"></i> Explore Salaries →</a>
-    </div>
-
-    <div class="border-beam-card">
-      <div>
-        <div style="font-size:32px; margin-bottom:12px;">📢</div>
-        <h3 style="font-size:20px; font-weight:700; color:#fff; margin-bottom:8px;">Marketing Examples Gallery</h3>
-        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">18 real tactical Indian startup marketing playbooks across Cold Email, SEO, Referral Loops, and Pricing with 'Copy This Tactic' prompt generator.</p>
-      </div>
-      <a class="btn btn-primary" href="marketing-examples.html"><i class="fas fa-bullhorn"></i> Explore Gallery →</a>
     </div>
   </div>
 </section>
@@ -459,48 +411,5 @@
 
 <script id="ssData" type="application/json">{"site": "Comonk AI", "sector": "AI Career Intelligence Platform", "summary": "Comonk is a free, AI-native career platform for the Ahmedabad/Gandhinagar tech market — resume tailoring, an approval-gated AI application autopilot, mock interviews with real-time scoring, and a full application tracker, all in one place.", "about": "Comonk is a 100% free AI career platform — resume parsing and RAG-based company matching, an ATS optimizer, LinkedIn profile optimization, salary intelligence, and AI-generated career roadmaps, all powered by a LangGraph multi-agent engine on Groq LLaMA 3.3 70B. Beyond search, Comonk runs your job hunt end-to-end: an approval-gated AI autopilot matches and drafts outreach to the best-fit companies, a full application tracker keeps every stage organised with automatic follow-ups, and voice/video mock interviews score your answers and generate a PDF report.", "highlights": ["Free RAG-based company matching", "Approval-gated AI application autopilot", "Voice & video mock interviews with PDF reports", "Full application tracker with follow-up automation"], "services": [{"name": "AI Application Autopilot", "desc": "Matches your resume against thousands of companies and drafts outreach for your approval — you stay in control."}, {"name": "ATS Resume Optimizer", "desc": "Rewrites and tailors your resume to beat applicant tracking systems and match any job description."}, {"name": "Mock Interviews", "desc": "Practice with AI-generated questions via text, voice, or recorded video — get a scored PDF report."}, {"name": "Salary Intelligence", "desc": "Real salary estimates and offer comparison so you know your worth before you negotiate."}, {"name": "Application Tracker", "desc": "A kanban board for every application with automatic follow-up reminders and HR-reply detection."}, {"name": "AI Career Roadmap", "desc": "A personalised, AI-generated learning roadmap from your current skills to your target role."}], "faqs": [{"q": "Is Comonk really free?", "a": "Yes — 100% free, no subscription or paywall. It's built to help the Ahmedabad/Gandhinagar tech community find AI/ML and software roles."}, {"q": "What is the AI application autopilot?", "a": "It matches your resume against thousands of tracked companies using RAG-based scoring, then drafts outreach — but never sends anything without your explicit approval."}, {"q": "Can I practice interviews with it?", "a": "Yes — text, voice, or full video mock interviews, each scored with a detailed PDF report you can review afterward."}, {"q": "Does it track my applications?", "a": "Yes — a full kanban-style tracker with automatic follow-up reminders and HR-reply detection, so nothing falls through the cracks."}], "contact": {"email": "hello@comonk.ai", "phone": "+91 84908 61586", "location": "Ahmedabad, Gujarat, India"}, "sections": [{"label": "About", "hash": "#about"}, {"label": "AI Tools", "hash": "#services"}, {"label": "Process", "hash": "#process"}, {"label": "Impact", "hash": "#impact"}, {"label": "Reviews", "hash": "#testimonials"}, {"label": "FAQ", "hash": "#faq"}, {"label": "Enterprise", "hash": "#enterprise"}, {"label": "Contact", "hash": "#contact"}], "ventures": [{"label": "Sevenseed", "href": "/"}, {"label": "Sevenforce", "href": "/sevenforce/"}, {"label": "Alpaben Vipulbhai Patel University", "href": "/avpu/"}, {"label": "Decode Forest Pharmacy", "href": "/pharmacy/"}, {"label": "Breakdown Factor Construction", "href": "/breakdown/"}, {"label": "AVP Charitable Trust", "href": "/trust/"}, {"label": "AVP Emart", "href": "/avp-emart/"}, {"label": "Rakshak AI Safety", "href": "/rakshak-ai/"}]}</script>
 <script src="app.js"></script>
-
-<script>
-(function() {
-  // Theme Toggle Handler
-  var tBtn = document.getElementById('themeToggle');
-  if (tBtn) {
-    function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
-    }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('ss-theme', next);
-      updateIcon(next);
-    });
-  }
-
-  // Cursor Ring
-  var ring = document.getElementById('cursorRing');
-  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
-      requestAnimationFrame(renderCursor);
-    }
-    requestAnimationFrame(renderCursor);
-  }
-})();
-</script>
-
 </body>
 </html>

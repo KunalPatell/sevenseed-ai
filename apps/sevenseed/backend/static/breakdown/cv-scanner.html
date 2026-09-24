@@ -151,11 +151,31 @@
         </div>
       </div>
 
-      <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="alert('Inspection Report & BOQ Schedule exported to clipboard!')">
+      <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="exportAuditReport()">
         <i class="fas fa-file-pdf"></i> Generate Printable Audit Report
       </button>
     </div>
 
+  </div>
+
+  <!-- AI Civil Structural Engineer Consultation -->
+  <div style="background:var(--bg-1); border:1px solid var(--border); border-radius:14px; padding:24px; margin-top:28px; box-shadow:var(--shadow);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+      <h3 style="font-size:16px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-robot" style="color:#f59e0b;"></i> Ask AI Structural Engineer (IS Code Diagnostics)
+      </h3>
+      <span style="font-size:11px; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); padding:3px 10px; border-radius:999px; font-family:'JetBrains Mono'; font-weight:700;">
+        <i class="fas fa-bolt"></i> Live Gemini AI
+      </span>
+    </div>
+    <p style="font-size:13px; color:var(--text-2); margin-bottom:14px;">Describe any visual cracks, rebar corrosion, foundation settlement, or water leakages on your site for an automated IS 456 engineering assessment.</p>
+    <div style="display:flex; gap:10px; margin-bottom:14px;">
+      <input type="text" id="engQuery" placeholder="e.g. Diagonal 45-degree crack on beam near column support with 0.8mm width..." style="flex:1; padding:12px 16px; background:var(--bg-2); border:1px solid var(--border-hi); border-radius:10px; color:#fff; font-size:13.5px; outline:none;">
+      <button class="btn btn-primary" onclick="consultAiEngineer()" style="padding:12px 20px; background:#f59e0b; color:#0f172a; font-weight:800; border:none; cursor:pointer;">
+        <i class="fas fa-paper-plane"></i> Analyze
+      </button>
+    </div>
+    <div id="engResult" style="display:none; background:var(--bg-2); border:1px solid var(--border); border-radius:10px; padding:16px; font-size:13.5px; color:#cbd5e1; line-height:1.7; white-space:pre-wrap;"></div>
   </div>
 
 </main>
@@ -243,6 +263,65 @@ function calcBOQ() {
   document.getElementById('boqScaffold').innerText = '₹' + Math.round(scaffold).toLocaleString('en-IN');
   document.getElementById('boqGst').innerText = '₹' + Math.round(gst).toLocaleString('en-IN');
   document.getElementById('boqTotal').innerText = '₹' + Math.round(total).toLocaleString('en-IN');
+}
+
+async function consultAiEngineer() {
+  var q = (document.getElementById('engQuery')?.value || '').trim();
+  if (!q) { alert('Please enter a description of the structural defect or crack.'); return; }
+
+  var resBox = document.getElementById('engResult');
+  resBox.style.display = 'block';
+  resBox.innerHTML = '<i class="fas fa-spinner fa-spin" style="color:#f59e0b; margin-right:8px;"></i> Analyzing defect against IS 456 & SP 24 structural design standards via Gemini AI...';
+
+  var apiKey = localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || '';
+  var prompt = 'You are a Senior Structural Forensic Engineer for Breakdown Factor (India).\n' +
+    'The site engineer reports this structural observation: "' + q + '"\n\n' +
+    'Provide an engineering diagnostic report:\n' +
+    '1. Probable Root Cause & Severity Classification (Critical / High / Moderate / Cosmetic).\n' +
+    '2. Relevant Indian Standard (IS) Code Citation (e.g. IS 456, IS 13920, IS 1893).\n' +
+    '3. Immediate Site Safety Action & Shoring Needs.\n' +
+    '4. Recommended Long-Term Remediation (e.g. Epoxy Grouting, Micro-concreting, CFRP Jacketing).\n' +
+    'Be precise, professional, and practical.';
+
+  var models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+  for (var i = 0; i < models.length; i++) {
+    try {
+      var r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + models[i] + ':generateContent?key=' + encodeURIComponent(apiKey), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      if (r.ok) {
+        var d = await r.json();
+        var reply = d.candidates && d.candidates[0] && d.candidates[0].content && d.candidates[0].content.parts && d.candidates[0].content.parts[0] && d.candidates[0].content.parts[0].text;
+        if (reply) {
+          resBox.innerHTML = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+          return;
+        }
+      }
+    } catch(e) {}
+  }
+  resBox.innerHTML = '<span style="color:#f87171;">Structural engine currently busy. Recommended immediate action: Install tell-tale glass markers and consult an SE-registered chartered engineer.</span>';
+}
+
+function exportAuditReport() {
+  var defect = currentDefect ? currentDefect.name : 'Structural Defect';
+  var code = currentDefect ? currentDefect.is_code_reference : 'IS 456:2000';
+  var total = document.getElementById('boqTotal').innerText;
+  var report = 'BREAKDOWN FACTOR — STRUCTURAL DEFECT & BOQ AUDIT\n' +
+    'Date: ' + new Date().toLocaleDateString() + '\n' +
+    '--------------------------------------------------\n' +
+    'Identified Hazard: ' + defect + '\n' +
+    'Compliance Reference: ' + code + '\n' +
+    'Estimated Remediation Cost: ' + total + '\n' +
+    'Calibrated Model: best.pt / IS 456:2000 Code Limits\n\n' +
+    'Verified by Breakdown Factor Structural Engine.';
+  var blob = new Blob([report], { type: 'text/plain' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'breakdown_factor_audit_' + Date.now() + '.txt';
+  a.click();
 }
 
 // Theme handler

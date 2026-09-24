@@ -1,11 +1,11 @@
-/* ════════════════════════════════════════════════════════════════
-   COMONK AI — Enterprise Frontend v4
-   ════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
+   COMONK AI â€” Enterprise Frontend v4
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 
-const API = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+const API = window.location.protocol === 'file:' ? 'http://localhost:8000' : (window.location.port === '8000' || !window.location.port ? '' : 'http://localhost:8000');
 const SESSION_ID = 'comonk_' + Math.random().toString(36).slice(2, 9);
 
-/* ── State ─────────────────────────────────────────────────────── */
+/* â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const S = {
   profile: null,
   companies: [],
@@ -25,7 +25,7 @@ const S = {
   jobSrc: 'all',
 };
 
-/* ── Utils ─────────────────────────────────────────────────────── */
+/* â”€â”€ Utils â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
 
@@ -36,10 +36,10 @@ function fmt(n) {
   return n;
 }
 function fmtINR(n) {
-  if (!n) return '—';
-  if (n >= 10000000) return '₹' + (n / 10000000).toFixed(1) + ' Cr';
-  if (n >= 100000) return '₹' + (n / 100000).toFixed(1) + ' L';
-  return '₹' + n.toLocaleString('en-IN');
+  if (!n) return 'â€”';
+  if (n >= 10000000) return 'â‚¹' + (n / 10000000).toFixed(1) + ' Cr';
+  if (n >= 100000) return 'â‚¹' + (n / 100000).toFixed(1) + ' L';
+  return 'â‚¹' + n.toLocaleString('en-IN');
 }
 function timeAgo(dateStr) {
   if (!dateStr) return '';
@@ -78,7 +78,7 @@ function saveApps() {
   localStorage.setItem('comonk_apps', JSON.stringify(S.apps));
 }
 
-/* ── Toast ─────────────────────────────────────────────────────── */
+/* â”€â”€ Toast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function toast(msg, type = 'info', dur = 3500) {
   const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle', warning: 'fa-exclamation-triangle' };
   const t = document.createElement('div');
@@ -88,7 +88,7 @@ function toast(msg, type = 'info', dur = 3500) {
   setTimeout(() => t.remove(), dur);
 }
 
-/* ── Modal ─────────────────────────────────────────────────────── */
+/* â”€â”€ Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function openModal(title, bodyHtml, footerHtml = '') {
   $('modal-title').textContent = title;
   $('modal-body').innerHTML = bodyHtml;
@@ -97,25 +97,25 @@ function openModal(title, bodyHtml, footerHtml = '') {
 }
 function closeModal() { $('modal-wrap').style.display = 'none'; }
 
-/* ── Notifications ─────────────────────────────────────────────── */
+/* â”€â”€ Notifications â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function addNotif(title, msg, type = 'info') {
   S.notifications.unshift({ title, msg, type, time: new Date().toISOString() });
   $('notif-dot').style.display = 'flex';
   renderNotifs();
 }
 function renderNotifs() {
-  const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+  const icons = { success: 'âœ…', error: 'â�Œ', info: 'â„¹ï¸�', warning: 'âš ï¸�' };
   $('nd-list').innerHTML = S.notifications.length
     ? S.notifications.map(n => `
       <div class="notif-item">
-        <div class="ni-title">${icons[n.type] || 'ℹ️'} ${escHtml(n.title)}</div>
+        <div class="ni-title">${icons[n.type] || 'â„¹ï¸�'} ${escHtml(n.title)}</div>
         <div class="ni-msg">${escHtml(n.msg)}</div>
         <div class="ni-time">${timeAgo(n.time)}</div>
       </div>`).join('')
     : '<div class="empty-state sm"><i class="fas fa-bell"></i><p>No notifications</p></div>';
 }
 
-/* ── Panel navigation ──────────────────────────────────────────── */
+/* â”€â”€ Panel navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function openPanel(id) {
   $$('.panel').forEach(p => p.classList.remove('active'));
   $$('.sb-item').forEach(b => b.classList.remove('active'));
@@ -161,7 +161,7 @@ function openPanel(id) {
   }
 }
 
-/* ── API helpers ───────────────────────────────────────────────── */
+/* â”€â”€ API helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function api(method, path, body, isForm = false) {
   const opts = { method, headers: {} };
   if (body && !isForm) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
@@ -171,9 +171,9 @@ async function api(method, path, body, isForm = false) {
   return res.json();
 }
 
-/* ════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 /*  LANDING PAGE                                                    */
-/* ════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 async function initLanding() {
   try {
     const stats = await api('GET', '/api/stats');
@@ -182,7 +182,7 @@ async function initLanding() {
     animCount('h-contacts', 0, stats.total_hr_contacts, 1400);
     animCount('h-tools', 0, stats.agent_tools_active, 800);
   } catch (e) {
-    ['h-companies','h-contacts','h-tools'].forEach(id => { const el = $(id); if (el) el.textContent = '—'; });
+    ['h-companies','h-contacts','h-tools'].forEach(id => { const el = $(id); if (el) el.textContent = 'â€”'; });
   }
 
   const zone = $('upload-zone');
@@ -227,7 +227,7 @@ function animCount(id, from, to, dur) {
 
 async function handleFile(file) {
   if (!file.name.toLowerCase().endsWith('.pdf')) { toast('Please upload a PDF file', 'error'); return; }
-  showParsing('Reading your resume…', 'AI extracting skills and experience…');
+  showParsing('Reading your resumeâ€¦', 'AI extracting skills and experienceâ€¦');
   animateBar();
   try {
     const fd = new FormData(); fd.append('file', file);
@@ -252,7 +252,7 @@ function hideParsing() {
 
 function animateBar() {
   let w = 0;
-  const msgs = ['Reading structure…','Extracting skills…','Analyzing experience…','Matching companies…','Finalizing…'];
+  const msgs = ['Reading structureâ€¦','Extracting skillsâ€¦','Analyzing experienceâ€¦','Matching companiesâ€¦','Finalizingâ€¦'];
   let mi = 0;
   const t = setInterval(() => {
     w = Math.min(w + Math.random() * 12 + 3, 92);
@@ -263,7 +263,7 @@ function animateBar() {
 }
 
 async function loadDemo() {
-  showParsing('Loading demo profile…', 'Generating sample AI Engineer profile');
+  showParsing('Loading demo profileâ€¦', 'Generating sample AI Engineer profile');
   animateBar();
   await new Promise(r => setTimeout(r, 1800));
   await launchApp({
@@ -286,9 +286,9 @@ async function launchApp(profile) {
   if (profile?.name) setDiceBearAvatar(profile.name);
 }
 
-/* ════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 /*  APP INIT                                                        */
-/* ════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function initApp() {
   const p = S.profile;
 
@@ -332,7 +332,7 @@ function initApp() {
   $('modal-wrap').addEventListener('click', e => { if (e.target === $('modal-wrap')) closeModal(); });
   $('reset-btn').addEventListener('click', () => { if (confirm('Start over with a new resume?')) location.reload(); });
 
-  // Keyboard shortcut ⌘K
+  // Keyboard shortcut âŒ˜K
   document.addEventListener('keydown', e => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); $('global-search').focus(); }
     if (e.key === 'Escape') closeModal();
@@ -461,7 +461,7 @@ function initApp() {
   wireAlertsExtra();
 }
 
-/* ── Overview ─────────────────────────────────────────────────── */
+/* â”€â”€ Overview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function loadOverview() {
   const p = S.profile, stats = S.stats;
 
@@ -469,19 +469,19 @@ function loadOverview() {
   const hr = new Date().getHours();
   const greet = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
   const greetEl = $('ov-greeting');
-  if (greetEl) greetEl.textContent = `${greet}, ${p.name?.split(' ')[0] || 'there'} 👋`;
+  if (greetEl) greetEl.textContent = `${greet}, ${p.name?.split(' ')[0] || 'there'} ðŸ‘‹`;
 
-  $('ov-name').textContent = p.name || '—';
+  $('ov-name').textContent = p.name || 'â€”';
   $('ov-level').textContent = (p.seniority_level || 'fresher').charAt(0).toUpperCase() + (p.seniority_level || 'fresher').slice(1);
   $('ov-exp').textContent = p.experience_years ? `${p.experience_years} year${p.experience_years > 1 ? 's' : ''}` : 'Fresher';
 
   const chips = $('ov-skills');
   chips.innerHTML = (p.skills || []).slice(0, 12).map(s => `<span class="skill-chip">${escHtml(s)}</span>`).join('');
 
-  $('ms-total').textContent = stats.total_companies?.toLocaleString('en-IN') || '—';
-  $('ms-aiml').textContent = stats.ai_ml_companies || '—';
-  $('ms-hr').textContent = stats.total_hr_contacts?.toLocaleString('en-IN') || '—';
-  $('ms-llm').textContent = (stats.llm_provider || '—').toUpperCase();
+  $('ms-total').textContent = stats.total_companies?.toLocaleString('en-IN') || 'â€”';
+  $('ms-aiml').textContent = stats.ai_ml_companies || 'â€”';
+  $('ms-hr').textContent = stats.total_hr_contacts?.toLocaleString('en-IN') || 'â€”';
+  $('ms-llm').textContent = (stats.llm_provider || 'â€”').toUpperCase();
 
   updateKPIs();
   setTimeout(() => {
@@ -501,7 +501,7 @@ function updateKPIs() {
   $('kpi-interviews').textContent = parseInt(localStorage.getItem('comonk_iv_count') || '0');
 }
 
-/* ── Company matching ─────────────────────────────────────────── */
+/* â”€â”€ Company matching â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function matchCompanies() {
   const skills = S.profile?.skills || [];
   try {
@@ -556,7 +556,7 @@ function renderCompanies() {
           <div class="co-score-badge ${fitScoreClass}" onclick="event.stopPropagation();openFitScoreModal(${c.id})" style="cursor:pointer;display:flex;align-items:center;gap:3px">
             <i class="fas fa-bullseye"></i> ${c.fit_score.score}%
           </div>
-        ` : c.score ? `<div class="co-score-badge ${scoreClass}">★ ${c.score}</div>` : ''}
+        ` : c.score ? `<div class="co-score-badge ${scoreClass}">â˜… ${c.score}</div>` : ''}
       </div>
       ${c.roles ? `<div class="co-roles"><i class="fas fa-briefcase" style="color:var(--c-purple-l);font-size:11px;margin-right:4px"></i>${escHtml(c.roles.slice(0,120))}</div>` : ''}
       ${c.address ? `<div class="co-addr"><i class="fas fa-map-marker-alt"></i>${escHtml(c.address.slice(0,80))}</div>` : ''}
@@ -578,7 +578,7 @@ function openFitScoreModal(id) {
   const fs = c.fit_score;
   const b = fs.breakdown;
   
-  openModal(`Fit Score Analysis — ${c.name}`, `
+  openModal(`Fit Score Analysis â€” ${c.name}`, `
     <div style="display:flex;flex-direction:column;gap:18px">
       <div style="display:flex;align-items:center;gap:16px;background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.15);border-radius:12px;padding:16px">
         <div style="position:relative;width:72px;height:72px;border-radius:50%;background:conic-gradient(var(--c-purple) ${fs.score * 3.6}deg, var(--bg-3) 0deg);display:flex;align-items:center;justify-content:center;box-shadow:0 0 15px rgba(124,58,237,0.2)">
@@ -679,7 +679,7 @@ function openCompanyModal(id) {
 async function draftEmail(id) {
   const c = S.companies.find(x => x.id === id);
   if (!c) return;
-  toast('Drafting email…', 'info');
+  toast('Drafting emailâ€¦', 'info');
   try {
     const res = await api('POST', '/api/draft-email', {
       company_id: id,
@@ -743,7 +743,7 @@ async function quickAddApp(cid) {
   }
 }
 
-/* ── Chat ─────────────────────────────────────────────────────── */
+/* â”€â”€ Chat â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function initChat() {
   const input = $('chat-input');
   $('chat-send-btn').addEventListener('click', sendChat);
@@ -800,10 +800,10 @@ function appendMsg(role, text) {
   msgs.scrollTop = msgs.scrollHeight;
 }
 
-/* ── Live Jobs ────────────────────────────────────────────────── */
+/* â”€â”€ Live Jobs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function loadJobs() {
   const skills = (S.profile?.skills || ['python']).slice(0, 5).join(',');
-  $('jobs-grid').innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading live jobs…</p></div>`;
+  $('jobs-grid').innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading live jobsâ€¦</p></div>`;
   try {
     const [r1, r2] = await Promise.allSettled([
       api('GET', `/api/live-jobs?skills=${encodeURIComponent(skills)}&limit=20`),
@@ -885,7 +885,7 @@ async function saveJob(btn, title, company) {
   }
 }
 
-/* ── Application Tracker ─────────────────────────────────────── */
+/* â”€â”€ Application Tracker â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function renderKanban() {
   const cols = ['saved','applied','interview','offer','rejected'];
   const counts = {};
@@ -912,7 +912,7 @@ function renderKanban() {
 
 function renderAppCard(a, status) {
   const next = { saved: 'applied', applied: 'interview', interview: 'offer' };
-  const nextLabel = { saved: '→ Applied', applied: '→ Interview', interview: '→ Offer' };
+  const nextLabel = { saved: 'â†’ Applied', applied: 'â†’ Interview', interview: 'â†’ Offer' };
   return `
   <div class="app-card" id="app-${a.id}">
     <div class="app-card-name">${escHtml(a.company)}</div>
@@ -925,7 +925,7 @@ function renderAppCard(a, status) {
         <button class="app-card-move-btn" style="color:var(--c-gold-l)" onclick="openSmartFollowup(${a.id})"><i class="fas fa-envelope"></i> Followup</button>
         <button class="app-card-move-btn" style="color:var(--c-green-l)" onclick="markAppReplied(${a.id})"><i class="fas fa-check"></i> Replied</button>
       ` : ''}
-      ${status === 'offer' ? `<button class="app-card-move-btn" style="color:var(--c-green-l)" onclick="moveApp(${a.id},'saved')">← Back</button>` : ''}
+      ${status === 'offer' ? `<button class="app-card-move-btn" style="color:var(--c-green-l)" onclick="moveApp(${a.id},'saved')">â†� Back</button>` : ''}
       <button class="app-card-del-btn" onclick="deleteApp(${a.id})" title="Delete"><i class="fas fa-trash"></i></button>
     </div>
   </div>`;
@@ -1055,7 +1055,7 @@ function openAddApp() {
         <select class="inp" id="na-status"><option value="saved">Saved</option><option value="applied">Applied</option><option value="interview">Interview</option><option value="offer">Offer</option></select>
       </div>
       <div class="fg"><label>Date</label><input class="inp" type="date" id="na-date" value="${new Date().toISOString().slice(0,10)}"></div>
-      <div class="fg"><label>Notes (optional)</label><textarea class="inp" id="na-notes" rows="3" placeholder="Any notes…"></textarea></div>
+      <div class="fg"><label>Notes (optional)</label><textarea class="inp" id="na-notes" rows="3" placeholder="Any notesâ€¦"></textarea></div>
     </div>`,
     `<button class="btn-primary" onclick="confirmAddApp()"><i class="fas fa-plus"></i> Add Application</button>
      <button class="btn-ghost" onclick="closeModal()">Cancel</button>`
@@ -1101,7 +1101,7 @@ async function confirmAddApp() {
   }
 }
 
-/* ── Job-Hunt Autopilot & Referral Finder ───────────────────── */
+/* â”€â”€ Job-Hunt Autopilot & Referral Finder â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 let autopilotState = { currentRun: null, drafts: [] };
 
 function initAutopilot() {
@@ -1141,7 +1141,7 @@ async function apGetHistory() {
           const params = JSON.parse(run.params || '{}');
           const summary = JSON.parse(run.summary || '{}');
           const dateStr = new Date(run.created_at * 1000).toLocaleString();
-          let outcome = '—';
+          let outcome = 'â€”';
           if (run.status === 'completed') {
             outcome = `Sent: ${summary.sent || 0} | Rejected: ${summary.rejected || 0}`;
           }
@@ -1312,13 +1312,13 @@ window.approveDraft = approveDraft;
 window.rejectDraft = rejectDraft;
 window.findReferralRecruiter = findReferralRecruiter;
 
-/* ── Mock Interview ──────────────────────────────────────────── */
+/* â”€â”€ Mock Interview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function initInterview() {
   $('start-iv-btn').addEventListener('click', startInterview);
   $('iv-end-btn').addEventListener('click', endVoiceInterview);
 }
 
-/* ── Company-Specific Voice Mock Interview ──────────────────── */
+/* â”€â”€ Company-Specific Voice Mock Interview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 let voiceSessionState = { sessionId: null, currentQuestion: "", totalQuestions: 3, qIdx: 1 };
 let recognition = null;
 let isRecording = false;
@@ -1449,7 +1449,7 @@ async function startVoiceInterview() {
 
   const btn = $('start-iv-btn');
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Initializing session…';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Initializing sessionâ€¦';
 
   try {
     const res = await api('POST', '/api/mock-interview/voice/start', {
@@ -1503,7 +1503,7 @@ async function submitVoiceAnswer() {
 
   const submitBtn = $('iv-submit-answer-btn');
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Evaluating…';
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Evaluatingâ€¦';
 
   try {
     const res = await api('POST', '/api/mock-interview/voice/answer', {
@@ -1581,14 +1581,14 @@ function endInterview() {
   toast('Interview session ended. Great practice!', 'success');
 }
 
-/* ── ATS Optimizer ──────────────────────────────────────────── */
+/* â”€â”€ ATS Optimizer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function runATS() {
   const role = $('ats-role').value.trim() || 'Software Engineer';
   const text = $('ats-resume').value.trim();
   if (!text) { toast('Paste your resume text first', 'warning'); return; }
 
   $('ats-btn').disabled = true;
-  $('ats-btn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing…';
+  $('ats-btn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzingâ€¦';
 
   try {
     const res = await api('POST', '/api/ats-optimize', { resume_text: text, target_role: role });
@@ -1644,12 +1644,12 @@ function renderATSGauge(score) {
   });
 }
 
-/* ── LinkedIn Optimizer ─────────────────────────────────────── */
+/* â”€â”€ LinkedIn Optimizer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function runLinkedIn() {
   const role = $('li-role').value.trim() || 'Software Engineer';
   const about = $('li-about').value.trim();
   $('li-btn').disabled = true;
-  $('li-btn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Optimizing…';
+  $('li-btn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Optimizingâ€¦';
   try {
     const res = await api('POST', '/api/linkedin-optimize', {
       about_text: about, target_role: role, skills: S.profile?.skills || [],
@@ -1675,11 +1675,11 @@ async function runLinkedIn() {
   $('li-btn').innerHTML = '<i class="fab fa-linkedin"></i> Generate Optimization';
 }
 
-/* ── Learning Hub ────────────────────────────────────────────── */
+/* â”€â”€ Learning Hub â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function loadLearning(tab) {
   const skills = (S.profile?.skills || ['python']).slice(0, 5).join(',');
   const el = $('learn-content');
-  el.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading…</p></div>`;
+  el.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loadingâ€¦</p></div>`;
 
   try {
     if (tab === 'articles') {
@@ -1722,7 +1722,7 @@ async function loadLearning(tab) {
           <div class="rc-body">
             <div class="rc-source" style="color:var(--c-gold-l)">${escHtml(a.source||'')}</div>
             <div class="rc-title">${escHtml(a.title||'')}</div>
-            <div class="rc-meta">${a.published||''} · ${escHtml(a.description?.slice(0,80)||'')}</div>
+            <div class="rc-meta">${a.published||''} Â· ${escHtml(a.description?.slice(0,80)||'')}</div>
           </div>
         </a>`).join('');
 
@@ -1745,12 +1745,12 @@ async function loadLearning(tab) {
   }
 }
 
-/* ── GitHub Trending Tab in Learning Hub ────────────────────────── */
+/* â”€â”€ GitHub Trending Tab in Learning Hub â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function loadGitHubTrendingTab(el) {
   const lang = S.profile?.skills?.[0]?.toLowerCase().replace(/\s+/g,'') || 'python';
   const langMap = { 'machine learning':'python','ml':'python','deep learning':'python','data science':'python','react':'javascript','nodejs':'javascript','node':'javascript','typescript':'typescript','java':'java','spring':'java','golang':'go','go':'go','flutter':'dart','android':'kotlin','ios':'swift' };
   const finalLang = langMap[lang] || lang;
-  el.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading trending ${finalLang} repos…</p></div>`;
+  el.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading trending ${finalLang} reposâ€¦</p></div>`;
   const res = await api('GET', `/api/github-trending?language=${encodeURIComponent(finalLang)}&period=weekly`);
   const repos = res.repos || [];
   if (!repos.length) { el.innerHTML = `<div class="empty-state"><i class="fab fa-github"></i><p>No trending repos found</p></div>`; return; }
@@ -1769,9 +1769,9 @@ async function loadGitHubTrendingTab(el) {
     </a>`).join('')}</div>`;
 }
 
-/* ── Product Hunt Tab in Learning Hub ────────────────────────────── */
+/* â”€â”€ Product Hunt Tab in Learning Hub â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function loadProductHuntTab(el) {
-  el.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading trending products…</p></div>`;
+  el.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading trending productsâ€¦</p></div>`;
   const res = await api('GET', '/api/product-hunt');
   const products = res.products || [];
   if (!products.length) { el.innerHTML = `<div class="empty-state"><i class="fas fa-rocket"></i><p>Could not load Product Hunt feed</p></div>`; return; }
@@ -1867,7 +1867,7 @@ async function updateStudyTask(taskId, newStatus) {
 }
 window.updateStudyTask = updateStudyTask;
 
-/* ── Cheat Sheets (cheatography.com) ──────────────────────────── */
+/* â”€â”€ Cheat Sheets (cheatography.com) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function loadCheatsheets(el, skills) {
   const skill = (S.profile?.skills?.[0] || skills?.split(',')?.[0] || 'python').trim();
   const res = await api('GET', `/api/cheatsheets?skill=${encodeURIComponent(skill)}&limit=12`);
@@ -1896,7 +1896,7 @@ async function loadCheatsheets(el, skills) {
         <div class="cs-body">
           <div class="cs-title">${escHtml(s.name||'Cheat Sheet')}</div>
           ${s.author ? `<div class="cs-author"><i class="fas fa-user"></i> ${escHtml(s.author)}</div>` : ''}
-          ${s.description ? `<div class="cs-desc">${escHtml(s.description.slice(0,80))}…</div>` : ''}
+          ${s.description ? `<div class="cs-desc">${escHtml(s.description.slice(0,80))}â€¦</div>` : ''}
         </div>
         <div class="cs-actions">
           <span class="btn-xs ghost"><i class="fas fa-external-link-alt"></i> Open</span>
@@ -1905,11 +1905,11 @@ async function loadCheatsheets(el, skills) {
   }</div>
   <div class="cs-footer">
     <a href="https://cheatography.com" target="_blank" class="btn-ghost btn-sm"><i class="fas fa-globe"></i> Browse All on cheatography.com</a>
-    <span class="muted" style="font-size:12px">2,000+ free cheat sheets · No account needed</span>
+    <span class="muted" style="font-size:12px">2,000+ free cheat sheets Â· No account needed</span>
   </div>`;
 }
 
-/* ── Official Roadmaps Tab (roadmap.sh) ───────────────────────── */
+/* â”€â”€ Official Roadmaps Tab (roadmap.sh) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function loadRoadmapShTab(el, skills) {
   const role = S.profile?.target_role || '';
   const res = await api('GET', `/api/roadmaps?skills=${encodeURIComponent(skills)}&role=${encodeURIComponent(role)}`);
@@ -1919,7 +1919,7 @@ async function loadRoadmapShTab(el, skills) {
     <div class="cs-topbar">
       <div>
         <span class="cs-source-badge roadmap-badge"><i class="fas fa-map-signs"></i> roadmap.sh</span>
-        <span class="muted" style="font-size:12px;margin-left:8px;">Official community-maintained roadmaps · Open source</span>
+        <span class="muted" style="font-size:12px;margin-left:8px;">Official community-maintained roadmaps Â· Open source</span>
       </div>
       <a href="https://roadmap.sh" target="_blank" class="btn-xs ghost"><i class="fas fa-external-link-alt"></i> View All ${res.total||30}+</a>
     </div>
@@ -1939,11 +1939,11 @@ async function loadRoadmapShTab(el, skills) {
     }</div>
     <div class="cs-footer">
       <a href="https://roadmap.sh" target="_blank" class="btn-ghost btn-sm"><i class="fas fa-map-signs"></i> All Roadmaps on roadmap.sh</a>
-      <span class="muted" style="font-size:12px">100% free · GitHub open source · Updated regularly</span>
+      <span class="muted" style="font-size:12px">100% free Â· GitHub open source Â· Updated regularly</span>
     </div>`;
 }
 
-/* ── Load roadmap.sh cards in Career Roadmap panel ───────────── */
+/* â”€â”€ Load roadmap.sh cards in Career Roadmap panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function loadRoadmapShCards() {
   const el = $('roadmap-sh-cards');
   if (!el) return;
@@ -1971,12 +1971,12 @@ async function loadRoadmapShCards() {
   }
 }
 
-/* ── Career Roadmap ─────────────────────────────────────────── */
+/* â”€â”€ Career Roadmap â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function generateRoadmap() {
   const role = $('rm-role').value.trim() || 'Software Engineer';
   const level = $('rm-level').value;
   const btn = $('gen-rm-btn');
-  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating…';
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generatingâ€¦';
   try {
     const [resText, resVisual] = await Promise.all([
       api('POST', '/api/career-roadmap', { target_role: role, experience_level: level, skills: S.profile?.skills || [] }),
@@ -2004,13 +2004,13 @@ async function generateRoadmap() {
   btn.disabled = false; btn.innerHTML = '<i class="fas fa-magic"></i> Generate My 90-Day Roadmap';
 }
 
-/* ── Salary Insights ─────────────────────────────────────────── */
+/* â”€â”€ Salary Insights â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function getSalary() {
   const role = $('sal-role').value.trim() || 'Software Engineer';
   const level = $('sal-level').value;
   const years = parseInt($('sal-years').value) || 0;
   const btn = $('sal-btn');
-  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Fetching…';
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Fetchingâ€¦';
   try {
     const res = await api('POST', '/api/salary-insights', { role, experience_level: level, experience_years: years, skills: S.profile?.skills || [] });
     $('sal-out').style.display = 'flex';
@@ -2053,12 +2053,12 @@ function renderCityChart(comp) {
   });
 }
 
-/* ── GitHub Analyzer ─────────────────────────────────────────── */
+/* â”€â”€ GitHub Analyzer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function analyzeGitHub() {
   const username = $('gh-username').value.trim();
   if (!username) { toast('Enter a GitHub username', 'warning'); return; }
   const btn = $('gh-analyze-btn');
-  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing…';
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzingâ€¦';
   try {
     const res = await api('GET', `/api/github-profile?username=${encodeURIComponent(username)}`);
     $('gh-out').style.display = 'block';
@@ -2085,7 +2085,7 @@ async function analyzeGitHub() {
     if (res.ai_analysis) {
       const a = res.ai_analysis;
       $('gh-score-box').style.display = 'block';
-      $('gh-score-val').textContent = a.score || '—';
+      $('gh-score-val').textContent = a.score || 'â€”';
       $('gh-analysis-card').style.display = 'block';
       $('gh-strengths').innerHTML = `<div class="strengths-list">${(a.strengths||[]).map(s=>`<div class="str-item">${escHtml(s)}</div>`).join('')}</div>`;
       $('gh-improvements').innerHTML = `<div class="improvements-list">${(a.improvements||[]).map(s=>`<div class="imp-item">${escHtml(s)}</div>`).join('')}</div>`;
@@ -2098,7 +2098,7 @@ async function analyzeGitHub() {
   btn.disabled = false; btn.innerHTML = '<i class="fab fa-github"></i> Analyze Profile';
 }
 
-/* ── Global Search ───────────────────────────────────────────── */
+/* â”€â”€ Global Search â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function handleGlobalSearch(e) {
   const q = e.target.value.trim().toLowerCase();
   if (!q) return;
@@ -2113,19 +2113,19 @@ function handleGlobalSearch(e) {
   }
 }
 
-/* ── Debounce ────────────────────────────────────────────────── */
+/* â”€â”€ Debounce â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function debounce(fn, wait) {
   let t; return function(...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), wait); };
 }
 
-/* ── INIT ─────────────────────────────────────────────────────── */
+/* â”€â”€ INIT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 document.addEventListener('DOMContentLoaded', initLanding);
 
-/* ═══════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    BATCH 3 - NEW CONTROLLERS: ROADMAPS, CHEAT SHEETS, RESOURCES
-   ═══════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 
-/* ── Visual Career Roadmap Renderer ─────────────────────────── */
+/* â”€â”€ Visual Career Roadmap Renderer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function renderVisualRoadmap(data) {
   const container = $('rm-visual-out');
   container.innerHTML = '';
@@ -2136,7 +2136,7 @@ function renderVisualRoadmap(data) {
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
         <div>
           <h3>${escHtml(data.role)} Visual Roadmap</h3>
-          <p class="muted" style="margin-top: 4px;">Duration: <strong>${escHtml(data.total_duration)}</strong> · Target Salary: <strong class="green">${escHtml(data.salary_after_roadmap || '—')}</strong></p>
+          <p class="muted" style="margin-top: 4px;">Duration: <strong>${escHtml(data.total_duration)}</strong> Â· Target Salary: <strong class="green">${escHtml(data.salary_after_roadmap || 'â€”')}</strong></p>
         </div>
         <span class="badge purple">90-Day Guide</span>
       </div>
@@ -2154,7 +2154,7 @@ function renderVisualRoadmap(data) {
           <div class="rm-phase-hdr">
             <div class="rm-phase-title-group">
               <div class="rm-phase-num" style="border: 1px solid ${color}; color: ${color}; font-weight: 700;">${p.phase_number}</div>
-              <div class="rm-phase-name">${escHtml(p.emoji || '📅')} ${escHtml(p.phase_name)}</div>
+              <div class="rm-phase-name">${escHtml(p.emoji || 'ðŸ“…')} ${escHtml(p.phase_name)}</div>
             </div>
             <span class="rm-phase-dur"><i class="fas fa-clock"></i> ${escHtml(p.duration)}</span>
           </div>
@@ -2272,10 +2272,10 @@ function renderVisualRoadmap(data) {
   container.innerHTML = html;
 }
 
-/* ── Free Cheat Sheets ───────────────────────────────────────── */
+/* â”€â”€ Free Cheat Sheets â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function loadCheatSheetTopics() {
   const container = $('cs-categories');
-  container.innerHTML = `<div class="empty-state sm"><div class="parse-spinner"></div><p>Loading categories…</p></div>`;
+  container.innerHTML = `<div class="empty-state sm"><div class="parse-spinner"></div><p>Loading categoriesâ€¦</p></div>`;
   try {
     const data = await api('GET', '/api/cheat-sheet-topics');
     const cats = data.categories || {};
@@ -2289,7 +2289,7 @@ async function loadCheatSheetTopics() {
           <div class="cs-topics-list">
             ${topics.map(t => `
               <button class="cs-topic-btn" onclick="loadCheatSheet('${escHtml(t.name)}')">
-                ${escHtml(t.icon || '⚡')} ${escHtml(t.name)}
+                ${escHtml(t.icon || 'âš¡')} ${escHtml(t.name)}
               </button>
             `).join('')}
           </div>
@@ -2343,7 +2343,7 @@ async function loadCheatSheet(technology) {
         const secCard = document.createElement('div');
         secCard.className = 'card cs-syntax-card';
         secCard.innerHTML = `
-          <h3>${escHtml(sec.emoji || '📝')} ${escHtml(sec.title)}</h3>
+          <h3>${escHtml(sec.emoji || 'ðŸ“�')} ${escHtml(sec.title)}</h3>
           <div style="display: flex; flex-direction: column; gap: 14px;">
             ${(sec.items || []).map(item => `
               <div class="cs-syntax-item">
@@ -2410,14 +2410,14 @@ async function loadCheatSheet(technology) {
       const fr = res.free_resources;
       let linksHtml = '';
       if (fr.official_docs) {
-        linksHtml += `<a href="${escHtml(fr.official_docs)}" target="_blank" class="cs-res-link"><span>📖 Official Docs</span> <i class="fas fa-external-link-alt"></i></a>`;
+        linksHtml += `<a href="${escHtml(fr.official_docs)}" target="_blank" class="cs-res-link"><span>ðŸ“– Official Docs</span> <i class="fas fa-external-link-alt"></i></a>`;
       }
       if (fr.cheat_sheet_url) {
-        linksHtml += `<a href="${escHtml(fr.cheat_sheet_url)}" target="_blank" class="cs-res-link"><span>📄 QuickRef Sheet</span> <i class="fas fa-external-link-alt"></i></a>`;
+        linksHtml += `<a href="${escHtml(fr.cheat_sheet_url)}" target="_blank" class="cs-res-link"><span>ðŸ“„ QuickRef Sheet</span> <i class="fas fa-external-link-alt"></i></a>`;
       }
       if (fr.free_courses && fr.free_courses.length) {
         fr.free_courses.forEach(c => {
-          linksHtml += `<a href="${escHtml(c.url)}" target="_blank" class="cs-res-link"><span>🎓 ${escHtml(c.name)} (${escHtml(c.platform)})</span> <i class="fas fa-external-link-alt"></i></a>`;
+          linksHtml += `<a href="${escHtml(c.url)}" target="_blank" class="cs-res-link"><span>ðŸŽ“ ${escHtml(c.name)} (${escHtml(c.platform)})</span> <i class="fas fa-external-link-alt"></i></a>`;
         });
       }
       resContainer.innerHTML = linksHtml;
@@ -2431,7 +2431,7 @@ async function loadCheatSheet(technology) {
   }
 }
 
-/* ── Free Resources Hub ──────────────────────────────────────── */
+/* â”€â”€ Free Resources Hub â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function searchResources(technology) {
   if (!technology) return;
   const dashboard = $('res-dashboard');
@@ -2457,7 +2457,7 @@ async function searchResources(technology) {
     if (cur.official_docs) {
       curHtml += `
         <div class="res-item-box">
-          <div class="res-item-title"><a href="${escHtml(cur.official_docs)}" target="_blank">📖 Official Reference Documentation</a> <span class="badge blue">docs</span></div>
+          <div class="res-item-title"><a href="${escHtml(cur.official_docs)}" target="_blank">ðŸ“– Official Reference Documentation</a> <span class="badge blue">docs</span></div>
           <p class="res-item-desc">Primary technical guide and API reference source.</p>
         </div>
       `;
@@ -2465,7 +2465,7 @@ async function searchResources(technology) {
     if (cur.practice) {
       curHtml += `
         <div class="res-item-box">
-          <div class="res-item-title"><a href="${escHtml(cur.practice)}" target="_blank">💻 Practice Coding Challenges</a> <span class="badge green">practice</span></div>
+          <div class="res-item-title"><a href="${escHtml(cur.practice)}" target="_blank">ðŸ’» Practice Coding Challenges</a> <span class="badge green">practice</span></div>
           <p class="res-item-desc">Hands-on exercises and programming problems.</p>
         </div>
       `;
@@ -2474,7 +2474,7 @@ async function searchResources(technology) {
       cur.free_courses.forEach(c => {
         curHtml += `
           <div class="res-item-box">
-            <div class="res-item-title"><a href="${escHtml(c.url)}" target="_blank">🎓 ${escHtml(c.name)}</a> <span class="badge purple">${escHtml(c.platform)}</span></div>
+            <div class="res-item-title"><a href="${escHtml(c.url)}" target="_blank">ðŸŽ“ ${escHtml(c.name)}</a> <span class="badge purple">${escHtml(c.platform)}</span></div>
             <p class="res-item-desc">Comprehensive tutorial course completely free.</p>
           </div>
         `;
@@ -2533,9 +2533,9 @@ async function searchResources(technology) {
   }
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    GITHUB TRENDING PANEL
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function initTrendingPanel() {
   const btn = $('trend-load-btn');
   if (!btn || btn.dataset.wired) return;
@@ -2554,11 +2554,11 @@ async function loadTrending() {
   const lang   = $('trend-lang')?.value || 'python';
   const period = $('trend-period')?.value || 'weekly';
   const grid   = $('trend-grid');
-  grid.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading ${lang} trending repos…</p></div>`;
+  grid.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading ${lang} trending reposâ€¦</p></div>`;
   try {
     const res = await api('GET', `/api/github-trending?language=${encodeURIComponent(lang)}&period=${period}`);
     const repos = res.repos || [];
-    if (!repos.length) { grid.innerHTML = `<div class="empty-state"><i class="fab fa-github"></i><p>No repos found — try a different language</p></div>`; return; }
+    if (!repos.length) { grid.innerHTML = `<div class="empty-state"><i class="fab fa-github"></i><p>No repos found â€” try a different language</p></div>`; return; }
     grid.innerHTML = repos.map(r => `
       <a href="${escHtml(r.url)}" target="_blank" class="trend-card">
         <div class="trend-card-top">
@@ -2585,9 +2585,9 @@ function langColor(lang) {
   return map[lang] || '#7c3aed';
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    STACK OVERFLOW PANEL
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function initSOPanel() {
   const btn = $('so-search-btn');
   if (!btn || btn.dataset.wired) return;
@@ -2602,7 +2602,7 @@ function initSOPanel() {
 async function loadSOQuestions() {
   const skill = ($('so-skill')?.value || 'python').trim();
   const grid = $('so-grid');
-  grid.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Searching Stack Overflow for "${escHtml(skill)}"…</p></div>`;
+  grid.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Searching Stack Overflow for "${escHtml(skill)}"â€¦</p></div>`;
   try {
     const res = await api('GET', `/api/stackoverflow?skill=${encodeURIComponent(skill)}&limit=15`);
     const qs = res.questions || [];
@@ -2627,13 +2627,13 @@ async function loadSOQuestions() {
   }
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    GRAMMAR CHECK
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 async function grammarCheck(text, outEl) {
   if (!text?.trim()) { toast('No text to check', 'error'); return; }
   outEl.style.display = 'block';
-  outEl.innerHTML = `<div class="empty-state sm"><div class="parse-spinner"></div><p>Checking grammar…</p></div>`;
+  outEl.innerHTML = `<div class="empty-state sm"><div class="parse-spinner"></div><p>Checking grammarâ€¦</p></div>`;
   try {
     const res = await api('POST', '/api/grammar-check', { text });
     const score = res.score ?? 100;
@@ -2642,7 +2642,7 @@ async function grammarCheck(text, outEl) {
     outEl.innerHTML = `
       <div class="grammar-hdr">
         <div><span class="grammar-score" style="color:${color}">${score}</span><span class="grammar-score-lbl">/100 grammar score</span></div>
-        <span class="muted">${res.word_count||0} words · ${matches.length} issue${matches.length!==1?'s':''} found</span>
+        <span class="muted">${res.word_count||0} words Â· ${matches.length} issue${matches.length!==1?'s':''} found</span>
       </div>
       ${matches.length === 0
         ? `<div class="grammar-ok"><i class="fas fa-check-circle" style="color:var(--c-green)"></i> Excellent! No grammar or spelling issues found.</div>`
@@ -2651,7 +2651,7 @@ async function grammarCheck(text, outEl) {
             <div class="gi-badge ${m.type}">${m.rule_category||m.type}</div>
             <div class="gi-msg">${escHtml(m.message)}</div>
             ${m.replacements.length ? `<div class="gi-fix">Fix: ${m.replacements.map(r=>`<span class="gi-suggestion">${escHtml(r)}</span>`).join(' ')}</div>` : ''}
-            <div class="gi-ctx muted">"…${escHtml(m.context)}…"</div>
+            <div class="gi-ctx muted">"â€¦${escHtml(m.context)}â€¦"</div>
           </div>`).join('')}</div>`
       }`;
   } catch(e) {
@@ -2659,13 +2659,13 @@ async function grammarCheck(text, outEl) {
   }
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    EXPORT RESUME AS PDF (jsPDF)
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 async function exportResumePDF() {
-  if (!S.profile?.name) { toast('No resume loaded — upload your resume first', 'error'); return; }
+  if (!S.profile?.name) { toast('No resume loaded â€” upload your resume first', 'error'); return; }
   const btn = $('export-resume-btn');
-  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating…';
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generatingâ€¦';
   try {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -2681,7 +2681,7 @@ async function exportResumePDF() {
     doc.text(p.name || 'Resume', M, 16);
     doc.setFontSize(11); doc.setFont('helvetica','normal');
     doc.setTextColor(160, 160, 200);
-    doc.text((p.target_role||'Software Engineer') + '  ·  ' + (p.experience||'Fresher'), M, 26);
+    doc.text((p.target_role||'Software Engineer') + '  Â·  ' + (p.experience||'Fresher'), M, 26);
     if (p.email) doc.text(p.email, M, 33);
     y = 48;
 
@@ -2691,7 +2691,7 @@ async function exportResumePDF() {
     doc.setTextColor(124,58,237); doc.text('SKILLS', M, y); y+=6;
     doc.setDrawColor(124,58,237); doc.setLineWidth(0.4); doc.line(M, y, W-M, y); y+=5;
     doc.setTextColor(60,60,80); doc.setFontSize(10); doc.setFont('helvetica','normal');
-    const skills = (p.skills || []).join('  ·  ');
+    const skills = (p.skills || []).join('  Â·  ');
     const skillLines = doc.splitTextToSize(skills, W - M*2);
     doc.text(skillLines, M, y); y += skillLines.length * 5 + 4;
 
@@ -2734,7 +2734,7 @@ async function exportResumePDF() {
       doc.setTextColor(124,58,237); doc.text('CERTIFICATIONS', M, y); y+=6;
       doc.setDrawColor(124,58,237); doc.line(M, y, W-M, y); y+=5;
       doc.setTextColor(60,60,80); doc.setFontSize(10); doc.setFont('helvetica','normal');
-      p.certifications.forEach(c => { doc.text(`• ${c}`, M+2, y); y+=5; });
+      p.certifications.forEach(c => { doc.text(`â€¢ ${c}`, M+2, y); y+=5; });
       y+=4;
     }
 
@@ -2748,7 +2748,7 @@ async function exportResumePDF() {
 
     // Footer
     doc.setFontSize(8); doc.setTextColor(160,160,180);
-    doc.text('Generated by Comonk AI — comonk.ai — 100% Free Career Platform', M, 285);
+    doc.text('Generated by Comonk AI â€” comonk.ai â€” 100% Free Career Platform', M, 285);
     doc.text(new Date().toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'}), W-M, 285, {align:'right'});
 
     doc.save(`${(p.name||'Resume').replace(/\s+/g,'_')}_Comonk.pdf`);
@@ -2759,9 +2759,9 @@ async function exportResumePDF() {
   btn.disabled = false; btn.innerHTML = '<i class="fas fa-file-pdf"></i> Export PDF';
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    EXCHANGE RATES in Salary panel
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 async function loadExchangeRates(inrAmount) {
   try {
     const res = await api('GET', '/api/exchange-rates');
@@ -2774,32 +2774,32 @@ async function loadExchangeRates(inrAmount) {
     };
     $('fx-usd').textContent = `${fmt(res.usd)} / yr`;
     $('fx-eur').textContent = `${(inrAmount * res.eur / 1000).toFixed(1)}K EUR / yr`;
-    $('fx-gbp').textContent = `£${(inrAmount * res.gbp / 1000).toFixed(1)}K / yr`;
+    $('fx-gbp').textContent = `Â£${(inrAmount * res.gbp / 1000).toFixed(1)}K / yr`;
   } catch(e) { /* silent */ }
 }
 
-/* ════════════════════════════════════════════════════════════════
-   HN JOBS — HackerNews tab in Live Jobs
-   ════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
+   HN JOBS â€” HackerNews tab in Live Jobs
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 async function loadHNJobs() {
   const grid = $('jobs-grid');
   const skill = (S.profile?.skills || ['python']).slice(0,2).join(' ');
-  grid.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading HackerNews "Who is Hiring"…</p></div>`;
+  grid.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading HackerNews "Who is Hiring"â€¦</p></div>`;
   try {
     const res = await api('GET', `/api/hn-jobs?skill=${encodeURIComponent(skill)}`);
     const jobs = res.jobs || [];
     if (!jobs.length) {
-      grid.innerHTML = `<div class="empty-state"><i class="fab fa-hacker-news"></i><p>No HN jobs found — <a href="${escHtml(res.thread_url||'https://news.ycombinator.com')}" target="_blank" class="purple">View thread</a></p></div>`;
+      grid.innerHTML = `<div class="empty-state"><i class="fab fa-hacker-news"></i><p>No HN jobs found â€” <a href="${escHtml(res.thread_url||'https://news.ycombinator.com')}" target="_blank" class="purple">View thread</a></p></div>`;
       return;
     }
     grid.innerHTML = `
-      <div class="hn-jobs-banner"><i class="fab fa-hacker-news"></i> From HN: <b>${escHtml(res.thread_title||'Who is Hiring')}</b> &nbsp;—&nbsp; <a href="${escHtml(res.thread_url||'#')}" target="_blank" class="purple">View full thread ↗</a></div>
+      <div class="hn-jobs-banner"><i class="fab fa-hacker-news"></i> From HN: <b>${escHtml(res.thread_title||'Who is Hiring')}</b> &nbsp;â€”&nbsp; <a href="${escHtml(res.thread_url||'#')}" target="_blank" class="purple">View full thread â†—</a></div>
       ${jobs.map(j => `
         <div class="hn-job-card">
           <div class="hn-job-company">${escHtml(j.company?.slice(0,80)||'Company')}</div>
-          <p class="hn-job-text">${escHtml(j.text?.replace(/<[^>]+>/g,'').slice(0,280)||'')}…</p>
+          <p class="hn-job-text">${escHtml(j.text?.replace(/<[^>]+>/g,'').slice(0,280)||'')}â€¦</p>
           <div class="hn-job-foot">
-            <span class="muted">${j.author} · ${j.posted ? new Date(j.posted).toLocaleDateString('en-IN') : ''}</span>
+            <span class="muted">${j.author} Â· ${j.posted ? new Date(j.posted).toLocaleDateString('en-IN') : ''}</span>
             <a href="${escHtml(j.url)}" target="_blank" class="btn-xs ghost"><i class="fas fa-external-link-alt"></i> Full Post</a>
           </div>
         </div>`).join('')}`;
@@ -2811,7 +2811,7 @@ async function loadHNJobs() {
 async function loadRedditJobs() {
   const grid = $('jobs-grid');
   const skill = (S.profile?.skills || ['python']).slice(0,2).join(' ');
-  grid.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading Reddit career posts…</p></div>`;
+  grid.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading Reddit career postsâ€¦</p></div>`;
   try {
     const res = await api('GET', `/api/reddit-feed?skill=${encodeURIComponent(skill)}&subreddit=cscareerquestions`);
     const posts = res.posts || [];
@@ -2820,14 +2820,14 @@ async function loadRedditJobs() {
       return;
     }
     grid.innerHTML = `
-      <div class="hn-jobs-banner"><i class="fab fa-reddit" style="color:#ff4500"></i> r/cscareerquestions — "${escHtml(skill)}"</div>
+      <div class="hn-jobs-banner"><i class="fab fa-reddit" style="color:#ff4500"></i> r/cscareerquestions â€” "${escHtml(skill)}"</div>
       ${posts.map(p => `
         <div class="hn-job-card">
           <div class="hn-job-company" style="color:var(--c-purple-l)">${escHtml(p.flair||'Post')}</div>
           <div class="hn-job-title">${escHtml(p.title)}</div>
-          ${p.self_text ? `<p class="hn-job-text">${escHtml(p.self_text.slice(0,200))}…</p>` : ''}
+          ${p.self_text ? `<p class="hn-job-text">${escHtml(p.self_text.slice(0,200))}â€¦</p>` : ''}
           <div class="hn-job-foot">
-            <span class="muted">↑ ${p.score} · ${p.comments} comments</span>
+            <span class="muted">â†‘ ${p.score} Â· ${p.comments} comments</span>
             <a href="${escHtml(p.url)}" target="_blank" class="btn-xs ghost"><i class="fab fa-reddit"></i> Open</a>
           </div>
         </div>`).join('')}`;
@@ -2836,9 +2836,9 @@ async function loadRedditJobs() {
   }
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    POMODORO TIMER
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 const POMO = { interval: null, remaining: 25*60, total: 25*60, mode: 'work', sessions: 0, totalMins: 0, running: false };
 const POMO_DURATIONS = { work: 25*60, short: 5*60, long: 15*60 };
 let pomoDomReady = false;
@@ -2877,7 +2877,7 @@ function initPomodoro() {
 function pomoStart() {
   POMO.running = true;
   $('pomo-start-btn').innerHTML = '<i class="fas fa-pause"></i> Pause';
-  $('pomo-label').textContent = POMO.mode === 'work' ? 'Stay focused! You got this.' : 'Rest — you earned it.';
+  $('pomo-label').textContent = POMO.mode === 'work' ? 'Stay focused! You got this.' : 'Rest â€” you earned it.';
   POMO.interval = setInterval(() => {
     POMO.remaining--;
     if (POMO.remaining <= 0) {
@@ -2901,9 +2901,9 @@ function pomoComplete() {
     POMO.totalMins += 25;
     $('pomo-count').textContent = POMO.sessions;
     $('pomo-total-time').textContent = POMO.totalMins + 'm';
-    toast('🎉 Pomodoro complete! Take a 5-min break.', 'success');
+    toast('ðŸŽ‰ Pomodoro complete! Take a 5-min break.', 'success');
   } else {
-    toast('Break over — back to work!', 'info');
+    toast('Break over â€” back to work!', 'info');
   }
   $('pomo-start-btn').innerHTML = '<i class="fas fa-play"></i> Start';
   $('pomo-label').textContent = POMO.mode === 'work' ? 'Session complete!' : 'Break done!';
@@ -2928,8 +2928,8 @@ function updatePomoDisplay() {
     arc.style.stroke = hue;
   }
   // Update page title
-  if (POMO.running) document.title = `⏱ ${m}:${s} — Comonk AI`;
-  else document.title = 'Comonk AI — Enterprise Career Intelligence Platform';
+  if (POMO.running) document.title = `â�± ${m}:${s} â€” Comonk AI`;
+  else document.title = 'Comonk AI â€” Enterprise Career Intelligence Platform';
 }
 
 async function fetchPomoQuote() {
@@ -2937,7 +2937,7 @@ async function fetchPomoQuote() {
     const res = await api('GET', '/api/study-quote');
     if (res.text) {
       $('pomo-quote-text').textContent = `"${res.text}"`;
-      $('pomo-quote-author').textContent = `— ${res.author}`;
+      $('pomo-quote-author').textContent = `â€” ${res.author}`;
     }
   } catch(e) { /* silent */ }
 }
@@ -2965,8 +2965,8 @@ async function loadWakaInPomo() {
     if (!card || !out) return;
     card.style.display = 'block';
     out.innerHTML = `
-      <div class="waka-stat"><i class="fas fa-clock" style="color:var(--c-purple-l)"></i> <b>${res.human_readable_total||'—'}</b> this week</div>
-      <div class="waka-stat"><i class="fas fa-calendar-day" style="color:var(--c-gold)"></i> Daily avg: <b>${res.daily_average||'—'}</b></div>
+      <div class="waka-stat"><i class="fas fa-clock" style="color:var(--c-purple-l)"></i> <b>${res.human_readable_total||'â€”'}</b> this week</div>
+      <div class="waka-stat"><i class="fas fa-calendar-day" style="color:var(--c-gold)"></i> Daily avg: <b>${res.daily_average||'â€”'}</b></div>
       ${res.best_day ? `<div class="waka-stat"><i class="fas fa-trophy" style="color:var(--c-gold)"></i> Best day: <b>${res.best_day}</b></div>` : ''}
       <div class="waka-langs">${(res.languages||[]).slice(0,5).map(l=>`
         <div class="waka-lang-row">
@@ -2978,9 +2978,9 @@ async function loadWakaInPomo() {
   } catch(e) { /* silent */ }
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    ALERTS SETUP PANEL
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 async function initAlertsPanel() {
   if ($('tg-test-btn').dataset.wired) return;
   $('tg-test-btn').dataset.wired = '1';
@@ -2990,7 +2990,7 @@ async function initAlertsPanel() {
     const tg = await api('GET', '/api/telegram-status');
     const badge = $('tg-status-badge');
     if (tg.configured) {
-      badge.textContent = 'Connected ✓';
+      badge.textContent = 'Connected âœ“';
       badge.style.background = 'rgba(16,185,129,0.15)';
       badge.style.color = 'var(--c-green)';
       $('tg-setup-steps').style.display = 'none';
@@ -3001,12 +3001,12 @@ async function initAlertsPanel() {
   $('tg-test-btn').addEventListener('click', async () => {
     const btn = $('tg-test-btn');
     btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    const res = await api('POST', '/api/telegram-alert', { message: `✅ Comonk AI test alert!\n\nYour job alerts are working.\n\nProfile: ${S.profile?.name||'Job Seeker'}\nSkills: ${(S.profile?.skills||[]).slice(0,3).join(', ')}` });
+    const res = await api('POST', '/api/telegram-alert', { message: `âœ… Comonk AI test alert!\n\nYour job alerts are working.\n\nProfile: ${S.profile?.name||'Job Seeker'}\nSkills: ${(S.profile?.skills||[]).slice(0,3).join(', ')}` });
     const out = $('tg-test-result');
     if (res.sent) {
       out.innerHTML = `<div class="alert-success"><i class="fas fa-check-circle"></i> Message sent successfully to Telegram!</div>`;
     } else if (res.missing) {
-      out.innerHTML = `<div class="alert-warn"><i class="fas fa-info-circle"></i> Missing: ${res.missing.join(', ')} — add to .env</div>`;
+      out.innerHTML = `<div class="alert-warn"><i class="fas fa-info-circle"></i> Missing: ${res.missing.join(', ')} â€” add to .env</div>`;
     } else {
       out.innerHTML = `<div class="alert-error"><i class="fas fa-times"></i> ${escHtml(res.error||'Failed')}</div>`;
     }
@@ -3022,14 +3022,14 @@ async function initAlertsPanel() {
     const res = await api('POST', '/api/send-email', {
       to_email: email,
       to_name: S.profile?.name || 'Job Seeker',
-      subject: 'Comonk AI — Job Alert Test ✓',
-      html_content: `<div style="font-family:sans-serif;max-width:600px;margin:auto;background:#060609;color:#eeeef8;padding:30px;border-radius:12px"><h2 style="color:#a78bfa">🤖 Comonk AI Alert</h2><p>This is a test email from your Comonk AI career platform.</p><p><strong>Profile:</strong> ${S.profile?.name||'Job Seeker'}<br><strong>Skills:</strong> ${(S.profile?.skills||[]).slice(0,5).join(', ')}</p><p style="color:#9090b0;font-size:12px">Email alerts powered by Brevo · 300 free/day</p></div>`,
+      subject: 'Comonk AI â€” Job Alert Test âœ“',
+      html_content: `<div style="font-family:sans-serif;max-width:600px;margin:auto;background:#060609;color:#eeeef8;padding:30px;border-radius:12px"><h2 style="color:#a78bfa">ðŸ¤– Comonk AI Alert</h2><p>This is a test email from your Comonk AI career platform.</p><p><strong>Profile:</strong> ${S.profile?.name||'Job Seeker'}<br><strong>Skills:</strong> ${(S.profile?.skills||[]).slice(0,5).join(', ')}</p><p style="color:#9090b0;font-size:12px">Email alerts powered by Brevo Â· 300 free/day</p></div>`,
     });
     const out = $('brevo-test-result');
     if (res.sent) {
       out.innerHTML = `<div class="alert-success"><i class="fas fa-check-circle"></i> Email sent to ${escHtml(email)}!</div>`;
     } else if (res.missing) {
-      out.innerHTML = `<div class="alert-warn"><i class="fas fa-info-circle"></i> Add BREVO_API_KEY to .env · Get it free at <a href="https://app.brevo.com" target="_blank">app.brevo.com</a></div>`;
+      out.innerHTML = `<div class="alert-warn"><i class="fas fa-info-circle"></i> Add BREVO_API_KEY to .env Â· Get it free at <a href="https://app.brevo.com" target="_blank">app.brevo.com</a></div>`;
     } else {
       out.innerHTML = `<div class="alert-error"><i class="fas fa-times"></i> ${escHtml(res.error||'Failed')}</div>`;
     }
@@ -3040,18 +3040,18 @@ async function initAlertsPanel() {
   $('waka-load-btn').addEventListener('click', async () => {
     const out = $('waka-stats-out');
     out.style.display = 'block';
-    out.innerHTML = `<div class="empty-state sm"><div class="parse-spinner"></div><p>Loading WakaTime stats…</p></div>`;
+    out.innerHTML = `<div class="empty-state sm"><div class="parse-spinner"></div><p>Loading WakaTime statsâ€¦</p></div>`;
     const res = await api('GET', '/api/wakatime-stats');
     if (!res.configured) {
-      out.innerHTML = `<div class="alert-warn"><i class="fas fa-info-circle"></i> Add WAKATIME_API_KEY to .env · <a href="https://wakatime.com/settings/api-key" target="_blank">Get free key</a></div>`;
+      out.innerHTML = `<div class="alert-warn"><i class="fas fa-info-circle"></i> Add WAKATIME_API_KEY to .env Â· <a href="https://wakatime.com/settings/api-key" target="_blank">Get free key</a></div>`;
       return;
     }
     if (res.error) { out.innerHTML = `<div class="alert-error">${escHtml(res.error)}</div>`; return; }
     const badge = $('waka-status-badge');
-    badge.textContent = 'Connected ✓'; badge.style.background = 'rgba(16,185,129,0.15)'; badge.style.color = 'var(--c-green)';
+    badge.textContent = 'Connected âœ“'; badge.style.background = 'rgba(16,185,129,0.15)'; badge.style.color = 'var(--c-green)';
     out.innerHTML = `
-      <div class="waka-stat"><i class="fas fa-clock" style="color:var(--c-purple-l)"></i> <b>${res.human_readable_total||'—'}</b> coded this week</div>
-      <div class="waka-stat"><i class="fas fa-sun" style="color:var(--c-gold)"></i> Daily avg: <b>${res.daily_average||'—'}</b></div>
+      <div class="waka-stat"><i class="fas fa-clock" style="color:var(--c-purple-l)"></i> <b>${res.human_readable_total||'â€”'}</b> coded this week</div>
+      <div class="waka-stat"><i class="fas fa-sun" style="color:var(--c-gold)"></i> Daily avg: <b>${res.daily_average||'â€”'}</b></div>
       ${res.best_day ? `<div class="waka-stat"><i class="fas fa-trophy" style="color:var(--c-gold)"></i> Best day: <b>${res.best_day}</b></div>` : ''}
       <div class="waka-langs" style="margin-top:12px">${(res.languages||[]).slice(0,6).map(l=>`
         <div class="waka-lang-row">
@@ -3076,7 +3076,7 @@ async function initAlertsPanel() {
   // Product Hunt
   $('ph-load-btn').addEventListener('click', async () => {
     const btn = $('ph-load-btn');
-    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading…';
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loadingâ€¦';
     const out = $('ph-out');
     try {
       const res = await api('GET', '/api/product-hunt');
@@ -3085,7 +3085,7 @@ async function initAlertsPanel() {
         <a href="${escHtml(p.url||'https://producthunt.com')}" target="_blank" class="ph-card">
           <div class="ph-rank">${i+1}</div>
           <div class="ph-body"><div class="ph-name">${escHtml(p.name)}</div><div class="ph-desc">${escHtml(p.description?.slice(0,100)||'')}</div></div>
-          <span class="btn-xs ghost">View ↗</span>
+          <span class="btn-xs ghost">View â†—</span>
         </a>`).join('')}</div>` : `<div class="empty-state sm"><p>Could not load Product Hunt feed</p></div>`;
     } catch(e) { out.innerHTML = `<div class="empty-state sm"><p>${escHtml(e.message)}</p></div>`; }
     btn.disabled = false; btn.innerHTML = '<i class="fas fa-rocket"></i> Load Today\'s Products';
@@ -3096,23 +3096,23 @@ async function initAlertsPanel() {
     const res = await api('POST', '/api/gemini-chat', { prompt: 'hi' });
     if (!res.missing) {
       const badge = $('gemini-status-badge');
-      badge.textContent = 'Connected ✓'; badge.style.background = 'rgba(16,185,129,0.15)'; badge.style.color = 'var(--c-green)';
+      badge.textContent = 'Connected âœ“'; badge.style.background = 'rgba(16,185,129,0.15)'; badge.style.color = 'var(--c-green)';
     }
   } catch(e) { /* silent */ }
 }
 
-/* ════════════════════════════════════════════════════════════════
-   COMPANY LOGOS — Clearbit (no key)
-   ════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
+   COMPANY LOGOS â€” Clearbit (no key)
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function getCompanyLogoHTML(company) {
   const domain = company.website?.replace(/https?:\/\//,'').split('/')[0] || '';
   if (!domain) return `<div class="co-logo-placeholder">${escHtml((company.name||'C')[0].toUpperCase())}</div>`;
   return `<img class="co-logo-img" src="https://logo.clearbit.com/${encodeURIComponent(domain)}" alt="" loading="lazy" onerror="this.outerHTML='<div class=co-logo-placeholder>${escHtml((company.name||'C')[0].toUpperCase())}</div>'">`;
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    Wire grammar buttons and export PDF button (called from initApp)
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function wireNewFeatureButtons() {
   // Grammar check in ATS
   const atsGrammarBtn = $('grammar-ats-btn');
@@ -3151,46 +3151,46 @@ function wireNewFeatureButtons() {
   });
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    Hook exchange rates into salary panel
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function hookSalaryFX() {
   const orig = window.getSalary;
   if (!orig || orig._fxHooked) return;
   orig._fxHooked = true;
 }
 
-/* ════════════════════════════════════════════════════════════════
-   SHOWPANEL — wire new panels
-   ════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
+   SHOWPANEL â€” wire new panels
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 const _origShowPanel = window.showPanel;
-function showPanel(id) { /* intentionally empty — handled inline in openPanel */ }
+function showPanel(id) { /* intentionally empty â€” handled inline in openPanel */ }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    WEATHER WIDGET
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 async function loadWeatherWidget() {
   try {
     const res = await api('GET', '/api/weather?city=ahmedabad');
-    $('wp-emoji').textContent = res.emoji || '☀️';
-    $('wp-temp').textContent  = `${res.temp}°C`;
+    $('wp-emoji').textContent = res.emoji || 'â˜€ï¸�';
+    $('wp-temp').textContent  = `${res.temp}Â°C`;
     const card = $('ov-weather-card');
     if (card) {
       card.style.display = 'block';
-      $('ov-w-emoji').textContent = res.emoji || '☀️';
-      $('ov-w-temp').textContent  = `${res.temp}°C`;
+      $('ov-w-emoji').textContent = res.emoji || 'â˜€ï¸�';
+      $('ov-w-temp').textContent  = `${res.temp}Â°C`;
       $('ov-w-desc').textContent  = res.description || '';
       $('ov-w-tip').textContent   = res.productivity_tip || '';
       const fc = $('ov-w-forecast');
-      if (fc) fc.innerHTML = (res.forecast||[]).map(d=>`<div class="w-fc-day"><div>${d.emoji}</div><div style="font-size:11px;color:var(--text-3)">${d.date?.slice(5)||''}</div><div style="font-size:12px">${d.max}°/${d.min}°</div></div>`).join('');
+      if (fc) fc.innerHTML = (res.forecast||[]).map(d=>`<div class="w-fc-day"><div>${d.emoji}</div><div style="font-size:11px;color:var(--text-3)">${d.date?.slice(5)||''}</div><div style="font-size:12px">${d.max}Â°/${d.min}Â°</div></div>`).join('');
     }
     $('weather-pill').style.display = 'flex';
   } catch(e) { /* silent */ }
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    SKILLS RADAR CHART
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 let radarChartInst = null;
 function renderSkillsRadar() {
   const canvas = $('skills-radar');
@@ -3212,9 +3212,9 @@ function renderSkillsRadar() {
   });
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    PROGRESS ANALYTICS CHART
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 let progressChartInst = null;
 function renderProgressChart() {
   const canvas = $('progress-chart');
@@ -3247,9 +3247,9 @@ function renderProgressChart() {
   }
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    DARK / LIGHT MODE
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 let isDark = true;
 function closeSidebar() {
   $('sidebar').classList.remove('mobile-open');
@@ -3270,9 +3270,9 @@ function initThemeToggle() {
   if (saved === 'light') { isDark = false; document.body.classList.add('light-mode'); $('theme-icon').className = 'fas fa-sun'; }
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    CODING STATS PANEL
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function initCodingStats() {
   const lcBtn = $('lc-btn'), cfBtn = $('cf-btn'), npmBtn = $('npm-btn'), wikiBtn = $('wiki-btn');
   if (!lcBtn || lcBtn.dataset.wired) return;
@@ -3291,7 +3291,7 @@ function initCodingStats() {
         <div class="lc-stat"><div class="lc-num" style="color:var(--c-gold)">${res.medium_solved}</div><div class="lc-lbl">Medium</div></div>
         <div class="lc-stat"><div class="lc-num" style="color:var(--c-red)">${res.hard_solved}</div><div class="lc-lbl">Hard</div></div>
       </div>
-      <div class="muted" style="font-size:12px;margin-top:8px">Global Rank: <b>#${(res.rank||0).toLocaleString()}</b> · Acceptance: <b>${res.acceptance_rate}%</b></div>
+      <div class="muted" style="font-size:12px;margin-top:8px">Global Rank: <b>#${(res.rank||0).toLocaleString()}</b> Â· Acceptance: <b>${res.acceptance_rate}%</b></div>
       <a href="${escHtml(res.profile_url)}" target="_blank" class="btn-xs ghost" style="margin-top:8px"><i class="fas fa-external-link-alt"></i> View Profile</a>`;
   });
 
@@ -3308,7 +3308,7 @@ function initCodingStats() {
         <div class="lc-stat"><div class="lc-num" style="color:${col}">${res.rating}</div><div class="lc-lbl">Rating</div></div>
         <div class="lc-stat"><div class="lc-num">${res.max_rating}</div><div class="lc-lbl">Max Rating</div></div>
       </div>
-      <div class="muted" style="font-size:12px;margin-top:8px">Rank: <b style="color:${col}">${res.rank}</b>${res.country ? ` · ${res.country}` : ''}</div>
+      <div class="muted" style="font-size:12px;margin-top:8px">Rank: <b style="color:${col}">${res.rank}</b>${res.country ? ` Â· ${res.country}` : ''}</div>
       <a href="${escHtml(res.profile_url)}" target="_blank" class="btn-xs ghost" style="margin-top:8px"><i class="fas fa-external-link-alt"></i> View Profile</a>`;
   });
 
@@ -3323,7 +3323,7 @@ function initCodingStats() {
         <div class="lc-stat"><div class="lc-num">${(res.weekly_downloads/1000).toFixed(0)}K</div><div class="lc-lbl">Weekly DLs</div></div>
         <div class="lc-stat"><div class="lc-num">${(res.monthly_downloads/1000).toFixed(0)}K</div><div class="lc-lbl">Monthly DLs</div></div>
       </div>
-      <div class="muted" style="font-size:12px;margin-top:8px">v${res.version} · ${res.license}</div>
+      <div class="muted" style="font-size:12px;margin-top:8px">v${res.version} Â· ${res.license}</div>
       <a href="${escHtml(res.npm_url)}" target="_blank" class="btn-xs ghost" style="margin-top:8px"><i class="fab fa-npm"></i> View on npm</a>`;
   });
 
@@ -3352,7 +3352,7 @@ function initCodingStats() {
         ${res.top_repos?.length?`<div style="margin-top:10px"><div class="muted" style="font-size:12px;margin-bottom:6px">TOP REPOS</div>${res.top_repos.map(r=>`
           <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--b0)">
             <a href="${escHtml(r.url)}" target="_blank" style="color:var(--c-purple-l);font-weight:600;font-size:13px">${escHtml(r.name)}</a>
-            <span class="muted" style="font-size:12px">★ ${r.stars} ${r.language?`· ${escHtml(r.language)}`:''}</span>
+            <span class="muted" style="font-size:12px">â˜… ${r.stars} ${r.language?`Â· ${escHtml(r.language)}`:''}</span>
           </div>`).join('')}</div>`:''}
         <a href="${escHtml(res.profile_url)}" target="_blank" class="btn-xs ghost" style="margin-top:8px"><i class="fab fa-github"></i> View Profile</a>`;
     });
@@ -3374,25 +3374,25 @@ function initCodingStats() {
   });
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    FLASHCARDS
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 const FLASHCARDS = {
   python: [
     {q:"What is a Python decorator?", a:"A function that wraps another function to add behavior without modifying it. Uses @syntax. Example: @staticmethod, @property, custom logging decorators."},
     {q:"Difference: list vs tuple", a:"List is mutable [], tuple is immutable (). Tuples are faster, hashable (can be dict keys). Lists for dynamic data, tuples for fixed records."},
-    {q:"What is GIL in Python?", a:"Global Interpreter Lock — allows only one thread to execute Python bytecode at a time. Affects CPU-bound multithreading. Use multiprocessing for parallelism."},
-    {q:"Explain list comprehension", a:"[expr for item in iterable if condition] — creates list in one line. Faster than for-loop. Example: [x**2 for x in range(10) if x%2==0]"},
+    {q:"What is GIL in Python?", a:"Global Interpreter Lock â€” allows only one thread to execute Python bytecode at a time. Affects CPU-bound multithreading. Use multiprocessing for parallelism."},
+    {q:"Explain list comprehension", a:"[expr for item in iterable if condition] â€” creates list in one line. Faster than for-loop. Example: [x**2 for x in range(10) if x%2==0]"},
     {q:"What is __init__ vs __new__?", a:"__new__ creates the object (allocates memory). __init__ initializes it (sets attributes). __new__ runs first, __init__ runs after."},
     {q:"What are *args and **kwargs?", a:"*args: variable positional arguments (tuple). **kwargs: variable keyword arguments (dict). Use when number of arguments is unknown."},
   ],
   ml: [
     {q:"Explain bias-variance tradeoff", a:"High bias = underfitting (too simple). High variance = overfitting (too complex). Goal: find balance. Regularization, more data, or cross-validation helps."},
-    {q:"What is gradient descent?", a:"Optimization algorithm that minimizes loss by moving in direction of steepest descent. Update: θ = θ - α∇J(θ). α = learning rate."},
-    {q:"Precision vs Recall", a:"Precision = TP/(TP+FP) — of predicted positives, how many are correct. Recall = TP/(TP+FN) — of actual positives, how many found. F1 = harmonic mean."},
+    {q:"What is gradient descent?", a:"Optimization algorithm that minimizes loss by moving in direction of steepest descent. Update: Î¸ = Î¸ - Î±âˆ‡J(Î¸). Î± = learning rate."},
+    {q:"Precision vs Recall", a:"Precision = TP/(TP+FP) â€” of predicted positives, how many are correct. Recall = TP/(TP+FN) â€” of actual positives, how many found. F1 = harmonic mean."},
     {q:"What is overfitting? How to prevent?", a:"Model memorizes training data, fails on new data. Fix: regularization (L1/L2), dropout, more data, cross-validation, early stopping, simpler model."},
-    {q:"Explain CNN architecture", a:"Conv layers (feature extraction) → Pooling layers (dimension reduction) → Flatten → Dense layers (classification). Used for images, spatial data."},
-    {q:"What is attention mechanism?", a:"Allows model to focus on relevant parts of input. Query, Key, Value matrices. Attention(Q,K,V) = softmax(QKᵀ/√d)V. Foundation of Transformers."},
+    {q:"Explain CNN architecture", a:"Conv layers (feature extraction) â†’ Pooling layers (dimension reduction) â†’ Flatten â†’ Dense layers (classification). Used for images, spatial data."},
+    {q:"What is attention mechanism?", a:"Allows model to focus on relevant parts of input. Query, Key, Value matrices. Attention(Q,K,V) = softmax(QKáµ€/âˆšd)V. Foundation of Transformers."},
   ],
   sql: [
     {q:"INNER JOIN vs LEFT JOIN", a:"INNER JOIN: only matching rows from both tables. LEFT JOIN: all rows from left + matching from right (NULL if no match). RIGHT JOIN = mirror."},
@@ -3403,10 +3403,10 @@ const FLASHCARDS = {
     {q:"What is normalization?", a:"Organizing DB to reduce redundancy. 1NF: atomic values. 2NF: no partial dependency. 3NF: no transitive dependency. Trades storage for consistency."},
   ],
   'system-design': [
-    {q:"How to design a URL shortener?", a:"Hash URL → base62 encode → store in DB (longURL, shortCode). Use Redis cache for reads. Handle collisions. Load balancer + CDN for scale."},
-    {q:"SQL vs NoSQL — when to choose?", a:"SQL: structured data, ACID, complex queries (banking, ERP). NoSQL: flexible schema, high scale, simple access (social feed, IoT, sessions)."},
+    {q:"How to design a URL shortener?", a:"Hash URL â†’ base62 encode â†’ store in DB (longURL, shortCode). Use Redis cache for reads. Handle collisions. Load balancer + CDN for scale."},
+    {q:"SQL vs NoSQL â€” when to choose?", a:"SQL: structured data, ACID, complex queries (banking, ERP). NoSQL: flexible schema, high scale, simple access (social feed, IoT, sessions)."},
     {q:"What is consistent hashing?", a:"Maps nodes and data to a ring. Adding/removing nodes only affects adjacent data. Used in distributed caches (Redis, Cassandra) to minimize redistribution."},
-    {q:"Explain CAP theorem", a:"Distributed system can guarantee only 2 of 3: Consistency, Availability, Partition tolerance. Network partitions always happen → choose CP or AP."},
+    {q:"Explain CAP theorem", a:"Distributed system can guarantee only 2 of 3: Consistency, Availability, Partition tolerance. Network partitions always happen â†’ choose CP or AP."},
     {q:"How does a CDN work?", a:"Content cached at edge servers near users. Request routes to nearest PoP. Origin server only hit on cache miss. Reduces latency by 50-90%."},
     {q:"What is rate limiting?", a:"Control request rate to prevent abuse. Algorithms: token bucket, leaky bucket, sliding window. Implement with Redis INCR + TTL. Return 429 Too Many Requests."},
   ],
@@ -3414,12 +3414,12 @@ const FLASHCARDS = {
     {q:"git rebase vs git merge", a:"Merge: creates merge commit, preserves history. Rebase: replays commits on top of branch, linear history. Rule: rebase local, merge public branches."},
     {q:"What is git stash?", a:"Temporarily saves uncommitted changes to a stack. git stash push, git stash pop. Useful to switch branches with a clean working tree."},
     {q:"Explain git cherry-pick", a:"Applies a specific commit from another branch onto current branch. git cherry-pick <commit-hash>. Useful for hotfixes without merging entire branch."},
-    {q:"git reset vs git revert", a:"reset: moves HEAD back, rewrites history (dangerous on shared branches). revert: creates new commit undoing changes — safe for shared branches."},
+    {q:"git reset vs git revert", a:"reset: moves HEAD back, rewrites history (dangerous on shared branches). revert: creates new commit undoing changes â€” safe for shared branches."},
   ],
   docker: [
     {q:"Docker image vs container", a:"Image: read-only template with instructions (like a class). Container: running instance of image (like an object). Multiple containers from one image."},
     {q:"What is Docker Compose?", a:"Tool to define and run multi-container apps with YAML. docker-compose up spins everything. Manages networking, volumes, dependencies between services."},
-    {q:"Explain Docker layers", a:"Each Dockerfile instruction creates a layer. Layers are cached — unchanged layers reuse cache. Order matters: put frequently changing instructions last."},
+    {q:"Explain Docker layers", a:"Each Dockerfile instruction creates a layer. Layers are cached â€” unchanged layers reuse cache. Order matters: put frequently changing instructions last."},
     {q:"What is a Docker volume?", a:"Persistent storage that survives container removal. Stored on host, mounted into container. Types: named volumes, bind mounts, tmpfs."},
   ],
   javascript: [
@@ -3432,30 +3432,30 @@ const FLASHCARDS = {
   os: [
     {q:"Process vs Thread", a:"Process: independent program with own memory space. Thread: lightweight unit within process, shares memory. Context switch is cheaper for threads."},
     {q:"What is deadlock?", a:"Two+ processes wait for each other's resources forever. Conditions: mutual exclusion, hold&wait, no preemption, circular wait. Prevention: break any condition."},
-    {q:"Explain virtual memory", a:"OS abstraction that gives each process its own address space. Physical RAM + disk swap. Enables more processes than physical RAM. Page tables map virtual→physical."},
+    {q:"Explain virtual memory", a:"OS abstraction that gives each process its own address space. Physical RAM + disk swap. Enables more processes than physical RAM. Page tables map virtualâ†’physical."},
     {q:"What is a semaphore?", a:"Synchronization primitive. Binary semaphore = mutex (0 or 1). Counting semaphore tracks resource count. P(wait) decrements, V(signal) increments."},
   ],
   dsa: [
     {q:"Time complexity of binary search?", a:"O(log n). Works on sorted array. Each step halves the search space. Space: O(1) iterative, O(log n) recursive. Key: array must be sorted first."},
     {q:"Explain BFS vs DFS", a:"BFS: queue, level-by-level, shortest path in unweighted graph. DFS: stack/recursion, depth-first, good for cycle detection, topological sort, path existence."},
     {q:"What is dynamic programming?", a:"Optimization: break problem into overlapping subproblems, memoize results. Two approaches: top-down (memoization) and bottom-up (tabulation). Examples: Fibonacci, LCS, Knapsack."},
-    {q:"Explain quicksort", a:"Divide & conquer. Pick pivot, partition (smaller left, bigger right), recurse. Average O(n log n), worst O(n²). In-place. Unstable. Fastest in practice for most arrays."},
-    {q:"Stack vs Queue", a:"Stack: LIFO — push/pop from same end. Queue: FIFO — enqueue at back, dequeue from front. Stack uses: recursion, undo. Queue uses: BFS, task scheduling."},
-    {q:"What is a hash table?", a:"Key-value store with O(1) average lookup, insert, delete. Uses hash function to map key → index. Handles collisions via chaining (linked list) or open addressing."},
+    {q:"Explain quicksort", a:"Divide & conquer. Pick pivot, partition (smaller left, bigger right), recurse. Average O(n log n), worst O(nÂ²). In-place. Unstable. Fastest in practice for most arrays."},
+    {q:"Stack vs Queue", a:"Stack: LIFO â€” push/pop from same end. Queue: FIFO â€” enqueue at back, dequeue from front. Stack uses: recursion, undo. Queue uses: BFS, task scheduling."},
+    {q:"What is a hash table?", a:"Key-value store with O(1) average lookup, insert, delete. Uses hash function to map key â†’ index. Handles collisions via chaining (linked list) or open addressing."},
     {q:"Explain merge sort", a:"Divide array in half, sort each half, merge. Always O(n log n). Stable sort. Requires O(n) extra space. Best for linked lists and external sorting."},
     {q:"What is a trie?", a:"Tree for string prefix operations. Each node = one character. O(L) insert/search (L=word length). Used for autocomplete, spell check, IP routing. Space-heavy but fast."},
   ],
   react: [
-    {q:"Virtual DOM — how does it work?", a:"React keeps lightweight copy of real DOM. On state change, it creates new virtual DOM, diffs with previous (reconciliation), and updates only changed real DOM nodes."},
+    {q:"Virtual DOM â€” how does it work?", a:"React keeps lightweight copy of real DOM. On state change, it creates new virtual DOM, diffs with previous (reconciliation), and updates only changed real DOM nodes."},
     {q:"useState vs useReducer", a:"useState: simple state (single value). useReducer: complex state with multiple sub-values or when next state depends on previous. Redux-style pattern: (state, action) => newState."},
     {q:"What is useEffect?", a:"Runs side effects after render. Deps array controls when it re-runs: [] = once, [val] = when val changes, omit = every render. Return cleanup function for subscriptions/timers."},
-    {q:"Explain React Context", a:"Avoids prop drilling. Create context → Provider wraps tree with value → useContext(ctx) reads value. Re-renders all consumers when value changes — use memo for optimization."},
-    {q:"useMemo vs useCallback", a:"useMemo: memoizes computed value — recomputes only when deps change. useCallback: memoizes function reference — prevents child re-renders when passing callbacks as props."},
-    {q:"What is React.memo?", a:"HOC that prevents re-render if props haven't changed. Use for expensive components that receive same props often. Only does shallow comparison — use useMemo for objects."},
+    {q:"Explain React Context", a:"Avoids prop drilling. Create context â†’ Provider wraps tree with value â†’ useContext(ctx) reads value. Re-renders all consumers when value changes â€” use memo for optimization."},
+    {q:"useMemo vs useCallback", a:"useMemo: memoizes computed value â€” recomputes only when deps change. useCallback: memoizes function reference â€” prevents child re-renders when passing callbacks as props."},
+    {q:"What is React.memo?", a:"HOC that prevents re-render if props haven't changed. Use for expensive components that receive same props often. Only does shallow comparison â€” use useMemo for objects."},
     {q:"Controlled vs Uncontrolled components", a:"Controlled: form value in React state (value + onChange). Uncontrolled: DOM manages state, accessed via ref. Controlled = more control + validation. Uncontrolled = simpler for simple cases."},
   ],
   kubernetes: [
-    {q:"Pod vs Deployment vs Service", a:"Pod: smallest unit, runs containers. Deployment: manages replica set of pods, handles rolling updates. Service: stable endpoint (IP/DNS) that routes to pods — abstracts pod IP changes."},
+    {q:"Pod vs Deployment vs Service", a:"Pod: smallest unit, runs containers. Deployment: manages replica set of pods, handles rolling updates. Service: stable endpoint (IP/DNS) that routes to pods â€” abstracts pod IP changes."},
     {q:"What is a ConfigMap?", a:"Stores non-sensitive config data as key-value pairs. Mounted as env vars or volume files. Decouples config from container image. Use Secret for sensitive data."},
     {q:"Explain rolling update", a:"Gradually replaces old pods with new ones. Zero downtime. Controlled by maxSurge (extra pods) and maxUnavailable (pods that can go down). Rollback with kubectl rollout undo."},
     {q:"What is a Namespace?", a:"Logical isolation within a cluster. Different teams/environments share the same cluster. Resource quotas per namespace. Default namespaces: default, kube-system, kube-public."},
@@ -3467,7 +3467,7 @@ const FLASHCARDS = {
     {q:"S3 storage classes", a:"Standard: frequent access. Intelligent-Tiering: auto moves. Standard-IA: infrequent, cheaper. Glacier: archival, minutes-hours retrieval. Lifecycle policies automate transitions."},
     {q:"What is IAM?", a:"Identity and Access Management. Users, Groups, Roles, Policies. Principle of least privilege. Roles for EC2/Lambda to access other services. MFA for root account. Never use root for daily work."},
     {q:"RDS vs DynamoDB", a:"RDS: managed relational (MySQL, PostgreSQL, Aurora). DynamoDB: serverless NoSQL, single-digit ms, auto-scale, event streams. RDS for complex queries; DynamoDB for high-scale key-value."},
-    {q:"What is a VPC?", a:"Virtual Private Cloud — your isolated network in AWS. Subnets (public/private), route tables, IGW (internet gateway), NAT gateway, security groups, NACLs. Peering for VPC-to-VPC."},
+    {q:"What is a VPC?", a:"Virtual Private Cloud â€” your isolated network in AWS. Subnets (public/private), route tables, IGW (internet gateway), NAT gateway, security groups, NACLs. Peering for VPC-to-VPC."},
     {q:"CloudFront vs S3 hosting", a:"S3 static hosting: simple, regional. CloudFront CDN: global edge locations, HTTPS, caching, WAF, lower latency worldwide. Use both: S3 as origin, CloudFront as CDN in front."},
   ],
 };
@@ -3523,9 +3523,9 @@ function fcNav(dir) {
   renderFlashcard();
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    NETWORK CONTACT LOG
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function initNetworkLog() {
   const addBtn = $('add-contact-btn');
   if (!addBtn || addBtn.dataset.wired) return;
@@ -3584,9 +3584,9 @@ function deleteContact(id) {
   renderContacts();
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    SKILL DEMAND HEATMAP
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function initHeatmap() {
   const btn = $('heatmap-load-btn');
   if (!btn || btn.dataset.wired) return;
@@ -3597,13 +3597,13 @@ function initHeatmap() {
 
 async function loadHeatmap() {
   const area = $('heatmap-area');
-  area.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Analyzing job listings…</p></div>`;
+  area.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Analyzing job listingsâ€¦</p></div>`;
   try {
     const res = await api('GET', '/api/skill-demand');
     const skills = res.skills || [];
     const max = skills[0]?.count || 1;
     area.innerHTML = `
-      <p class="muted" style="margin-bottom:16px">Based on live Adzuna India job listings — top 25 in-demand skills</p>
+      <p class="muted" style="margin-bottom:16px">Based on live Adzuna India job listings â€” top 25 in-demand skills</p>
       <div class="heatmap-grid">${skills.map(s => {
         const pct = Math.round((s.count/max)*100);
         const bg = pct>80?'var(--c-purple)':pct>60?'rgba(124,58,237,0.7)':pct>40?'rgba(124,58,237,0.4)':pct>20?'rgba(124,58,237,0.2)':'rgba(124,58,237,0.08)';
@@ -3615,13 +3615,13 @@ async function loadHeatmap() {
   }
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    GREENHOUSE + INTERNSHALA JOBS
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 async function loadGreenhouseJobs() {
   const grid = $('jobs-grid');
   const skill = (S.profile?.skills||['python']).slice(0,1).join('');
-  grid.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading Greenhouse job boards…</p></div>`;
+  grid.innerHTML = `<div class="empty-state"><div class="parse-spinner"></div><p>Loading Greenhouse job boardsâ€¦</p></div>`;
   // Try a few known companies on Greenhouse
   const companies = ['netflix','stripe','airbnb','shopify','gitlab','hashicorp','mongodb'];
   try {
@@ -3662,9 +3662,9 @@ async function loadIndiaBoardsJobs() {
   }
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    CSV EXPORT
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function exportCSV() {
   const apps = JSON.parse(localStorage.getItem('comonk_apps') || '[]');
   if (!apps.length) { toast('No applications to export', 'error'); return; }
@@ -3679,9 +3679,9 @@ function exportCSV() {
   toast('CSV exported!', 'success');
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    DICEBEAR AVATAR (auto-set profile avatar from name)
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function setDiceBearAvatar(name) {
   const seed = encodeURIComponent(name || 'User');
   const url = `https://api.dicebear.com/9.x/initials/svg?seed=${seed}&backgroundColor=7c3aed&fontFamily=Arial&fontSize=40&bold=true`;
@@ -3693,20 +3693,20 @@ function setDiceBearAvatar(name) {
   });
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    DISCORD TEST + ABSTRACT EMAIL VALIDATION (Alerts Panel)
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function wireAlertsExtra() {
   const dc = $('dc-test-btn');
   if (dc && !dc.dataset.wired) {
     dc.dataset.wired = '1';
     dc.addEventListener('click', async () => {
       dc.disabled = true; dc.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-      const res = await api('POST', '/api/discord-alert', { message: `✅ Comonk AI test!\n\nProfile: ${S.profile?.name||'Job Seeker'}\nSkills: ${(S.profile?.skills||[]).slice(0,3).join(', ')}` });
+      const res = await api('POST', '/api/discord-alert', { message: `âœ… Comonk AI test!\n\nProfile: ${S.profile?.name||'Job Seeker'}\nSkills: ${(S.profile?.skills||[]).slice(0,3).join(', ')}` });
       const out = $('dc-test-result');
       if (res.sent) {
         out.innerHTML = `<div class="alert-success"><i class="fas fa-check-circle"></i> Sent to Discord!</div>`;
-        const badge = $('dc-status-badge'); if(badge){badge.textContent='Connected ✓';badge.style.background='rgba(16,185,129,0.15)';badge.style.color='var(--c-green)';}
+        const badge = $('dc-status-badge'); if(badge){badge.textContent='Connected âœ“';badge.style.background='rgba(16,185,129,0.15)';badge.style.color='var(--c-green)';}
       } else if (res.missing) {
         out.innerHTML = `<div class="alert-warn">Add DISCORD_WEBHOOK_URL to .env</div>`;
       } else {
@@ -3723,9 +3723,9 @@ function wireAlertsExtra() {
       notionRmBtn.disabled = true; notionRmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
       const content = $('rm-out')?.textContent?.trim() || '';
       if (!content) { toast('Generate a roadmap first', 'error'); notionRmBtn.disabled=false; notionRmBtn.innerHTML='<i class="fas fa-book-open"></i> Export to Notion'; return; }
-      const res = await api('POST', '/api/notion-export', { title: `Career Roadmap — ${S.profile?.name||''}`, content, page_type: 'roadmap' });
+      const res = await api('POST', '/api/notion-export', { title: `Career Roadmap â€” ${S.profile?.name||''}`, content, page_type: 'roadmap' });
       if (res.success) toast('Exported to Notion!', 'success');
-      else if (res.missing) toast('Add NOTION_TOKEN to .env — notion.so/my-integrations', 'warn');
+      else if (res.missing) toast('Add NOTION_TOKEN to .env â€” notion.so/my-integrations', 'warn');
       else toast(res.error||'Failed', 'error');
       notionRmBtn.disabled=false; notionRmBtn.innerHTML='<i class="fas fa-book-open"></i> Export to Notion';
     });
@@ -3737,12 +3737,12 @@ function wireAlertsExtra() {
     notionBtn.addEventListener('click', async () => {
       notionBtn.disabled = true; notionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
       const roadmapText = $('rm-out')?.textContent || $('ats-result')?.textContent || `Career Roadmap for ${S.profile?.name||'Job Seeker'}\nSkills: ${(S.profile?.skills||[]).join(', ')}\nTarget: ${(S.profile?.target_roles||[]).join(', ')}`;
-      const res = await api('POST', '/api/notion-export', { title: `Comonk Roadmap — ${S.profile?.name||''}`, content: roadmapText.slice(0, 3000), page_type: 'roadmap' });
+      const res = await api('POST', '/api/notion-export', { title: `Comonk Roadmap â€” ${S.profile?.name||''}`, content: roadmapText.slice(0, 3000), page_type: 'roadmap' });
       const out = $('notion-result');
       if (res.success) {
         out.innerHTML = `<div class="alert-success"><i class="fas fa-check-circle"></i> Exported! <a href="${escHtml(res.page_url)}" target="_blank" style="color:inherit;text-decoration:underline">Open in Notion</a></div>`;
       } else if (res.missing) {
-        out.innerHTML = `<div class="alert-warn">Add NOTION_TOKEN to .env · <a href="https://www.notion.so/my-integrations" target="_blank">Create integration</a></div>`;
+        out.innerHTML = `<div class="alert-warn">Add NOTION_TOKEN to .env Â· <a href="https://www.notion.so/my-integrations" target="_blank">Create integration</a></div>`;
       } else {
         out.innerHTML = `<div class="alert-error">${escHtml(res.error||'Failed')}</div>`;
       }
@@ -3755,12 +3755,12 @@ function wireAlertsExtra() {
     resendBtn.dataset.wired = '1';
     resendBtn.addEventListener('click', async () => {
       resendBtn.disabled = true;
-      const res = await api('POST', '/api/resend-email', { to: 'kunalpatel8702@gmail.com', subject: '✅ Comonk AI Test Email', body: `Hi ${S.profile?.name||'there'},\n\nComonk AI job alerts are now connected via Resend!\n\nYour skills: ${(S.profile?.skills||[]).slice(0,5).join(', ')}\n\n— Comonk AI Team` });
+      const res = await api('POST', '/api/resend-email', { to: 'kunalpatel8702@gmail.com', subject: 'âœ… Comonk AI Test Email', body: `Hi ${S.profile?.name||'there'},\n\nComonk AI job alerts are now connected via Resend!\n\nYour skills: ${(S.profile?.skills||[]).slice(0,5).join(', ')}\n\nâ€” Comonk AI Team` });
       const out = $('resend-result');
       if (res.sent) {
         out.innerHTML = `<div class="alert-success"><i class="fas fa-check-circle"></i> Email sent via Resend!</div>`;
       } else if (res.missing) {
-        out.innerHTML = `<div class="alert-warn">Add RESEND_API_KEY to .env · <a href="https://resend.com" target="_blank">Get free</a></div>`;
+        out.innerHTML = `<div class="alert-warn">Add RESEND_API_KEY to .env Â· <a href="https://resend.com" target="_blank">Get free</a></div>`;
       } else {
         out.innerHTML = `<div class="alert-error">${escHtml(res.error||'Failed')}</div>`;
       }
@@ -3778,13 +3778,13 @@ function wireAlertsExtra() {
       const res = await api('GET', `/api/validate-email?email=${encodeURIComponent(email)}`);
       const out = $('abstract-result');
       if (res.missing) {
-        out.innerHTML = `<div class="alert-warn">Add ABSTRACT_API_KEY to .env · <a href="https://app.abstractapi.com/api/email-validation" target="_blank">Get free</a></div>`;
+        out.innerHTML = `<div class="alert-warn">Add ABSTRACT_API_KEY to .env Â· <a href="https://app.abstractapi.com/api/email-validation" target="_blank">Get free</a></div>`;
       } else if (res.valid === null) {
         out.innerHTML = `<div class="alert-error">${escHtml(res.error||'Error')}</div>`;
       } else {
         const color = res.valid ? 'var(--c-green)' : 'var(--c-red)';
-        out.innerHTML = `<div style="color:${color};font-weight:600">${res.valid?'✅ Valid & Deliverable':'❌ Invalid / Undeliverable'}</div>
-          <div class="muted" style="font-size:12px;margin-top:4px">Free email: ${res.is_free_email?'Yes':'No'} · Disposable: ${res.is_disposable?'⚠️ Yes':'No'} · Score: ${res.score||'—'}</div>`;
+        out.innerHTML = `<div style="color:${color};font-weight:600">${res.valid?'âœ… Valid & Deliverable':'â�Œ Invalid / Undeliverable'}</div>
+          <div class="muted" style="font-size:12px;margin-top:4px">Free email: ${res.is_free_email?'Yes':'No'} Â· Disposable: ${res.is_disposable?'âš ï¸� Yes':'No'} Â· Score: ${res.score||'â€”'}</div>`;
       }
       ab.disabled = false;
     });
@@ -3812,13 +3812,13 @@ function wireAlertsExtra() {
       const res = await api('POST', '/api/sms-alert', {
         to: phone,
         channel: smsChannel,
-        message: `✅ Comonk AI test ${smsChannel === 'whatsapp' ? 'WhatsApp' : 'SMS'}!\n\nYour job alerts are active.\nProfile: ${S.profile?.name || 'Job Seeker'}\nSkills: ${(S.profile?.skills || []).slice(0, 3).join(', ')}`
+        message: `âœ… Comonk AI test ${smsChannel === 'whatsapp' ? 'WhatsApp' : 'SMS'}!\n\nYour job alerts are active.\nProfile: ${S.profile?.name || 'Job Seeker'}\nSkills: ${(S.profile?.skills || []).slice(0, 3).join(', ')}`
       });
       const out = $('sms-test-result');
       const badge = $('sms-status-badge');
       if (res.sent) {
         out.innerHTML = `<div class="alert-success"><i class="fas fa-check-circle"></i> ${smsChannel === 'whatsapp' ? 'WhatsApp' : 'SMS'} sent to ${escHtml(phone)}!</div>`;
-        if (badge) { badge.textContent = 'Connected ✓'; badge.style.background = 'rgba(16,185,129,0.15)'; badge.style.color = 'var(--c-green)'; }
+        if (badge) { badge.textContent = 'Connected âœ“'; badge.style.background = 'rgba(16,185,129,0.15)'; badge.style.color = 'var(--c-green)'; }
       } else if (res.not_configured) {
         out.innerHTML = `<div class="alert-warn"><i class="fas fa-exclamation-triangle"></i> Add <code>TWILIO_AUTH_TOKEN</code> + <code>TWILIO_FROM_NUMBER</code> to .env and restart</div>`;
       } else {
@@ -3832,7 +3832,7 @@ function wireAlertsExtra() {
 /* Wire everything when initApp runs */
 const _origInitApp = window.initApp;
 
-/* Call all new inits after profile loads — hooked via initApp */
+/* Call all new inits after profile loads â€” hooked via initApp */
 function initAllNewFeatures() {
   initThemeToggle();
   loadWeatherWidget();
@@ -3858,9 +3858,9 @@ function initAllNewFeatures() {
   });
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    HERO PARTICLES
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function initParticles() {
   const canvas = $('hero-particles');
   if (!canvas) return;
@@ -3900,9 +3900,9 @@ function initParticles() {
   draw();
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    AI CAREER SCORE
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function computeCareerScore() {
   const p = S.profile || {};
   const breakdown = [];
@@ -3973,18 +3973,18 @@ function renderScoreRing() {
   }
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    DAILY CAREER TIP
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function renderDailyTip() {
   const tips = [
-    { icon: 'fa-building', text: 'Apply to at least 3 Ahmedabad companies today. Consistency beats perfection — send that application even if the resume isn\'t perfect yet.', panel: 'targets', cta: 'Find Companies' },
+    { icon: 'fa-building', text: 'Apply to at least 3 Ahmedabad companies today. Consistency beats perfection â€” send that application even if the resume isn\'t perfect yet.', panel: 'targets', cta: 'Find Companies' },
     { icon: 'fa-microphone', text: 'Practice one mock interview question out loud. Verbal rehearsal improves real interview performance by up to 40%.', panel: 'mockvoice', cta: 'Start Mock Interview' },
-    { icon: 'fa-linkedin', text: 'Update your LinkedIn headline with your top 3 skills and target role. Recruiters spend just 6 seconds on a profile — make every word count.', panel: 'linkedin', cta: 'Optimize LinkedIn' },
+    { icon: 'fa-linkedin', text: 'Update your LinkedIn headline with your top 3 skills and target role. Recruiters spend just 6 seconds on a profile â€” make every word count.', panel: 'linkedin', cta: 'Optimize LinkedIn' },
     { icon: 'fa-file-alt', text: 'Tailor your resume for the specific job role. ATS systems reject 75% of resumes before a human ever sees them.', panel: 'ats', cta: 'ATS Check' },
     { icon: 'fa-map', text: 'Review your 90-day career roadmap and check off completed milestones. Tracking progress multiplies motivation.', panel: 'roadmap', cta: 'View Roadmap' },
-    { icon: 'fa-envelope', text: 'Send one personalized cold email to an HR contact today. Personalized emails get 6× more replies than generic ones.', panel: 'targets', cta: 'Find HR Contacts' },
-    { icon: 'fa-code', text: 'Solve one LeetCode problem today. Many Ahmedabad IT companies use coding tests — build the habit now.', panel: 'codingstats', cta: 'Coding Stats' },
+    { icon: 'fa-envelope', text: 'Send one personalized cold email to an HR contact today. Personalized emails get 6Ã— more replies than generic ones.', panel: 'targets', cta: 'Find HR Contacts' },
+    { icon: 'fa-code', text: 'Solve one LeetCode problem today. Many Ahmedabad IT companies use coding tests â€” build the habit now.', panel: 'codingstats', cta: 'Coding Stats' },
     { icon: 'fa-star', text: 'Ask the AI counselor to review your profile and suggest 3 specific improvements. Free, instant, and fully personalized.', panel: 'chat', cta: 'Ask AI Counselor' },
     { icon: 'fa-rupee-sign', text: 'Research salary ranges before your next interview. Knowing the Ahmedabad market rate gives you real negotiation power.', panel: 'salary', cta: 'Salary Intelligence' },
     { icon: 'fa-graduation-cap', text: 'Spend 30 minutes on a skill from your learning hub. Small consistent improvements compound dramatically over weeks.', panel: 'learning', cta: 'Learning Hub' },
@@ -4000,9 +4000,9 @@ function renderDailyTip() {
   if (action) action.innerHTML = `<button class="btn-primary sm" onclick="openPanel('${tip.panel}')"><i class="fas fa-arrow-right"></i> ${tip.cta}</button>`;
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    ACTIVITY HEATMAP
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function trackActivity() {
   const today = new Date().toISOString().slice(0, 10);
   const a = JSON.parse(localStorage.getItem('comonk_activity') || '{}');
@@ -4030,12 +4030,12 @@ function renderActivityHeatmap() {
   let streak = 0;
   for (let i = cells.length - 1; i >= 0; i--) { if (cells[i].count > 0) streak++; else break; }
   const sEl = $('heatmap-streak');
-  if (sEl) sEl.textContent = streak > 1 ? `🔥 ${streak}-day streak` : streak === 1 ? '🔥 1-day streak — keep going!' : 'Start your streak today!';
+  if (sEl) sEl.textContent = streak > 1 ? `ðŸ”¥ ${streak}-day streak` : streak === 1 ? 'ðŸ”¥ 1-day streak â€” keep going!' : 'Start your streak today!';
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    ACHIEVEMENT BADGES
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 const ACHIEVEMENTS = [
   { id: 'first_load',      icon: 'fa-rocket',      label: 'Launch Ready', desc: 'Opened Comonk AI',                    color: '#a78bfa', check: () => true },
   { id: 'profile_done',    icon: 'fa-user-check',   label: 'Profile Pro',  desc: 'Uploaded your resume',               color: '#93c5fd', check: () => !!(S.profile?.skills?.length) },
@@ -4055,7 +4055,7 @@ function renderAchievements() {
   ACHIEVEMENTS.forEach(a => { if (!unlocked.includes(a.id) && a.check()) { unlocked.push(a.id); newUnlocks.push(a); } });
   if (newUnlocks.length) {
     localStorage.setItem('comonk_ach', JSON.stringify(unlocked));
-    newUnlocks.forEach((a, i) => setTimeout(() => toast(`🏆 Achievement: ${a.label}!`, 'success', 4000), i * 600));
+    newUnlocks.forEach((a, i) => setTimeout(() => toast(`ðŸ�† Achievement: ${a.label}!`, 'success', 4000), i * 600));
   }
   const badge = $('ach-count-badge');
   if (badge) badge.textContent = `${unlocked.length}/8`;
@@ -4068,9 +4068,9 @@ function renderAchievements() {
   }).join('');
 }
 
-/* ════════════════════════════════════════════════════════════════
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
    GLOBAL SEARCH  (Cmd+K)
-   ════════════════════════════════════════════════════════════════ */
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 const SEARCH_INDEX = [
   { label: 'Overview Dashboard',        panel: 'overview',     icon: 'fa-th-large',          desc: 'Career score, achievements, heatmap' },
   { label: 'AI Career Counselor',        panel: 'chat',         icon: 'fa-comments',           desc: 'LangGraph multi-agent chat' },
@@ -4087,7 +4087,7 @@ const SEARCH_INDEX = [
   { label: 'Learning Hub',              panel: 'learning',     icon: 'fa-graduation-cap',     desc: 'Articles, videos, cheatsheets' },
   { label: 'Interview Q&A',             panel: 'interview',    icon: 'fa-microphone',         desc: 'AI questions + STAR templates' },
   { label: 'Job Alerts Setup',          panel: 'alerts',       icon: 'fa-bell',               desc: 'Telegram, SMS, WhatsApp, Discord' },
-  { label: 'Flashcards',                panel: 'flashcards',   icon: 'fa-layer-group',        desc: 'Python, ML, SQL, System Design…' },
+  { label: 'Flashcards',                panel: 'flashcards',   icon: 'fa-layer-group',        desc: 'Python, ML, SQL, System Designâ€¦' },
   { label: 'Network Log',               panel: 'network',      icon: 'fa-user-friends',       desc: 'LinkedIn connection tracker' },
   { label: 'Skill Heatmap',             panel: 'heatmap',      icon: 'fa-th',                 desc: 'Live demand visualization' },
   { label: 'Focus Timer',               panel: 'pomodoro',     icon: 'fa-clock',              desc: 'Pomodoro with WakaTime' },
@@ -4272,26 +4272,26 @@ function initTestPanel(){
     return;
   }
   if(Auth.user?.is_verified){
-    area.innerHTML='<div class="empty-state" style="padding:60px"><i class="fas fa-check-circle" style="font-size:64px;color:var(--c-green)"></i><h3 style="margin-top:16px">You are Comonk Verified!</h3><p class="muted">HR contacts unlocked · 5 free/month</p><button class="btn-primary" style="margin-top:16px" onclick="openPanel(\'targets\')"><i class="fas fa-building"></i> View Companies</button></div>';
+    area.innerHTML='<div class="empty-state" style="padding:60px"><i class="fas fa-check-circle" style="font-size:64px;color:var(--c-green)"></i><h3 style="margin-top:16px">You are Comonk Verified!</h3><p class="muted">HR contacts unlocked Â· 5 free/month</p><button class="btn-primary" style="margin-top:16px" onclick="openPanel(\'targets\')"><i class="fas fa-building"></i> View Companies</button></div>';
     return;
   }
   area.innerHTML=`<div class="test-intro card" style="max-width:640px;margin:0 auto">
-    <div style="text-align:center;padding:20px 0"><div style="font-size:56px">🎓</div><h2 style="margin-top:12px">Comonk Verified Aptitude Test</h2><p class="muted" style="margin-top:8px;line-height:1.7">20 hard questions · 45 seconds each · 70% (14/20) to pass</p></div>
+    <div style="text-align:center;padding:20px 0"><div style="font-size:56px">ðŸŽ“</div><h2 style="margin-top:12px">Comonk Verified Aptitude Test</h2><p class="muted" style="margin-top:8px;line-height:1.7">20 hard questions Â· 45 seconds each Â· 70% (14/20) to pass</p></div>
     <div class="test-rules">
       <div class="rule-item"><i class="fas fa-eye-slash" style="color:var(--c-red)"></i> Tab switching = Strike (3 strikes = auto fail)</div>
       <div class="rule-item"><i class="fas fa-ban" style="color:var(--c-red)"></i> Copy/paste, right-click, DevTools blocked</div>
       <div class="rule-item"><i class="fas fa-expand" style="color:var(--c-gold)"></i> Fullscreen required throughout test</div>
-      <div class="rule-item"><i class="fas fa-clock" style="color:var(--c-blue-l)"></i> 45 seconds per question — auto-advances</div>
+      <div class="rule-item"><i class="fas fa-clock" style="color:var(--c-blue-l)"></i> 45 seconds per question â€” auto-advances</div>
       <div class="rule-item"><i class="fas fa-redo" style="color:var(--c-purple-l)"></i> Failed? Retry after 24 hours</div>
     </div>
-    <button class="btn-primary" style="width:100%;margin-top:20px;padding:14px;font-size:16px" id="start-test-btn"><i class="fas fa-play"></i> Start Test — Enter Fullscreen</button>
+    <button class="btn-primary" style="width:100%;margin-top:20px;padding:14px;font-size:16px" id="start-test-btn"><i class="fas fa-play"></i> Start Test â€” Enter Fullscreen</button>
   </div>`;
   $('start-test-btn').addEventListener('click',startTest);
 }
 
 async function startTest(){
   const area=$('test-area');
-  area.innerHTML='<div class="empty-state"><div class="parse-spinner"></div><p>Loading questions…</p></div>';
+  area.innerHTML='<div class="empty-state"><div class="parse-spinner"></div><p>Loading questionsâ€¦</p></div>';
   const res=await authApi('GET','/api/test/questions');
   if(res.cooldown){area.innerHTML=`<div class="empty-state"><i class="fas fa-clock" style="font-size:48px;color:var(--c-gold)"></i><h3>Cooldown Active</h3><p class="muted">${escHtml(res.message)}</p></div>`;return;}
   if(res.already_verified){initTestPanel();return;}
@@ -4349,15 +4349,15 @@ function autoFailTest(){
 async function submitTest(){
   AntiCheat.stop();
   const timeTaken=Math.floor((Date.now()-testState.startTime)/1000);
-  $('test-area').innerHTML='<div class="empty-state"><div class="parse-spinner"></div><p>Evaluating…</p></div>';
+  $('test-area').innerHTML='<div class="empty-state"><div class="parse-spinner"></div><p>Evaluatingâ€¦</p></div>';
   const res=await authApi('POST','/api/test/submit',{answers:testState.answers,answer_key:testState.answerKey,tab_switches:AntiCheat.strikes,time_taken:timeTaken});
   const pct=Math.round((res.score/res.total)*100);
   const color=res.passed?'var(--c-green)':'var(--c-red)';
   $('test-area').innerHTML=`<div class="test-result card" style="max-width:480px;margin:40px auto;text-align:center">
-    <div style="font-size:64px">${res.passed?'🎉':'😔'}</div>
+    <div style="font-size:64px">${res.passed?'ðŸŽ‰':'ðŸ˜”'}</div>
     <h2 style="margin-top:12px;color:${color}">${res.passed?'Congratulations! Verified!':'Not Passed'}</h2>
     <div style="font-size:48px;font-weight:800;color:${color};margin:16px 0">${res.score}/${res.total}</div>
-    <div class="muted">${pct}% · Need 70%</div>
+    <div class="muted">${pct}% Â· Need 70%</div>
     ${res.suspicious?'<div class="alert-warn" style="margin-top:16px">Suspicious activity flagged for admin review.</div>':''}
     <p class="muted" style="margin-top:12px">${escHtml(res.message)}</p>
     ${res.passed?'<button class="btn-primary" style="margin-top:20px;width:100%" onclick="initTestPanel()"><i class="fas fa-check-circle"></i> Done</button>':'<button class="btn-ghost" style="margin-top:16px;width:100%" onclick="initTestPanel()"><i class="fas fa-arrow-left"></i> Back</button>'}
@@ -4401,7 +4401,7 @@ async function loadAdminStats(){
     {label:'Test Attempts',val:d.total_test_attempts,icon:'fa-pen'},
     {label:'Passed',val:d.passed_tests,icon:'fa-trophy',color:'var(--c-green)'},
     {label:'Suspicious',val:d.suspicious_attempts,icon:'fa-flag',color:'var(--c-red)'},
-  ].map(k=>`<div class="kpi-card"><div class="kpi-icon"><i class="fas ${k.icon}" style="color:${k.color||'var(--c-purple)'}"></i></div><div class="kpi-val" style="color:${k.color||''}">${k.val??'—'}</div><div class="kpi-label">${k.label}</div></div>`).join('');
+  ].map(k=>`<div class="kpi-card"><div class="kpi-icon"><i class="fas ${k.icon}" style="color:${k.color||'var(--c-purple)'}"></i></div><div class="kpi-val" style="color:${k.color||''}">${k.val??'â€”'}</div><div class="kpi-label">${k.label}</div></div>`).join('');
 }
 
 async function loadAdminRequests(){
@@ -4415,13 +4415,13 @@ async function loadAdminRequests(){
 async function loadAdminUsers(){
   const d=await adminFetch('/api/admin/users?limit=100');
   $('admin-tab-users').innerHTML='<div class="admin-table"><div class="admin-tr hdr"><span>Name</span><span>Email</span><span>Role</span><span>Verified</span><span>Contacts</span><span></span></div>'+
-    (d.users||[]).map(u=>`<div class="admin-tr"><span>${escHtml(u.name)}</span><span class="muted">${escHtml(u.email)}</span><span>${escHtml(u.target_role)}</span><span>${u.is_verified?'<span style="color:var(--c-green)">✓</span>':'<span class="muted">—</span>'}</span><span>${u.contacts_used}</span><span><button class="btn-xs ghost" onclick="adminDeleteUser(${u.id},'${escHtml(u.name)}')"><i class="fas fa-trash"></i></button></span></div>`).join('')+'</div>';
+    (d.users||[]).map(u=>`<div class="admin-tr"><span>${escHtml(u.name)}</span><span class="muted">${escHtml(u.email)}</span><span>${escHtml(u.target_role)}</span><span>${u.is_verified?'<span style="color:var(--c-green)">âœ“</span>':'<span class="muted">â€”</span>'}</span><span>${u.contacts_used}</span><span><button class="btn-xs ghost" onclick="adminDeleteUser(${u.id},'${escHtml(u.name)}')"><i class="fas fa-trash"></i></button></span></div>`).join('')+'</div>';
 }
 
 async function loadAdminAttempts(){
   const d=await adminFetch('/api/admin/test-attempts');
   $('admin-tab-attempts').innerHTML='<div class="admin-table"><div class="admin-tr hdr"><span>User</span><span>Score</span><span>Pass</span><span>Strikes</span><span>Time</span><span>Flag</span></div>'+
-    (d.attempts||[]).map(a=>`<div class="admin-tr ${a.suspicious?'suspicious-row':''}"><span>${escHtml(a.name)}</span><span>${a.score}/${a.total}</span><span>${a.passed?'<span style="color:var(--c-green)">✓</span>':'<span style="color:var(--c-red)">✗</span>'}</span><span style="color:${a.tab_switches>0?'var(--c-red)':''}">${a.tab_switches}</span><span>${Math.floor(a.time_taken/60)}m${a.time_taken%60}s</span><span>${a.suspicious?'⚠️':'—'}</span></div>`).join('')+'</div>';
+    (d.attempts||[]).map(a=>`<div class="admin-tr ${a.suspicious?'suspicious-row':''}"><span>${escHtml(a.name)}</span><span>${a.score}/${a.total}</span><span>${a.passed?'<span style="color:var(--c-green)">âœ“</span>':'<span style="color:var(--c-red)">âœ—</span>'}</span><span style="color:${a.tab_switches>0?'var(--c-red)':''}">${a.tab_switches}</span><span>${Math.floor(a.time_taken/60)}m${a.time_taken%60}s</span><span>${a.suspicious?'âš ï¸�':'â€”'}</span></div>`).join('')+'</div>';
 }
 
 async function adminApprove(reqId){
@@ -4444,9 +4444,9 @@ async function adminDeleteUser(userId,name){
   toast('Deleted '+name,'success'); loadAdminUsers();
 }
 
-/* ════════════════════════════════════════════════════════════════
-   ONBOARDING FLOW  (Account → Verify → Resume → Ready → Dashboard)
-   ════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
+   ONBOARDING FLOW  (Account â†’ Verify â†’ Resume â†’ Ready â†’ Dashboard)
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 const DEMO_PROFILE = {
   name: 'Arjun Sharma', email: 'arjun@example.com', phone: '+91 98765 43210',
   skills: ['Python','Machine Learning','LangChain','FastAPI','TensorFlow','PyTorch','NLP','SQL','Docker','Git'],
@@ -4481,7 +4481,7 @@ function initOnboarding(){
           phone=$('ob-phone').value.trim(), role=$('ob-role').value, city=$('ob-city').value;
     if(!name||!email||!pw){ obErr('ob-reg-err','Please fill name, email, and password'); return; }
     if(pw.length<6){ obErr('ob-reg-err','Password must be at least 6 characters'); return; }
-    reg.disabled=true; reg.innerHTML='<i class="fas fa-spinner fa-spin"></i> Creating…';
+    reg.disabled=true; reg.innerHTML='<i class="fas fa-spinner fa-spin"></i> Creatingâ€¦';
     const res=await authApi('POST','/api/auth/register',{name,email,password:pw,phone,target_role:role,city});
     if(res.success){
       obState.email=email; localStorage.setItem('comonk_pending_email',email);
@@ -4504,7 +4504,7 @@ function initOnboarding(){
   $('ob-otp-btn').addEventListener('click', async()=>{
     const otp=obOtpValue();
     if(otp.length<6){ obErr('ob-otp-err','Enter all 6 digits'); return; }
-    const btn=$('ob-otp-btn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Verifying…';
+    const btn=$('ob-otp-btn'); btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Verifyingâ€¦';
     const res=await authApi('POST','/api/auth/verify-otp',{email:obState.email,otp});
     if(res.success){
       Auth.save(res.token,res); updateAuthUI(); $('ob-otp-err').innerHTML='';
@@ -4524,16 +4524,16 @@ function initOnboarding(){
 }
 
 function obShowParsing(h,s){ $('ob-upload-idle').style.display='none'; $('ob-upload-parsing').style.display='block'; $('ob-parse-headline').textContent=h; $('ob-parse-sub').textContent=s; }
-function obAnimateBar(){ let w=0; const msgs=['Reading structure…','Extracting skills…','Analyzing experience…','Matching companies…','Finalizing…']; let mi=0;
+function obAnimateBar(){ let w=0; const msgs=['Reading structureâ€¦','Extracting skillsâ€¦','Analyzing experienceâ€¦','Matching companiesâ€¦','Finalizingâ€¦']; let mi=0;
   const t=setInterval(()=>{ w=Math.min(w+Math.random()*12+3,92); const b=$('ob-parse-prog-bar'); if(b)b.style.width=w+'%'; if(w>mi*18+18){ $('ob-parse-sub').textContent=msgs[mi]||msgs[msgs.length-1]; mi++; } if(w>=92)clearInterval(t); },250); }
 
 async function obHandleResume(file){
   if(!file.name.toLowerCase().endsWith('.pdf')){ toast('Please upload a PDF file','error'); return; }
-  obShowParsing('Reading your resume…','AI extracting skills and experience…'); obAnimateBar();
+  obShowParsing('Reading your resumeâ€¦','AI extracting skills and experienceâ€¦'); obAnimateBar();
   try{ const fd=new FormData(); fd.append('file',file); const profile=await api('POST','/api/parse-resume',fd,true); await obAfterProfile(profile); }
   catch(e){ $('ob-upload-idle').style.display='block'; $('ob-upload-parsing').style.display='none'; toast('Could not parse PDF: '+e.message,'error'); }
 }
-async function obLoadDemo(){ obShowParsing('Loading demo profile…','Generating sample AI Engineer profile'); obAnimateBar(); await new Promise(r=>setTimeout(r,1500)); await obAfterProfile(JSON.parse(JSON.stringify(DEMO_PROFILE))); }
+async function obLoadDemo(){ obShowParsing('Loading demo profileâ€¦','Generating sample AI Engineer profile'); obAnimateBar(); await new Promise(r=>setTimeout(r,1500)); await obAfterProfile(JSON.parse(JSON.stringify(DEMO_PROFILE))); }
 
 async function obAfterProfile(profile){
   const b=$('ob-parse-prog-bar'); if(b) b.style.width='100%';
@@ -4571,9 +4571,9 @@ function finishOnboardingDirect(){
   if(S.profile?.name) setDiceBearAvatar(S.profile.name);
 }
 
-/* ════════════════════════════════════════════════════════════════
-   PROMISED FEATURE 1 — AI MOCK INTERVIEW (voice via Web Speech API)
-   ════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
+   PROMISED FEATURE 1 â€” AI MOCK INTERVIEW (voice via Web Speech API)
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 let mockState = { questions:[], current:0, recognizing:false, recog:null, transcript:'' };
 
 function initMockVoice(){
@@ -4581,16 +4581,16 @@ function initMockVoice(){
   area.innerHTML=`
     <div class="mv-intro card" style="max-width:620px;margin:0 auto">
       <div style="text-align:center;padding:14px 0">
-        <div style="font-size:52px">🎤</div>
+        <div style="font-size:52px">ðŸŽ¤</div>
         <h2 style="margin-top:10px">AI Mock Interview</h2>
-        <p class="muted" style="margin-top:6px;line-height:1.7">Role-specific questions. Answer out loud (we transcribe in your browser — nothing is uploaded) or type. AI scores you on clarity, structure, relevance & confidence.</p>
+        <p class="muted" style="margin-top:6px;line-height:1.7">Role-specific questions. Answer out loud (we transcribe in your browser â€” nothing is uploaded) or type. AI scores you on clarity, structure, relevance & confidence.</p>
       </div>
       <div class="form-row-2" style="margin-top:10px">
         <div class="fg"><label>Target Role</label><input type="text" id="mv-role" class="inp" value="${escHtml((S.profile?.target_roles&&S.profile.target_roles[0])||S.profile?.target_role||'AI/ML Engineer')}"></div>
         <div class="fg"><label>Difficulty</label><select id="mv-diff" class="inp"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select></div>
       </div>
       <button class="btn-primary lg" style="width:100%;margin-top:8px" id="mv-start-btn"><i class="fas fa-play"></i> Start Interview</button>
-      ${!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) ? '<p class="muted" style="margin-top:10px;font-size:12px;text-align:center"><i class="fas fa-circle-info"></i> Voice not supported in this browser — you can still type your answers. (Chrome/Edge recommended.)</p>' : ''}
+      ${!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) ? '<p class="muted" style="margin-top:10px;font-size:12px;text-align:center"><i class="fas fa-circle-info"></i> Voice not supported in this browser â€” you can still type your answers. (Chrome/Edge recommended.)</p>' : ''}
     </div>`;
   $('mv-start-btn').addEventListener('click', mvStart);
 }
@@ -4599,7 +4599,7 @@ async function mvStart(){
   const role=$('mv-role').value.trim()||'AI/ML Engineer';
   const diff=$('mv-diff').value;
   const area=$('mockvoice-area');
-  area.innerHTML='<div class="empty-state"><div class="parse-spinner"></div><p>Generating your interview questions…</p></div>';
+  area.innerHTML='<div class="empty-state"><div class="parse-spinner"></div><p>Generating your interview questionsâ€¦</p></div>';
   const res=await api('POST','/api/mock-interview/questions',{target_role:role,difficulty:diff,count:5});
   if(!res.success||!res.questions?.length){ area.innerHTML=`<div class="alert-error">${escHtml(res.error||'Failed to load questions')}</div>`; return; }
   mockState={questions:res.questions,current:0,recognizing:false,recog:null,transcript:'',role,scores:[]};
@@ -4637,7 +4637,7 @@ function mvRenderQuestion(){
         <div class="mv-mic-row">
           ${supported?`<button class="mv-mic" id="mv-mic-btn"><i class="fas fa-microphone"></i></button><span class="mv-mic-hint" id="mv-mic-hint">Tap to speak</span>`:''}
         </div>
-        <textarea id="mv-answer" class="inp" rows="6" placeholder="${supported?'Your spoken answer appears here — or type directly…':'Type your answer here…'}" style="resize:vertical;margin-top:14px;font-family:inherit"></textarea>
+        <textarea id="mv-answer" class="inp" rows="6" placeholder="${supported?'Your spoken answer appears here â€” or type directlyâ€¦':'Type your answer hereâ€¦'}" style="resize:vertical;margin-top:14px;font-family:inherit"></textarea>
         <div style="display:flex;gap:10px;margin-top:14px">
           <button class="btn-primary" style="flex:1" id="mv-submit-btn"><i class="fas fa-star"></i> Score My Answer</button>
           <button class="btn-ghost" id="mv-skip-btn">Skip</button>
@@ -4662,7 +4662,7 @@ function mvWireMic(){
     const recog=new SR();
     recog.lang='en-IN'; recog.continuous=true; recog.interimResults=true;
     mockState.recog=recog; mockState.baseText=ta.value;
-    recog.onstart=()=>{ mockState.recognizing=true; btn.classList.add('recording'); hint.textContent='Listening… tap to stop'; };
+    recog.onstart=()=>{ mockState.recognizing=true; btn.classList.add('recording'); hint.textContent='Listeningâ€¦ tap to stop'; };
     recog.onresult=e=>{
       let txt='';
       for(let i=0;i<e.results.length;i++) txt+=e.results[i][0].transcript;
@@ -4679,7 +4679,7 @@ async function mvScore(){
   if(answer.length<10){ toast('Answer is too short to score','error'); return; }
   if(mockState.recognizing) mockState.recog?.stop();
   const q=mockState.questions[mockState.current];
-  const fb=$('mv-feedback'); fb.innerHTML='<div class="empty-state" style="padding:20px"><div class="parse-spinner"></div><p>AI is evaluating your answer…</p></div>';
+  const fb=$('mv-feedback'); fb.innerHTML='<div class="empty-state" style="padding:20px"><div class="parse-spinner"></div><p>AI is evaluating your answerâ€¦</p></div>';
   const res=await api('POST','/api/mock-interview/score',{question:q.q,answer,target_role:mockState.role,qtype:q.type});
   if(!res.success){ fb.innerHTML=`<div class="alert-error">${escHtml(res.error||'Scoring failed')}</div>`; return; }
   if(!mockState.scores) mockState.scores=[];
@@ -4692,8 +4692,8 @@ async function mvScore(){
         ${['clarity','relevance','structure','confidence'].map(k=>`<div class="mv-bar-row"><span>${k}</span><div class="mv-bar"><div class="mv-bar-fill" style="width:${(s[k]||0)*10}%"></div></div><b>${s[k]??0}</b></div>`).join('')}
       </div>
       <div class="mv-fb-cols">
-        <div><h5 class="green"><i class="fas fa-circle-check"></i> Strengths</h5><ul>${(res.strengths||[]).map(x=>`<li>${escHtml(x)}</li>`).join('')||'<li>—</li>'}</ul></div>
-        <div><h5 class="gold"><i class="fas fa-lightbulb"></i> Improve</h5><ul>${(res.improvements||[]).map(x=>`<li>${escHtml(x)}</li>`).join('')||'<li>—</li>'}</ul></div>
+        <div><h5 class="green"><i class="fas fa-circle-check"></i> Strengths</h5><ul>${(res.strengths||[]).map(x=>`<li>${escHtml(x)}</li>`).join('')||'<li>â€”</li>'}</ul></div>
+        <div><h5 class="gold"><i class="fas fa-lightbulb"></i> Improve</h5><ul>${(res.improvements||[]).map(x=>`<li>${escHtml(x)}</li>`).join('')||'<li>â€”</li>'}</ul></div>
       </div>
       ${res.model_answer?`<div class="mv-model"><h5 class="purple"><i class="fas fa-wand-magic-sparkles"></i> Model answer</h5><p>${escHtml(res.model_answer)}</p></div>`:''}
       <button class="btn-primary" style="width:100%;margin-top:14px" id="mv-next-btn">${mockState.current+1>=mockState.questions.length?'<i class="fas fa-flag-checkered"></i> Finish & See Summary':'<i class="fas fa-arrow-right"></i> Next Question'}</button>
@@ -4710,17 +4710,17 @@ function mvFinish(){
   const avg=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):0;
   $('mockvoice-area').innerHTML=`
     <div class="card" style="max-width:480px;margin:40px auto;text-align:center">
-      <div style="font-size:60px">${avg>=70?'🏆':avg>=45?'💪':'📚'}</div>
+      <div style="font-size:60px">${avg>=70?'ðŸ�†':avg>=45?'ðŸ’ª':'ðŸ“š'}</div>
       <h2 style="margin-top:10px">Interview Complete</h2>
       <div style="font-size:46px;font-weight:800;color:${avg>=70?'var(--c-green)':avg>=45?'var(--c-gold)':'var(--c-red)'};margin:12px 0">${avg}<span style="font-size:20px;color:var(--text-3)">/100 avg</span></div>
-      <p class="muted">${scores.length} answers scored. ${avg>=70?"Strong performance — you're interview-ready!":avg>=45?'Solid base. Practice the improvement areas and retry.':'Keep practicing — review model answers and try again.'}</p>
+      <p class="muted">${scores.length} answers scored. ${avg>=70?"Strong performance â€” you're interview-ready!":avg>=45?'Solid base. Practice the improvement areas and retry.':'Keep practicing â€” review model answers and try again.'}</p>
       <button class="btn-primary" style="margin-top:18px;width:100%" onclick="initMockVoice()"><i class="fas fa-redo"></i> New Interview</button>
     </div>`;
 }
 
-/* ════════════════════════════════════════════════════════════════
-   PROMISED FEATURE 2 — RESUME STUDIO (rewriter + cover letter)
-   ════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
+   PROMISED FEATURE 2 â€” RESUME STUDIO (rewriter + cover letter)
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 function initResumeStudio(){
   $$('.rs-tab').forEach(t=>{ if(t.dataset.wired) return; t.dataset.wired='1';
     t.addEventListener('click', ()=>{
@@ -4804,24 +4804,24 @@ async function rsRewrite(){
   const text=$('rs-resume-text').value.trim();
   if(text.length<30){ toast('Paste more of your resume first','error'); return; }
   const out=$('rs-rewrite-out');
-  out.innerHTML='<div class="empty-state"><div class="parse-spinner"></div><p>AI is rewriting for ATS…</p></div>';
+  out.innerHTML='<div class="empty-state"><div class="parse-spinner"></div><p>AI is rewriting for ATSâ€¦</p></div>';
   const res=await api('POST','/api/resume-rewrite',{resume_text:text,target_role:$('rs-role').value.trim()||'AI/ML Engineer'});
   if(!res.success){ out.innerHTML=`<div class="alert-error">${escHtml(res.error||'Failed')}</div>`; return; }
   out.innerHTML=`
     <div class="card-hdr"><h4><i class="fas fa-circle-check green"></i> ATS-Optimized</h4><button class="btn-xs ghost" onclick="copyText(window._rsRewriteText)"><i class="fas fa-copy"></i> Copy</button></div>
     <div class="rs-section"><h5>Professional Summary</h5><p>${escHtml(res.summary||'')}</p></div>
     <div class="rs-section"><h5>Achievement Bullets</h5><ul>${(res.bullets||[]).map(b=>`<li>${escHtml(b)}</li>`).join('')}</ul></div>
-    <div class="rs-section"><h5>Skills to Add</h5><div class="chip-row">${(res.skills_to_add||[]).map(s=>`<span class="chip">${escHtml(s)}</span>`).join('')||'—'}</div></div>
-    <div class="rs-section"><h5>ATS Keywords</h5><div class="chip-row">${(res.keywords||[]).map(s=>`<span class="chip blue">${escHtml(s)}</span>`).join('')||'—'}</div></div>
+    <div class="rs-section"><h5>Skills to Add</h5><div class="chip-row">${(res.skills_to_add||[]).map(s=>`<span class="chip">${escHtml(s)}</span>`).join('')||'â€”'}</div></div>
+    <div class="rs-section"><h5>ATS Keywords</h5><div class="chip-row">${(res.keywords||[]).map(s=>`<span class="chip blue">${escHtml(s)}</span>`).join('')||'â€”'}</div></div>
     <div class="rs-section"><h5>Quick Wins</h5><ul>${(res.ats_tips||[]).map(t=>`<li>${escHtml(t)}</li>`).join('')}</ul></div>`;
-  window._rsRewriteText=`PROFESSIONAL SUMMARY\n${res.summary}\n\nEXPERIENCE\n`+(res.bullets||[]).map(b=>'• '+b).join('\n')+`\n\nSKILLS TO ADD: ${(res.skills_to_add||[]).join(', ')}\nATS KEYWORDS: ${(res.keywords||[]).join(', ')}`;
+  window._rsRewriteText=`PROFESSIONAL SUMMARY\n${res.summary}\n\nEXPERIENCE\n`+(res.bullets||[]).map(b=>'â€¢ '+b).join('\n')+`\n\nSKILLS TO ADD: ${(res.skills_to_add||[]).join(', ')}\nATS KEYWORDS: ${(res.keywords||[]).join(', ')}`;
 }
 
 async function clGenerate(){
   const company=$('cl-company').value.trim();
   if(!company){ toast('Enter a company name','error'); return; }
   const out=$('cl-out');
-  out.innerHTML='<div class="empty-state"><div class="parse-spinner"></div><p>Writing your cover letter…</p></div>';
+  out.innerHTML='<div class="empty-state"><div class="parse-spinner"></div><p>Writing your cover letterâ€¦</p></div>';
   const p=S.profile||{};
   const res=await api('POST','/api/cover-letter',{
     name:p.name||'', target_role:$('cl-role').value.trim()||'AI/ML Engineer', company,
@@ -4830,15 +4830,15 @@ async function clGenerate(){
   if(!res.success){ out.innerHTML=`<div class="alert-error">${escHtml(res.error||'Failed')}</div>`; return; }
   window._clText=res.letter;
   out.innerHTML=`
-    <div class="card-hdr"><h4><i class="fas fa-envelope-open-text green"></i> Cover Letter — ${escHtml(company)}</h4><button class="btn-xs ghost" onclick="copyText(window._clText)"><i class="fas fa-copy"></i> Copy</button></div>
+    <div class="card-hdr"><h4><i class="fas fa-envelope-open-text green"></i> Cover Letter â€” ${escHtml(company)}</h4><button class="btn-xs ghost" onclick="copyText(window._clText)"><i class="fas fa-copy"></i> Copy</button></div>
     <pre class="cl-letter">${escHtml(res.letter)}</pre>`;
 }
 
 function copyText(t){ if(!t) return; navigator.clipboard.writeText(t).then(()=>toast('Copied to clipboard','success')).catch(()=>toast('Copy failed','error')); }
 
-/* ════════════════════════════════════════════════════════════════
-   PROMISED FEATURE 3 — CALENDAR / SCHEDULER
-   ════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
+   PROMISED FEATURE 3 â€” CALENDAR / SCHEDULER
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 const CAL_KEY='comonk_cal_events';
 let calView={ y:0, m:0 };
 function calEvents(){ try{ return JSON.parse(localStorage.getItem(CAL_KEY)||'[]'); }catch(e){ return []; } }
@@ -4880,7 +4880,7 @@ function renderCalendar(){
   $('cal-upcoming').innerHTML = up.length? up.map(e=>`
     <div class="cal-up-item" onclick="openCalModal('${e.id}')">
       <div class="cal-up-dot" style="background:${CAL_TYPE_COLOR[e.type]||'var(--text-2)'}"></div>
-      <div><div class="cal-up-title">${escHtml(e.title)}</div><div class="cal-up-date">${new Date(e.date+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short'})}${e.time?' · '+e.time:''} · ${e.type}</div></div>
+      <div><div class="cal-up-title">${escHtml(e.title)}</div><div class="cal-up-date">${new Date(e.date+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short'})}${e.time?' Â· '+e.time:''} Â· ${e.type}</div></div>
     </div>`).join('') : '<p class="muted" style="font-size:13px">No upcoming events. Click a date to add one.</p>';
 }
 
@@ -4913,11 +4913,11 @@ function calDeleteEvent(){
   calSave(calEvents().filter(x=>x.id!==id)); closeCalModal(); renderCalendar(); toast('Event deleted','warn');
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   ENTERPRISE FEATURES — Phase 3
-   ══════════════════════════════════════════════════════════════════ */
+/* â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�
+   ENTERPRISE FEATURES â€” Phase 3
+   â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•�â•� */
 
-/* ── Feature 1: Company Intelligence Deep Dive ──────────────────── */
+/* â”€â”€ Feature 1: Company Intelligence Deep Dive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function loadCompanyIntel(companyId) {
   try {
     const data = await api('GET', `/api/company-intel/${companyId}`);
@@ -4941,7 +4941,7 @@ async function loadCompanyIntel(companyId) {
           </div>`).join('')
       : `<p class="muted" style="font-size:12px">No recruiters indexed for this company yet.</p>`;
 
-    openModal(`🏢 ${data.name} — Company Intel`, `
+    openModal(`ðŸ�¢ ${data.name} â€” Company Intel`, `
       <div style="display:flex;flex-direction:column;gap:16px">
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           ${intel.growth_stage ? `<span style="background:rgba(245,158,11,0.1);color:var(--c-gold-l);border:1px solid rgba(245,158,11,0.2);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700">${escHtml(intel.growth_stage)}</span>` : ''}
@@ -4971,7 +4971,7 @@ async function loadCompanyIntel(companyId) {
 }
 window.loadCompanyIntel = loadCompanyIntel;
 
-/* ── Feature 2: Daily Briefing Panel ────────────────────────────── */
+/* â”€â”€ Feature 2: Daily Briefing Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function loadDailyBriefing() {
   const body = $('briefing-body');
   const dateEl = $('briefing-date');
@@ -4989,8 +4989,8 @@ async function loadDailyBriefing() {
     const d = await authApi('GET', '/api/daily-briefing');
     if (dateEl) dateEl.textContent = `${d.weekday}, ${d.date}`;
 
-    const weekdayIcons = { Monday:'🌅', Tuesday:'🚀', Wednesday:'⚡', Thursday:'🎯', Friday:'🔥', Saturday:'☀️', Sunday:'🌟' };
-    const wIcon = weekdayIcons[d.weekday] || '🌞';
+    const weekdayIcons = { Monday:'ðŸŒ…', Tuesday:'ðŸš€', Wednesday:'âš¡', Thursday:'ðŸŽ¯', Friday:'ðŸ”¥', Saturday:'â˜€ï¸�', Sunday:'ðŸŒŸ' };
+    const wIcon = weekdayIcons[d.weekday] || 'ðŸŒž';
     const statsCards = [
       { label: 'Total Applications', val: d.stats.total, icon: 'fa-file-alt', color: 'var(--c-purple)' },
       { label: 'Interview Calls', val: d.stats.interviews, icon: 'fa-handshake', color: 'var(--c-blue)' },
@@ -5012,7 +5012,7 @@ async function loadDailyBriefing() {
             <span style="font-size:11px;color:var(--c-gold-l);background:rgba(245,158,11,0.1);padding:2px 8px;border-radius:10px">${f.days_since}d overdue</span>
           </div>`
         ).join('')
-      : `<p class="muted" style="font-size:12px;padding:12px 0">No overdue follow-ups! 🎉 Keep it up.</p>`;
+      : `<p class="muted" style="font-size:12px;padding:12px 0">No overdue follow-ups! ðŸŽ‰ Keep it up.</p>`;
 
     body.innerHTML = `
       <!-- AI greeting -->
@@ -5059,7 +5059,7 @@ async function loadDailyBriefing() {
 }
 window.loadDailyBriefing = loadDailyBriefing;
 
-/* ── Feature 3: Outreach Analytics Dashboard ────────────────────── */
+/* â”€â”€ Feature 3: Outreach Analytics Dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function loadOutreachAnalytics() {
   const body = $('outreach-body');
   if (!body) return;
@@ -5131,18 +5131,18 @@ async function loadOutreachAnalytics() {
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <div style="text-align:center;padding:10px;background:var(--bg-3);border-radius:10px">
             <div style="font-size:28px;font-weight:900;color:var(--c-purple)">${d.streak_days}</div>
-            <div style="font-size:10px;color:var(--text-2)">Day Streak 🔥</div>
+            <div style="font-size:10px;color:var(--text-2)">Day Streak ðŸ”¥</div>
           </div>
           <div style="text-align:center;padding:10px;background:var(--bg-3);border-radius:10px">
             <div style="font-size:28px;font-weight:900;color:var(--c-blue)">${d.conversion_rate}%</div>
             <div style="font-size:10px;color:var(--text-2)">Reply Rate</div>
           </div>
           <div style="text-align:center;padding:10px;background:var(--bg-3);border-radius:10px">
-            <div style="font-size:28px;font-weight:900;color:var(--c-green)">${d.avg_response_days !== null ? d.avg_response_days + 'd' : '—'}</div>
+            <div style="font-size:28px;font-weight:900;color:var(--c-green)">${d.avg_response_days !== null ? d.avg_response_days + 'd' : 'â€”'}</div>
             <div style="font-size:10px;color:var(--text-2)">Avg. Response</div>
           </div>
           <div style="text-align:center;padding:10px;background:var(--bg-3);border-radius:10px">
-            <div style="font-size:28px;font-weight:900;color:var(--c-gold)">${d.avg_fit_score !== null ? d.avg_fit_score + '%' : '—'}</div>
+            <div style="font-size:28px;font-weight:900;color:var(--c-gold)">${d.avg_fit_score !== null ? d.avg_fit_score + '%' : 'â€”'}</div>
             <div style="font-size:10px;color:var(--text-2)">Avg. Fit Score</div>
           </div>
         </div>
@@ -5173,7 +5173,7 @@ async function loadOutreachAnalytics() {
 }
 window.loadOutreachAnalytics = loadOutreachAnalytics;
 
-/* ── Feature 4: Cold Email Scorer ───────────────────────────────── */
+/* â”€â”€ Feature 4: Cold Email Scorer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 async function scoreEmail() {
   const text = ($('email-scorer-text') || {}).value?.trim();
   const company = ($('email-scorer-company') || {}).value?.trim();
@@ -5216,17 +5216,17 @@ async function scoreEmail() {
       <div style="padding:12px 0">${dimHtml}</div>
 
       <div style="padding:10px;background:var(--bg-3);border-radius:8px;margin-bottom:10px">
-        <div style="font-size:11px;font-weight:700;color:var(--c-green-l);margin-bottom:4px">✅ Strength</div>
+        <div style="font-size:11px;font-weight:700;color:var(--c-green-l);margin-bottom:4px">âœ… Strength</div>
         <div style="font-size:12px;color:var(--text-1)">${escHtml(d.top_strength || '')}</div>
       </div>
       <div style="padding:10px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.12);border-radius:8px;margin-bottom:10px">
-        <div style="font-size:11px;font-weight:700;color:#f87171;margin-bottom:4px">⚠️ Top Issue</div>
+        <div style="font-size:11px;font-weight:700;color:#f87171;margin-bottom:4px">âš ï¸� Top Issue</div>
         <div style="font-size:12px;color:var(--text-1)">${escHtml(d.top_weakness || '')}</div>
       </div>
 
       ${d.rewritten && d.rewritten !== text ? `
         <div style="margin-top:4px">
-          <div style="font-size:11px;font-weight:700;color:var(--c-blue-l);margin-bottom:6px">✨ AI-Rewritten Version</div>
+          <div style="font-size:11px;font-weight:700;color:var(--c-blue-l);margin-bottom:6px">âœ¨ AI-Rewritten Version</div>
           <div style="font-size:12px;background:var(--bg-3);padding:10px;border-radius:8px;white-space:pre-wrap;line-height:1.6;color:var(--text-1);max-height:160px;overflow-y:auto">${escHtml(d.rewritten)}</div>
           <button class="btn-primary sm" style="margin-top:8px;width:100%" onclick="document.getElementById('email-scorer-text').value=${JSON.stringify(d.rewritten || '')};toast('Email replaced with AI version','success')"><i class='fas fa-magic'></i> Use AI Version</button>
         </div>` : ''}
@@ -5240,7 +5240,7 @@ async function scoreEmail() {
 }
 window.scoreEmail = scoreEmail;
 
-/* ── Feature 5: Offer Comparator ─────────────────────────────────── */
+/* â”€â”€ Feature 5: Offer Comparator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 let _offerSlots = [];
 
 function addOfferSlot() {
@@ -5268,14 +5268,14 @@ function renderOfferSlots() {
   if (compareBtn) compareBtn.style.display = _offerSlots.length >= 1 ? '' : 'none';
 
   const perksOptions = [
-    { id: 'health_insurance', label: '🏥 Health Insurance' },
-    { id: 'remote', label: '🏠 Remote Work' },
-    { id: 'hybrid', label: '🏢 Hybrid' },
-    { id: 'flexible_hours', label: '⏰ Flexible Hours' },
-    { id: 'meal', label: '🍱 Meal Benefits' },
-    { id: 'learning_budget', label: '📚 L&D Budget' },
-    { id: 'gym', label: '💪 Gym / Wellness' },
-    { id: 'stock', label: '📈 Stock / ESOP' },
+    { id: 'health_insurance', label: 'ðŸ�¥ Health Insurance' },
+    { id: 'remote', label: 'ðŸ�  Remote Work' },
+    { id: 'hybrid', label: 'ðŸ�¢ Hybrid' },
+    { id: 'flexible_hours', label: 'â�° Flexible Hours' },
+    { id: 'meal', label: 'ðŸ�± Meal Benefits' },
+    { id: 'learning_budget', label: 'ðŸ“š L&D Budget' },
+    { id: 'gym', label: 'ðŸ’ª Gym / Wellness' },
+    { id: 'stock', label: 'ðŸ“ˆ Stock / ESOP' },
   ];
 
   grid.innerHTML = _offerSlots.map((_, i) => `
@@ -5330,18 +5330,18 @@ async function compareOffers() {
       const ih = o.inhand || {};
       return `
         <div class="card" style="${pick ? 'border:2px solid var(--c-green);background:rgba(16,185,129,0.04)' : ''}position:relative;flex:1;min-width:220px">
-          ${pick ? `<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--c-green);color:#000;font-size:10px;font-weight:700;padding:2px 10px;border-radius:10px">⭐ AI PICK</div>` : ''}
+          ${pick ? `<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--c-green);color:#000;font-size:10px;font-weight:700;padding:2px 10px;border-radius:10px">â­� AI PICK</div>` : ''}
           <div style="font-size:14px;font-weight:800;color:white;margin-bottom:2px">${escHtml(o.company || 'Offer ' + (i+1))}</div>
           <div style="font-size:11px;color:var(--text-2);margin-bottom:12px">${escHtml(o.role || '')}</div>
           <div style="display:flex;flex-direction:column;gap:8px">
             <div style="display:flex;justify-content:space-between;font-size:12px">
-              <span class="muted">CTC</span><span style="font-weight:bold;color:white">${o.ctc ? o.ctc.toFixed(1) + ' LPA' : '—'}</span>
+              <span class="muted">CTC</span><span style="font-weight:bold;color:white">${o.ctc ? o.ctc.toFixed(1) + ' LPA' : 'â€”'}</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:12px">
-              <span class="muted">Monthly In-Hand</span><span style="font-weight:bold;color:var(--c-green)">₹${ih.monthly_inhand ? (ih.monthly_inhand/1000).toFixed(0) + 'K' : '—'}</span>
+              <span class="muted">Monthly In-Hand</span><span style="font-weight:bold;color:var(--c-green)">â‚¹${ih.monthly_inhand ? (ih.monthly_inhand/1000).toFixed(0) + 'K' : 'â€”'}</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:12px">
-              <span class="muted">Annual Tax (est.)</span><span style="font-weight:bold;color:var(--c-gold)">₹${ih.estimated_tax ? Math.round(ih.estimated_tax/1000) + 'K' : '—'}</span>
+              <span class="muted">Annual Tax (est.)</span><span style="font-weight:bold;color:var(--c-gold)">â‚¹${ih.estimated_tax ? Math.round(ih.estimated_tax/1000) + 'K' : 'â€”'}</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:12px">
               <span class="muted">Growth Potential</span>
@@ -5374,7 +5374,7 @@ async function compareOffers() {
 window.compareOffers = compareOffers;
 
 // ------------------------------------------------------------------------------
-//  BYOK � Bring Your Own Key API Settings
+//  BYOK — Bring Your Own Key API Settings
 //  Keys stored in localStorage. Sent to backend as X-Api-Key-* headers.
 //  Backend reads headers first, falls back to server env vars.
 // ------------------------------------------------------------------------------
@@ -5436,7 +5436,7 @@ function clearApiKeys() {
   });
   updateByokSavedBadge();
   updateByokProviderIndicator();
-  toast('API keys cleared � using server defaults', 'info');
+  toast('API keys cleared — using server defaults', 'info');
 }
 
 function toggleKeyVis(id) {
@@ -5518,7 +5518,7 @@ window.clearApiKeys      = clearApiKeys;
 window.toggleKeyVis      = toggleKeyVis;
 
 
-// ─── Extended Sevenseed Platform Feature Module Handlers ──────────────────────
+// â”€â”€â”€ Extended Sevenseed Platform Feature Module Handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 async function verifyEmailDeliverability() {
   const email = document.getElementById('outreach-email-inp').value.trim();
@@ -5537,7 +5537,7 @@ async function verifyEmailDeliverability() {
     resDiv.innerHTML = `
       <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:14px">
         <h4 style="margin:0 0 6px 0;color:var(--c-green)"><i class="fas fa-check-circle"></i> Status: ${d.status} (Score: ${d.deliverability_score}/100)</h4>
-        <p style="margin:0 0 6px 0;font-size:13px">Domain: <strong>${d.domain}</strong> | MX Record: <strong>${d.mx_record_found ? '✓ Found' : '✗ Missing'}</strong> | Disposable: <strong>${d.is_disposable ? 'Yes' : 'No'}</strong></p>
+        <p style="margin:0 0 6px 0;font-size:13px">Domain: <strong>${d.domain}</strong> | MX Record: <strong>${d.mx_record_found ? 'âœ“ Found' : 'âœ— Missing'}</strong> | Disposable: <strong>${d.is_disposable ? 'Yes' : 'No'}</strong></p>
         <p style="margin:0;font-size:12px;color:var(--text-3)"><em>${d.recommendation}</em></p>
       </div>`;
   } catch (e) {
@@ -5675,7 +5675,7 @@ async function summarizeMeetingTranscript() {
     if (!r.ok) { resDiv.innerHTML = `<p style="color:var(--c-red)">${d.detail || 'Summary error'}</p>`; return; }
     let itemsHtml = '';
     d.action_items.forEach(ai => {
-      itemsHtml += `<li><strong>${ai.task}</strong> — Owner: <em>${ai.owner}</em> (${ai.deadline})</li>`;
+      itemsHtml += `<li><strong>${ai.task}</strong> â€” Owner: <em>${ai.owner}</em> (${ai.deadline})</li>`;
     });
     resDiv.innerHTML = `
       <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:14px;padding:20px">

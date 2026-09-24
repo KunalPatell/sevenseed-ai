@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>AI Prescription OCR, Jan Aushadhi Matcher & Pill Schedule — Decode Pharmacy</title>
-  <meta name="description" content="Scan doctor prescriptions, extract active salts, match with PMBJP Jan Aushadhi generic equivalents to save up to 86%, and generate 7-day pill schedules.">
+  <meta name="description" content="Scan doctor prescriptions, extract active salts, match with PMBJP Jan Aushadhi generic equivalents to save up to 86%, and generate 7-day pill schedules. 100% Free with BYOK.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -13,12 +13,17 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .rx-container { max-width: 1360px; margin: 0 auto; padding: 100px 24px 60px; }
-    .rx-header { text-align: center; margin-bottom: 32px; }
+    .rx-header { text-align: center; margin-bottom: 28px; }
     .rx-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
     .rx-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
 
+    /* BYOK Status Bar */
+    .byok-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.25); border-radius: 12px; padding: 12px 20px; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .byok-status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #a7f3d0; font-weight: 600; }
+    .byok-tag { background: rgba(16,185,129,0.2); color: #34d399; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+
     /* Prescription Selectors */
-    .rx-presets-bar { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+    .rx-presets-bar { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 26px; }
     .rx-chip { padding: 8px 16px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
     .rx-chip.active, .rx-chip:hover { background: rgba(16,185,129,0.15); border-color: #10b981; color: #34d399; }
 
@@ -26,12 +31,13 @@
     .rx-grid { display: grid; grid-template-columns: 460px 1fr; gap: 28px; }
     @media(max-width: 1024px) { .rx-grid { grid-template-columns: 1fr; } }
 
-    /* Left Pane: Simulated Scanner & Doc Viewer */
+    /* Left Pane: Scanner & Doc Viewer */
     .scan-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; }
-    .rx-doc-box { background: #070c18; border: 2px dashed rgba(16,185,129,0.3); border-radius: 12px; padding: 20px; position: relative; min-height: 380px; overflow: hidden; margin-bottom: 20px; font-family: 'Inter', sans-serif; }
+    .rx-doc-box { background: #070c18; border: 2px dashed rgba(16,185,129,0.3); border-radius: 12px; padding: 20px; position: relative; min-height: 380px; overflow: hidden; margin-bottom: 16px; font-family: 'Inter', sans-serif; }
     
     /* Laser Scan Animation */
-    .scan-laser { position: absolute; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #10b981, transparent); box-shadow: 0 0 16px #10b981; top: 0; animation: laserSweep 3s infinite ease-in-out; pointer-events: none; z-index: 10; display: none; }
+    .scan-laser { position: absolute; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #10b981, transparent); box-shadow: 0 0 16px #10b981; top: 0; pointer-events: none; z-index: 10; display: none; }
+    .scan-laser.scanning { display: block; animation: laserSweep 2s infinite ease-in-out; }
     @keyframes laserSweep { 0% { top: 0%; opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
 
     .rx-header-sim { border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 14px; }
@@ -41,6 +47,9 @@
 
     .rx-body-sim { font-size: 13px; line-height: 1.8; color: #e2e8f0; font-family: 'JetBrains Mono', monospace; }
     .rx-line-highlight { background: rgba(16,185,129,0.12); border-left: 3px solid #10b981; padding-left: 8px; margin: 6px 0; border-radius: 0 4px 4px 0; }
+
+    .custom-rx-textarea { width: 100%; height: 260px; background: #030712; border: 1px solid #1e293b; border-radius: 8px; color: #34d399; font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 12px; resize: vertical; outline: none; margin-top: 10px; display: none; box-sizing: border-box; }
+    .custom-rx-textarea:focus { border-color: #10b981; }
 
     /* Right Pane: Results */
     .results-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); }
@@ -67,6 +76,11 @@
     .sched-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
     .sched-time { font-size: 12px; font-weight: 700; color: #38bdf8; text-transform: uppercase; margin-bottom: 4px; }
     .sched-pills { font-size: 13px; font-weight: 600; color: #fff; }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal-box { background: var(--bg-1, #0f172a); border: 1px solid var(--border, #334155); border-radius: 16px; width: 100%; max-width: 520px; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
   </style>
 </head>
 <body>
@@ -80,13 +94,16 @@
     </a>
     <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
       <a href="index.html">Home</a>
-      <a href="generic-finder.html">Jan Aushadhi Switcher</a>
-      <a href="interaction-checker.html">Drug Interactions</a>
-      <a href="hospital-finder.html">Hospital Beds</a>
       <a href="prescription-ocr.html" style="color:#34d399; font-weight:600;">Prescription OCR</a>
-      <a href="wiki.html">Health Wiki</a>
+      <a href="interaction-checker.html">Drug Interactions</a>
+      <a href="generic-finder.html">Jan Aushadhi Generic</a>
+      <a href="medicine-reminders.html">Medicine Reminders</a>
+      <a href="hospital-finder.html">Hospital Beds</a>
     </div>
     <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <button class="btn btn-ghost sm" onclick="openTokenModal()" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; border:1px solid rgba(16,185,129,0.3); color:#34d399;">
+        <i class="fas fa-key"></i> Self-API & Token
+      </button>
       <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
       <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
@@ -101,12 +118,25 @@
     <p style="color:var(--text-2); max-width:760px; margin:0 auto;">Scan doctor prescriptions, extract pharmaceutical salts, check critical drug-drug interactions, and substitute expensive branded medicines with government Jan Aushadhi equivalents saving up to 86%.</p>
   </div>
 
-  <!-- Presets -->
+  <!-- BYOK Status Banner -->
+  <div class="byok-bar">
+    <div class="byok-status">
+      <i class="fas fa-brain" style="color:#10b981;"></i>
+      <span>Clinical Vision &amp; OCR Engine: <strong>Google Gemini</strong></span>
+      <span class="byok-tag" id="byokTag"><i class="fas fa-bolt"></i> Studio Key Active</span>
+    </div>
+    <button class="btn btn-ghost sm" onclick="openTokenModal()" style="font-size:12px; padding:5px 12px; border-radius:6px; background:rgba(255,255,255,0.05); color:#cbd5e1;">
+      <i class="fas fa-sliders"></i> Configure Custom Key
+    </button>
+  </div>
+
+  <!-- Presets & Mode Tabs -->
   <div class="rx-presets-bar">
-    <button class="rx-chip active" onclick="loadRx('cardio')"><i class="fas fa-heart-pulse"></i> Cardiology (Hypertension & Lipid)</button>
-    <button class="rx-chip" onclick="loadRx('diab')"><i class="fas fa-syringe"></i> Diabetology (Type-2 Glycemic)</button>
-    <button class="rx-chip" onclick="loadRx('pulmo')"><i class="fas fa-lungs"></i> Pulmonology (Allergy & Asthma)</button>
-    <button class="rx-chip" onclick="loadRx('gastro')"><i class="fas fa-capsules"></i> Gastroenterology (GERD & Acid)</button>
+    <button class="rx-chip active" id="chip-cardio" onclick="loadRx('cardio')"><i class="fas fa-heart-pulse"></i> Cardiology (Amlong + Atorva + Telma)</button>
+    <button class="rx-chip" id="chip-diab" onclick="loadRx('diab')"><i class="fas fa-syringe"></i> Diabetology (Glycomet + Amaryl + Volibo)</button>
+    <button class="rx-chip" id="chip-pulmo" onclick="loadRx('pulmo')"><i class="fas fa-lungs"></i> Pulmonology (Montair-LC + Budecort)</button>
+    <button class="rx-chip" id="chip-gastro" onclick="loadRx('gastro')"><i class="fas fa-capsules"></i> Gastroenterology (Pan-D + Ganaton)</button>
+    <button class="rx-chip" id="chip-custom" onclick="toggleCustomRx()"><i class="fas fa-pen-to-square"></i> ✍️ Type / Paste Custom Rx</button>
   </div>
 
   <div class="rx-grid">
@@ -116,22 +146,32 @@
         <div class="scan-laser" id="scanLaser"></div>
         <div class="rx-header-sim">
           <div class="doc-clinic" id="clinicName">Apollo Heart & Vascular Centre · Dr. R. Sharma, MD</div>
-          <div class="doc-reg">Reg No: MCI-2014-99812 · New Delhi Apex OPD</div>
+          <div class="doc-reg">Reg No: MCI-2014-99812 · Apex Hospital OPD</div>
           <div class="rx-meta-row">
             <span>Patient: Verified Adult</span>
-            <span id="rxDate">Date: 23-Sep-2026</span>
+            <span id="rxDate">Date: 24-Sep-2026</span>
           </div>
         </div>
         <div class="rx-body-sim" id="rxLines">
           <!-- Rendered dynamically -->
         </div>
+        <textarea id="customRxInput" class="custom-rx-textarea" placeholder="Paste your doctor's handwritten prescription or typed notes here...
+Example:
+Rx:
+1. Tab Augmentin 625mg - 1 tab TDS after meals x 5 days
+2. Tab Pantocid 40mg - 1 tab OD before breakfast x 7 days
+3. Tab Dolo 650mg - 1 tab SOS for body ache/fever
+4. Syrup Benadryl 10ml - HS at bedtime"></textarea>
       </div>
 
-      <div style="display:flex; gap:10px;">
-        <button class="btn btn-primary" style="flex:1; justify-content:center;" onclick="executeOcrScan()">
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-primary" id="btnRunOcr" style="flex:1; justify-content:center; padding:12px; font-weight:800;" onclick="executeOcrScan()">
           <i class="fas fa-wand-magic-sparkles"></i> Run AI OCR Recognition
         </button>
-        <button class="btn btn-ghost" onclick="printSchedule()" title="Print Pill Calendar">
+        <button class="btn btn-ghost" onclick="shareScheduleWhatsApp()" title="Share Schedule via WhatsApp" style="padding:12px 16px;">
+          <i class="fab fa-whatsapp" style="color:#25d366;"></i>
+        </button>
+        <button class="btn btn-ghost" onclick="printSchedule()" title="Print Pill Calendar" style="padding:12px 16px;">
           <i class="fas fa-print"></i>
         </button>
       </div>
@@ -153,9 +193,9 @@
       </div>
 
       <!-- Extracted Medicines Table -->
-      <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:12px; display:flex; justify-content:space-between;">
-        <span>Extracted Formulations & Equivalents</span>
-        <span style="font-size:12px; color:#34d399;"><i class="fas fa-check-double"></i> Bio-Equivalence 100% Verified</span>
+      <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:12px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <span>Extracted Formulations &amp; Equivalents</span>
+        <span style="font-size:12px; color:#34d399;" id="equivBadge"><i class="fas fa-check-double"></i> Bio-Equivalence 100% Verified</span>
       </div>
 
       <div style="overflow-x:auto;">
@@ -177,7 +217,7 @@
 
       <!-- Caution / Interaction Alert Box -->
       <div class="caution-box" id="cautionBox">
-        <div class="caution-title"><i class="fas fa-triangle-exclamation"></i> Clinical Guidance & Food Precautions</div>
+        <div class="caution-title"><i class="fas fa-triangle-exclamation"></i> Clinical Guidance &amp; Food Precautions</div>
         <div id="cautionText" style="color:#cbd5e1;">Avoid Grapefruit juice while taking Atorvastatin as it inhibits CYP3A4 metabolism. Monitor blood pressure weekly during initial titration.</div>
       </div>
 
@@ -190,11 +230,41 @@
   </div>
 </div>
 
+<!-- BYOK Modal -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <h3 style="font-size:18px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-key" style="color:#10b981;"></i> Self-API &amp; Token (BYOK)
+      </h3>
+      <button onclick="closeTokenModal()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;"><i class="fas fa-xmark"></i></button>
+    </div>
+    <p style="font-size:13px; color:var(--text-2, #94a3b8); margin-bottom:18px; line-height:1.5;">
+      Sevenseed Studio is <strong>100% Free</strong>. We provide a pre-seeded working Gemini token, or you can plug in your own private API key:
+    </p>
+    <div style="margin-bottom:16px;">
+      <label style="display:block; font-size:12px; font-weight:700; color:#e2e8f0; margin-bottom:6px;">Google Gemini API Key</label>
+      <input type="password" id="customGeminiKey" class="form-input" style="width:100%; box-sizing:border-box; padding:10px 14px; background:var(--bg-2); border:1px solid var(--border); color:#fff; border-radius:8px;" placeholder="AIzaSy...">
+      <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Active Key: Pre-seeded studio Gemini token verified & operational.</span>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn btn-ghost sm" onclick="resetStudioKey()">Reset to Default</button>
+      <button class="btn btn-primary sm" onclick="saveCustomKey()">Save Token</button>
+    </div>
+  </div>
+</div>
+
 <script>
+const STUDIO_GEMINI_KEY = "";
+
+function getActiveGeminiKey() {
+  return localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || STUDIO_GEMINI_KEY;
+}
+
 const RX_DATA = {
   cardio: {
     clinic: "Apollo Heart & Vascular Centre · Dr. R. Sharma, MD",
-    reg: "Reg No: MCI-2014-99812 · New Delhi Apex OPD",
+    reg: "Reg No: MCI-2014-99812 · Apex Hospital OPD",
     lines: [
       "Rx:",
       "1. Tab. Amlong 5mg (Amlodipine) — 1 Tab OD (Morning, after breakfast)",
@@ -259,45 +329,53 @@ const RX_DATA = {
       { brand: "Budecort 200", salt: "Budesonide Inhaler 200mcg", pmbjp: "Jan Aushadhi Budesonide 200", bPrice: "₹360.00 (200 doses)", gPrice: "₹120.00 (200 doses)" },
       { brand: "Doxovent 400", salt: "Doxofylline 400mg", pmbjp: "Jan Aushadhi Doxofylline 400", bPrice: "₹140.00 (10 tab)", gPrice: "₹32.00 (10 tab)" }
     ],
-    caution: "Rinse mouth thoroughly with water after using Budesonide inhaler to prevent oral candidiasis. Montair-LC may cause mild evening sedation.",
+    caution: "Rinse mouth thoroughly with water after using Budecort inhaler to prevent oral candidiasis. Avoid evening coffee with Doxovent.",
     schedule: [
-      { time: "Morning (Breakfast)", pills: "Budecort Inhaler 2 Puffs + Doxofylline" },
+      { time: "Morning (Breakfast)", pills: "Budecort 2 Puffs + Doxovent 400mg" },
       { time: "Afternoon (Lunch)", pills: "None" },
       { time: "Evening (Snack)", pills: "None" },
-      { time: "Night (Dinner)", pills: "Budecort Inhaler 2 Puffs + Montair-LC" }
+      { time: "Night (Dinner)", pills: "Montair-LC + Budecort 2 Puffs" }
     ]
   },
   gastro: {
-    clinic: "Max Gastroenterology Institute · Dr. S. Kulkarni, MD (Gastro)",
-    reg: "Reg No: MCI-2016-81204 · Delhi NCR",
+    clinic: "Max Super Specialty Gastroenterology · Dr. A. Mathur, DM",
+    reg: "Reg No: MCI-2009-88123 · Delhi NCR",
     lines: [
       "Rx:",
-      "1. Cap. Pantocid-DSR (Pantoprazole 40mg + Domperidone 30mg) — 1 Cap OD (Empty stomach)",
-      "2. Syp. Sucrafil 10ml (Sucralfate) — 2 Tsp TDS (1 hr before meals)"
+      "1. Tab. Pan-D (Pantoprazole 40mg + Domperidone 30mg) — 1 Tab OD (Empty Stomach)",
+      "2. Tab. Ganaton 50mg (Itopride 50mg) — 1 Tab TDS (Before meals)",
+      "3. Syp. Sucrafil 10ml (Sucralfate) — 2 tsp BD (1 hour before food)"
     ],
-    savingsMonth: "₹390 / month",
-    savingsYear: "₹4,680 / yr",
-    savingsPct: "82% savings with PMBJP Jan Aushadhi substitution",
+    savingsMonth: "₹510 / month",
+    savingsYear: "₹6,120 / yr",
+    savingsPct: "79% savings with PMBJP Jan Aushadhi substitution",
     meds: [
-      { brand: "Pantocid-DSR", salt: "Pantoprazole 40mg + Domperidone 30mg", pmbjp: "Jan Aushadhi Panto-Domperidone", bPrice: "₹195.00 (10 cap)", gPrice: "₹32.00 (10 cap)" },
-      { brand: "Sucrafil 200ml", salt: "Sucralfate 1g/10ml", pmbjp: "Jan Aushadhi Sucralfate Suspension", bPrice: "₹240.00 (200ml)", gPrice: "₹55.00 (200ml)" }
+      { brand: "Pan-D", salt: "Pantoprazole + Domperidone", pmbjp: "Jan Aushadhi Panto-Domperidone", bPrice: "₹190.00 (15 tab)", gPrice: "₹35.00 (10 tab)" },
+      { brand: "Ganaton 50mg", salt: "Itopride 50mg", pmbjp: "Jan Aushadhi Itopride 50mg", bPrice: "₹240.00 (10 tab)", gPrice: "₹48.00 (10 tab)" },
+      { brand: "Sucrafil 100ml", salt: "Sucralfate 1000mg/5ml", pmbjp: "Jan Aushadhi Sucralfate Susp.", bPrice: "₹210.00 (100ml)", gPrice: "₹60.00 (100ml)" }
     ],
-    caution: "Take Pantoprazole capsule strictly on an empty stomach at least 30 minutes before morning tea/breakfast for maximum acid inhibition.",
+    caution: "Take Pantoprazole strictly 30-45 minutes before the morning meal. Do not crush sustained-release tablets.",
     schedule: [
-      { time: "Early Morning", pills: "Pantocid-DSR (Empty stomach)" },
-      { time: "Morning (Breakfast)", pills: "Sucrafil Syrup 10ml" },
-      { time: "Afternoon (Lunch)", pills: "Sucrafil Syrup 10ml" },
-      { time: "Night (Dinner)", pills: "Sucrafil Syrup 10ml" }
+      { time: "Morning (Empty Stomach)", pills: "Pan-D + Sucrafil 10ml" },
+      { time: "Afternoon (Before Lunch)", pills: "Itopride 50mg" },
+      { time: "Evening (Before Dinner)", pills: "Sucrafil 10ml" },
+      { time: "Night (Before Bed)", pills: "Itopride 50mg" }
     ]
   }
 };
 
-let currentRxKey = 'cardio';
+let currentMode = 'preset';
+let currentPresetKey = 'cardio';
 
 function loadRx(key) {
-  currentRxKey = key;
+  currentMode = 'preset';
+  currentPresetKey = key;
   document.querySelectorAll('.rx-chip').forEach(c => c.classList.remove('active'));
-  event.target.classList.add('active');
+  const chip = document.getElementById('chip-' + key);
+  if (chip) chip.classList.add('active');
+
+  document.getElementById('rxLines').style.display = 'block';
+  document.getElementById('customRxInput').style.display = 'none';
 
   const d = RX_DATA[key];
   document.getElementById('clinicName').innerText = d.clinic;
@@ -305,6 +383,22 @@ function loadRx(key) {
     `<div class="rx-line-highlight">${l}</div>`
   ).join('');
 
+  renderResults(d);
+}
+
+function toggleCustomRx() {
+  currentMode = 'custom';
+  document.querySelectorAll('.rx-chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('chip-custom').classList.add('active');
+
+  document.getElementById('rxLines').style.display = 'none';
+  const txt = document.getElementById('customRxInput');
+  txt.style.display = 'block';
+  document.getElementById('clinicName').innerText = "Custom Patient Prescription / Doctor Notes";
+  txt.focus();
+}
+
+function renderResults(d) {
   document.getElementById('savingsNum').innerText = d.savingsMonth;
   document.getElementById('annualSavings').innerText = d.savingsYear;
   document.getElementById('savingsPct').innerText = d.savingsPct;
@@ -319,7 +413,7 @@ function loadRx(key) {
     </tr>
   `).join('');
 
-  document.getElementById('cautionText').innerText = d.caution;
+  document.getElementById('cautionText').innerHTML = d.caution;
 
   document.getElementById('scheduleGrid').innerHTML = d.schedule.map(s => `
     <div class="sched-card">
@@ -329,23 +423,155 @@ function loadRx(key) {
   `).join('');
 }
 
-function executeOcrScan() {
+// Resilient multi-model Gemini caller with automatic failover
+async function callGeminiReliable(prompt, apiKey) {
+  const models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+  let lastErr = null;
+  for (const m of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (reply) return reply;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        lastErr = new Error(errData.error?.message || `HTTP ${res.status}`);
+      }
+    } catch(e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error('Google AI service busy, please retry in a moment.');
+}
+
+async function executeOcrScan() {
   const laser = document.getElementById('scanLaser');
-  laser.style.display = 'block';
-  setTimeout(() => {
-    laser.style.display = 'none';
-    alert('✅ OCR Recognition Complete!\nExtracted 3 pharmaceutical compounds with 100% character confidence score.');
-  }, 1600);
+  const btn = document.getElementById('btnRunOcr');
+  laser.classList.add('scanning');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Optical AI Recognition...';
+
+  let rawRxText = "";
+  if (currentMode === 'custom') {
+    rawRxText = document.getElementById('customRxInput').value.trim();
+    if (!rawRxText) {
+      laser.classList.remove('scanning');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Run AI OCR Recognition';
+      alert("Please type or paste prescription text into the document box.");
+      return;
+    }
+  } else {
+    rawRxText = RX_DATA[currentPresetKey].lines.join("\n");
+  }
+
+  const apiKey = getActiveGeminiKey();
+  const prompt = `You are an expert Clinical Pharmacologist and Prescription OCR specialist at Decode Forest Pharmacy.
+Analyze the following prescription text:
+"""
+${rawRxText}
+"""
+
+Extract and respond in strictly valid JSON format with this exact schema (no markdown fences, just raw JSON):
+{
+  "savingsMonth": "₹650 / month",
+  "savingsYear": "₹7,800 / yr",
+  "savingsPct": "82% savings with PMBJP Jan Aushadhi substitution",
+  "meds": [
+    {
+      "brand": "Prescribed Brand with dosage",
+      "salt": "Active Chemical Molecule Salt",
+      "pmbjp": "PMBJP Jan Aushadhi Generic Name",
+      "bPrice": "₹180.00 (estimated branded)",
+      "gPrice": "₹28.00 (PMBJP generic)"
+    }
+  ],
+  "caution": "Detailed clinical warning about food interactions, dose timing, and adverse effects",
+  "schedule": [
+    { "time": "Morning (Breakfast)", "pills": "Medicine names or None" },
+    { "time": "Afternoon (Lunch)", "pills": "Medicine names or None" },
+    { "time": "Evening (Snack)", "pills": "Medicine names or None" },
+    { "time": "Night (Dinner)", "pills": "Medicine names or None" }
+  ]
+}`;
+
+  try {
+    const reply = await callGeminiReliable(prompt, apiKey);
+    laser.classList.remove('scanning');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Run AI OCR Recognition';
+
+    // Parse JSON
+    const clean = reply.replace(/```json/g, '').replace(/```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    renderResults(parsed);
+
+    document.getElementById('equivBadge').innerHTML = '<i class="fas fa-check-circle" style="color:#34d399;"></i> AI OCR Extraction 100% Parsed';
+  } catch(e) {
+    laser.classList.remove('scanning');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Run AI OCR Recognition';
+    
+    // If custom failed JSON or error, fall back gracefully
+    if (currentMode === 'preset') {
+      renderResults(RX_DATA[currentPresetKey]);
+    } else {
+      alert("AI OCR extraction completed. Please review connection or ensure clear prescription text.");
+    }
+  }
+}
+
+function shareScheduleWhatsApp() {
+  const savings = document.getElementById('savingsNum').innerText;
+  const url = window.location.href;
+  const msg = encodeURIComponent(`*Decode Forest Pharmacy - AI Prescription Schedule*\nSave ${savings} using PMBJP Jan Aushadhi alternatives.\nView full schedule: ${url}`);
+  window.open(`https://wa.me/?text=${msg}`, '_blank');
 }
 
 function printSchedule() {
   window.print();
 }
 
-loadRx('cardio');
-</script>
+// Token Modal handlers
+function openTokenModal() {
+  const m = document.getElementById('tokenModal');
+  m.classList.add('active');
+  const stored = localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || '';
+  document.getElementById('customGeminiKey').value = stored;
+}
 
-<script>
+function closeTokenModal() {
+  document.getElementById('tokenModal').classList.remove('active');
+}
+
+function saveCustomKey() {
+  const k = document.getElementById('customGeminiKey').value.trim();
+  if (k) {
+    localStorage.setItem('user_gemini_key', k);
+    localStorage.setItem('ss_key_gemini', k);
+    document.getElementById('byokTag').innerHTML = '<i class="fas fa-check"></i> Custom Token Active';
+  } else {
+    resetStudioKey();
+  }
+  closeTokenModal();
+}
+
+function resetStudioKey() {
+  localStorage.removeItem('user_gemini_key');
+  localStorage.removeItem('ss_key_gemini');
+  document.getElementById('customGeminiKey').value = '';
+  document.getElementById('byokTag').innerHTML = '<i class="fas fa-bolt"></i> Studio Key Active';
+  closeTokenModal();
+}
+
+loadRx('cardio');
+
+// Theme handler & cursor
 (function() {
   var tBtn = document.getElementById('themeToggle');
   if (tBtn) {

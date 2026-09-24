@@ -174,7 +174,7 @@
         <div class="prov-status ps-no" id="status-gemini"><i class="fas fa-circle-xmark"></i> Not Set</div>
       </div>
       <div class="vbody">
-        <div class="key-row"><span class="key-lbl">API Key</span><div class="key-wrap"><input type="password" class="key-inp" id="key-gemini" placeholder="AIzaSy... or AQ.Ab8RN6J..." autocomplete="off"><button class="key-eye" onclick="toggleKey('gemini')"><i class="fas fa-eye" id="eye-gemini"></i></button></div></div>
+        <div class="key-row"><span class="key-lbl">API Key</span><div class="key-wrap"><input type="password" class="key-inp" id="key-gemini" placeholder="AIzaSy...RN6J..." autocomplete="off"><button class="key-eye" onclick="toggleKey('gemini')"><i class="fas fa-eye" id="eye-gemini"></i></button></div></div>
         <div class="vactions"><button class="bsm bsave" onclick="saveKey('gemini')"><i class="fas fa-floppy-disk"></i> Save Key</button><button class="bsm btest" onclick="testKey('gemini')"><i class="fas fa-flask"></i> Test</button><button class="bsm bclear" onclick="clearKey('gemini')"><i class="fas fa-trash"></i> Clear</button></div>
         <div class="caps"><span class="cap">&#128172; Chat</span><span class="cap">&#128065; Vision</span><span class="cap">&#9889; Code</span><span class="cap">&#128247; Imagen 3</span><span class="cap">&#127758; Web Grounding</span><span class="cap">&#128269; Embeddings</span></div>
       </div>
@@ -287,9 +287,57 @@ function saveKey(p){const v=document.getElementById('key-'+p)?.value?.trim();if(
 function saveAllMistral(){let s=0;for(let i=1;i<=5;i++){const v=document.getElementById('key-mistral'+i)?.value?.trim();if(v){localStorage.setItem('ss_key_m'+i,v);document.getElementById('key-mistral'+i).classList.add('saved');s++;}}if(s){setStatus('mistral','ok');showToast(s+' Mistral keys saved!');updateCounts();}else showToast('Enter at least one key','error');}
 function clearKey(p){localStorage.removeItem('ss_key_'+p);const i=document.getElementById('key-'+p);if(i){i.value='';i.classList.remove('saved');}setStatus(p,'none');showToast(p+' cleared','error');updateCounts();}
 function clearMistral(){for(let i=1;i<=5;i++){localStorage.removeItem('ss_key_m'+i);const inp=document.getElementById('key-mistral'+i);if(inp){inp.value='';inp.classList.remove('saved');}}setStatus('mistral','none');showToast('Mistral keys cleared','error');updateCounts();}
-async function testKey(p){setStatus(p,'test');try{let ok=false;if(p==='gemini'){const k=localStorage.getItem('ss_key_gemini')||document.getElementById('key-gemini').value.trim();if(!k){showToast('Enter Gemini key first','error');setStatus(p,'none');return;}const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+k,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'Say: OK'}]}]})});ok=r.ok;}else if(p==='openai'){const k=localStorage.getItem('ss_key_openai')||document.getElementById('key-openai').value.trim();if(!k){showToast('Enter OpenAI key first','error');setStatus(p,'none');return;}const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'user',content:'Say: OK'}],max_tokens:5})});ok=r.ok;}else if(p==='mistral'){const k=localStorage.getItem('ss_key_m1')||document.getElementById('key-mistral1').value.trim();if(!k){showToast('Enter Mistral key 1 first','error');setStatus(p,'none');return;}const r=await fetch('https://api.mistral.ai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model:'mistral-small-latest',messages:[{role:'user',content:'Say: OK'}],max_tokens:5})});ok=r.ok;}else if(p==='cohere'){const k=localStorage.getItem('ss_key_cohere')||document.getElementById('key-cohere').value.trim();if(!k){showToast('Enter Cohere key first','error');setStatus(p,'none');return;}const r=await fetch('https://api.cohere.com/v1/generate',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({prompt:'Say: OK',max_tokens:5})});ok=r.ok;}setStatus(p,ok?'ok':'none');showToast(ok?p+' key works!':p+' key failed - check it',ok?'success':'error');}catch(e){setStatus(p,'none');showToast('Error: '+e.message,'error');}}
+async function testKey(p){
+  setStatus(p,'test');
+  try{
+    let ok=false;
+    let errDetail='';
+    if(p==='gemini'){
+      const k=localStorage.getItem('ss_key_gemini')||document.getElementById('key-gemini').value.trim();
+      if(!k){showToast('Enter Gemini key first','error');setStatus(p,'none');return;}
+      const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key='+k,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'Say: OK'}]}]})});
+      ok=r.ok;
+      if(!ok){const d=await r.json().catch(()=>({})); errDetail=d.error?.message||'HTTP '+r.status;}
+    }else if(p==='openai'){
+      const k=localStorage.getItem('ss_key_openai')||document.getElementById('key-openai').value.trim();
+      if(!k){showToast('Enter OpenAI key first','error');setStatus(p,'none');return;}
+      const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'user',content:'Say: OK'}],max_tokens:5})});
+      ok=r.ok;
+      if(!ok){
+        const d=await r.json().catch(()=>({}));
+        if(d.error?.code==='credit_balance_exhausted'){ errDetail='OpenAI Credits Exhausted ($0 balance). Please add credits at platform.openai.com'; }
+        else{ errDetail=d.error?.message||'HTTP '+r.status; }
+      }
+    }else if(p==='mistral'){
+      const k=localStorage.getItem('ss_key_m1')||document.getElementById('key-mistral1').value.trim();
+      if(!k){showToast('Enter Mistral key 1 first','error');setStatus(p,'none');return;}
+      const r=await fetch('https://api.mistral.ai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model:'mistral-small-latest',messages:[{role:'user',content:'Say: OK'}],max_tokens:5})});
+      ok=r.ok;
+      if(!ok){
+        const d=await r.json().catch(()=>({}));
+        if(r.status===429){ errDetail='Mistral Free Tier Rate Limit Exceeded (429)'; }
+        else{ errDetail=d.message||'HTTP '+r.status; }
+      }
+    }else if(p==='cohere'){
+      const k=localStorage.getItem('ss_key_cohere')||document.getElementById('key-cohere').value.trim();
+      if(!k){showToast('Enter Cohere key first','error');setStatus(p,'none');return;}
+      const r=await fetch('https://api.cohere.com/v1/generate',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({prompt:'Say: OK',max_tokens:5})});
+      ok=r.ok;
+      if(!ok){const d=await r.json().catch(()=>({})); errDetail=d.message||'HTTP '+r.status;}
+    }
+    setStatus(p,ok?'ok':'none');
+    if(ok){
+      showToast(p+' key verified & working!','success');
+    }else{
+      showToast(p+': '+(errDetail||'Key failed verification'),'error');
+    }
+  }catch(e){
+    setStatus(p,'none');
+    showToast('Error: '+e.message,'error');
+  }
+}
 const SYS={chat:'You are a helpful AI on the Sevenseed platform.',code:'You are a senior engineer. Write clean code with comments.',research:'You are a research analyst. Give structured key facts and insights.',teardown:'You are a growth strategist. Break down acquisition, retention, and revenue.'};
-async function runConsole(){const p=document.getElementById('cprov').value,md=document.getElementById('cmode').value,pr=document.getElementById('cinput').value.trim();if(!pr)return;const out=document.getElementById('cout'),btn=document.getElementById('runBtn'),t0=Date.now();out.className='con-out loading';out.textContent='Calling '+p+' API...';btn.disabled=true;document.getElementById('mProv').textContent=p;try{let res='',tok=0,model='';if(p==='gemini'){const k=localStorage.getItem('ss_key_gemini');if(!k)throw new Error('Gemini key not in vault. Save it above first.');model='gemini-2.0-flash';const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent?key='+k,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:SYS[md]+'\n\n'+pr}]}]})});if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'HTTP '+r.status);}const d=await r.json();res=d.candidates?.[0]?.content?.parts?.[0]?.text||'No response';tok=d.usageMetadata?.totalTokenCount||0;trkU('g',tok);}else if(p==='openai'){const k=localStorage.getItem('ss_key_openai');if(!k)throw new Error('OpenAI key not in vault. Save it above first.');model='gpt-4o';const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model,messages:[{role:'system',content:SYS[md]},{role:'user',content:pr}],max_tokens:800})});if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'HTTP '+r.status);}const d=await r.json();res=d.choices?.[0]?.message?.content||'No response';tok=d.usage?.total_tokens||0;trkU('o',tok);}else if(p==='mistral'){const k=localStorage.getItem('ss_key_m1')||localStorage.getItem('ss_key_m2');if(!k)throw new Error('Mistral key not in vault. Save it above first.');model='mistral-large-latest';const r=await fetch('https://api.mistral.ai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model,messages:[{role:'system',content:SYS[md]},{role:'user',content:pr}],max_tokens:800})});if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'HTTP '+r.status);}const d=await r.json();res=d.choices?.[0]?.message?.content||'No response';tok=d.usage?.total_tokens||0;trkU('m',tok);}else if(p==='cohere'){const k=localStorage.getItem('ss_key_cohere');if(!k)throw new Error('Cohere key not in vault. Save it above first.');model='command-r-plus';const r=await fetch('https://api.cohere.com/v2/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model,messages:[{role:'user',content:pr}],preamble:SYS[md]})});if(!r.ok){const e=await r.json();throw new Error(e.message||'HTTP '+r.status);}const d=await r.json();res=d.message?.content?.[0]?.text||'No response';tok=(d.meta?.tokens?.input_tokens||0)+(d.meta?.tokens?.output_tokens||0);trkU('c',tok);}const lat=Date.now()-t0;out.className='con-out';out.textContent=res;document.getElementById('mTok').textContent=tok;document.getElementById('mLat').textContent=lat+'ms';document.getElementById('mMod').textContent=model;}catch(e){out.className='con-out error';out.textContent='Error: '+e.message;}btn.disabled=false;}
+async function runConsole(){const p=document.getElementById('cprov').value,md=document.getElementById('cmode').value,pr=document.getElementById('cinput').value.trim();if(!pr)return;const out=document.getElementById('cout'),btn=document.getElementById('runBtn'),t0=Date.now();out.className='con-out loading';out.textContent='Calling '+p+' API...';btn.disabled=true;document.getElementById('mProv').textContent=p;try{let res='',tok=0,model='';if(p==='gemini'){const k=localStorage.getItem('ss_key_gemini');if(!k)throw new Error('Gemini key not in vault. Save it above first.');model='gemini-3.6-flash';const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent?key='+k,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:SYS[md]+'\n\n'+pr}]}]})});if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'HTTP '+r.status);}const d=await r.json();res=d.candidates?.[0]?.content?.parts?.[0]?.text||'No response';tok=d.usageMetadata?.totalTokenCount||0;trkU('g',tok);}else if(p==='openai'){const k=localStorage.getItem('ss_key_openai');if(!k)throw new Error('OpenAI key not in vault. Save it above first.');model='gpt-4o';const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model,messages:[{role:'system',content:SYS[md]},{role:'user',content:pr}],max_tokens:800})});if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'HTTP '+r.status);}const d=await r.json();res=d.choices?.[0]?.message?.content||'No response';tok=d.usage?.total_tokens||0;trkU('o',tok);}else if(p==='mistral'){const k=localStorage.getItem('ss_key_m1')||localStorage.getItem('ss_key_m2');if(!k)throw new Error('Mistral key not in vault. Save it above first.');model='mistral-large-latest';const r=await fetch('https://api.mistral.ai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model,messages:[{role:'system',content:SYS[md]},{role:'user',content:pr}],max_tokens:800})});if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'HTTP '+r.status);}const d=await r.json();res=d.choices?.[0]?.message?.content||'No response';tok=d.usage?.total_tokens||0;trkU('m',tok);}else if(p==='cohere'){const k=localStorage.getItem('ss_key_cohere');if(!k)throw new Error('Cohere key not in vault. Save it above first.');model='command-r-plus';const r=await fetch('https://api.cohere.com/v2/chat',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model,messages:[{role:'user',content:pr}],preamble:SYS[md]})});if(!r.ok){const e=await r.json();throw new Error(e.message||'HTTP '+r.status);}const d=await r.json();res=d.message?.content?.[0]?.text||'No response';tok=(d.meta?.tokens?.input_tokens||0)+(d.meta?.tokens?.output_tokens||0);trkU('c',tok);}const lat=Date.now()-t0;out.className='con-out';out.textContent=res;document.getElementById('mTok').textContent=tok;document.getElementById('mLat').textContent=lat+'ms';document.getElementById('mMod').textContent=model;}catch(e){out.className='con-out error';out.textContent='Error: '+e.message;}btn.disabled=false;}
 let lastUrl=null,hist=[];
 async function genImage(){const pr=document.getElementById('iPrompt').value.trim(),st=document.getElementById('iStyle').value,pv=document.getElementById('iProv').value,sz=document.getElementById('iSize').value,btn=document.getElementById('genBtn'),prev=document.getElementById('gprev');if(!pr){showToast('Enter a prompt','error');return;}btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Generating...';prev.innerHTML='<div class="gen-ph" style="color:#a855f7"><i class="fas fa-spinner fa-spin" style="font-size:32px"></i><p style="margin-top:12px">AI generating...</p></div>';try{const fp=pr+'. Style: '+st+'. High quality, professional.';if(pv==='openai'){const k=localStorage.getItem('ss_key_openai');if(!k)throw new Error('OpenAI key not found in vault');const r=await fetch('https://api.openai.com/v1/images/generations',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+k},body:JSON.stringify({model:'dall-e-3',prompt:fp,n:1,size:sz,quality:'hd'})});if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'DALL-E error');}const d=await r.json();showImg(d.data?.[0]?.url,pr);trkU('o',500);}else{const k=localStorage.getItem('ss_key_gemini');if(!k)throw new Error('Gemini key not found in vault');const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key='+k,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({instances:[{prompt:fp}],parameters:{sampleCount:1,aspectRatio:'1:1'}})});if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'Imagen error');}const d=await r.json();const b64=d.predictions?.[0]?.bytesBase64Encoded;if(!b64)throw new Error('No image data');showImg('data:image/png;base64,'+b64,pr);trkU('g',500);}}catch(e){prev.innerHTML='<div class="gen-ph" style="color:#f87171"><i class="fas fa-circle-xmark" style="font-size:32px"></i><p style="margin-top:10px">'+e.message+'</p></div>';showToast(e.message,'error');}btn.disabled=false;btn.innerHTML='<i class="fas fa-wand-magic-sparkles"></i> Generate Image';}
 function showImg(url,p){if(!url)return;lastUrl=url;document.getElementById('gprev').innerHTML='<img src="'+url+'" alt="'+p+'">';document.getElementById('dlBtn').style.display='inline-flex';document.getElementById('cpBtn').style.display='inline-flex';hist.unshift({url,p});renderHist();showToast('Image generated!');}
@@ -297,7 +345,35 @@ function renderHist(){const h=document.getElementById('ghist');h.innerHTML=hist.
 function pickHist(i){const it=hist[i];document.getElementById('gprev').innerHTML='<img src="'+it.url+'">';document.getElementById('iPrompt').value=it.p;lastUrl=it.url;document.querySelectorAll('.gen-thumb').forEach((t,j)=>t.classList.toggle('on',j===i));}
 function dlImage(){if(!lastUrl)return;const a=document.createElement('a');a.href=lastUrl;a.download='sevenseed-'+Date.now()+'.png';a.click();}
 function cpPrompt(){navigator.clipboard.writeText(document.getElementById('iPrompt').value);showToast('Prompt copied!');}
-window.addEventListener('DOMContentLoaded',()=>{['gemini','openai','cohere'].forEach(p=>{const k=localStorage.getItem('ss_key_'+p);if(k){const i=document.getElementById('key-'+p);if(i){i.value=k;i.classList.add('saved');}setStatus(p,'ok');}});let hm=false;for(let i=1;i<=5;i++){const k=localStorage.getItem('ss_key_m'+i);if(k){const inp=document.getElementById('key-mistral'+i);if(inp){inp.value=k;inp.classList.add('saved');}hm=true;}}if(hm)setStatus('mistral','ok');updateCounts();setInterval(()=>{document.getElementById('ctime').textContent=new Date().toLocaleTimeString();},1000);document.getElementById('cinput').addEventListener('keydown',e=>{if(e.key==='Enter')runConsole();});});
+window.addEventListener('DOMContentLoaded',()=>{
+  // Pre-seed working Studio Gemini key if none exists
+  const studioGemini = '';
+  if(!localStorage.getItem('ss_key_gemini')){
+    localStorage.setItem('ss_key_gemini', studioGemini);
+    localStorage.setItem('user_gemini_key', studioGemini);
+  }
+  ['gemini','openai','cohere'].forEach(p=>{
+    const k=localStorage.getItem('ss_key_'+p);
+    if(k){
+      const i=document.getElementById('key-'+p);
+      if(i){i.value=k;i.classList.add('saved');}
+      setStatus(p,'ok');
+    }
+  });
+  let hm=false;
+  for(let i=1;i<=5;i++){
+    const k=localStorage.getItem('ss_key_m'+i);
+    if(k){
+      const inp=document.getElementById('key-mistral'+i);
+      if(inp){inp.value=k;inp.classList.add('saved');}
+      hm=true;
+    }
+  }
+  if(hm)setStatus('mistral','ok');
+  updateCounts();
+  setInterval(()=>{document.getElementById('ctime').textContent=new Date().toLocaleTimeString();},1000);
+  document.getElementById('cinput').addEventListener('keydown',e=>{if(e.key==='Enter')runConsole();});
+});
 </script>
 </body>
 </html>

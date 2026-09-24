@@ -1386,14 +1386,23 @@ const MM_MODELS_MAP = {
 };
 
 const MM_KEY_PROVIDERS = [
-  { name: 'Gemini', key: () => localStorage.getItem('ss_key_gemini') || localStorage.getItem('ss_apikey_gemini'),
+  { name: 'Gemini', key: () => localStorage.getItem('ss_key_gemini') || localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_apikey_gemini') || '',
     call: async (key, prompt) => {
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.75,maxOutputTokens:900}})
-      });
-      if(!r.ok){const e=await r.json();throw new Error(e.error?.message);}
-      return (await r.json()).candidates?.[0]?.content?.parts?.[0]?.text;
+      const models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+      for (const m of models) {
+        try {
+          const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${key}`,{
+            method:'POST',headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.75,maxOutputTokens:900}})
+          });
+          if(r.ok){
+            const d = await r.json();
+            const txt = d.candidates?.[0]?.content?.parts?.[0]?.text;
+            if(txt) return txt;
+          }
+        }catch(e){}
+      }
+      throw new Error('All Gemini endpoints busy');
     }
   },
   { name: 'GPT-4o', key: () => localStorage.getItem('ss_key_openai') || localStorage.getItem('ss_apikey_openai'),

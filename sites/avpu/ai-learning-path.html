@@ -153,12 +153,15 @@
       <span class="brand-text">AVP University</span>
     </a>
     <div style="display:flex;align-items:center;gap:14px;">
-      <a href="modules.html" class="nav-link">Modules</a>
-      <a href="topic-search.html" class="nav-link">Search</a>
-      <a href="review-queue.html" class="nav-link">Review Queue</a>
-      <a href="learn-dag.html" class="nav-link">Knowledge Graph</a>
-      <a href="mental-models.html" class="nav-link">Mental Models</a>
+      <a href="ai-learning-path.html" class="nav-link" style="color:#818cf8;font-weight:700;">AI Path</a>
       <a href="certifications.html" class="nav-link">Certificates</a>
+      <a href="100-day-challenge.html" class="nav-link">100 Days AI</a>
+      <a href="learn-dag.html" class="nav-link">Knowledge Graph</a>
+      <a href="flashcards.html" class="nav-link">Flashcards</a>
+      <a href="code-lab.html" class="nav-link">Code Lab</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px; border-radius:999px; border:1px solid rgba(16,185,129,0.3); color:#10b981; text-decoration:none;"><i class="fas fa-seedling"></i> Sevenseed Hub</a>
       <button class="btn-theme-toggle" id="themeToggle" title="Toggle theme"><i class="fa-solid fa-circle-half-stroke"></i></button>
     </div>
   </div>
@@ -296,12 +299,178 @@ function updStats(){document.getElementById('totalXP').textContent=totalXP.toLoc
 updStats();
 function showToast(msg){const t=document.getElementById('xpToast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 function fillAndGenerate(t){document.getElementById('learnInput').value=t;generatePath();}
-async function generatePath(){const inp=document.getElementById('learnInput').value.trim();if(!inp){document.getElementById('learnInput').focus();return;}const btn=document.getElementById('generateBtn'),btxt=document.getElementById('btnText');btn.disabled=true;btxt.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Generating...';document.getElementById('canvasEmpty').classList.add('hidden');await new Promise(r=>setTimeout(r,900));const pd=getPath(inp);currentPath=pd;completedNodes=new Set();document.getElementById('pathsCount').textContent=parseInt(document.getElementById('pathsCount').textContent)+1;renderRoadmap(inp,pd);showAI(inp,pd);showRes(pd.nodes[0]);btn.disabled=false;btxt.textContent='Generate Path';}
-function renderRoadmap(topic,pd){const nl=document.getElementById('nodesList');nl.classList.remove('hidden');document.getElementById('roadmapProgress').style.display='flex';let h='';pd.nodes.forEach((n,i)=>{const lc=n.level==='Beginner'?'#10b981':n.level==='Intermediate'?'#f59e0b':'#ef4444';if(i>0)h+='<div class="node-connector"></div>';h+=`<div class="node-card" id="nc-${i}" style="--node-color:${pd.color};" onclick="selNode(${i})"><div class="node-num">${i+1}</div><div class="node-body"><div class="node-title">${n.title}</div><div class="node-desc">${n.desc}</div><div class="node-meta"><span class="node-tag"><i class="fa-regular fa-clock"></i> ${n.time}</span><span class="node-tag n-xp"><i class="fa-solid fa-bolt"></i> +${n.xp} XP</span><span class="node-tag" style="color:${lc};background:${lc}15;border-color:${lc}30;">${n.level}</span></div></div><div class="node-check" id="chk-${i}" onclick="event.stopPropagation();togNode(${i},${n.xp})"><i class="fa-solid fa-check"></i></div></div>`;});nl.innerHTML=h;updProg(pd.nodes.length);}
-function togNode(i,xp){const c=document.getElementById(`chk-${i}`),d=document.getElementById(`nc-${i}`);if(completedNodes.has(i)){completedNodes.delete(i);c.classList.remove('done');d.classList.remove('completed');}else{completedNodes.add(i);c.classList.add('done');d.classList.add('completed');totalXP+=xp;localStorage.setItem('avpu-xp',totalXP);updStats();showToast(`+${xp} XP Earned! &#127919;`);}updProg(currentPath?currentPath.nodes.length:0);}
-function selNode(i){if(currentPath)showRes(currentPath.nodes[i]);}
-function updProg(total){const done=completedNodes.size;document.getElementById('progressFill').style.width=total>0?`${(done/total)*100}%`:'0%';document.getElementById('progressLabel').textContent=`${done} / ${total} completed`;}
-async function showAI(topic,pd){const p=document.getElementById('aiPanel'),o=document.getElementById('aiOutput');p.classList.add('visible');const tw=pd.nodes.reduce((s,n)=>s+(parseInt(n.time)||2),0),tx=pd.nodes.reduce((s,n)=>s+n.xp,0);const text=`Path Analysis — "${topic}"\n\nDuration: ~${tw} weeks (~${Math.round(tw/4)} months)\nXP Available: ${tx.toLocaleString()} XP\nMilestones: ${pd.nodes.length} checkpoints\nLevel Gain: +${Math.ceil(tx/600)} levels\n\nPath Logic:\nEach milestone builds upon the previous, following proven pedagogy: foundations -> tools -> skills -> projects.\n\nPro Tips:\n- 60-90 min/day for steady progress\n- Build mini-projects at each milestone\n- Join the AVPU Discord community\n- Pair with the Mental Models Library\n\nYou are on a 7-day streak — keep it up!`;o.textContent='';let i=0;const cur=document.createElement('span');cur.className='typing-cursor';o.appendChild(cur);const iv=setInterval(()=>{if(i<text.length){o.insertBefore(document.createTextNode(text[i]),cur);i++;o.scrollTop=o.scrollHeight;}else{clearInterval(iv);cur.remove();}},10);}
+const STUDIO_GEMINI_KEY = "";
+
+function getActiveGeminiKey() {
+  return localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || STUDIO_GEMINI_KEY;
+}
+
+// Resilient multi-model Gemini caller with automatic failover
+async function callGeminiReliable(prompt, apiKey) {
+  const models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+  let lastErr = null;
+  for (const m of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (reply) return reply;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        lastErr = new Error(errData.error?.message || `HTTP ${res.status}`);
+      }
+    } catch(e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error('Google AI service busy, please retry in a moment.');
+}
+
+async function generatePath() {
+  const inp = document.getElementById('learnInput').value.trim();
+  if (!inp) {
+    document.getElementById('learnInput').focus();
+    return;
+  }
+  const btn = document.getElementById('generateBtn'), btxt = document.getElementById('btnText');
+  btn.disabled = true;
+  btxt.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Synthesizing Curriculum...';
+  document.getElementById('canvasEmpty').classList.add('hidden');
+
+  const apiKey = getActiveGeminiKey();
+  const prompt = `You are the Dean of Curriculum & AI Pedagogy at AVPU.
+Generate a structured, professional 6-to-7 milestone learning roadmap for this topic:
+"${inp}"
+
+Respond strictly in valid JSON format matching this exact schema (no markdown, just valid JSON):
+{
+  "color": "#6366f1",
+  "analysis": "2-3 paragraphs analyzing this learning journey, estimated total weeks, prerequisites, and tips to succeed.",
+  "nodes": [
+    {
+      "title": "Milestone Title",
+      "desc": "Actionable explanation of concepts mastered in this phase",
+      "time": "2 weeks",
+      "xp": 150,
+      "level": "Beginner",
+      "res": ["Primary Doc/Course", "Hands-on Project Tutorial", "Community/Tool"]
+    }
+  ]
+}`;
+
+  try {
+    const reply = await callGeminiReliable(prompt, apiKey);
+    const clean = reply.replace(/```json/g, '').replace(/```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    currentPath = parsed;
+    completedNodes = new Set();
+    document.getElementById('pathsCount').textContent = parseInt(document.getElementById('pathsCount').textContent) + 1;
+    renderRoadmap(inp, parsed);
+    showAI(inp, parsed, parsed.analysis);
+    if (parsed.nodes && parsed.nodes[0]) showRes(parsed.nodes[0]);
+  } catch(e) {
+    // Graceful fallback to local curriculum database
+    const pd = getPath(inp);
+    currentPath = pd;
+    completedNodes = new Set();
+    document.getElementById('pathsCount').textContent = parseInt(document.getElementById('pathsCount').textContent) + 1;
+    renderRoadmap(inp, pd);
+    showAI(inp, pd);
+    showRes(pd.nodes[0]);
+  }
+
+  btn.disabled = false;
+  btxt.textContent = 'Generate Path';
+}
+
+function renderRoadmap(topic, pd) {
+  const nl = document.getElementById('nodesList');
+  nl.classList.remove('hidden');
+  document.getElementById('roadmapProgress').style.display = 'flex';
+  let h = '';
+  pd.nodes.forEach((n, i) => {
+    const lc = n.level === 'Beginner' ? '#10b981' : (n.level === 'Intermediate' ? '#f59e0b' : '#ef4444');
+    if (i > 0) h += '<div class="node-connector"></div>';
+    h += `<div class="node-card" id="nc-${i}" style="--node-color:${pd.color || '#6366f1'};" onclick="selNode(${i})">
+      <div class="node-num">${i+1}</div>
+      <div class="node-body">
+        <div class="node-title">${n.title}</div>
+        <div class="node-desc">${n.desc}</div>
+        <div class="node-meta">
+          <span class="node-tag"><i class="fa-regular fa-clock"></i> ${n.time}</span>
+          <span class="node-tag n-xp"><i class="fa-solid fa-bolt"></i> +${n.xp} XP</span>
+          <span class="node-tag" style="color:${lc};background:${lc}15;border-color:${lc}30;">${n.level}</span>
+        </div>
+      </div>
+      <div class="node-check" id="chk-${i}" onclick="event.stopPropagation();togNode(${i},${n.xp})"><i class="fa-solid fa-check"></i></div>
+    </div>`;
+  });
+  nl.innerHTML = h;
+  updProg(pd.nodes.length);
+}
+
+function togNode(i, xp) {
+  const c = document.getElementById(`chk-${i}`), d = document.getElementById(`nc-${i}`);
+  if (completedNodes.has(i)) {
+    completedNodes.delete(i);
+    c.classList.remove('done');
+    d.classList.remove('completed');
+  } else {
+    completedNodes.add(i);
+    c.classList.add('done');
+    d.classList.add('completed');
+    totalXP += xp;
+    localStorage.setItem('avpu-xp', totalXP);
+    updStats();
+    showToast(`+${xp} XP Earned! 🎯`);
+  }
+  updProg(currentPath ? currentPath.nodes.length : 0);
+}
+
+function selNode(i) {
+  if (currentPath && currentPath.nodes && currentPath.nodes[i]) {
+    showRes(currentPath.nodes[i]);
+  }
+}
+
+function updProg(total) {
+  const done = completedNodes.size;
+  document.getElementById('progressFill').style.width = total > 0 ? `${(done/total)*100}%` : '0%';
+  document.getElementById('progressLabel').textContent = `${done} / ${total} completed`;
+}
+
+async function showAI(topic, pd, customAnalysis) {
+  const p = document.getElementById('aiPanel'), o = document.getElementById('aiOutput');
+  p.classList.add('visible');
+  const tw = pd.nodes.reduce((s, n) => s + (parseInt(n.time) || 2), 0);
+  const tx = pd.nodes.reduce((s, n) => s + n.xp, 0);
+
+  const text = customAnalysis ? 
+    `Path Analysis — "${topic}"\n\nDuration: ~${tw} weeks (~${Math.round(tw/4)} months)\nXP Available: ${tx.toLocaleString()} XP\nMilestones: ${pd.nodes.length} checkpoints\nLevel Gain: +${Math.ceil(tx/600)} levels\n\n${customAnalysis}\n\nYou are on a 7-day streak — keep learning!` :
+    `Path Analysis — "${topic}"\n\nDuration: ~${tw} weeks (~${Math.round(tw/4)} months)\nXP Available: ${tx.toLocaleString()} XP\nMilestones: ${pd.nodes.length} checkpoints\nLevel Gain: +${Math.ceil(tx/600)} levels\n\nPath Logic:\nEach milestone builds upon the previous, following proven pedagogy: foundations -> tools -> skills -> projects.\n\nPro Tips:\n- 60-90 min/day for steady progress\n- Build mini-projects at each milestone\n- Pair with the Mental Models Library\n\nYou are on a 7-day streak — keep it up!`;
+
+  o.textContent = '';
+  let i = 0;
+  const cur = document.createElement('span');
+  cur.className = 'typing-cursor';
+  o.appendChild(cur);
+  const iv = setInterval(() => {
+    if (i < text.length) {
+      o.insertBefore(document.createTextNode(text[i]), cur);
+      i++;
+      o.scrollTop = o.scrollHeight;
+    } else {
+      clearInterval(iv);
+      cur.remove();
+    }
+  }, 8);
+}
 function showRes(node){const p=document.getElementById('resourcesPanel');p.style.display='block';const icons=['&#128216;','&#127909;','&#128187;'],types=['Documentation','Video Course','Interactive'],colors=['#6366f1','#ef4444','#10b981'];document.getElementById('resourcesList').innerHTML=node.res.map((r,i)=>`<a class="resource-item" href="#" onclick="event.preventDefault();"><div class="res-icon" style="background:${colors[i%3]}22;color:${colors[i%3]};">${icons[i%3]}</div><div><div class="res-title">${r}</div><div class="res-type">${types[i%3]}</div></div><i class="fa-solid fa-arrow-up-right-from-square" style="color:var(--text-3);font-size:12px;margin-left:auto;"></i></a>`).join('');}
 function shareRoadmap(){navigator.clipboard.writeText(window.location.href).catch(()=>{});showToast('Link copied! &#128279;');}
 function resetRoadmap(){document.getElementById('learnInput').value='';document.getElementById('nodesList').classList.add('hidden');document.getElementById('roadmapProgress').style.display='none';document.getElementById('aiPanel').classList.remove('visible');document.getElementById('resourcesPanel').style.display='none';document.getElementById('canvasEmpty').classList.remove('hidden');completedNodes=new Set();currentPath=null;updProg(0);}

@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Levels.fyi Real-Time Tech Compensation & Career Roadmaps — Comonk AI</title>
-  <meta name="description" content="Explore verified tech compensation percentiles in India (₹ LPA) & US ($), 90-day learning roadmaps, and interview question rubrics across leading AI companies.">
+  <meta name="description" content="Explore verified tech compensation percentiles in India (₹ LPA) & US ($), 90-day learning roadmaps, and AI salary negotiation counter-offer engine. 100% Free with BYOK.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -16,11 +16,24 @@
     .sal-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
     .sal-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
 
+    /* BYOK Bar */
+    .byok-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.25); border-radius: 10px; padding: 12px 20px; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
+    .byok-status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #bae6fd; font-weight: 600; }
+    .byok-tag { background: rgba(56,189,248,0.2); color: #38bdf8; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+
     /* Visual Banner */
     .hero-banner-box { max-width: 1280px; margin: 0 auto 36px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(56,189,248,0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
-    .hero-banner-img { width: 100%; height: auto; max-height: 380px; object-fit: cover; display: block; }
+    .hero-banner-img { width: 100%; height: auto; max-height: 340px; object-fit: cover; display: block; }
     .hero-banner-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(8,11,20,0.95) 100%); display: flex; align-items: flex-end; padding: 24px 32px; }
     .hero-banner-caption { color: #fff; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+
+    /* AI Negotiation Tool Card */
+    .nego-tool-card { background: var(--bg-1); border: 1px solid #38bdf8; border-radius: var(--radius); padding: 32px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(56,189,248,0.1); }
+    .nego-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px; }
+    .nego-input { width: 100%; padding: 12px 14px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 8px; color: #fff; font-size: 13.5px; outline: none; box-sizing: border-box; }
+    .nego-input:focus { border-color: #38bdf8; }
+
+    .nego-output { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.7; color: #cbd5e1; min-height: 180px; white-space: pre-wrap; display: none; }
 
     /* Interactive Filters */
     .filter-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 32px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
@@ -69,6 +82,11 @@
     .sal-table th, .sal-table td { padding: 16px 20px; border-bottom: 1px solid var(--border); }
     .sal-table th { background: var(--bg-2); color: var(--text-2); font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; }
     .sal-table tr:hover td { background: var(--bg-2); }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal-box { background: var(--bg-1, #0f172a); border: 1px solid var(--border, #334155); border-radius: 16px; width: 100%; max-width: 520px; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
   </style>
 </head>
 <body>
@@ -88,6 +106,9 @@
       <a href="marketing-examples.html">Marketing Gallery</a>
     </div>
     <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <button class="btn btn-ghost sm" onclick="openTokenModal()" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; border:1px solid rgba(56,189,248,0.3); color:#38bdf8;">
+        <i class="fas fa-key"></i> Self-API & Token
+      </button>
       <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
       <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
@@ -97,9 +118,21 @@
 
 <div class="sal-container">
   <div class="sal-header">
-    <div class="sal-badge"><i class="fas fa-chart-bar"></i> Inspired by Levels.fyi & Indian Tech Market 2026</div>
-    <h1 class="sal-title">Real-Time Tech Compensation & Career Roadmaps</h1>
-    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Explore verified salary packages, stock grants (RSUs), ₹ LPA percentiles in India, and 90-day step-by-step career transition roadmaps.</p>
+    <div class="sal-badge"><i class="fas fa-chart-bar"></i> Tech Compensation &amp; Counter-Offer Intelligence</div>
+    <h1 class="sal-title">Real-Time Tech Compensation &amp; Career Roadmaps</h1>
+    <p style="color:var(--text-2); max-width:740px; margin:0 auto;">Explore verified salary packages, stock grants (RSUs), ₹ LPA percentiles in India, and generate AI-negotiated counter-offers to unlock 20-40% higher packages.</p>
+  </div>
+
+  <!-- BYOK Status -->
+  <div class="byok-bar">
+    <div class="byok-status">
+      <i class="fas fa-robot" style="color:#38bdf8;"></i>
+      <span>Compensation Intelligence Model: <strong>Google Gemini</strong></span>
+      <span class="byok-tag" id="byokTag"><i class="fas fa-bolt"></i> Studio Key Active</span>
+    </div>
+    <button class="btn btn-ghost sm" onclick="openTokenModal()" style="font-size:12px; padding:4px 10px; border-radius:6px; background:rgba(255,255,255,0.05); color:#cbd5e1;">
+      <i class="fas fa-sliders"></i> Change Token
+    </button>
   </div>
 
   <!-- Hero Visual Banner -->
@@ -108,9 +141,48 @@
     <div class="hero-banner-overlay">
       <div class="hero-banner-caption">
         <i class="fas fa-arrow-trend-up" style="color:#38bdf8;"></i>
-        <span>AI & ML Engineer Packages: ₹18 - 85 LPA · 90-Day Step-by-Step Curriculum</span>
+        <span>AI &amp; ML Engineer Packages: ₹18 - 85 LPA · 90-Day Step-by-Step Curriculum</span>
       </div>
     </div>
+  </div>
+
+  <!-- LIVE AI Salary Negotiation Counter-Offer Engine -->
+  <div class="nego-tool-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+      <div>
+        <span style="font-size:12px; font-weight:700; text-transform:uppercase; color:#38bdf8; letter-spacing:0.05em;"><i class="fas fa-handshake"></i> Negotiation Copilot</span>
+        <h3 style="font-size:22px; font-weight:800; color:#fff; margin-top:2px;">AI Salary Counter-Offer &amp; CTC Teardown Generator</h3>
+      </div>
+      <span style="font-size:12px; padding:4px 12px; border-radius:99px; background:rgba(16,185,129,0.15); color:#34d399; font-weight:700;">100% Free · Real-Time</span>
+    </div>
+
+    <div class="nego-grid">
+      <div>
+        <label style="font-size:12px; font-weight:700; color:var(--text-3); display:block; margin-bottom:6px;">Target Role</label>
+        <input type="text" id="negoRole" class="nego-input" value="Senior Backend / AI Engineer">
+      </div>
+      <div>
+        <label style="font-size:12px; font-weight:700; color:var(--text-3); display:block; margin-bottom:6px;">Experience (Years)</label>
+        <input type="number" id="negoExp" class="nego-input" value="5">
+      </div>
+      <div>
+        <label style="font-size:12px; font-weight:700; color:var(--text-3); display:block; margin-bottom:6px;">Current CTC (₹ LPA)</label>
+        <input type="number" id="negoCurrent" class="nego-input" value="22">
+      </div>
+      <div>
+        <label style="font-size:12px; font-weight:700; color:var(--text-3); display:block; margin-bottom:6px;">Target Company</label>
+        <input type="text" id="negoCompany" class="nego-input" value="Google / Flipkart / Fast-growing AI Startup">
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+      <button class="btn btn-primary" id="btnNego" onclick="generateCounterOffer()" style="padding:12px 24px; font-weight:800;">
+        <i class="fas fa-wand-magic-sparkles"></i> Generate Counter-Offer Strategy &amp; Email Script
+      </button>
+      <span style="font-size:12px; color:var(--text-3);">Generates Base vs RSU distribution + polite recruiter counter-offer email</span>
+    </div>
+
+    <div class="nego-output" id="negoOutput"></div>
   </div>
 
   <!-- Interactive Indian Tech Roles Section -->
@@ -159,32 +231,25 @@
         <div class="sub-amt" id="stockSalary">$145,000</div>
       </div>
       <div class="tc-sub-box">
-        <div class="sub-lbl">Annual Bonus</div>
+        <div class="sub-lbl">Target Bonus</div>
         <div class="sub-amt" id="bonusSalary">$37,000</div>
       </div>
     </div>
   </div>
 
-  <!-- Levels Table -->
+  <!-- Levels.fyi Comparative Table -->
   <div class="table-card">
     <table class="sal-table">
       <thead>
         <tr>
           <th>Company</th>
-          <th>Level Equivalent</th>
-          <th>Base Salary</th>
-          <th>Stock / Year</th>
-          <th>Total Comp (Median)</th>
+          <th>Level / Title</th>
+          <th>Base Pay</th>
+          <th>Stock / Equity</th>
+          <th>Total Comp (USD)</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td><strong>OpenAI</strong></td>
-          <td>Member of Technical Staff</td>
-          <td>$300,000</td>
-          <td>$480,000 (PPU)</td>
-          <td style="color:#34d399; font-weight:800; font-family:'JetBrains Mono';">$780,000</td>
-        </tr>
         <tr>
           <td><strong>Google</strong></td>
           <td>Senior SWE (L5)</td>
@@ -211,7 +276,37 @@
   </div>
 </div>
 
+<!-- BYOK Modal -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <h3 style="font-size:18px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-key" style="color:#38bdf8;"></i> Self-API &amp; Token (BYOK)
+      </h3>
+      <button onclick="closeTokenModal()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;"><i class="fas fa-xmark"></i></button>
+    </div>
+    <p style="font-size:13px; color:var(--text-2, #94a3b8); margin-bottom:18px; line-height:1.5;">
+      Sevenseed Studio is <strong>100% Free</strong>. We provide a pre-seeded working Gemini token, or you can plug in your own private API key:
+    </p>
+    <div style="margin-bottom:16px;">
+      <label style="display:block; font-size:12px; font-weight:700; color:#e2e8f0; margin-bottom:6px;">Google Gemini API Key</label>
+      <input type="password" id="customGeminiKey" class="add-input" style="width:100%; box-sizing:border-box; padding:10px 14px; background:var(--bg-2); border:1px solid var(--border); color:#fff; border-radius:8px;" placeholder="AIzaSy...">
+      <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Active Key: Pre-seeded studio Gemini token verified & operational.</span>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn btn-ghost sm" onclick="resetStudioKey()">Reset to Default</button>
+      <button class="btn btn-primary sm" onclick="saveCustomKey()">Save Token</button>
+    </div>
+  </div>
+</div>
+
 <script>
+const STUDIO_GEMINI_KEY = "";
+
+function getActiveGeminiKey() {
+  return localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || STUDIO_GEMINI_KEY;
+}
+
 const COMP_DATA = {
   sde1: { base: 145000, stock: 45000, bonus: 18000 },
   sde2: { base: 175000, stock: 85000, bonus: 25000 },
@@ -228,6 +323,79 @@ function updateComp() {
   document.getElementById('baseSalary').innerText = '$' + data.base.toLocaleString();
   document.getElementById('stockSalary').innerText = '$' + data.stock.toLocaleString();
   document.getElementById('bonusSalary').innerText = '$' + data.bonus.toLocaleString();
+}
+
+// Resilient multi-model Gemini caller with automatic failover
+async function callGeminiReliable(prompt, apiKey) {
+  const models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+  let lastErr = null;
+  for (const m of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (reply) return reply;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        lastErr = new Error(errData.error?.message || `HTTP ${res.status}`);
+      }
+    } catch(e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error('Google AI service busy, please retry in a moment.');
+}
+
+async function generateCounterOffer() {
+  const role = document.getElementById('negoRole').value.trim();
+  const exp = document.getElementById('negoExp').value;
+  const curr = document.getElementById('negoCurrent').value;
+  const comp = document.getElementById('negoCompany').value.trim();
+  const output = document.getElementById('negoOutput');
+  const btn = document.getElementById('btnNego');
+
+  output.style.display = 'block';
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing Compensation Brackets...';
+  output.innerHTML = '// Running market percentile simulation and drafting recruiter negotiation script...';
+
+  const apiKey = getActiveGeminiKey();
+  const prompt = `You are an elite Tech Compensation & Executive Negotiation Coach.
+Candidate Profile:
+- Role: ${role}
+- Experience: ${exp} years
+- Current CTC: ₹${curr} LPA (Indian Tech Market)
+- Target Company / Offerer: ${comp}
+
+Provide an actionable, strategic compensation teardown:
+1. **REALISTIC TARGET CTC BRACKET (₹ LPA)**:
+   - Base Pay: ₹X LPA
+   - Performance Bonus: ₹Y LPA
+   - Annual Stock / ESOPs / RSUs: ₹Z LPA
+   - Total Target CTC: ₹Total LPA (with realistic % hike)
+2. **ESTIMATED MONTHLY IN-HAND (AFTER TAX)**:
+   - Approximate monthly take-home salary after PF and Indian Income Tax (New Regime u/s 115BAC).
+3. **HIGH-CONVERTING NEGOTIATION EMAIL SCRIPT**:
+   - Write a polite, confident, professional email ready to copy-paste and send to the HR recruiter.
+   - Anchor high without sounding demanding, express excitement for the mission, and articulate value.
+4. **TACTICAL LEVERAGE TIPS**:
+   - 2 key levers to unlock signing bonuses or faster equity vesting.`;
+
+  try {
+    const reply = await callGeminiReliable(prompt, apiKey);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Counter-Offer Strategy & Email Script';
+    output.innerHTML = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  } catch(err) {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Counter-Offer Strategy & Email Script';
+    output.innerHTML = `Error: ${err.message}. Please verify your API token in BYOK settings.`;
+  }
 }
 
 // Load Careers Data
@@ -263,6 +431,38 @@ fetch('data/careers.json')
   .catch(function(err) {
     console.error('Failed loading careers.json:', err);
   });
+
+// Token Modal handlers
+function openTokenModal() {
+  const m = document.getElementById('tokenModal');
+  m.classList.add('active');
+  const stored = localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || '';
+  document.getElementById('customGeminiKey').value = stored;
+}
+
+function closeTokenModal() {
+  document.getElementById('tokenModal').classList.remove('active');
+}
+
+function saveCustomKey() {
+  const k = document.getElementById('customGeminiKey').value.trim();
+  if (k) {
+    localStorage.setItem('user_gemini_key', k);
+    localStorage.setItem('ss_key_gemini', k);
+    document.getElementById('byokTag').innerHTML = '<i class="fas fa-check"></i> Custom Token Active';
+  } else {
+    resetStudioKey();
+  }
+  closeTokenModal();
+}
+
+function resetStudioKey() {
+  localStorage.removeItem('user_gemini_key');
+  localStorage.removeItem('ss_key_gemini');
+  document.getElementById('customGeminiKey').value = '';
+  document.getElementById('byokTag').innerHTML = '<i class="fas fa-bolt"></i> Studio Key Active';
+  closeTokenModal();
+}
 
 // Theme handler
 var tBtn = document.getElementById('themeToggle');

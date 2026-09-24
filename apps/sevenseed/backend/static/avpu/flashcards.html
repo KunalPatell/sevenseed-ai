@@ -220,6 +220,10 @@
       border-radius: 20px; width: 100%; max-width: 540px; padding: 28px;
       box-shadow: 0 25px 60px rgba(0,0,0,0.6);
     }
+    .fc-canonical-note { display: flex; gap: 12px; align-items: flex-start; max-width: 780px; margin: 0 auto 28px; padding: 14px 18px; background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.28); border-left: 3px solid var(--primary); border-radius: 10px; font-size: 13.5px; line-height: 1.6; color: var(--text-2); text-align: left; }
+    .fc-canonical-note i { color: #60a5fa; font-size: 15px; margin-top: 2px; flex-shrink: 0; }
+    .fc-canonical-note strong { color: var(--text); }
+    .fc-canonical-note a { color: var(--primary-l); font-weight: 600; }
   </style>
 </head>
 <body data-variant="academic">
@@ -233,14 +237,17 @@
   </a>
   <div class="nav-links" id="navLinks">
     <a href="learn-dag.html"><i class="fas fa-project-diagram" style="color:#60a5fa;"></i> Learn DAG</a>
+    <a href="topic-search.html"><i class="fas fa-magnifying-glass" style="color:#93c5fd;"></i> Search</a>
+    <a href="review-queue.html"><i class="fas fa-repeat" style="color:#c084fc;"></i> Review Queue</a>
     <a href="duo-league.html"><i class="fas fa-trophy" style="color:#fbbf24;"></i> Duolingo</a>
     <a href="flashcards.html" class="active"><i class="fas fa-layer-group" style="color:#38bdf8;"></i> Flashcards</a>
     <a href="code-lab.html"><i class="fas fa-code" style="color:#34d399;"></i> Code Lab</a>
     <a href="laws-of-ux.html"><i class="fas fa-brain" style="color:#c084fc;"></i> UX Laws</a>
-    <a href="challenge-100days.html"><i class="fas fa-calendar-check" style="color:#38bdf8;"></i> 100 Days AI</a>
+    <a href="100-day-challenge.html"><i class="fas fa-calendar-check" style="color:#38bdf8;"></i> 100 Days AI</a>
     <a href="certifications.html"><i class="fas fa-certificate"></i> Certs</a>
   </div>
   <div class="nav-right">
+    <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px; border-radius:999px; border:1px solid rgba(16,185,129,0.3); color:#10b981; text-decoration:none;"><i class="fas fa-seedling"></i> Sevenseed Hub</a>
     <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
     <a class="btn btn-ghost" href="learn-dag.html"><i class="fas fa-wand-magic-sparkles"></i> Launch DAG</a>
     <a class="btn btn-primary" href="index.html#admissions"><i class="fas fa-paper-plane"></i> Apply Free</a>
@@ -249,9 +256,25 @@
 
 <div class="fc-container">
   <div class="fc-header">
-    <div class="fc-badge"><i class="fas fa-brain"></i> SuperMemo SM-2 & Leitner Box Engine</div>
+    <div class="fc-badge"><i class="fas fa-brain"></i> Leitner 5-Box Engine · fixed 1/3/7/14/30-day intervals</div>
     <h1 class="fc-title">Spaced Repetition AI Flashcards</h1>
     <p class="fc-sub">Retain deep neural network architectures, agentic coordination protocols, and computer vision mathematics with scientifically scheduled memory review intervals.</p>
+  </div>
+
+  <!-- Canonical-surface notice: AVPU has two spaced-repetition engines. This is
+       the simpler fixed-interval one; review-queue.html is the adaptive one and
+       is what the site nav points at. They keep separate progress stores. -->
+  <div class="fc-canonical-note">
+    <i class="fas fa-circle-info"></i>
+    <div>
+      <strong>This is the simple fixed-interval drill.</strong>
+      Cards move up a box on a correct answer and back to box 1 on a miss, so every card in a
+      given box waits the same number of days.
+      <a href="review-queue.html">The Review Queue</a> is the adaptive scheduler AVPU uses by
+      default: it gives every card its own ease factor and computes a personal interval, so
+      material you find hard keeps returning more often. Progress on the two pages is stored
+      separately — pick one and stay with it.
+    </div>
   </div>
 
   <!-- Leitner Box Metrics Ribbon -->

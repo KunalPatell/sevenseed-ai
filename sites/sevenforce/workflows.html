@@ -1,268 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>LangGraph Multi-Agent Studio & Flow Orchestrator — Sevenforce</title>
-  <meta name="description" content="Visual cyclic multi-agent orchestrator connecting Planner, Researcher, Coder, QA, and Critic agents with real-time token tracking.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autonomous Multi-Agent Workflow Builder — Sevenforce</title>
+  <meta name="description" content="Chain AI employees together to automate complex multi-department business processes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .studio-container { max-width: 1360px; margin: 0 auto; padding: 100px 24px 60px; }
-    .studio-header { text-align: center; margin-bottom: 32px; }
-    .studio-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3); color: #818cf8; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
-    .studio-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
-
-    /* Studio Layout */
-    .studio-grid { display: grid; grid-template-columns: 1fr 420px; gap: 24px; min-height: 640px; }
-    @media(max-width: 1024px) { .studio-grid { grid-template-columns: 1fr; } }
-
-    /* Visual Graph Stage */
-    .graph-stage { background: radial-gradient(circle at 50% 50%, #0f1428 0%, #060813 100%); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
-    .stage-topbar { display: flex; justify-content: space-between; align-items: center; z-index: 10; }
-    .token-counter { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #818cf8; background: var(--bg-1); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; }
-
-    /* Visual Nodes Flow */
-    .nodes-diagram { display: flex; flex-direction: column; gap: 20px; align-items: center; justify-content: center; margin: 30px 0; z-index: 10; }
-    .agent-node { width: 340px; background: var(--bg-1); border: 2px solid var(--border-hi); border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s; position: relative; }
-    .agent-node.active { border-color: #818cf8; box-shadow: 0 0 20px rgba(99,102,241,0.35); background: rgba(99,102,241,0.1); transform: scale(1.03); }
-    .agent-node.completed { border-color: #10b981; }
-
-    .node-icon-wrap { width: 38px; height: 38px; border-radius: 8px; background: var(--bg-2); display: flex; align-items: center; justify-content: center; font-size: 16px; color: #818cf8; }
-    .node-details { flex: 1; margin-left: 12px; }
-    .node-name { font-size: 14px; font-weight: 700; color: #fff; }
-    .node-role { font-size: 11px; color: var(--text-3); text-transform: uppercase; }
-    .node-status { font-size: 11px; font-weight: 700; color: var(--text-3); }
-
-    .arrow-down { color: var(--text-3); font-size: 16px; animation: bounceArrow 1.5s infinite; }
-    @keyframes bounceArrow { 0%,100%{transform:translateY(0);} 50%{transform:translateY(4px);} }
-
-    /* Execution Log Pane */
-    .log-pane { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; overflow: hidden; }
-    .log-header { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-    .log-terminal { flex: 1; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #94a3b8; overflow-y: auto; line-height: 1.6; max-height: 480px; white-space: pre-wrap; }
+    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
+    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
+    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
+    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
+    .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
+    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
+    .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
+    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
   </style>
 </head>
 <body>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
 
 <nav class="nav" id="mainNav">
-  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
-      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#6366f1,#818cf8); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-users-gear"></i></span>
-      <span style="font-weight:700; font-size:18px;">Sevenforce</span>
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">
+      <span class="nav-logo-wrap"><i class="fas fa-users-gear"></i></span>
+      <span class="nav-name">Sevenforce</span>
     </a>
-    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
-      <a href="index.html">Home</a>
-      <a href="employees.html">7 AI Employees</a>
-      <a href="workflows.html" style="color:#818cf8; font-weight:600;">Agent Studio</a>
-      <a href="pricing.html">Pricing</a>
-        <a href="growth-teardown.html">Growth Teardowns</a>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="employees.html">7 AI Employees</a>
+        <a href="workflows.html" class="active">Agent Workflows</a>
+        <a href="pricing.html">Pricing</a>
     </div>
-    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
-      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
-      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
+    <div class="nav-actions">
+      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
+      <a class="btn btn-primary sm" href="index.html#contact"><i class="fas fa-rocket"></i> Launch</a>
     </div>
   </div>
 </nav>
 
-<div class="studio-container">
-  <div class="studio-header">
-    <div class="studio-badge"><i class="fas fa-diagram-project"></i> Inspired by LangGraph & CrewAI</div>
-    <h1 class="studio-title">Visual Multi-Agent DAG Studio & Execution Runner</h1>
-    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Simulate complex autonomous swarms. Watch Planner, Research, Coding, and Critic agents negotiate, execute sandboxed code, and resolve errors with self-healing feedback loops.</p>
-  </div>
 
-  <div class="studio-grid">
-    <!-- Visual Graph Stage -->
-    <div class="graph-stage">
-      <div class="stage-topbar">
-        <span style="font-size:14px; font-weight:700; color:#fff;"><i class="fas fa-microchip" style="color:#818cf8;"></i> Swarm Architecture: Hierarchical Supervisor</span>
-        <span class="token-counter" id="tokenDisplay">Tokens: 0 | Latency: 0ms</span>
-      </div>
+<header class="sub-hero">
+  <div class="sub-hero-pill"><i class="fas fa-sparkles"></i> 100% Free · Interactive AI Tool</div>
+  <h1 class="sub-hero-title">Autonomous Multi-Agent Workflow Builder</h1>
+  <p class="sub-hero-sub">Chain AI employees together to automate complex multi-department business processes.</p>
+</header>
 
-      <div class="nodes-diagram">
-        <div class="agent-node" id="nodeSupervisor">
-          <div class="node-icon-wrap"><i class="fas fa-sitemap"></i></div>
-          <div class="node-details">
-            <div class="node-name">1. Supervisor Router</div>
-            <div class="node-role">LangGraph Orchestrator</div>
-          </div>
-          <div class="node-status" id="statusSup">IDLE</div>
-        </div>
-
-        <i class="fas fa-arrow-down arrow-down"></i>
-
-        <div class="agent-node" id="nodeResearcher">
-          <div class="node-icon-wrap"><i class="fas fa-globe"></i></div>
-          <div class="node-details">
-            <div class="node-name">2. Web Research Agent</div>
-            <div class="node-role">ChromaDB + Search Tool</div>
-          </div>
-          <div class="node-status" id="statusRes">IDLE</div>
-        </div>
-
-        <i class="fas fa-arrow-down arrow-down"></i>
-
-        <div class="agent-node" id="nodeCoder">
-          <div class="node-icon-wrap"><i class="fas fa-code"></i></div>
-          <div class="node-details">
-            <div class="node-name">3. Autonomous Coder</div>
-            <div class="node-role">Python Code Generation</div>
-          </div>
-          <div class="node-status" id="statusCoder">IDLE</div>
-        </div>
-
-        <i class="fas fa-arrow-down arrow-down"></i>
-
-        <div class="agent-node" id="nodeCritic">
-          <div class="node-icon-wrap"><i class="fas fa-shield-halved"></i></div>
-          <div class="node-details">
-            <div class="node-name">4. Critic & QA Guardrail</div>
-            <div class="node-role">Self-Reflection & Unit Test</div>
-          </div>
-          <div class="node-status" id="statusCritic">IDLE</div>
-        </div>
-      </div>
-
-      <div>
-        <button class="btn btn-primary" id="launchSwarmBtn" style="width:100%; justify-content:center;" onclick="executeSwarm()">
-          <i class="fas fa-play"></i> Run Autonomous Agent Swarm
-        </button>
-      </div>
+<main class="container">
+  
+<div class="interactive-card" style="text-align:left;">
+  <h3>🔄 Build an Automated Agent Pipeline</h3>
+  <p style="color:#94a3b8; margin-bottom:24px;">Select how agents pass data from one step to the next.</p>
+  <div class="grid-3" style="margin-bottom:24px;">
+    <div class="form-group">
+      <label>Step 1: Inbound Lead</label>
+      <select class="form-control"><option>Liam (Sales Outreach)</option></select>
     </div>
-
-    <!-- Execution Terminal -->
-    <div class="log-pane">
-      <div class="log-header">
-        <span>Execution Telemetry</span>
-        <span style="font-size:12px; color:#34d399;"><i class="fas fa-circle" style="font-size:8px;"></i> Sandboxed</span>
-      </div>
-      <div class="log-terminal" id="terminalLog">
-// Click 'Run Autonomous Agent Swarm' to initiate LangGraph state loop...
-      </div>
+    <div class="form-group">
+      <label>Step 2: Content Nurturing</label>
+      <select class="form-control"><option>Ava (Content Marketing)</option></select>
+    </div>
+    <div class="form-group">
+      <label>Step 3: Contract Review</label>
+      <select class="form-control"><option>Ethan (Legal Compliance)</option></select>
     </div>
   </div>
+  <button class="btn btn-primary" onclick="simulateWorkflow()"><i class="fas fa-play"></i> Run Simulated Pipeline</button>
+  <div class="output-screen" id="wfOutput" style="margin-top:20px;">// Workflow builder ready. Click 'Run Simulated Pipeline' to trace execution.</div>
 </div>
-
 <script>
-function executeSwarm() {
-  const btn = document.getElementById('launchSwarmBtn');
-  btn.disabled = true;
-  btn.innerText = 'Agents Negotiating Tasks...';
+function simulateWorkflow() {
+  document.getElementById('wfOutput').innerText = '1. [Liam - Sales]: Inbound lead qualified (Score: 92/100)
+2. [Ava - Content]: Auto-generated tailored PDF product proposal
+3. [Ethan - Legal]: Standard NDA generated & pre-approved
 
-  const term = document.getElementById('terminalLog');
-  term.innerText = '[00.00s] Initializing LangGraph TypedDict AgentState...\n';
-
-  let tokens = 0;
-  const tokenEl = document.getElementById('tokenDisplay');
-
-  // Step 1: Supervisor
-  setTimeout(() => {
-    document.getElementById('nodeSupervisor').className = 'agent-node active';
-    document.getElementById('statusSup').innerHTML = '<span style="color:#818cf8;">ROUTING</span>';
-    term.innerText += '[00.42s] [Supervisor] Goal received: "Build and verify a FastAPI rate-limiter middleware".\n';
-    term.innerText += '[00.80s] [Supervisor] Delegating research task to Researcher Agent.\n';
-    tokens += 320;
-    tokenEl.innerText = `Tokens: ${tokens} | Latency: 420ms`;
-  }, 400);
-
-  // Step 2: Researcher
-  setTimeout(() => {
-    document.getElementById('nodeSupervisor').className = 'agent-node completed';
-    document.getElementById('statusSup').innerHTML = '<span style="color:#10b981;">DONE</span>';
-
-    document.getElementById('nodeResearcher').className = 'agent-node active';
-    document.getElementById('statusRes').innerHTML = '<span style="color:#818cf8;">SEARCHING</span>';
-    term.innerText += '[01.50s] [Researcher] Querying vector index for token bucket algorithms...\n';
-    term.innerText += '[02.10s] [Researcher] Retrieved 3 reference implementations using Redis sliding window.\n';
-    tokens += 890;
-    tokenEl.innerText = `Tokens: ${tokens} | Latency: 1.2s`;
-  }, 1600);
-
-  // Step 3: Coder
-  setTimeout(() => {
-    document.getElementById('nodeResearcher').className = 'agent-node completed';
-    document.getElementById('statusRes').innerHTML = '<span style="color:#10b981;">DONE</span>';
-
-    document.getElementById('nodeCoder').className = 'agent-node active';
-    document.getElementById('statusCoder').innerHTML = '<span style="color:#818cf8;">CODING</span>';
-    term.innerText += '[02.80s] [Coder] Generating asynchronous FastAPI middleware with Redis pipeline...\n';
-    term.innerText += '[03.60s] [Coder] Code generated: 48 lines of Python. Dispatching to Critic.\n';
-    tokens += 1450;
-    tokenEl.innerText = `Tokens: ${tokens} | Latency: 2.1s`;
-  }, 3200);
-
-  // Step 4: Critic
-  setTimeout(() => {
-    document.getElementById('nodeCoder').className = 'agent-node completed';
-    document.getElementById('statusCoder').innerHTML = '<span style="color:#10b981;">DONE</span>';
-
-    document.getElementById('nodeCritic').className = 'agent-node active';
-    document.getElementById('statusCritic').innerHTML = '<span style="color:#818cf8;">TESTING</span>';
-    term.innerText += '[04.20s] [Critic] Running unit test assertions in Docker sandbox...\n';
-    term.innerText += '[04.90s] [Critic] Test 1 (Under Limit): 200 OK.\n';
-    term.innerText += '[05.30s] [Critic] Test 2 (Burst Limit): 429 Too Many Requests.\n';
-    term.innerText += '[05.70s] [Critic] Code verified. 0 defects detected. FINAL ANSWER returned.\n';
-    tokens += 1980;
-    tokenEl.innerText = `Tokens: ${tokens} | Latency: 3.4s`;
-
-    document.getElementById('nodeCritic').className = 'agent-node completed';
-    document.getElementById('statusCritic').innerHTML = '<span style="color:#10b981;">VERIFIED</span>';
-
-    btn.disabled = false;
-    btn.innerText = 'Swarm Task Completed Successfully!';
-    btn.style.background = '#10b981';
-  }, 4800);
+🎉 PIPELINE FINISHED IN 1.8 SECONDS!';
 }
 </script>
 
+</main>
 
-<script>
-(function() {
-  // Theme Toggle Handler
-  var tBtn = document.getElementById('themeToggle');
-  if (tBtn) {
-    function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
-    }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('ss-theme', next);
-      updateIcon(next);
-    });
-  }
 
-  // Cursor Ring
-  var ring = document.getElementById('cursorRing');
-  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
-      requestAnimationFrame(renderCursor);
-    }
-    requestAnimationFrame(renderCursor);
-  }
-})();
-</script>
+<footer class="footer">
+  <div class="foot-inner">
+    <div class="foot-col">
+      <div class="foot-brand"><i class="fas fa-users-gear"></i> Sevenforce</div>
+      <p class="foot-tag">AI Workforce & Automation — Part of the Sevenseed AI Venture Studio portfolio.</p>
+      <div class="foot-copy">© 2026 Sevenforce. 100% Free · Bring Your Own Key Architecture.</div>
+    </div>
+    <div class="foot-col">
+      <h4>Navigation</h4>
+      <ul class="foot-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="../index.html">Sevenseed Hub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
 
+
+<script src="app.js"></script>
 </body>
 </html>

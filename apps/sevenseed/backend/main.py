@@ -304,6 +304,10 @@ class ContactReq(BaseModel):
 
 ADMIN_KEY = os.environ.get("ADMIN_KEY","")
 
+@app.get("/dashboard")
+def dashboard_redirect():
+    return RedirectResponse(url="/app/")
+
 
 # ── API endpoints ─────────────────────────────────────────────────────────────
 @app.get("/api/health")
@@ -449,11 +453,13 @@ async def _proxy_child(request: Request, prefix: str, tail: str):
     return await proxy_to_child(request, prefix, tail)
 
 if config.STATIC_DIR.exists():
+    mounted = set()
     # Mount each child's pre-built static frontend at its own prefix.
     for prefix in CHILDREN:
         static_sub = config.STATIC_DIR / prefix
-        if static_sub.exists():
+        if static_sub.exists() and prefix not in mounted:
             app.mount(f"/{prefix}", StaticFiles(directory=str(static_sub), html=True), name=prefix)
+            mounted.add(prefix)
 
     # Alias mounts for long URL compatibility
     aliases = {
@@ -463,9 +469,11 @@ if config.STATIC_DIR.exists():
         "avp-charitable-trust": "trust"
     }
     for alias_name, target_prefix in aliases.items():
-        target_sub = config.STATIC_DIR / target_prefix
-        if target_sub.exists():
-            app.mount(f"/{alias_name}", StaticFiles(directory=str(target_sub), html=True), name=f"alias_{alias_name}")
+        if alias_name not in mounted:
+            target_sub = config.STATIC_DIR / target_prefix
+            if target_sub.exists():
+                app.mount(f"/{alias_name}", StaticFiles(directory=str(target_sub), html=True), name=f"alias_{alias_name}")
+                mounted.add(alias_name)
 
     # Mount root landing page last
     app.mount("/", StaticFiles(directory=str(config.STATIC_DIR), html=True), name="frontend")
@@ -480,6 +488,6 @@ else:
 
 if __name__=="__main__":
     import uvicorn
-    port=int(os.environ.get("PORT",8000))
+    port=int(os.environ.get("PORT", 8001))
     print(f"[Sevenseed] provider={active_provider()} | db={config.DB_PATH}")
     uvicorn.run(app,host="0.0.0.0",port=port)

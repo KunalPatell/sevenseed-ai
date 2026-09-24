@@ -5,55 +5,258 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Medicine Refill & Dose Reminder — Decode Pharmacy</title>
-  <meta name="description" content="Track your daily prescription doses, receive automated refill alerts, and discover Jan Aushadhi generic alternatives. 100% Free.">
+  <meta name="description" content="Track daily prescription doses, automated refill alerts, bio-equivalent Jan Aushadhi generic alternatives, and live AI clinical safety audit. 100% Free.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .mr-container { max-width: 1100px; margin: 0 auto; padding: 100px 24px 60px; }
-    .mr-header { text-align: center; margin-bottom: 32px; }
-    .mr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
-    .mr-title { font-size: clamp(28px, 4vw, 42px); font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
-    .mr-sub { color: var(--text-2); font-size: 15px; max-width: 620px; margin: 0 auto; line-height: 1.6; }
+    :root {
+      --em-green: #10b981;
+      --em-dark: #064e3b;
+      --em-glow: rgba(16, 185, 129, 0.25);
+    }
+    .mr-container { max-width: 1200px; margin: 0 auto; padding: 90px 24px 80px; }
+    .mr-header { text-align: center; margin-bottom: 30px; }
+    .mr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 999px; background: rgba(16,185,129,0.14); border: 1px solid rgba(16,185,129,0.35); color: #34d399; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+    .mr-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.15; margin-bottom: 8px; background: linear-gradient(135deg, #ffffff 40%, #a7f3d0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .mr-sub { color: var(--text-2, #94a3b8); font-size: 15px; max-width: 680px; margin: 0 auto; line-height: 1.6; }
+
+    /* BYOK Status Bar */
+    .byok-banner {
+      background: linear-gradient(90deg, rgba(16,185,129,0.12), rgba(6,182,212,0.1));
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 12px;
+      padding: 12px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .byok-info { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #e2e8f0; }
+    .byok-status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(16,185,129,0.2); color: #34d399;
+      padding: 4px 10px; border-radius: 999px; font-size: 11px;
+      font-weight: 700; font-family: 'JetBrains Mono', monospace;
+    }
+    .byok-btn {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+      color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
+    }
+    .byok-btn:hover { background: rgba(16,185,129,0.2); border-color: #10b981; }
 
     /* Summary Cards */
-    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px; }
-    .sum-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow); }
-    .sum-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-    .sum-num { font-size: 24px; font-weight: 800; font-family: 'JetBrains Mono', monospace; line-height: 1.1; }
-    .sum-lbl { font-size: 12px; color: var(--text-3); font-weight: 500; }
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .sum-card { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 14px; padding: 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .sum-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .sum-num { font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; line-height: 1.1; }
+    .sum-lbl { font-size: 12px; color: var(--text-3, #64748b); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 3px; }
+
+    /* Action Toolbar */
+    .toolbar-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; align-items: center; justify-content: space-between; }
+    .btn-ai-audit {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff; font-weight: 800; font-size: 14px; padding: 12px 24px;
+      border-radius: 10px; border: none; cursor: pointer; display: inline-flex;
+      align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(16,185,129,0.35);
+      transition: all 0.2s;
+    }
+    .btn-ai-audit:hover { transform: translateY(-2px); box-shadow: 0 6px 26px rgba(16,185,129,0.5); }
+    .btn-secondary {
+      background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.12));
+      color: #e2e8f0; font-weight: 600; font-size: 13px; padding: 10px 18px;
+      border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .btn-secondary:hover { border-color: #10b981; color: #fff; background: rgba(16,185,129,0.08); }
 
     /* Add Form */
-    .add-form-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
-    .form-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 12px; align-items: center; }
+    .add-form-card { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 14px; padding: 22px 24px; margin-bottom: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .form-grid { display: grid; grid-template-columns: 2fr 1fr 1.2fr 1.2fr auto; gap: 12px; align-items: center; }
     @media(max-width: 900px) { .form-grid { grid-template-columns: 1fr 1fr; } }
     @media(max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
-    
-    .form-input { width: 100%; padding: 11px 14px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
+    .form-input { width: 100%; padding: 11px 14px; background: var(--bg-2, #161f36); border: 1px solid var(--border, rgba(255,255,255,0.12)); border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
     .form-input:focus { border-color: #10b981; }
 
     /* Reminders List */
-    .reminders-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-    .reminders-header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-2); }
-    .rem-row { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 20px; transition: background 0.2s; }
-    .rem-row:hover { background: var(--bg-2); }
+    .reminders-card { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 14px; overflow: hidden; margin-bottom: 36px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .reminders-header { padding: 16px 24px; border-bottom: 1px solid var(--border, rgba(255,255,255,0.08)); display: flex; justify-content: space-between; align-items: center; background: var(--bg-2, #141c30); }
+    .rem-row { padding: 20px 24px; border-bottom: 1px solid var(--border, rgba(255,255,255,0.06)); display: flex; justify-content: space-between; align-items: center; gap: 20px; transition: background 0.2s; }
+    .rem-row:hover { background: var(--bg-2, #141c30); }
     @media(max-width: 768px) { .rem-row { flex-direction: column; align-items: flex-start; gap: 14px; } }
 
     .rem-info { flex: 1; }
     .rem-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-    .rem-meta { font-size: 12px; color: var(--text-3); display: flex; gap: 12px; font-family: 'JetBrains Mono', monospace; flex-wrap: wrap; }
-    
+    .rem-meta { font-size: 12px; color: var(--text-3, #64748b); display: flex; gap: 12px; font-family: 'JetBrains Mono', monospace; flex-wrap: wrap; margin-bottom: 6px; }
     .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
     .badge-overdue { background: rgba(239,68,68,0.18); border: 1px solid #ef4444; color: #f87171; animation: pulseAlert 1.5s infinite; }
-    @keyframes pulseAlert { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+    @keyframes pulseAlert { 0%,100%{transform:scale(1);} 50%{transform:scale(1.04);} }
     .badge-ok { background: rgba(16,185,129,0.18); border: 1px solid #10b981; color: #34d399; }
-    
-    .generic-alt-chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 6px; background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; font-size: 11px; margin-top: 6px; }
+    .generic-alt-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; font-size: 11.5px; }
+
+    /* AI Clinical Audit Modal / Result Card */
+    .ai-audit-box {
+      background: #080d1a;
+      border: 1px solid rgba(16,185,129,0.35);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 36px;
+      display: none;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    .ai-audit-box.active { display: block; }
+    .ai-audit-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; }
+    .ai-audit-title { font-size: 18px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px; }
+    .ai-audit-content { font-size: 14px; color: #cbd5e1; line-height: 1.7; white-space: pre-wrap; font-family: 'Inter', sans-serif; }
+    .ai-audit-content strong { color: #34d399; }
+    .ai-audit-content code { background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+    /* 24/7 AI Clinical Chat */
+    .chat-section {
+      background: var(--bg-1, #0c1222);
+      border: 1px solid var(--border, rgba(255,255,255,0.08));
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .chat-head {
+      background: var(--bg-2, #141c30);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border, rgba(255,255,255,0.08));
+    }
+    .chat-messages {
+      height: 320px;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #060913;
+    }
+    .chat-bubble {
+      max-width: 80%;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    .bubble-bot {
+      background: #111a2e;
+      border: 1px solid rgba(16,185,129,0.25);
+      color: #e2e8f0;
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
+    }
+    .bubble-user {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+    .chat-input-bar {
+      display: flex;
+      gap: 10px;
+      padding: 14px 24px;
+      background: var(--bg-2, #141c30);
+      border-top: 1px solid var(--border, rgba(255,255,255,0.08));
+    }
+    .chat-inp {
+      flex: 1;
+      padding: 12px 16px;
+      background: #090e1a;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 13.5px;
+      outline: none;
+    }
+    .chat-inp:focus { border-color: #10b981; }
+    .chat-send {
+      padding: 12px 20px;
+      background: #10b981;
+      border: none;
+      border-radius: 10px;
+      color: #04241a;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .chat-send:hover { background: #34d399; }
+
+    /* Emergency Helplines & Health Camps Grid */
+    .helplines-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 36px; }
+    .help-card {
+      background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08));
+      border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; gap: 14px;
+    }
+    .help-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .hi-red { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .hi-green { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .hi-blue { background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); }
+    .help-title { font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; }
+    .help-num { font-size: 18px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #fff; margin-top: 2px; }
+    .help-num a { color: inherit; text-decoration: none; }
+    .help-num a:hover { text-decoration: underline; color: #34d399; }
+
+    /* Modal for BYOK */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px); z-index: 99999;
+      display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-card {
+      background: #0d1322; border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 16px; max-width: 520px; width: 100%; padding: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7); position: relative;
+    }
   </style>
 </head>
 <body>
+
+<!-- Self API / Token Modal -->
+<div class="modal-overlay" id="byokModal">
+  <div class="modal-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h3 style="font-size:18px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-key" style="color:#10b981;"></i> Self API &amp; Token Settings
+      </h3>
+      <button onclick="closeByokModal()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;"><i class="fas fa-xmark"></i></button>
+    </div>
+    <p style="font-size:13px; color:#94a3b8; margin-bottom:18px; line-height:1.6;">
+      All Decode Pharmacy AI features run <strong>100% free</strong>. You can use Sevenseed Studio's pre-configured Gemini 3.6 Flash key, or paste your own Google Gemini / OpenAI / Mistral token below (saved locally in your browser).
+    </p>
+    <div style="margin-bottom:16px;">
+      <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:6px;">Google Gemini API Token</label>
+      <input type="password" id="modalKeyGemini" class="form-input" placeholder="AIzaSy..." style="font-family:'JetBrains Mono',monospace;">
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="display:block; font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:6px;">OpenAI ChatGPT API Token (Optional)</label>
+      <input type="password" id="modalKeyOpenAI" class="form-input" placeholder="sk-proj-..." style="font-family:'JetBrains Mono',monospace;">
+    </div>
+    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+      <button class="btn-secondary" onclick="resetToStudioKey()"><i class="fas fa-rotate"></i> Reset Studio Key</button>
+      <button class="btn btn-primary" onclick="saveCustomTokens()" style="background:#10b981; color:#04241a; font-weight:800; padding:10px 20px;">
+        <i class="fas fa-save"></i> Save Tokens
+      </button>
+    </div>
+  </div>
+</div>
+
 <nav class="nav" id="mainNav">
   <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
     <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
@@ -68,15 +271,32 @@
       <a href="hospital-finder.html"><i class="fas fa-hospital" style="color:#f43f5e;"></i> Hospital Radar</a>
       <a href="medicine-reminders.html" class="active"><i class="fas fa-bell" style="color:#34d399;"></i> Dose Reminders</a>
       <a href="health-wiki.html"><i class="fas fa-book-medical" style="color:#a78bfa;"></i> Clinical Wiki</a>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px; border-radius:999px; border:1px solid rgba(16,185,129,0.3); color:#10b981; text-decoration:none;"><i class="fas fa-seedling"></i> Sevenseed Hub</a>
+      <button class="byok-btn" onclick="openByokModal()"><i class="fas fa-key" style="color:#34d399;"></i> Self Token</button>
+      <a class="btn-secondary" href="tel:108" style="color:#f87171; border-color:rgba(239,68,68,0.3); padding:6px 12px; font-size:12px;"><i class="fas fa-truck-medical"></i> SOS 108</a>
     </div>
   </div>
 </nav>
 
 <div class="mr-container">
+
+  <!-- BYOK Self API Bar -->
+  <div class="byok-banner">
+    <div class="byok-info">
+      <i class="fas fa-circle-check" style="color:#34d399; font-size:16px;"></i>
+      <span><strong>Free Community Health Platform:</strong> 100% Free AI consultations &amp; Jan Aushadhi generic mapping.</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span class="byok-status-pill" id="activeProviderPill"><i class="fas fa-bolt"></i> Gemini 3.6 Flash Active</span>
+      <button class="byok-btn" onclick="openByokModal()"><i class="fas fa-sliders"></i> BYOK Settings</button>
+    </div>
+  </div>
+
   <div class="mr-header">
-    <div class="mr-badge"><i class="fas fa-pills"></i> Clinical Dose & Jan Aushadhi Refill Radar</div>
-    <h1 class="mr-title">Medicine Refill & Dose Reminders</h1>
-    <p class="mr-sub">Keep your daily prescriptions on track. Receive automated audio chimes for dosage schedules and discover bio-equivalent Jan Aushadhi generic alternatives.</p>
+    <div class="mr-badge"><i class="fas fa-pills"></i> Clinical Dose &amp; Jan Aushadhi Refill Radar</div>
+    <h1 class="mr-title">Medicine Refill &amp; Dose Reminders</h1>
+    <p class="mr-sub">Keep your daily prescriptions on track. Receive automated audio alarms for dosage schedules, run real-time AI drug safety audits, and discover 80%+ cheaper bio-equivalent Jan Aushadhi generics.</p>
   </div>
 
   <!-- Summary Cards -->
@@ -99,8 +319,52 @@
       <div class="sum-icon" style="background:rgba(56,189,248,0.15); color:#38bdf8;"><i class="fas fa-hand-holding-dollar"></i></div>
       <div>
         <div class="sum-num" id="statSavings" style="color:#38bdf8;">₹1,450 / mo</div>
-        <div class="sum-lbl">Generic Switch Savings</div>
+        <div class="sum-lbl">Estimated PMBJP Savings</div>
       </div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-icon" style="background:rgba(168,85,247,0.15); color:#a855f7;"><i class="fas fa-shield-virus"></i></div>
+      <div>
+        <div class="sum-num" style="color:#a855f7;">Zero Cost</div>
+        <div class="sum-lbl">100% Free Health Tech</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Toolbar -->
+  <div class="toolbar-row">
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn-ai-audit" onclick="runAiPrescriptionAudit()">
+        <i class="fas fa-wand-magic-sparkles"></i> Run Live AI Drug Safety &amp; Interaction Audit
+      </button>
+      <button class="btn-secondary" onclick="exportToWhatsApp()">
+        <i class="fab fa-whatsapp" style="color:#25d366;"></i> Share Schedule with Caregiver
+      </button>
+    </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn-secondary" onclick="testAlarmChime()">
+        <i class="fas fa-volume-high" style="color:#fbbf24;"></i> Test Alarm Sound
+      </button>
+      <button class="btn-secondary" onclick="requestWebNotifications()">
+        <i class="fas fa-bell" style="color:#34d399;"></i> Enable Notifications
+      </button>
+    </div>
+  </div>
+
+  <!-- AI Clinical Audit Box (Interactive Live Gemini) -->
+  <div class="ai-audit-box" id="aiAuditBox">
+    <div class="ai-audit-head">
+      <div class="ai-audit-title">
+        <i class="fas fa-robot" style="color:#34d399;"></i>
+        <span>Clinical AI Prescription &amp; Interaction Review</span>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <span class="byok-status-pill"><i class="fas fa-check-circle"></i> Live Gemini 3.6</span>
+        <button onclick="document.getElementById('aiAuditBox').classList.remove('active')" style="background:none; border:none; color:#94a3b8; font-size:16px; cursor:pointer;"><i class="fas fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="ai-audit-content" id="aiAuditText">
+      <i class="fas fa-spinner fa-spin" style="color:#34d399; margin-right:8px;"></i> Analyzing prescription list for drug interactions, food precautions, and Jan Aushadhi generic alternatives...
     </div>
   </div>
 
@@ -122,30 +386,102 @@
         <option value="Night (Before Bed)">Night (Before Bed)</option>
         <option value="Empty Stomach (Morning)">Empty Stomach (Morning)</option>
       </select>
-      <button type="submit" class="btn btn-primary" style="padding:11px 20px;"><i class="fas fa-plus"></i> Schedule</button>
+      <button type="submit" class="btn btn-primary" style="padding:11px 20px; background:#10b981; color:#04241a; font-weight:800; cursor:pointer;"><i class="fas fa-plus"></i> Schedule</button>
     </form>
   </div>
 
   <!-- Reminders List -->
   <div class="reminders-card">
     <div class="reminders-header">
-      <span style="font-size:14px; font-weight:700; color:#fff;"><i class="fas fa-calendar-check"></i> Today's Prescription Schedule</span>
-      <span style="font-size:12px; color:var(--text-3); font-family:'JetBrains Mono';">Local Time: <span id="clockNow"></span></span>
+      <span style="font-size:14px; font-weight:700; color:#fff;"><i class="fas fa-calendar-check" style="color:#34d399; margin-right:6px;"></i> Active Prescription Schedule</span>
+      <span style="font-size:12px; color:var(--text-3, #64748b); font-family:'JetBrains Mono';">Local Time: <span id="clockNow"></span></span>
     </div>
     <div id="remindersContainer">
       <!-- Injected via JavaScript -->
     </div>
   </div>
+
+  <!-- 24/7 AI Clinical Health Chatbot -->
+  <div class="chat-section">
+    <div class="chat-head">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="width:36px; height:36px; border-radius:10px; background:rgba(16,185,129,0.2); display:flex; align-items:center; justify-content:center; color:#34d399;"><i class="fas fa-user-doctor"></i></span>
+        <div>
+          <div style="font-size:15px; font-weight:800; color:#fff;">Dr. Forest AI — 24/7 Clinical Pharmacist Assistant</div>
+          <div style="font-size:11px; color:#94a3b8;">Free Clinical Advice · Dosage Clarifications · Side Effect Explanations · Drug Precautions</div>
+        </div>
+      </div>
+      <span class="byok-status-pill"><i class="fas fa-brain"></i> BYOK AI Online</span>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-bubble bubble-bot">
+        👋 Namaste! I am Dr. Forest, your clinical AI pharmacist. You can ask me anything about your scheduled medications:
+        <br>• <em>"Can I take Metformin if I skip my morning meal?"</em>
+        <br>• <em>"What is the Jan Aushadhi generic salt for Lipitor?"</em>
+        <br>• <em>"Are there food interactions with Telmisartan?"</em>
+      </div>
+    </div>
+    <form class="chat-input-bar" onsubmit="handleChatSubmit(event)">
+      <input type="text" class="chat-inp" id="chatInput" placeholder="Ask a health, dosage, or medicine question..." required autocomplete="off">
+      <button type="submit" class="chat-send" id="chatSendBtn"><i class="fas fa-paper-plane"></i> Ask AI</button>
+    </form>
+  </div>
+
+  <!-- Emergency Hotlines & Free Medical Camp Section -->
+  <div style="margin-bottom:20px;">
+    <h3 style="font-size:18px; font-weight:800; color:#fff; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+      <i class="fas fa-truck-medical" style="color:#f87171;"></i> 24x7 Emergency Helplines &amp; Free Medical Aid
+    </h3>
+    <div class="helplines-grid">
+      <div class="help-card">
+        <div class="help-icon hi-red"><i class="fas fa-ambulance"></i></div>
+        <div>
+          <div class="help-title">National Emergency Ambulance</div>
+          <div class="help-num"><a href="tel:108">108 / 112</a></div>
+        </div>
+      </div>
+      <div class="help-card">
+        <div class="help-icon hi-red"><i class="fas fa-droplet"></i></div>
+        <div>
+          <div class="help-title">24x7 Blood Bank Helpline</div>
+          <div class="help-num"><a href="tel:104">104</a></div>
+        </div>
+      </div>
+      <div class="help-card">
+        <div class="help-icon hi-green"><i class="fas fa-pills"></i></div>
+        <div>
+          <div class="help-title">PMBJP Jan Aushadhi Helpline</div>
+          <div class="help-num"><a href="tel:18001808080">1800-180-8080</a></div>
+        </div>
+      </div>
+      <div class="help-card">
+        <div class="help-icon hi-blue"><i class="fas fa-hand-holding-medical"></i></div>
+        <div>
+          <div class="help-title">Ayushman Bharat Free Treatment</div>
+          <div class="help-num"><a href="tel:14555">14555</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
+<footer class="footer" style="padding:40px 24px; border-top:1px solid rgba(255,255,255,0.08); background:#060810; text-align:center;">
+  <p style="color:#64748b; font-size:13px; margin-bottom:8px;">Decode Forest Pharmacy is a 100% free healthcare initiative under <strong>Sevenseed AI Venture Studio</strong> &amp; <strong>AVP Charitable Trust</strong>.</p>
+  <p style="color:#475569; font-size:11.5px;">Disclaimer: AI suggestions are for informational and reminder purposes. Please consult your registered medical practitioner before altering any prescription dosages.</p>
+</footer>
+
 <script>
+// Web Audio Chime Synthesizer
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playChime(freq, duration = 0.25) {
+function playChime(freq = 660, duration = 0.3) {
   try {
+    if (audioCtx.state === 'suspended') { audioCtx.resume(); }
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
+    osc.type = 'sine';
     osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
@@ -154,14 +490,91 @@ function playChime(freq, duration = 0.25) {
   } catch(e){}
 }
 
+function testAlarmChime() {
+  playChime(587.33, 0.15);
+  setTimeout(() => playChime(880, 0.35), 180);
+}
+
+// Notification API
+function requestWebNotifications() {
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notifications.");
+    return;
+  }
+  Notification.requestPermission().then(permission => {
+    if (permission === "granted") {
+      new Notification("Decode Pharmacy Dose Radar", {
+        body: "Automated dose reminders are now active on your device!",
+        icon: "img/favicon.png"
+      });
+      playChime(880, 0.3);
+    }
+  });
+}
+
+// Pre-seeded Studio Gemini Key
+const STUDIO_GEMINI_KEY = "";
+
+function getActiveGeminiKey() {
+  try {
+    return localStorage.getItem('user_gemini_key') ||
+           localStorage.getItem('ss_key_gemini') ||
+           localStorage.getItem('ss_apikey_gemini') ||
+           STUDIO_GEMINI_KEY;
+  } catch(e) {
+    return STUDIO_GEMINI_KEY;
+  }
+}
+
+function openByokModal() {
+  const gKey = localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || '';
+  const oKey = localStorage.getItem('ss_key_openai') || '';
+  document.getElementById('modalKeyGemini').value = gKey;
+  document.getElementById('modalKeyOpenAI').value = oKey;
+  document.getElementById('byokModal').classList.add('open');
+}
+
+function closeByokModal() {
+  document.getElementById('byokModal').classList.remove('open');
+}
+
+function resetToStudioKey() {
+  localStorage.removeItem('user_gemini_key');
+  localStorage.removeItem('ss_key_gemini');
+  localStorage.removeItem('ss_apikey_gemini');
+  document.getElementById('modalKeyGemini').value = '';
+  document.getElementById('activeProviderPill').innerHTML = '<i class="fas fa-bolt"></i> Gemini 3.6 Flash Active';
+  closeByokModal();
+  alert('Reset to default Sevenseed Studio Gemini key.');
+}
+
+function saveCustomTokens() {
+  const g = document.getElementById('modalKeyGemini').value.trim();
+  const o = document.getElementById('modalKeyOpenAI').value.trim();
+  if (g) {
+    localStorage.setItem('user_gemini_key', g);
+    localStorage.setItem('ss_key_gemini', g);
+  }
+  if (o) {
+    localStorage.setItem('ss_key_openai', o);
+  }
+  document.getElementById('activeProviderPill').innerHTML = '<i class="fas fa-check-double"></i> Custom BYOK Active';
+  closeByokModal();
+  alert('API Tokens saved locally in your browser!');
+}
+
 const STORAGE_KEY = "pharmacy_medicine_reminders_v1";
 
 const GENERIC_MAP = {
-  "lipitor": { generic: "Atorvastatin 10mg", savings: "Save ₹145/strip" },
-  "metformin": { generic: "Metformin 500mg PR", savings: "Jan Aushadhi: ₹12/strip" },
-  "telmisartan": { generic: "Telmisartan 40mg", savings: "Save ₹85/strip" },
-  "pan 40": { generic: "Pantoprazole 40mg", savings: "Save ₹98/strip" },
-  "augmentin": { generic: "Amoxicillin + Clavulanic Acid 625mg", savings: "Save ₹180/strip" }
+  "lipitor": { generic: "Atorvastatin 10mg / 20mg", savings: "PMBJP Jan Aushadhi: ₹18 (Save ₹165)" },
+  "metformin": { generic: "Metformin 500mg SR", savings: "Jan Aushadhi: ₹12 (Save ₹48)" },
+  "telmisartan": { generic: "Telmisartan 40mg", savings: "Jan Aushadhi: ₹14 (Save ₹76)" },
+  "pan 40": { generic: "Pantoprazole 40mg", savings: "Jan Aushadhi: ₹15 (Save ₹85)" },
+  "pantocid": { generic: "Pantoprazole 40mg", savings: "Jan Aushadhi: ₹15 (Save ₹85)" },
+  "augmentin": { generic: "Amoxicillin + Clavulanic Acid 625mg", savings: "Jan Aushadhi: ₹65 (Save ₹145)" },
+  "doxovent": { generic: "Doxofylline 400mg", savings: "Jan Aushadhi: ₹32 (Save ₹108)" },
+  "montair": { generic: "Montelukast 10mg + Levocetirizine 5mg", savings: "Jan Aushadhi: ₹45 (Save ₹165)" },
+  "glycomet": { generic: "Metformin Hydrochloride 500mg", savings: "Jan Aushadhi: ₹12 (Save ₹38)" }
 };
 
 const DEFAULT_REMINDERS = [
@@ -226,7 +639,7 @@ function renderReminders() {
         <div class="rem-name">
           <i class="fas fa-pills" style="color:#10b981;"></i>
           ${r.name}
-          <span style="font-size:12px; font-weight:normal; color:var(--text-3);">· ${r.dosage}</span>
+          <span style="font-size:12px; font-weight:normal; color:var(--text-3,#64748b);">· ${r.dosage}</span>
         </div>
         <div class="rem-meta">
           <span><i class="fas fa-clock"></i> ${r.timing}</span>
@@ -235,7 +648,7 @@ function renderReminders() {
         </div>
         ${genMatch ? `
           <div class="generic-alt-chip">
-            <i class="fas fa-leaf"></i> <strong>PMBJP Generic Salt Equivalent:</strong> ${genMatch.generic} (${genMatch.savings})
+            <i class="fas fa-leaf"></i> <strong>PMBJP Generic Equivalent:</strong> ${genMatch.generic} (${genMatch.savings})
           </div>
         ` : ''}
       </div>
@@ -246,10 +659,10 @@ function renderReminders() {
             : `<span class="status-badge badge-ok"><i class="fas fa-check"></i> Next dose scheduled</span>`
           }
         </div>
-        <button class="btn btn-primary sm" onclick="markDoseTaken('${r.id}')" style="background:#10b981; color:#000;">
-          <i class="fas fa-check"></i> Take Dose
+        <button class="btn btn-primary sm" onclick="markDoseTaken('${r.id}')" style="background:#10b981; color:#04241a; font-weight:800; border:none; padding:8px 16px; border-radius:8px; cursor:pointer;">
+          <i class="fas fa-check"></i> Mark Taken
         </button>
-        <button onclick="removeReminder('${r.id}')" style="background:none; border:none; color:var(--text-3); font-size:16px; cursor:pointer;" title="Delete prescription">
+        <button onclick="removeReminder('${r.id}')" style="background:none; border:none; color:var(--text-3,#64748b); font-size:16px; cursor:pointer;" title="Delete prescription">
           <i class="fas fa-trash-can"></i>
         </button>
       </div>
@@ -297,6 +710,114 @@ function markDoseTaken(id) {
 function removeReminder(id) {
   reminders = reminders.filter(r => r.id !== id);
   saveReminders();
+}
+
+// Resilient multi-model Gemini caller with automatic failover
+async function callGeminiReliable(prompt, apiKey) {
+  const models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+  let lastErr = null;
+  for (const m of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (reply) return reply;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        lastErr = new Error(errData.error?.message || `HTTP ${res.status}`);
+      }
+    } catch(e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error('Google AI service busy, please retry in a moment.');
+}
+
+// Live AI Prescription & Interaction Audit
+async function runAiPrescriptionAudit() {
+  const box = document.getElementById('aiAuditBox');
+  const txt = document.getElementById('aiAuditText');
+  box.classList.add('active');
+  txt.innerHTML = '<i class="fas fa-spinner fa-spin" style="color:#34d399; margin-right:8px;"></i> Calling Google Gemini to audit your active prescriptions...';
+
+  const medList = reminders.map(r => `${r.name} (${r.dosage}, ${r.timing})`).join(", ");
+  const apiKey = getActiveGeminiKey();
+
+  const prompt = `You are an expert Clinical Pharmacist at Decode Forest Pharmacy.
+Patient's current active medication list:
+${medList}
+
+Provide a clinical audit structured with:
+1. ⚠️ Potential Drug-Drug or Food-Drug Interactions (if any, explain in plain, reassuring language).
+2. ⏰ Optimal Administration Timing & Spacing (e.g. empty stomach vs with meals).
+3. 🌿 PMBJP Jan Aushadhi Bio-Equivalent Generic Substitutions for each branded drug with estimated savings in INR.
+4. 🩺 Questions to Ask the Doctor at Next Follow-Up.
+
+Be concise, practical, and highly empathetic.`;
+
+  try {
+    const reply = await callGeminiReliable(prompt, apiKey);
+    txt.innerHTML = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  } catch(err) {
+    txt.innerHTML = `<span style="color:#f87171;"><i class="fas fa-triangle-exclamation"></i> Error running AI audit: ${err.message}</span><br><br>Tip: You can add your personal API token in the BYOK settings modal above.`;
+  }
+}
+
+// Live AI Chatbot (Dr. Forest)
+async function handleChatSubmit(e) {
+  e.preventDefault();
+  const inp = document.getElementById('chatInput');
+  const query = inp.value.trim();
+  if (!query) return;
+
+  const msgs = document.getElementById('chatMessages');
+  
+  // Append User Bubble
+  const uBubble = document.createElement('div');
+  uBubble.className = 'chat-bubble bubble-user';
+  uBubble.textContent = query;
+  msgs.appendChild(uBubble);
+  inp.value = '';
+
+  // Append Bot Placeholder
+  const bBubble = document.createElement('div');
+  bBubble.className = 'chat-bubble bubble-bot';
+  bBubble.innerHTML = '<i class="fas fa-spinner fa-spin" style="color:#34d399;"></i> Thinking...';
+  msgs.appendChild(bBubble);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  const medList = reminders.map(r => r.name).join(", ");
+  const apiKey = getActiveGeminiKey();
+
+  const prompt = `You are Dr. Forest, a compassionate and expert clinical pharmacist at Decode Forest Pharmacy (India).
+Patient active medicines: ${medList || 'None specified'}.
+Patient question: "${query}"
+
+Provide a warm, clinically accurate, and practical answer in 2-3 short paragraphs. Include any relevant Jan Aushadhi generic recommendations or emergency precautions if applicable.`;
+
+  try {
+    const reply = await callGeminiReliable(prompt, apiKey);
+    bBubble.innerHTML = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  } catch(err) {
+    bBubble.innerHTML = `<span style="color:#f87171;">⚠️ Dr. Forest: ${err.message}. Please check your BYOK API token.</span>`;
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// Export to WhatsApp
+function exportToWhatsApp() {
+  let text = "📋 *My Daily Prescription & Dose Schedule (Decode Pharmacy)*\n\n";
+  reminders.forEach((r, idx) => {
+    text += `${idx + 1}. *${r.name}* - ${r.dosage}\n   ⏰ Timing: ${r.timing}\n\n`;
+  });
+  text += "🌿 *Jan Aushadhi Generic Savings Powered by Decode Pharmacy* (100% Free Health Tech)";
+  const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
 }
 
 loadReminders();

@@ -73,17 +73,21 @@ if (cform) {
     e.preventDefault();
     var to = cform.getAttribute('data-email') || 'hello@sevenseed.in';
     var company = cform.getAttribute('data-company') || 'Sevenseed';
-    var name = (document.getElementById('cf-name').value || '').trim();
-    var from = (document.getElementById('cf-email').value || '').trim();
+    var nameEl = document.getElementById('cf-name');
+    var fromEl = document.getElementById('cf-email');
+    var name = nameEl ? (nameEl.value || '').trim() : '';
+    var from = fromEl ? (fromEl.value || '').trim() : '';
     var orgEl = document.getElementById('cf-org');
     var sizeEl = document.getElementById('cf-size');
     var org = orgEl ? (orgEl.value || '').trim() : '';
     var size = sizeEl ? (sizeEl.value || '').trim() : '';
     var typeEl = document.getElementById('cf-type');
     var type = typeEl ? (typeEl.value || '').trim() : '';
-    var subj = (document.getElementById('cf-subject').value || '').trim() || ('Enquiry for ' + company);
+    var subjEl = document.getElementById('cf-subject');
+    var subj = (subjEl ? (subjEl.value || '').trim() : '') || ('Enquiry for ' + company);
     if (type) subj = '[' + type + '] ' + subj;
-    var msg = (document.getElementById('cf-msg').value || '').trim();
+    var msgEl = document.getElementById('cf-msg');
+    var msg = msgEl ? (msgEl.value || '').trim() : '';
     var note = document.getElementById('cf-note');
     var sbtn = cform.querySelector('button[type="submit"]');
     var originalBtnHtml = sbtn ? sbtn.innerHTML : 'Send message';
@@ -681,19 +685,28 @@ function toast(msg, type){
       'SERVICES: ' + (ctx.services || []).map(function(s){ return s.name + ' - ' + s.desc; }).join('; ') + '\n' +
       'FAQ: ' + (ctx.faqs || []).map(function(f){ return f.q + ' -> ' + f.a; }).join('; ') + '\n' +
       'CONTACT: ' + (ctx.contact ? (ctx.contact.email + ', ' + ctx.contact.phone) : '');
-    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(key);
-    return fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: sys + '\n\nVISITOR QUESTION: ' + q }] }] })
-    })
-    .then(function(res){ if (!res.ok) throw new Error('status ' + res.status); return res.json(); })
-    .then(function(data){
-      var text = data && data.candidates && data.candidates[0] && data.candidates[0].content &&
-        data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
-      if (!text) throw new Error('empty response');
-      return text.trim();
-    });
+    var models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+    function tryModel(idx){
+      if(idx >= models.length) return Promise.reject(new Error('All Gemini endpoints busy'));
+      var m = models[idx];
+      var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + m + ':generateContent?key=' + encodeURIComponent(key);
+      return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: sys + '\n\nVISITOR QUESTION: ' + q }] }] })
+      })
+      .then(function(res){
+        if (!res.ok) return tryModel(idx + 1);
+        return res.json().then(function(data){
+          var text = data && data.candidates && data.candidates[0] && data.candidates[0].content &&
+            data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+          if (!text) return tryModel(idx + 1);
+          return text.trim();
+        });
+      })
+      .catch(function(){ return tryModel(idx + 1); });
+    }
+    return tryModel(0);
   }
 
   form.addEventListener('submit', function(e){

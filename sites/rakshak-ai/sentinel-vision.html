@@ -1,331 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Sentinel Surveillance & Video Security Simulator — Rakshak AI</title>
-  <meta name="description" content="Simulated real-time CCTV security camera analytics with YOLO bounding boxes, crowd density heatmaps, intrusion alarms, and ALPR license plate detection.">
+  <meta name="description" content="Real-time video analytics for face verification, boundary breach, and weapon alerts.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .sent-container { max-width: 1400px; margin: 0 auto; padding: 100px 24px 60px; }
-    .sent-header { text-align: center; margin-bottom: 28px; }
-    .sent-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #f87171; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
-    .sent-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
-
-    /* Channel Selector Bar */
-    .channel-bar { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
-    .ch-btn { padding: 8px 16px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
-    .ch-btn.active, .ch-btn:hover { background: rgba(239,68,68,0.18); border-color: #ef4444; color: #f87171; }
-
-    /* Workspace */
-    .sent-grid { display: grid; grid-template-columns: 1fr 420px; gap: 24px; min-height: 640px; }
-    @media(max-width: 1080px) { .sent-grid { grid-template-columns: 1fr; } }
-
-    /* Video Feed Screen */
-    .feed-card { background: #04060e; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; box-shadow: var(--shadow); }
-    .feed-topbar { display: flex; justify-content: space-between; align-items: center; z-index: 10; margin-bottom: 14px; }
-    .live-indicator { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; color: #ef4444; font-family: 'JetBrains Mono'; text-transform: uppercase; }
-    .live-dot { width: 10px; height: 10px; border-radius: 50%; background: #ef4444; animation: blink 1s infinite; }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-    /* CCTV Canvas Overlay Stage */
-    .cctv-stage { flex: 1; background: radial-gradient(circle at 50% 50%, #0d1326 0%, #03050c 100%); border: 1px solid #1e293b; border-radius: 12px; position: relative; min-height: 420px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-    #cctvCanvas { width: 100%; height: 100%; display: block; position: absolute; inset: 0; }
-
-    /* HUD Watermark */
-    .hud-overlay { position: absolute; top: 16px; left: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8; z-index: 5; pointer-events: none; line-height: 1.6; text-shadow: 0 1px 4px #000; }
-    .hud-threat { position: absolute; top: 16px; right: 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 800; z-index: 5; }
-
-    /* Right Pane: Telemetry & Event Log */
-    .telemetry-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow); }
-    .metrics-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
-    .m-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
-    .m-val { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono'; }
-    .m-lbl { font-size: 11px; text-transform: uppercase; color: var(--text-3); font-weight: 700; margin-top: 2px; }
-
-    .event-log { flex: 1; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #cbd5e1; line-height: 1.6; overflow-y: auto; max-height: 340px; margin-bottom: 20px; white-space: pre-wrap; }
+    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
+    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
+    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
+    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
+    .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
+    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
+    .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
+    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
   </style>
 </head>
 <body>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
 
 <nav class="nav" id="mainNav">
-  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
-      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#ef4444,#dc2626); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-shield-halved"></i></span>
-      <span style="font-weight:700; font-size:18px;">Rakshak AI</span>
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">
+      <span class="nav-logo-wrap"><i class="fas fa-shield-halved"></i></span>
+      <span class="nav-name">Rakshak AI</span>
     </a>
-    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
-      <a href="index.html">Home</a>
-      <a href="fir-generator.html">BNS Auto-FIR</a>
-      <a href="sentinel-vision.html" style="color:#f87171; font-weight:600;">CCTV Sentinel</a>
-      <a href="threat-radar.html">Threat Radar</a>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="fir-generator.html">BNS / IPC FIR Generator</a>
+        <a href="sentinel-vision.html" class="active">Sentinel Vision</a>
     </div>
-    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
-      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
-      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
+    <div class="nav-actions">
+      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
+      <a class="btn btn-primary sm" href="index.html#contact"><i class="fas fa-rocket"></i> Launch</a>
     </div>
   </div>
 </nav>
 
-<div class="sent-container">
-  <div class="sent-header">
-    <div class="sent-badge"><i class="fas fa-video"></i> Real-Time YOLO Computer Vision Surveillance</div>
-    <h1 class="sent-title">Sentinel AI Public Safety & CCTV Video Analytics</h1>
-    <p style="color:var(--text-2); max-width:760px; margin:0 auto;">Simulate intelligent CCTV camera feeds with real-time YOLO object detection bounding boxes, crowd density heatmaps, automated license plate recognition (ALPR), and tripwire intrusion triggers.</p>
-  </div>
 
-  <!-- Channel Switcher -->
-  <div class="channel-bar">
-    <button class="ch-btn active" onclick="switchChannel('gate')"><i class="fas fa-door-open"></i> CAM-01: Main Gate & ALPR</button>
-    <button class="ch-btn" onclick="switchChannel('crowd')"><i class="fas fa-users"></i> CAM-02: Public Concourse Density</button>
-    <button class="ch-btn" onclick="switchChannel('vault')"><i class="fas fa-vault"></i> CAM-03: Server Room Biometrics</button>
-    <button class="ch-btn" onclick="switchChannel('fence')"><i class="fas fa-fence"></i> CAM-04: North Perimeter Fence</button>
-  </div>
+<header class="sub-hero">
+  <div class="sub-hero-pill"><i class="fas fa-sparkles"></i> 100% Free · Interactive AI Tool</div>
+  <h1 class="sub-hero-title">AI Sentinel Surveillance & Video Security Simulator</h1>
+  <p class="sub-hero-sub">Real-time video analytics for face verification, boundary breach, and weapon alerts.</p>
+</header>
 
-  <div class="sent-grid">
-    <!-- Video Stream Display -->
-    <div class="feed-card">
-      <div class="feed-topbar">
-        <div class="live-indicator">
-          <div class="live-dot"></div>
-          <span id="camName">CAM-01: PERIMETER GATE EAST</span>
-        </div>
-        <div style="font-family:'JetBrains Mono'; font-size:12px; color:var(--text-3);">
-          FPS: <span id="fpsNum" style="color:#34d399;">30.0</span> · 1080p · YOLOv8s
-        </div>
+<main class="container">
+  
+<div class="interactive-card" style="text-align:left;">
+  <div class="grid-2">
+    <div>
+      <div class="form-group">
+        <label>Select Surveillance Feed</label>
+        <select id="camFeed" class="form-control">
+          <option>Camera 01: Perimeter Gate East</option>
+          <option>Camera 02: Main Lobby Entrance</option>
+          <option>Camera 03: Cash & Inventory Vault</option>
+        </select>
       </div>
-
-      <div class="cctv-stage">
-        <canvas id="cctvCanvas"></canvas>
-        <div class="hud-overlay">
-          <div>LOC: GANDHINAGAR SECTOR 24</div>
-          <div id="hudTime">TIME: 2026-09-23 14:35:10</div>
-          <div>MODEL: RAKSHAK-SENTINEL-v4.2</div>
-        </div>
-        <div class="hud-threat" id="hudThreat" style="color:#34d399;">
-          THREAT: LOW (0.04)
-        </div>
-      </div>
-
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:12px; color:var(--text-3);">
-        <span>Grid: AI Optical Sensor Array Active</span>
-        <button class="btn btn-ghost sm" onclick="triggerAlert()"><i class="fas fa-bell"></i> Broadcast Emergency Dispatch</button>
-      </div>
+      <button class="btn btn-primary" onclick="scanSentinelFeed()" style="width:100%;"><i class="fas fa-video"></i> Analyze Feed</button>
     </div>
-
-    <!-- Telemetry Pane -->
-    <div class="telemetry-card">
-      <div>
-        <div style="font-size:16px; font-weight:700; color:#fff; margin-bottom:14px;">Live Optical Telemetry</div>
-        
-        <div class="metrics-row">
-          <div class="m-card">
-            <div class="m-val" style="color:#38bdf8;" id="mObjects">3</div>
-            <div class="m-lbl">Detected Objects</div>
-          </div>
-          <div class="m-card">
-            <div class="m-val" style="color:#34d399;" id="mThreat">NORMAL</div>
-            <div class="m-lbl">Security Status</div>
-          </div>
-          <div class="m-card">
-            <div class="m-val" style="color:#fbbf24;" id="mInference">14ms</div>
-            <div class="m-lbl">Inference Latency</div>
-          </div>
-          <div class="m-card">
-            <div class="m-val" style="color:#a78bfa;" id="mConfidence">98.4%</div>
-            <div class="m-lbl">Model Confidence</div>
-          </div>
-        </div>
-
-        <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:8px; display:flex; justify-content:space-between;">
-          <span>Event Stream Telemetry</span>
-          <span style="color:#10b981; font-size:11px;"><i class="fas fa-circle" style="font-size:7px;"></i> Streaming</span>
-        </div>
-        <div class="event-log" id="eventLog">
-[14:35:01] CAM-01 initialized. Resolution 1920x1080.
-[14:35:02] Target locked: Vehicle GJ-01-AB-1234 (Confidence: 99.1%)
-[14:35:04] Pedestrian detected: ID #812 (Authorized Personnel)
-[14:35:08] Perimeter integrity verified. Zero anomalies.
-        </div>
-      </div>
-
-      <button class="btn btn-primary" style="width:100%; justify-content:center; background:#ef4444; border:none;" onclick="triggerSecurityAudit()">
-        <i class="fas fa-file-shield"></i> Export Security Audit Report
-      </button>
+    <div>
+      <div class="output-screen" id="sentinelOutput" style="min-height:180px;">// Select camera feed to run real-time sentinel visual checks.</div>
     </div>
   </div>
 </div>
-
 <script>
-const CHANNELS = {
-  gate: {
-    name: "CAM-01: PERIMETER GATE EAST (ALPR)",
-    objects: "3",
-    status: "NORMAL",
-    statusColor: "#34d399",
-    threat: "THREAT: LOW (0.04)",
-    threatColor: "#34d399",
-    boxes: [
-      { x: 120, y: 160, w: 220, h: 140, label: "SUV (GJ-01-AB-1234) 99.1%", color: "#38bdf8" },
-      { x: 420, y: 110, w: 70, h: 190, label: "Guard ID #812 (98.4%)", color: "#34d399" },
-      { x: 530, y: 130, w: 60, h: 170, label: "Pedestrian (94.2%)", color: "#34d399" }
-    ],
-    log: "[14:35:01] CAM-01 initialized. Resolution 1920x1080.\n[14:35:02] Target locked: Vehicle GJ-01-AB-1234 (Confidence: 99.1%)\n[14:35:04] Pedestrian detected: ID #812 (Authorized Personnel)\n[14:35:08] Perimeter integrity verified. Zero anomalies."
-  },
-  crowd: {
-    name: "CAM-02: PUBLIC CONCOURSE & METRO EXIT",
-    objects: "18",
-    status: "MODERATE",
-    statusColor: "#fbbf24",
-    threat: "CROWD DENSITY: 62% (MONITOR)",
-    threatColor: "#fbbf24",
-    boxes: [
-      { x: 80, y: 100, w: 50, h: 140, label: "Person 96%", color: "#fbbf24" },
-      { x: 150, y: 110, w: 50, h: 130, label: "Person 95%", color: "#fbbf24" },
-      { x: 230, y: 90, w: 55, h: 150, label: "Person 98%", color: "#fbbf24" },
-      { x: 310, y: 120, w: 50, h: 120, label: "Person 91%", color: "#fbbf24" },
-      { x: 400, y: 105, w: 52, h: 135, label: "Person 94%", color: "#fbbf24" },
-      { x: 500, y: 115, w: 48, h: 125, label: "Person 93%", color: "#fbbf24" }
-    ],
-    log: "[14:35:10] CAM-02 Concourse: Influx +18 persons in 30s.\n[14:35:12] Crowd Density Index: 62% (Warning threshold at 80%)\n[14:35:14] Egress routes clear. Automated flow balancing active."
-  },
-  vault: {
-    name: "CAM-03: SECURE SERVER ROOM & VAULT",
-    objects: "1",
-    status: "RESTRICTED",
-    statusColor: "#a78bfa",
-    threat: "BIOMETRIC: VERIFIED",
-    threatColor: "#a78bfa",
-    boxes: [
-      { x: 280, y: 90, w: 110, h: 230, label: "Staff Engineer #104 · Access Granted", color: "#a78bfa" }
-    ],
-    log: "[14:35:15] Access Card Swiped: Badge #104\n[14:35:16] Biometric Facial Match: 99.8% match against Staff DB\n[14:35:17] Server room door unlocked. Single occupant confirmed."
-  },
-  fence: {
-    name: "CAM-04: NORTH PERIMETER FENCE (TRIPWIRE)",
-    objects: "0",
-    status: "SECURE",
-    statusColor: "#34d399",
-    threat: "TRIPWIRE: INTACT",
-    threatColor: "#34d399",
-    boxes: [],
-    log: "[14:35:20] Optical tripwire active along 450m fence line.\n[14:35:21] Thermal sensor: Zero infrared heat signatures.\n[14:35:23] Perimeter status: 100% Secure."
-  }
-};
+function scanSentinelFeed() {
+  document.getElementById('sentinelOutput').innerText = '📹 SENTINEL VISION STATUS:
+Camera: Perimeter Gate East
+Resolution: 1080p @ 30 FPS
 
-let currentCamKey = 'gate';
-const canvas = document.getElementById('cctvCanvas');
-const ctx = canvas.getContext('2d');
-
-function switchChannel(key) {
-  currentCamKey = key;
-  document.querySelectorAll('.ch-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-
-  const c = CHANNELS[key];
-  document.getElementById('camName').innerText = c.name;
-  document.getElementById('mObjects').innerText = c.objects;
-  document.getElementById('mThreat').innerText = c.status;
-  document.getElementById('mThreat').style.color = c.statusColor;
-  document.getElementById('hudThreat').innerText = c.threat;
-  document.getElementById('hudThreat').style.color = c.threatColor;
-  document.getElementById('eventLog').innerText = c.log;
-
-  renderFeed();
+- Active Objects: 2 Pedestrians, 1 Vehicle
+- Threat Level: NORMAL (0 Breaches detected)
+- Facial Recognition: All individuals verified personnel
+- Status: SECURE';
 }
-
-function resizeFeed() {
-  const rect = canvas.parentElement.getBoundingClientRect();
-  canvas.width = rect.width;
-  canvas.height = rect.height;
-  renderFeed();
-}
-window.addEventListener('resize', resizeFeed);
-
-function renderFeed() {
-  const c = CHANNELS[currentCamKey];
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Background Grid / Radar Scan
-  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-  ctx.lineWidth = 1;
-  for (let x = 0; x < canvas.width; x += 40) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-  }
-  for (let y = 0; y < canvas.height; y += 40) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-  }
-
-  // Draw Bounding Boxes
-  c.boxes.forEach(b => {
-    ctx.strokeStyle = b.color;
-    ctx.lineWidth = 2;
-    ctx.strokeRect(b.x, b.y, b.w, b.h);
-
-    // Label banner
-    ctx.fillStyle = b.color;
-    ctx.fillRect(b.x, b.y - 20, b.label.length * 7.5 + 10, 20);
-
-    ctx.fillStyle = '#000';
-    ctx.font = 'bold 11px JetBrains Mono';
-    ctx.fillText(b.label, b.x + 6, b.y - 6);
-  });
-}
-
-function triggerAlert() {
-  alert('🚨 EMERGENCY DISPATCH TRIGGERED!\nAutomated notification and GPS coordinates sent to Gandhinagar Police Control Room.');
-}
-
-function triggerSecurityAudit() {
-  alert('📋 Security Telemetry Audit exported to encrypted audit ledger.');
-}
-
-switchChannel('gate');
-setTimeout(resizeFeed, 50);
 </script>
 
-<script>
-(function() {
-  var tBtn = document.getElementById('themeToggle');
-  if (tBtn) {
-    function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-    }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('ss-theme', next);
-      updateIcon(next);
-    });
-  }
+</main>
 
-  var ring = document.getElementById('cursorRing');
-  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
-      requestAnimationFrame(renderCursor);
-    }
-    requestAnimationFrame(renderCursor);
-  }
-})();
-</script>
+
+<footer class="footer">
+  <div class="foot-inner">
+    <div class="foot-col">
+      <div class="foot-brand"><i class="fas fa-shield-halved"></i> Rakshak AI</div>
+      <p class="foot-tag">AI Public Safety & Legal — Part of the Sevenseed AI Venture Studio portfolio.</p>
+      <div class="foot-copy">© 2026 Rakshak AI. 100% Free · Bring Your Own Key Architecture.</div>
+    </div>
+    <div class="foot-col">
+      <h4>Navigation</h4>
+      <ul class="foot-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="../index.html">Sevenseed Hub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+<script src="app.js"></script>
 </body>
 </html>

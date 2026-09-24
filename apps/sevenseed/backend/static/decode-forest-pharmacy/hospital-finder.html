@@ -1,330 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Emergency Hospitals & Free Health Camp Directory — Decode Pharmacy</title>
-  <meta name="description" content="Verified directory of 24x7 emergency apex hospitals, trauma centers, Ayushman Bharat facilities, and free medical camps across India.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency Hospital & Free Health Camp Directory — Decode Pharmacy</title>
+  <meta name="description" content="Find nearby emergency medical centers and community blood donation camps in Gujarat.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .sub-hero { padding: 110px 24px 36px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(16,185,129,0.18), transparent 70%); }
-    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
-    .sub-hero-title { font-size: clamp(28px, 4.5vw, 48px); font-weight: 800; line-height: 1.15; margin-bottom: 14px; }
-    .sub-hero-sub { font-size: 16px; color: var(--text-2); max-width: 720px; margin: 0 auto 28px; line-height: 1.6; }
-
-    /* Hero Banner Image */
-    .hero-banner-container { max-width: 1200px; margin: 0 auto 40px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(16,185,129,0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
-    .hero-banner-img { width: 100%; height: auto; max-height: 380px; object-fit: cover; display: block; }
-    .hero-banner-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(6,11,20,0.95) 100%); display: flex; align-items: flex-end; padding: 24px 32px; }
-    .hero-banner-caption { color: #fff; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-
-    /* Emergency Hotline Banner */
-    .hotline-bar { max-width: 1200px; margin: 0 auto 36px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-    .hotline-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 12px; padding: 18px 24px; display: flex; align-items: center; gap: 16px; box-shadow: var(--shadow); }
-    .hl-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-    .hl-red { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
-    .hl-green { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
-    .hl-blue { background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); }
-    .hl-info { flex: 1; }
-    .hl-label { font-size: 11px; text-transform: uppercase; color: var(--text-3); font-weight: 700; letter-spacing: 0.05em; }
-    .hl-number { font-size: 20px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #fff; margin-top: 2px; }
-    .hl-number a { color: inherit; text-decoration: none; }
-    .hl-number a:hover { text-decoration: underline; }
-
-    /* Search & Filter Toolbar */
-    .filter-wrap { max-width: 1200px; margin: 0 auto 32px; background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 20px; box-shadow: var(--shadow); }
-    .filter-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
-    .search-box { flex: 1; min-width: 260px; position: relative; }
-    .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-3); }
-    .search-box input { width: 100%; padding: 12px 16px 12px 42px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; color: #fff; font-size: 14px; outline: none; }
-    .search-box input:focus { border-color: #10b981; }
-
-    .city-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
-    .city-btn { padding: 8px 16px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .city-btn:hover { border-color: #10b981; color: #fff; }
-    .city-btn.active { background: #10b981; color: #022c22; border-color: #10b981; font-weight: 700; }
-
-    /* Hospital Grid */
-    .hosp-grid { max-width: 1200px; margin: 0 auto 60px; display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px; }
-    .hosp-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; transition: transform 0.2s, border-color 0.2s; box-shadow: var(--shadow); position: relative; }
-    .hosp-card:hover { transform: translateY(-4px); border-color: rgba(16,185,129,0.4); }
-
-    .hosp-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .hosp-name { font-size: 17px; font-weight: 800; color: #fff; line-height: 1.3; flex: 1; }
-    .badge-verified { font-size: 11px; padding: 4px 8px; border-radius: 6px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
-
-    .hosp-address { font-size: 13px; color: var(--text-2); margin-bottom: 14px; line-height: 1.5; }
-    .hosp-meta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; font-size: 12px; }
-    .meta-tag { background: var(--bg-2); border: 1px solid var(--border); padding: 4px 10px; border-radius: 6px; color: var(--text-2); display: inline-flex; align-items: center; gap: 6px; }
-    .meta-tag strong { color: #fff; }
-
-    .spec-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
-    .spec-pill { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--text-2); }
-
-    .hosp-actions { margin-top: auto; display: flex; gap: 10px; }
-    .call-btn { flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 700; text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s; }
-    .call-red { background: #ef4444; color: #fff; }
-    .call-red:hover { background: #dc2626; }
-    .call-ghost { background: var(--bg-2); border: 1px solid var(--border-hi); color: var(--text); }
-    .call-ghost:hover { border-color: #10b981; }
-
-    /* Free Health Camps Section */
-    .camp-sec { max-width: 1200px; margin: 0 auto 60px; }
-    .sec-head { text-align: center; margin-bottom: 32px; }
-    .sec-head h2 { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 8px; }
-    .sec-head p { color: var(--text-2); font-size: 15px; }
-
-    .camps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-    .camp-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 24px; box-shadow: var(--shadow); }
-    .camp-badge { font-size: 11px; padding: 4px 10px; border-radius: 99px; background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); font-weight: 700; display: inline-block; margin-bottom: 10px; }
-    .camp-title { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 8px; }
-    .camp-info { font-size: 13px; color: var(--text-2); margin-bottom: 12px; line-height: 1.6; }
-    .camp-services { list-style: none; padding: 0; margin: 0 0 16px; font-size: 12.5px; color: #cbd5e1; }
-    .camp-services li { margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
-    .camp-services li i { color: #10b981; font-size: 11px; }
+    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
+    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
+    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
+    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
+    .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
+    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
+    .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
+    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
   </style>
 </head>
 <body>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
 
 <nav class="nav" id="mainNav">
-  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
-      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#10b981,#059669); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-mortar-pestle"></i></span>
-      <span style="font-weight:700; font-size:18px;">Decode Pharmacy</span>
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">
+      <span class="nav-logo-wrap"><i class="fas fa-mortar-pestle"></i></span>
+      <span class="nav-name">Decode Pharmacy</span>
     </a>
-    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
-      <a href="index.html">Home</a>
-      <a href="hospital-finder.html" style="color:#34d399; font-weight:600;">Hospital Directory</a>
-      <a href="generic-finder.html">Generic Finder</a>
-      <a href="interaction-checker.html">Drug Interactions</a>
-      <a href="prescription-ocr.html">Prescription OCR</a>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="prescription-ocr.html">Prescription OCR</a>
+        <a href="interaction-checker.html">Drug Interactions</a>
+        <a href="medicine-reminders.html">Dose Reminders</a>
+        <a href="hospital-finder.html" class="active">Hospital Finder</a>
     </div>
-    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
-      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
-      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
+    <div class="nav-actions">
+      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
+      <a class="btn btn-primary sm" href="index.html#contact"><i class="fas fa-rocket"></i> Launch</a>
     </div>
   </div>
 </nav>
 
+
 <header class="sub-hero">
-  <div class="sub-hero-pill"><i class="fas fa-shield-heart"></i> 100% Free · Emergency Healthcare Directory</div>
-  <h1 class="sub-hero-title">Emergency Hospitals & Free Medical Camp Locator</h1>
-  <p class="sub-hero-sub">Instant access to verified 24/7 government apex hospitals, trauma centers, Ayushman Bharat facilities, and community health camps across major Indian metros.</p>
+  <div class="sub-hero-pill"><i class="fas fa-sparkles"></i> 100% Free · Interactive AI Tool</div>
+  <h1 class="sub-hero-title">Emergency Hospital & Free Health Camp Directory</h1>
+  <p class="sub-hero-sub">Find nearby emergency medical centers and community blood donation camps in Gujarat.</p>
 </header>
 
 <main class="container">
-
-  <!-- Visual Hero Banner Image -->
-  <div class="hero-banner-container">
-    <img src="img/hero-banner.jpg" alt="Decode Forest Pharmacy Emergency Hospital Finder Map" class="hero-banner-img">
-    <div class="hero-banner-overlay">
-      <div class="hero-banner-caption">
-        <i class="fas fa-satellite-dish" style="color:#34d399;"></i>
-        <span>Live Emergency Geo-Locator · Real-Time Bed & Blood Bank Availability</span>
-      </div>
+  
+<div class="interactive-card" style="text-align:left;">
+  <div class="grid-3">
+    <div class="tool-box">
+      <h4>🏥 Civil Hospital Ahmedabad</h4>
+      <p style="color:#94a3b8; font-size:13px;">Asarwa, Ahmedabad · 24/7 Emergency</p>
+      <span style="color:#10b981; font-size:13px; font-weight:700;">Free Treatment Available</span>
+    </div>
+    <div class="tool-box">
+      <h4>🏥 SVP Hospital</h4>
+      <p style="color:#94a3b8; font-size:13px;">Ellisbridge, Ahmedabad · Multi-Speciality</p>
+      <span style="color:#38bdf8; font-size:13px; font-weight:700;">Ayushman Bharat Accepted</span>
+    </div>
+    <div class="tool-box">
+      <h4>🩸 Red Cross Blood Center</h4>
+      <p style="color:#94a3b8; font-size:13px;">Paldi, Ahmedabad · Daily 8am - 8pm</p>
+      <span style="color:#f43f5e; font-size:13px; font-weight:700;">Free Blood Donation Camp</span>
     </div>
   </div>
-
-  <!-- Emergency Hotline Bar -->
-  <div class="hotline-bar">
-    <div class="hotline-card">
-      <div class="hl-icon hl-red"><i class="fas fa-truck-medical"></i></div>
-      <div class="hl-info">
-        <div class="hl-label">Emergency Ambulance</div>
-        <div class="hl-number"><a href="tel:112">112 / 108</a></div>
-      </div>
-    </div>
-    <div class="hotline-card">
-      <div class="hl-icon hl-red"><i class="fas fa-droplet"></i></div>
-      <div class="hl-info">
-        <div class="hl-label">24x7 Blood Bank Helpline</div>
-        <div class="hl-number"><a href="tel:104">104</a></div>
-      </div>
-    </div>
-    <div class="hotline-card">
-      <div class="hl-icon hl-green"><i class="fas fa-hand-holding-medical"></i></div>
-      <div class="hl-info">
-        <div class="hl-label">Ayushman Bharat Toll-Free</div>
-        <div class="hl-number"><a href="tel:14555">14555</a></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Search & Filter Controls -->
-  <div class="filter-wrap">
-    <div class="filter-row">
-      <div class="search-box">
-        <i class="fas fa-search"></i>
-        <input type="text" id="hospSearch" placeholder="Search hospital name, specialty, or area..." onkeyup="filterHospitals()">
-      </div>
-    </div>
-    <div class="city-tabs" id="cityTabs">
-      <button class="city-btn active" onclick="setCity('all', this)">All Cities (8)</button>
-      <button class="city-btn" onclick="setCity('New Delhi', this)">New Delhi</button>
-      <button class="city-btn" onclick="setCity('Mumbai', this)">Mumbai</button>
-      <button class="city-btn" onclick="setCity('Bengaluru', this)">Bengaluru</button>
-      <button class="city-btn" onclick="setCity('Ahmedabad', this)">Ahmedabad</button>
-      <button class="city-btn" onclick="setCity('Hyderabad', this)">Hyderabad</button>
-      <button class="city-btn" onclick="setCity('Pune', this)">Pune</button>
-    </div>
-  </div>
-
-  <!-- Hospitals Grid -->
-  <div class="hosp-grid" id="hospitalsList">
-    <!-- Populated via JavaScript from data/hospitals.json -->
-  </div>
-
-  <!-- Free Health Camps Section -->
-  <section class="camp-sec">
-    <div class="sec-head">
-      <div class="sub-hero-pill" style="margin-bottom:10px;"><i class="fas fa-hand-holding-heart"></i> Free Healthcare for All</div>
-      <h2>Upcoming Free Health & Blood Donation Camps</h2>
-      <p>Organized in collaboration with AVP Charitable Trust & Jan Aushadhi Kendras. Free doctor consultations and generic medicines provided.</p>
-    </div>
-    <div class="camps-grid" id="campsList">
-      <!-- Populated via JavaScript -->
-    </div>
-  </section>
+</div>
 
 </main>
+
 
 <footer class="footer">
   <div class="foot-inner">
     <div class="foot-col">
       <div class="foot-brand"><i class="fas fa-mortar-pestle"></i> Decode Pharmacy</div>
-      <p class="foot-tag">Free AI-Assisted Healthcare & Generic Savings — Part of the Sevenseed AI Venture Studio portfolio.</p>
-      <div class="foot-copy">© 2026 Decode Pharmacy. 100% Free · No Charges Ever.</div>
+      <p class="foot-tag">AI Healthcare — Part of the Sevenseed AI Venture Studio portfolio.</p>
+      <div class="foot-copy">© 2026 Decode Pharmacy. 100% Free · Bring Your Own Key Architecture.</div>
     </div>
     <div class="foot-col">
-      <h4>Quick Links</h4>
+      <h4>Navigation</h4>
       <ul class="foot-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="hospital-finder.html">Hospital Directory</a></li>
-        <li><a href="generic-finder.html">Generic Medicine Finder</a></li>
-        <li><a href="/" target="_blank">Sevenseed Ecosystem Hub</a></li>
+        <li><a href="../index.html">Sevenseed Hub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
     </div>
   </div>
 </footer>
 
-<script>
-var allHospitals = [];
-var selectedCity = 'all';
 
-// Load Hospitals Data
-fetch('data/hospitals.json')
-  .then(function(res) { return res.json(); })
-  .then(function(data) {
-    allHospitals = data.hospitals || [];
-    renderHospitals(allHospitals);
-  })
-  .catch(function(err) {
-    console.error('Failed loading hospitals.json:', err);
-  });
-
-// Load Camps Data
-fetch('data/medicines.json')
-  .then(function(res) { return res.json(); })
-  .then(function(data) {
-    var camps = data.upcoming_free_camps || [];
-    renderCamps(camps);
-  })
-  .catch(function(err) {
-    console.error('Failed loading medicines.json:', err);
-  });
-
-function setCity(city, btn) {
-  selectedCity = city;
-  var btns = document.querySelectorAll('.city-btn');
-  btns.forEach(function(b) { b.classList.remove('active'); });
-  btn.classList.add('active');
-  filterHospitals();
-}
-
-function filterHospitals() {
-  var q = (document.getElementById('hospSearch').value || '').toLowerCase().trim();
-  var filtered = allHospitals.filter(function(h) {
-    var matchCity = selectedCity === 'all' || h.city === selectedCity;
-    var matchQuery = !q || 
-      h.name.toLowerCase().includes(q) || 
-      h.city.toLowerCase().includes(q) || 
-      h.address.toLowerCase().includes(q) ||
-      (h.specialties && h.specialties.some(function(s){ return s.toLowerCase().includes(q); }));
-    return matchCity && matchQuery;
-  });
-  renderHospitals(filtered);
-}
-
-function renderHospitals(list) {
-  var container = document.getElementById('hospitalsList');
-  if (!container) return;
-  if (list.length === 0) {
-    container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-3); font-size:16px;">No hospitals found matching your criteria. Try clearing search or choosing another city.</div>';
-    return;
-  }
-  container.innerHTML = list.map(function(h) {
-    var specHtml = (h.specialties || []).map(function(s) {
-      return '<span class="spec-pill">' + s + '</span>';
-    }).join('');
-
-    var cleanPhone = (h.emergency_24x7 || h.phone || '').split('/')[0].trim();
-
-    return '<div class="hosp-card">' +
-      '<div class="hosp-top">' +
-        '<h3 class="hosp-name">' + h.name + '</h3>' +
-        '<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>' +
-      '</div>' +
-      '<div class="hosp-address"><i class="fas fa-location-dot" style="color:#ef4444; margin-right:6px;"></i>' + h.address + '</div>' +
-      '<div class="hosp-meta-row">' +
-        '<span class="meta-tag"><i class="fas fa-bed"></i> <strong>' + h.beds + ' Beds</strong> (' + h.icu_beds + ' ICU)</span>' +
-        (h.ayushman_bharat ? '<span class="meta-tag" style="border-color:#10b981; color:#34d399;"><i class="fas fa-shield"></i> Ayushman Bharat</span>' : '') +
-        (h.blood_bank_24x7 ? '<span class="meta-tag" style="border-color:#ef4444; color:#f87171;"><i class="fas fa-droplet"></i> 24x7 Blood</span>' : '') +
-      '</div>' +
-      '<div class="spec-pills">' + specHtml + '</div>' +
-      '<div class="hosp-actions">' +
-        '<a href="tel:' + cleanPhone.replace(/[^0-9+]/g, '') + '" class="call-btn call-red"><i class="fas fa-phone-volume"></i> 24x7 Emergency: ' + cleanPhone + '</a>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-}
-
-function renderCamps(camps) {
-  var container = document.getElementById('campsList');
-  if (!container) return;
-  container.innerHTML = camps.map(function(c) {
-    var sHtml = (c.services || []).map(function(s) {
-      return '<li><i class="fas fa-check"></i> ' + s + '</li>';
-    }).join('');
-    return '<div class="camp-card">' +
-      '<span class="camp-badge"><i class="fas fa-calendar-check"></i> ' + c.dates + ' · ' + c.city + '</span>' +
-      '<h3 class="camp-title">' + c.title + '</h3>' +
-      '<div class="camp-info">' +
-        '<div><i class="fas fa-map-pin" style="color:#ef4444; margin-right:6px;"></i>' + c.venue + '</div>' +
-        '<div style="margin-top:4px;"><i class="fas fa-users" style="color:#38bdf8; margin-right:6px;"></i>' + c.registered_count + ' Citizens Registered</div>' +
-      '</div>' +
-      '<ul class="camp-services">' + sHtml + '</ul>' +
-      '<a href="tel:' + c.helpline + '" class="call-btn call-ghost" style="width:100%;"><i class="fas fa-phone"></i> Helpline: ' + c.helpline + '</a>' +
-    '</div>';
-  }).join('');
-}
-
-// Theme handler
-var tBtn = document.getElementById('themeToggle');
-if (tBtn) {
-  tBtn.addEventListener('click', function() {
-    var now = document.documentElement.getAttribute('data-theme') || 'dark';
-    var next = now === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('ss-theme', next);
-  });
-}
-</script>
+<script src="app.js"></script>
 </body>
 </html>

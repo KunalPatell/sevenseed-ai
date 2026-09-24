@@ -74,11 +74,17 @@ for slug, port, label, main_file in APPS:
         continue
     env = dict(os.environ, PORT=str(port))
     procs.append(subprocess.Popen([sys.executable, main_file], cwd=backend, env=env))
-    dash = "app" if slug == "sevenforce" else "dashboard" if slug != "comonk" else ""
+    dash_map = {
+        "sevenseed": "app/",
+        "sevenforce": "app",
+        "breakdown-factor": "app",
+        "avp-charitable-trust": "app",
+    }
+    dash = dash_map.get(slug, "")
     print(f"  [OK]    {label}")
     print(f"          site:     http://localhost:{port}/")
     if dash:
-        print(f"          dashboard: http://localhost:{port}/{dash}")
+        print(f"          app/dash: http://localhost:{port}/{dash}")
     started.append((slug, port))
 
 print("=" * 70)

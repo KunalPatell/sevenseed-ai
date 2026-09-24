@@ -52,15 +52,22 @@ def main():
         run_cmd(f'"{sys.executable}" "{sub_script}"')
     print("   [OK] Generated all 9 venture root sites & 24 dedicated sub-pages cleanly.")
 
-    # 1b. Sync Hub sub-pages to backend static directory
+    # 1b. Sync Hub & venture sub-pages to backend static directory
     static_hub = REPO_ROOT / "apps" / "sevenseed" / "backend" / "static"
-    if static_hub.is_dir():
+    sites_src = REPO_ROOT / "sites"
+    if static_hub.is_dir() and sites_src.is_dir():
         import shutil
-        for f_name in ["index.html", "style.css", "app.js", "pricing.html", "byok.html", "ventures.html"]:
-            src_f = REPO_ROOT / "sites" / "sevenseed" / f_name
-            if src_f.is_file():
-                shutil.copy2(src_f, static_hub / f_name)
-        print("   [OK] Synced Hub index, styles, scripts, pricing, byok, and ventures subpages into backend/static.")
+        synced_count = 0
+        for root, dirs, files in os.walk(sites_src):
+            dirs[:] = [d for d in dirs if d != '_next']
+            rel = os.path.relpath(root, sites_src)
+            target_dir = static_hub / rel
+            target_dir.mkdir(parents=True, exist_ok=True)
+            for f in files:
+                if f.endswith(('.html', '.js', '.css', '.svg', '.png', '.jpg', '.ico', '.json')):
+                    shutil.copy2(os.path.join(root, f), target_dir / f)
+                    synced_count += 1
+        print(f"   [OK] Synced {synced_count} distribution files from sites/ into backend/static.")
 
 
     # 2. Stage changes
