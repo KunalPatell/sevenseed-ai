@@ -110,7 +110,7 @@ def render_subpage_header(slug: str, current_page: str) -> str:
     </div>
     <div class="nav-actions">
       <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
-      <a class="btn btn-primary sm" href="index.html#contact"><i class="fas fa-rocket"></i> Launch</a>
+      <a class="btn btn-primary sm" href="app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
     </div>
   </div>
 </nav>

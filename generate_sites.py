@@ -1335,19 +1335,19 @@ def render_html(c):
     ventures_nav = '<a href="#ventures">Ventures</a>' if c["slug"] == "sevenseed" else ""
     sandbox_section = render_sandbox(c)
     if c["slug"] == "sevenseed":
-        app_url = "ventures.html"
+        app_url = "/sevenseed/app/"
     elif c["slug"] == "sevenforce":
         app_url = "/sevenforce/app/"
     elif c["slug"] == "comonk":
-        app_url = "/comonk-ai/"
+        app_url = "/comonk-ai/app/"
     elif c["slug"] == "decode-forest-pharmacy":
-        app_url = "/pharmacy/"
+        app_url = "/decode-forest-pharmacy/app/"
     elif c["slug"] == "breakdown-factor":
-        app_url = "/breakdown/"
+        app_url = "/breakdown-factor/app/"
     elif c["slug"] == "avp-charitable-trust":
-        app_url = "/trust/"
+        app_url = "/avp-charitable-trust/app/"
     else:
-        app_url = f'/{c["slug"]}/'
+        app_url = f'/{c["slug"]}/app/'
     app_btn = f'<a class="btn btn-ghost" href="{app_url}"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>'
     pillars_html = f'''<section class="pillars-band">
   <div class="pillars-inner">

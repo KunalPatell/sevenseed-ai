@@ -13,7 +13,8 @@ import io
 # Fix Windows console encoding
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(HERE) if os.path.basename(HERE) == "scripts" else HERE
 
 VENTURE_THEMES = {
     "sevenforce": {
