@@ -1,97 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Rakshak AI — AI Defense, Vision Security & BNS FIR Workstations</title>
-  <meta name="description" content="Bharatiya Nyaya Sanhita (BNS 2023) legal FIR generator, cybercrime threat radar, and computer vision sentinels."/>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E⚖️%3C/text%3E%3C/svg%3E"/>
+  <title>Rakshak AI — AI Vision Security & BNS 2024 Legal FIR Workstation</title>
+  <meta name="description" content="Real-time 4-camera CCTV stream analytics, Bharatiya Nyaya Sanhita (BNS 2024) FIR drafting, and biometric face attendance."/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🛡️%3C/text%3E%3C/svg%3E"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: '#ef4444',
+            brandSec: '#f43f5e',
+            darkBg: '#0b0305'
+          }
+        }
+      }
+    };
+  </script>
   <link rel="stylesheet" href="portal.css"/>
-  <style>
-    :root {
-      --p-color: #ef4444;
-      --s-color: #f43f5e;
-      --p-rgb: 239, 68, 68;
-      --s-rgb: 244, 63, 94;
-      --bg-color: #0b0305;
-    }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: portalFadeIn 0.28s ease-out; }
-    @keyframes portalFadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
 </head>
-<body class="antialiased">
+<body class="antialiased text-slate-100 bg-[#0b0305]">
   <!-- Aceternity Overhead Glow Lamp -->
   <div class="hero-lamp"></div>
   <div class="hero-lamp-line"></div>
 
   <!-- Mobile Drawer Overlay -->
-  <div id="mobile-sidebar-overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); z-index:45;"></div>
+  <div id="mobile-sidebar-overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); z-index:45;"></div>
 
   <div class="app-shell flex min-h-screen">
     <!-- Sidebar Navigation -->
-    <aside class="sidebar w-[260px] shrink-0 border-r border-white/5 flex flex-col p-4 fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0" id="main-sidebar">
+    <aside class="sidebar w-[270px] shrink-0 border-r border-white/5 flex flex-col p-4 fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0" id="main-sidebar">
       <!-- Logo Header -->
-      <div class="flex items-center justify-between mb-6 px-2">
+      <div class="flex items-center justify-between mb-4 px-2">
         <a class="side-logo flex items-center gap-3 no-underline" href="/rakshak-ai/">
-          <span class="logo-icon w-9 h-9 rounded-xl grid place-items-center text-white font-bold text-lg">⚖️</span>
+          <span class="w-10 h-10 rounded-xl grid place-items-center text-white font-bold text-xl bg-gradient-to-br from-[#ef4444] to-[#f43f5e] shadow-lg shadow-black/40 border border-white/10">🛡️</span>
           <div>
             <div class="text-white font-extrabold text-[15px] tracking-tight">Rakshak AI</div>
-            <div class="text-[10px] text-white/50 uppercase font-semibold tracking-wider">Vision Defense & Legal</div>
+            <div class="text-[10px] text-white/50 uppercase font-semibold tracking-wider">AI Vision Security & BNS FIR Workstations</div>
           </div>
         </a>
-        <button class="md:hidden text-white/60 hover:text-white p-1" onclick="toggleSidebar()" aria-label="Close menu">
+        <button class="md:hidden text-white/60 hover:text-white p-1 cursor-pointer" onclick="toggleSidebar()" aria-label="Close menu">
           <i class="fas fa-xmark text-lg"></i>
         </button>
+      </div>
+
+      <!-- Venture Switcher -->
+      <div class="mb-4 px-1">
+        <label class="block text-[10px] uppercase font-bold text-white/40 mb-1.5 px-1 tracking-wider">Switch Venture Console</label>
+        <select onchange="if(this.value) window.location.href=this.value;" class="w-full bg-white/[0.04] border border-white/10 rounded-xl py-2 px-2.5 text-xs text-white/80 font-medium outline-none cursor-pointer hover:border-white/20 transition-all">
+          <option value="/app/" >Sevenseed Studio Hub</option><option value="/sevenforce/app/" >Sevenforce AI Workforce</option><option value="/comonk-ai/app/" >Comonk Career AI</option><option value="/avpu/app/" >AVP University</option><option value="/avp-emart/app/" >AVP Emart Price Radar</option><option value="/breakdown-factor/app/" >Breakdown Factor</option><option value="/decode-forest-pharmacy/app/" >Decode Pharmacy</option><option value="/rakshak-ai/app/" selected>Rakshak AI Security</option><option value="/avp-charitable-trust/app/" >AVP Charitable Trust</option>
+        </select>
       </div>
 
       <!-- Navigation Links -->
       <nav class="side-nav flex flex-col gap-1.5 flex-1 overflow-y-auto pr-1">
         
-        <button class="nav-item active" onclick="switchTab('fir')" id="nav-btn-fir">
-          <i class="fas fa-file-shield" style="width:16px; text-align:center;"></i>
-          <span class="truncate">BNS 2023 Auto-FIR Drafter</span>
+        <button class="nav-item active" onclick="switchTab('cctv')" id="nav-btn-cctv">
+          <i class="fas fa-video" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Sentinel Vision Streams</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Live 4</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('sentinel')" id="nav-btn-sentinel">
-          <i class="fas fa-video" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Vision Security Sentinel</span>
+        <button class="nav-item " onclick="switchTab('fir')" id="nav-btn-fir">
+          <i class="fas fa-scale-balanced" style="width:18px; text-align:center;"></i>
+          <span class="truncate">BNS 2024 Legal FIR</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Legal</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('cyber')" id="nav-btn-cyber">
-          <i class="fas fa-shield-virus" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Cybercrime Threat Radar</span>
+        <button class="nav-item " onclick="switchTab('attendance')" id="nav-btn-attendance">
+          <i class="fas fa-user-check" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Biometric Face Audit</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">98.8%</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('sos')" id="nav-btn-sos">
-          <i class="fas fa-phone-volume" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Emergency SOS Dispatch</span>
+        <button class="nav-item " onclick="switchTab('incidents')" id="nav-btn-incidents">
+          <i class="fas fa-shield-halved" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Incident Risk Matrix</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Low Risk</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('crosswalk')" id="nav-btn-crosswalk">
-          <i class="fas fa-scale-balanced" style="width:16px; text-align:center;"></i>
-          <span class="truncate">IPC to BNS Legal Crosswalk</span>
+        <button class="nav-item " onclick="switchTab('dispatch')" id="nav-btn-dispatch">
+          <i class="fas fa-person-military-pointing" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Guard Patrol GPS Mesh</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">GPS</span>
         </button>
         
       </nav>
 
       <!-- Sidebar Footer -->
       <div class="side-foot flex flex-col gap-3 pt-4 border-t border-white/10 mt-auto">
-        <div class="flex items-center justify-between text-xs px-2 py-1.5 rounded-lg bg-white/[0.03] border border-white/5">
+        <div class="flex items-center justify-between text-xs px-2.5 py-2 rounded-xl bg-white/[0.03] border border-white/5">
           <span class="inline-flex items-center gap-2 text-white/70 font-mono text-[11px]">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             AI Engine Online
           </span>
-          <span class="text-[10px] font-bold text-emerald-400/90 font-mono">v3.4-PROD</span>
+          <span class="text-[10px] font-bold text-emerald-400 font-mono">v4.2-PROD</span>
         </div>
-        <a class="side-back flex items-center gap-2 text-xs text-white/60 hover:text-white py-2 px-3 rounded-lg border border-white/10 hover:border-white/20 transition-all no-underline" href="/rakshak-ai/">
+        <a class="side-back flex items-center justify-center gap-2 text-xs font-semibold text-white/70 hover:text-white py-2 px-3 rounded-xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all no-underline" href="/rakshak-ai/">
           <i class="fas fa-arrow-left text-[11px]"></i>
           <span>Back to Landing Page</span>
         </a>
@@ -112,16 +125,16 @@
               <span>/</span>
               <span class="text-white/80" id="topbar-crumb">Workspace Console</span>
             </div>
-            <h1 class="text-base font-extrabold text-white tracking-tight" id="topbar-title">Active Dashboard</h1>
+            <h1 class="text-base font-extrabold text-white tracking-tight" id="topbar-title">Active Workstation</h1>
           </div>
         </div>
 
         <div class="flex items-center gap-3">
           <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-white/80">
             <i class="fas fa-shield-halved text-emerald-400 text-xs"></i>
-            <span>Guest Studio Access (Full VIP)</span>
+            <span>Verified Founder VIP</span>
           </div>
-          <button class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-gradient-to-r from-[var(--p-color)] to-[var(--s-color)] hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-black/40 flex items-center gap-1.5" onclick="triggerQuickAction()">
+          <button class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#ef4444] to-[#f43f5e] hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-black/40 flex items-center gap-1.5" onclick="triggerQuickAction()">
             <i class="fas fa-bolt text-xs"></i>
             <span>Quick Run</span>
           </button>
@@ -129,82 +142,323 @@
       </header>
 
       <!-- Main Scrollable Panels -->
-      <main class="panels p-6 md:p-10 max-w-[1280px] w-full mx-auto flex-1">
+      <main class="panels p-6 md:p-10 max-w-[1360px] w-full mx-auto flex-1">
+        <!-- Top KPI Stats Row -->
+        <div class="stats-grid">
+          
+        <div class="stat-card">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Perimeter Coverage</div>
+          <div class="stat-pill stat-pill-green">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>32 Edge Vision Nodes</span>
+          </div>
+        </div>
         
-    <div id="tab-fir" class="tab-content active">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">⚖️ Bharatiya Nyaya Sanhita (BNS 2023) Auto-FIR Drafter</div>
-            <div class="tool-ep">New Criminal Code Official Legal Generator</div>
+        <div class="stat-card">
+          <div class="stat-num">0.4s</div>
+          <div class="stat-label">Intrusion Detection Latency</div>
+          <div class="stat-pill stat-pill-blue">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>YOLOv10-Security Core</span>
           </div>
         </div>
-        <p class="text-xs text-slate-300 mb-3">Input an incident description to map legacy IPC sections to BNS 2023 and format a police-ready First Information Report.</p>
-        <textarea id="fir-incident" class="w-full p-3.5 rounded-xl bg-black/40 border border-white/10 text-xs text-white h-24 font-mono">Yesterday evening around 8 PM, two unknown individuals on a black motorcycle snatched my gold chain and wallet at gunpoint near Vastrapur Lake.</textarea>
-        <button class="run-btn self-end mt-2" onclick="executeFir()"><i class="fas fa-file-contract text-xs"></i> Draft Formal BNS FIR</button>
-        <div id="fir-result" class="tool-result mt-4" style="display:none;">
-          <pre id="fir-out-text" class="result-box font-mono text-xs"></pre>
+        
+        <div class="stat-card">
+          <div class="stat-num">148 / 148</div>
+          <div class="stat-label">Biometric Liveness Validated</div>
+          <div class="stat-pill stat-pill-purple">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>Zero Deepfake Spoofs</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-num">BNS 2024</div>
+          <div class="stat-label">Compliant Legal Formats</div>
+          <div class="stat-pill stat-pill-green">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>Sec 303, 318, 329 Codified</span>
+          </div>
+        </div>
+        
+        </div>
+
+        <!-- Tab Contents -->
+        
+    <!-- TAB 1: SENTINEL VISION STREAMS -->
+    <div id="tab-cctv" class="tab-content active">
+      <div class="welcome-box mb-8 p-8 rounded-2xl border border-white/10 bg-gradient-to-r from-red-500/15 via-rose-500/10 to-transparent relative overflow-hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-rose-300 text-xs font-bold mb-3">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              Sentinel Vision Core v4.2 Active — Sector 9 Facility
+            </div>
+            <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">AI Vision Security & Incident Intelligence</h2>
+            <p class="text-sm text-slate-300 mt-2 max-w-[680px] leading-relaxed">
+              Real-time multi-camera CCTV analytics with neural object tracking, automatic perimeter intrusion deterrence, biometric facial verification with 3D liveness, and instant Bharatiya Nyaya Sanhita (BNS) 2024 FIR drafting.
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="switchTab('fir')" class="run-btn px-5 py-3 rounded-xl text-xs font-bold text-white flex items-center gap-2">
+              <i class="fas fa-file-shield"></i> Draft Legal FIR
+            </button>
+            <button onclick="switchTab('attendance')" class="px-4 py-3 rounded-xl text-xs font-bold text-white/80 bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center gap-2">
+              <i class="fas fa-user-check"></i> Face Audit
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4-Camera Multi-View Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div class="p-3.5 rounded-2xl bg-black/60 border border-white/10 relative overflow-hidden">
+          <div class="aspect-video bg-slate-950 rounded-xl relative flex items-center justify-center overflow-hidden border border-white/5">
+            <i class="fas fa-warehouse text-4xl text-slate-800"></i>
+            <div class="absolute top-3 left-3 px-2 py-0.5 rounded bg-red-600/90 text-[10px] font-mono font-bold text-white flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> LIVE: CAM-01
+            </div>
+            <div class="absolute top-3 right-3 text-[10px] text-white/70 font-mono bg-black/60 px-2 py-0.5 rounded">60 FPS • 4K ULTRA</div>
+            <div class="absolute bottom-3 left-3 text-xs text-white font-mono bg-black/70 px-2 py-1 rounded border border-white/10">
+              GATE 1: MAIN ENTRY & VEHICLE ANPR
+            </div>
+            <div class="absolute bottom-3 right-3 text-xs text-emerald-400 font-mono bg-emerald-950/60 px-2 py-1 rounded border border-emerald-500/30">
+              VEHICLE: DL-01-AB-1234 [AUTHORIZED]
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-black/60 border border-white/10 relative overflow-hidden">
+          <div class="aspect-video bg-slate-950 rounded-xl relative flex items-center justify-center overflow-hidden border border-white/5">
+            <i class="fas fa-server text-4xl text-slate-800"></i>
+            <div class="absolute top-3 left-3 px-2 py-0.5 rounded bg-red-600/90 text-[10px] font-mono font-bold text-white flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> LIVE: CAM-02
+            </div>
+            <div class="absolute top-3 right-3 text-[10px] text-white/70 font-mono bg-black/60 px-2 py-0.5 rounded">60 FPS • 4K ULTRA</div>
+            <div class="absolute bottom-3 left-3 text-xs text-white font-mono bg-black/70 px-2 py-1 rounded border border-white/10">
+              SERVER ROOM & CRYPTO VAULT
+            </div>
+            <div class="absolute bottom-3 right-3 text-xs text-emerald-400 font-mono bg-emerald-950/60 px-2 py-1 rounded border border-emerald-500/30">
+              SECURITY: LOCKED & SEALED
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-black/60 border border-white/10 relative overflow-hidden">
+          <div class="aspect-video bg-slate-950 rounded-xl relative flex items-center justify-center overflow-hidden border border-white/5">
+            <i class="fas fa-industry text-4xl text-slate-800"></i>
+            <div class="absolute top-3 left-3 px-2 py-0.5 rounded bg-red-600/90 text-[10px] font-mono font-bold text-white flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> LIVE: CAM-03
+            </div>
+            <div class="absolute top-3 right-3 text-[10px] text-white/70 font-mono bg-black/60 px-2 py-0.5 rounded">60 FPS • 4K ULTRA</div>
+            <div class="absolute bottom-3 left-3 text-xs text-white font-mono bg-black/70 px-2 py-1 rounded border border-white/10">
+              CENTRAL WORKSHOP & LOGISTICS
+            </div>
+            <div class="absolute bottom-3 right-3 text-xs text-emerald-400 font-mono bg-emerald-950/60 px-2 py-1 rounded border border-emerald-500/30">
+              PERSONNEL: 12 WORKERS [VERIFIED]
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-black/60 border border-white/10 relative overflow-hidden">
+          <div class="aspect-video bg-slate-950 rounded-xl relative flex items-center justify-center overflow-hidden border border-white/5">
+            <i class="fas fa-tree text-4xl text-slate-800"></i>
+            <div class="absolute top-3 left-3 px-2 py-0.5 rounded bg-red-600/90 text-[10px] font-mono font-bold text-white flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> LIVE: CAM-04
+            </div>
+            <div class="absolute top-3 right-3 text-[10px] text-white/70 font-mono bg-black/60 px-2 py-0.5 rounded">60 FPS • 4K ULTRA</div>
+            <div class="absolute bottom-3 left-3 text-xs text-white font-mono bg-black/70 px-2 py-1 rounded border border-white/10">
+              NORTH PERIMETER FENCE & TRIPWIRE
+            </div>
+            <div class="absolute bottom-3 right-3 text-xs text-emerald-400 font-mono bg-emerald-950/60 px-2 py-1 rounded border border-emerald-500/30">
+              INFRARED: NO BREACH DETECTED
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="tab-sentinel" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">🛡️ Vision Security Sentinel & Perimeter Surveillance</div>
-            <div class="tool-ep">Real-Time Threat Detection Model</div>
+    <!-- TAB 2: BNS 2024 LEGAL FIR GENERATOR -->
+    <div id="tab-fir" class="tab-content">
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-gavel text-rose-400"></i> Bharatiya Nyaya Sanhita (BNS 2024) FIR Generator
+            </h3>
+            <span class="text-xs text-rose-400 font-mono font-bold">Bharatiya Nagarik Suraksha Sanhita</span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Incident Offense Category</label>
+              <select id="fir-offense" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-rose-500">
+                <option value="bns_303">Theft / Larceny of Corporate Property (BNS Section 303)</option>
+                <option value="bns_318">Cheating & Cyber Financial Fraud (BNS Section 318)</option>
+                <option value="bns_329">Criminal Trespass & Perimeter Intrusion (BNS Section 329)</option>
+                <option value="bns_351">Criminal Intimidation & Workplace Harassment (BNS Section 351)</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Date & Time of Occurrence</label>
+                <input type="text" id="fir-time" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-rose-500" value="2026-09-25 02:40 AM IST"/>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Place of Occurrence</label>
+                <input type="text" id="fir-place" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-rose-500" value="Sector 9 Warehouse, North Yard"/>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Incident Statement & Evidence Hashes</label>
+              <textarea id="fir-statement" rows="5" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-slate-200 font-mono outline-none focus:border-rose-500">Unidentified intruder attempted to breach North Perimeter Gate via cutting razor wire. Automated Sentinel Vision CAM-04 triggered spotlight and alarm at 02:41 AM. Suspect fled on unnumbered two-wheeler towards Outer Ring Road. SHA-256 optical hash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.</textarea>
+            </div>
+
+            <button onclick="generateLegalFir()" class="run-btn w-full py-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+              <i class="fas fa-file-contract"></i> Generate Court-Admissible BNS Legal FIR Draft
+            </button>
           </div>
         </div>
-        <button class="run-btn" onclick="executeSentinel()"><i class="fas fa-video text-xs"></i> Run Perimeter Vision Scan</button>
-        <div id="sentinel-result" class="tool-result mt-4" style="display:none;">
-          <pre id="sentinel-out-text" class="result-box font-mono text-xs"></pre>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <div class="terminal-dot bg-rose-500"></div>
+              <div class="terminal-dot bg-amber-500"></div>
+              <div class="terminal-dot bg-emerald-500"></div>
+            </div>
+            <span class="text-xs font-mono text-slate-400">bns_legal_fir_draft.txt</span>
+            <button onclick="copyResult('fir-console')" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+          <div class="terminal-body" id="fir-console">
+[LEGAL DRAFTING CONSOLE] Click 'Generate Court-Admissible BNS Legal FIR Draft' to structure incident facts under Bharatiya Nagarik Suraksha Sanhita (BNSS) Section 173 for police submission.
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="tab-cyber" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">🚨 Cybercrime Threat & Phishing Radar</div>
-            <div class="tool-ep">Direct 1930 Portal Guidance</div>
+    <!-- TAB 3: BIOMETRIC FACE AUDIT -->
+    <div id="tab-attendance" class="tab-content">
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-id-card-clip text-rose-400"></i> Facial Recognition Roster (Today's Shift)
+            </h3>
+            <span class="text-xs text-emerald-400 font-mono font-bold">142 / 148 Checked In</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 font-black text-xs grid place-items-center">VK</div>
+                <div>
+                  <div class="text-xs font-bold text-white">Vikram Kulkarni (Chief Security Officer)</div>
+                  <div class="text-[11px] text-slate-400">Badge #SEC-01 • In: 07:45 AM • Gate 1 Face Scanner</div>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-mono font-bold">Verified (99.8% match)</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 font-black text-xs grid place-items-center">RS</div>
+                <div>
+                  <div class="text-xs font-bold text-white">Ritu Sharma (Operations Lead)</div>
+                  <div class="text-[11px] text-slate-400">Badge #OPS-14 • In: 08:12 AM • Turnstile B</div>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-mono font-bold">Verified (99.4% match)</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 font-black text-xs grid place-items-center">AM</div>
+                <div>
+                  <div class="text-xs font-bold text-white">Anand Mishra (Warehouse Incharge)</div>
+                  <div class="text-[11px] text-slate-400">Badge #WH-09 • In: 08:30 AM • Loading Bay Camera</div>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-mono font-bold">Verified (99.6% match)</span>
+            </div>
           </div>
         </div>
-        <input id="cyber-text" class="w-full p-3.5 rounded-xl bg-black/40 border border-white/10 text-xs text-white mb-3" value="Dear Customer, your SBI YONO account will be blocked today. Click http://sbi-kyc-update.apk to update PAN immediately."/>
-        <button class="run-btn" onclick="executeCyber()"><i class="fas fa-bug text-xs"></i> Verify Scam & Generate Complaint</button>
-        <div id="cyber-result" class="tool-result mt-4" style="display:none;">
-          <pre id="cyber-out-text" class="result-box font-mono text-xs"></pre>
+
+        <div class="workbench-card">
+          <h3 class="text-base font-extrabold text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-shield-virus text-rose-400"></i> Anti-Spoofing Liveness Diagnostics
+          </h3>
+          <div class="space-y-3 text-xs">
+            <div class="p-3 rounded-lg bg-emerald-500/10 text-emerald-300 flex items-center gap-2">
+              <i class="fas fa-check-circle"></i>
+              <span>3D Flash Reflection Liveness: Active (Zero photo/screen bypasses)</span>
+            </div>
+            <div class="p-3 rounded-lg bg-emerald-500/10 text-emerald-300 flex items-center gap-2">
+              <i class="fas fa-check-circle"></i>
+              <span>Infrared Depth Map Check: 100% Pass Rate</span>
+            </div>
+            <div class="p-3 rounded-lg bg-emerald-500/10 text-emerald-300 flex items-center gap-2">
+              <i class="fas fa-check-circle"></i>
+              <span>Blink & Micro-tremor Validation: Active</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="tab-sos" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">🚨 Emergency 112 / SOS Geo-Dispatch</div>
-            <div class="tool-ep">RapidSOS Integrated Standard</div>
-          </div>
+    <!-- TAB 4: INCIDENT RISK MATRIX -->
+    <div id="tab-incidents" class="tab-content">
+      <div class="workbench-card">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+            <i class="fas fa-chart-pie text-rose-400"></i> Facility Security Threat Assessment
+          </h3>
+          <span class="text-xs text-emerald-400 font-mono font-bold">DEFCON 4 — LOW THREAT LEVEL</span>
         </div>
-        <button class="run-btn" onclick="executeSos()"><i class="fas fa-location-crosshairs text-xs"></i> Simulate SOS Emergency Dispatch</button>
-        <div id="sos-result" class="tool-result mt-4" style="display:none;">
-          <pre id="sos-out-text" class="result-box font-mono text-xs"></pre>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+            <div class="text-xs font-bold text-emerald-400 mb-1">PERIMETER BREACH RISK</div>
+            <div class="text-sm font-bold text-white mb-2">0.2% (Very Low)</div>
+            <p class="text-[11px] text-slate-300">Infrared sensors and PTZ cameras patrolling 360-degree perimeter.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+            <div class="text-xs font-bold text-emerald-400 mb-1">INTERNAL ACCESS AUDIT</div>
+            <div class="text-sm font-bold text-white mb-2">0 Unauthorized Swipes</div>
+            <p class="text-[11px] text-slate-300">All server room and vault entries matched biometric identities.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+            <div class="text-xs font-bold text-emerald-400 mb-1">EMERGENCY RESPONSE TIME</div>
+            <div class="text-sm font-bold text-white mb-2">42 Seconds Average</div>
+            <p class="text-[11px] text-slate-300">On-site rapid response armed guards stationed at Gate 1 and Gate 3.</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="tab-crosswalk" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">📋 IPC to BNS Legal Code Crosswalk</div>
-            <div class="tool-ep">Instant Section Conversion</div>
-          </div>
+    <!-- TAB 5: GUARD PATROL GPS MESH -->
+    <div id="tab-dispatch" class="tab-content">
+      <div class="workbench-card">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+            <i class="fas fa-location-crosshairs text-rose-400"></i> Guard Patrol GPS Mesh & RFID Checkpoints
+          </h3>
+          <span class="text-xs text-emerald-400 font-mono font-bold">Patrol Route A Active</span>
         </div>
-        <button class="run-btn" onclick="executeCrosswalk()"><i class="fas fa-book text-xs"></i> View Key Criminal Code Mappings</button>
-        <div id="crosswalk-result" class="tool-result mt-4" style="display:none;">
-          <pre id="crosswalk-out-text" class="result-box font-mono text-xs"></pre>
+
+        <div class="p-4 rounded-xl bg-black/40 border border-white/10 space-y-3 font-mono text-xs">
+          <div class="text-slate-300">PATROL SQUAD: Guard Alpha (Officer S. Rao) • GPS Tracked</div>
+          <div class="text-emerald-400">✓ CHECKPOINT 1: North Substation RFID Tag - Scanned at 02:15 AM</div>
+          <div class="text-emerald-400">✓ CHECKPOINT 2: West Logistics Gate RFID Tag - Scanned at 02:30 AM</div>
+          <div class="text-sky-400">▶ CHECKPOINT 3: Diesel Generator Yard - Due in 8 Minutes</div>
+          <div class="text-slate-400 pt-2 border-t border-white/10">SOS PANIC BUTTON STATUS: Operational & Test Pings Acknowledged</div>
         </div>
       </div>
     </div>
@@ -213,184 +467,109 @@
     </div>
   </div>
 
-  <!-- Floating Cold-Start Status Pill -->
-  <div id="cs-pill" style="display:none; position:fixed; bottom:20px; right:20px; z-index:99999; padding:8px 16px; border-radius:999px; background:rgba(15,23,42,0.9); border:1px solid rgba(245,158,11,0.4); color:#f8fafc; font-size:12px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,0.5); backdrop-filter:blur(16px); align-items:center; gap:8px;">
-    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-    <span id="cs-pill-msg">Connecting AI Backend...</span>
-  </div>
-
+  <!-- Global Script -->
   <script>
     function toggleSidebar() {
-      var sb = document.getElementById('main-sidebar');
-      var ov = document.getElementById('mobile-sidebar-overlay');
-      if (!sb) return;
-      var isClosed = sb.classList.contains('-translate-x-full');
-      if (isClosed) {
+      const sb = document.getElementById('main-sidebar');
+      const ov = document.getElementById('mobile-sidebar-overlay');
+      if (sb.classList.contains('-translate-x-full')) {
         sb.classList.remove('-translate-x-full');
         sb.classList.add('translate-x-0');
-        if (ov) ov.style.display = 'block';
-        document.body.style.overflow = 'hidden';
+        ov.style.display = 'block';
       } else {
         sb.classList.add('-translate-x-full');
         sb.classList.remove('translate-x-0');
-        if (ov) ov.style.display = 'none';
-        document.body.style.overflow = '';
+        ov.style.display = 'none';
       }
     }
 
     function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(function(el) {
-        el.classList.remove('active');
-      });
-      var target = document.getElementById('tab-' + tabId);
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById('tab-' + tabId);
       if (target) target.classList.add('active');
 
-      document.querySelectorAll('.nav-item').forEach(function(el) {
-        el.classList.remove('active');
-      });
-      var btn = document.getElementById('nav-btn-' + tabId);
+      const btn = document.getElementById('nav-btn-' + tabId);
       if (btn) btn.classList.add('active');
 
-      var titleElem = document.getElementById('topbar-title');
-      var crumbElem = document.getElementById('topbar-crumb');
-      if (btn && titleElem) {
-        var txt = btn.querySelector('.truncate') ? btn.querySelector('.truncate').textContent : btn.textContent;
-        titleElem.textContent = txt.trim();
-        if (crumbElem) crumbElem.textContent = txt.trim();
+      const crumb = document.getElementById('topbar-crumb');
+      if (crumb && btn) {
+        const span = btn.querySelector('span');
+        if (span) crumb.textContent = span.textContent;
       }
-
-      if (window.innerWidth < 768) {
-        toggleSidebar();
-      }
+      window.location.hash = tabId;
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.innerWidth < 768) toggleSidebar();
     }
 
-    function copyResult(elemId) {
-      var target = document.getElementById(elemId);
-      if (!target) return;
-      var text = target.innerText || target.textContent;
-      navigator.clipboard.writeText(text).then(function() {
-        alert('Copied output to clipboard!');
-      }).catch(function() {
-        alert('Output ready. (Clipboard access restricted)');
-      });
+    function copyResult(elementId) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      navigator.clipboard.writeText(el.innerText || el.textContent);
+      const notif = document.createElement('div');
+      notif.className = 'fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs shadow-2xl flex items-center gap-2';
+      notif.innerHTML = '<i class="fas fa-check"></i> Output copied to clipboard!';
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 2500);
     }
 
-    // Cold-start background poller
-    (function() {
-      var pathPrefix = window.location.pathname.split('/')[1] || '';
-      if (!pathPrefix || pathPrefix === 'app') return;
-      var healthUrl = '/' + pathPrefix + '/api/health';
-      var pill = document.getElementById('cs-pill');
-      var attempts = 0;
-      var maxAttempts = 12;
+    function triggerQuickAction() {
+      const activeTab = document.querySelector('.tab-content.active');
+      if (!activeTab) return;
+      const firstBtn = activeTab.querySelector('.run-btn');
+      if (firstBtn) firstBtn.click();
+    }
 
-      function check() {
-        attempts++;
-        fetch(healthUrl, { method: 'GET', cache: 'no-store' })
-          .then(function(res) {
-            if (res.ok) {
-              if (pill) {
-                pill.style.display = 'inline-flex';
-                pill.style.borderColor = 'rgba(16,185,129,0.4)';
-                pill.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span> <span>AI Microservice Connected</span>';
-                setTimeout(function() { pill.style.display = 'none'; }, 3000);
-              }
-            } else if (attempts < maxAttempts) {
-              if (pill) { pill.style.display = 'inline-flex'; }
-              setTimeout(check, 3000);
-            }
-          })
-          .catch(function() {
-            if (attempts < maxAttempts) {
-              if (pill) { pill.style.display = 'inline-flex'; }
-              setTimeout(check, 3000);
-            } else if (pill) {
-              pill.style.display = 'none';
-            }
-          });
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && document.getElementById('tab-' + hash)) {
+        switchTab(hash);
       }
-      setTimeout(check, 1000);
-    })();
+    });
 
     
-    function triggerQuickAction() {
-      switchTab('fir');
-      executeFir();
-    }
+    function generateLegalFir() {
+      const offense = document.getElementById('fir-offense').value;
+      const t = document.getElementById('fir-time').value;
+      const p = document.getElementById('fir-place').value;
+      const stmt = document.getElementById('fir-statement').value;
+      const consoleEl = document.getElementById('fir-console');
 
-    function executeFir() {
-      var res = document.getElementById('fir-result');
-      var out = document.getElementById('fir-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== FORMAL FIRST INFORMATION REPORT (FIR DRAFT) ===
-Jurisdiction: Vastrapur Police Station, Ahmedabad Commissionerate
-Applicable Legal Code: Bharatiya Nyaya Sanhita, 2023 (BNS)
+      consoleEl.innerHTML = `<span class="text-yellow-400">>> [LEGAL CORE] Structuring formal First Information Report under BNSS Section 173...</span>\n>> Binding digital CCTV evidence hashes and legal clauses...`;
 
-Mapped Sections:
-1. BNS Section 309(4) — Robbery with attempt to cause death or grievous hurt (Legacy IPC 392/397)
-2. BNS Section 311 — Snatching (Newly introduced specific offense in BNS)
-3. Arms Act, 1959 — Section 25(1B)(a) (Unlawful possession & brandishing of firearm)
+      setTimeout(() => {
+        consoleEl.innerHTML = `========================================================================
+FIRST INFORMATION REPORT (DRAFT)
+[Under Section 173 of Bharatiya Nagarik Suraksha Sanhita, 2023 / 2024]
+========================================================================
+POLICE STATION JURISDICTION: Cyber & Crime Branch, Sector 9
+DISTRICT: Central Industrial Division
+DATE & TIME OF REPORT: ${new Date().toLocaleString()}
 
-FIR Synopsis:
-On 24-09-2026 at approx 20:00 hrs, the complainant was confronted by two unidentified male assailants riding an unnumbered motorcycle. The pillion rider displayed an illegal firearm, causing imminent threat to life, and forcibly snatched complainant's gold chain (approx 22g) and leather wallet.
+1. DETAILS OF COMPLAINANT:
+   Name: Vikram Kulkarni (Chief Security Officer)
+   Entity: Sevenseed Rakshak Autonomous Facility Infrastructure
 
-Cognizable Offense: YES | Police Action: Immediate registration & forensic CCTV extraction mandated under Section 173 BNSS.`;
-    }
+2. DETAILS OF OCCURRENCE:
+   Date & Time: ${t}
+   Place of Occurrence: ${p}
 
-    function executeSentinel() {
-      var res = document.getElementById('sentinel-result');
-      var out = document.getElementById('sentinel-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== VISION SECURITY SENTINEL REPORT ===
-Perimeter Camera Feed #02 (East Gate)
-Threat Index: 🟡 ELEVATED
+3. APPLICABLE STATUTORY SECTIONS:
+   • Bharatiya Nyaya Sanhita (BNS), 2023 - Section 329(3) [Criminal Trespass at Night]
+   • Section 303(2) [Attempted Theft of Corporate Property]
+   • Bharatiya Sakshya Adhiniyam, 2023 - Section 61 (Admissibility of Electronic Records)
 
-Events Detected:
-• 02:14:22 — Unidentified individual detected climbing perimeter fence.
-• Infrared Thermal Signature: Confirmed human silhouette.
-• Automated Deterrent: Strobe spotlight activated; Security guard booth notified via automated siren.`;
-    }
+4. STATEMENT OF FACTS:
+   "${stmt}"
 
-    function executeCyber() {
-      var res = document.getElementById('cyber-result');
-      var out = document.getElementById('cyber-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== CYBERCRIME THREAT RADAR VERDICT ===
-Scam Classification: 🔴 CRITICAL THREAT (Malicious Android Banking Trojan)
+5. DIGITAL FORENSIC EVIDENCE ATTACHMENTS:
+   ✓ 4K CCTV Video Hash: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+   ✓ Infrared Sensor Log Timestamp: 02:41:12 IST
+   ✓ Automated Incident Dispatch Log #INC-2026-9908
 
-Threat Breakdown:
-• Fake SBI Domain: Hosted on bulletproof hosting in Eastern Europe.
-• Payload: APK drops SMS-forwarding malware designed to intercept bank OTPs.
-
-Action Steps:
-1. DO NOT CLICK or install the APK file.
-2. Dial 1930 immediately to report the malicious phone number.
-3. Automated draft created for National Cyber Crime Reporting Portal (cybercrime.gov.in).`;
-    }
-
-    function executeSos() {
-      var res = document.getElementById('sos-result');
-      var out = document.getElementById('sos-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== SOS DISPATCH SIMULATION ===
-GPS Coordinates: 23.0338° N, 72.5850° E (Navrangpura, Ahmedabad)
-Emergency Packet Broadcasted:
-• Police Control Room (112): Alert acknowledged (PCR Van #18 en route, ETA 4 mins)
-• 3 Pre-saved Emergency Contacts alerted via SMS with live tracking link.`;
-    }
-
-    function executeCrosswalk() {
-      var res = document.getElementById('crosswalk-result');
-      var out = document.getElementById('crosswalk-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== IPC TO BNS 2023 QUICK CONVERSION TABLE ===
-• IPC 302 (Murder) ─────────────► BNS Section 103(1)
-• IPC 307 (Attempt to Murder) ──► BNS Section 109
-• IPC 376 (Rape) ───────────────► BNS Section 64
-• IPC 420 (Cheating/Fraud) ─────► BNS Section 318(4)
-• IPC 392 (Robbery) ────────────► BNS Section 309
-• IPC 124A (Sedition) ──────────► Omitted (Replaced by BNS 152: Endangering Sovereignty)`;
+STATUS: VERIFIED & READY FOR SUBMISSION TO STATION HOUSE OFFICER (SHO).`;
+      }, 700);
     }
     
   </script>

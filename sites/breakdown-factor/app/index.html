@@ -1,97 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Breakdown Factor — AI AEC Safety & CPWD BOQ Workstations</title>
-  <meta name="description" content="CPWD DSR 2023 construction takeoff, Procore OSHA safety compliance, and computer vision PPE site monitoring."/>
+  <title>Breakdown Factor Workstation — AI Construction Vision & BOQ Costing</title>
+  <meta name="description" content="OSHA site safety surveillance, YOLOv10 sub-millimeter concrete crack inspection, and CPWD automated BOQ estimation."/>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏗️%3C/text%3E%3C/svg%3E"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: '#f59e0b',
+            brandSec: '#ea580c',
+            darkBg: '#0b0702'
+          }
+        }
+      }
+    };
+  </script>
   <link rel="stylesheet" href="portal.css"/>
-  <style>
-    :root {
-      --p-color: #f59e0b;
-      --s-color: #eab308;
-      --p-rgb: 245, 158, 11;
-      --s-rgb: 234, 179, 8;
-      --bg-color: #0a0702;
-    }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: portalFadeIn 0.28s ease-out; }
-    @keyframes portalFadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
 </head>
-<body class="antialiased">
+<body class="antialiased text-slate-100 bg-[#0b0702]">
   <!-- Aceternity Overhead Glow Lamp -->
   <div class="hero-lamp"></div>
   <div class="hero-lamp-line"></div>
 
   <!-- Mobile Drawer Overlay -->
-  <div id="mobile-sidebar-overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); z-index:45;"></div>
+  <div id="mobile-sidebar-overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); z-index:45;"></div>
 
   <div class="app-shell flex min-h-screen">
     <!-- Sidebar Navigation -->
-    <aside class="sidebar w-[260px] shrink-0 border-r border-white/5 flex flex-col p-4 fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0" id="main-sidebar">
+    <aside class="sidebar w-[270px] shrink-0 border-r border-white/5 flex flex-col p-4 fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0" id="main-sidebar">
       <!-- Logo Header -->
-      <div class="flex items-center justify-between mb-6 px-2">
+      <div class="flex items-center justify-between mb-4 px-2">
         <a class="side-logo flex items-center gap-3 no-underline" href="/breakdown-factor/">
-          <span class="logo-icon w-9 h-9 rounded-xl grid place-items-center text-white font-bold text-lg">🏗️</span>
+          <span class="w-10 h-10 rounded-xl grid place-items-center text-white font-bold text-xl bg-gradient-to-br from-[#f59e0b] to-[#ea580c] shadow-lg shadow-black/40 border border-white/10">🏗️</span>
           <div>
             <div class="text-white font-extrabold text-[15px] tracking-tight">Breakdown Factor</div>
-            <div class="text-[10px] text-white/50 uppercase font-semibold tracking-wider">Civil AEC Workstation</div>
+            <div class="text-[10px] text-white/50 uppercase font-semibold tracking-wider">AI Construction Vision & BOQ Costing</div>
           </div>
         </a>
-        <button class="md:hidden text-white/60 hover:text-white p-1" onclick="toggleSidebar()" aria-label="Close menu">
+        <button class="md:hidden text-white/60 hover:text-white p-1 cursor-pointer" onclick="toggleSidebar()" aria-label="Close menu">
           <i class="fas fa-xmark text-lg"></i>
         </button>
+      </div>
+
+      <!-- Venture Switcher -->
+      <div class="mb-4 px-1">
+        <label class="block text-[10px] uppercase font-bold text-white/40 mb-1.5 px-1 tracking-wider">Switch Venture Console</label>
+        <select onchange="if(this.value) window.location.href=this.value;" class="w-full bg-white/[0.04] border border-white/10 rounded-xl py-2 px-2.5 text-xs text-white/80 font-medium outline-none cursor-pointer hover:border-white/20 transition-all">
+          <option value="/app/" >Sevenseed Studio Hub</option><option value="/sevenforce/app/" >Sevenforce AI Workforce</option><option value="/comonk-ai/app/" >Comonk Career AI</option><option value="/avpu/app/" >AVP University</option><option value="/avp-emart/app/" >AVP Emart Price Radar</option><option value="/breakdown-factor/app/" selected>Breakdown Factor</option><option value="/decode-forest-pharmacy/app/" >Decode Pharmacy</option><option value="/rakshak-ai/app/" >Rakshak AI Security</option><option value="/avp-charitable-trust/app/" >AVP Charitable Trust</option>
+        </select>
       </div>
 
       <!-- Navigation Links -->
       <nav class="side-nav flex flex-col gap-1.5 flex-1 overflow-y-auto pr-1">
         
-        <button class="nav-item active" onclick="switchTab('boq')" id="nav-btn-boq">
-          <i class="fas fa-calculator" style="width:16px; text-align:center;"></i>
-          <span class="truncate">CPWD DSR 2023 BOQ Takeoff</span>
+        <button class="nav-item active" onclick="switchTab('safety')" id="nav-btn-safety">
+          <i class="fas fa-helmet-safety" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Site Safety Radar</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">98.4%</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('safety')" id="nav-btn-safety">
-          <i class="fas fa-clipboard-check" style="width:16px; text-align:center;"></i>
-          <span class="truncate">OSHA Safety Compliance Audit</span>
+        <button class="nav-item " onclick="switchTab('defect')" id="nav-btn-defect">
+          <i class="fas fa-camera" style="width:18px; text-align:center;"></i>
+          <span class="truncate">CV Crack & Defect Scanner</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">CV</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('cv')" id="nav-btn-cv">
-          <i class="fas fa-camera" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Computer Vision PPE Scanner</span>
+        <button class="nav-item " onclick="switchTab('boq')" id="nav-btn-boq">
+          <i class="fas fa-calculator" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Automated BOQ Cost Estimator</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">CPWD</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('concrete')" id="nav-btn-concrete">
-          <i class="fas fa-cubes" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Concrete RCC & Steel Estimator</span>
+        <button class="nav-item " onclick="switchTab('delays')" id="nav-btn-delays">
+          <i class="fas fa-chart-gantt" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Critical Path Delay Risk</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Gantt</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('machinery')" id="nav-btn-machinery">
-          <i class="fas fa-truck-monster" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Heavy Fleet Diagnostics</span>
+        <button class="nav-item " onclick="switchTab('drones')" id="nav-btn-drones">
+          <i class="fas fa-helicopter" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Drone Volumetric Survey</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">3D</span>
         </button>
         
       </nav>
 
       <!-- Sidebar Footer -->
       <div class="side-foot flex flex-col gap-3 pt-4 border-t border-white/10 mt-auto">
-        <div class="flex items-center justify-between text-xs px-2 py-1.5 rounded-lg bg-white/[0.03] border border-white/5">
+        <div class="flex items-center justify-between text-xs px-2.5 py-2 rounded-xl bg-white/[0.03] border border-white/5">
           <span class="inline-flex items-center gap-2 text-white/70 font-mono text-[11px]">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             AI Engine Online
           </span>
-          <span class="text-[10px] font-bold text-emerald-400/90 font-mono">v3.4-PROD</span>
+          <span class="text-[10px] font-bold text-emerald-400 font-mono">v4.2-PROD</span>
         </div>
-        <a class="side-back flex items-center gap-2 text-xs text-white/60 hover:text-white py-2 px-3 rounded-lg border border-white/10 hover:border-white/20 transition-all no-underline" href="/breakdown-factor/">
+        <a class="side-back flex items-center justify-center gap-2 text-xs font-semibold text-white/70 hover:text-white py-2 px-3 rounded-xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all no-underline" href="/breakdown-factor/">
           <i class="fas fa-arrow-left text-[11px]"></i>
           <span>Back to Landing Page</span>
         </a>
@@ -112,16 +125,16 @@
               <span>/</span>
               <span class="text-white/80" id="topbar-crumb">Workspace Console</span>
             </div>
-            <h1 class="text-base font-extrabold text-white tracking-tight" id="topbar-title">Active Dashboard</h1>
+            <h1 class="text-base font-extrabold text-white tracking-tight" id="topbar-title">Active Workstation</h1>
           </div>
         </div>
 
         <div class="flex items-center gap-3">
           <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-white/80">
             <i class="fas fa-shield-halved text-emerald-400 text-xs"></i>
-            <span>Guest Studio Access (Full VIP)</span>
+            <span>Verified Founder VIP</span>
           </div>
-          <button class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-gradient-to-r from-[var(--p-color)] to-[var(--s-color)] hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-black/40 flex items-center gap-1.5" onclick="triggerQuickAction()">
+          <button class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#f59e0b] to-[#ea580c] hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-black/40 flex items-center gap-1.5" onclick="triggerQuickAction()">
             <i class="fas fa-bolt text-xs"></i>
             <span>Quick Run</span>
           </button>
@@ -129,81 +142,355 @@
       </header>
 
       <!-- Main Scrollable Panels -->
-      <main class="panels p-6 md:p-10 max-w-[1280px] w-full mx-auto flex-1">
+      <main class="panels p-6 md:p-10 max-w-[1360px] w-full mx-auto flex-1">
+        <!-- Top KPI Stats Row -->
+        <div class="stats-grid">
+          
+        <div class="stat-card">
+          <div class="stat-num">98.4%</div>
+          <div class="stat-label">PPE Safety Compliance</div>
+          <div class="stat-pill stat-pill-green">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>Zero OSHA Violations</span>
+          </div>
+        </div>
         
-    <div id="tab-boq" class="tab-content active">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">🏗️ CPWD DSR 2023 Civil BOQ Estimator</div>
-            <div class="tool-ep">Delhi Schedule of Rates Official Takeoff</div>
+        <div class="stat-card">
+          <div class="stat-num">142 Days</div>
+          <div class="stat-label">Zero Lost Time Incidents</div>
+          <div class="stat-pill stat-pill-blue">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>Tower B & C Phase</span>
           </div>
         </div>
-        <p class="text-xs text-slate-300 mb-3">Input built-up square meters and civil class to generate full itemized BOQ with 15% contractor profit and 18% GST calculation.</p>
-        <input id="boq-area" class="w-full p-3.5 rounded-xl bg-black/40 border border-white/10 text-xs text-white mb-3" value="1,200 sq.m Commercial Office (G+3 Floors)"/>
-        <button class="run-btn" onclick="executeBoq()"><i class="fas fa-calculator text-xs"></i> Calculate Itemized BOQ</button>
-        <div id="boq-result" class="tool-result mt-4" style="display:none;">
-          <pre id="boq-out-text" class="result-box font-mono text-xs"></pre>
+        
+        <div class="stat-card">
+          <div class="stat-num">₹18.4 Cr</div>
+          <div class="stat-label">Managed BOQ Inventory</div>
+          <div class="stat-pill stat-pill-purple">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>Real-Time CPWD Rates</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-num">0.35 mm</div>
+          <div class="stat-label">Min Crack Resolution</div>
+          <div class="stat-pill stat-pill-green">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>YOLOv10 Defect Engine</span>
+          </div>
+        </div>
+        
+        </div>
+
+        <!-- Tab Contents -->
+        
+    <!-- TAB 1: SITE SAFETY RADAR -->
+    <div id="tab-safety" class="tab-content active">
+      <div class="welcome-box mb-8 p-8 rounded-2xl border border-white/10 bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-transparent relative overflow-hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold mb-3">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              Site Vision Surveillance Mesh Online — Project Apex Tower
+            </div>
+            <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">AI Construction Vision & Safety Cockpit</h2>
+            <p class="text-sm text-slate-300 mt-2 max-w-[680px] leading-relaxed">
+              Autonomous computer vision monitoring 14 high-definition site camera feeds. Real-time PPE hardhat enforcement, structural shear crack detection, automated CPWD BOQ schedule generation, and weather-adjusted project delay projections.
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="switchTab('defect')" class="run-btn px-5 py-3 rounded-xl text-xs font-bold text-white flex items-center gap-2">
+              <i class="fas fa-camera"></i> Run CV Crack Scan
+            </button>
+            <button onclick="switchTab('boq')" class="px-4 py-3 rounded-xl text-xs font-bold text-white/80 bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center gap-2">
+              <i class="fas fa-calculator"></i> BOQ Calculator
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Safety Camera Feeds & Violations -->
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-video text-amber-400"></i> Active Site Surveillance Feeds
+            </h3>
+            <span class="text-xs text-emerald-400 font-mono font-bold">14 Feeds Live</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="p-3 rounded-xl bg-black/50 border border-white/10 relative overflow-hidden">
+              <div class="aspect-video bg-slate-900 rounded-lg flex items-center justify-center relative overflow-hidden">
+                <i class="fas fa-building text-3xl text-slate-700"></i>
+                <div class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-red-600/80 text-[10px] font-mono text-white flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> REC
+                </div>
+                <div class="absolute bottom-2 left-2 text-[10px] text-white/80 font-mono bg-black/60 px-1 rounded">CAM-01: Tower A Scaffolding</div>
+              </div>
+              <div class="mt-2 flex justify-between items-center text-[11px]">
+                <span class="text-emerald-400">✓ 100% Hardhat & Vest Compliant</span>
+                <span class="text-slate-400 font-mono">30 FPS</span>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-black/50 border border-white/10 relative overflow-hidden">
+              <div class="aspect-video bg-slate-900 rounded-lg flex items-center justify-center relative overflow-hidden">
+                <i class="fas fa-truck text-3xl text-slate-700"></i>
+                <div class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-red-600/80 text-[10px] font-mono text-white flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> REC
+                </div>
+                <div class="absolute bottom-2 left-2 text-[10px] text-white/80 font-mono bg-black/60 px-1 rounded">CAM-04: Concrete Batching Plant</div>
+              </div>
+              <div class="mt-2 flex justify-between items-center text-[11px]">
+                <span class="text-emerald-400">✓ Slump Test Sensor Active</span>
+                <span class="text-slate-400 font-mono">30 FPS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between text-xs">
+            <span class="text-slate-300">Total Workers On Site: <strong class="text-white">184 Personnel</strong></span>
+            <span class="text-emerald-400 font-bold">OSHA Class-A Certified</span>
+          </div>
+        </div>
+
+        <div class="workbench-card">
+          <h3 class="text-base font-extrabold text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-triangle-exclamation text-amber-400"></i> Environmental & Hazard Sensors
+          </h3>
+          <div class="space-y-3">
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white">Dust Pollution (PM 2.5 / PM 10)</div>
+                <div class="text-[11px] text-slate-400">Mist Sprinkler Anti-Smog Gun: Activated</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-mono font-bold">42 µg/m³ (Safe)</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white">Crane Radius Proximity Warning</div>
+                <div class="text-[11px] text-slate-400">Tower Crane #2 Load: 4.8T (Under 10T Limit)</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-mono font-bold">Clear Zone</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white">Concrete Curing Hydration Temp</div>
+                <div class="text-[11px] text-slate-400">Embedded IoT Thermocouple in 4th Floor Slab</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-sky-500/15 text-sky-300 text-xs font-mono font-bold">28.4°C (Optimal)</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="tab-safety" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">🦺 OSHA Safety Hazard & Site Audit</div>
-            <div class="tool-ep">Procore Safety Compliance Benchmark</div>
+    <!-- TAB 2: CV CRACK & DEFECT SCANNER -->
+    <div id="tab-defect" class="tab-content">
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-microscope text-amber-400"></i> YOLOv10 Concrete Defect Scanner
+            </h3>
+            <span class="text-xs text-amber-400 font-mono font-bold">Sub-millimeter Vision</span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Structural Element Inspected</label>
+              <select id="defect-element" class="w-full bg-black/40 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white outline-none focus:border-amber-500">
+                <option value="beam_b4">Reinforced Concrete Beam #B4-Level 3 (Tensile Zone)</option>
+                <option value="column_c12">Shear Wall Column #C12-Basement 2 (Axial Load)</option>
+                <option value="slab_s8">Post-Tensioned Slab #S8-Podium Deck</option>
+              </select>
+            </div>
+
+            <div class="p-4 rounded-xl bg-black/50 border border-white/10 text-center">
+              <div class="relative inline-block border-2 border-dashed border-amber-500/40 rounded-xl p-6 w-full">
+                <i class="fas fa-camera text-4xl text-amber-400/60 mb-2"></i>
+                <div class="text-xs font-bold text-white">Target Image: Concrete_Shear_Zone_042.raw</div>
+                <div class="text-[11px] text-slate-400">4032 x 3024 HDR Macro Optical Capture</div>
+                <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-mono">
+                  [Simulated 120µm Optical Inspection Bounding Box]
+                </div>
+              </div>
+            </div>
+
+            <button onclick="scanConcreteDefect()" class="run-btn w-full py-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+              <i class="fas fa-bolt"></i> Run Computer Vision Defect Segmentation
+            </button>
           </div>
         </div>
-        <button class="run-btn" onclick="executeSafety()"><i class="fas fa-shield-halved text-xs"></i> Run Safety Inspection</button>
-        <div id="safety-result" class="tool-result mt-4" style="display:none;">
-          <pre id="safety-out-text" class="result-box font-mono text-xs"></pre>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <div class="terminal-dot bg-rose-500"></div>
+              <div class="terminal-dot bg-amber-500"></div>
+              <div class="terminal-dot bg-emerald-500"></div>
+            </div>
+            <span class="text-xs font-mono text-slate-400">structural_defect_telemetry.json</span>
+            <button onclick="copyResult('defect-console')" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+          <div class="terminal-body" id="defect-console">
+[VISION PIPELINE STANDBY] Click 'Run Computer Vision Defect Segmentation' to execute YOLOv10-Defect weights and compute crack width, depth, and structural safety margin (IS 456:2000).
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="tab-cv" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">📷 Computer Vision PPE Site Scanner (YOLOv8)</div>
-            <div class="tool-ep">Camera Feed Simulator</div>
+    <!-- TAB 3: AUTOMATED BOQ COST ESTIMATOR -->
+    <div id="tab-boq" class="tab-content">
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-calculator text-amber-400"></i> CPWD Automated BOQ Cost Estimator
+            </h3>
+            <span class="text-xs text-emerald-400 font-mono font-bold">Delhi Schedule of Rates (DSR 2025)</span>
+          </div>
+
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Built-Up Area (Sq. Ft)</label>
+                <input type="number" id="boq-area" oninput="calculateBoq()" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-amber-500" value="25000"/>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Construction Grade</label>
+                <select id="boq-grade" onchange="calculateBoq()" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-amber-500">
+                  <option value="luxury">Luxury High-Rise (₹3,200/sq.ft)</option>
+                  <option value="premium" selected>Premium Commercial (₹2,450/sq.ft)</option>
+                  <option value="standard">Standard Residential (₹1,850/sq.ft)</option>
+                  <option value="industrial">Pre-Engineered Industrial (₹1,400/sq.ft)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Concrete Grade</label>
+                <select id="boq-concrete" onchange="calculateBoq()" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-amber-500">
+                  <option value="m25">M25 Ready-Mix</option>
+                  <option value="m30" selected>M30 High-Strength</option>
+                  <option value="m40">M40 Self-Compacting</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Steel Reinforcement</label>
+                <select id="boq-steel" onchange="calculateBoq()" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-amber-500">
+                  <option value="fe500" selected>Fe500D TMT Bars (Tata/JSW)</option>
+                  <option value="fe550">Fe550D Corrosion Resistant</option>
+                </select>
+              </div>
+            </div>
+
+            <button onclick="calculateBoq()" class="run-btn w-full py-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+              <i class="fas fa-file-invoice-dollar"></i> Generate Detailed Schedule of Rates
+            </button>
           </div>
         </div>
-        <button class="run-btn" onclick="executeCv()"><i class="fas fa-video text-xs"></i> Scan Site Frame</button>
-        <div id="cv-result" class="tool-result mt-4" style="display:none;">
-          <pre id="cv-out-text" class="result-box font-mono text-xs"></pre>
+
+        <div class="workbench-card">
+          <h3 class="text-base font-extrabold text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-receipt text-amber-400"></i> Estimated Bill of Quantities (BOQ)
+          </h3>
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-4">
+            <div class="flex items-baseline justify-between border-b border-white/10 pb-3">
+              <span class="text-xs text-slate-300 font-medium">Estimated Civil & Finishing Budget</span>
+              <span class="text-2xl font-black text-amber-400 font-mono" id="boq-total">₹6,12,50,000</span>
+            </div>
+
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between">
+                <span class="text-slate-400">Substructure & Foundation (22%):</span>
+                <span class="text-white font-mono font-bold" id="boq-foundation">₹1,34,75,000</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">RCC Superstructure Frame (34%):</span>
+                <span class="text-amber-300 font-mono font-bold" id="boq-superstructure">₹2,08,25,000</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Brickwork & External Facade (16%):</span>
+                <span class="text-slate-300 font-mono font-bold" id="boq-masonry">₹98,00,000</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">MEP Electrical & Plumbing (18%):</span>
+                <span class="text-sky-300 font-mono font-bold" id="boq-mep">₹1,10,25,000</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Internal Finishes & Flooring (10%):</span>
+                <span class="text-emerald-300 font-mono font-bold" id="boq-finishing">₹61,25,000</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-white/10 text-[11px] text-slate-400">
+              <i class="fas fa-shield-halved text-amber-400 mr-1"></i> Rates indexed to CPWD Schedule 2025 with 8% escalation buffer included.
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="tab-concrete" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
+    <!-- TAB 4: CRITICAL PATH DELAY RISK -->
+    <div id="tab-delays" class="tab-content">
+      <div class="workbench-card">
+        <div class="flex items-center justify-between mb-6">
           <div>
-            <div class="tool-title">🧱 Concrete RCC M25 & Steel Reinforcement Takeoff</div>
-            <div class="tool-ep">IS 456:2000 Structural Standard</div>
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-triangle-exclamation text-amber-400"></i> AI Delay Risk Forecasting & Critical Path
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Multi-variable projection factoring monsoon forecasts, cement truck supply logs, and labor availability</p>
           </div>
+          <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">On Track (-2 Days Ahead)</span>
         </div>
-        <button class="run-btn" onclick="executeConcrete()"><i class="fas fa-cubes text-xs"></i> Calculate Structural Materials</button>
-        <div id="concrete-result" class="tool-result mt-4" style="display:none;">
-          <pre id="concrete-out-text" class="result-box font-mono text-xs"></pre>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+            <div class="text-xs font-bold text-amber-400 mb-1">WEATHER IMPACT</div>
+            <div class="text-sm font-bold text-white mb-2">0 Rain Delay Days in Next 15 Days</div>
+            <p class="text-[11px] text-slate-300">Dry weather window allows double-shift casting for 5th floor transfer slab.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+            <div class="text-xs font-bold text-sky-400 mb-1">MATERIAL SUPPLY CHAIN</div>
+            <div class="text-sm font-bold text-white mb-2">320T Fe500D Steel In Stock</div>
+            <p class="text-[11px] text-slate-300">Guaranteed 28-day inventory buffer on site. No price surge exposure.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+            <div class="text-xs font-bold text-emerald-400 mb-1">MILESTONE HANDOVER</div>
+            <div class="text-sm font-bold text-white mb-2">Podium Completion: Dec 14</div>
+            <p class="text-[11px] text-slate-300">Critical path float: 6 days. Zero penalty risk under RERA clause 18.</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="tab-machinery" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">🚜 Heavy Fleet Telemetry & Predictive Maintenance</div>
-            <div class="tool-ep">CAN-Bus Diagnostic Sensor Parser</div>
-          </div>
+    <!-- TAB 5: DRONE VOLUMETRIC SURVEY -->
+    <div id="tab-drones" class="tab-content">
+      <div class="workbench-card">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+            <i class="fas fa-satellite text-amber-400"></i> Autonomous Drone Volumetric Survey Logs
+          </h3>
+          <span class="text-xs text-amber-400 font-mono font-bold">Survey Drone #DJI-M300</span>
         </div>
-        <button class="run-btn" onclick="executeMachinery()"><i class="fas fa-wrench text-xs"></i> Check Excavator Fleet Telemetry</button>
-        <div id="machinery-result" class="tool-result mt-4" style="display:none;">
-          <pre id="machinery-out-text" class="result-box font-mono text-xs"></pre>
+
+        <div class="p-4 rounded-xl bg-black/40 border border-white/10 space-y-3 font-mono text-xs">
+          <div class="text-slate-300">LAST MISSION: 2026-09-24 07:30 AM • 45 Flight Minutes</div>
+          <div class="text-emerald-400">✓ Basements Excavation Volumetric Cut: 14,820 m³ (99.2% of target design)</div>
+          <div class="text-emerald-400">✓ Earthwork Fill Stockpile: 3,410 m³ stored in West Yard</div>
+          <div class="text-sky-400">✓ 3D Point Cloud Resolution: 1.2 cm GSD (Ground Sampling Distance)</div>
+          <div class="text-slate-400 pt-2 border-t border-white/10">NEXT SCHEDULED FLIGHT: Tomorrow at 07:00 AM (Automated Waypoint #WP-104)</div>
         </div>
       </div>
     </div>
@@ -212,191 +499,120 @@
     </div>
   </div>
 
-  <!-- Floating Cold-Start Status Pill -->
-  <div id="cs-pill" style="display:none; position:fixed; bottom:20px; right:20px; z-index:99999; padding:8px 16px; border-radius:999px; background:rgba(15,23,42,0.9); border:1px solid rgba(245,158,11,0.4); color:#f8fafc; font-size:12px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,0.5); backdrop-filter:blur(16px); align-items:center; gap:8px;">
-    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-    <span id="cs-pill-msg">Connecting AI Backend...</span>
-  </div>
-
+  <!-- Global Script -->
   <script>
     function toggleSidebar() {
-      var sb = document.getElementById('main-sidebar');
-      var ov = document.getElementById('mobile-sidebar-overlay');
-      if (!sb) return;
-      var isClosed = sb.classList.contains('-translate-x-full');
-      if (isClosed) {
+      const sb = document.getElementById('main-sidebar');
+      const ov = document.getElementById('mobile-sidebar-overlay');
+      if (sb.classList.contains('-translate-x-full')) {
         sb.classList.remove('-translate-x-full');
         sb.classList.add('translate-x-0');
-        if (ov) ov.style.display = 'block';
-        document.body.style.overflow = 'hidden';
+        ov.style.display = 'block';
       } else {
         sb.classList.add('-translate-x-full');
         sb.classList.remove('translate-x-0');
-        if (ov) ov.style.display = 'none';
-        document.body.style.overflow = '';
+        ov.style.display = 'none';
       }
     }
 
     function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(function(el) {
-        el.classList.remove('active');
-      });
-      var target = document.getElementById('tab-' + tabId);
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById('tab-' + tabId);
       if (target) target.classList.add('active');
 
-      document.querySelectorAll('.nav-item').forEach(function(el) {
-        el.classList.remove('active');
-      });
-      var btn = document.getElementById('nav-btn-' + tabId);
+      const btn = document.getElementById('nav-btn-' + tabId);
       if (btn) btn.classList.add('active');
 
-      var titleElem = document.getElementById('topbar-title');
-      var crumbElem = document.getElementById('topbar-crumb');
-      if (btn && titleElem) {
-        var txt = btn.querySelector('.truncate') ? btn.querySelector('.truncate').textContent : btn.textContent;
-        titleElem.textContent = txt.trim();
-        if (crumbElem) crumbElem.textContent = txt.trim();
+      const crumb = document.getElementById('topbar-crumb');
+      if (crumb && btn) {
+        const span = btn.querySelector('span');
+        if (span) crumb.textContent = span.textContent;
       }
-
-      if (window.innerWidth < 768) {
-        toggleSidebar();
-      }
+      window.location.hash = tabId;
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.innerWidth < 768) toggleSidebar();
     }
 
-    function copyResult(elemId) {
-      var target = document.getElementById(elemId);
-      if (!target) return;
-      var text = target.innerText || target.textContent;
-      navigator.clipboard.writeText(text).then(function() {
-        alert('Copied output to clipboard!');
-      }).catch(function() {
-        alert('Output ready. (Clipboard access restricted)');
-      });
+    function copyResult(elementId) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      navigator.clipboard.writeText(el.innerText || el.textContent);
+      const notif = document.createElement('div');
+      notif.className = 'fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs shadow-2xl flex items-center gap-2';
+      notif.innerHTML = '<i class="fas fa-check"></i> Output copied to clipboard!';
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 2500);
     }
 
-    // Cold-start background poller
-    (function() {
-      var pathPrefix = window.location.pathname.split('/')[1] || '';
-      if (!pathPrefix || pathPrefix === 'app') return;
-      var healthUrl = '/' + pathPrefix + '/api/health';
-      var pill = document.getElementById('cs-pill');
-      var attempts = 0;
-      var maxAttempts = 12;
+    function triggerQuickAction() {
+      const activeTab = document.querySelector('.tab-content.active');
+      if (!activeTab) return;
+      const firstBtn = activeTab.querySelector('.run-btn');
+      if (firstBtn) firstBtn.click();
+    }
 
-      function check() {
-        attempts++;
-        fetch(healthUrl, { method: 'GET', cache: 'no-store' })
-          .then(function(res) {
-            if (res.ok) {
-              if (pill) {
-                pill.style.display = 'inline-flex';
-                pill.style.borderColor = 'rgba(16,185,129,0.4)';
-                pill.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span> <span>AI Microservice Connected</span>';
-                setTimeout(function() { pill.style.display = 'none'; }, 3000);
-              }
-            } else if (attempts < maxAttempts) {
-              if (pill) { pill.style.display = 'inline-flex'; }
-              setTimeout(check, 3000);
-            }
-          })
-          .catch(function() {
-            if (attempts < maxAttempts) {
-              if (pill) { pill.style.display = 'inline-flex'; }
-              setTimeout(check, 3000);
-            } else if (pill) {
-              pill.style.display = 'none';
-            }
-          });
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && document.getElementById('tab-' + hash)) {
+        switchTab(hash);
       }
-      setTimeout(check, 1000);
-    })();
+    });
 
     
-    function triggerQuickAction() {
-      switchTab('boq');
-      executeBoq();
+    function scanConcreteDefect() {
+      const element = document.getElementById('defect-element').value;
+      const consoleEl = document.getElementById('defect-console');
+
+      consoleEl.innerHTML = `<span class="text-yellow-400">>> [INSPECTING] YOLOv10 segmentation model loading high-res scan...</span>\n>> Applying edge filters and computing crack width in millimeters...`;
+
+      setTimeout(() => {
+        consoleEl.innerHTML = `========================================================================
+BREAKDOWN FACTOR — STRUCTURAL DEFECT VISION ANALYSIS
+========================================================================
+TARGET: ${element}
+TIMESTAMP: 2026-09-25 15:42:09 IST
+
+[DETECTION SUMMARY]:
+• Crack Detected: Hairline surface shrinkage crack (0.18 mm width)
+• Depth Estimation (Ultrasound Acoustic Echo): 4.2 mm (Non-structural surface)
+• IS 456:2000 Permissible Width Limit: 0.30 mm for moderate exposure
+
+[SEVERITY CLASSIFICATION]: LEVEL 1 — COSMETIC / NEGLIGIBLE RISK
+  ✓ Does not compromise rebar passivation layer.
+  ✓ No signs of water seepage or chemical efflorescence.
+
+[REMEDIATION RECOMMENDATION]:
+  Apply low-viscosity epoxy injection / elastomeric acrylic coating prior to plastering.
+  Structural stability clearance: APPROVED.`;
+      }, 700);
     }
 
-    function executeBoq() {
-      var res = document.getElementById('boq-result');
-      var out = document.getElementById('boq-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== CPWD DSR 2023 BILL OF QUANTITIES (BOQ) ===
-Project: 1,200 sq.m Commercial Office (G+3)
+    function calculateBoq() {
+      const area = parseFloat(document.getElementById('boq-area').value) || 25000;
+      const grade = document.getElementById('boq-grade').value;
 
-1. Earthwork in excavation (DSR 2.8): 450 cu.m @ ₹185 = ₹83,250
-2. Plain Cement Concrete 1:4:8 (DSR 4.1): 120 cu.m @ ₹4,850 = ₹5,82,000
-3. RCC M25 in Columns/Beams/Slabs (DSR 5.1): 380 cu.m @ ₹8,420 = ₹31,99,600
-4. Thermo-Mechanically Treated (TMT) Fe500D Steel (DSR 5.22): 32 Tonnes @ ₹68,500 = ₹21,92,000
-5. Flyash Brick Masonry in 1:6 cement mortar (DSR 6.1): 240 cu.m @ ₹5,120 = ₹12,28,800
+      let rate = 2450;
+      if (grade === 'luxury') rate = 3200;
+      else if (grade === 'standard') rate = 1850;
+      else if (grade === 'industrial') rate = 1400;
 
-Civil Base Cost: ₹72,85,650
-+ Contractor Profit & Overhead (15%): ₹10,92,847
-+ GST @ 18%: ₹15,08,129
-Grand Estimated Civil Takeoff: ₹98,86,626 (₹8,238 / sq.m)`;
-    }
+      const total = Math.round(area * rate);
+      const foundation = Math.round(total * 0.22);
+      const superstructure = Math.round(total * 0.34);
+      const masonry = Math.round(total * 0.16);
+      const mep = Math.round(total * 0.18);
+      const finishing = Math.round(total * 0.10);
 
-    function executeSafety() {
-      var res = document.getElementById('safety-result');
-      var out = document.getElementById('safety-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== OSHA SAFETY AUDIT SCORECARD ===
-Site: Ahmedabad Metro Extension Pier 42
-Audit Score: 88/100 (Grade: A - Minor Observations)
+      const fmt = (v) => '₹' + (Math.round(v / 100000 * 10) / 10).toLocaleString() + ' L (' + (Math.round(v / 10000000 * 100) / 100) + ' Cr)';
 
-Checklist:
-✔ Edge Perimeter Fall Protection (Guardrails installed): PASS
-✔ High-Voltage Cable Grounding: PASS
-⚠️ Excavation Trench Shoring (Trench depth > 1.8m lacks hydraulic jack): ACTION REQUIRED
-✔ Fire Extinguisher Accessibility (Inspected valid): PASS
-
-CAPA Corrective Action Generated:
-Install timber lagging shoring along East trench wall before 18:00 IST today.`;
-    }
-
-    function executeCv() {
-      var res = document.getElementById('cv-result');
-      var out = document.getElementById('cv-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== COMPUTER VISION PPE DETECTOR (YOLOv8x) ===
-Image Frame: CCTV Camera 04 (North Scaffold)
-Workers Detected: 7
-
-PPE Detections:
-• Hardhats: 7 / 7 (100% Compliance)
-• High-Visibility Vests: 6 / 7 (1 Worker flagged: Red bounding box)
-• Safety Harness: 3 / 3 (Scaffold workers all tethered)
-
-Automated Alert Dispatched:
-SMS sent to Safety Supervisor regarding Worker #4 without high-vis vest on Level 2.`;
-    }
-
-    function executeConcrete() {
-      var res = document.getElementById('concrete-result');
-      var out = document.getElementById('concrete-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== CONCRETE MIX & STEEL TAKE-OFF ===
-Volume: 100 cu.m of RCC M25 Grade
-
-Material Requirements:
-• Cement (OPC 53 Grade): 760 Bags (38,000 kg)
-• River Sand (Coarse Aggregate Zone II): 48.5 Metric Tonnes
-• Crushed Stone (20mm down): 82.0 Metric Tonnes
-• Water: 13,800 Litres
-• Reinforcement Steel (@ 90kg/cu.m): 9.0 Metric Tonnes Fe500D`;
-    }
-
-    function executeMachinery() {
-      var res = document.getElementById('machinery-result');
-      var out = document.getElementById('machinery-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== FLEET TELEMETRY: KOMATSU PC210 EXCAVATOR ===
-• Engine Hours: 4,218 hrs
-• Hydraulic Oil Temperature: 82°C (Optimal)
-• Engine Oil Pressure: 42 PSI (Normal)
-• Fuel Consumption: 14.8 L/hr
-• Predictive Fault Code: P0183 (Fuel temp sensor intermittent - replace within 50 operating hrs)`;
+      document.getElementById('boq-total').innerText = '₹' + (Math.round(total / 10000000 * 100) / 100) + ' Crores';
+      document.getElementById('boq-foundation').innerText = fmt(foundation);
+      document.getElementById('boq-superstructure').innerText = fmt(superstructure);
+      document.getElementById('boq-masonry').innerText = fmt(masonry);
+      document.getElementById('boq-mep').innerText = fmt(mep);
+      document.getElementById('boq-finishing').innerText = fmt(finishing);
     }
     
   </script>

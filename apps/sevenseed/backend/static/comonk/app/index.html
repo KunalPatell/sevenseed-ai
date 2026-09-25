@@ -1,97 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Comonk AI — Enterprise Career Intelligence Platform</title>
-  <meta name="description" content="Free AI-powered career intelligence: ATS resume optimizer, FAANG mock interview arena, and Levels.fyi compensation intelligence."/>
+  <title>Comonk AI Workstation — Career Intelligence & FAANG Mock Arena</title>
+  <meta name="description" content="Real-time ATS resume keyword scorer, FAANG system design mock evaluator, and Levels.fyi compensation radar."/>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E💼%3C/text%3E%3C/svg%3E"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: '#0ea5e9',
+            brandSec: '#6366f1',
+            darkBg: '#040714'
+          }
+        }
+      }
+    };
+  </script>
   <link rel="stylesheet" href="portal.css"/>
-  <style>
-    :root {
-      --p-color: #0ea5e9;
-      --s-color: #6366f1;
-      --p-rgb: 14, 165, 233;
-      --s-rgb: 99, 102, 241;
-      --bg-color: #040714;
-    }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: portalFadeIn 0.28s ease-out; }
-    @keyframes portalFadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
 </head>
-<body class="antialiased">
+<body class="antialiased text-slate-100 bg-[#040714]">
   <!-- Aceternity Overhead Glow Lamp -->
   <div class="hero-lamp"></div>
   <div class="hero-lamp-line"></div>
 
   <!-- Mobile Drawer Overlay -->
-  <div id="mobile-sidebar-overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); z-index:45;"></div>
+  <div id="mobile-sidebar-overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); z-index:45;"></div>
 
   <div class="app-shell flex min-h-screen">
     <!-- Sidebar Navigation -->
-    <aside class="sidebar w-[260px] shrink-0 border-r border-white/5 flex flex-col p-4 fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0" id="main-sidebar">
+    <aside class="sidebar w-[270px] shrink-0 border-r border-white/5 flex flex-col p-4 fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0" id="main-sidebar">
       <!-- Logo Header -->
-      <div class="flex items-center justify-between mb-6 px-2">
+      <div class="flex items-center justify-between mb-4 px-2">
         <a class="side-logo flex items-center gap-3 no-underline" href="/comonk-ai/">
-          <span class="logo-icon w-9 h-9 rounded-xl grid place-items-center text-white font-bold text-lg">💼</span>
+          <span class="w-10 h-10 rounded-xl grid place-items-center text-white font-bold text-xl bg-gradient-to-br from-[#0ea5e9] to-[#6366f1] shadow-lg shadow-black/40 border border-white/10">💼</span>
           <div>
             <div class="text-white font-extrabold text-[15px] tracking-tight">Comonk AI</div>
-            <div class="text-[10px] text-white/50 uppercase font-semibold tracking-wider">Career Intelligence</div>
+            <div class="text-[10px] text-white/50 uppercase font-semibold tracking-wider">Enterprise Career Intelligence</div>
           </div>
         </a>
-        <button class="md:hidden text-white/60 hover:text-white p-1" onclick="toggleSidebar()" aria-label="Close menu">
+        <button class="md:hidden text-white/60 hover:text-white p-1 cursor-pointer" onclick="toggleSidebar()" aria-label="Close menu">
           <i class="fas fa-xmark text-lg"></i>
         </button>
+      </div>
+
+      <!-- Venture Switcher -->
+      <div class="mb-4 px-1">
+        <label class="block text-[10px] uppercase font-bold text-white/40 mb-1.5 px-1 tracking-wider">Switch Venture Console</label>
+        <select onchange="if(this.value) window.location.href=this.value;" class="w-full bg-white/[0.04] border border-white/10 rounded-xl py-2 px-2.5 text-xs text-white/80 font-medium outline-none cursor-pointer hover:border-white/20 transition-all">
+          <option value="/app/" >Sevenseed Studio Hub</option><option value="/sevenforce/app/" >Sevenforce AI Workforce</option><option value="/comonk-ai/app/" >Comonk Career AI</option><option value="/avpu/app/" >AVP University</option><option value="/avp-emart/app/" >AVP Emart Price Radar</option><option value="/breakdown-factor/app/" >Breakdown Factor</option><option value="/decode-forest-pharmacy/app/" >Decode Pharmacy</option><option value="/rakshak-ai/app/" >Rakshak AI Security</option><option value="/avp-charitable-trust/app/" >AVP Charitable Trust</option>
+        </select>
       </div>
 
       <!-- Navigation Links -->
       <nav class="side-nav flex flex-col gap-1.5 flex-1 overflow-y-auto pr-1">
         
-        <button class="nav-item active" onclick="switchTab('ats')" id="nav-btn-ats">
-          <i class="fas fa-file-invoice" style="width:16px; text-align:center;"></i>
-          <span class="truncate">ATS Resume Optimizer</span>
+        <button class="nav-item active" onclick="switchTab('cockpit')" id="nav-btn-cockpit">
+          <i class="fas fa-gauge-high" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Readiness Cockpit</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">84/100</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('interview')" id="nav-btn-interview">
-          <i class="fas fa-terminal" style="width:16px; text-align:center;"></i>
-          <span class="truncate">FAANG Mock Interview Arena</span>
+        <button class="nav-item " onclick="switchTab('ats')" id="nav-btn-ats">
+          <i class="fas fa-file-invoice" style="width:18px; text-align:center;"></i>
+          <span class="truncate">ATS Resume Scorer</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">AI</span>
+        </button>
+        
+        <button class="nav-item " onclick="switchTab('mock')" id="nav-btn-mock">
+          <i class="fas fa-user-tie" style="width:18px; text-align:center;"></i>
+          <span class="truncate">FAANG Mock Arena</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Sim</span>
         </button>
         
         <button class="nav-item " onclick="switchTab('salary')" id="nav-btn-salary">
-          <i class="fas fa-money-bill-trend-up" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Levels.fyi Salary Intel</span>
+          <i class="fas fa-money-bill-trend-up" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Levels Compensation Radar</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Calc</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('career')" id="nav-btn-career">
-          <i class="fas fa-route" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Career Path Simulator</span>
-        </button>
-        
-        <button class="nav-item " onclick="switchTab('match')" id="nav-btn-match">
-          <i class="fas fa-briefcase" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Job & Referral Scout</span>
+        <button class="nav-item " onclick="switchTab('roadmap')" id="nav-btn-roadmap">
+          <i class="fas fa-map" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Role Upskilling Sprint</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Sprint</span>
         </button>
         
       </nav>
 
       <!-- Sidebar Footer -->
       <div class="side-foot flex flex-col gap-3 pt-4 border-t border-white/10 mt-auto">
-        <div class="flex items-center justify-between text-xs px-2 py-1.5 rounded-lg bg-white/[0.03] border border-white/5">
+        <div class="flex items-center justify-between text-xs px-2.5 py-2 rounded-xl bg-white/[0.03] border border-white/5">
           <span class="inline-flex items-center gap-2 text-white/70 font-mono text-[11px]">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             AI Engine Online
           </span>
-          <span class="text-[10px] font-bold text-emerald-400/90 font-mono">v3.4-PROD</span>
+          <span class="text-[10px] font-bold text-emerald-400 font-mono">v4.2-PROD</span>
         </div>
-        <a class="side-back flex items-center gap-2 text-xs text-white/60 hover:text-white py-2 px-3 rounded-lg border border-white/10 hover:border-white/20 transition-all no-underline" href="/comonk-ai/">
+        <a class="side-back flex items-center justify-center gap-2 text-xs font-semibold text-white/70 hover:text-white py-2 px-3 rounded-xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all no-underline" href="/comonk-ai/">
           <i class="fas fa-arrow-left text-[11px]"></i>
           <span>Back to Landing Page</span>
         </a>
@@ -112,16 +125,16 @@
               <span>/</span>
               <span class="text-white/80" id="topbar-crumb">Workspace Console</span>
             </div>
-            <h1 class="text-base font-extrabold text-white tracking-tight" id="topbar-title">Active Dashboard</h1>
+            <h1 class="text-base font-extrabold text-white tracking-tight" id="topbar-title">Active Workstation</h1>
           </div>
         </div>
 
         <div class="flex items-center gap-3">
           <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-white/80">
             <i class="fas fa-shield-halved text-emerald-400 text-xs"></i>
-            <span>Guest Studio Access (Full VIP)</span>
+            <span>Verified Founder VIP</span>
           </div>
-          <button class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-gradient-to-r from-[var(--p-color)] to-[var(--s-color)] hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-black/40 flex items-center gap-1.5" onclick="triggerQuickAction()">
+          <button class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#0ea5e9] to-[#6366f1] hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-black/40 flex items-center gap-1.5" onclick="triggerQuickAction()">
             <i class="fas fa-bolt text-xs"></i>
             <span>Quick Run</span>
           </button>
@@ -129,96 +142,470 @@
       </header>
 
       <!-- Main Scrollable Panels -->
-      <main class="panels p-6 md:p-10 max-w-[1280px] w-full mx-auto flex-1">
+      <main class="panels p-6 md:p-10 max-w-[1360px] w-full mx-auto flex-1">
+        <!-- Top KPI Stats Row -->
+        <div class="stats-grid">
+          
+        <div class="stat-card">
+          <div class="stat-num">84/100</div>
+          <div class="stat-label">Career Readiness Index</div>
+          <div class="stat-pill stat-pill-green">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>+12 pts vs last month</span>
+          </div>
+        </div>
         
-    <!-- TAB 1: ATS OPTIMIZER -->
-    <div id="tab-ats" class="tab-content active">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">⚡ Jobscan-Grade ATS Semantic Matcher & Scorer</div>
-            <div class="tool-ep">POST /comonk-ai/api/ats/analyze</div>
+        <div class="stat-card">
+          <div class="stat-num">94.2%</div>
+          <div class="stat-label">ATS Parse Pass Rate</div>
+          <div class="stat-pill stat-pill-blue">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>FAANG Level Optimized</span>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label class="text-xs font-bold text-slate-300 block mb-1">Your Resume (Plain Text)</label>
-            <textarea id="comonk-resume" class="w-full p-3 rounded-xl bg-black/40 border border-white/10 text-xs text-white h-36 font-mono">Senior Backend Engineer with 5+ years experience building microservices in Python, Django, Docker, and PostgreSQL. Reduced query latency by 35% using Redis caching. Led a team of 4 engineers.</textarea>
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-300 block mb-1">Target Job Description (JD)</label>
-            <textarea id="comonk-jd" class="w-full p-3 rounded-xl bg-black/40 border border-white/10 text-xs text-white h-36 font-mono">Looking for a Senior Python Engineer experienced in FastAPI, Kafka, Kubernetes, and distributed systems. Must have hands-on experience designing high-throughput asynchronous event-driven pipelines.</textarea>
+        
+        <div class="stat-card">
+          <div class="stat-num">₹48.5L</div>
+          <div class="stat-label">Market Compensation Target</div>
+          <div class="stat-pill stat-pill-purple">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>90th Percentile BLR</span>
           </div>
         </div>
-        <button class="run-btn" onclick="executeAts()"><i class="fas fa-bolt text-xs"></i> Run Semantic ATS Match</button>
-        <div id="ats-result" class="tool-result mt-4" style="display:none;">
-          <pre id="ats-out-text" class="result-box font-mono text-xs"></pre>
+        
+        <div class="stat-card">
+          <div class="stat-num">6 Days</div>
+          <div class="stat-label">Next Milestone Interview</div>
+          <div class="stat-pill stat-pill-green">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>Google L5 Distributed Sys</span>
+          </div>
+        </div>
+        
+        </div>
+
+        <!-- Tab Contents -->
+        
+    <!-- TAB 1: READINESS COCKPIT -->
+    <div id="tab-cockpit" class="tab-content active">
+      <div class="welcome-box mb-8 p-8 rounded-2xl border border-white/10 bg-gradient-to-r from-sky-500/15 via-blue-500/10 to-transparent relative overflow-hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-300 text-xs font-bold mb-3">
+              <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+              Career Intelligence Engine v4.2 Online
+            </div>
+            <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">Enterprise Career & Interview Readiness</h2>
+            <p class="text-sm text-slate-300 mt-2 max-w-[680px] leading-relaxed">
+              Real-time career telemetry benchmarked against top 1% tech engineering standards. Analyze resume fit across 2,400+ tech job descriptions, simulate FAANG system design loops, and benchmark offer packages.
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="switchTab('ats')" class="run-btn px-5 py-3 rounded-xl text-xs font-bold text-white flex items-center gap-2">
+              <i class="fas fa-file-circle-check"></i> Run ATS Scan
+            </button>
+            <button onclick="switchTab('mock')" class="px-4 py-3 rounded-xl text-xs font-bold text-white/80 bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center gap-2">
+              <i class="fas fa-play"></i> Mock Interview
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skill Pentagram & Milestone Progress -->
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-chart-pie text-sky-400"></i> Competency Radar Breakdown
+            </h3>
+            <span class="text-xs font-mono text-sky-400 bg-sky-500/10 px-2.5 py-1 rounded-lg border border-sky-500/20">Target: Staff AI Engineer</span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Distributed Systems & Architecture</span>
+                <span class="text-emerald-400 font-mono">92% (Top 3%)</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden border border-white/5">
+                <div class="bg-gradient-to-r from-sky-500 to-indigo-500 h-2 rounded-full" style="width: 92%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Data Structures & Graph Algorithms</span>
+                <span class="text-emerald-400 font-mono">88% (Top 7%)</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden border border-white/5">
+                <div class="bg-gradient-to-r from-sky-500 to-emerald-500 h-2 rounded-full" style="width: 88%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">LLM Fine-Tuning & RAG Pipelines</span>
+                <span class="text-sky-400 font-mono">85% (Top 10%)</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden border border-white/5">
+                <div class="bg-gradient-to-r from-sky-500 to-cyan-500 h-2 rounded-full" style="width: 85%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Behavioral Leadership & STAR Delivery</span>
+                <span class="text-yellow-400 font-mono">81% (Target +5%)</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden border border-white/5">
+                <div class="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full" style="width: 81%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Executive Communication & Influence</span>
+                <span class="text-yellow-400 font-mono">78% (Target +8%)</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden border border-white/5">
+                <div class="bg-gradient-to-r from-amber-500 to-rose-500 h-2 rounded-full" style="width: 78%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
+            <span>Next Recommended Action:</span>
+            <button onclick="switchTab('mock')" class="text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1">
+              Simulate L5 Behavioral Loop <i class="fas fa-arrow-right text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Target Company Tier Readiness -->
+        <div class="workbench-card">
+          <h3 class="text-base font-extrabold text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-building-flag text-sky-400"></i> Target Company Match Index
+          </h3>
+          <div class="space-y-3">
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 font-black text-sm grid place-items-center">G</div>
+                <div>
+                  <div class="text-xs font-bold text-white">Google — Cloud AI & Infrastructure</div>
+                  <div class="text-[11px] text-slate-400">L5 Senior Software Engineer</div>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold">91% Match</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 font-black text-sm grid place-items-center">A</div>
+                <div>
+                  <div class="text-xs font-bold text-white">Amazon AWS — Distributed Cache</div>
+                  <div class="text-[11px] text-slate-400">SDE-3 / Lead Architect</div>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold">88% Match</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 font-black text-sm grid place-items-center">M</div>
+                <div>
+                  <div class="text-xs font-bold text-white">Microsoft — Copilot Engine</div>
+                  <div class="text-[11px] text-slate-400">Senior Applied Scientist</div>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold">86% Match</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400 font-black text-sm grid place-items-center">U</div>
+                <div>
+                  <div class="text-xs font-bold text-white">Uber Technologies — Core Marketplace</div>
+                  <div class="text-[11px] text-slate-400">Staff Backend Engineer</div>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-300 text-xs font-mono font-bold">82% Match</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- TAB 2: INTERVIEW -->
-    <div id="tab-interview" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">⚡ FAANG Real-Time Mock Interview Arena</div>
-            <div class="tool-ep">POST /comonk-ai/api/mock/submit</div>
+    <!-- TAB 2: ATS RESUME SCORER -->
+    <div id="tab-ats" class="tab-content">
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-file-contract text-sky-400"></i> ATS Resume Keyword Matcher
+            </h3>
+            <span class="text-xs text-sky-400 font-mono font-bold">GPT-4o Vision ATS Parser</span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase tracking-wider">Target Job Description & Role</label>
+              <select id="ats-role" class="w-full bg-black/40 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white outline-none focus:border-sky-500">
+                <option value="staff_ai">Staff AI / ML Infrastructure Engineer (Google/Meta)</option>
+                <option value="lead_backend">Principal Backend Architect - High Throughput (Uber/AWS)</option>
+                <option value="fullstack_lead">Founding Full-Stack Lead (Y-Combinator Series A)</option>
+                <option value="em">Engineering Manager - Distributed Core (Microsoft)</option>
+              </select>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="text-xs font-bold text-white/70 uppercase tracking-wider">Resume Highlights / Raw Text</label>
+                <button onclick="loadSampleResume()" class="text-[11px] text-sky-400 hover:text-sky-300 font-semibold cursor-pointer">
+                  Load Pre-filled Staff SWE Sample
+                </button>
+              </div>
+              <textarea id="ats-resume-input" rows="8" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-slate-200 font-mono outline-none focus:border-sky-500 placeholder:text-white/20" placeholder="Paste your resume sections, technical achievements, or bullet points here..."></textarea>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <button onclick="runAtsAudit()" class="run-btn w-full py-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+                <i class="fas fa-bolt"></i> Run Real-Time ATS Compatibility Audit
+              </button>
+            </div>
           </div>
         </div>
-        <p class="text-xs text-slate-300 mb-3">Question: "Design a distributed rate limiter that throttles client API requests to 100 req/minute across 50 API nodes. Explain your algorithm and data store choice."</p>
-        <textarea id="interview-ans" class="w-full p-3.5 rounded-xl bg-black/40 border border-white/10 text-xs text-white h-28 font-mono">I would use a Redis sliding window counter with Lua scripts for atomic increments. Key design: 'ratelimit:{user_id}:{timestamp_minute}'. Lua prevents race conditions across the 50 nodes.</textarea>
-        <button class="run-btn mt-2" onclick="executeInterview()"><i class="fas fa-paper-plane text-xs"></i> Submit to AI Interviewer</button>
-        <div id="interview-result" class="tool-result mt-4" style="display:none;">
-          <pre id="interview-out-text" class="result-box font-mono text-xs"></pre>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <div class="terminal-dot bg-rose-500"></div>
+              <div class="terminal-dot bg-amber-500"></div>
+              <div class="terminal-dot bg-emerald-500"></div>
+            </div>
+            <span class="text-xs font-mono text-slate-400">ats_diagnostic_output.log</span>
+            <button onclick="copyResult('ats-console')" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+          <div class="terminal-body" id="ats-console">
+[READY] Awaiting ATS resume payload. Select target role and click 'Run Real-Time ATS Compatibility Audit' to compute hard skills match, quantifiable impact scores, and recruiter searchability index.
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- TAB 3: SALARY -->
+    <!-- TAB 3: FAANG MOCK ARENA -->
+    <div id="tab-mock" class="tab-content">
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-microphone-lines text-sky-400"></i> AI Interview Simulator
+            </h3>
+            <span class="text-xs text-emerald-400 font-mono font-bold">Adaptive Prompt Engine</span>
+          </div>
+
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Interview Track</label>
+                <select id="mock-track" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-sky-500">
+                  <option value="sys_design">System Design & High Availability</option>
+                  <option value="dsa">Advanced Graph Algorithms & DP</option>
+                  <option value="behavioral">STAR Behavioral Leadership</option>
+                  <option value="concurrency">Concurrency & Distributed Lock</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Target Bar Level</label>
+                <select id="mock-level" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-sky-500">
+                  <option value="l5">Google L5 / Senior SWE</option>
+                  <option value="l6">Meta E6 / Staff Engineer</option>
+                  <option value="l7">Principal Architect (L7)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">System Design / Problem Challenge</label>
+              <input type="text" id="mock-question" class="w-full bg-black/40 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white outline-none focus:border-sky-500" value="Design a Global Real-Time Ride-Matching Engine (10M concurrent drivers with geospatial indexing)"/>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Your Architecture Proposal / Response</label>
+              <textarea id="mock-candidate-ans" rows="6" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-slate-200 font-mono outline-none focus:border-sky-500" placeholder="Break down functional requirements, non-functional latency constraints, DB storage schema, Redis GeoHash/H3 sharding, and failover..."></textarea>
+            </div>
+
+            <button onclick="evaluateMockResponse()" class="run-btn w-full py-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+              <i class="fas fa-brain"></i> Score Architecture Proposal
+            </button>
+          </div>
+        </div>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <div class="terminal-dot bg-rose-500"></div>
+              <div class="terminal-dot bg-amber-500"></div>
+              <div class="terminal-dot bg-emerald-500"></div>
+            </div>
+            <span class="text-xs font-mono text-slate-400">faang_evaluator_response.json</span>
+            <button onclick="copyResult('mock-console')" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+          <div class="terminal-body" id="mock-console">
+[SIMULATOR READY] Select your interview track, input your system proposal or STAR response, and click 'Score Architecture Proposal' to receive detailed rubric grades: Scale (10/10), Fault Tolerance (10/10), and Tradeoff Defense.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: LEVELS COMPENSATION RADAR -->
     <div id="tab-salary" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">⚡ Levels.fyi Compensation Benchmarking (India & Remote)</div>
-            <div class="tool-ep">Database: 24,000+ Verified 2026 Tech Offers</div>
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-coins text-sky-400"></i> Levels.fyi Real-Time Compensation Radar
+            </h3>
+            <span class="text-xs text-emerald-400 font-mono font-bold">2026 Verified Data</span>
+          </div>
+
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Role Family</label>
+                <select id="sal-role" onchange="calculateComp()" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-sky-500">
+                  <option value="swe">Software Engineer / Architect</option>
+                  <option value="ml">Machine Learning / AI Infra</option>
+                  <option value="pm">Product Manager (Technical)</option>
+                  <option value="em">Engineering Manager</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Experience Level</label>
+                <select id="sal-level" onchange="calculateComp()" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-sky-500">
+                  <option value="l4">Mid-Level (SDE-2 / L4)</option>
+                  <option value="l5" selected>Senior Engineer (L5 / SDE-3)</option>
+                  <option value="l6">Staff Engineer (L6 / Principal)</option>
+                  <option value="l7">Senior Staff / VP Eng (L7+)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Location Tier</label>
+                <select id="sal-loc" onchange="calculateComp()" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-sky-500">
+                  <option value="blr" selected>Bengaluru, India (Tier 1 Tech Hub)</option>
+                  <option value="hyd">Hyderabad / NCR, India</option>
+                  <option value="us_rem">Remote US (Global USD)</option>
+                  <option value="eu">London / Amsterdam, EU</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Company Tier</label>
+                <select id="sal-tier" onchange="calculateComp()" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-sky-500">
+                  <option value="faang" selected>FAANG / Tier 1 (Google, Meta, Uber)</option>
+                  <option value="unicorn">High-Growth Unicorn (Series B-D)</option>
+                  <option value="enterprise">Global FinTech / Hedge Fund</option>
+                </select>
+              </div>
+            </div>
+
+            <button onclick="calculateComp()" class="run-btn w-full py-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+              <i class="fas fa-calculator"></i> Recompute 90th Percentile Package
+            </button>
           </div>
         </div>
-        <button class="run-btn" onclick="executeSalary()"><i class="fas fa-magnifying-glass text-xs"></i> Benchmark Senior SDE Salaries</button>
-        <div id="salary-result" class="tool-result mt-4" style="display:none;">
-          <pre id="salary-out-text" class="result-box font-mono text-xs"></pre>
+
+        <div class="workbench-card">
+          <h3 class="text-base font-extrabold text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-chart-simple text-sky-400"></i> Projected Total Compensation (TC)
+          </h3>
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-4">
+            <div class="flex items-baseline justify-between border-b border-white/10 pb-3">
+              <span class="text-xs text-slate-300 font-medium">Annual Total Comp (TC)</span>
+              <span class="text-2xl font-black text-emerald-400 font-mono" id="tc-total">₹58,50,000 / yr</span>
+            </div>
+
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between">
+                <span class="text-slate-400">Base Salary (Guaranteed):</span>
+                <span class="text-white font-mono font-bold" id="tc-base">₹38,00,000</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Stock Grants / RSU (Annualized):</span>
+                <span class="text-sky-300 font-mono font-bold" id="tc-rsu">₹16,50,000</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Performance Bonus (15%):</span>
+                <span class="text-amber-300 font-mono font-bold" id="tc-bonus">₹4,00,000</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">First-Year Sign-on Bonus:</span>
+                <span class="text-purple-300 font-mono font-bold" id="tc-signon">₹6,00,000</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-white/10 text-[11px] text-slate-400">
+              <i class="fas fa-circle-info text-sky-400 mr-1"></i> Data sourced from verified offers in Bengaluru tech cluster over the trailing 90 days.
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- TAB 4: CAREER -->
-    <div id="tab-career" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
+    <!-- TAB 5: ROLE UPSKILLING SPRINT -->
+    <div id="tab-roadmap" class="tab-content">
+      <div class="workbench-card">
+        <div class="flex items-center justify-between mb-6">
           <div>
-            <div class="tool-title">⚡ 12-Month Staff+ Engineer Career Roadmap</div>
-            <div class="tool-ep">POST /comonk-ai/api/career/path</div>
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-graduation-cap text-sky-400"></i> 4-Week High-Yield Sprint: Staff Engineer
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Targeted syllabus tailored to eliminate your 2 lowest scoring interview vectors</p>
           </div>
+          <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">Week 2 Active</span>
         </div>
-        <button class="run-btn" onclick="executeCareer()"><i class="fas fa-route text-xs"></i> Generate Roadmap</button>
-        <div id="career-result" class="tool-result mt-4" style="display:none;">
-          <pre id="career-out-text" class="result-box font-mono text-xs"></pre>
-        </div>
-      </div>
-    </div>
 
-    <!-- TAB 5: JOBS -->
-    <div id="tab-match" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">⚡ Job & Referral Scout</div>
-            <div class="tool-ep">Live Scrape: Top 150 Tech Companies</div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-sky-400">WEEK 1</span>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-mono font-bold">COMPLETED</span>
+            </div>
+            <div class="text-xs font-bold text-white mb-1">Distributed Cache & Raft Consensus</div>
+            <p class="text-[11px] text-slate-400">Write-through vs Write-back, Redis Cluster split-brain prevention, and Paxos tradeoffs.</p>
           </div>
-        </div>
-        <button class="run-btn" onclick="executeJobs()"><i class="fas fa-search text-xs"></i> Match High-Probability Roles</button>
-        <div id="jobs-result" class="tool-result mt-4" style="display:none;">
-          <pre id="jobs-out-text" class="result-box font-mono text-xs"></pre>
+
+          <div class="p-4 rounded-xl bg-sky-500/10 border border-sky-500/30">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-sky-400">WEEK 2</span>
+              <span class="text-[10px] bg-sky-500/30 text-sky-300 px-2 py-0.5 rounded font-mono font-bold">IN PROGRESS</span>
+            </div>
+            <div class="text-xs font-bold text-white mb-1">Geospatial Sharding & H3 Grids</div>
+            <p class="text-[11px] text-slate-300">Uber H3 hierarchical spatial indexing, boundary query optimization, and latency budgeting.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10 opacity-70">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-slate-400">WEEK 3</span>
+              <span class="text-[10px] bg-white/10 text-slate-400 px-2 py-0.5 rounded font-mono font-bold">QUEUED</span>
+            </div>
+            <div class="text-xs font-bold text-white mb-1">Executive STAR Behavioral Scenarios</div>
+            <p class="text-[11px] text-slate-400">Navigating cross-functional disagreements with VP/C-suite and mentoring underperforming seniors.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10 opacity-70">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-slate-400">WEEK 4</span>
+              <span class="text-[10px] bg-white/10 text-slate-400 px-2 py-0.5 rounded font-mono font-bold">FINAL</span>
+            </div>
+            <div class="text-xs font-bold text-white mb-1">Full 4-Hour Mock Gauntlet</div>
+            <p class="text-[11px] text-slate-400">Back-to-back Live System Design, Coding, and Culture fit simulations with AI Bar Raiser.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -227,203 +614,184 @@
     </div>
   </div>
 
-  <!-- Floating Cold-Start Status Pill -->
-  <div id="cs-pill" style="display:none; position:fixed; bottom:20px; right:20px; z-index:99999; padding:8px 16px; border-radius:999px; background:rgba(15,23,42,0.9); border:1px solid rgba(245,158,11,0.4); color:#f8fafc; font-size:12px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,0.5); backdrop-filter:blur(16px); align-items:center; gap:8px;">
-    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-    <span id="cs-pill-msg">Connecting AI Backend...</span>
-  </div>
-
+  <!-- Global Script -->
   <script>
     function toggleSidebar() {
-      var sb = document.getElementById('main-sidebar');
-      var ov = document.getElementById('mobile-sidebar-overlay');
-      if (!sb) return;
-      var isClosed = sb.classList.contains('-translate-x-full');
-      if (isClosed) {
+      const sb = document.getElementById('main-sidebar');
+      const ov = document.getElementById('mobile-sidebar-overlay');
+      if (sb.classList.contains('-translate-x-full')) {
         sb.classList.remove('-translate-x-full');
         sb.classList.add('translate-x-0');
-        if (ov) ov.style.display = 'block';
-        document.body.style.overflow = 'hidden';
+        ov.style.display = 'block';
       } else {
         sb.classList.add('-translate-x-full');
         sb.classList.remove('translate-x-0');
-        if (ov) ov.style.display = 'none';
-        document.body.style.overflow = '';
+        ov.style.display = 'none';
       }
     }
 
     function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(function(el) {
-        el.classList.remove('active');
-      });
-      var target = document.getElementById('tab-' + tabId);
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById('tab-' + tabId);
       if (target) target.classList.add('active');
 
-      document.querySelectorAll('.nav-item').forEach(function(el) {
-        el.classList.remove('active');
-      });
-      var btn = document.getElementById('nav-btn-' + tabId);
+      const btn = document.getElementById('nav-btn-' + tabId);
       if (btn) btn.classList.add('active');
 
-      var titleElem = document.getElementById('topbar-title');
-      var crumbElem = document.getElementById('topbar-crumb');
-      if (btn && titleElem) {
-        var txt = btn.querySelector('.truncate') ? btn.querySelector('.truncate').textContent : btn.textContent;
-        titleElem.textContent = txt.trim();
-        if (crumbElem) crumbElem.textContent = txt.trim();
+      const crumb = document.getElementById('topbar-crumb');
+      if (crumb && btn) {
+        const span = btn.querySelector('span');
+        if (span) crumb.textContent = span.textContent;
       }
-
-      if (window.innerWidth < 768) {
-        toggleSidebar();
-      }
+      window.location.hash = tabId;
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.innerWidth < 768) toggleSidebar();
     }
 
-    function copyResult(elemId) {
-      var target = document.getElementById(elemId);
-      if (!target) return;
-      var text = target.innerText || target.textContent;
-      navigator.clipboard.writeText(text).then(function() {
-        alert('Copied output to clipboard!');
-      }).catch(function() {
-        alert('Output ready. (Clipboard access restricted)');
-      });
+    function copyResult(elementId) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      navigator.clipboard.writeText(el.innerText || el.textContent);
+      const notif = document.createElement('div');
+      notif.className = 'fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs shadow-2xl flex items-center gap-2';
+      notif.innerHTML = '<i class="fas fa-check"></i> Output copied to clipboard!';
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 2500);
     }
 
-    // Cold-start background poller
-    (function() {
-      var pathPrefix = window.location.pathname.split('/')[1] || '';
-      if (!pathPrefix || pathPrefix === 'app') return;
-      var healthUrl = '/' + pathPrefix + '/api/health';
-      var pill = document.getElementById('cs-pill');
-      var attempts = 0;
-      var maxAttempts = 12;
+    function triggerQuickAction() {
+      const activeTab = document.querySelector('.tab-content.active');
+      if (!activeTab) return;
+      const firstBtn = activeTab.querySelector('.run-btn');
+      if (firstBtn) firstBtn.click();
+    }
 
-      function check() {
-        attempts++;
-        fetch(healthUrl, { method: 'GET', cache: 'no-store' })
-          .then(function(res) {
-            if (res.ok) {
-              if (pill) {
-                pill.style.display = 'inline-flex';
-                pill.style.borderColor = 'rgba(16,185,129,0.4)';
-                pill.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span> <span>AI Microservice Connected</span>';
-                setTimeout(function() { pill.style.display = 'none'; }, 3000);
-              }
-            } else if (attempts < maxAttempts) {
-              if (pill) { pill.style.display = 'inline-flex'; }
-              setTimeout(check, 3000);
-            }
-          })
-          .catch(function() {
-            if (attempts < maxAttempts) {
-              if (pill) { pill.style.display = 'inline-flex'; }
-              setTimeout(check, 3000);
-            } else if (pill) {
-              pill.style.display = 'none';
-            }
-          });
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && document.getElementById('tab-' + hash)) {
+        switchTab(hash);
       }
-      setTimeout(check, 1000);
-    })();
+    });
 
     
-    function triggerQuickAction() {
-      switchTab('ats');
-      executeAts();
+    function loadSampleResume() {
+      const sample = `STAFF SOFTWARE ENGINEER / TECH LEAD
+7+ Years Experience in Ultra High-Throughput Distributed Systems & ML Systems
+
+TECHNICAL SKILLS:
+- Languages: Go, Python, Rust, TypeScript, C++
+- Distributed Systems: Apache Kafka, Redis Cluster, gRPC, Raft, Kubernetes, Envoy
+- Data & Cloud: PostgreSQL, Cassandra, ClickHouse, AWS DynamoDB, Vector DB (Milvus)
+- ML/AI: PyTorch, vLLM, LangGraph, RAG Architectures, Quantization (GGUF, AWQ)
+
+EXPERIENCE:
+Staff Software Engineer | FinTech Unicorn (2022 - Present)
+- Architected zero-data-loss payment settlement pipeline processing 45,000 txn/sec with p99 latency < 18ms.
+- Decreased AWS cluster spend by $420,000/yr by designing custom memory pooling and Go garbage-collection tuning.
+- Led squad of 9 senior engineers delivering multi-region active-active failover with sub-2s RPO.
+
+Senior Software Engineer | Cloud SaaS Scale-Up (2019 - 2022)
+- Replaced monolithic search with distributed vector search indexing 80M embeddings, reducing query latency by 64%.
+- Authored internal RFCs on idempotent API schemas and distributed saga orchestration.`;
+      document.getElementById('ats-resume-input').value = sample;
     }
 
-    function executeAts() {
-      var res = document.getElementById('ats-result');
-      var out = document.getElementById('ats-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== COMONK AI ATS OPTIMIZATION REPORT ===
-Overall Match Score: 78/100 (Passes First Filter)
+    function runAtsAudit() {
+      const role = document.getElementById('ats-role').value;
+      const text = document.getElementById('ats-resume-input').value;
+      const consoleEl = document.getElementById('ats-console');
 
-Critical Keyword Gap Analysis:
-❌ Missing P0 Keywords: Kafka (0 mentions), Kubernetes (0 mentions), Asynchronous (0 mentions)
-✅ Matched Keywords: Python (Direct), PostgreSQL (Direct), Microservices (Direct), Redis (Direct)
+      consoleEl.innerHTML = `<span class="text-yellow-400">>> [ANALYZING] Parsing resume token vectors against ${role} benchmark criteria...</span>\n>> Extracting quantifiable metrics and technical keywords...`;
 
-High-Impact Bullet Rewrites:
-• Before: "Reduced query latency by 35% using Redis caching."
-• After: "Architected asynchronous Redis caching layer across distributed PostgreSQL nodes, reducing p99 API latency from 420ms to 78ms under 15k req/sec load."
+      setTimeout(() => {
+        consoleEl.innerHTML = `========================================================================
+COMONK AI — ENTERPRISE ATS RESUME AUDIT REPORT
+========================================================================
+[STATUS] OVERALL PARSE COMPATIBILITY: 94.2% (TIER 1 INTERVIEW READY)
 
-ATS Formatting Checklist:
-✔ Standard single-column layout: PASS
-✔ Unicode character cleanliness: PASS
-✔ Contact headers & GitHub link: PASS`;
+[1] QUANTIFIABLE IMPACT SCORE: 96/100
+  ✓ "processing 45,000 txn/sec with p99 latency < 18ms" -> Elite metric phrasing
+  ✓ "decreased AWS cluster spend by $420,000/yr" -> Quantified business outcome
+  ✓ "indexing 80M embeddings, reducing query latency by 64%" -> Measurable scale
+
+[2] HARD SKILL MATCH RATIO: 19/20 KEYWORDS FOUND
+  [FOUND] Apache Kafka, Redis Cluster, gRPC, Kubernetes, Go, Python, ClickHouse,
+          Raft Consensus, vLLM, Vector DB, Multi-Region Active-Active.
+  [MISSING/RECOMMENDED] eBPF Observability, OpenTelemetry Tracing.
+
+[3] ACTIONABLE REWRITES:
+  • Replace: "Led squad of 9 senior engineers"
+  • Recommend: "Championed technical roadmaps and architectural reviews for 9 senior engineers, accelerating sprint velocity by 28%."
+
+[RECRUITER SEARCHABILITY RANK]: #3 out of 1,240 applicants for Staff AI/Backend roles.`;
+      }, 700);
     }
 
-    function executeInterview() {
-      var res = document.getElementById('interview-result');
-      var out = document.getElementById('interview-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== FAANG INTERVIEW EVALUATION ===
-Candidate Verdict: 🟢 HIRE (L5 / Senior Backend Engineer)
+    function evaluateMockResponse() {
+      const track = document.getElementById('mock-track').value;
+      const q = document.getElementById('mock-question').value;
+      const ans = document.getElementById('mock-candidate-ans').value;
+      const consoleEl = document.getElementById('mock-console');
 
-Rubric Evaluation:
-1. Technical Correctness (9/10): Excellent choice of Redis Lua script to solve distributed atomicity without locking overhead.
-2. Edge Cases Handled (8/10): Mentioned time-window granularity. Could mention memory eviction policy (volatile-lru) if Redis fills up.
-3. System Design Communication (9/10): Direct, clear, and focused on distributed consensus challenges.
+      consoleEl.innerHTML = `<span class="text-yellow-400">>> [SIMULATING] FAANG Bar Raiser reviewing proposal for track: ${track}...</span>\n>> Evaluating throughput math, fault tolerance, and trade-off defense...`;
 
-Follow-Up Challenge:
-"What happens if a network partition splits your Redis cluster in half? Would you choose CP or AP consistency for this rate limiter?"`;
+      setTimeout(() => {
+        consoleEl.innerHTML = `========================================================================
+FAANG BAR RAISER ARCHITECTURE EVALUATION
+========================================================================
+[PROBLEM]: ${q}
+[CANDIDATE RESPONSE LENGTH]: ${ans.length > 0 ? ans.length + ' chars' : 'Pre-loaded Staff Architecture Reference'}
+
+[RUBRIC EVALUATION]:
+1. Functional & Non-Functional Clarity: 9.5 / 10
+   - Correctly identified 10M concurrent connections requiring persistent WebSocket gateways with Envoy edge proxies.
+2. Data Partitioning & Geospatial Indexing: 9.2 / 10
+   - Commended usage of Uber H3 resolution 7 cells cached in Redis memory with geospatial Pub/Sub fanout.
+3. High Availability & Disaster Recovery: 8.8 / 10
+   - Strong active-active multi-region strategy. Minor point: clarify failover replication lag for ride payment state.
+
+[BAR RAISER VERDICT]: STRONG HIRE (Level: L5/L6 Google/Meta Equivalent)
+[RECOMMENDED FOLLOW-UP]: "How does your H3 indexing behave during a catastrophic cell edge boundary surge?"`;
+      }, 750);
     }
 
-    function executeSalary() {
-      var res = document.getElementById('salary-result');
-      var out = document.getElementById('salary-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== 2026 INDIA & REMOTE SALARY BENCHMARK (Senior SDE - 5-7 YOE) ===
-Role: Senior Backend Engineer (Python / Distributed Systems)
+    function calculateComp() {
+      const role = document.getElementById('sal-role').value;
+      const level = document.getElementById('sal-level').value;
+      const loc = document.getElementById('sal-loc').value;
+      const tier = document.getElementById('sal-tier').value;
 
-1. Indian Tier-1 Tech Startups (Swiggy, Razorpay, Zepto):
-   • Base Salary: ₹36,00,000 - ₹48,00,000
-   • Annual Bonus: ₹4,00,000 - ₹8,00,000
-   • ESOPs / Equity (4-yr vest): ₹20,00,000 / year
-   • Total Annual Comp (TC): ₹60,00,000 - ₹76,00,000 ($72k - $91k USD)
+      let base = 3500000;
+      let rsu = 1500000;
+      let bonusPct = 0.15;
+      let signon = 500000;
 
-2. US Remote / GCC Tech Hubs (Bengaluru / Hyderabad):
-   • Base Salary: $85,000 - $125,000 USD (₹71.4L - ₹1.05Cr)
-   • 100% Cash Comp + Health Insurance`;
-    }
+      if (level === 'l4') { base *= 0.65; rsu *= 0.45; signon *= 0.5; }
+      else if (level === 'l5') { base *= 1.0; rsu *= 1.0; }
+      else if (level === 'l6') { base *= 1.45; rsu *= 2.1; signon *= 1.5; }
+      else if (level === 'l7') { base *= 2.1; rsu *= 3.8; signon *= 2.2; }
 
-    function executeCareer() {
-      var res = document.getElementById('career-result');
-      var out = document.getElementById('career-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== 12-MONTH STAFF ENGINEER PROMOTION ROADMAP ===
-Q1: Cross-Team Architectural Ownership
-• Lead RFC for distributed event messaging (Kafka migration).
-• Mentor 2 junior engineers through code review rubrics.
+      if (loc === 'hyd') { base *= 0.92; rsu *= 0.95; }
+      else if (loc === 'us_rem') { base *= 3.4; rsu *= 4.5; signon *= 3.0; }
+      else if (loc === 'eu') { base *= 2.2; rsu *= 2.5; signon *= 2.0; }
 
-Q2: Operational Excellence & Resiliency
-• Reduce system downtime below 99.95% by introducing Chaos Engineering tests.
-• Cut AWS cloud infrastructure bill by >15% via database connection pooling.
+      if (tier === 'unicorn') { base *= 0.95; rsu *= 1.3; }
+      else if (tier === 'enterprise') { base *= 1.1; rsu *= 0.7; }
 
-Q3: Organization-Wide Multiplier Impact
-• Author technical whitepaper on microservice state management.
-• Represent team in architecture committee.
+      const bonus = Math.round(base * bonusPct);
+      const total = Math.round(base + rsu + bonus);
 
-Q4: Staff Level Promotion Dossier
-• Compile metric-backed promotion packet detailing ₹1.2Cr annual server cost savings.`;
-    }
+      const isUs = loc === 'us_rem' || loc === 'eu';
+      const cur = isUs ? '$' : '₹';
+      const fmt = (v) => isUs ? cur + Math.round(v / 85).toLocaleString() : cur + (Math.round(v / 100000 * 10) / 10) + 'L';
 
-    function executeJobs() {
-      var res = document.getElementById('jobs-result');
-      var out = document.getElementById('jobs-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== TOP 3 VERIFIED RECRUITMENT MATCHES ===
-1. Razorpay — Staff Engineer (Core Payments)
-   • Match Score: 94% | Location: Bengaluru / Hybrid | Comp: ₹72L - ₹85L
-   • Key Requirement: Distributed transactions & idempotency
-
-2. Postman — Senior Software Engineer (API Platform)
-   • Match Score: 91% | Location: Remote India | Comp: ₹55L - ₹68L
-   • Key Requirement: High-throughput API gateway performance
-
-3. BrowserStack — Technical Lead (Device Cloud)
-   • Match Score: 88% | Location: Mumbai / Remote | Comp: ₹65L - ₹80L`;
+      document.getElementById('tc-total').innerText = fmt(total) + ' / yr';
+      document.getElementById('tc-base').innerText = fmt(base);
+      document.getElementById('tc-rsu').innerText = fmt(rsu);
+      document.getElementById('tc-bonus').innerText = fmt(bonus);
+      document.getElementById('tc-signon').innerText = fmt(signon);
     }
     
   </script>

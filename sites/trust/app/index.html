@@ -1,97 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>AVP Charitable Trust — AI Social Impact & 80G Governance Ledger</title>
-  <meta name="description" content="Section 80G tax exemption, Form 10BE certificate generation, and Charity Navigator 4-star impact ledger."/>
+  <title>AVP Charitable Trust — AI Social Impact & 80G Tax Exemption Ledger</title>
+  <meta name="description" content="Transparent CSR grant ledger, beneficiary RAG need allocation, and Section 80G digital tax receipt issuance."/>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🤝%3C/text%3E%3C/svg%3E"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: '#f43f5e',
+            brandSec: '#fb7185',
+            darkBg: '#0b0307'
+          }
+        }
+      }
+    };
+  </script>
   <link rel="stylesheet" href="portal.css"/>
-  <style>
-    :root {
-      --p-color: #f43f5e;
-      --s-color: #fb7185;
-      --p-rgb: 244, 63, 94;
-      --s-rgb: 251, 113, 133;
-      --bg-color: #0b0307;
-    }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: portalFadeIn 0.28s ease-out; }
-    @keyframes portalFadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
 </head>
-<body class="antialiased">
+<body class="antialiased text-slate-100 bg-[#0b0307]">
   <!-- Aceternity Overhead Glow Lamp -->
   <div class="hero-lamp"></div>
   <div class="hero-lamp-line"></div>
 
   <!-- Mobile Drawer Overlay -->
-  <div id="mobile-sidebar-overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); z-index:45;"></div>
+  <div id="mobile-sidebar-overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); z-index:45;"></div>
 
   <div class="app-shell flex min-h-screen">
     <!-- Sidebar Navigation -->
-    <aside class="sidebar w-[260px] shrink-0 border-r border-white/5 flex flex-col p-4 fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0" id="main-sidebar">
+    <aside class="sidebar w-[270px] shrink-0 border-r border-white/5 flex flex-col p-4 fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0" id="main-sidebar">
       <!-- Logo Header -->
-      <div class="flex items-center justify-between mb-6 px-2">
+      <div class="flex items-center justify-between mb-4 px-2">
         <a class="side-logo flex items-center gap-3 no-underline" href="/avp-charitable-trust/">
-          <span class="logo-icon w-9 h-9 rounded-xl grid place-items-center text-white font-bold text-lg">🤝</span>
+          <span class="w-10 h-10 rounded-xl grid place-items-center text-white font-bold text-xl bg-gradient-to-br from-[#f43f5e] to-[#fb7185] shadow-lg shadow-black/40 border border-white/10">🤝</span>
           <div>
-            <div class="text-white font-extrabold text-[15px] tracking-tight">AVP Trust</div>
-            <div class="text-[10px] text-white/50 uppercase font-semibold tracking-wider">Social Impact</div>
+            <div class="text-white font-extrabold text-[15px] tracking-tight">AVP Charitable Trust</div>
+            <div class="text-[10px] text-white/50 uppercase font-semibold tracking-wider">AI Social Impact & 80G Governance Ledger</div>
           </div>
         </a>
-        <button class="md:hidden text-white/60 hover:text-white p-1" onclick="toggleSidebar()" aria-label="Close menu">
+        <button class="md:hidden text-white/60 hover:text-white p-1 cursor-pointer" onclick="toggleSidebar()" aria-label="Close menu">
           <i class="fas fa-xmark text-lg"></i>
         </button>
+      </div>
+
+      <!-- Venture Switcher -->
+      <div class="mb-4 px-1">
+        <label class="block text-[10px] uppercase font-bold text-white/40 mb-1.5 px-1 tracking-wider">Switch Venture Console</label>
+        <select onchange="if(this.value) window.location.href=this.value;" class="w-full bg-white/[0.04] border border-white/10 rounded-xl py-2 px-2.5 text-xs text-white/80 font-medium outline-none cursor-pointer hover:border-white/20 transition-all">
+          <option value="/app/" >Sevenseed Studio Hub</option><option value="/sevenforce/app/" >Sevenforce AI Workforce</option><option value="/comonk-ai/app/" >Comonk Career AI</option><option value="/avpu/app/" >AVP University</option><option value="/avp-emart/app/" >AVP Emart Price Radar</option><option value="/breakdown-factor/app/" >Breakdown Factor</option><option value="/decode-forest-pharmacy/app/" >Decode Pharmacy</option><option value="/rakshak-ai/app/" >Rakshak AI Security</option><option value="/avp-charitable-trust/app/" selected>AVP Charitable Trust</option>
+        </select>
       </div>
 
       <!-- Navigation Links -->
       <nav class="side-nav flex flex-col gap-1.5 flex-1 overflow-y-auto pr-1">
         
-        <button class="nav-item active" onclick="switchTab('exemption')" id="nav-btn-exemption">
-          <i class="fas fa-file-invoice-dollar" style="width:16px; text-align:center;"></i>
-          <span class="truncate">80G Tax Exemption & Form 10BE</span>
+        <button class="nav-item active" onclick="switchTab('impact')" id="nav-btn-impact">
+          <i class="fas fa-heart-pulse" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Impact Transparency</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">48.2k Lives</span>
+        </button>
+        
+        <button class="nav-item " onclick="switchTab('rag')" id="nav-btn-rag">
+          <i class="fas fa-hands-holding-child" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Beneficiary RAG Engine</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">RAG</span>
         </button>
         
         <button class="nav-item " onclick="switchTab('ledger')" id="nav-btn-ledger">
-          <i class="fas fa-chart-pie" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Charity Navigator Impact Ledger</span>
+          <i class="fas fa-receipt" style="width:18px; text-align:center;"></i>
+          <span class="truncate">80G Tax Exemption Ledger</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">80G</span>
         </button>
         
         <button class="nav-item " onclick="switchTab('camps')" id="nav-btn-camps">
-          <i class="fas fa-stethoscope" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Rural Health Camps & Triage</span>
+          <i class="fas fa-truck-medical" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Medical Camp Scheduler</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Camps</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('grants')" id="nav-btn-grants">
-          <i class="fas fa-hand-holding-heart" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Beneficiary Direct Grants</span>
-        </button>
-        
-        <button class="nav-item " onclick="switchTab('csr')" id="nav-btn-csr">
-          <i class="fas fa-building-ngo" style="width:16px; text-align:center;"></i>
-          <span class="truncate">Transparent CSR Tracker</span>
+        <button class="nav-item " onclick="switchTab('audit')" id="nav-btn-audit">
+          <i class="fas fa-clipboard-check" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Statutory Audit & FCRA</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Audit</span>
         </button>
         
       </nav>
 
       <!-- Sidebar Footer -->
       <div class="side-foot flex flex-col gap-3 pt-4 border-t border-white/10 mt-auto">
-        <div class="flex items-center justify-between text-xs px-2 py-1.5 rounded-lg bg-white/[0.03] border border-white/5">
+        <div class="flex items-center justify-between text-xs px-2.5 py-2 rounded-xl bg-white/[0.03] border border-white/5">
           <span class="inline-flex items-center gap-2 text-white/70 font-mono text-[11px]">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             AI Engine Online
           </span>
-          <span class="text-[10px] font-bold text-emerald-400/90 font-mono">v3.4-PROD</span>
+          <span class="text-[10px] font-bold text-emerald-400 font-mono">v4.2-PROD</span>
         </div>
-        <a class="side-back flex items-center gap-2 text-xs text-white/60 hover:text-white py-2 px-3 rounded-lg border border-white/10 hover:border-white/20 transition-all no-underline" href="/avp-charitable-trust/">
+        <a class="side-back flex items-center justify-center gap-2 text-xs font-semibold text-white/70 hover:text-white py-2 px-3 rounded-xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all no-underline" href="/avp-charitable-trust/">
           <i class="fas fa-arrow-left text-[11px]"></i>
           <span>Back to Landing Page</span>
         </a>
@@ -108,20 +121,20 @@
           </button>
           <div>
             <div class="text-xs text-white/50 flex items-center gap-1.5 font-medium">
-              <span>AVP Trust</span>
+              <span>AVP Charitable Trust</span>
               <span>/</span>
               <span class="text-white/80" id="topbar-crumb">Workspace Console</span>
             </div>
-            <h1 class="text-base font-extrabold text-white tracking-tight" id="topbar-title">Active Dashboard</h1>
+            <h1 class="text-base font-extrabold text-white tracking-tight" id="topbar-title">Active Workstation</h1>
           </div>
         </div>
 
         <div class="flex items-center gap-3">
           <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-white/80">
             <i class="fas fa-shield-halved text-emerald-400 text-xs"></i>
-            <span>Guest Studio Access (Full VIP)</span>
+            <span>Verified Founder VIP</span>
           </div>
-          <button class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-gradient-to-r from-[var(--p-color)] to-[var(--s-color)] hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-black/40 flex items-center gap-1.5" onclick="triggerQuickAction()">
+          <button class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#f43f5e] to-[#fb7185] hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-black/40 flex items-center gap-1.5" onclick="triggerQuickAction()">
             <i class="fas fa-bolt text-xs"></i>
             <span>Quick Run</span>
           </button>
@@ -129,83 +142,355 @@
       </header>
 
       <!-- Main Scrollable Panels -->
-      <main class="panels p-6 md:p-10 max-w-[1280px] w-full mx-auto flex-1">
+      <main class="panels p-6 md:p-10 max-w-[1360px] w-full mx-auto flex-1">
+        <!-- Top KPI Stats Row -->
+        <div class="stats-grid">
+          
+        <div class="stat-card">
+          <div class="stat-num">48,200+</div>
+          <div class="stat-label">Lives Uplifted</div>
+          <div class="stat-pill stat-pill-green">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>Across 64 Rural Districts</span>
+          </div>
+        </div>
         
-    <div id="tab-exemption" class="tab-content active">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">📜 Section 80G Tax Deduction & Form 10BE Generator</div>
-            <div class="tool-ep">Income Tax Department Approved</div>
+        <div class="stat-card">
+          <div class="stat-num">98.2%</div>
+          <div class="stat-label">Program Spend Ratio</div>
+          <div class="stat-pill stat-pill-blue">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>Only 1.8% Admin Overhead</span>
           </div>
         </div>
-        <p class="text-xs text-slate-300 mb-3">Calculate 50% tax deductions on eligible donations and generate instant verified certificates with cryptographic SHA-256 verification QR code.</p>
-        <div class="flex gap-3 mb-4">
-          <input id="donation-amount" class="flex-1 p-3.5 rounded-xl bg-black/40 border border-white/10 text-xs text-white" value="50,000"/>
-          <button class="run-btn" onclick="executeExemption()"><i class="fas fa-calculator text-xs"></i> Calculate Deduction</button>
+        
+        <div class="stat-card">
+          <div class="stat-num">₹4.8 Cr</div>
+          <div class="stat-label">CSR Grants Distributed</div>
+          <div class="stat-pill stat-pill-purple">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>100% On-Chain Transparent</span>
+          </div>
         </div>
-        <div id="exemption-result" class="tool-result mt-4" style="display:none;">
-          <pre id="exemption-out-text" class="result-box font-mono text-xs"></pre>
+        
+        <div class="stat-card">
+          <div class="stat-num">100% Tax</div>
+          <div class="stat-label">80G Certified Exemption</div>
+          <div class="stat-pill stat-pill-green">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>Sec 80G(5)(vi) Income Tax</span>
+          </div>
+        </div>
+        
+        </div>
+
+        <!-- Tab Contents -->
+        
+    <!-- TAB 1: IMPACT TRANSPARENCY -->
+    <div id="tab-impact" class="tab-content active">
+      <div class="welcome-box mb-8 p-8 rounded-2xl border border-white/10 bg-gradient-to-r from-rose-500/15 via-pink-500/10 to-transparent relative overflow-hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold mb-3">
+              <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+              Social Impact Ledger v4.2 Active — 100% Public Audit
+            </div>
+            <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">AI Social Impact & Governance Ledger</h2>
+            <p class="text-sm text-slate-300 mt-2 max-w-[680px] leading-relaxed">
+              Transparent philanthropic execution powered by AI. Allocate corporate CSR capital, prioritize high-need rural medical beneficiaries with vector intelligence, and instantly issue Section 80G tax exemption certificates.
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="switchTab('ledger')" class="run-btn px-5 py-3 rounded-xl text-xs font-bold text-white flex items-center gap-2">
+              <i class="fas fa-hand-holding-heart"></i> Donate & Get 80G
+            </button>
+            <button onclick="switchTab('rag')" class="px-4 py-3 rounded-xl text-xs font-bold text-white/80 bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center gap-2">
+              <i class="fas fa-magnifying-glass"></i> Beneficiary RAG
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CSR Fund Distribution Breakdown -->
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-chart-pie text-rose-400"></i> CSR Capital Allocation by Sector
+            </h3>
+            <span class="text-xs text-rose-400 font-mono font-bold">FY 2025-2026</span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Rural Education & STEM Digital Labs</span>
+                <span class="text-rose-300 font-mono">42% (₹2,01,60,000)</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                <div class="bg-gradient-to-r from-rose-500 to-pink-500 h-2 rounded-full" style="width: 42%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Dialysis & Rural Cardiac Medical Camps</span>
+                <span class="text-rose-300 font-mono">28% (₹1,34,40,000)</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                <div class="bg-gradient-to-r from-pink-500 to-purple-500 h-2 rounded-full" style="width: 28%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Solar RO Drinking Water Filtration Plants</span>
+                <span class="text-rose-300 font-mono">18% (₹86,40,000)</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                <div class="bg-gradient-to-r from-rose-400 to-amber-500 h-2 rounded-full" style="width: 18%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span class="text-slate-300">Women Livelihood & Textile Micro-Enterprises</span>
+                <span class="text-rose-300 font-mono">12% (₹57,60,000)</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                <div class="bg-gradient-to-r from-amber-500 to-emerald-500 h-2 rounded-full" style="width: 12%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
+            <span>Admin & Overhead Expense:</span>
+            <span class="text-emerald-400 font-bold">1.8% (Exceeds Global 5% Efficiency Standard)</span>
+          </div>
+        </div>
+
+        <div class="workbench-card">
+          <h3 class="text-base font-extrabold text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-hand-holding-heart text-rose-400"></i> Real-Time Field Deployments
+          </h3>
+          <div class="space-y-3">
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white">42 Solar RO Plants Commissioned</div>
+                <div class="text-[11px] text-slate-400">Dharwad & Gadag Districts • 18,000 villagers served</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-mono font-bold">Operational</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white">12,400 Free Dialysis Sessions Funded</div>
+                <div class="text-[11px] text-slate-400">AVP Memorial Hospital Wing • 100% Subsidy</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-mono font-bold">Ongoing</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white">3,200 High School STEM Tablets</div>
+                <div class="text-[11px] text-slate-400">Loaded with Gyan AI Offline Syllabus Core</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-mono font-bold">Distributed</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- TAB 2: BENEFICIARY RAG ENGINE -->
+    <div id="tab-rag" class="tab-content">
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-brain text-rose-400"></i> Beneficiary Need Vector Matcher
+            </h3>
+            <span class="text-xs text-rose-400 font-mono font-bold">Fair Priority RAG</span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Search Need Description / Location / Medical Urgency</label>
+              <input type="text" id="rag-need-query" class="w-full bg-black/40 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white outline-none focus:border-rose-500" value="Urgent pediatric open heart surgery subsidy for BPL family in Raichur"/>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Annual Income Cap</label>
+                <select class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none">
+                  <option>Below Poverty Line (BPL - Under ₹1.5L)</option>
+                  <option>Antyodaya Anna Yojana (AAY)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Verification Level</label>
+                <select class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none">
+                  <option>Gram Panchayat & Hospital Verified</option>
+                  <option>District Health Officer Endorsed</option>
+                </select>
+              </div>
+            </div>
+
+            <button onclick="queryBeneficiaryRag()" class="run-btn w-full py-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+              <i class="fas fa-magnifying-glass"></i> Match Grants from CSR Allocation Pool
+            </button>
+          </div>
+        </div>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <div class="terminal-dot bg-rose-500"></div>
+              <div class="terminal-dot bg-amber-500"></div>
+              <div class="terminal-dot bg-emerald-500"></div>
+            </div>
+            <span class="text-xs font-mono text-slate-400">beneficiary_allocation.json</span>
+            <button onclick="copyResult('rag-console')" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+          <div class="terminal-body" id="rag-console">
+[RAG MATCHING POOL STANDBY] Click 'Match Grants from CSR Allocation Pool' to calculate priority index across 1,420 pending community health requests.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: 80G TAX EXEMPTION LEDGER -->
     <div id="tab-ledger" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">📊 Charity Navigator 4-Star Transparency Ledger</div>
-            <div class="tool-ep">Real-Time Audited Financial Ledger</div>
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-calculator text-rose-400"></i> Section 80G Tax Exemption Calculator
+            </h3>
+            <span class="text-xs text-emerald-400 font-mono font-bold">100% Verifiable</span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Donation Amount (INR)</label>
+              <input type="number" id="donation-amount" oninput="calculate80G()" class="w-full bg-black/40 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white outline-none focus:border-rose-500" value="50000"/>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Donor Type</label>
+                <select id="donor-type" onchange="calculate80G()" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-rose-500">
+                  <option value="individual" selected>Individual (Resident Indian)</option>
+                  <option value="corporate">Corporate CSR Entity</option>
+                  <option value="nri">NRI (Indian Passport Holder)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Tax Bracket</label>
+                <select id="donor-bracket" onchange="calculate80G()" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-rose-500">
+                  <option value="30" selected>30% (Old/New Slab > ₹15L)</option>
+                  <option value="20">20% (Income ₹10L - ₹15L)</option>
+                  <option value="personal">Corporate Tax (25%)</option>
+                </select>
+              </div>
+            </div>
+
+            <button onclick="issue80GReceipt()" class="run-btn w-full py-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+              <i class="fas fa-file-invoice"></i> Issue Digital 80G Certificate (Form 10BE)
+            </button>
           </div>
         </div>
-        <button class="run-btn" onclick="executeLedger()"><i class="fas fa-chart-pie text-xs"></i> Inspect Expense Ratio</button>
-        <div id="ledger-result" class="tool-result mt-4" style="display:none;">
-          <pre id="ledger-out-text" class="result-box font-mono text-xs"></pre>
+
+        <div class="workbench-card">
+          <h3 class="text-base font-extrabold text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-receipt text-rose-400"></i> Tax Deduction Breakdown
+          </h3>
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-4">
+            <div class="flex items-baseline justify-between border-b border-white/10 pb-3">
+              <span class="text-xs text-slate-300 font-medium">Net Tax Savings on Donation</span>
+              <span class="text-2xl font-black text-emerald-400 font-mono" id="tax-saved">₹7,800</span>
+            </div>
+
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between">
+                <span class="text-slate-400">Total Philanthropic Donation:</span>
+                <span class="text-white font-mono font-bold" id="tax-donation">₹50,000</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Qualifying Deduction (50% u/s 80G):</span>
+                <span class="text-rose-300 font-mono font-bold" id="tax-deduction">₹25,000</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Income Tax Saved (incl 4% Cess):</span>
+                <span class="text-emerald-300 font-mono font-bold" id="tax-savings-calc">₹7,800</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Effective Out-of-Pocket Cost:</span>
+                <span class="text-sky-300 font-mono font-bold" id="tax-effective">₹42,200</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-white/10 text-[11px] text-slate-400">
+              <i class="fas fa-stamp text-rose-400 mr-1"></i> AVP Charitable Trust PAN: AAATA1234F • 80G Unique Reg: CIT(E)/BLR/80G/2021/10492
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- TAB 4: MEDICAL CAMP SCHEDULER -->
     <div id="tab-camps" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
+      <div class="workbench-card">
+        <div class="flex items-center justify-between mb-6">
           <div>
-            <div class="tool-title">🩺 Rural Health Camps & Free Clinic Triage</div>
-            <div class="tool-ep">Gujarat Rural Healthcare Outreach</div>
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-truck-medical text-rose-400"></i> Upcoming Rural Health & Eye Surgery Camps
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Free consultations, cataract screenings, and diagnostic blood work across tier-3 villages</p>
           </div>
+          <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">3 Camps Scheduled</span>
         </div>
-        <button class="run-btn" onclick="executeCamps()"><i class="fas fa-kit-medical text-xs"></i> View Camp Schedule</button>
-        <div id="camps-result" class="tool-result mt-4" style="display:none;">
-          <pre id="camps-out-text" class="result-box font-mono text-xs"></pre>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+            <div class="text-xs font-bold text-rose-400 mb-1">OCTOBER 10, 2026</div>
+            <div class="text-sm font-bold text-white mb-2">Raichur Rural Community Hall</div>
+            <p class="text-[11px] text-slate-300">Pediatric cardiology screening & nutrition kits for 600 children.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+            <div class="text-xs font-bold text-rose-400 mb-1">OCTOBER 24, 2026</div>
+            <div class="text-sm font-bold text-white mb-2">Gadag Primary Health Centre</div>
+            <p class="text-[11px] text-slate-300">Free cataract laser surgeries & distribution of 1,200 prescription glasses.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+            <div class="text-xs font-bold text-rose-400 mb-1">NOVEMBER 08, 2026</div>
+            <div class="text-sm font-bold text-white mb-2">Bidar Tribal Taluk Camp</div>
+            <p class="text-[11px] text-slate-300">Diabetes detection, HbA1c screening, and Jan Aushadhi generic kits.</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="tab-grants" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">🤝 Direct Beneficiary Grant Disbursements</div>
-            <div class="tool-ep">Verified UPI Direct Benefit Transfer (DBT)</div>
-          </div>
+    <!-- TAB 5: STATUTORY AUDIT & FCRA -->
+    <div id="tab-audit" class="tab-content">
+      <div class="workbench-card">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+            <i class="fas fa-file-shield text-rose-400"></i> Statutory Governance & Independent Audit Reports
+          </h3>
+          <span class="text-xs text-emerald-400 font-mono font-bold">Unqualified Audit Opinion</span>
         </div>
-        <button class="run-btn" onclick="executeGrants()"><i class="fas fa-hand-holding-heart text-xs"></i> Audit Disbursements</button>
-        <div id="grants-result" class="tool-result mt-4" style="display:none;">
-          <pre id="grants-out-text" class="result-box font-mono text-xs"></pre>
-        </div>
-      </div>
-    </div>
 
-    <div id="tab-csr" class="tab-content">
-      <div class="tool-card">
-        <div class="tool-header">
-          <div>
-            <div class="tool-title">🏢 Corporate CSR Compliance Tracker</div>
-            <div class="tool-ep">Section 135 Companies Act Compliance</div>
-          </div>
-        </div>
-        <button class="run-btn" onclick="executeCsr()"><i class="fas fa-file-contract text-xs"></i> Generate CSR Report</button>
-        <div id="csr-result" class="tool-result mt-4" style="display:none;">
-          <pre id="csr-out-text" class="result-box font-mono text-xs"></pre>
+        <div class="p-4 rounded-xl bg-black/40 border border-white/10 space-y-3 font-mono text-xs">
+          <div class="text-slate-300">AUDITOR: M/s Raman & Associates, Chartered Accountants (Firm Reg: 004128S)</div>
+          <div class="text-emerald-400">✓ SECTION 12A REGISTRATION: Granted & Permanent (Order #CIT/12A/2019)</div>
+          <div class="text-emerald-400">✓ SECTION 80G EXEMPTION: Re-validated under New IT System (Form 10AC)</div>
+          <div class="text-emerald-400">✓ FCRA CLEARANCE: Ministry of Home Affairs Reg #094421890 (Valid till 2029)</div>
+          <div class="text-slate-400 pt-2 border-t border-white/10">100% OF CSR FUNDS ROUTED VIA PUBLIC DIGITAL LEDGERS WITH ZERO INTERMEDIARY COMMISSIONS</div>
         </div>
       </div>
     </div>
@@ -214,182 +499,115 @@
     </div>
   </div>
 
-  <!-- Floating Cold-Start Status Pill -->
-  <div id="cs-pill" style="display:none; position:fixed; bottom:20px; right:20px; z-index:99999; padding:8px 16px; border-radius:999px; background:rgba(15,23,42,0.9); border:1px solid rgba(245,158,11,0.4); color:#f8fafc; font-size:12px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,0.5); backdrop-filter:blur(16px); align-items:center; gap:8px;">
-    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-    <span id="cs-pill-msg">Connecting AI Backend...</span>
-  </div>
-
+  <!-- Global Script -->
   <script>
     function toggleSidebar() {
-      var sb = document.getElementById('main-sidebar');
-      var ov = document.getElementById('mobile-sidebar-overlay');
-      if (!sb) return;
-      var isClosed = sb.classList.contains('-translate-x-full');
-      if (isClosed) {
+      const sb = document.getElementById('main-sidebar');
+      const ov = document.getElementById('mobile-sidebar-overlay');
+      if (sb.classList.contains('-translate-x-full')) {
         sb.classList.remove('-translate-x-full');
         sb.classList.add('translate-x-0');
-        if (ov) ov.style.display = 'block';
-        document.body.style.overflow = 'hidden';
+        ov.style.display = 'block';
       } else {
         sb.classList.add('-translate-x-full');
         sb.classList.remove('translate-x-0');
-        if (ov) ov.style.display = 'none';
-        document.body.style.overflow = '';
+        ov.style.display = 'none';
       }
     }
 
     function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(function(el) {
-        el.classList.remove('active');
-      });
-      var target = document.getElementById('tab-' + tabId);
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById('tab-' + tabId);
       if (target) target.classList.add('active');
 
-      document.querySelectorAll('.nav-item').forEach(function(el) {
-        el.classList.remove('active');
-      });
-      var btn = document.getElementById('nav-btn-' + tabId);
+      const btn = document.getElementById('nav-btn-' + tabId);
       if (btn) btn.classList.add('active');
 
-      var titleElem = document.getElementById('topbar-title');
-      var crumbElem = document.getElementById('topbar-crumb');
-      if (btn && titleElem) {
-        var txt = btn.querySelector('.truncate') ? btn.querySelector('.truncate').textContent : btn.textContent;
-        titleElem.textContent = txt.trim();
-        if (crumbElem) crumbElem.textContent = txt.trim();
+      const crumb = document.getElementById('topbar-crumb');
+      if (crumb && btn) {
+        const span = btn.querySelector('span');
+        if (span) crumb.textContent = span.textContent;
       }
-
-      if (window.innerWidth < 768) {
-        toggleSidebar();
-      }
+      window.location.hash = tabId;
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.innerWidth < 768) toggleSidebar();
     }
 
-    function copyResult(elemId) {
-      var target = document.getElementById(elemId);
-      if (!target) return;
-      var text = target.innerText || target.textContent;
-      navigator.clipboard.writeText(text).then(function() {
-        alert('Copied output to clipboard!');
-      }).catch(function() {
-        alert('Output ready. (Clipboard access restricted)');
-      });
+    function copyResult(elementId) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      navigator.clipboard.writeText(el.innerText || el.textContent);
+      const notif = document.createElement('div');
+      notif.className = 'fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs shadow-2xl flex items-center gap-2';
+      notif.innerHTML = '<i class="fas fa-check"></i> Output copied to clipboard!';
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 2500);
     }
 
-    // Cold-start background poller
-    (function() {
-      var pathPrefix = window.location.pathname.split('/')[1] || '';
-      if (!pathPrefix || pathPrefix === 'app') return;
-      var healthUrl = '/' + pathPrefix + '/api/health';
-      var pill = document.getElementById('cs-pill');
-      var attempts = 0;
-      var maxAttempts = 12;
+    function triggerQuickAction() {
+      const activeTab = document.querySelector('.tab-content.active');
+      if (!activeTab) return;
+      const firstBtn = activeTab.querySelector('.run-btn');
+      if (firstBtn) firstBtn.click();
+    }
 
-      function check() {
-        attempts++;
-        fetch(healthUrl, { method: 'GET', cache: 'no-store' })
-          .then(function(res) {
-            if (res.ok) {
-              if (pill) {
-                pill.style.display = 'inline-flex';
-                pill.style.borderColor = 'rgba(16,185,129,0.4)';
-                pill.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span> <span>AI Microservice Connected</span>';
-                setTimeout(function() { pill.style.display = 'none'; }, 3000);
-              }
-            } else if (attempts < maxAttempts) {
-              if (pill) { pill.style.display = 'inline-flex'; }
-              setTimeout(check, 3000);
-            }
-          })
-          .catch(function() {
-            if (attempts < maxAttempts) {
-              if (pill) { pill.style.display = 'inline-flex'; }
-              setTimeout(check, 3000);
-            } else if (pill) {
-              pill.style.display = 'none';
-            }
-          });
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && document.getElementById('tab-' + hash)) {
+        switchTab(hash);
       }
-      setTimeout(check, 1000);
-    })();
+    });
 
     
-    function triggerQuickAction() {
-      switchTab('exemption');
-      executeExemption();
+    function queryBeneficiaryRag() {
+      const q = document.getElementById('rag-need-query').value;
+      const consoleEl = document.getElementById('rag-console');
+
+      consoleEl.innerHTML = `<span class="text-yellow-400">>> [RAG ENGINE] Vector similarity search across 1,420 beneficiary applications...</span>\n>> Verifying income certificates against state BPL database...`;
+
+      setTimeout(() => {
+        consoleEl.innerHTML = `========================================================================
+AVP CHARITABLE TRUST — BENEFICIARY ALLOCATION MATCH
+========================================================================
+MATCHED CASE: #BEN-2026-0892
+PATIENT: Master Aarav Kumar (Age: 7) • Location: Raichur District, Karnataka
+DIAGNOSIS: Congenital Ventricular Septal Defect (VSD)
+
+[FINANCIAL VERIFICATION]:
+• Family Annual Income: ₹72,000 (Ration Card: BPL #2940-KA-1102)
+• Total Hospital Package Cost: ₹1,85,000 (Narayana Hrudayalaya BLR)
+• State Ayushman Bharat Scheme: ₹90,000 Approved
+
+[AVP TRUST CSR ALLOCATION]:
+✓ MATCH GRANTED: ₹95,000 (100% of remaining co-pay funded)
+✓ Direct hospital settlement code: #CSR-HOSP-NH-4091
+✓ Case worker assigned: Sister Mary D'Souza (Medical Camp Lead)
+
+STATUS: ALLOCATED & CLEARED FOR SURGERY ON 14 OCT 2026.`;
+      }, 700);
     }
 
-    function executeExemption() {
-      var amt = parseFloat(document.getElementById('donation-amount').value) || 50000;
-      var deduction = amt * 0.5;
-      var taxSaved30 = deduction * 0.312; // 30% slab + 4% cess
-      var res = document.getElementById('exemption-result');
-      var out = document.getElementById('exemption-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== SECTION 80G TAX EXEMPTION CALCULATION ===
-Donation Amount: ₹${amt.toLocaleString('en-IN')}
-Tax Deduction (50% under 80G): ₹${deduction.toLocaleString('en-IN')}
-Net Tax Saved (30% Bracket + Cess): ₹${taxSaved30.toLocaleString('en-IN')}
-Effective Cost of Donation: ₹${(amt - taxSaved30).toLocaleString('en-IN')}
+    function calculate80G() {
+      const don = parseFloat(document.getElementById('donation-amount').value) || 50000;
+      const ded = don * 0.50; // 50% under 80G
+      const taxRate = 0.312; // 30% + 4% cess = 31.2%
+      const saved = Math.round(ded * taxRate);
+      const effective = Math.round(don - saved);
 
-Certificate Details (Form 10BE):
-• Trust Registration No: AADTA1234F20214
-• 80G Approval Order: CIT(E)/AHM/80G/2022-23/A/1042
-• Verification Hash: SHA256: 7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1f
-• Download Status: PDF Certificate Generated & Ready`;
+      const fmt = (v) => '₹' + v.toLocaleString();
+
+      document.getElementById('tax-donation').innerText = fmt(don);
+      document.getElementById('tax-deduction').innerText = fmt(ded);
+      document.getElementById('tax-saved').innerText = fmt(saved);
+      document.getElementById('tax-savings-calc').innerText = fmt(saved);
+      document.getElementById('tax-effective').innerText = fmt(effective);
     }
 
-    function executeLedger() {
-      var res = document.getElementById('ledger-result');
-      var out = document.getElementById('ledger-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== CHARITY NAVIGATOR 4-STAR TRANSPARENCY AUDIT ===
-Financial Accountability Score: 100/100 (Exceptional)
-
-Expenditure Breakdown:
-• Direct Program Services (Healthcare & Education): 88.4%
-• Administrative & Operating Overhead: 7.2%
-• Fundraising & Outreach: 4.4%
-Program Expense Ratio: 88.4% (Exceeds industry standard of 70%)`;
-    }
-
-    function executeCamps() {
-      var res = document.getElementById('camps-result');
-      var out = document.getElementById('camps-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== UPCOMING RURAL HEALTH CAMPS ===
-1. Kadi Taluka Mobile Pediatric & Eye Clinic
-   • Date: October 4, 2026 | Location: Kadi Community Health Center
-   • Doctors: 4 Pediatricians, 2 Optometrists | Target Beneficiaries: 600
-
-2. Sanand Geriatric Screening & Dental Camp
-   • Date: October 18, 2026 | Location: Sanand Primary Health Center
-   • Free generic medicines provided via Decode Pharmacy collaboration.`;
-    }
-
-    function executeGrants() {
-      var res = document.getElementById('grants-result');
-      var out = document.getElementById('grants-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== DIRECT BENEFICIARY DISBURSEMENTS (LAST 30 DAYS) ===
-• Total Distributed: ₹18,40,000 across 342 verified beneficiaries.
-• Student Scholarships: ₹11,20,000 (180 students in STEM degrees)
-• Critical Medical Aid: ₹7,20,000 (162 patients for surgical procedures)
-All payments audited via direct bank transfer with zero cash intermediaries.`;
-    }
-
-    function executeCsr() {
-      var res = document.getElementById('csr-result');
-      var out = document.getElementById('csr-out-text');
-      res.style.display = 'block';
-      out.textContent = `=== SECTION 135 CSR COMPLIANCE REPORT ===
-Corporate Partner: Sevenseed Technologies Pvt Ltd
-CSR Registration Number (MCA): CSR00028491
-
-Audited CSR Contribution: ₹24,00,000
-Projects Funded: Rural Telemedicine Kiosks (Schedule VII Category: Healthcare)
-Impact: 14,200 rural patient consultations completed.`;
+    function issue80GReceipt() {
+      const don = document.getElementById('donation-amount').value;
+      alert(`Digital 80G Certificate (Form 10BE) issued for donation of ₹${don}! Stamped with Trust PAN and sent to your email with income-tax filing acknowledgement number.`);
     }
     
   </script>
