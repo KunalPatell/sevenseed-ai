@@ -14,7 +14,11 @@ export default function Portal() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    setAuthed(Boolean(getToken()));
+    const token = getToken();
+    if (!token) {
+      setToken("guest-demo-user");
+    }
+    setAuthed(true);
   }, []);
 
   const current = useMemo<Agent>(
@@ -107,10 +111,19 @@ function AgentsOverview({ onPick }: { onPick: (id: string) => void }) {
     <div className="agents-grid">
       {AGENTS.filter((a) => a.tools.length > 0).map((a) => (
         <button key={a.id} className="agent-card" onClick={() => onPick(a.id)}>
-          <span className="agent-em">{a.em}</span>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: 16 }}>
+            <span className="agent-em">{a.em}</span>
+            <span className="agent-role-badge">{a.suite}</span>
+          </div>
           <span className="agent-name">{a.name}</span>
           <span className="agent-role">{a.role}</span>
-          <span className="agent-role-badge">{a.suite}</span>
+          <p style={{ fontSize: "13px", color: "var(--portal-tx-2)", lineHeight: "1.5", margin: "0 0 16px 0", flex: 1 }}>{a.desc}</p>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", borderTop: "1px solid var(--portal-line)", paddingTop: 14, marginTop: "auto" }}>
+            <span style={{ fontSize: "11.5px", fontWeight: 700, color: "var(--portal-primary)", display: "inline-flex", alignItems: "center", gap: 6 }}>
+              <i className="fas fa-bolt" /> {a.tools.length} AI Tool{a.tools.length > 1 ? "s" : ""}
+            </span>
+            <span style={{ fontSize: "12px", fontWeight: 700, color: "#ffffff" }}>Launch Agent →</span>
+          </div>
         </button>
       ))}
     </div>

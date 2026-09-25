@@ -50,7 +50,10 @@ def main():
     sub_script = REPO_ROOT / "scripts" / "generate_all_subpages.py"
     if sub_script.is_file():
         run_cmd(f'"{sys.executable}" "{sub_script}"')
-    print("   [OK] Generated all 9 venture root sites & 24 dedicated sub-pages cleanly.")
+    portal_script = REPO_ROOT / "scripts" / "upgrade_all_portals.py"
+    if portal_script.is_file():
+        run_cmd(f'"{sys.executable}" "{portal_script}"')
+    print("   [OK] Generated all 9 venture root sites, sub-pages & upgraded portals cleanly.")
 
     # 1b. Sync Hub & venture sub-pages to backend static directory
     static_hub = REPO_ROOT / "apps" / "sevenseed" / "backend" / "static"
