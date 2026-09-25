@@ -1,1 +1,840 @@
-<!DOCTYPE html><html lang="en" class="h-full scroll-smooth"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="/avpu/_next/static/chunks/41-m-bts0w3vj.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/avpu/_next/static/chunks/3z5q_p4msz2ha.js"/><script src="/avpu/_next/static/chunks/15orcrkp-_9ct.js" async=""></script><script src="/avpu/_next/static/chunks/3rxl-jt3pdxgx.js" async=""></script><script src="/avpu/_next/static/chunks/0ydffv-plsbi2.js" async=""></script><script src="/avpu/_next/static/chunks/turbopack-1xridbm9f65_i.js" async=""></script><script src="/avpu/_next/static/chunks/05-c3ty_6dwfk.js" async=""></script><script src="/avpu/_next/static/chunks/14mrh2-p_w84d.js" async=""></script><script src="/avpu/_next/static/chunks/04ujbhgur4-0e.js" async=""></script><script src="/avpu/_next/static/chunks/2xgd0skllvg-h.js" async=""></script><link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" as="style"/><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><title>AVP University (AVPU) — AI-Powered Digital Learning Hub</title><meta name="description" content="AVPU&#x27;s AI Tutor, Gyan, answers syllabus questions with a RAG-grounded LangGraph pipeline, builds week-by-week study roadmaps, matches skills to placement partners, and grades assessments — all free to try."/><link rel="icon" href="/favicon.ico"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/><script src="/avpu/_next/static/chunks/0cz1d0mv5g_q7.js" noModule=""></script></head><body class="min-h-full bg-[#060609] text-[#eeeef8]"><div hidden=""><!--$--><!--/$--></div><div class="app-shell flex min-h-screen"><aside class="sidebar w-[255px] shrink-0 bg-[#0d0f0e] border-r border-white/5 flex flex-col p-[18px_14px] fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0"><div class="flex justify-between items-center mb-6"><a class="side-logo flex items-center gap-3 font-extrabold text-[15px] tracking-tight" href="/avpu/"><span class="logo-icon w-[34px] h-[34px] rounded-[10px] grid place-items-center text-white bg-gradient-to-br from-[#6366f1] to-[#3b82f6] shadow-[0_6px_16px_rgba(99,102,241,0.3)]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap h-4 w-4" aria-hidden="true"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg></span><span class="text-white">AVP <span class="text-[#c7d2fe]">University</span></span></a><button class="md:hidden text-white/50 hover:text-white transition-all cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x h-5 w-5" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></div><nav class="side-nav flex flex-col gap-1.5 flex-1"><button class="nav-item flex items-center gap-3 pl-3.5 pr-4 py-2.5 rounded-xl text-left text-xs font-semibold border-l-2 cursor-pointer transition-all bg-[#6366f1]/15 text-[#c7d2fe] border-[#6366f1]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard h-4 w-4 shrink-0 text-[#c7d2fe]" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg><span>Dashboard</span></button><button class="nav-item flex items-center gap-3 pl-3.5 pr-4 py-2.5 rounded-xl text-left text-xs font-semibold border-l-2 cursor-pointer transition-all border-transparent text-[#8890aa] hover:bg-[#12121e] hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot h-4 w-4 shrink-0 text-[#8890aa]" aria-hidden="true"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg><span>Syllabus AI Tutor</span></button><button class="nav-item flex items-center gap-3 pl-3.5 pr-4 py-2.5 rounded-xl text-left text-xs font-semibold border-l-2 cursor-pointer transition-all border-transparent text-[#8890aa] hover:bg-[#12121e] hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map h-4 w-4 shrink-0 text-[#8890aa]" aria-hidden="true"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"></path><path d="M15 5.764v15"></path><path d="M9 3.236v15"></path></svg><span>Study Roadmaps</span></button><button class="nav-item flex items-center gap-3 pl-3.5 pr-4 py-2.5 rounded-xl text-left text-xs font-semibold border-l-2 cursor-pointer transition-all border-transparent text-[#8890aa] hover:bg-[#12121e] hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-award h-4 w-4 shrink-0 text-[#8890aa]" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg><span>Adaptive Quiz</span></button><button class="nav-item flex items-center gap-3 pl-3.5 pr-4 py-2.5 rounded-xl text-left text-xs font-semibold border-l-2 cursor-pointer transition-all border-transparent text-[#8890aa] hover:bg-[#12121e] hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-briefcase h-4 w-4 shrink-0 text-[#8890aa]" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path><rect width="20" height="14" x="2" y="6" rx="2"></rect></svg><span>Placements Matcher</span></button><button class="nav-item flex items-center gap-3 pl-3.5 pr-4 py-2.5 rounded-xl text-left text-xs font-semibold border-l-2 cursor-pointer transition-all border-transparent text-[#8890aa] hover:bg-[#12121e] hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search h-4 w-4 shrink-0 text-[#8890aa]" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span>Admissions Counselor</span></button><button class="nav-item flex items-center gap-3 pl-3.5 pr-4 py-2.5 rounded-xl text-left text-xs font-semibold border-l-2 cursor-pointer transition-all border-transparent text-[#8890aa] hover:bg-[#12121e] hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4 shrink-0 text-[#8890aa]" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg><span>Research Abstract</span></button><button class="nav-item flex items-center gap-3 pl-3.5 pr-4 py-2.5 rounded-xl text-left text-xs font-semibold border-l-2 cursor-pointer transition-all border-transparent text-[#8890aa] hover:bg-[#12121e] hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers h-4 w-4 shrink-0 text-[#8890aa]" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"></path><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"></path></svg><span>Quiz Yourself</span></button></nav><div class="side-foot flex flex-col gap-3 pt-4 border-t border-white/5 mt-auto"><button class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-xl text-left text-xs font-semibold border-none cursor-pointer transition-all text-[#8890aa] hover:bg-[#12121e] hover:text-white"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings h-4 w-4" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg> API Settings </button><div class="sysbadge flex items-center gap-2 text-[10.5px] font-mono rounded-lg border p-2.5 transition-all duration-300 text-[#8890aa] border-white/5 bg-[#12121e]"><i class="fas fa-circle text-[#5b5f78] text-[6px]"></i>Offline Mode</div><a class="side-back flex items-center gap-2 text-xs text-[#8890aa] hover:text-white py-1 transition-all" href="/avpu/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left h-3.5 w-3.5" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg> Back to landing page</a></div></aside><div class="main flex-1 flex flex-col min-w-0"><header class="topbar sticky top-0 bg-[#060609]/95 backdrop-blur-md border-b border-white/5 z-20 flex items-center gap-4 px-6 md:px-12 py-4"><button class="md:hidden w-10 h-10 rounded-lg bg-[#12121e] border border-white/10 flex items-center justify-center text-white cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu h-5 w-5" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button><div><h1 class="text-lg font-black text-white capitalize">dashboard</h1><p class="text-xs text-[#9aa0b8] mt-0.5">AVPU Student Workspace Suite</p></div><div class="ml-auto hidden md:block"><span class="prov-chip font-mono text-[11px] font-semibold text-[#c7d2fe] bg-[#6366f1]/10 border border-[#6366f1]/25 px-3 py-1.5 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu h-3 w-3 inline mr-1.5" aria-hidden="true"><path d="M12 20v2"></path><path d="M12 2v2"></path><path d="M17 20v2"></path><path d="M17 2v2"></path><path d="M2 12h2"></path><path d="M2 17h2"></path><path d="M2 7h2"></path><path d="M20 12h2"></path><path d="M20 17h2"></path><path d="M20 7h2"></path><path d="M7 20v2"></path><path d="M7 2v2"></path><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="8" y="8" width="8" height="8" rx="1"></rect></svg>Offline AI Engine<!-- --> · <!-- -->Local<!-- --> RAG</span></div></header><main class="panels p-6 md:p-12 max-w-[1180px] w-full flex-1"><div class="flex flex-col gap-8 animate-[fade_0.3s_ease]"><div class="welcome relative overflow-hidden bg-gradient-to-r from-[#6366f1]/15 to-[#3b82f6]/5 border border-white/5 rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6"><div class="flex items-start gap-4"><span class="hidden sm:flex w-12 h-12 rounded-xl bg-gradient-to-br from-[#6366f1] to-[#3b82f6] items-center justify-center shrink-0 shadow-[0_6px_20px_rgba(99,102,241,0.35)]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap h-6 w-6 text-white" aria-hidden="true"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg></span><div><h2 class="text-xl md:text-2xl font-black text-white">Welcome to AVPU Student Portal 🎓</h2><p class="text-sm text-[#9aa0b8] mt-1 max-w-[620px] leading-relaxed">Access vector database resources, compile syllabus guides, customize roadmaps, or evaluate placements options.</p></div></div><span class="inline-flex items-center gap-2 text-[11px] font-bold px-3 py-1.5 rounded-full border shrink-0 text-[#8890aa] bg-white/5 border-white/10"><span class="w-1.5 h-1.5 rounded-full bg-[#5b5f78]"></span>Offline Mode</span></div><div class="tool-empty"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open h-8 w-8 opacity-30" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg><p class="text-xs">Academic branch catalog is loading or unavailable right now</p></div><div class="flex flex-col gap-3"><h4 class="font-extrabold text-[#eeeef8] text-sm uppercase tracking-wider">Quick access</h4><div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"><button class="flex flex-col items-start gap-2.5 text-left bg-[#0d0f0e] border border-white/5 rounded-xl p-4 hover:border-[#6366f1]/40 hover:bg-[#12121e] transition-all cursor-pointer"><span class="w-8 h-8 rounded-lg bg-[#6366f1]/15 text-[#c7d2fe] flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot h-4 w-4" aria-hidden="true"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg></span><span class="text-xs font-semibold text-white">AI Tutor</span></button><button class="flex flex-col items-start gap-2.5 text-left bg-[#0d0f0e] border border-white/5 rounded-xl p-4 hover:border-[#6366f1]/40 hover:bg-[#12121e] transition-all cursor-pointer"><span class="w-8 h-8 rounded-lg bg-[#6366f1]/15 text-[#c7d2fe] flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map h-4 w-4" aria-hidden="true"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"></path><path d="M15 5.764v15"></path><path d="M9 3.236v15"></path></svg></span><span class="text-xs font-semibold text-white">Study Roadmaps</span></button><button class="flex flex-col items-start gap-2.5 text-left bg-[#0d0f0e] border border-white/5 rounded-xl p-4 hover:border-[#6366f1]/40 hover:bg-[#12121e] transition-all cursor-pointer"><span class="w-8 h-8 rounded-lg bg-[#6366f1]/15 text-[#c7d2fe] flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-award h-4 w-4" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"></path><circle cx="12" cy="8" r="6"></circle></svg></span><span class="text-xs font-semibold text-white">Adaptive Quiz</span></button><button class="flex flex-col items-start gap-2.5 text-left bg-[#0d0f0e] border border-white/5 rounded-xl p-4 hover:border-[#6366f1]/40 hover:bg-[#12121e] transition-all cursor-pointer"><span class="w-8 h-8 rounded-lg bg-[#6366f1]/15 text-[#c7d2fe] flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-briefcase h-4 w-4" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path><rect width="20" height="14" x="2" y="6" rx="2"></rect></svg></span><span class="text-xs font-semibold text-white">Placements</span></button><button class="flex flex-col items-start gap-2.5 text-left bg-[#0d0f0e] border border-white/5 rounded-xl p-4 hover:border-[#6366f1]/40 hover:bg-[#12121e] transition-all cursor-pointer"><span class="w-8 h-8 rounded-lg bg-[#6366f1]/15 text-[#c7d2fe] flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search h-4 w-4" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></span><span class="text-xs font-semibold text-white">Admissions</span></button><button class="flex flex-col items-start gap-2.5 text-left bg-[#0d0f0e] border border-white/5 rounded-xl p-4 hover:border-[#6366f1]/40 hover:bg-[#12121e] transition-all cursor-pointer"><span class="w-8 h-8 rounded-lg bg-[#6366f1]/15 text-[#c7d2fe] flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg></span><span class="text-xs font-semibold text-white">Research</span></button><button class="flex flex-col items-start gap-2.5 text-left bg-[#0d0f0e] border border-white/5 rounded-xl p-4 hover:border-[#6366f1]/40 hover:bg-[#12121e] transition-all cursor-pointer"><span class="w-8 h-8 rounded-lg bg-[#6366f1]/15 text-[#c7d2fe] flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers h-4 w-4" aria-hidden="true"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"></path><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"></path><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"></path></svg></span><span class="text-xs font-semibold text-white">Quiz Yourself</span></button></div></div></div></main></div></div><!--$--><!--/$--><script src="/avpu/_next/static/chunks/3z5q_p4msz2ha.js" id="_R_" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n2:I[39756,[\"/avpu/_next/static/chunks/05-c3ty_6dwfk.js\",\"/avpu/_next/static/chunks/14mrh2-p_w84d.js\"],\"default\"]\n3:I[37457,[\"/avpu/_next/static/chunks/05-c3ty_6dwfk.js\",\"/avpu/_next/static/chunks/14mrh2-p_w84d.js\"],\"default\"]\n4:I[47257,[\"/avpu/_next/static/chunks/05-c3ty_6dwfk.js\",\"/avpu/_next/static/chunks/14mrh2-p_w84d.js\"],\"ClientPageRoot\"]\n5:I[30335,[\"/avpu/_next/static/chunks/05-c3ty_6dwfk.js\",\"/avpu/_next/static/chunks/14mrh2-p_w84d.js\",\"/avpu/_next/static/chunks/04ujbhgur4-0e.js\",\"/avpu/_next/static/chunks/2xgd0skllvg-h.js\"],\"default\"]\n8:I[97367,[\"/avpu/_next/static/chunks/05-c3ty_6dwfk.js\",\"/avpu/_next/static/chunks/14mrh2-p_w84d.js\"],\"OutletBoundary\"]\n9:\"$Sreact.suspense\"\nc:I[97367,[\"/avpu/_next/static/chunks/05-c3ty_6dwfk.js\",\"/avpu/_next/static/chunks/14mrh2-p_w84d.js\"],\"ViewportBoundary\"]\ne:I[97367,[\"/avpu/_next/static/chunks/05-c3ty_6dwfk.js\",\"/avpu/_next/static/chunks/14mrh2-p_w84d.js\"],\"MetadataBoundary\"]\n10:I[68027,[\"/avpu/_next/static/chunks/05-c3ty_6dwfk.js\",\"/avpu/_next/static/chunks/14mrh2-p_w84d.js\"],\"default\",1]\n:HL[\"/avpu/_next/static/chunks/41-m-bts0w3vj.css\",\"style\"]\n:HL[\"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900\u0026family=JetBrains+Mono:wght@400;500;600\u0026display=swap\",\"style\"]\n:HL[\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css\",\"style\"]\n"])</script><script>self.__next_f.push([1,"0:{\"P\":null,\"c\":[\"\",\"app\",\"\"],\"q\":\"\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"app\",{\"children\":[\"__PAGE__\",{}]}]},\"$undefined\",\"$undefined\",16],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/avpu/_next/static/chunks/41-m-bts0w3vj.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"/avpu/_next/static/chunks/05-c3ty_6dwfk.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-1\",{\"src\":\"/avpu/_next/static/chunks/14mrh2-p_w84d.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"en\",\"className\":\"h-full scroll-smooth\",\"children\":[[\"$\",\"head\",null,{\"children\":[[\"$\",\"link\",null,{\"rel\":\"preconnect\",\"href\":\"https://fonts.googleapis.com\"}],[\"$\",\"link\",null,{\"rel\":\"preconnect\",\"href\":\"https://fonts.gstatic.com\",\"crossOrigin\":\"anonymous\"}],[\"$\",\"link\",null,{\"href\":\"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900\u0026family=JetBrains+Mono:wght@400;500;600\u0026display=swap\",\"rel\":\"stylesheet\"}],[\"$\",\"link\",null,{\"rel\":\"stylesheet\",\"href\":\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css\"}]]}],[\"$\",\"body\",null,{\"className\":\"min-h-full bg-[#060609] text-[#eeeef8]\",\"children\":[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]]}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[[\"$\",\"$L4\",null,{\"Component\":\"$5\",\"serverProvidedParams\":{\"searchParams\":{},\"params\":{},\"promises\":[\"$@6\",\"$@7\"]}}],[[\"$\",\"script\",\"script-0\",{\"src\":\"/avpu/_next/static/chunks/04ujbhgur4-0e.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-1\",{\"src\":\"/avpu/_next/static/chunks/2xgd0skllvg-h.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"$L8\",null,{\"children\":[\"$\",\"$9\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@a\"}]}]]}],{},null,false,null]},null,false,\"$@b\"]},null,false,null],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$Lc\",null,{\"children\":\"$Ld\"}],[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$Le\",null,{\"children\":[\"$\",\"$9\",null,{\"name\":\"Next.Metadata\",\"children\":\"$Lf\"}]}]}],null]}],false]],\"m\":\"$undefined\",\"G\":[\"$10\",[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/avpu/_next/static/chunks/41-m-bts0w3vj.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]]],\"S\":true,\"h\":null,\"s\":\"$undefined\",\"l\":\"$undefined\",\"p\":\"$undefined\",\"d\":\"$undefined\",\"b\":\"nM77gHDZTDiytdS8tbT7o\"}\n"])</script><script>self.__next_f.push([1,"11:[]\nb:\"$W11\"\n6:{}\n7:\"$0:f:0:1:1:children:1:children:0:props:children:0:props:serverProvidedParams:params\"\n"])</script><script>self.__next_f.push([1,"d:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\n"])</script><script>self.__next_f.push([1,"12:I[27201,[\"/avpu/_next/static/chunks/05-c3ty_6dwfk.js\",\"/avpu/_next/static/chunks/14mrh2-p_w84d.js\"],\"IconMark\"]\na:null\nf:[[\"$\",\"title\",\"0\",{\"children\":\"AVP University (AVPU) — AI-Powered Digital Learning Hub\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"AVPU's AI Tutor, Gyan, answers syllabus questions with a RAG-grounded LangGraph pipeline, builds week-by-week study roadmaps, matches skills to placement partners, and grades assessments — all free to try.\"}],[\"$\",\"link\",\"2\",{\"rel\":\"icon\",\"href\":\"/favicon.ico\"}],[\"$\",\"$L12\",\"3\",{}]]\n"])</script></body></html>
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>AVP University Portal — Autonomous Academic & Placement Workstation</title>
+  <meta name="description" content="Autonomous learning portal powered by Gyan AI Socratic syllabus tutor, adaptive quiz arena, and campus placement shortlisting."/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🎓%3C/text%3E%3C/svg%3E"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: '#3b82f6',
+            brandSec: '#8b5cf6',
+            darkBg: '#020617'
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="portal.css"/>
+</head>
+<body class="antialiased text-slate-100 bg-[#020617]">
+  <!-- Aceternity Overhead Glow Lamp -->
+  <div class="hero-lamp"></div>
+  <div class="hero-lamp-line"></div>
+
+  <!-- Mobile Drawer Overlay -->
+  <div id="mobile-sidebar-overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); z-index:45;"></div>
+
+  <div class="app-shell flex min-h-screen">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar w-[270px] shrink-0 border-r border-white/5 flex flex-col p-4 fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0" id="main-sidebar">
+      <!-- Logo Header -->
+      <div class="flex items-center justify-between mb-4 px-2">
+        <a class="side-logo flex items-center gap-3 no-underline" href="/avpu/">
+          <span class="w-10 h-10 rounded-xl grid place-items-center text-white font-bold text-xl bg-gradient-to-br from-[#3b82f6] to-[#8b5cf6] shadow-lg shadow-black/40 border border-white/10">🎓</span>
+          <div>
+            <div class="text-white font-extrabold text-[15px] tracking-tight">AVP University</div>
+            <div class="text-[10px] text-white/50 uppercase font-semibold tracking-wider">AI Higher Education & Labs</div>
+          </div>
+        </a>
+        <button class="md:hidden text-white/60 hover:text-white p-1 cursor-pointer" onclick="toggleSidebar()" aria-label="Close menu">
+          <i class="fas fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Venture Switcher -->
+      <div class="mb-4 px-1">
+        <label class="block text-[10px] uppercase font-bold text-white/40 mb-1.5 px-1 tracking-wider">Switch Venture Console</label>
+        <select onchange="if(this.value) window.location.href=this.value;" class="w-full bg-white/[0.04] border border-white/10 rounded-xl py-2 px-2.5 text-xs text-white/80 font-medium outline-none cursor-pointer hover:border-white/20 transition-all">
+          <option value="/app/" >Sevenseed Studio Hub</option><option value="/sevenforce/app/" >Sevenforce AI Workforce</option><option value="/comonk-ai/app/" >Comonk Career AI</option><option value="/avpu/app/" selected>AVP University</option><option value="/avp-emart/app/" >AVP Emart Price Radar</option><option value="/breakdown-factor/app/" >Breakdown Factor</option><option value="/decode-forest-pharmacy/app/" >Decode Pharmacy</option><option value="/rakshak-ai/app/" >Rakshak AI Security</option><option value="/avp-charitable-trust/app/" >AVP Charitable Trust</option>
+        </select>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="side-nav flex flex-col gap-1.5 flex-1 overflow-y-auto pr-1">
+        
+        <button class="nav-item active" onclick="switchTab('hub')" id="nav-btn-hub">
+          <i class="fas fa-user-graduate" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Student Hub & CGPA</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">8.92</span>
+        </button>
+        
+        <button class="nav-item " onclick="switchTab('gyan')" id="nav-btn-gyan">
+          <i class="fas fa-brain" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Gyan AI Socratic Tutor</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">AI</span>
+        </button>
+        
+        <button class="nav-item " onclick="switchTab('roadmap')" id="nav-btn-roadmap">
+          <i class="fas fa-route" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Syllabus Mastery Map</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Sem 6</span>
+        </button>
+        
+        <button class="nav-item " onclick="switchTab('quiz')" id="nav-btn-quiz">
+          <i class="fas fa-circle-question" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Adaptive Quiz Arena</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Quiz</span>
+        </button>
+        
+        <button class="nav-item " onclick="switchTab('placement')" id="nav-btn-placement">
+          <i class="fas fa-briefcase" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Campus Placement Matcher</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">94%</span>
+        </button>
+        
+        <button class="nav-item " onclick="switchTab('codelab')" id="nav-btn-codelab">
+          <i class="fas fa-code" style="width:18px; text-align:center;"></i>
+          <span class="truncate">Algorithm Code Lab</span>
+          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Lab</span>
+        </button>
+        
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="side-foot flex flex-col gap-3 pt-4 border-t border-white/10 mt-auto">
+        <div class="flex items-center justify-between text-xs px-2.5 py-2 rounded-xl bg-white/[0.03] border border-white/5">
+          <span class="inline-flex items-center gap-2 text-white/70 font-mono text-[11px]">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            AI Engine Online
+          </span>
+          <span class="text-[10px] font-bold text-emerald-400 font-mono">v4.2-PROD</span>
+        </div>
+        <a class="side-back flex items-center justify-center gap-2 text-xs font-semibold text-white/70 hover:text-white py-2 px-3 rounded-xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all no-underline" href="/avpu/">
+          <i class="fas fa-arrow-left text-[11px]"></i>
+          <span>Back to Landing Page</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div class="main flex-1 flex flex-col min-w-0">
+      <!-- Topbar Header -->
+      <header class="topbar sticky top-0 border-b border-white/5 z-20 flex items-center justify-between px-6 md:px-10 py-3.5 backdrop-blur-xl bg-black/40">
+        <div class="flex items-center gap-4">
+          <button class="md:hidden w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white cursor-pointer" onclick="toggleSidebar()" aria-label="Open menu">
+            <i class="fas fa-bars text-sm"></i>
+          </button>
+          <div>
+            <div class="text-xs text-white/50 flex items-center gap-1.5 font-medium">
+              <span>AVP University</span>
+              <span>/</span>
+              <span class="text-white/80" id="topbar-crumb">Workspace Console</span>
+            </div>
+            <h1 class="text-base font-extrabold text-white tracking-tight" id="topbar-title">Active Workstation</h1>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-white/80">
+            <i class="fas fa-shield-halved text-emerald-400 text-xs"></i>
+            <span>Verified Founder VIP</span>
+          </div>
+          <button class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6] hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-black/40 flex items-center gap-1.5" onclick="triggerQuickAction()">
+            <i class="fas fa-bolt text-xs"></i>
+            <span>Quick Run</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Scrollable Panels -->
+      <main class="panels p-6 md:p-10 max-w-[1360px] w-full mx-auto flex-1">
+        <!-- Top KPI Stats Row -->
+        <div class="stats-grid">
+          
+        <div class="stat-card">
+          <div class="stat-num">8.92</div>
+          <div class="stat-label">Cumulative CGPA</div>
+          <div class="stat-pill stat-pill-green">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>Top 5% CSE Dept</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-num">118 / 160</div>
+          <div class="stat-label">Degree Credits Earned</div>
+          <div class="stat-pill stat-pill-blue">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>73.8% Completed</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-num">94.2%</div>
+          <div class="stat-label">Biometric Attendance</div>
+          <div class="stat-pill stat-pill-purple">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>Exceeds 75% Threshold</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-num">4 Offers</div>
+          <div class="stat-label">Pre-Placement Shortlists</div>
+          <div class="stat-pill stat-pill-green">
+            <i class="fas fa-arrow-trend-up text-[10px]"></i>
+            <span>Google, Uber, AWS, Oracle</span>
+          </div>
+        </div>
+        
+        </div>
+
+        <!-- Tab Contents -->
+        
+    <!-- TAB 1: STUDENT HUB & CGPA -->
+    <div id="tab-hub" class="tab-content active">
+      <div class="welcome-box mb-8 p-8 rounded-2xl border border-white/10 bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-transparent relative overflow-hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-500/30 text-blue-300 text-xs font-bold mb-3">
+              <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+              Academic Semester VI — B.Tech Computer Science & AI
+            </div>
+            <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">AVP University Academic Workstation</h2>
+            <p class="text-sm text-slate-300 mt-2 max-w-[680px] leading-relaxed">
+              Personalized autonomous learning portal powered by Gyan AI. Track degree milestone credits, prepare for semester examinations with socratic syllabus models, and participate in high-frequency campus placement recruitment.
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="switchTab('gyan')" class="run-btn px-5 py-3 rounded-xl text-xs font-bold text-white flex items-center gap-2">
+              <i class="fas fa-brain"></i> Ask Gyan AI Tutor
+            </button>
+            <button onclick="switchTab('quiz')" class="px-4 py-3 rounded-xl text-xs font-bold text-white/80 bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center gap-2">
+              <i class="fas fa-play"></i> Start Quiz Arena
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Courses & Grade Matrix -->
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-book-open-reader text-blue-400"></i> Active Semester Courses (Sem VI)
+            </h3>
+            <span class="text-xs text-blue-400 font-mono font-bold">24 Total Credits</span>
+          </div>
+
+          <div class="space-y-4">
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-xs font-bold text-white">CS601: Distributed Systems & Cloud Infrastructure</span>
+                <span class="text-xs font-mono font-bold text-emerald-400">Grade: O (Outstanding)</span>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-400 mb-2">
+                <span>Instructor: Dr. R. Ramanujan</span>
+                <span>Credits: 4.0 | Progress: 88%</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-500 h-1.5 rounded-full" style="width: 88%"></div>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-xs font-bold text-white">CS602: Advanced Deep Neural Networks & Transformers</span>
+                <span class="text-xs font-mono font-bold text-emerald-400">Grade: A+ (Excellent)</span>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-400 mb-2">
+                <span>Instructor: Prof. S. Sen</span>
+                <span>Credits: 4.0 | Progress: 92%</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-cyan-500 h-1.5 rounded-full" style="width: 92%"></div>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-xs font-bold text-white">CS603: Compiler Design & Static Code Analysis</span>
+                <span class="text-xs font-mono font-bold text-sky-400">Grade: A (Very Good)</span>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-400 mb-2">
+                <span>Instructor: Dr. V. Trivedi</span>
+                <span>Credits: 4.0 | Progress: 79%</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-emerald-500 h-1.5 rounded-full" style="width: 79%"></div>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-xs font-bold text-white">CS604: Database Storage Engines & Write-Ahead Logs</span>
+                <span class="text-xs font-mono font-bold text-emerald-400">Grade: A+ (Excellent)</span>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-400 mb-2">
+                <span>Instructor: Prof. K. Verma</span>
+                <span>Credits: 4.0 | Progress: 85%</span>
+              </div>
+              <div class="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full" style="width: 85%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic Milestones & Exam Countdown -->
+        <div class="workbench-card">
+          <h3 class="text-base font-extrabold text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-calendar-check text-blue-400"></i> Examination Schedule & Milestones
+          </h3>
+          <div class="space-y-3">
+            <div class="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white">Mid-Term: CS601 Distributed Systems</div>
+                <div class="text-[11px] text-blue-300">Room: Turing Hall 304 • Oct 12, 10:00 AM</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-mono font-bold">In 14 Days</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white">Mid-Term: CS602 Deep Transformers</div>
+                <div class="text-[11px] text-slate-400">Room: Lovelace Lab 102 • Oct 15, 02:00 PM</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-white/10 text-slate-300 text-xs font-mono font-bold">In 17 Days</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white">Capstone Project Phase-I Defense</div>
+                <div class="text-[11px] text-slate-400">Panel Review with Industry Mentors • Nov 02</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 text-xs font-mono font-bold">In 35 Days</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-bold text-white">Day-0 Campus Placement Day</div>
+                <div class="text-[11px] text-slate-400">FAANG & Unicorn On-Campus Interviews • Dec 01</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-mono font-bold">Eligible (Top 5%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: GYAN AI SOCRATIC TUTOR -->
+    <div id="tab-gyan" class="tab-content">
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-brain text-blue-400"></i> Gyan AI Socratic Syllabus Tutor
+            </h3>
+            <span class="text-xs text-blue-400 font-mono font-bold">University Curriculum RAG</span>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Select Syllabus Subject</label>
+              <select id="gyan-subject" class="w-full bg-black/40 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white outline-none focus:border-blue-500">
+                <option value="dist_sys">CS601: Distributed Systems (Raft, Paxos, Vector Clocks)</option>
+                <option value="transformers">CS602: Deep Transformers (Multi-Head Attention, RoPE, FlashAttention)</option>
+                <option value="compiler">CS603: Compiler Design (LLVM IR, LALR(1) Parsing, SSA Form)</option>
+                <option value="db_kernel">CS604: Database Kernels (LSM Trees, B+ Tree Concurrency, WAL)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Select or Enter Academic Concept</label>
+              <input type="text" id="gyan-concept" class="w-full bg-black/40 border border-white/10 rounded-xl py-2.5 px-3 text-xs text-white outline-none focus:border-blue-500" value="Explain Vector Clocks vs Lamport Timestamps with causality violation examples"/>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <button onclick="askGyanAi()" class="run-btn w-full py-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+                <i class="fas fa-wand-magic-sparkles"></i> Generate Socratic Explanation & Proof
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <div class="terminal-dot bg-rose-500"></div>
+              <div class="terminal-dot bg-amber-500"></div>
+              <div class="terminal-dot bg-emerald-500"></div>
+            </div>
+            <span class="text-xs font-mono text-slate-400">gyan_socratic_tutor.md</span>
+            <button onclick="copyResult('gyan-console')" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+          <div class="terminal-body" id="gyan-console">
+[GYAN AI ONLINE] University RAG repository loaded with syllabus textbooks, university past exam papers (2018-2025), and step-by-step mathematical proofs. Select a concept to begin Socratic learning.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: SYLLABUS MASTERY MAP -->
+    <div id="tab-roadmap" class="tab-content">
+      <div class="workbench-card">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-map-location-dot text-blue-400"></i> 4-Week Exam Mastery Roadmap: CS601 Distributed Systems
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Structured week-by-week checklist covering all mid-term and end-term question blueprints</p>
+          </div>
+          <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">78% Completed</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-emerald-400">UNIT 1</span>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-mono font-bold">100% DONE</span>
+            </div>
+            <div class="text-xs font-bold text-white mb-1">Time, Clocks & State Detection</div>
+            <ul class="text-[11px] text-slate-300 space-y-1">
+              <li>✓ Lamport Logical Clocks</li>
+              <li>✓ Vector Timestamp Ordering</li>
+              <li>✓ Chandy-Lamport Snapshot</li>
+            </ul>
+          </div>
+
+          <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-emerald-400">UNIT 2</span>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-mono font-bold">100% DONE</span>
+            </div>
+            <div class="text-xs font-bold text-white mb-1">Mutual Exclusion & Election</div>
+            <ul class="text-[11px] text-slate-300 space-y-1">
+              <li>✓ Ricart-Agrawala Algorithm</li>
+              <li>✓ Maekawa's Voting Quorums</li>
+              <li>✓ Bully & Ring Leader Elections</li>
+            </ul>
+          </div>
+
+          <div class="p-4 rounded-xl bg-blue-500/15 border border-blue-500/40">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-blue-400">UNIT 3</span>
+              <span class="text-[10px] bg-blue-500/30 text-blue-300 px-2 py-0.5 rounded font-mono font-bold">IN PROGRESS</span>
+            </div>
+            <div class="text-xs font-bold text-white mb-1">Consensus & Fault Tolerance</div>
+            <ul class="text-[11px] text-slate-300 space-y-1">
+              <li>✓ Paxos Synod & Multi-Paxos</li>
+              <li>▶ Raft Leader Election & Log Replication</li>
+              <li>▷ Byzantine Generals (PBFT)</li>
+            </ul>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/[0.02] border border-white/10 opacity-70">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-slate-400">UNIT 4</span>
+              <span class="text-[10px] bg-white/10 text-slate-400 px-2 py-0.5 rounded font-mono font-bold">NEXT WEEK</span>
+            </div>
+            <div class="text-xs font-bold text-white mb-1">Distributed Storage & Transactions</div>
+            <ul class="text-[11px] text-slate-400 space-y-1">
+              <li>▷ Two-Phase Commit (2PC)</li>
+              <li>▷ Google Spanner TrueTime</li>
+              <li>▷ DynamoDB Consistent Hashing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: ADAPTIVE QUIZ ARENA -->
+    <div id="tab-quiz" class="tab-content">
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-stopwatch-20 text-blue-400"></i> Adaptive Quiz Arena (Duolingo Style)
+            </h3>
+            <span class="text-xs text-emerald-400 font-mono font-bold" id="quiz-streak">🔥 14 Day Streak</span>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 mb-4">
+            <div class="flex justify-between items-center text-xs text-slate-400 mb-2">
+              <span>Question 3 of 5 • Difficulty: Hard</span>
+              <span class="font-mono text-blue-400 font-bold">Score: 200 pts</span>
+            </div>
+            <p class="text-sm font-semibold text-white leading-relaxed">
+              In the Raft Consensus Protocol, under what exact condition can a leader commit a log entry from a *previous* term?
+            </p>
+          </div>
+
+          <div class="space-y-2.5 mb-6" id="quiz-options">
+            <button onclick="selectQuizOpt(this, false)" class="w-full text-left p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:border-blue-400 hover:bg-white/5 transition-all text-xs text-slate-200">
+              A) As soon as the majority of followers acknowledge receipt via AppendEntries RPC.
+            </button>
+            <button onclick="selectQuizOpt(this, true)" class="w-full text-left p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:border-blue-400 hover:bg-white/5 transition-all text-xs text-slate-200">
+              B) It must NOT directly commit past entries by counting replicas; it must commit an entry from its CURRENT term, which indirectly commits earlier entries.
+            </button>
+            <button onclick="selectQuizOpt(this, false)" class="w-full text-left p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:border-blue-400 hover:bg-white/5 transition-all text-xs text-slate-200">
+              C) When a pre-vote phase succeeds across 100% of cluster nodes without network partitioning.
+            </button>
+            <button onclick="selectQuizOpt(this, false)" class="w-full text-left p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:border-blue-400 hover:bg-white/5 transition-all text-xs text-slate-200">
+              D) Whenever a candidate receives a higher election term number from an external heartbeat.
+            </button>
+          </div>
+
+          <div id="quiz-feedback" class="hidden p-3.5 rounded-xl text-xs font-semibold mb-4"></div>
+
+          <button onclick="nextQuizQuestion()" class="run-btn w-full py-2.5 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+            <span>Next Question</span> <i class="fas fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+
+        <div class="workbench-card">
+          <h3 class="text-base font-extrabold text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-trophy text-amber-400"></i> Department Leaderboard (CSE Sem VI)
+          </h3>
+          <div class="space-y-3">
+            <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-amber-400 text-slate-950 font-black text-xs grid place-items-center">1</span>
+                <div>
+                  <div class="text-xs font-bold text-white">Ananya Sharma</div>
+                  <div class="text-[10px] text-slate-400">2,840 XP • 100% Accuracy</div>
+                </div>
+              </div>
+              <span class="text-xs font-mono font-bold text-amber-300">Level 28</span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-sky-400 text-slate-950 font-black text-xs grid place-items-center">2</span>
+                <div>
+                  <div class="text-xs font-bold text-white">Kunal Patel (You)</div>
+                  <div class="text-[10px] text-slate-400">2,620 XP • 96% Accuracy</div>
+                </div>
+              </div>
+              <span class="text-xs font-mono font-bold text-sky-300">Level 26</span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-6 h-6 rounded-full bg-white/10 text-white font-black text-xs grid place-items-center">3</span>
+                <div>
+                  <div class="text-xs font-bold text-white">Rahul Mehta</div>
+                  <div class="text-[10px] text-slate-400">2,410 XP • 92% Accuracy</div>
+                </div>
+              </div>
+              <span class="text-xs font-mono font-bold text-slate-400">Level 24</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: CAMPUS PLACEMENT MATCHER -->
+    <div id="tab-placement" class="tab-content">
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-building-user text-blue-400"></i> Day-0 / Day-1 Campus Placement Drives
+            </h3>
+            <span class="text-xs text-emerald-400 font-mono font-bold">Eligibility: 100% Qualified</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-white">Google India — Software Engineer, University Graduate</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400">Day 0 Super Dream</span>
+                </div>
+                <div class="text-[11px] text-slate-400 mt-1">Package: ₹42.0 LPA CTC • Min CGPA: 8.5 (Yours: 8.92) • Location: Bengaluru/Hyderabad</div>
+              </div>
+              <button onclick="applyPlacement('Google India', '₹42.0 LPA')" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 transition-all cursor-pointer whitespace-nowrap">
+                Slot Confirmed
+              </button>
+            </div>
+
+            <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-white">Uber — SDE-1 Core Infrastructure</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-400">Day 0 Super Dream</span>
+                </div>
+                <div class="text-[11px] text-slate-400 mt-1">Package: ₹38.5 LPA CTC • Min CGPA: 8.0 (Yours: 8.92) • Location: Bengaluru</div>
+              </div>
+              <button onclick="applyPlacement('Uber', '₹38.5 LPA')" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-white/10 hover:bg-white/20 transition-all cursor-pointer whitespace-nowrap">
+                Apply with Profile
+              </button>
+            </div>
+
+            <div class="p-4 rounded-xl bg-white/[0.03] border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-white">Amazon AWS — Cloud Development Engineer</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-400">Dream Offer</span>
+                </div>
+                <div class="text-[11px] text-slate-400 mt-1">Package: ₹32.0 LPA CTC • Min CGPA: 7.5 (Yours: 8.92) • Location: Hyderabad</div>
+              </div>
+              <button onclick="applyPlacement('Amazon AWS', '₹32.0 LPA')" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-white/10 hover:bg-white/20 transition-all cursor-pointer whitespace-nowrap">
+                Apply with Profile
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="workbench-card">
+          <h3 class="text-base font-extrabold text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-check-double text-emerald-400"></i> Placement Verification Checklist
+          </h3>
+          <div class="space-y-3 text-xs">
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-emerald-500/10 text-emerald-300">
+              <i class="fas fa-circle-check"></i>
+              <span>No Active Backlogs (0 Backlogs across all semesters)</span>
+            </div>
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-emerald-500/10 text-emerald-300">
+              <i class="fas fa-circle-check"></i>
+              <span>CGPA Threshold Exceeded (8.92 vs 8.00 Cutoff)</span>
+            </div>
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-emerald-500/10 text-emerald-300">
+              <i class="fas fa-circle-check"></i>
+              <span>AI Bar-Raiser Assessment Passed (92nd percentile)</span>
+            </div>
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-emerald-500/10 text-emerald-300">
+              <i class="fas fa-circle-check"></i>
+              <span>Dean of Academics NOC Certificate Issued</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: ALGORITHM CODE LAB -->
+    <div id="tab-codelab" class="tab-content">
+      <div class="workbench-grid">
+        <div class="workbench-card">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fas fa-terminal text-blue-400"></i> Interactive Code Lab: Distributed Raft Election
+            </h3>
+            <span class="text-xs text-blue-400 font-mono font-bold">Python 3.12 Runtime</span>
+          </div>
+
+          <textarea id="codelab-editor" rows="11" class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-xs text-emerald-400 font-mono outline-none focus:border-blue-500">
+class RaftNode:
+    def __init__(self, node_id, peers):
+        self.node_id = node_id
+        self.peers = peers
+        self.current_term = 0
+        self.voted_for = None
+        self.state = "FOLLOWER"
+
+    def request_vote(self, term, candidate_id):
+        if term > self.current_term:
+            self.current_term = term
+            self.voted_for = candidate_id
+            self.state = "FOLLOWER"
+            return True
+        return False
+
+# Simulate cluster of 3 nodes
+node1 = RaftNode(1, [2, 3])
+print(f"Node 1 initialized as: {node1.state} (Term: {node1.current_term})")
+granted = node1.request_vote(term=1, candidate_id=2)
+print(f"Vote granted to Candidate 2: {granted}")
+print(f"Node 1 updated term: {node1.current_term}, voted for: {node1.voted_for}")
+</textarea>
+          <div class="mt-4 flex items-center gap-3">
+            <button onclick="runCodeLab()" class="run-btn w-full py-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+              <i class="fas fa-play"></i> Execute Algorithm in Cloud Sandbox
+            </button>
+          </div>
+        </div>
+
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <div class="terminal-dot bg-rose-500"></div>
+              <div class="terminal-dot bg-amber-500"></div>
+              <div class="terminal-dot bg-emerald-500"></div>
+            </div>
+            <span class="text-xs font-mono text-slate-400">sandbox_execution.stdout</span>
+            <button onclick="copyResult('code-console')" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+          <div class="terminal-body" id="code-console">
+[SANDBOX STANDBY] Click 'Execute Algorithm in Cloud Sandbox' to compile and run the Python code with assertions against distributed edge test cases.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      </main>
+    </div>
+  </div>
+
+  <!-- Global Script -->
+  <script>
+    function toggleSidebar() {
+      const sb = document.getElementById('main-sidebar');
+      const ov = document.getElementById('mobile-sidebar-overlay');
+      if (sb.classList.contains('-translate-x-full')) {
+        sb.classList.remove('-translate-x-full');
+        sb.classList.add('translate-x-0');
+        ov.style.display = 'block';
+      } else {
+        sb.classList.add('-translate-x-full');
+        sb.classList.remove('translate-x-0');
+        ov.style.display = 'none';
+      }
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+
+      const btn = document.getElementById('nav-btn-' + tabId);
+      if (btn) btn.classList.add('active');
+
+      const crumb = document.getElementById('topbar-crumb');
+      if (crumb && btn) {
+        const span = btn.querySelector('span');
+        if (span) crumb.textContent = span.textContent;
+      }
+      window.location.hash = tabId;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.innerWidth < 768) toggleSidebar();
+    }
+
+    function copyResult(elementId) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      navigator.clipboard.writeText(el.innerText || el.textContent);
+      const notif = document.createElement('div');
+      notif.className = 'fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs shadow-2xl flex items-center gap-2';
+      notif.innerHTML = '<i class="fas fa-check"></i> Output copied to clipboard!';
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 2500);
+    }
+
+    function triggerQuickAction() {
+      const activeTab = document.querySelector('.tab-content.active');
+      if (!activeTab) return;
+      const firstBtn = activeTab.querySelector('.run-btn');
+      if (firstBtn) firstBtn.click();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && document.getElementById('tab-' + hash)) {
+        switchTab(hash);
+      }
+    });
+
+    
+    function askGyanAi() {
+      const subject = document.getElementById('gyan-subject').value;
+      const concept = document.getElementById('gyan-concept').value;
+      const consoleEl = document.getElementById('gyan-console');
+
+      consoleEl.innerHTML = `<span class="text-yellow-400">>> [GYAN AI] Querying University Syllabus Vector DB for: "${concept}"...</span>\n>> Formulating Socratic breakdown with proof steps...`;
+
+      setTimeout(() => {
+        consoleEl.innerHTML = `========================================================================
+GYAN AI SOCRATIC PEDAGOGY — ${subject.toUpperCase()}
+========================================================================
+[QUESTION]: "${concept}"
+
+1. CONCEPTUAL INTUITION:
+   • Lamport Timestamps: Partial order only (If e1 -> e2, then L(e1) < L(e2)).
+     CRUCIAL LIMITATION: The converse is FALSE! L(e1) < L(e2) does NOT imply e1 -> e2.
+   • Vector Clocks: Full causal order! V(e1) < V(e2) IF AND ONLY IF e1 causally preceded e2.
+
+2. MATHEMATICAL UPDATE RULES:
+   Each process P_i maintains vector V_i of size N (number of nodes):
+   a) Before local event: V_i[i] = V_i[i] + 1
+   b) When sending message m: send (m, V_i)
+   c) Upon receiving (m, V_msg):
+      V_i[k] = max(V_i[k], V_msg[k]) for all k in [1..N]
+      V_i[i] = V_i[i] + 1
+
+3. CAUSALITY VIOLATION EXAMPLE IN DISTRIBUTED MESSAGING:
+   If Node A sends a photo to Node B and Node C, and Node B comments on the photo
+   and notifies Node C. With Lamport clocks, Node C could process the comment BEFORE
+   the photo exists! Vector clocks prevent this by guaranteeing causal delivery.
+
+[SOCRATIC REFLECTION CHALLENGE]:
+"What is the communication overhead of Vector Clocks in a dynamic cluster of 10,000 microservices?"`;
+      }, 700);
+    }
+
+    function selectQuizOpt(btn, isCorrect) {
+      const parent = document.getElementById('quiz-options');
+      parent.querySelectorAll('button').forEach(b => {
+        b.disabled = true;
+        b.classList.remove('hover:border-blue-400', 'hover:bg-white/5');
+      });
+
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+
+      if (isCorrect) {
+        btn.classList.add('bg-emerald-500/20', 'border-emerald-500', 'text-emerald-300');
+        fb.className = 'p-3.5 rounded-xl text-xs font-semibold mb-4 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300';
+        fb.innerHTML = '<i class="fas fa-check-circle mr-1.5"></i> <strong>Spot on!</strong> Section 5.4.2 of the Raft Paper: A leader cannot commit a previous term entry solely by counting replicas because a subsequent leader could overwrite it. It commits current term entries to guarantee safety.';
+      } else {
+        btn.classList.add('bg-rose-500/20', 'border-rose-500', 'text-rose-300');
+        fb.className = 'p-3.5 rounded-xl text-xs font-semibold mb-4 bg-rose-500/15 border border-rose-500/30 text-rose-300';
+        fb.innerHTML = '<i class="fas fa-circle-xmark mr-1.5"></i> <strong>Incorrect.</strong> Check Section 5.4.2 (Figure 8 in Ongaro & Ousterhout). Look at Option B for the exact Raft invariant.';
+      }
+    }
+
+    function nextQuizQuestion() {
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.add('hidden');
+      const parent = document.getElementById('quiz-options');
+      parent.querySelectorAll('button').forEach(b => {
+        b.disabled = false;
+        b.className = 'w-full text-left p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:border-blue-400 hover:bg-white/5 transition-all text-xs text-slate-200';
+      });
+      alert('Next question loaded from AVP Question Bank (350+ questions available).');
+    }
+
+    function applyPlacement(company, ctc) {
+      alert(`Interview slot confirmed for ${company} (${ctc})! Invitation sent to your AVP student email.`);
+    }
+
+    function runCodeLab() {
+      const consoleEl = document.getElementById('code-console');
+      consoleEl.innerHTML = `<span class="text-yellow-400">>> [SANDBOX] Spawning isolated Python 3.12 container...</span>\n>> Compiling bytecode & running Raft election simulation...`;
+
+      setTimeout(() => {
+        consoleEl.innerHTML = `========================================================================
+SANDBOX EXECUTION SUCCESSFUL (Time: 38ms, Memory: 14.2 MB)
+========================================================================
+Node 1 initialized as: FOLLOWER (Term: 0)
+Vote granted to Candidate 2: True
+Node 1 updated term: 1, voted for: 2
+
+[UNIT TESTS]:
+  ✓ test_vote_higher_term: PASSED
+  ✓ test_reject_lower_term: PASSED
+  ✓ test_single_vote_per_term: PASSED
+
+ALL 3 TESTS PASSED (100% COVERAGE)`;
+      }, 650);
+    }
+    
+  </script>
+</body>
+</html>

@@ -36,6 +36,7 @@ VENTURES_CONFIG = {
         "bg": "#040612",
         "home_url": "/ventures.html",
         "dirs": ["app", "sevenseed/app"],
+        "standalone_dirs": ["apps/sevenseed/frontend/out/app"],
         "data_fn": get_hub_data,
         "title": "Sevenseed Studio Hub — AI Venture Studio & Incubation Workstation",
         "desc": "High-density command center for Sevenseed's 8 incubated AI ventures. Launch autonomous models, simulate SPV carry waterfalls, and run RAG pipelines."
@@ -51,6 +52,7 @@ VENTURES_CONFIG = {
         "bg": "#020510",
         "home_url": "/sevenforce/",
         "dirs": ["sevenforce/app"],
+        "standalone_dirs": ["apps/sevenforce/backend/static/app", "apps/sevenforce/frontend/out/app"],
         "data_fn": get_sevenforce_data,
         "title": "Sevenforce Cockpit — Autonomous Multi-Agent Workforce Suite",
         "desc": "Orchestrate, supervise, and dispatch 9 autonomous AI employees for sales, code shipping, competitor teardowns, and multi-agent workflows."
@@ -66,6 +68,7 @@ VENTURES_CONFIG = {
         "bg": "#040714",
         "home_url": "/comonk-ai/",
         "dirs": ["comonk-ai/app", "comonk/app"],
+        "standalone_dirs": ["apps/comonk/frontend/out/app", "apps/comonk-ai/frontend/out/app", "apps/comonk-ai/backend/static/app"],
         "data_fn": get_comonk_data,
         "title": "Comonk AI Workstation — Career Intelligence & FAANG Mock Arena",
         "desc": "Real-time ATS resume keyword scorer, FAANG system design mock evaluator, and Levels.fyi compensation radar."
@@ -81,6 +84,7 @@ VENTURES_CONFIG = {
         "bg": "#020617",
         "home_url": "/avpu/",
         "dirs": ["avpu/app"],
+        "standalone_dirs": ["apps/avpu/backend/static/app", "apps/avpu/frontend/out/app"],
         "data_fn": get_avpu_data,
         "title": "AVP University Portal — Autonomous Academic & Placement Workstation",
         "desc": "Autonomous learning portal powered by Gyan AI Socratic syllabus tutor, adaptive quiz arena, and campus placement shortlisting."
@@ -96,6 +100,7 @@ VENTURES_CONFIG = {
         "bg": "#0b0502",
         "home_url": "/avp-emart/",
         "dirs": ["avp-emart/app"],
+        "standalone_dirs": ["apps/avp-emart/backend/static/app", "apps/avp-emart/frontend/out/app"],
         "data_fn": get_emart_data,
         "title": "AVP Emart Radar — Multi-Store Price Comparison & Deal Scraper",
         "desc": "Scan prices across Amazon, Flipkart, Blinkit, and Zepto in real time with automated multi-cart optimization."
@@ -111,6 +116,7 @@ VENTURES_CONFIG = {
         "bg": "#0b0702",
         "home_url": "/breakdown-factor/",
         "dirs": ["breakdown-factor/app", "breakdown/app"],
+        "standalone_dirs": ["apps/breakdown-factor/backend/static/app", "apps/breakdown-factor/frontend/out/app"],
         "data_fn": get_breakdown_data,
         "title": "Breakdown Factor Workstation — AI Construction Vision & BOQ Costing",
         "desc": "OSHA site safety surveillance, YOLOv10 sub-millimeter concrete crack inspection, and CPWD automated BOQ estimation."
@@ -126,6 +132,7 @@ VENTURES_CONFIG = {
         "bg": "#020907",
         "home_url": "/decode-forest-pharmacy/",
         "dirs": ["decode-forest-pharmacy/app", "pharmacy/app"],
+        "standalone_dirs": ["apps/decode-forest-pharmacy/backend/static/app", "apps/decode-forest-pharmacy/frontend/out/app"],
         "data_fn": get_pharmacy_data,
         "title": "Decode Pharmacy — Clinical AI Pharmacology & Jan Aushadhi Hub",
         "desc": "Prescription active salt extraction, drug-to-drug contraindication radar, and PMBJP Jan Aushadhi generic substitution."
@@ -141,6 +148,7 @@ VENTURES_CONFIG = {
         "bg": "#0b0305",
         "home_url": "/rakshak-ai/",
         "dirs": ["rakshak-ai/app"],
+        "standalone_dirs": ["apps/rakshak-ai/backend/static/app", "apps/rakshak-ai/frontend/out/app"],
         "data_fn": get_rakshak_data,
         "title": "Rakshak AI — AI Vision Security & BNS 2024 Legal FIR Workstation",
         "desc": "Real-time 4-camera CCTV stream analytics, Bharatiya Nyaya Sanhita (BNS 2024) FIR drafting, and biometric face attendance."
@@ -156,6 +164,7 @@ VENTURES_CONFIG = {
         "bg": "#0b0307",
         "home_url": "/avp-charitable-trust/",
         "dirs": ["avp-charitable-trust/app", "trust/app"],
+        "standalone_dirs": ["apps/avp-charitable-trust/backend/static/app", "apps/avp-charitable-trust/frontend/build_out/app", "apps/avp-charitable-trust/frontend/out/app"],
         "data_fn": get_trust_data,
         "title": "AVP Charitable Trust — AI Social Impact & 80G Tax Exemption Ledger",
         "desc": "Transparent CSR grant ledger, beneficiary RAG need allocation, and Section 80G digital tax receipt issuance."
@@ -449,6 +458,17 @@ def build_all():
 
             print(f"  [OK] -> {rel_dir} (sites & backend static synced)")
             total_files += 4
+
+        # Destination 3: Standalone apps under apps/<venture>/
+        for standalone_rel in vcfg.get("standalone_dirs", []):
+            dest3 = os.path.join(REPO_ROOT, standalone_rel)
+            os.makedirs(dest3, exist_ok=True)
+            with open(os.path.join(dest3, "index.html"), "w", encoding="utf-8") as f:
+                f.write(html_content)
+            with open(os.path.join(dest3, "portal.css"), "w", encoding="utf-8") as f:
+                f.write(css_content)
+            print(f"  [OK] -> {standalone_rel} (standalone app synced)")
+            total_files += 2
 
     print(f"\\nSUCCESS: All 9 venture portals built and synced! ({total_files} files written)")
 
