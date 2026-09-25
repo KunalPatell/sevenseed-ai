@@ -49,15 +49,17 @@ def get_rakshak_data():
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div class="p-3.5 rounded-2xl bg-black/60 border border-white/10 relative overflow-hidden">
           <div class="aspect-video bg-slate-950 rounded-xl relative flex items-center justify-center overflow-hidden border border-white/5">
-            <i class="fas fa-warehouse text-4xl text-slate-800"></i>
-            <div class="absolute top-3 left-3 px-2 py-0.5 rounded bg-red-600/90 text-[10px] font-mono font-bold text-white flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> LIVE: CAM-01
+            <canvas id="cctv-canvas" width="640" height="360" class="w-full h-full object-cover"></canvas>
+            <div class="absolute top-3 left-3 px-2 py-0.5 rounded bg-red-600/90 text-[10px] font-mono font-bold text-white flex items-center gap-1.5 z-10">
+              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> LIVE: CAM-01 (SYNTHETIC FEED)
             </div>
-            <div class="absolute top-3 right-3 text-[10px] text-white/70 font-mono bg-black/60 px-2 py-0.5 rounded">60 FPS • 4K ULTRA</div>
-            <div class="absolute bottom-3 left-3 text-xs text-white font-mono bg-black/70 px-2 py-1 rounded border border-white/10">
+            <button onclick="toggleNightVision()" class="absolute top-3 right-3 text-[10px] text-white/90 font-mono bg-black/70 hover:bg-black px-2 py-1 rounded border border-white/20 transition-all z-10 flex items-center gap-1.5 cursor-pointer">
+              <i class="fas fa-eye text-emerald-400"></i> <span id="nv-label">IR Night Vision: OFF</span>
+            </button>
+            <div class="absolute bottom-3 left-3 text-xs text-white font-mono bg-black/70 px-2 py-1 rounded border border-white/10 z-10">
               GATE 1: MAIN ENTRY & VEHICLE ANPR
             </div>
-            <div class="absolute bottom-3 right-3 text-xs text-emerald-400 font-mono bg-emerald-950/60 px-2 py-1 rounded border border-emerald-500/30">
+            <div class="absolute bottom-3 right-3 text-xs text-emerald-400 font-mono bg-emerald-950/70 px-2 py-1 rounded border border-emerald-500/30 z-10">
               VEHICLE: DL-01-AB-1234 [AUTHORIZED]
             </div>
           </div>
@@ -299,6 +301,96 @@ def get_rakshak_data():
     """
 
     script_content = """
+    let nightVision = false;
+    let cctvAnimId = null;
+
+    function toggleNightVision() {
+      nightVision = !nightVision;
+      const lbl = document.getElementById('nv-label');
+      if (lbl) lbl.textContent = nightVision ? 'IR Night Vision: ON' : 'IR Night Vision: OFF';
+    }
+
+    function initCctvCanvas() {
+      const canvas = document.getElementById('cctv-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let t = 0;
+
+      function render() {
+        t += 0.04;
+        const w = canvas.width;
+        const h = canvas.height;
+
+        // Background
+        if (nightVision) {
+          ctx.fillStyle = '#061a0e';
+          ctx.fillRect(0, 0, w, h);
+          // Green phosphorescent noise grid
+          ctx.strokeStyle = 'rgba(34, 197, 94, 0.12)';
+          ctx.lineWidth = 1;
+          for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+          for (let y = 0; y < h; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+        } else {
+          ctx.fillStyle = '#0a0e1a';
+          ctx.fillRect(0, 0, w, h);
+          // Dark surveillance grid
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+          ctx.lineWidth = 1;
+          for (let x = 0; x < w; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+          for (let y = 0; y < h; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+        }
+
+        // Animated Vehicle / Pedestrian Tracking Target 1
+        const x1 = (Math.sin(t * 0.7) * 0.35 + 0.5) * w;
+        const y1 = (Math.cos(t * 0.5) * 0.2 + 0.55) * h;
+        const bw1 = 90;
+        const bh1 = 70;
+
+        ctx.strokeStyle = nightVision ? '#22c55e' : '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x1 - bw1 / 2, y1 - bh1 / 2, bw1, bh1);
+
+        // Corner ticks
+        ctx.fillStyle = nightVision ? '#22c55e' : '#38bdf8';
+        ctx.fillRect(x1 - bw1 / 2 - 2, y1 - bh1 / 2 - 2, 8, 3);
+        ctx.fillRect(x1 - bw1 / 2 - 2, y1 - bh1 / 2 - 2, 3, 8);
+        ctx.fillRect(x1 + bw1 / 2 - 6, y1 - bh1 / 2 - 2, 8, 3);
+        ctx.fillRect(x1 + bw1 / 2 - 1, y1 - bh1 / 2 - 2, 3, 8);
+
+        // Label Tag
+        ctx.fillStyle = nightVision ? 'rgba(34, 197, 94, 0.2)' : 'rgba(56, 189, 248, 0.2)';
+        ctx.fillRect(x1 - bw1 / 2, y1 - bh1 / 2 - 18, bw1, 16);
+        ctx.fillStyle = nightVision ? '#86efac' : '#e0f2fe';
+        ctx.font = '10px monospace';
+        ctx.fillText('ID: AMIT S. 99.4%', x1 - bw1 / 2 + 4, y1 - bh1 / 2 - 6);
+
+        // Secondary Target: Vehicle Gate
+        const x2 = w * 0.78;
+        const y2 = h * 0.42;
+        ctx.strokeStyle = nightVision ? '#86efac' : '#10b981';
+        ctx.strokeRect(x2 - 50, y2 - 35, 100, 70);
+        ctx.fillStyle = nightVision ? 'rgba(34, 197, 94, 0.2)' : 'rgba(16, 185, 129, 0.2)';
+        ctx.fillRect(x2 - 50, y2 - 51, 100, 16);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText('ANPR: DL-01-AB', x2 - 46, y2 - 39);
+
+        // Crosshair Center
+        ctx.strokeStyle = nightVision ? 'rgba(34, 197, 94, 0.4)' : 'rgba(255, 255, 255, 0.3)';
+        ctx.beginPath();
+        ctx.moveTo(w / 2 - 15, h / 2); ctx.lineTo(w / 2 + 15, h / 2);
+        ctx.moveTo(w / 2, h / 2 - 15); ctx.lineTo(w / 2, h / 2 + 15);
+        ctx.stroke();
+
+        // HUD Timestamp
+        ctx.fillStyle = nightVision ? '#86efac' : 'rgba(255,255,255,0.7)';
+        ctx.font = '10px monospace';
+        ctx.fillText(`EDGE_FPS: 59.8 | LATENCY: 22ms | SENSORS: 4/4 OK`, 12, h - 14);
+
+        cctvAnimId = requestAnimationFrame(render);
+      }
+      render();
+    }
+
     function generateLegalFir() {
       const offense = document.getElementById('fir-offense').value;
       const t = document.getElementById('fir-time').value;
@@ -339,8 +431,21 @@ DATE & TIME OF REPORT: ${new Date().toLocaleString()}
    ✓ Automated Incident Dispatch Log #INC-2026-9908
 
 STATUS: VERIFIED & READY FOR SUBMISSION TO STATION HOUSE OFFICER (SHO).`;
-      }, 700);
+      }, 500);
     }
+
+    function downloadFirDocx() {
+      const text = document.getElementById('fir-console').innerText || document.getElementById('fir-console').textContent;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'BNS_2024_FIR_Draft_' + Date.now() + '.txt';
+      a.click();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initCctvCanvas();
+    });
     """
 
     return nav_items, stats_items, main_content, script_content

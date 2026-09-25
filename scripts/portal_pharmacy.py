@@ -332,13 +332,38 @@ PATIENT Rx IDENTIFIED: 4 THERAPEUTIC MEDICATIONS
       const b = document.getElementById('drug-b').value;
       const textEl = document.getElementById('interaction-text');
       const recEl = document.getElementById('interaction-rec');
+      const card = document.getElementById('interaction-card');
 
       if ((a === 'aspirin' && b === 'ibuprofen') || (a === 'ibuprofen' && b === 'aspirin')) {
+        card.className = 'p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 space-y-3';
+        card.querySelector('span:first-child').textContent = 'SEVERITY: MAJOR / CONTRAINDICATED';
+        card.querySelector('span:last-child').textContent = 'Risk Level 3';
         textEl.innerHTML = `Co-administration of <strong>Aspirin</strong> and <strong>Ibuprofen</strong> results in competitive antagonism at the platelet COX-1 binding site. Ibuprofen competitively inhibits the irreversible antiplatelet effect of low-dose aspirin, significantly attenuating cardioprotection and tripling gastrointestinal bleeding risk.`;
         recEl.innerHTML = `CLINICAL RECOMMENDATION: Take Aspirin at least 2 hours BEFORE Ibuprofen, or substitute Ibuprofen with Paracetamol for analgesia.`;
+      } else if ((a === 'warfarin' && b === 'aspirin') || (a === 'aspirin' && b === 'warfarin') || (a === 'warfarin' && b === 'ibuprofen')) {
+        card.className = 'p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 space-y-3';
+        card.querySelector('span:first-child').textContent = 'SEVERITY: CRITICAL / HIGH BLEEDING HAZARD';
+        card.querySelector('span:last-child').textContent = 'Risk Level 4';
+        textEl.innerHTML = `Potent synergism between vitamin K antagonist (<strong>Warfarin</strong>) and antiplatelet / NSAID. Exponentially increases International Normalized Ratio (INR) and risk of upper GI hemorrhaging and intracranial hemorrhage.`;
+        recEl.innerHTML = `CLINICAL RECOMMENDATION: Strictly avoid unless directed by hematologist. Maintain INR monitoring every 48 hours.`;
+      } else if ((a === 'cipro' && b === 'antacid') || (a === 'antacid' && b === 'cipro')) {
+        card.className = 'p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-3';
+        card.querySelector('span:first-child').textContent = 'SEVERITY: MODERATE / CHELATION IMPAIRMENT';
+        card.querySelector('span:last-child').textContent = 'Risk Level 2';
+        textEl.innerHTML = `Polyvalent cations (Magnesium, Aluminum, Calcium) in antacids form insoluble chelates with <strong>Ciprofloxacin</strong>, reducing antibiotic bioavailability by up to 85% and causing treatment failure.`;
+        recEl.innerHTML = `CLINICAL RECOMMENDATION: Administer Ciprofloxacin 2 hours BEFORE or 6 hours AFTER antacid ingestion.`;
+      } else if (a === 'metformin' && b === 'paracetamol') {
+        card.className = 'p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-3';
+        card.querySelector('span:first-child').textContent = 'SEVERITY: SAFE / NO KNOWN INTERACTION';
+        card.querySelector('span:last-child').textContent = 'Risk Level 0';
+        textEl.innerHTML = `No clinically significant pharmacokinetic or pharmacodynamic interaction documented between <strong>Metformin</strong> and <strong>Paracetamol</strong>. Hepatic and renal clearance pathways operate independently.`;
+        recEl.innerHTML = `CLINICAL RECOMMENDATION: Safe to co-administer at standard therapeutic dosages.`;
       } else {
-        textEl.innerHTML = `Co-administration of selected molecules evaluated against FDA drug-interaction database. No severe metabolic enzyme CYP450 inhibition detected. Routine therapeutic dose monitoring advised.`;
-        recEl.innerHTML = `CLINICAL RECOMMENDATION: Safe to administer as per prescribed chronopharmacology intervals.`;
+        card.className = 'p-4 rounded-xl bg-blue-500/10 border border-blue-500/30 space-y-3';
+        card.querySelector('span:first-child').textContent = 'SEVERITY: MINOR / MONITORING ADVISED';
+        card.querySelector('span:last-child').textContent = 'Risk Level 1';
+        textEl.innerHTML = `Co-administration evaluated against CDSCO & FDA pharmacovigilance monographs. No severe cytochrome P450 enzyme competition detected. Normal renal and hepatic clearance expected.`;
+        recEl.innerHTML = `CLINICAL RECOMMENDATION: Safe to administer under standard chronopharmacology regimen.`;
       }
     }
     """

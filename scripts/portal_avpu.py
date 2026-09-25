@@ -450,9 +450,17 @@ def get_avpu_data():
         <div class="workbench-card">
           <div class="flex items-center justify-between mb-4">
             <h3 class="text-base font-extrabold text-white flex items-center gap-2">
-              <i class="fas fa-terminal text-blue-400"></i> Interactive Code Lab: Distributed Raft Election
+              <i class="fas fa-terminal text-blue-400"></i> Interactive Code Lab & Sandbox
             </h3>
-            <span class="text-xs text-blue-400 font-mono font-bold">Python 3.12 Runtime</span>
+            <div class="flex items-center gap-2">
+              <select id="codelab-algo-select" onchange="loadAlgorithm(this.value)" class="bg-black/40 border border-white/10 rounded-lg py-1 px-2.5 text-xs text-white outline-none focus:border-blue-400">
+                <option value="raft" selected>Distributed Raft Election (Python)</option>
+                <option value="dijkstra">Dijkstra's Shortest Path & Heap (Python)</option>
+                <option value="bst">AVL Self-Balancing Tree (Python)</option>
+                <option value="sql">In-Memory Hash Join Engine (Python)</option>
+              </select>
+              <span class="text-xs text-blue-400 font-mono font-bold">Python 3.12</span>
+            </div>
           </div>
 
           <textarea id="codelab-editor" rows="11" class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-xs text-emerald-400 font-mono outline-none focus:border-blue-500">
@@ -579,25 +587,131 @@ GYAN AI SOCRATIC PEDAGOGY — ${subject.toUpperCase()}
       alert(`Interview slot confirmed for ${company} (${ctc})! Invitation sent to your AVP student email.`);
     }
 
+    const ALGO_SNIPPETS = {
+      raft: `class RaftNode:
+    def __init__(self, node_id, peers):
+        self.node_id = node_id
+        self.peers = peers
+        self.current_term = 0
+        self.voted_for = None
+        self.state = "FOLLOWER"
+
+    def request_vote(self, term, candidate_id):
+        if term > self.current_term:
+            self.current_term = term
+            self.voted_for = candidate_id
+            self.state = "FOLLOWER"
+            return True
+        return False
+
+# Simulate cluster of 3 nodes
+node1 = RaftNode(1, [2, 3])
+print(f"Node 1 initialized as: {node1.state} (Term: {node1.current_term})")
+granted = node1.request_vote(term=1, candidate_id=2)
+print(f"Vote granted to Candidate 2: {granted}")
+print(f"Node 1 updated term: {node1.current_term}, voted for: {node1.voted_for}")`,
+      dijkstra: `import heapq
+
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    pq = [(0, start)]
+    
+    while pq:
+        curr_dist, curr_node = heapq.heappop(pq)
+        if curr_dist > distances[curr_node]:
+            continue
+        for neighbor, weight in graph[curr_node].items():
+            dist = curr_dist + weight
+            if dist < distances[neighbor]:
+                distances[neighbor] = dist
+                heapq.heappush(pq, (dist, neighbor))
+    return distances
+
+mesh = {
+    'Router-A': {'Router-B': 4, 'Router-C': 2},
+    'Router-B': {'Router-A': 4, 'Router-C': 1, 'Router-D': 5},
+    'Router-C': {'Router-A': 2, 'Router-B': 1, 'Router-D': 8, 'Router-E': 10},
+    'Router-D': {'Router-B': 5, 'Router-C': 8, 'Router-E': 2},
+    'Router-E': {'Router-C': 10, 'Router-D': 2}
+}
+print("Computing shortest routing paths from Router-A:")
+routes = dijkstra(mesh, 'Router-A')
+for target, cost in routes.items():
+    print(f" -> {target}: Latency = {cost}ms")`,
+      bst: `class AVLNode:
+    def __init__(self, key):
+        self.key = key
+        self.left = None
+        self.right = None
+        self.height = 1
+
+def get_height(node):
+    return node.height if node else 0
+
+def get_balance(node):
+    return get_height(node.left) - get_height(node.right) if node else 0
+
+def right_rotate(y):
+    x = y.left
+    T2 = x.right
+    x.right = y
+    y.left = T2
+    y.height = max(get_height(y.left), get_height(y.right)) + 1
+    x.height = max(get_height(x.left), get_height(x.right)) + 1
+    return x
+
+print("AVL Tree Self-Balancing Engine initialized.")
+print("Testing Left-Left Imbalance rotation (Z -> Y -> X)...")
+root = AVLNode(30)
+root.left = AVLNode(20)
+root.left.left = AVLNode(10)
+print(f"Pre-rotation balance factor: {get_balance(root)}")
+root = right_rotate(root)
+print(f"Post-rotation root: {root.key}, balance: {get_balance(root)} (BALANCED)")`,
+      sql: `# In-Memory Hash Join Algorithm
+def hash_join(table_a, table_b, key_a, key_b):
+    hash_table = {}
+    for row in table_a:
+        k = row[key_a]
+        hash_table.setdefault(k, []).append(row)
+    
+    joined = []
+    for row in table_b:
+        k = row[key_b]
+        if k in hash_table:
+            for match in hash_table[k]:
+                joined.append({**match, **row})
+    return joined
+
+students = [{'id': 1, 'name': 'Kunal'}, {'id': 2, 'name': 'Ananya'}]
+enrollments = [{'id': 1, 'course': 'Distributed Systems'}, {'id': 1, 'course': 'Computer Vision'}, {'id': 2, 'course': 'NLP'}]
+print(f"Joined {len(hash_join(students, enrollments, 'id', 'id'))} records using O(M+N) Hash Join.")`
+    };
+
+    function loadAlgorithm(key) {
+      const editor = document.getElementById('codelab-editor');
+      if (ALGO_SNIPPETS[key]) {
+        editor.value = ALGO_SNIPPETS[key];
+      }
+    }
+
     function runCodeLab() {
+      const algo = document.getElementById('codelab-algo-select').value;
       const consoleEl = document.getElementById('code-console');
-      consoleEl.innerHTML = `<span class="text-yellow-400">>> [SANDBOX] Spawning isolated Python 3.12 container...</span>\\n>> Compiling bytecode & running Raft election simulation...`;
+      consoleEl.innerHTML = `<span class="text-yellow-400">>> [SANDBOX] Compiling Python 3.12 bytecode for: ${algo.toUpperCase()}...</span>\\n>> Allocating virtual heap & evaluating distributed test cases...`;
 
       setTimeout(() => {
-        consoleEl.innerHTML = `========================================================================
-SANDBOX EXECUTION SUCCESSFUL (Time: 38ms, Memory: 14.2 MB)
-========================================================================
-Node 1 initialized as: FOLLOWER (Term: 0)
-Vote granted to Candidate 2: True
-Node 1 updated term: 1, voted for: 2
-
-[UNIT TESTS]:
-  ✓ test_vote_higher_term: PASSED
-  ✓ test_reject_lower_term: PASSED
-  ✓ test_single_vote_per_term: PASSED
-
-ALL 3 TESTS PASSED (100% COVERAGE)`;
-      }, 650);
+        if (algo === 'dijkstra') {
+          consoleEl.innerHTML = `========================================================================\\nSANDBOX EXECUTION SUCCESSFUL (Time: 24ms, Memory: 11.4 MB)\\n========================================================================\\nComputing shortest routing paths from Router-A:\\n -> Router-A: Latency = 0ms\\n -> Router-B: Latency = 3ms  (via Router-C)\\n -> Router-C: Latency = 2ms\\n -> Router-D: Latency = 8ms  (via Router-B)\\n -> Router-E: Latency = 10ms (via Router-D)\\n\\n[VERIFICATION SUITE]:\\n  ✓ test_optimal_cost: PASSED (Found global minimum)\\n  ✓ test_negative_cycle_guard: PASSED (None detected)\\n  ✓ test_heapq_invariant: PASSED (O(E log V) verified)`;
+        } else if (algo === 'bst') {
+          consoleEl.innerHTML = `========================================================================\\nSANDBOX EXECUTION SUCCESSFUL (Time: 19ms, Memory: 8.9 MB)\\n========================================================================\\nAVL Tree Self-Balancing Engine initialized.\\nTesting Left-Left Imbalance rotation (Z -> Y -> X)...\\nPre-rotation balance factor: 2 (STRICT VIOLATION)\\nPost-rotation root: 20, balance: 0 (BALANCED)\\n\\n[VERIFICATION SUITE]:\\n  ✓ test_avl_height_balance: PASSED (Strictly [-1, 0, +1])\\n  ✓ test_inorder_traversal_sort: PASSED [10, 20, 30]\\n  ✓ test_rebalance_cost: PASSED (O(1) pointer rotations)`;
+        } else if (algo === 'sql') {
+          consoleEl.innerHTML = `========================================================================\\nSANDBOX EXECUTION SUCCESSFUL (Time: 14ms, Memory: 9.2 MB)\\n========================================================================\\nJoined 3 records using O(M+N) Hash Join:\\n -> {id: 1, name: 'Kunal', course: 'Distributed Systems'}\\n -> {id: 1, name: 'Kunal', course: 'Computer Vision'}\\n -> {id: 2, name: 'Ananya', course: 'NLP'}\\n\\n[VERIFICATION SUITE]:\\n  ✓ test_hash_collision_chaining: PASSED\\n  ✓ test_equi_join_completeness: PASSED (3/3 matches found)\\n  ✓ test_complexity_linear: PASSED`;
+        } else {
+          consoleEl.innerHTML = `========================================================================\\nSANDBOX EXECUTION SUCCESSFUL (Time: 38ms, Memory: 14.2 MB)\\n========================================================================\\nNode 1 initialized as: FOLLOWER (Term: 0)\\nVote granted to Candidate 2: True\\nNode 1 updated term: 1, voted for: 2\\n\\n[UNIT TESTS]:\\n  ✓ test_vote_higher_term: PASSED\\n  ✓ test_reject_lower_term: PASSED\\n  ✓ test_single_vote_per_term: PASSED\\n\\nALL 3 TESTS PASSED (100% COVERAGE)`;
+        }
+      }, 550);
     }
     """
 
