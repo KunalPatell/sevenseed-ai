@@ -308,6 +308,11 @@ ADMIN_KEY = os.environ.get("ADMIN_KEY","")
 def dashboard_redirect():
     return RedirectResponse(url="/app/")
 
+@app.get("/sevenseed/app", include_in_schema=False)
+@app.get("/sevenseed/app/", include_in_schema=False)
+def _sevenseed_app_redirect():
+    return RedirectResponse(url="/app/", status_code=307)
+
 
 # ── API endpoints ─────────────────────────────────────────────────────────────
 @app.get("/api/health")
@@ -475,12 +480,6 @@ if config.STATIC_DIR.exists():
                 app.mount(f"/{alias_name}", StaticFiles(directory=str(target_sub), html=True), name=f"alias_{alias_name}")
                 mounted.add(alias_name)
 
-    # Sevenseed hub /app redirect to canonical /app/
-    @app.get("/sevenseed/app", include_in_schema=False)
-    @app.get("/sevenseed/app/", include_in_schema=False)
-    def _sevenseed_app_redirect():
-        return RedirectResponse(url="/app/", status_code=307)
-
     # Mount Sevenseed standalone directory if present
     sevenseed_static = config.STATIC_DIR / "sevenseed"
     if sevenseed_static.exists() and "sevenseed" not in mounted:
@@ -500,6 +499,6 @@ else:
 
 if __name__=="__main__":
     import uvicorn
-    port=int(os.environ.get("PORT", 8001))
+    port=int(os.environ.get("PORT",8000))
     print(f"[Sevenseed] provider={active_provider()} | db={config.DB_PATH}")
     uvicorn.run(app,host="0.0.0.0",port=port)

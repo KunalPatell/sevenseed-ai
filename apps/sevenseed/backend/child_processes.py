@@ -50,32 +50,18 @@ from fastapi import Request, Response
 
 APPS_DIR = Path(__file__).resolve().parents[2]
 
-def _is_port_listening(port: int) -> bool:
-    import socket
-    try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.settimeout(0.3)
-            return s.connect_ex(("127.0.0.1", port)) == 0
-    except Exception:
-        return False
-
 # prefix -> (folder name under apps/, internal port, optional overrides)
 # backend_subdir: subfolder under folder/ that contains main.py (default: "backend")
 # main_file: entry point filename (default: "main.py")
-# Ports are strictly unified with run_all.py (8000 to 8008)
 CHILDREN: Dict[str, Dict[str, object]] = {
-    "comonk": {"folder": "comonk", "port": 8000, "backend_subdir": "", "main_file": "comonk_backend.py"},
-    "comonk-ai": {"folder": "comonk", "port": 8000, "backend_subdir": "", "main_file": "comonk_backend.py"},
-    "sevenforce": {"folder": "sevenforce", "port": 8002},
-    "avpu": {"folder": "avpu", "port": 8003},
-    "pharmacy": {"folder": "decode-forest-pharmacy", "port": 8004},
-    "decode-forest-pharmacy": {"folder": "decode-forest-pharmacy", "port": 8004},
-    "breakdown": {"folder": "breakdown-factor", "port": 8005},
-    "breakdown-factor": {"folder": "breakdown-factor", "port": 8005},
-    "trust": {"folder": "avp-charitable-trust", "port": 8006},
-    "avp-charitable-trust": {"folder": "avp-charitable-trust", "port": 8006},
-    "avp-emart": {"folder": "avp-emart", "port": 8007},
-    "rakshak-ai": {"folder": "rakshak-ai", "port": 8008},
+    "avp-emart": {"folder": "avp-emart", "port": 8001},
+    "avpu": {"folder": "avpu", "port": 8002},
+    "breakdown": {"folder": "breakdown-factor", "port": 8003},
+    "trust": {"folder": "avp-charitable-trust", "port": 8004},
+    "pharmacy": {"folder": "decode-forest-pharmacy", "port": 8005},
+    "sevenforce": {"folder": "sevenforce", "port": 8006},
+    "rakshak-ai": {"folder": "rakshak-ai", "port": 8007},
+    "comonk-ai": {"folder": "comonk-ai", "port": 8008, "backend_subdir": "", "main_file": "comonk_backend.py"},
 }
 
 _HOP_BY_HOP = {"content-length", "transfer-encoding", "connection", "keep-alive"}
@@ -135,17 +121,8 @@ async def ensure_child_running(prefix: str) -> None:
     reaper, since idle timeout alone is too slow to prevent a memory spike from
     ordinary traffic hitting several heavy children within the same minute.
     """
-    info = CHILDREN[prefix]
-    port = int(info["port"])
-
-    # If the process is already running and listening (e.g. started via run_all.py or standalone),
-    # avoid duplicate spawn and port collision
-    if _is_port_listening(port):
-        _last_used[prefix] = time.monotonic()
-        return
-
     async with _locks[prefix]:
-        if _is_running(prefix) or _is_port_listening(port):
+        if _is_running(prefix):
             _last_used[prefix] = time.monotonic()
             return
 
