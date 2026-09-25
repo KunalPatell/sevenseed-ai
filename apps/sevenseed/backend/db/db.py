@@ -14,24 +14,35 @@ HERE = Path(__file__).resolve().parent
 DEFAULT_SQLITE_PATH = HERE.parent / "db.sqlite3"
 
 # DATABASE_URL from environment or fallback to SQLite
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 
 if not DATABASE_URL:
-    # Use SQLite fallback
     DATABASE_URL = f"sqlite:///{DEFAULT_SQLITE_PATH}"
 else:
-    # Standardize PostgreSQL URL schema for SQLAlchemy (Render/Neon/Supabase use postgres://)
+    # Standardize PostgreSQL URL schema for psycopg2 (SQLAlchemy 2 defaults postgresql:// to psycopg3)
     if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg2://", 1)
+    elif DATABASE_URL.startswith("postgresql://") and not DATABASE_URL.startswith("postgresql+"):
+        DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://", 1)
 
 # Configure engine connect args (SQLite needs check_same_thread=False)
 connect_args = {}
 if DATABASE_URL.startswith("sqlite"):
     connect_args = {"check_same_thread": False}
 
-engine = create_engine(DATABASE_URL, connect_args=connect_args, pool_pre_ping=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+try:
+    engine = create_engine(DATABASE_URL, connect_args=connect_args, pool_pre_ping=True)
+    # Test connection
+    with engine.connect() as conn:
+        pass
+except Exception as e:
+    # Fallback to local SQLite on any PostgreSQL driver/connection failure
+    print(f"[db] Warning: Failed to connect via {DATABASE_URL[:25]}...: {e}. Falling back to SQLite.")
+    DATABASE_URL = f"sqlite:///{DEFAULT_SQLITE_PATH}"
+    connect_args = {"check_same_thread": False}
+    engine = create_engine(DATABASE_URL, connect_args=connect_args, pool_pre_ping=True)
 
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 
@@ -46,31 +57,34 @@ def get_db():
 
 def init_db():
     """Initialize database schema tables with auto-migration for legacy SQLite tables."""
-    from db.models import User, Workspace, WorkspaceMember, Subscription, UserAPIKey, TokenUsageLog  # noqa: F401
-    from sqlalchemy import inspect, text
-    
-    inspector = inspect(engine)
-    
-    # Check users table
-    if inspector.has_table("users"):
-        cols = [c["name"] for c in inspector.get_columns("users")]
-        if "password_hash" not in cols or "full_name" not in cols:
-            with engine.connect() as conn:
-                try:
-                    conn.execute(text("DROP TABLE IF EXISTS users"))
-                    conn.commit()
-                except Exception:
-                    pass
+    try:
+        from db.models import User, Workspace, WorkspaceMember, Subscription, UserAPIKey, TokenUsageLog  # noqa: F401
+        from sqlalchemy import inspect, text
+        
+        inspector = inspect(engine)
+        
+        # Check users table
+        if inspector.has_table("users"):
+            cols = [c["name"] for c in inspector.get_columns("users")]
+            if "password_hash" not in cols or "full_name" not in cols:
+                with engine.connect() as conn:
+                    try:
+                        conn.execute(text("DROP TABLE IF EXISTS users"))
+                        conn.commit()
+                    except Exception:
+                        pass
 
-    # Check subscriptions table
-    if inspector.has_table("subscriptions"):
-        cols = [c["name"] for c in inspector.get_columns("subscriptions")]
-        if "workspace_id" not in cols:
-            with engine.connect() as conn:
-                try:
-                    conn.execute(text("DROP TABLE IF EXISTS subscriptions"))
-                    conn.commit()
-                except Exception:
-                    pass
+        # Check subscriptions table
+        if inspector.has_table("subscriptions"):
+            cols = [c["name"] for c in inspector.get_columns("subscriptions")]
+            if "workspace_id" not in cols:
+                with engine.connect() as conn:
+                    try:
+                        conn.execute(text("DROP TABLE IF EXISTS subscriptions"))
+                        conn.commit()
+                    except Exception:
+                        pass
 
-    Base.metadata.create_all(bind=engine)
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        print(f"[db] init_db note: {e}")
