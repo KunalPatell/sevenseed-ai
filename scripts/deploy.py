@@ -95,11 +95,12 @@ def main():
     run_cmd("git push origin main")
     print("   [OK] Pushed to origin main successfully.")
 
-    # 5. Push to Render Watched Remote (ai -> master)
-    print("\n5. Pushing to Render Watched Remote (ai -> main:master)...")
+    # 5. Push to Render Watched Remote (ai -> both master and main)
+    print("\n5. Pushing to Render Watched Remote (ai -> main:master and main:main)...")
     try:
         run_cmd("git push ai main:master")
-        print("   [OK] Pushed to ai main:master successfully.")
+        run_cmd("git push ai main:main")
+        print("   [OK] Pushed to ai master and main branches successfully.")
     except Exception as e:
         print(f"   [WARNING] Remote 'ai' push encountered an issue: {e}")
         print("   Ensure remote 'ai' is configured (git remote add ai https://github.com/KunalPatell/sevenseed-ai.git)")
