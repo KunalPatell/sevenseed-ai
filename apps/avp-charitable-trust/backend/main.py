@@ -5,7 +5,7 @@ Serves Next.js static site and handles NGO needs assessments, donor counseling, 
 """
 from __future__ import annotations
 import os, sys, math, re, uuid
-from typing import List, Dict, Any, TypedDict, Annotated
+from typing import List, Dict, Any, TypedDict, Annotated, Optional
 import operator
 
 _HERE = os.path.dirname(os.path.abspath(__file__))

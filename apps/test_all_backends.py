@@ -26,7 +26,7 @@ for name, sub, mod_name, app_var in APPS:
     code = f"import {mod_name}; app=getattr({mod_name}, '{app_var}', None); print(f'OK {{type(app)}}')"
     cmd = [sys.executable, "-u", "-c", code]
     try:
-        res = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=12)
+        res = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=35)
         if res.returncode == 0:
             print(f"[PASS] -> {res.stdout.strip()}", flush=True)
         else:

@@ -53,7 +53,7 @@ for root, dirs, files in os.walk(SITES_DIR):
         srcs = re.findall(r'src=["\']([^"\']+)["\']', content)
         for s in srcs:
             s = s.strip()
-            if not s or s.startswith("data:") or s.startswith("http://") or s.startswith("https://"):
+            if not s or s.startswith("data:") or s.startswith("http://") or s.startswith("https://") or s.startswith("${"):
                 continue
             clean_s = s.split("?")[0].split("#")[0]
             if not clean_s:
