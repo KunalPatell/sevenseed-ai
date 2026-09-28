@@ -64,6 +64,8 @@ def render_pharmacy_html(c):
   <div class="nav-links" id="navLinks">
     <a href="generic-finder.html"><i class="fas fa-pills" style="color:#34d399;"></i> Generic Finder</a>
     <a href="interaction-checker.html"><i class="fas fa-triangle-exclamation" style="color:#fbbf24;"></i> Interactions</a>
+    <a href="symptom-checker.html"><i class="fas fa-stethoscope" style="color:#34d399;"></i> Symptom Checker</a>
+    <a href="medicine-reminder.html"><i class="fas fa-bell" style="color:#34d399;"></i> Med Reminders</a>
     <a href="prescription-ocr.html"><i class="fas fa-file-prescription" style="color:#38bdf8;"></i> Prescription OCR</a>
     <a href="hospital-finder.html"><i class="fas fa-hospital" style="color:#f472b6;"></i> Hospital Radar</a>
     <a href="#workstations">Workstations</a>

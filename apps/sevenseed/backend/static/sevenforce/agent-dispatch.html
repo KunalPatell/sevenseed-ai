@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Dispatch Console — Sevenforce</title>
+  <meta name="description"
+    content="Hire, brief, and watch your AI workforce execute tasks in real-time. Live execution console for all 7 Sevenforce AI employees.">
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🤖%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --brand: #06b6d4;
+      --brand2: #6366f1;
+      --surface: rgba(15, 23, 42, 0.85);
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    body {
+      background: #020617;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+    }
+
+    /* ── Page shell ── */
+    .dispatch-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 24px 60px;
+    }
+
+    .page-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 16px;
+    }
+
+    .page-title {
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+
+    .page-sub {
+      font-size: 16px;
+      color: #94a3b8;
+      margin-bottom: 48px;
+      max-width: 600px;
+    }
+
+    /* ── Agent selector grid ── */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+
+    .agent-chip {
+      background: rgba(255, 255, 255, 0.03);
+      border: 2px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      padding: 18px 16px;
+      cursor: pointer;
+      transition: all .2s;
+      text-align: center;
+      user-select: none;
+    }
+
+    .agent-chip:hover {
+      border-color: var(--brand);
+      background: rgba(6, 182, 212, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .agent-chip.active {
+      border-color: var(--brand);
+      background: rgba(6, 182, 212, 0.12);
+      box-shadow: 0 0 0 1px var(--brand);
+    }
+
+    .agent-chip .avatar {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .agent-chip .name {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .agent-chip .role {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .agent-chip .suite-tag {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .suite-growth {
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+    }
+
+    .suite-agency {
+      background: rgba(6, 182, 212, 0.15);
+      color: #67e8f9;
+    }
+
+    /* ── Brief panel ── */
+    .brief-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      backdrop-filter: blur(16px);
+      margin-bottom: 28px;
+    }
+
+    .brief-panel h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brief-panel h3 .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 8px var(--brand);
+    }
+
+    .brief-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    @media(max-width:640px) {
+      .brief-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .brief-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-bottom: 6px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .brief-field input,
+    .brief-field select,
+    .brief-field textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(2, 6, 23, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: #e2e8f0;
+      font-size: 14px;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: border-color .2s;
+    }
+
+    .brief-field input:focus,
+    .brief-field select:focus,
+    .brief-field textarea:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
+    }
+
+    .brief-field textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .brief-field select option {
+      background: #0f172a;
+    }
+
+    .dispatch-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #06b6d4, #6366f1);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: opacity .2s, transform .15s;
+      margin-top: 4px;
+    }
+
+    .dispatch-btn:hover {
+      opacity: .9;
+      transform: translateY(-1px);
+    }
+
+    .dispatch-btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .byok-notice {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 10px;
+      font-size: 12px;
+      color: #fbbf24;
+      margin-bottom: 16px;
+    }
+
+    /* ── Execution terminal ── */
+    .terminal-panel {
+      background: #010d1f;
+      border: 1px solid #1e3a5f;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .terminal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: #01111f;
+      border-bottom: 1px solid #1e3a5f;
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .terminal-dots span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .terminal-dots .td-r {
+      background: #ef4444;
+    }
+
+    .terminal-dots .td-y {
+      background: #f59e0b;
+    }
+
+    .terminal-dots .td-g {
+      background: #10b981;
+    }
+
+    .terminal-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #475569;
+    }
+
+    .terminal-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .term-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: #94a3b8;
+      cursor: pointer;
+    }
+
+    .term-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+    }
+
+    .terminal-body {
+      padding: 20px 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      min-height: 280px;
+      max-height: 480px;
+      overflow-y: auto;
+      line-height: 1.7;
+    }
+
+    .terminal-body .t-idle {
+      color: #334155;
+    }
+
+    .terminal-body .t-sys {
+      color: #475569;
+    }
+
+    .terminal-body .t-info {
+      color: #38bdf8;
+    }
+
+    .terminal-body .t-success {
+      color: #4ade80;
+    }
+
+    .terminal-body .t-warn {
+      color: #fbbf24;
+    }
+
+    .terminal-body .t-output {
+      color: #e2e8f0;
+    }
+
+    .terminal-body .t-agent {
+      color: #a78bfa;
+      font-weight: 600;
+    }
+
+    .terminal-body .t-step {
+      color: #06b6d4;
+    }
+
+    .cursor-blink {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--brand);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0
+      }
+    }
+
+    /* ── Task history ── */
+    .history-section {
+      margin-top: 48px;
+    }
+
+    .history-section h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .hi-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hi-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .hi-info .hi-task {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .hi-info .hi-meta {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .hi-badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-done {
+      background: rgba(74, 222, 128, 0.1);
+      color: #4ade80;
+    }
+
+    .badge-running {
+      background: rgba(6, 182, 212, 0.1);
+      color: #38bdf8;
+    }
+
+    /* ── ROI widget ── */
+    .roi-widget {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      margin-top: 40px;
+    }
+
+    .roi-widget h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .roi-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    @media(max-width:640px) {
+      .roi-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .roi-slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .roi-slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .roi-slider-label span:last-child {
+      font-weight: 700;
+      color: var(--brand);
+    }
+
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--brand);
+    }
+
+    .roi-result {
+      background: rgba(6, 182, 212, 0.05);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .roi-saving {
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--brand);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .roi-saving-lbl {
+      font-size: 14px;
+      color: #94a3b8;
+    }
+
+    .roi-breakdown {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="nav">
+    <a class="logo" href="index.html">
+      <span class="logo-icon"><i class="fas fa-users-gear"></i></span>
+      <span class="logo-text">Seven <span class="logo-accent">force</span></span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="workflows.html"><i class="fas fa-diagram-project" style="color:#06b6d4"></i> LangGraph Studio</a>
+      <a href="devin-terminal.html"><i class="fas fa-terminal" style="color:#06b6d4"></i> Devin Terminal</a>
+      <a href="employees.html"><i class="fas fa-users-gear" style="color:#06b6d4"></i> 7 AI Employees</a>
+      <a href="agent-dispatch.html" class="active"><i class="fas fa-play" style="color:#06b6d4"></i> Dispatch
+        Console</a>
+      <a href="pricing.html"><i class="fas fa-calculator" style="color:#06b6d4"></i> ROI & Pricing</a>
+    </div>
+    <div class="nav-right">
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme"><i
+          class="fas fa-moon"></i></button>
+      <a class="btn btn-ghost" href="/sevenforce/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <div class="dispatch-wrap">
+    <div class="page-eyebrow"><i class="fas fa-terminal"></i> Live Execution Console</div>
+    <h1 class="page-title">Agent Dispatch <span
+        style="background:linear-gradient(135deg,#06b6d4,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Console</span>
+    </h1>
+    <p class="page-sub">Select an AI employee, write your brief, and watch them execute the task in real-time. Powered
+      by LangGraph multi-agent orchestration.</p>
+
+    <!-- Agent selector -->
+    <h3
+      style="font-size:14px;font-weight:700;color:#94a3b8;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px;">
+      <i class="fas fa-users-gear" style="color:#06b6d4;margin-right:6px"></i> Select Your AI Employee
+    </h3>
+    <div class="agent-grid" id="agentGrid">
+      <div class="agent-chip active" data-agent="maya" data-suite="growth" onclick="selectAgent(this)">
+        <div class="avatar">✍️</div>
+        <div class="name">Maya</div>
+        <div class="role">Content & SEO</div>
+        <span class="suite-tag suite-growth">Growth AI</span>
+      </div>
+      <div class="agent-chip" data-agent="vibe" data-suite="growth" onclick="selectAgent(this)">
+        <div class="avatar">📱</div>
+        <div class="name">Vibe</div>
+        <div class="role">Social Media</div>
+        <span class="suite-tag suite-growth">Growth AI</span>
+      </div>
+      <div class="agent-chip" data-agent="wave" data-suite="growth" onclick="selectAgent(this)">
+        <div class="avatar">💬</div>
+        <div class="name">Wave</div>
+        <div class="role">Sales & Comms</div>
+        <span class="suite-tag suite-growth">Growth AI</span>
+      </div>
+      <div class="agent-chip" data-agent="nova" data-suite="agency" onclick="selectAgent(this)">
+        <div class="avatar">📋</div>
+        <div class="name">Nova</div>
+        <div class="role">Business Analyst</div>
+        <span class="suite-tag suite-agency">Agency AI</span>
+      </div>
+      <div class="agent-chip" data-agent="echo" data-suite="agency" onclick="selectAgent(this)">
+        <div class="avatar">🎙️</div>
+        <div class="name">Echo</div>
+        <div class="role">Meeting Assistant</div>
+        <span class="suite-tag suite-agency">Agency AI</span>
+      </div>
+      <div class="agent-chip" data-agent="scout" data-suite="agency" onclick="selectAgent(this)">
+        <div class="avatar">🔍</div>
+        <div class="name">Scout</div>
+        <div class="role">AI Recruiter</div>
+        <span class="suite-tag suite-agency">Agency AI</span>
+      </div>
+      <div class="agent-chip" data-agent="sage" data-suite="agency" onclick="selectAgent(this)">
+        <div class="avatar">📊</div>
+        <div class="name">Sage</div>
+        <div class="role">Data Analyst</div>
+        <span class="suite-tag suite-agency">Agency AI</span>
+      </div>
+    </div>
+
+    <!-- Brief form -->
+    <div class="brief-panel">
+      <h3><span class="dot"></span> Task Brief — <span id="selectedAgentName">Maya</span></h3>
+      <div class="byok-notice">
+        <i class="fas fa-key"></i>
+        <span>Your API key is used only in-browser and never stored on our servers. <a href="index.html#byok"
+            style="color:#fbbf24;text-decoration:underline">Add key in BYOK Vault →</a></span>
+      </div>
+      <div class="brief-row">
+        <div class="brief-field">
+          <label>Task Type</label>
+          <select id="taskType">
+            <option value="">Select task type…</option>
+          </select>
+        </div>
+        <div class="brief-field">
+          <label>Output Format</label>
+          <select id="outputFormat">
+            <option value="markdown">Markdown</option>
+            <option value="bullet">Bullet Points</option>
+            <option value="json">Structured JSON</option>
+            <option value="prose">Prose Paragraph</option>
+          </select>
+        </div>
+      </div>
+      <div class="brief-field" style="margin-bottom:16px">
+        <label>Your Brief / Prompt</label>
+        <textarea id="taskBrief" placeholder="Describe exactly what you need this AI employee to do…"
+          rows="4"></textarea>
+      </div>
+      <div class="brief-row">
+        <div class="brief-field">
+          <label>Company / Brand Context (optional)</label>
+          <input type="text" id="brandContext" placeholder="e.g. SaaS startup for construction teams">
+        </div>
+        <div class="brief-field">
+          <label>Target Audience (optional)</label>
+          <input type="text" id="targetAudience" placeholder="e.g. SMB owners in India">
+        </div>
+      </div>
+      <button class="dispatch-btn" id="dispatchBtn" onclick="runDispatch()">
+        <i class="fas fa-play"></i> Dispatch Agent
+      </button>
+    </div>
+
+    <!-- Terminal -->
+    <div class="terminal-panel">
+      <div class="terminal-top">
+        <div class="terminal-dots">
+          <span class="td-r"></span><span class="td-y"></span><span class="td-g"></span>
+        </div>
+        <span class="terminal-title">sevenforce-agent-runtime v2.4.1</span>
+        <div class="terminal-actions">
+          <button class="term-btn" onclick="clearTerminal()"><i class="fas fa-trash"></i> Clear</button>
+          <button class="term-btn" onclick="copyTerminal()"><i class="far fa-copy"></i> Copy</button>
+          <button class="term-btn" onclick="exportMarkdown()"><i class="fas fa-file-arrow-down"></i> Export .md</button>
+        </div>
+      </div>
+      <div class="terminal-body" id="terminalBody">
+        <div class="t-sys">$ sevenforce-agent-runtime v2.4.1 — ready</div>
+        <div class="t-sys">$ Waiting for dispatch…</div>
+        <div class="t-idle"> </div>
+        <div class="t-idle">Select an agent and write your brief above, then click Dispatch Agent.</div>
+      </div>
+    </div>
+
+    <!-- Task history -->
+    <div class="history-section">
+      <h3><i class="fas fa-clock-rotate-left" style="color:#06b6d4;margin-right:6px"></i> Recent Task History</h3>
+      <div class="history-list" id="historyList">
+        <div class="history-item">
+          <div class="hi-left">
+            <div class="hi-avatar">✍️</div>
+            <div class="hi-info">
+              <div class="hi-task">Write SEO blog outline: "AI Tools for SMBs in 2026"</div>
+              <div class="hi-meta">Maya · Growth AI · 2 min ago · 847 tokens used</div>
+            </div>
+          </div>
+          <span class="hi-badge badge-done"><i class="fas fa-check"></i> Done</span>
+        </div>
+        <div class="history-item">
+          <div class="hi-left">
+            <div class="hi-avatar">🔍</div>
+            <div class="hi-info">
+              <div class="hi-task">Screen 5 resumes for Senior React Developer role</div>
+              <div class="hi-meta">Scout · Agency AI · 8 min ago · 2,341 tokens used</div>
+            </div>
+          </div>
+          <span class="hi-badge badge-done"><i class="fas fa-check"></i> Done</span>
+        </div>
+        <div class="history-item">
+          <div class="hi-left">
+            <div class="hi-avatar">📊</div>
+            <div class="hi-info">
+              <div class="hi-task">Analyse Q3 revenue data and flag top 3 growth levers</div>
+              <div class="hi-meta">Sage · Agency AI · 14 min ago · 1,203 tokens used</div>
+            </div>
+          </div>
+          <span class="hi-badge badge-done"><i class="fas fa-check"></i> Done</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent Performance Stats -->
+    <div id="statsPanel"
+      style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;margin-top:40px;backdrop-filter:blur(16px)">
+    </div>
+
+    <!-- ROI Calculator -->
+    <div class="roi-widget">
+      <h3><i class="fas fa-calculator" style="color:#06b6d4;margin-right:8px"></i> Monthly Cost Savings Calculator</h3>
+      <div class="roi-row">
+        <div class="roi-slider-group">
+          <div>
+            <div class="roi-slider-label"><span>Team size</span><span id="rTeamSize">5</span> people</div>
+            <input type="range" min="1" max="50" value="5" id="rTeam" oninput="calcROI()">
+          </div>
+          <div>
+            <div class="roi-slider-label"><span>AI tasks per person / day</span><span id="rTasksPerDay">8</span></div>
+            <input type="range" min="2" max="30" value="8" id="rTasks" oninput="calcROI()">
+          </div>
+          <div>
+            <div class="roi-slider-label"><span>Avg time saved per task (min)</span><span id="rMinSaved">25</span> min
+            </div>
+            <input type="range" min="5" max="120" value="25" id="rMins" oninput="calcROI()">
+          </div>
+          <div>
+            <div class="roi-slider-label"><span>Avg hourly cost (₹)</span>₹<span id="rHourlyCost">800</span></div>
+            <input type="range" min="200" max="5000" step="100" value="800" id="rCost" oninput="calcROI()">
+          </div>
+        </div>
+        <div class="roi-result">
+          <div class="roi-saving" id="roiSaving">₹0</div>
+          <div class="roi-saving-lbl">estimated monthly savings</div>
+          <div class="roi-breakdown" id="roiBreakdown">
+            Move the sliders to calculate your ROI.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot" style="margin-top:80px">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="logo" href="index.html"><span class="logo-icon"><i class="fas fa-users-gear"></i></span><span
+            class="logo-text">Seven <span class="logo-accent">force</span></span></a>
+        <p>AI workforce platform — 7 AI employees, 2 suites, one dashboard.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="employees.html">AI Employees</a></li>
+          <li><a href="workflows.html">Workflows</a></li>
+          <li><a href="agent-dispatch.html">Dispatch Console</a></li>
+          <li><a href="../sevenseed/index.html">Sevenseed Hub</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // ── Agent task templates ──
+    const AGENT_TASKS = {
+      maya: ['Write SEO blog post outline', 'Generate 5 social media captions', 'Create email newsletter draft', 'Keyword research for topic', 'Write product description copy'],
+      vibe: ['Draft 7-day Instagram content calendar', 'Write Twitter/X thread', 'Create LinkedIn post series', 'Generate hashtag strategy', 'Caption 5 product photos'],
+      wave: ['Write cold B2B outreach email', 'Draft WhatsApp broadcast message', 'Create follow-up email sequence', 'Write sales proposal intro', 'Generate 10 lead qualification questions'],
+      nova: ['Write full BRD for new feature', 'Create project scope document', 'Draft client proposal', 'Write user stories for sprint', 'Generate test case matrix'],
+      echo: ['Summarise meeting transcript', 'Extract action items from notes', 'Write follow-up email from call', 'Create meeting agenda template', 'Draft decision log'],
+      scout: ['Screen 5 resumes for role', 'Generate structured interview questions', 'Write job description', 'Create candidate scorecard', 'Draft offer letter'],
+      sage: ['Analyse sales data trend', 'Write SQL query for monthly report', 'Explain KPI anomaly in plain English', 'Generate executive summary from CSV', 'Create data visualisation recommendation'],
+    };
+
+    const AGENT_NAMES = { maya: 'Maya', vibe: 'Vibe', wave: 'Wave', nova: 'Nova', echo: 'Echo', scout: 'Scout', sage: 'Sage' };
+
+    let currentAgent = 'maya';
+
+    function selectAgent(el) {
+      document.querySelectorAll('.agent-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      currentAgent = el.dataset.agent;
+      document.getElementById('selectedAgentName').textContent = AGENT_NAMES[currentAgent];
+      // Update task dropdown
+      const sel = document.getElementById('taskType');
+      sel.innerHTML = '<option value="">Select task type…</option>';
+      AGENT_TASKS[currentAgent].forEach(t => {
+        const o = document.createElement('option');
+        o.value = t; o.textContent = t; sel.appendChild(o);
+      });
+      // Pre-fill brief placeholder
+      const briefs = {
+        maya: 'e.g. Write a 1500-word SEO blog post about AI tools for small businesses in India. Target keyword: "best AI tools 2026".',
+        vibe: 'e.g. Create a 7-day Instagram content calendar for a D2C skincare brand targeting millennials.',
+        wave: 'e.g. Write a cold outreach email to construction company owners about our AI project management tool.',
+        nova: 'e.g. Write a detailed BRD for an AI-powered invoice processing feature for our SaaS product.',
+        echo: 'e.g. Here is the meeting transcript: [paste transcript]. Extract all action items with owners and deadlines.',
+        scout: 'e.g. We are hiring a Senior Python Developer. Here are 3 resume summaries: [paste]. Rank them and explain.',
+        sage: 'e.g. Our revenue grew 12% MoM but CAC also rose 18%. Identify the top 2 levers to improve unit economics.',
+      };
+      document.getElementById('taskBrief').placeholder = briefs[currentAgent] || 'Describe your task…';
+    }
+
+    // Populate initial dropdown for maya
+    selectAgent(document.querySelector('.agent-chip.active'));
+
+    // Ctrl+Enter to dispatch
+    document.getElementById('taskBrief').addEventListener('keydown', function (e) {
+      if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); runDispatch(); }
+    });
+
+    // ── Terminal helpers ──
+    function termLine(cls, text) {
+      const body = document.getElementById('terminalBody');
+      const div = document.createElement('div');
+      div.className = cls;
+      div.textContent = text;
+      body.appendChild(div);
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function clearTerminal() {
+      document.getElementById('terminalBody').innerHTML =
+        '<div class="t-sys">$ Terminal cleared.</div>';
+    }
+
+    function copyTerminal() {
+      const text = document.getElementById('terminalBody').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.term-btn:last-child');
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(() => { btn.innerHTML = '<i class="far fa-copy"></i> Copy'; }, 1500);
+      });
+    }
+
+    // ── Execution simulation ──
+    const AGENT_STEPS = {
+      maya: [
+        ['t-sys', '$ Initialising Maya (Content & SEO Agent)…'],
+        ['t-info', '[AGENT] Loading brand context and tone guidelines…'],
+        ['t-step', '[STEP 1/5] Analysing target audience and search intent…'],
+        ['t-step', '[STEP 2/5] Running keyword clustering and SERP gap analysis…'],
+        ['t-step', '[STEP 3/5] Building content outline with H2/H3 hierarchy…'],
+        ['t-step', '[STEP 4/5] Drafting full article body with internal link suggestions…'],
+        ['t-step', '[STEP 5/5] SEO meta title + description generation…'],
+      ],
+      vibe: [
+        ['t-sys', '$ Initialising Vibe (Social Media Agent)…'],
+        ['t-info', '[AGENT] Scanning brand voice and audience profile…'],
+        ['t-step', '[STEP 1/4] Identifying trending hooks per platform…'],
+        ['t-step', '[STEP 2/4] Writing platform-specific captions (IG, LinkedIn, Twitter)…'],
+        ['t-step', '[STEP 3/4] Generating hashtag bundles and optimal post times…'],
+        ['t-step', '[STEP 4/4] Assembling content calendar with engagement CTAs…'],
+      ],
+      wave: [
+        ['t-sys', '$ Initialising Wave (Sales & Comms Agent)…'],
+        ['t-info', '[AGENT] Loading ICP profile and past campaign data…'],
+        ['t-step', '[STEP 1/4] Researching prospect pain points…'],
+        ['t-step', '[STEP 2/4] Crafting personalised subject line and opener…'],
+        ['t-step', '[STEP 3/4] Writing email body with social proof and CTA…'],
+        ['t-step', '[STEP 4/4] Generating A/B variant and follow-up sequence…'],
+      ],
+      nova: [
+        ['t-sys', '$ Initialising Nova (Business Analyst Agent)…'],
+        ['t-info', '[AGENT] Parsing project brief and stakeholder context…'],
+        ['t-step', '[STEP 1/5] Defining scope, objectives and success metrics…'],
+        ['t-step', '[STEP 2/5] Listing functional and non-functional requirements…'],
+        ['t-step', '[STEP 3/5] Writing user stories in Given/When/Then format…'],
+        ['t-step', '[STEP 4/5] Generating acceptance criteria and edge cases…'],
+        ['t-step', '[STEP 5/5] Drafting executive summary and next-steps table…'],
+      ],
+      echo: [
+        ['t-sys', '$ Initialising Echo (Meeting Assistant Agent)…'],
+        ['t-info', '[AGENT] Processing transcript — speaker diarisation…'],
+        ['t-step', '[STEP 1/3] Extracting key discussion points and decisions…'],
+        ['t-step', '[STEP 2/3] Tagging action items with owners and deadlines…'],
+        ['t-step', '[STEP 3/3] Drafting follow-up email with structured summary…'],
+      ],
+      scout: [
+        ['t-sys', '$ Initialising Scout (AI Recruiter Agent)…'],
+        ['t-info', '[AGENT] Loading JD requirements and scoring rubric…'],
+        ['t-step', '[STEP 1/4] Parsing candidate profiles and extracting skills…'],
+        ['t-step', '[STEP 2/4] Scoring candidates on 7 dimensions (skills, exp, culture fit…)…'],
+        ['t-step', '[STEP 3/4] Ranking shortlist and writing evaluation rationale…'],
+        ['t-step', '[STEP 4/4] Generating tailored interview question set…'],
+      ],
+      sage: [
+        ['t-sys', '$ Initialising Sage (Data Analyst Agent)…'],
+        ['t-info', '[AGENT] Connecting to data context and schema inference…'],
+        ['t-step', '[STEP 1/4] Parsing natural language query…'],
+        ['t-step', '[STEP 2/4] Generating safe, read-only SQL with explanation…'],
+        ['t-step', '[STEP 3/4] Running query simulation and summarising results…'],
+        ['t-step', '[STEP 4/4] Writing executive insight and recommended actions…'],
+      ],
+    };
+
+    const SAMPLE_OUTPUTS = {
+      maya: `## SEO Blog Outline: "Best AI Tools for SMBs in 2026"
+
+**Meta Title:** Best AI Tools for Small Businesses in India 2026 (Free & Paid)
+**Meta Description:** Discover the top AI tools transforming how Indian SMBs operate in 2026 — from AI writing assistants to smart accounting software.
+
+### Introduction
+- Hook: The AI adoption gap between large enterprises and SMBs is closing fast
+- Thesis: 5 categories of AI tools every SMB needs in 2026
+
+### H2: AI Writing & Content Tools
+- **Sevenforce Maya** — AI content employee, BYOK model, free to use
+- **Jasper AI** — Premium copywriting
+- Comparison table: pricing, use-case, Indian language support
+
+### H2: AI Customer Support Tools
+- Chatbot builders, WhatsApp AI integration
+- Cost savings estimate for a 10-person support team
+
+### H2: AI Data & Analytics
+- NL-to-SQL tools (Sage), Google Looker Studio integrations
+- Case study: D2C brand cuts reporting time by 70%
+
+### H2: AI Recruitment
+- Scout vs. traditional ATS — 5x faster screening
+- JD-to-scorecard automation walkthrough
+
+### Conclusion + CTA
+- "Start with 1 AI employee, scale to 7" — link to Sevenforce`,
+
+      scout: `## Scout AI — Candidate Evaluation Report
+
+**Role:** Senior React Developer | **Date:** ${new Date().toLocaleDateString()}
+
+---
+### Candidate #1 — Arjun Mehta ★★★★★ 91/100
+**Strengths:** 5y React, TypeScript expert, open-source contributions, system design depth
+**Concern:** No direct fintech experience (role requires it)
+**Interview Focus:** Micro-frontend architecture, state management at scale
+
+### Candidate #2 — Priya Shah ★★★★☆ 78/100
+**Strengths:** Strong UI/UX sensibility, React + Next.js, 3y XP
+**Concern:** Limited backend exposure for a full-stack hybrid role
+**Interview Focus:** API integration patterns, performance optimisation
+
+### Candidate #3 — Rahul Verma ★★★☆☆ 62/100
+**Strengths:** Fast learner, good communication skills, React basics solid
+**Concern:** Only 1.5y experience, no production-scale projects
+**Interview Focus:** Fundamentals depth check, growth mindset assessment
+
+---
+**Recommendation:** Proceed with Arjun (final round), Priya (technical screen), Rahul (hold for junior opening).
+
+**Generated Interview Questions (Top 3):**
+1. Walk me through how you'd architect a real-time dashboard with 50k concurrent users.
+2. How do you manage global state in a micro-frontend architecture?
+3. Describe a production bug you debugged — what was your process?`,
+
+      sage: `## Sage Data Analysis — Revenue & CAC Trend Report
+
+**Query:** Revenue grew 12% MoM but CAC rose 18% — identify top 2 levers
+
+---
+### Finding #1: Channel Mix Shift 🔴 HIGH IMPACT
+Paid social CAC increased ₹340 → ₹490 (+44%) due to iOS tracking changes.
+Organic search CAC remained flat at ₹120.
+**Recommendation:** Reallocate 30% of paid social budget to SEO content + WhatsApp referral programme.
+
+### Finding #2: Cohort Retention Drop 🟡 MEDIUM IMPACT
+Month-3 retention fell from 68% → 54% in the Q3 cohort.
+LTV:CAC ratio declined from 4.2x → 3.1x.
+**Recommendation:** Launch a 30-day onboarding drip sequence; target activation metric (first meaningful action within 24h).
+
+### SQL Generated:
+\`\`\`sql
+SELECT
+  channel,
+  AVG(acquisition_cost) AS avg_cac,
+  COUNT(user_id) AS new_users,
+  AVG(ltv_90d) AS avg_ltv_90
+FROM user_acquisition
+WHERE acquisition_date >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+GROUP BY channel
+ORDER BY avg_cac DESC;
+\`\`\``,
+    };
+
+    // ── Typewriter output ──
+    function typewriter(el, text, onDone) {
+      el.textContent = '';
+      let i = 0;
+      const iv = setInterval(function () {
+        el.textContent += text[i++];
+        document.getElementById('terminalBody').scrollTop = document.getElementById('terminalBody').scrollHeight;
+        if (i >= text.length) {
+          clearInterval(iv);
+          if (onDone) onDone();
+        }
+      }, 48); // ~20 chars/sec
+    }
+
+    function runDispatch() {
+      const brief = document.getElementById('taskBrief').value.trim();
+      const taskType = document.getElementById('taskType').value;
+      if (!brief && !taskType) {
+        alert('Please write a brief or select a task type first.');
+        return;
+      }
+      const btn = document.getElementById('dispatchBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Dispatching…';
+
+      const body = document.getElementById('terminalBody');
+      body.innerHTML = '';
+
+      const steps = AGENT_STEPS[currentAgent] || AGENT_STEPS.maya;
+      const task = taskType || brief.substring(0, 60) + '…';
+      const agentName = AGENT_NAMES[currentAgent];
+
+      termLine('t-sys', `$ dispatch --agent=${currentAgent} --task="${task}"`);
+      termLine('t-sys', '');
+
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < steps.length) {
+          termLine(steps[i][0], steps[i][1]);
+          i++;
+        } else {
+          clearInterval(interval);
+          setTimeout(() => {
+            termLine('t-sys', '');
+            termLine('t-agent', `[${agentName.toUpperCase()}] ✅ Task execution complete. Generating output…`);
+            termLine('t-sys', '');
+            const output = SAMPLE_OUTPUTS[currentAgent] || `[${agentName}] Task completed successfully.\n\nYour output has been generated based on the brief: "${task}"\n\nConnect your BYOK API key for live AI-powered results.`;
+            const twDiv = document.createElement('div');
+            twDiv.className = 't-output';
+            twDiv.id = 'typewriterTarget';
+            body.appendChild(twDiv);
+            body.scrollTop = body.scrollHeight;
+
+            typewriter(document.getElementById('typewriterTarget'), output, function () {
+              termLine('t-sys', '');
+              termLine('t-success', `✅ Done · ${agentName} · ${(Math.random() * 2000 + 500) | 0} tokens · ${((Math.random() * 8 + 2)).toFixed(1)}s`);
+
+              btn.disabled = false;
+              btn.innerHTML = '<i class="fas fa-play"></i> Dispatch Agent';
+
+              // Add to history
+              const hl = document.getElementById('historyList');
+              const avatars = { maya: '✍️', vibe: '📱', wave: '💬', nova: '📋', echo: '🎙️', scout: '🔍', sage: '📊' };
+              const suites = { maya: 'Growth AI', vibe: 'Growth AI', wave: 'Growth AI', nova: 'Agency AI', echo: 'Agency AI', scout: 'Agency AI', sage: 'Agency AI' };
+              const item = document.createElement('div');
+              item.className = 'history-item';
+              item.innerHTML = `
+            <div class="hi-left">
+              <div class="hi-avatar">${avatars[currentAgent]}</div>
+              <div class="hi-info">
+                <div class="hi-task">${task.substring(0, 70)}</div>
+                <div class="hi-meta">${agentName} · ${suites[currentAgent]} · Just now</div>
+              </div>
+            </div>
+            <span class="hi-badge badge-done"><i class="fas fa-check"></i> Done</span>`;
+              hl.prepend(item);
+
+              // Update agent performance stats
+              updateStats(currentAgent, Math.round(Math.random() * 3000 + 1000));
+            });
+          }, 400);
+        }
+      }, 320);
+    }
+
+    // ── Export as Markdown ──
+    function exportMarkdown() {
+      const lines = Array.from(document.querySelectorAll('#terminalBody div'));
+      const text = lines.map(function (el) { return el.textContent; }).join('\n');
+      const agentName = document.getElementById('selectedAgentName').textContent || 'agent';
+      const ts = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+      const md = '# Agent Dispatch Log — ' + agentName + '\n\n```\n' + text + '\n```\n';
+      const a = document.createElement('a');
+      a.href = 'data:text/markdown;charset=utf-8,' + encodeURIComponent(md);
+      a.download = agentName.toLowerCase() + '-' + ts + '.md';
+      a.click();
+    }
+
+    // ── Agent Performance Stats ──
+    function loadStats() {
+      try { return JSON.parse(localStorage.getItem('ss_sevenforce_stats') || '{}'); } catch (e) { return {}; }
+    }
+
+    function updateStats(agentId, durationMs) {
+      const stats = loadStats();
+      if (!stats[agentId]) stats[agentId] = { tasksCompleted: 0, totalMs: 0, successes: 0 };
+      stats[agentId].tasksCompleted++;
+      stats[agentId].totalMs += durationMs;
+      stats[agentId].successes++;
+      try { localStorage.setItem('ss_sevenforce_stats', JSON.stringify(stats)); } catch (e) { }
+      renderStatsPanel();
+    }
+
+    function renderStatsPanel() {
+      const stats = loadStats();
+      const panel = document.getElementById('statsPanel');
+      if (!panel) return;
+      const agents = ['maya', 'vibe', 'wave', 'nova', 'echo', 'scout', 'sage'];
+      const names = { maya: 'Maya', vibe: 'Vibe', wave: 'Wave', nova: 'Nova', echo: 'Echo', scout: 'Scout', sage: 'Sage' };
+      const rows = agents.map(id => {
+        const s = stats[id] || { tasksCompleted: 0, totalMs: 0, successes: 0 };
+        const avg = s.tasksCompleted ? Math.round(s.totalMs / s.tasksCompleted / 1000) : 0;
+        const rate = s.tasksCompleted ? Math.round((s.successes / s.tasksCompleted) * 100) : 0;
+        return `<tr><td style="padding:8px 12px">${names[id]}</td><td style="padding:8px 12px;font-family:'JetBrains Mono',monospace">${s.tasksCompleted}</td><td style="padding:8px 12px">${avg > 0 ? avg + 's' : '—'}</td><td style="padding:8px 12px;color:${rate >= 80 ? '#4ade80' : rate > 0 ? '#f59e0b' : '#64748b'}">${s.tasksCompleted > 0 ? rate + '%' : '—'}</td></tr>`;
+      }).join('');
+      panel.innerHTML = `<h3 style="font-size:16px;font-weight:700;margin:0 0 16px;display:flex;align-items:center;gap:8px"><i class="fas fa-chart-bar" style="color:#06b6d4"></i> Agent Performance Stats</h3>
+        <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="color:#64748b;font-size:12px;text-align:left">
+            <th style="padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08)">Agent</th>
+            <th style="padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08)">Tasks</th>
+            <th style="padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08)">Avg Time</th>
+            <th style="padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08)">Success</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table></div>`;
+    }
+
+    // ── ROI Calculator ──
+    function calcROI() {
+      const team = +document.getElementById('rTeam').value;
+      const tasks = +document.getElementById('rTasks').value;
+      const mins = +document.getElementById('rMins').value;
+      const cost = +document.getElementById('rCost').value;
+      document.getElementById('rTeamSize').textContent = team;
+      document.getElementById('rTasksPerDay').textContent = tasks;
+      document.getElementById('rMinSaved').textContent = mins;
+      document.getElementById('rHourlyCost').textContent = cost.toLocaleString('en-IN');
+      const monthlyHours = (team * tasks * mins / 60) * 22; // 22 working days
+      const saving = Math.round(monthlyHours * cost);
+      document.getElementById('roiSaving').textContent = '₹' + saving.toLocaleString('en-IN');
+      document.getElementById('roiBreakdown').innerHTML =
+        `${team} people × ${tasks} tasks/day × ${mins} min saved<br>
+     = ${monthlyHours.toFixed(0)} hours/month freed<br>
+     @ ₹${cost.toLocaleString('en-IN')}/hr = <strong style="color:#06b6d4">₹${saving.toLocaleString('en-IN')}</strong> monthly`;
+    }
+    calcROI();
+    renderStatsPanel();
+  </script>
+</body>
+
+</html>

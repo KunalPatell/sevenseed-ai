@@ -64,6 +64,8 @@ def render_trust_html(c):
     <a href="tax-exemption.html"><i class="fas fa-file-invoice-dollar" style="color:#fb7185;"></i> 80G & Form 10BE</a>
     <a href="impact-tracker.html"><i class="fas fa-chart-pie" style="color:#38bdf8;"></i> Impact Ledger</a>
     <a href="health-camps.html"><i class="fas fa-kit-medical" style="color:#34d399;"></i> Health Camps</a>
+    <a href="donation-ledger.html"><i class="fas fa-book-open" style="color:#fda4af;"></i> Donation Ledger</a>
+    <a href="volunteer-portal.html"><i class="fas fa-hands-helping" style="color:#fda4af;"></i> Volunteer Portal</a>
     <a href="#workstations">Workstations</a>
     <a href="#faq">FAQ</a>
   </div>

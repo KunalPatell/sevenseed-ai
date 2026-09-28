@@ -1,391 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Procore-Grade Site Safety & OSHA Hazard Audit — Breakdown Factor</title>
-  <meta name="description" content="Digital safety checklist, severity × probability hazard risk matrix, and live AI CAPA (Corrective Action) report generator. 100% Free with BYOK.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automated ISO Safety Audit Generator — Breakdown Factor</title>
+  <meta name="description" content="Generate a standardized site compliance report for health and safety inspections.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .safety-container { max-width: 1320px; margin: 0 auto; padding: 100px 24px 60px; }
-    .safety-header { text-align: center; margin-bottom: 28px; }
-    .safety-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
-    .safety-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
-
-    /* BYOK Bar */
-    .byok-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.25); border-radius: 10px; padding: 12px 20px; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
-    .byok-status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #fde68a; font-weight: 600; }
-    .byok-tag { background: rgba(245,158,11,0.2); color: #fbbf24; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-
-    /* Audit Grid */
-    .audit-grid { display: grid; grid-template-columns: 1fr 440px; gap: 28px; }
-    @media(max-width: 1024px) { .audit-grid { grid-template-columns: 1fr; } }
-
-    .checklist-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
-    .check-item { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px 16px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; gap: 14px; }
-    .check-info h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
-    .check-info p { font-size: 12px; color: var(--text-2); margin: 0; }
-
-    .check-toggle { display: flex; gap: 8px; flex-shrink: 0; }
-    .btn-toggle { padding: 6px 14px; border-radius: 6px; font-size: 11px; font-weight: 800; cursor: pointer; border: 1px solid var(--border); background: var(--bg-3); color: var(--text-2); transition: all 0.2s; }
-    .btn-pass.active { background: rgba(16,185,129,0.2); border-color: #10b981; color: #34d399; }
-    .btn-fail.active { background: rgba(239,68,68,0.2); border-color: #ef4444; color: #f87171; }
-
-    /* Risk Scorecard */
-    .risk-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; gap: 20px; }
-    .risk-score-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
-    .risk-num { font-size: 48px; font-weight: 900; font-family: 'JetBrains Mono'; color: #34d399; }
-
-    /* CAPA Output Box */
-    .capa-output-box { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 22px; font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.7; color: #cbd5e1; max-height: 480px; overflow-y: auto; white-space: pre-wrap; display: none; }
-
-    /* Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-    .modal-overlay.active { display: flex; }
-    .modal-box { background: var(--bg-1, #0f172a); border: 1px solid var(--border, #334155); border-radius: 16px; width: 100%; max-width: 520px; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
+    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
+    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
+    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
+    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
+    .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
+    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
+    .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
+    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
   </style>
 </head>
 <body>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
 
 <nav class="nav" id="mainNav">
-  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
-      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#f59e0b,#d97706); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-helmet-safety"></i></span>
-      <span style="font-weight:700; font-size:18px;">Breakdown Factor</span>
+  <div class="nav-inner">
+    <a class="nav-brand" href="index.html">
+      <span class="nav-logo-wrap"><i class="fas fa-helmet-safety"></i></span>
+      <span class="nav-name">Breakdown Factor</span>
     </a>
-    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
-      <a href="index.html">Home</a>
-      <a href="cv-scanner.html">CV Site Sentinel</a>
-      <a href="boq-estimator.html">CPWD Estimator</a>
-      <a href="safety-audit.html" style="color:#fbbf24; font-weight:600;">Safety Audit</a>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="cv-scanner.html">YOLO CV Scanner</a>
+        <a href="boq-estimator.html">BOQ Cost Estimator</a>
+        <a href="safety-audit.html" class="active">Safety Audit</a>
     </div>
-    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
-      <button class="btn btn-ghost sm" onclick="openTokenModal()" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; border:1px solid rgba(245,158,11,0.3); color:#fbbf24;">
-        <i class="fas fa-key"></i> Self-API & Token
-      </button>
-      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
-      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
+    <div class="nav-actions">
+      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
+      <a class="btn btn-primary sm" href="app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
     </div>
   </div>
 </nav>
 
-<div class="safety-container">
-  <div class="safety-header">
-    <div class="safety-badge"><i class="fas fa-shield-alt"></i> Inspired by Procore Safety &amp; OSHA Standards</div>
-    <h1 class="safety-title">Digital Site Safety &amp; Hazard Incident Audit</h1>
-    <p style="color:var(--text-2); max-width:740px; margin:0 auto;">Conduct digital jobsite safety inspections. Check fall prevention, rigging, trench shoring, and hazardous wiring to generate AI-powered CAPA (Corrective and Preventive Action) mitigation plans.</p>
-  </div>
 
-  <!-- BYOK Status -->
-  <div class="byok-bar">
-    <div class="byok-status">
-      <i class="fas fa-robot" style="color:#fbbf24;"></i>
-      <span>OSHA &amp; IS Code Safety AI Engine: <strong>Google Gemini</strong></span>
-      <span class="byok-tag" id="byokTag"><i class="fas fa-bolt"></i> Studio Key Active</span>
-    </div>
-    <button class="btn btn-ghost sm" onclick="openTokenModal()" style="font-size:12px; padding:4px 10px; border-radius:6px; background:rgba(255,255,255,0.05); color:#cbd5e1;">
-      <i class="fas fa-sliders"></i> Change Token
-    </button>
-  </div>
+<header class="sub-hero">
+  <div class="sub-hero-pill"><i class="fas fa-sparkles"></i> 100% Free · Interactive AI Tool</div>
+  <h1 class="sub-hero-title">Automated ISO Safety Audit Generator</h1>
+  <p class="sub-hero-sub">Generate a standardized site compliance report for health and safety inspections.</p>
+</header>
 
-  <div class="audit-grid">
-    <!-- Checklist -->
-    <div class="checklist-card">
-      <h3 style="font-size:17px; font-weight:700; color:#fff; margin-bottom:16px;">Daily Site Safety Inspection Protocol</h3>
-      
-      <div class="check-item">
-        <div class="check-info">
-          <h4>1. Fall Protection &amp; Perimeter Railings</h4>
-          <p>Guardrails &amp; safety nets installed on open slab edges >2.0m elevation (IS 3696 / OSHA 1926.502).</p>
-        </div>
-        <div class="check-toggle">
-          <button class="btn-toggle btn-pass active" onclick="setAudit(this, true)">PASS</button>
-          <button class="btn-toggle btn-fail" onclick="setAudit(this, false)">FAIL</button>
-        </div>
-      </div>
-
-      <div class="check-item">
-        <div class="check-info">
-          <h4>2. Personal Protective Equipment (PPE) Compliance</h4>
-          <p>100% hard hat, high-visibility vest, and steel-toe safety footwear verified across ground crew.</p>
-        </div>
-        <div class="check-toggle">
-          <button class="btn-toggle btn-pass active" onclick="setAudit(this, true)">PASS</button>
-          <button class="btn-toggle btn-fail" onclick="setAudit(this, false)">FAIL</button>
-        </div>
-      </div>
-
-      <div class="check-item">
-        <div class="check-info">
-          <h4>3. Crane &amp; Heavy Rigging Slings</h4>
-          <p>Outriggers fully extended on timber mats with certified wire rope inspection tags.</p>
-        </div>
-        <div class="check-toggle">
-          <button class="btn-toggle btn-pass active" onclick="setAudit(this, true)">PASS</button>
-          <button class="btn-toggle btn-fail" onclick="setAudit(this, false)">FAIL</button>
-        </div>
-      </div>
-
-      <div class="check-item">
-        <div class="check-info">
-          <h4>4. Temporary Electrical Distribution &amp; Grounding</h4>
-          <p>Residual Current Circuit Breakers (RCCBs 30mA) operational on all distribution boards.</p>
-        </div>
-        <div class="check-toggle">
-          <button class="btn-toggle btn-pass active" onclick="setAudit(this, true)">PASS</button>
-          <button class="btn-toggle btn-fail" onclick="setAudit(this, false)">FAIL</button>
-        </div>
-      </div>
-
-      <div class="check-item">
-        <div class="check-info">
-          <h4>5. Deep Trench Shoring &amp; Cave-in Prevention</h4>
-          <p>Sheet piling / benching implemented for excavations exceeding 1.5m depth (IS 3764).</p>
-        </div>
-        <div class="check-toggle">
-          <button class="btn-toggle btn-pass active" onclick="setAudit(this, true)">PASS</button>
-          <button class="btn-toggle btn-fail" onclick="setAudit(this, false)">FAIL</button>
-        </div>
-      </div>
-
-      <div class="check-item">
-        <div class="check-info">
-          <h4>6. Hot Work &amp; Fire Protection Equipment</h4>
-          <p>Class ABC fire extinguishers positioned within 10m of all welding and gas cutting operations.</p>
-        </div>
-        <div class="check-toggle">
-          <button class="btn-toggle btn-pass active" onclick="setAudit(this, true)">PASS</button>
-          <button class="btn-toggle btn-fail" onclick="setAudit(this, false)">FAIL</button>
-        </div>
-      </div>
-
-      <div style="margin-top:16px;">
-        <label style="font-size:12px; font-weight:700; color:var(--text-3); display:block; margin-bottom:6px;">Additional Field Observation Notes</label>
-        <input type="text" id="siteNotes" class="boq-inp" style="width:100%; box-sizing:border-box; padding:10px 14px; background:var(--bg-2); border:1px solid var(--border); color:#fff; border-radius:8px;" placeholder="e.g. Scaffolding clamp slipped at Column C4; worker noted loose coupling.">
-      </div>
-    </div>
-
-    <!-- Safety Score & CAPA Generator -->
-    <div class="risk-card">
-      <div>
-        <h3 style="font-size:17px; font-weight:700; color:#fff; margin-bottom:14px;">Jobsite Safety Index</h3>
-        <div class="risk-score-box">
-          <div style="font-size:12px; color:var(--text-3); text-transform:uppercase; margin-bottom:4px;">OSHA Compliance Score</div>
-          <div class="risk-num" id="safetyScore">100%</div>
-          <div style="font-size:13px; color:#34d399; font-weight:700; margin-top:6px;" id="safetyStatus">Low Hazard / Fully Compliant</div>
-        </div>
-        <div style="font-size:13px; color:var(--text-2); line-height:1.6; margin-top:14px;">
-          Failed checklist protocols automatically trigger high-priority Corrective &amp; Preventive Action (CAPA) notices for project managers.
-        </div>
-      </div>
-
-      <button class="btn btn-primary" id="btnCapa" style="width:100%; justify-content:center; padding:14px; font-weight:800; background:#f59e0b; color:#000;" onclick="generateCapaReport()">
-        <i class="fas fa-file-signature"></i> Generate Formal AI CAPA Report
-      </button>
-
-      <div class="capa-output-box" id="capaOutput"></div>
-    </div>
-  </div>
+<main class="container">
+  
+<div class="interactive-card" style="text-align:left;">
+  <h3>📋 Generate Site Audit Report</h3>
+  <p style="color:#94a3b8; margin-bottom:20px;">Download an ISO-aligned digital inspection checklist.</p>
+  <button class="btn btn-primary" onclick="genAuditReport()"><i class="fas fa-file-pdf"></i> Generate Safety Report Preview</button>
+  <div class="output-screen" id="auditOutput" style="margin-top:20px;">// Report preview will appear here.</div>
 </div>
-
-<!-- BYOK Modal -->
-<div class="modal-overlay" id="tokenModal">
-  <div class="modal-box">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-      <h3 style="font-size:18px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
-        <i class="fas fa-key" style="color:#fbbf24;"></i> Self-API &amp; Token (BYOK)
-      </h3>
-      <button onclick="closeTokenModal()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;"><i class="fas fa-xmark"></i></button>
-    </div>
-    <p style="font-size:13px; color:var(--text-2, #94a3b8); margin-bottom:18px; line-height:1.5;">
-      Sevenseed Studio is <strong>100% Free</strong>. We provide a pre-seeded working Gemini token, or you can plug in your own private API key:
-    </p>
-    <div style="margin-bottom:16px;">
-      <label style="display:block; font-size:12px; font-weight:700; color:#e2e8f0; margin-bottom:6px;">Google Gemini API Key</label>
-      <input type="password" id="customGeminiKey" class="boq-inp" style="width:100%; box-sizing:border-box; padding:10px 14px; background:var(--bg-2); border:1px solid var(--border); color:#fff; border-radius:8px;" placeholder="AIzaSy...">
-      <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Active Key: Pre-seeded studio Gemini token verified & operational.</span>
-    </div>
-    <div style="display:flex; gap:10px; justify-content:flex-end;">
-      <button class="btn btn-ghost sm" onclick="resetStudioKey()">Reset to Default</button>
-      <button class="btn btn-primary sm" onclick="saveCustomKey()">Save Token</button>
-    </div>
-  </div>
-</div>
-
 <script>
-const STUDIO_GEMINI_KEY = "";
+function genAuditReport() {
+  document.getElementById('auditOutput').innerText = '📄 ISO 45001 SAFETY AUDIT REPORT:
+Site: Ahmedabad Commercial Block A
+Date: 2026-08-18
+Auditor: AI Sentinel Vision System
 
-function getActiveGeminiKey() {
-  return localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || STUDIO_GEMINI_KEY;
+Overall Score: 94% COMPLIANT
+- Scaffolding Integrity: PASS
+- Fire Extinguisher Accessibility: PASS
+- First Aid Kit Stock: PASS
+
+Status: APPROVED FOR WORK';
 }
-
-let totalChecks = 6;
-let passedChecks = 6;
-
-function setAudit(btn, isPass) {
-  const parent = btn.parentElement;
-  parent.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-
-  passedChecks = document.querySelectorAll('.btn-pass.active').length;
-  const pct = Math.round((passedChecks / totalChecks) * 100);
-
-  const scoreEl = document.getElementById('safetyScore');
-  scoreEl.innerText = `${pct}%`;
-  scoreEl.style.color = pct >= 80 ? '#34d399' : (pct >= 50 ? '#fbbf24' : '#f87171');
-
-  document.getElementById('safetyStatus').innerText = pct >= 80 ? 'Low Hazard / Compliant' : (pct >= 50 ? 'Moderate Risk / Caution' : 'High Hazard Non-Conformance');
-  document.getElementById('safetyStatus').style.color = scoreEl.style.color;
-}
-
-// Resilient multi-model Gemini caller with automatic failover
-async function callGeminiReliable(prompt, apiKey) {
-  const models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
-  let lastErr = null;
-  for (const m of models) {
-    try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (reply) return reply;
-      } else {
-        const errData = await res.json().catch(() => ({}));
-        lastErr = new Error(errData.error?.message || `HTTP ${res.status}`);
-      }
-    } catch(e) {
-      lastErr = e;
-    }
-  }
-  throw lastErr || new Error('Google AI service busy, please retry in a moment.');
-}
-
-async function generateCapaReport() {
-  const output = document.getElementById('capaOutput');
-  const btn = document.getElementById('btnCapa');
-  const notes = document.getElementById('siteNotes').value.trim();
-
-  // Find failed items
-  const failedItems = [];
-  document.querySelectorAll('.check-item').forEach(item => {
-    const isFail = item.querySelector('.btn-fail.active');
-    if (isFail) {
-      const title = item.querySelector('h4').innerText;
-      const desc = item.querySelector('p').innerText;
-      failedItems.push(`${title}: ${desc}`);
-    }
-  });
-
-  output.style.display = 'block';
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Synthesizing CAPA Plan...';
-  output.innerHTML = '// Analyzing inspection deficiencies against OSHA 1926 and IS 3696 standards...';
-
-  const apiKey = getActiveGeminiKey();
-  const prompt = `You are a Principal Health, Safety, and Environment (HSE) Auditor at Breakdown Factor.
-Site Inspection Audit Results:
-- Total Checkpoints: ${totalChecks}
-- Passed: ${passedChecks}
-- Failed Checkpoints: ${failedItems.length > 0 ? failedItems.join("; ") : "None (100% Clean Pass)"}
-- Additional Field Observation Notes: ${notes || "None recorded"}
-
-Generate a professional, OSHA/IS code compliant Corrective and Preventive Action (CAPA) Report:
-1. **AUDIT EXECUTIVE SUMMARY**: Formal safety status statement and overall site risk level.
-2. **ROOT CAUSE ANALYSIS (RCA)**: Why the failure occurred (human factor, equipment wear, supervisory lapse).
-3. **IMMEDIATE CORRECTIVE ACTIONS**: Immediate containment steps (stop-work notice, barricading, retrofitting).
-4. **PREVENTIVE PROTOCOLS**: Long-term procedural fixes (toolbox talks, weekly rigging inspection log, certified training).
-5. **SIGNOFF & TIMELINE**: Required completion window (e.g. 24h / 48h) and responsible supervisor roles.`;
-
-  try {
-    const reply = await callGeminiReliable(prompt, apiKey);
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-file-signature"></i> Generate Formal AI CAPA Report';
-    output.innerHTML = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-  } catch(err) {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-file-signature"></i> Generate Formal AI CAPA Report';
-    output.innerHTML = `Error: ${err.message}. Please verify your API token in BYOK settings.`;
-  }
-}
-
-// Token Modal handlers
-function openTokenModal() {
-  const m = document.getElementById('tokenModal');
-  m.classList.add('active');
-  const stored = localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || '';
-  document.getElementById('customGeminiKey').value = stored;
-}
-
-function closeTokenModal() {
-  document.getElementById('tokenModal').classList.remove('active');
-}
-
-function saveCustomKey() {
-  const k = document.getElementById('customGeminiKey').value.trim();
-  if (k) {
-    localStorage.setItem('user_gemini_key', k);
-    localStorage.setItem('ss_key_gemini', k);
-    document.getElementById('byokTag').innerHTML = '<i class="fas fa-check"></i> Custom Token Active';
-  } else {
-    resetStudioKey();
-  }
-  closeTokenModal();
-}
-
-function resetStudioKey() {
-  localStorage.removeItem('user_gemini_key');
-  localStorage.removeItem('ss_key_gemini');
-  document.getElementById('customGeminiKey').value = '';
-  document.getElementById('byokTag').innerHTML = '<i class="fas fa-bolt"></i> Studio Key Active';
-  closeTokenModal();
-}
-
-// Theme handler
-(function() {
-  var tBtn = document.getElementById('themeToggle');
-  if (tBtn) {
-    function updateIcon(theme) {
-      var ic = tBtn.querySelector('i');
-      if (ic) ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-    }
-    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
-    updateIcon(cur);
-    tBtn.addEventListener('click', function() {
-      var now = document.documentElement.getAttribute('data-theme') || 'dark';
-      var next = now === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('ss-theme', next);
-      updateIcon(next);
-    });
-  }
-
-  var ring = document.getElementById('cursorRing');
-  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
-      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
-      requestAnimationFrame(renderCursor);
-    }
-    requestAnimationFrame(renderCursor);
-  }
-})();
 </script>
+
+</main>
+
+
+<footer class="footer">
+  <div class="foot-inner">
+    <div class="foot-col">
+      <div class="foot-brand"><i class="fas fa-helmet-safety"></i> Breakdown Factor</div>
+      <p class="foot-tag">AI Construction Safety — Part of the Sevenseed AI Venture Studio portfolio.</p>
+      <div class="foot-copy">© 2026 Breakdown Factor. 100% Free · Bring Your Own Key Architecture.</div>
+    </div>
+    <div class="foot-col">
+      <h4>Navigation</h4>
+      <ul class="foot-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="../index.html">Sevenseed Hub</a></li>
+        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+<script src="app.js"></script>
 </body>
 </html>

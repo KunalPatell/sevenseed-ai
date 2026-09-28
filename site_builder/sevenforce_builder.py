@@ -80,6 +80,7 @@ def render_sevenforce_html(c):
     <a href="workflows.html"><i class="fas fa-diagram-project" style="color:#22d3ee;"></i> LangGraph Studio</a>
     <a href="devin-terminal.html"><i class="fas fa-terminal" style="color:#fbbf24;"></i> Devin AI Terminal</a>
     <a href="employees.html"><i class="fas fa-users" style="color:#34d399;"></i> 7 AI Employees</a>
+    <a href="agent-dispatch.html"><i class="fas fa-play" style="color:#06b6d4;"></i> Dispatch Console</a>
     <a href="pricing.html"><i class="fas fa-calculator" style="color:#c084fc;"></i> ROI Calculator</a>
     <a href="#feature-suites">Workstations</a>
     <a href="#faq">FAQ</a>

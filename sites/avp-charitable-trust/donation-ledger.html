@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Donation Ledger — AVP Charitable Trust</title>
+  <meta name="description" content="Transparent public donation log with fund deployment progress and 80G receipt generation for AVP Charitable Trust.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🤝%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Page layout ── */
+    .dl-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+    }
+
+    /* ── Page header ── */
+    .dl-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .dl-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(244,63,94,.12);
+      border: 1px solid rgba(244,63,94,.3);
+      color: #fda4af;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .dl-title {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .dl-sub {
+      color: var(--text-2);
+      font-size: 16px;
+      max-width: 620px;
+      margin: 0 auto 28px;
+      line-height: 1.6;
+    }
+
+    /* ── Stats row ── */
+    .dl-stats {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .dl-stat-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 32px;
+      text-align: center;
+      flex: 1;
+      min-width: 180px;
+      max-width: 240px;
+      transition: border-color var(--t), transform var(--t);
+    }
+    .dl-stat-card:hover {
+      border-color: rgba(244,63,94,.4);
+      transform: translateY(-2px);
+    }
+    .dl-stat-num {
+      font-size: 32px;
+      font-weight: 800;
+      background: linear-gradient(120deg, #f43f5e, #f59e0b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: 'JetBrains Mono', monospace;
+      display: block;
+    }
+    .dl-stat-lbl {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 4px;
+    }
+
+    /* ── Category breakdown ── */
+    .section-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin-bottom: 28px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title i {
+      color: var(--primary-l);
+    }
+    .cat-row {
+      margin-bottom: 16px;
+    }
+    .cat-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .cat-label {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cat-pct {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary-l);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .cat-bar-bg {
+      height: 8px;
+      background: var(--bg-2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .cat-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      width: 0%;
+      transition: width 1.2s cubic-bezier(.4,0,.2,1);
+    }
+    .cat-bar-education  { background: linear-gradient(90deg,#818cf8,#6366f1); }
+    .cat-bar-food       { background: linear-gradient(90deg,#34d399,#10b981); }
+    .cat-bar-medical    { background: linear-gradient(90deg,#f43f5e,#e11d48); }
+
+    .cat-dot-education  { width:10px; height:10px; border-radius:50%; background:#6366f1; flex-shrink:0; }
+    .cat-dot-food       { width:10px; height:10px; border-radius:50%; background:#10b981; flex-shrink:0; }
+    .cat-dot-medical    { width:10px; height:10px; border-radius:50%; background:#e11d48; flex-shrink:0; }
+
+    /* ── Funds deployed ── */
+    .fund-row {
+      margin-bottom: 18px;
+      padding: 16px 18px;
+      background: var(--bg-2);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .fund-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .fund-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .fund-info {
+      font-size: 12px;
+      color: var(--text-2);
+    }
+    .fund-pct-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fcd34d;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .fund-bar-bg {
+      height: 6px;
+      background: var(--bg-3);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .fund-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #f59e0b, #f43f5e);
+      width: 0%;
+      transition: width 1.4s cubic-bezier(.4,0,.2,1) .3s;
+    }
+
+    /* ── Donations table ── */
+    .table-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .table-actions h2 {
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .table-actions h2 i {
+      color: var(--primary-l);
+    }
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .dl-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .dl-table thead tr {
+      background: var(--bg-2);
+      border-bottom: 2px solid rgba(244,63,94,.3);
+    }
+    .dl-table th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      white-space: nowrap;
+    }
+    .dl-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background var(--t);
+    }
+    .dl-table tbody tr:hover {
+      background: rgba(244,63,94,.04);
+    }
+    .dl-table td {
+      padding: 14px 16px;
+      vertical-align: middle;
+    }
+    .amount-cell {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: #34d399;
+      white-space: nowrap;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .status-cleared {
+      background: rgba(52,211,153,.12);
+      color: #34d399;
+      border: 1px solid rgba(52,211,153,.25);
+    }
+    .status-pending {
+      background: rgba(245,158,11,.12);
+      color: #fbbf24;
+      border: 1px solid rgba(245,158,11,.25);
+    }
+    .cat-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .cat-education { background: rgba(99,102,241,.12); color: #a5b4fc; border: 1px solid rgba(99,102,241,.25); }
+    .cat-food      { background: rgba(16,185,129,.12); color: #6ee7b7; border: 1px solid rgba(16,185,129,.25); }
+    .cat-medical   { background: rgba(244,63,94,.12);  color: #fda4af; border: 1px solid rgba(244,63,94,.25); }
+
+    .receipt-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(244,63,94,.1);
+      border: 1px solid rgba(244,63,94,.25);
+      color: #fda4af;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--t);
+      white-space: nowrap;
+    }
+    .receipt-btn:hover {
+      background: rgba(244,63,94,.2);
+      border-color: rgba(244,63,94,.5);
+      transform: translateY(-1px);
+    }
+
+    /* ── Receipt overlay (visible only in print mode unless shown) ── */
+    #receipt-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #fff;
+      color: #000;
+      padding: 40px 48px;
+      font-family: 'Inter', sans-serif;
+    }
+    .receipt-letterhead {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 3px solid #ec4899;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    .receipt-org-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: #be185d;
+    }
+    .receipt-org-sub {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    .receipt-logo-mark {
+      font-size: 36px;
+    }
+    .receipt-title {
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #1f2937;
+    }
+    .receipt-cert-no {
+      text-align: center;
+      font-size: 12px;
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
+    .receipt-body {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #374151;
+    }
+    .receipt-highlight {
+      background: #fdf2f8;
+      border-left: 4px solid #ec4899;
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 4px;
+    }
+    .receipt-highlight strong {
+      color: #be185d;
+    }
+    .receipt-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    .receipt-table th {
+      background: #fdf2f8;
+      border: 1px solid #fce7f3;
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+    .receipt-table td {
+      border: 1px solid #f3f4f6;
+      padding: 10px 12px;
+    }
+    .receipt-80g-statement {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #166534;
+      margin: 20px 0;
+    }
+    .receipt-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 32px;
+      padding-top: 16px;
+      border-top: 2px solid #e5e7eb;
+    }
+    .receipt-sig {
+      text-align: center;
+    }
+    .receipt-sig-line {
+      width: 160px;
+      border-bottom: 1.5px solid #374151;
+      margin-bottom: 6px;
+    }
+    .receipt-sig-label {
+      font-size: 11px;
+      color: #6b7280;
+    }
+    .receipt-qr-mock {
+      width: 72px;
+      height: 72px;
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .receipt-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%) rotate(-30deg);
+      font-size: 80px;
+      font-weight: 900;
+      color: rgba(236,72,153,.04);
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: .1em;
+    }
+    .receipt-disclaimer {
+      font-size: 10px;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    /* ── Print styles ── */
+    @media print {
+      /* Hide everything except the receipt overlay */
+      body > *:not(#receipt-overlay) { display: none !important; }
+      #receipt-overlay {
+        display: block !important;
+        position: static !important;
+        padding: 20px 32px !important;
+        background: #fff !important;
+        color: #000 !important;
+      }
+      /* Full ledger print: show page, hide receipt */
+      body.print-ledger > *:not(#receipt-overlay) { display: block !important; }
+      body.print-ledger #receipt-overlay { display: none !important; }
+      body.print-ledger .nav,
+      body.print-ledger #cursorRing,
+      body.print-ledger .receipt-btn,
+      body.print-ledger .dl-print-btn,
+      body.print-ledger .table-actions .btn { display: none !important; }
+      body.print-ledger { background: #fff !important; color: #000 !important; }
+      body.print-ledger .dl-wrap { padding-top: 20px !important; }
+      body.print-ledger .dl-stat-card,
+      body.print-ledger .section-card,
+      body.print-ledger .fund-row { background: #fff !important; border-color: #e5e7eb !important; }
+      body.print-ledger .dl-stat-num { -webkit-text-fill-color: #be185d !important; }
+      body.print-ledger .dl-table thead tr { background: #f3f4f6 !important; }
+      body.print-ledger .amount-cell { color: #047857 !important; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .dl-stats { gap: 12px; }
+      .dl-stat-card { padding: 16px 20px; }
+      .section-card { padding: 20px 18px; }
+      .dl-table th, .dl-table td { padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<!-- Nav -->
+<nav class="nav" id="mainNav">
+  <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#ec4899,#db2777); display:flex; align-items:center; justify-content:center; color:#fff; flex-shrink:0;"><i class="fas fa-hand-holding-heart"></i></span>
+      <span style="font-weight:700; font-size:16px; white-space:nowrap;">AVP <span style="color:#fda4af;">Charitable Trust</span></span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:4px; flex-wrap:wrap; font-size:13px;">
+      <a href="index.html">Home</a>
+      <a href="tax-exemption.html">80G Tax Exemption</a>
+      <a href="impact-tracker.html">Impact Ledger</a>
+      <a href="health-camps.html">Health Camps</a>
+      <a href="donation-ledger.html" style="color:#fda4af; font-weight:700; background:rgba(244,63,94,.1); border-radius:8px;">Donation Ledger</a>
+      <a href="volunteer-portal.html">Volunteer Portal</a>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+      <a class="btn btn-ghost" href="/" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:5px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Main content -->
+<main class="dl-wrap">
+
+  <!-- Header -->
+  <div class="dl-header">
+    <div class="dl-badge"><i class="fas fa-book-open"></i> Section 80G · Charity Navigator Standard · Annual Report</div>
+    <h1 class="dl-title">Public <span class="grad">Donation Ledger</span></h1>
+    <p class="dl-sub">Transparent, verified record of every donation received — with fund deployment progress and instant 80G receipt generation for every donor.</p>
+    <button class="btn btn-ghost dl-print-btn" onclick="printLedger()" aria-label="Print full ledger">
+      <i class="fas fa-print"></i> Print Ledger
+    </button>
+  </div>
+
+  <!-- Stats row -->
+  <div class="dl-stats" id="statsRow">
+    <div class="dl-stat-card">
+      <span class="dl-stat-num" id="totalCounter">₹0</span>
+      <div class="dl-stat-lbl">Total Funds Raised</div>
+    </div>
+    <div class="dl-stat-card">
+      <span class="dl-stat-num" id="donorCount">0</span>
+      <div class="dl-stat-lbl">Total Donors</div>
+    </div>
+    <div class="dl-stat-card">
+      <span class="dl-stat-num" id="clearedCount">0</span>
+      <div class="dl-stat-lbl">Cleared Donations</div>
+    </div>
+    <div class="dl-stat-card">
+      <span class="dl-stat-num" id="deployedPct">0%</span>
+      <div class="dl-stat-lbl">Funds Deployed</div>
+    </div>
+  </div>
+
+  <!-- Category Breakdown -->
+  <div class="section-card">
+    <div class="section-title"><i class="fas fa-chart-pie"></i> Category Breakdown</div>
+    <div id="categoryBreakdown">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+
+  <!-- Funds Deployed -->
+  <div class="section-card">
+    <div class="section-title"><i class="fas fa-rocket"></i> Funds Deployed — Project Progress</div>
+    <div id="fundsDeployed">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+
+  <!-- Donation Table -->
+  <div class="section-card">
+    <div class="table-actions">
+      <h2><i class="fas fa-table-list"></i> Donation Entries</h2>
+      <button class="btn btn-ghost dl-print-btn" onclick="printLedger()" aria-label="Print full ledger">
+        <i class="fas fa-print"></i> Print / Export
+      </button>
+    </div>
+    <div class="table-scroll">
+      <table class="dl-table" id="donationTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Donor Name</th>
+            <th>Amount (₹)</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Receipt</th>
+          </tr>
+        </thead>
+        <tbody id="donationTbody">
+          <!-- Rendered by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main><!-- /.dl-wrap -->
+
+<!-- 80G Receipt Overlay (hidden; shown only via print trigger) -->
+<div id="receipt-overlay" role="dialog" aria-modal="true" aria-label="80G Tax Exemption Receipt">
+  <div class="receipt-watermark">CERTIFIED</div>
+  <div class="receipt-letterhead">
+    <div>
+      <div class="receipt-org-name">AVP Charitable Trust</div>
+      <div class="receipt-org-sub">Ahmedabad, Gujarat, India · connect@avptrust.org</div>
+      <div class="receipt-org-sub">PAN: <strong>ABCDE1234F</strong> &nbsp;|&nbsp; 80G Registration: 80G/AVPCT/2026/001</div>
+    </div>
+    <div class="receipt-logo-mark">🤝</div>
+  </div>
+
+  <div class="receipt-title">Section 80G Donation Receipt / Certificate</div>
+  <div class="receipt-cert-no" id="receiptCertNo">Certificate No: AVPCT-2026-0001</div>
+
+  <div class="receipt-body">
+    <p>This is to certify that the following donation has been received by <strong>AVP Charitable Trust</strong>, a registered charitable organisation under Section 12A and approved under Section 80G of the Income Tax Act, 1961.</p>
+
+    <div class="receipt-highlight">
+      <strong>Certified Donor Details</strong>
+      <table class="receipt-table" id="receiptTable">
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody id="receiptTableBody">
+        </tbody>
+      </table>
+    </div>
+
+    <div class="receipt-80g-statement" id="receipt80gStatement">
+      <!-- Filled by JS -->
+    </div>
+
+    <p style="font-size:13px; color:#4b5563; margin-top:12px;">
+      The above donation is eligible for tax deduction under <strong>Section 80G of the Income Tax Act, 1961</strong>. 
+      Fifty percent (50%) of the donated amount is deductible from the gross total income of the donor, subject to the provisions and limits prescribed under the Act.
+    </p>
+  </div>
+
+  <div class="receipt-footer">
+    <div class="receipt-sig">
+      <div class="receipt-sig-line"></div>
+      <div class="receipt-sig-label">Authorised Signatory<br>AVP Charitable Trust</div>
+    </div>
+    <div style="text-align:center; font-size:12px; color:#6b7280;">
+      <div id="receiptDate" style="font-weight:700; color:#374151; margin-bottom:4px;"></div>
+      <div>Date of Certificate</div>
+    </div>
+    <div class="receipt-qr-mock" title="QR verification">
+      <span style="font-size:10px; text-align:center; line-height:1.2; color:#374151; font-weight:700;">VERIFIED<br>QR</span>
+    </div>
+  </div>
+  <div class="receipt-disclaimer">
+    This computer-generated receipt is valid without a physical signature as per the Income Tax (Amendment) Rules. | AVP Charitable Trust · PAN: ABCDE1234F · 80G Reg: 80G/AVPCT/2026/001
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+/* ─────────────────────────────────────────
+   STATIC DATA
+───────────────────────────────────────── */
+const DONATIONS = [
+  { id:'DON-001', donorName:'Rajesh Mehta',         amount: 50000, category:'Education',  date:'2026-01-15', status:'Cleared',  pan:'AAAPM1234R' },
+  { id:'DON-002', donorName:'Priya Sharma',          amount: 25000, category:'Food',       date:'2026-01-22', status:'Cleared',  pan:'BBFPS9876T' },
+  { id:'DON-003', donorName:'Ankit Joshi',           amount: 15000, category:'Medical',    date:'2026-02-03', status:'Cleared',  pan:'CCGAJ4521H' },
+  { id:'DON-004', donorName:'Sunita Patel',          amount:100000, category:'Education',  date:'2026-02-14', status:'Cleared',  pan:'DDHSP7812K' },
+  { id:'DON-005', donorName:'Vikram Desai',          amount: 30000, category:'Medical',    date:'2026-02-28', status:'Pending',  pan:'EEIVD2345L' },
+  { id:'DON-006', donorName:'Kavita Nair',           amount:  8000, category:'Food',       date:'2026-03-07', status:'Cleared',  pan:'FFJKN6634M' },
+  { id:'DON-007', donorName:'Suresh Gupta',          amount: 20000, category:'Education',  date:'2026-03-18', status:'Cleared',  pan:'GGKSG1109N' },
+  { id:'DON-008', donorName:'Deepika Iyer',          amount: 12000, category:'Medical',    date:'2026-03-25', status:'Cleared',  pan:'HHLDIY3310P' },
+  { id:'DON-009', donorName:'Mohit Agarwal',         amount: 75000, category:'Education',  date:'2026-04-02', status:'Cleared',  pan:'IIMMA4421Q' },
+  { id:'DON-010', donorName:'Aarti Chaudhary',       amount:  5000, category:'Food',       date:'2026-04-09', status:'Pending',  pan:'JJNAC5532R' },
+  { id:'DON-011', donorName:'Ramesh Krishnamurthy',  amount: 40000, category:'Medical',    date:'2026-04-18', status:'Cleared',  pan:'KKORK7743S' },
+  { id:'DON-012', donorName:'Nandita Shah',          amount: 18000, category:'Education',  date:'2026-05-01', status:'Cleared',  pan:'LLPSN8854T' },
+  { id:'DON-013', donorName:'Harish Pandey',         amount: 22000, category:'Food',       date:'2026-05-12', status:'Cleared',  pan:'MMQHP9965U' },
+  { id:'DON-014', donorName:'Lalita Bose',           amount: 60000, category:'Education',  date:'2026-05-20', status:'Pending',  pan:'NNRLB1076V' },
+  { id:'DON-015', donorName:'Girish Vaghela',        amount: 35000, category:'Medical',    date:'2026-06-04', status:'Cleared',  pan:'OOSGV2187W' },
+];
+
+const FUNDS_DEPLOYED = [
+  {
+    name: 'Rural Scholarship Programme — Gujarat',
+    category: 'Education',
+    amount: 150000,
+    deployed: 135000,
+    pct: 90,
+    description: '24 merit scholarships awarded to students in Viramgam & Mehsana districts.'
+  },
+  {
+    name: 'Weekly Food Relief Drive — Ahmedabad',
+    category: 'Food',
+    amount: 80000,
+    deployed: 56000,
+    pct: 70,
+    description: '3,200 nutritious meals served across 8 centres weekly.'
+  },
+  {
+    name: 'Free Medical Camp — Dholka Block',
+    category: 'Medical',
+    amount: 120000,
+    deployed: 84000,
+    pct: 70,
+    description: '620 patients screened; 48 specialist referrals processed.'
+  },
+  {
+    name: 'Digital Literacy Centres',
+    category: 'Education',
+    amount: 60000,
+    deployed: 27000,
+    pct: 45,
+    description: '3 community computer labs established; 110 students enrolled.'
+  },
+  {
+    name: 'Eye Care & Vision Screening',
+    category: 'Medical',
+    amount: 45000,
+    deployed: 36000,
+    pct: 80,
+    description: '280 patients screened; 52 spectacle kits distributed free of cost.'
+  }
+];
+
+/* ─────────────────────────────────────────
+   UTILITY — number formatting
+───────────────────────────────────────── */
+function fmtINR(n) {
+  return '₹' + Number(n).toLocaleString('en-IN');
+}
+
+function fmtDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+/* ─────────────────────────────────────────
+   ANIMATED COUNTER
+───────────────────────────────────────── */
+function animateCounter(el, target, duration) {
+  const start = performance.now();
+  function tick(now) {
+    const p = Math.min(1, (now - start) / duration);
+    // ease-out cubic
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = '₹' + Math.floor(eased * target).toLocaleString('en-IN');
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function animateNumber(el, target, duration, suffix) {
+  suffix = suffix || '';
+  const start = performance.now();
+  function tick(now) {
+    const p = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.floor(eased * target) + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ─────────────────────────────────────────
+   CATEGORY PROPORTIONS
+   Pure function: array → { Education, Food, Medical } percentages
+───────────────────────────────────────── */
+function calcProportions(donations) {
+  const totals = { Education: 0, Food: 0, Medical: 0 };
+  let grand = 0;
+  donations.forEach(function(d) {
+    const cat = d.category === 'Food' ? 'Food' : d.category; // normalise
+    if (totals[cat] !== undefined) totals[cat] += d.amount;
+    grand += d.amount;
+  });
+  if (grand === 0) return { Education: 0, Food: 0, Medical: 0 };
+  return {
+    Education: Math.round((totals.Education / grand) * 1000) / 10,
+    Food:      Math.round((totals.Food      / grand) * 1000) / 10,
+    Medical:   Math.round((totals.Medical   / grand) * 1000) / 10
+  };
+}
+
+/* ─────────────────────────────────────────
+   RENDER CATEGORY BREAKDOWN
+───────────────────────────────────────── */
+function renderCategoryBreakdown() {
+  const props = calcProportions(DONATIONS);
+  const container = document.getElementById('categoryBreakdown');
+
+  const cats = [
+    { key:'Education', label:'Education',   icon:'fas fa-graduation-cap', dot:'cat-dot-education', fill:'cat-bar-education',  pct: props.Education },
+    { key:'Food',      label:'Food Relief', icon:'fas fa-bowl-rice',       dot:'cat-dot-food',      fill:'cat-bar-food',       pct: props.Food },
+    { key:'Medical',   label:'Medical Aid', icon:'fas fa-stethoscope',     dot:'cat-dot-medical',   fill:'cat-bar-medical',    pct: props.Medical },
+  ];
+
+  container.innerHTML = cats.map(function(c) {
+    return '<div class="cat-row">' +
+      '<div class="cat-label-row">' +
+        '<span class="cat-label"><span class="' + c.dot + '"></span><i class="' + c.icon + '" style="font-size:13px; color:var(--text-2)"></i> ' + c.label + '</span>' +
+        '<span class="cat-pct" id="pct-' + c.key + '">0%</span>' +
+      '</div>' +
+      '<div class="cat-bar-bg"><div class="cat-bar-fill ' + c.fill + '" id="bar-' + c.key + '"></div></div>' +
+    '</div>';
+  }).join('');
+
+  // Trigger animations after paint
+  requestAnimationFrame(function() {
+    cats.forEach(function(c) {
+      var barEl = document.getElementById('bar-' + c.key);
+      var pctEl = document.getElementById('pct-' + c.key);
+      if (barEl) barEl.style.width = c.pct + '%';
+      if (pctEl) {
+        var start = performance.now();
+        var target = c.pct;
+        (function tick(now) {
+          var p = Math.min(1, (now - start) / 1200);
+          var eased = 1 - Math.pow(1 - p, 3);
+          pctEl.textContent = (eased * target).toFixed(1) + '%';
+          if (p < 1) requestAnimationFrame(tick);
+        })(start);
+      }
+    });
+  });
+}
+
+/* ─────────────────────────────────────────
+   RENDER FUNDS DEPLOYED
+───────────────────────────────────────── */
+function renderFundsDeployed() {
+  var container = document.getElementById('fundsDeployed');
+  container.innerHTML = FUNDS_DEPLOYED.map(function(f) {
+    return '<div class="fund-row">' +
+      '<div class="fund-meta">' +
+        '<div>' +
+          '<div class="fund-name">' + f.name + '</div>' +
+          '<div class="fund-info"><i class="fas fa-info-circle" style="margin-right:4px;"></i>' + f.description + '</div>' +
+        '</div>' +
+        '<div style="text-align:right; flex-shrink:0;">' +
+          '<div class="fund-pct-label" id="fdpct-' + f.pct + '-' + f.name.slice(0,8).replace(/\s/g,'') + '">' + f.pct + '%</div>' +
+          '<div class="fund-info">' + fmtINR(f.deployed) + ' of ' + fmtINR(f.amount) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="fund-bar-bg"><div class="fund-bar-fill" style="width:0%" data-target="' + f.pct + '"></div></div>' +
+    '</div>';
+  }).join('');
+
+  // Animate bars
+  requestAnimationFrame(function() {
+    document.querySelectorAll('.fund-bar-fill').forEach(function(bar) {
+      var target = bar.getAttribute('data-target');
+      if (target) bar.style.width = target + '%';
+    });
+  });
+}
+
+/* ─────────────────────────────────────────
+   RENDER DONATION TABLE
+───────────────────────────────────────── */
+function renderTable() {
+  var tbody = document.getElementById('donationTbody');
+  tbody.innerHTML = DONATIONS.map(function(d, i) {
+    var statusBadge = d.status === 'Cleared'
+      ? '<span class="status-badge status-cleared"><i class="fas fa-circle-check" style="font-size:10px;"></i> Cleared</span>'
+      : '<span class="status-badge status-pending"><i class="fas fa-clock" style="font-size:10px;"></i> Pending</span>';
+
+    var catClass = d.category === 'Education' ? 'cat-education' : (d.category === 'Food' ? 'cat-food' : 'cat-medical');
+    var catIcon  = d.category === 'Education' ? 'fa-graduation-cap' : (d.category === 'Food' ? 'fa-bowl-rice' : 'fa-stethoscope');
+    var catLabel = d.category === 'Food' ? 'Food Relief' : d.category;
+
+    var catTag = '<span class="cat-tag ' + catClass + '"><i class="fas ' + catIcon + '" style="font-size:10px;"></i> ' + catLabel + '</span>';
+
+    return '<tr>' +
+      '<td style="color:var(--text-3); font-family:\'JetBrains Mono\',monospace; font-size:12px;">' + (i + 1) + '</td>' +
+      '<td style="font-weight:600;">' + escHtml(d.donorName) + '</td>' +
+      '<td class="amount-cell">' + fmtINR(d.amount) + '</td>' +
+      '<td>' + catTag + '</td>' +
+      '<td style="color:var(--text-2); white-space:nowrap;">' + fmtDate(d.date) + '</td>' +
+      '<td>' + statusBadge + '</td>' +
+      '<td><button class="receipt-btn" onclick="showReceipt(' + i + ')" aria-label="Download 80G receipt for ' + escAttr(d.donorName) + '"><i class="fas fa-file-invoice"></i> 80G Receipt</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(s) {
+  return String(s).replace(/"/g,'&quot;');
+}
+
+/* ─────────────────────────────────────────
+   80G RECEIPT
+───────────────────────────────────────── */
+function showReceipt(index) {
+  var d = DONATIONS[index];
+  if (!d) return;
+
+  // Populate certificate number
+  document.getElementById('receiptCertNo').textContent =
+    'Certificate No: AVPCT-2026-' + d.id;
+
+  // Populate receipt date
+  document.getElementById('receiptDate').textContent =
+    'Issued: ' + fmtDate(new Date().toISOString().slice(0, 10));
+
+  // Populate the data table
+  var rows = [
+    ['Donor Full Name',      d.donorName],
+    ['PAN / Tax ID',         d.pan || 'ABCDE1234F'],
+    ['Donation Amount',      fmtINR(d.amount) + ' (Rupees ' + amountInWords(d.amount) + ' only)'],
+    ['Mode of Receipt',      'Online Transfer / NEFT'],
+    ['Category / Programme', d.category === 'Food' ? 'Food Relief' : d.category],
+    ['Donation Date',        fmtDate(d.date)],
+    ['Receipt Status',       d.status],
+    ['Trust PAN',            'ABCDE1234F'],
+    ['80G Reg. No.',         '80G/AVPCT/2026/001'],
+  ];
+
+  document.getElementById('receiptTableBody').innerHTML = rows.map(function(r) {
+    return '<tr><td style="font-weight:600; color:#374151; white-space:nowrap;">' + escHtml(r[0]) + '</td><td style="color:#111827;">' + escHtml(r[1]) + '</td></tr>';
+  }).join('');
+
+  // 80G Statement
+  var fifty = fmtINR(Math.floor(d.amount / 2));
+  document.getElementById('receipt80gStatement').innerHTML =
+    '<strong>🏛 Section 80G — Income Tax Act, 1961</strong><br>' +
+    'The AVP Charitable Trust is approved under <strong>Section 80G</strong> of the Income Tax Act, 1961 ' +
+    '(Registration No: 80G/AVPCT/2026/001). The donor is entitled to deduct <strong>50%</strong> of the ' +
+    'donated amount (' + fifty + ') from their Gross Total Income when filing their Income Tax Return, ' +
+    'subject to limits prescribed under the Act. This certificate must be produced to the Assessing Officer ' +
+    'if required.';
+
+  // Show overlay, print, then hide
+  var overlay = document.getElementById('receipt-overlay');
+  overlay.style.display = 'block';
+  setTimeout(function() {
+    window.print();
+  }, 80);
+}
+
+window.addEventListener('afterprint', function() {
+  var overlay = document.getElementById('receipt-overlay');
+  if (overlay) overlay.style.display = 'none';
+  // Remove ledger print class if set
+  document.body.classList.remove('print-ledger');
+});
+
+/* ─────────────────────────────────────────
+   PRINT FULL LEDGER
+───────────────────────────────────────── */
+function printLedger() {
+  document.body.classList.add('print-ledger');
+  var overlay = document.getElementById('receipt-overlay');
+  if (overlay) overlay.style.display = 'none';
+  setTimeout(function() {
+    window.print();
+  }, 50);
+}
+
+/* ─────────────────────────────────────────
+   SIMPLE AMOUNT IN WORDS (Indian system)
+───────────────────────────────────────── */
+function amountInWords(n) {
+  if (n >= 100000) return (n / 100000).toFixed(1).replace('.0','') + ' Lakh';
+  if (n >= 1000)   return (n / 1000).toFixed(1).replace('.0','') + ' Thousand';
+  return String(n);
+}
+
+/* ─────────────────────────────────────────
+   INITIALISE ON PAGE LOAD
+───────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', function() {
+  // Render table
+  renderTable();
+
+  // Render category breakdown
+  renderCategoryBreakdown();
+
+  // Render funds deployed
+  renderFundsDeployed();
+
+  // Compute stats
+  var total   = DONATIONS.reduce(function(s, d) { return s + d.amount; }, 0);
+  var cleared = DONATIONS.filter(function(d) { return d.status === 'Cleared'; }).length;
+
+  // Animate total counter
+  animateCounter(document.getElementById('totalCounter'), total, 1500);
+
+  // Animate donor count
+  animateNumber(document.getElementById('donorCount'),   DONATIONS.length, 1000, '');
+  animateNumber(document.getElementById('clearedCount'), cleared,           1000, '');
+
+  // Deployed percentage (funds deployed / total raised)
+  var totalDeployed = FUNDS_DEPLOYED.reduce(function(s, f) { return s + f.deployed; }, 0);
+  var totalBudget   = FUNDS_DEPLOYED.reduce(function(s, f) { return s + f.amount;   }, 0);
+  var deployedRatio = Math.round((totalDeployed / totalBudget) * 100);
+  animateNumber(document.getElementById('deployedPct'), deployedRatio, 1500, '%');
+});
+</script>
+</body>
+</html>

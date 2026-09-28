@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Defect Scanner — Breakdown Factor</title>
+  <meta name="description"
+    content="Upload a structural photo and get instant YOLOv8-powered defect detection: cracks, spalling, rebar corrosion, and IS 456 compliance analysis with cost estimates.">
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏗️%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --brand: #f59e0b;
+      --brand2: #ef4444;
+      --surface: rgba(15, 23, 42, 0.85);
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    body {
+      background: #020617;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+    }
+
+    .scanner-wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+    }
+
+    .page-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 16px;
+    }
+
+    .page-title {
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight: 800;
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: .01em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .page-sub {
+      font-size: 16px;
+      color: #94a3b8;
+      margin-bottom: 48px;
+      max-width: 620px;
+    }
+
+    /* ── Upload zone ── */
+    .upload-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-bottom: 36px;
+    }
+
+    @media(max-width:768px) {
+      .upload-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .upload-zone {
+      border: 2px dashed rgba(245, 158, 11, 0.35);
+      border-radius: 20px;
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .25s;
+      background: rgba(245, 158, 11, 0.03);
+      position: relative;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.drag-over {
+      border-color: var(--brand);
+      background: rgba(245, 158, 11, 0.08);
+    }
+
+    .upload-zone input[type=file] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload-icon {
+      font-size: 40px;
+      margin-bottom: 16px;
+      color: var(--brand);
+    }
+
+    .upload-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .upload-sub {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+
+    .upload-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* ── Settings panel ── */
+    .settings-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+    }
+
+    .settings-panel h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin: 0 0 20px;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+
+    .setting-label {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .setting-sub {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .toggle {
+      width: 40px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: background .2s;
+    }
+
+    .toggle.on {
+      background: var(--brand);
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform .2s;
+    }
+
+    .toggle.on::after {
+      transform: translateX(18px);
+    }
+
+    .conf-slider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .conf-slider input {
+      width: 100px;
+      accent-color: var(--brand);
+    }
+
+    .conf-value {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brand);
+      min-width: 36px;
+      text-align: right;
+    }
+
+    .scan-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      border: none;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: opacity .2s, transform .15s;
+      margin-top: 24px;
+      letter-spacing: .02em;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    .scan-btn:hover {
+      opacity: .9;
+      transform: translateY(-1px);
+    }
+
+    .scan-btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── Results ── */
+    .results-panel {
+      display: none;
+    }
+
+    .results-panel.visible {
+      display: block;
+    }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .results-header h2 {
+      font-size: 22px;
+      font-weight: 800;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    .severity-badge {
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .sev-critical {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .sev-moderate {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .sev-minor {
+      background: rgba(74, 222, 128, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+    }
+
+    /* image + bbox overlay */
+    .image-result-wrap {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #000;
+      margin-bottom: 28px;
+    }
+
+    .image-result-wrap img {
+      width: 100%;
+      display: block;
+      max-height: 440px;
+      object-fit: contain;
+    }
+
+    .bbox-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .bbox {
+      position: absolute;
+      border: 3px solid;
+      border-radius: 4px;
+    }
+
+    .bbox-label {
+      position: absolute;
+      top: -24px;
+      left: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .bbox-crack {
+      border-color: #ef4444;
+    }
+
+    .bbox-crack .bbox-label {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .bbox-spalling {
+      border-color: #f59e0b;
+    }
+
+    .bbox-spalling .bbox-label {
+      background: #f59e0b;
+      color: #000;
+    }
+
+    .bbox-rebar {
+      border-color: #a855f7;
+    }
+
+    .bbox-rebar .bbox-label {
+      background: #a855f7;
+      color: #fff;
+    }
+
+    .bbox-stain {
+      border-color: #06b6d4;
+    }
+
+    .bbox-stain .bbox-label {
+      background: #06b6d4;
+      color: #000;
+    }
+
+    /* Detection cards */
+    .detection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .det-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .det-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .det-type {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .det-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .det-conf-bar {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 2px;
+      margin-bottom: 8px;
+    }
+
+    .det-conf-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 1s ease;
+    }
+
+    .det-desc {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    /* IS 456 compliance */
+    .compliance-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 32px;
+    }
+
+    .compliance-table th {
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .compliance-table td {
+      font-size: 13px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .compliance-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .ct-pass {
+      color: #4ade80;
+      font-weight: 600;
+    }
+
+    .ct-fail {
+      color: #ef4444;
+      font-weight: 600;
+    }
+
+    .ct-warn {
+      color: #f59e0b;
+      font-weight: 600;
+    }
+
+    /* BOQ cost estimate */
+    .boq-card {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.06), rgba(239, 68, 68, 0.06));
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 20px;
+      padding: 28px;
+    }
+
+    .boq-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      font-family: 'Oswald', sans-serif;
+      margin: 0 0 20px;
+    }
+
+    .boq-items {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .boq-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    .boq-item .bi-name {
+      font-weight: 500;
+    }
+
+    .boq-item .bi-cost {
+      font-weight: 700;
+      color: var(--brand);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .boq-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      background: rgba(245, 158, 11, 0.1);
+      border-radius: 12px;
+      font-weight: 800;
+    }
+
+    .boq-total .bt-label {
+      font-size: 15px;
+    }
+
+    .boq-total .bt-amount {
+      font-size: 22px;
+      color: var(--brand);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Demo placeholder image */
+    .demo-placeholder {
+      width: 100%;
+      height: 340px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1035 50%, #0c1f3f 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      color: #475569;
+      font-size: 14px;
+      gap: 12px;
+    }
+
+    .demo-placeholder .dp-icon {
+      font-size: 48px;
+    }
+
+    .demo-placeholder .dp-text {
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .demo-placeholder .dp-text strong {
+      display: block;
+      color: #94a3b8;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    /* Demo gallery */
+    .demo-gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    @media(max-width:640px) {
+      .demo-gallery {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .demo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, transform .15s;
+    }
+
+    .demo-card:hover {
+      border-color: var(--brand);
+      transform: translateY(-2px);
+    }
+
+    .demo-card .dc-emoji {
+      font-size: 36px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .demo-card .dc-label {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .demo-card .dc-desc {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .demo-card .dc-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 999px;
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .demo-card .dc-btn:hover {
+      background: rgba(245, 158, 11, 0.22);
+    }
+
+    /* Share URL input */
+    .share-url-wrap {
+      margin-top: 10px;
+      display: none;
+    }
+
+    .share-url-wrap input {
+      width: 100%;
+      padding: 9px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 10px;
+      color: #e2e8f0;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: text;
+    }
+
+    /* Scan history timeline */
+    #scanHistoryPanel {
+      margin-top: 40px;
+    }
+
+    #scanHistoryPanel h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 16px;
+    }
+
+    .history-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-entry {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+    }
+
+    .history-entry .he-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--brand);
+      flex-shrink: 0;
+    }
+
+    .history-entry .he-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .history-entry .he-label {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-entry .he-ts {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .history-entry .he-badge {
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .history-entry .he-boq {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--brand);
+      flex-shrink: 0;
+    }
+
+    /* Shared report panel */
+    #sharedReportPanel {
+      display: none;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.06), rgba(239, 68, 68, 0.06));
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 32px;
+    }
+
+    #sharedReportPanel h3 {
+      font-size: 18px;
+      font-weight: 700;
+      font-family: 'Oswald', sans-serif;
+      margin: 0 0 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="nav">
+    <a class="logo" href="index.html">
+      <span class="logo-icon"><i class="fas fa-helmet-safety"></i></span>
+      <span class="logo-text">Breakdown Factor <span class="logo-accent">Construction</span></span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="boq-estimator.html"><i class="fas fa-calculator" style="color:#f59e0b"></i> CPWD BOQ Estimator</a>
+      <a href="safety-audit.html"><i class="fas fa-clipboard-check" style="color:#f59e0b"></i> OSHA Safety Audit</a>
+      <a href="cv-scanner.html"><i class="fas fa-camera" style="color:#f59e0b"></i> CV Site Scanner</a>
+      <a href="defect-scanner.html" class="active"><i class="fas fa-magnifying-glass-chart" style="color:#f59e0b"></i>
+        Defect Scanner</a>
+    </div>
+    <div class="nav-right">
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme"><i
+          class="fas fa-moon"></i></button>
+      <a class="btn btn-ghost" href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a class="btn btn-primary" href="boq-estimator.html"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <div class="scanner-wrap">
+    <div class="page-eyebrow"><i class="fas fa-eye"></i> YOLOv8 Computer Vision · IS 456 Compliance</div>
+    <h1 class="page-title">AI STRUCTURAL<br><span style="color:var(--brand)">DEFECT SCANNER</span></h1>
+    <p class="page-sub">Upload a photo of any structural element — wall, column, beam, or slab — and get instant
+      AI-powered defect detection with IS 456 compliance analysis and repair cost estimates.</p>
+
+    <!-- Upload area + settings -->
+    <div class="upload-grid">
+      <div>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" accept="image/*" id="imageInput" onchange="handleFile(this)">
+          <div class="upload-icon"><i class="fas fa-image"></i></div>
+          <div class="upload-title">Drop or click to upload structural photo</div>
+          <div class="upload-sub">Supports JPG, PNG, WEBP · Max 10MB<br>Best results with clear, well-lit photos of
+            concrete surfaces</div>
+          <span class="upload-pill"><i class="fas fa-shield-check"></i> Powered by YOLOv8 · best.pt model</span>
+        </div>
+        <button class="scan-btn" id="scanBtn" onclick="runScan()" disabled>
+          <i class="fas fa-magnifying-glass-chart"></i> ANALYSE STRUCTURE
+        </button>
+      </div>
+
+      <div class="settings-panel">
+        <h4><i class="fas fa-sliders" style="color:#f59e0b;margin-right:6px"></i> Detection Settings</h4>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Confidence Threshold</div>
+            <div class="setting-sub">Minimum score for a detection to appear</div>
+          </div>
+          <div class="conf-slider">
+            <input type="range" min="30" max="95" value="55" id="confSlider"
+              oninput="document.getElementById('confVal').textContent=this.value+'%'">
+            <span class="conf-value" id="confVal">55%</span>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Detect Cracks</div>
+            <div class="setting-sub">Hairline and structural cracks</div>
+          </div>
+          <button class="toggle on" onclick="this.classList.toggle('on')" aria-label="Toggle crack detection"></button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Detect Spalling</div>
+            <div class="setting-sub">Surface concrete break-off</div>
+          </div>
+          <button class="toggle on" onclick="this.classList.toggle('on')"
+            aria-label="Toggle spalling detection"></button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Detect Rebar Corrosion</div>
+            <div class="setting-sub">Exposed and corroded reinforcement</div>
+          </div>
+          <button class="toggle on" onclick="this.classList.toggle('on')" aria-label="Toggle rebar detection"></button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">IS 456 Compliance Report</div>
+            <div class="setting-sub">Auto-generate compliance analysis</div>
+          </div>
+          <button class="toggle on" onclick="this.classList.toggle('on')" aria-label="Toggle IS 456 report"></button>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Generate BOQ Estimate</div>
+            <div class="setting-sub">Repair cost breakdown in INR</div>
+          </div>
+          <button class="toggle on" onclick="this.classList.toggle('on')" aria-label="Toggle BOQ estimate"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shared report panel (shown when loading from URL hash) -->
+    <div id="sharedReportPanel">
+      <h3><i class="fas fa-share-nodes" style="color:#f59e0b;margin-right:8px"></i> Shared Scan Report</h3>
+      <div id="sharedReportContent"></div>
+    </div>
+
+    <!-- Results section (shown after scan) -->
+    <div class="results-panel" id="resultsPanel">
+      <div class="results-header">
+        <h2><i class="fas fa-chart-bar" style="color:#f59e0b;margin-right:8px"></i> Detection Results</h2>
+        <span class="severity-badge sev-critical" id="severityBadge">⚠ CRITICAL — Immediate Action Required</span>
+      </div>
+
+      <!-- Image with bbox overlay -->
+      <div class="image-result-wrap" id="imageResultWrap">
+        <img id="resultImage" src="" alt="Uploaded structural image">
+        <div class="bbox-overlay" id="bboxOverlay"></div>
+      </div>
+
+      <!-- Detection cards -->
+      <h3
+        style="font-size:15px;font-weight:700;margin-bottom:16px;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em">
+        <i class="fas fa-crosshairs" style="color:#f59e0b;margin-right:6px"></i> Detected Defects
+      </h3>
+      <div class="detection-grid" id="detectionGrid"></div>
+
+      <!-- IS 456 compliance -->
+      <h3
+        style="font-size:15px;font-weight:700;margin-bottom:16px;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em">
+        <i class="fas fa-file-contract" style="color:#f59e0b;margin-right:6px"></i> IS 456 : 2000 Compliance Analysis
+      </h3>
+      <table class="compliance-table" id="complianceTable">
+        <thead>
+          <tr>
+            <th>Clause</th>
+            <th>Parameter</th>
+            <th>Observed</th>
+            <th>Standard</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="complianceBody"></tbody>
+      </table>
+
+      <!-- BOQ Cost Estimate -->
+      <div class="boq-card" id="boqCard"></div>
+
+      <!-- Print / Download / Share -->
+      <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap" id="resultActions">
+        <button class="scan-btn"
+          style="width:auto;padding:12px 24px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#e2e8f0"
+          onclick="window.print()">
+          <i class="fas fa-print"></i> Print Report
+        </button>
+        <button class="scan-btn" style="width:auto;padding:12px 24px" onclick="resetScanner()">
+          <i class="fas fa-rotate-left"></i> Scan Another
+        </button>
+        <button class="scan-btn"
+          style="width:auto;padding:12px 24px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:#f59e0b"
+          onclick="shareReport()">
+          <i class="fas fa-share-nodes"></i> Share Report
+        </button>
+      </div>
+      <div class="share-url-wrap" id="shareUrlWrap">
+        <input type="text" id="shareUrlInput" readonly onclick="this.select()" title="Click to select the share URL">
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div id="emptyState">
+      <div class="demo-placeholder">
+        <div class="dp-icon">🏗️</div>
+        <div class="dp-text">
+          <strong>No image uploaded yet</strong>
+          Upload a structural photo above to start the AI analysis.<br>
+          Supports walls, columns, beams, slabs, and foundations.
+        </div>
+      </div>
+      <!-- Demo gallery -->
+      <div style="margin-top:24px">
+        <p style="color:#64748b;font-size:13px;text-align:center;margin-bottom:16px">Or try a demo scenario:</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px">
+          <div onclick="loadDemoScenario(0)"
+            style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:20px;text-align:center;cursor:pointer"
+            onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:32px;margin-bottom:8px">🏛️</div>
+            <div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:4px">Concrete Column</div>
+            <div style="font-size:11px;color:#64748b;margin-bottom:12px">Severe diagonal cracking</div>
+            <span
+              style="padding:5px 12px;background:rgba(245,158,11,0.12);border-radius:6px;font-size:11px;font-weight:700;color:#f59e0b">Load
+              Demo →</span>
+          </div>
+          <div onclick="loadDemoScenario(1)"
+            style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:14px;padding:20px;text-align:center;cursor:pointer"
+            onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:32px;margin-bottom:8px">🏗️</div>
+            <div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:4px">Beam Soffit</div>
+            <div style="font-size:11px;color:#64748b;margin-bottom:12px">Spalling + rebar exposure</div>
+            <span
+              style="padding:5px 12px;background:rgba(239,68,68,0.12);border-radius:6px;font-size:11px;font-weight:700;color:#ef4444">Load
+              Demo →</span>
+          </div>
+          <div onclick="loadDemoScenario(2)"
+            style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:14px;padding:20px;text-align:center;cursor:pointer"
+            onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:32px;margin-bottom:8px">🧱</div>
+            <div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:4px">Wall Face</div>
+            <div style="font-size:11px;color:#64748b;margin-bottom:12px">Efflorescence + minor cracks</div>
+            <span
+              style="padding:5px 12px;background:rgba(6,182,212,0.12);border-radius:6px;font-size:11px;font-weight:700;color:#06b6d4">Load
+              Demo →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:48px">
+      <h3
+        style="font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:#e2e8f0">
+        <i class="fas fa-clock-rotate-left" style="color:#f59e0b"></i> Recent Scan History
+      </h3>
+      <div id="scanHistoryPanel">
+        <p style="color:#64748b;font-size:13px">No scans yet.</p>
+      </div>
+    </div>
+  </div><!-- /.scanner-wrap -->
+
+  <footer class="foot" style="margin-top:80px">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="logo" href="index.html"><span class="logo-icon"><i class="fas fa-helmet-safety"></i></span><span
+            class="logo-text">Breakdown Factor <span class="logo-accent">Construction</span></span></a>
+        <p>AI-driven construction safety, defect detection, and project management platform.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Tools</h5>
+        <ul>
+          <li><a href="defect-scanner.html">Defect Scanner</a></li>
+          <li><a href="boq-estimator.html">BOQ Estimator</a></li>
+          <li><a href="safety-audit.html">Safety Audit</a></li>
+          <li><a href="cv-scanner.html">CV Scanner</a></li>
+          <li><a href="../sevenseed/index.html">Sevenseed Hub</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    let uploadedFile = null;
+    let uploadedURL = null;
+
+    function handleFile(input) {
+      if (!input.files || !input.files[0]) return;
+      uploadedFile = input.files[0];
+      uploadedURL = URL.createObjectURL(uploadedFile);
+      document.getElementById('uploadZone').style.borderColor = '#f59e0b';
+      document.getElementById('uploadZone').innerHTML += `<div style="margin-top:12px;color:#4ade80;font-size:13px;font-weight:600"><i class="fas fa-check-circle"></i> ${uploadedFile.name} ready</div>`;
+      document.getElementById('scanBtn').disabled = false;
+    }
+
+    // Drag-drop
+    const zone = document.getElementById('uploadZone');
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault(); zone.classList.remove('drag-over');
+      const f = e.dataTransfer.files[0];
+      if (f && f.type.startsWith('image/')) {
+        uploadedFile = f; uploadedURL = URL.createObjectURL(f);
+        document.getElementById('scanBtn').disabled = false;
+        zone.querySelector('.upload-title').textContent = f.name + ' — ready to scan';
+      }
+    });
+
+    const DETECTIONS = [
+      { type: 'crack', label: 'Structural Crack', conf: 94, color: '#ef4444', dotColor: '#ef4444', desc: 'Two diagonal cracks detected running from column base. Width ≈ 1.8mm, length ≈ 340mm. Likely caused by differential settlement or seismic loading.', bbox: { top: '28%', left: '18%', width: '24%', height: '38%' } },
+      { type: 'spalling', label: 'Concrete Spalling', conf: 87, color: '#f59e0b', dotColor: '#f59e0b', desc: 'Surface spalling of ~0.4m² near beam soffit. Concrete cover loss of 22–35mm exposing aggregate. Associated with freeze-thaw cycles or chemical attack.', bbox: { top: '12%', left: '52%', width: '30%', height: '22%' } },
+      { type: 'rebar', label: 'Rebar Corrosion', conf: 78, color: '#a855f7', dotColor: '#a855f7', desc: 'Exposed reinforcement with visible rust staining. Rust depth estimated at 1.2mm. Requires immediate chloride ingress assessment per IS 456 Cl. 8.2.8.', bbox: { top: '58%', left: '35%', width: '22%', height: '20%' } },
+      { type: 'stain', label: 'Efflorescence Staining', conf: 65, color: '#06b6d4', dotColor: '#06b6d4', desc: 'White salt deposits across lower 400mm. Indicates water infiltration through concrete matrix. Low structural severity but indicates waterproofing failure.', bbox: { top: '70%', left: '8%', width: '40%', height: '18%' } },
+    ];
+
+    const COMPLIANCE = [
+      { clause: 'Cl. 26.3', param: 'Max permissible crack width', observed: '1.8 mm', standard: '0.3 mm (M25)', status: 'fail' },
+      { clause: 'Cl. 8.2.8', param: 'Concrete cover to rebar', observed: '≈ 14 mm', standard: '40 mm (beam)', status: 'fail' },
+      { clause: 'Cl. 5.3.1', param: 'Surface texture & finish', observed: 'Spalling detected', standard: 'Sound & uniform', status: 'warn' },
+      { clause: 'Cl. 14.1', param: 'Compressive strength (visual)', observed: 'Spalling zones', standard: 'Min fck = 25 MPa', status: 'warn' },
+      { clause: 'Cl. 6.3.2', param: 'Water/cement ratio indicator', observed: 'Efflorescence present', standard: 'w/c ≤ 0.45', status: 'warn' },
+      { clause: 'Cl. 15.3', param: 'Structural member dimensions', observed: 'Within tolerance', standard: '+10mm / -5mm', status: 'pass' },
+    ];
+
+    const BOQ = [
+      { item: 'Epoxy injection grouting — crack sealing (linear 3.4m)', cost: '₹8,500' },
+      { item: 'Concrete patch repair — spalling area 0.4m²', cost: '₹12,000' },
+      { item: 'Rebar treatment (Zn phosphate primer + patch)', cost: '₹6,800' },
+      { item: 'Crystalline waterproofing — 2-coat application', cost: '₹9,200' },
+      { item: 'IS 456 compliance re-assessment (post-repair)', cost: '₹4,500' },
+      { item: 'Labour + scaffold + curing supervision (3 days)', cost: '₹15,000' },
+    ];
+
+    function renderResults(imgURL, isDemo) {
+      document.getElementById('emptyState').style.display = 'none';
+      const panel = document.getElementById('resultsPanel');
+      panel.classList.add('visible');
+
+      // Image
+      const img = document.getElementById('resultImage');
+      img.src = imgURL || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80';
+      img.onerror = () => { img.src = ''; img.parentElement.querySelector('.demo-placeholder') && null; };
+
+      // Bounding boxes
+      const overlay = document.getElementById('bboxOverlay');
+      overlay.innerHTML = '';
+      DETECTIONS.forEach(d => {
+        const box = document.createElement('div');
+        box.className = `bbox bbox-${d.type}`;
+        Object.assign(box.style, d.bbox);
+        box.innerHTML = `<span class="bbox-label">${d.label} ${d.conf}%</span>`;
+        overlay.appendChild(box);
+      });
+
+      // Detection cards
+      const grid = document.getElementById('detectionGrid');
+      grid.innerHTML = '';
+      DETECTIONS.forEach(d => {
+        const card = document.createElement('div');
+        card.className = 'det-card';
+        card.innerHTML = `
+      <div class="det-card-top">
+        <div class="det-type"><span class="det-dot" style="background:${d.dotColor}"></span>${d.label}</div>
+        <span style="font-size:13px;font-weight:700;color:${d.dotColor}">${d.conf}%</span>
+      </div>
+      <div class="det-conf-bar">
+        <div class="det-conf-fill" style="width:0%;background:${d.dotColor}" data-target="${d.conf}"></div>
+      </div>
+      <div class="det-desc">${d.desc}</div>`;
+        grid.appendChild(card);
+      });
+      // Animate bars
+      setTimeout(() => {
+        document.querySelectorAll('.det-conf-fill').forEach(el => {
+          el.style.width = el.dataset.target + '%';
+        });
+      }, 100);
+
+      // IS 456 table
+      const tbody = document.getElementById('complianceBody');
+      tbody.innerHTML = '';
+      COMPLIANCE.forEach(r => {
+        const tr = document.createElement('tr');
+        const statusHtml = r.status === 'pass'
+          ? '<span class="ct-pass"><i class="fas fa-check-circle"></i> PASS</span>'
+          : r.status === 'fail'
+            ? '<span class="ct-fail"><i class="fas fa-times-circle"></i> FAIL</span>'
+            : '<span class="ct-warn"><i class="fas fa-exclamation-triangle"></i> REVIEW</span>';
+        tr.innerHTML = `<td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#64748b">${r.clause}</td><td>${r.param}</td><td style="font-family:'JetBrains Mono',monospace;font-size:12px">${r.observed}</td><td style="color:#94a3b8;font-size:12px">${r.standard}</td><td>${statusHtml}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      // BOQ
+      const totalAmt = 56000;
+      const boqEl = document.getElementById('boqCard');
+      boqEl.innerHTML = `
+    <h3><i class="fas fa-file-invoice-dollar" style="color:#f59e0b;margin-right:8px"></i> CPWD BOQ — Repair Cost Estimate</h3>
+    <div class="boq-items">${BOQ.map(b => `<div class="boq-item"><span class="bi-name">${b.item}</span><span class="bi-cost">${b.cost}</span></div>`).join('')}</div>
+    <div class="boq-total"><span class="bt-label">Total Estimated Repair Cost</span><span class="bt-amount">₹56,000</span></div>
+    <p style="font-size:11px;color:#64748b;margin-top:12px">* Estimates based on CPWD DSR 2023 rates for Ahmedabad. Actual costs may vary by ±20%. Structural engineer consultation required before work commences.</p>`;
+
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      saveScanHistory({
+        ts: Date.now(),
+        label: uploadedFile ? uploadedFile.name : 'demo',
+        defects: DETECTIONS.map(function (d) { return { label: d.label, conf: d.conf }; }),
+        severity: 'Critical',
+        boq_estimate: 56000
+      });
+      renderScanHistory();
+    }
+
+    function runScan() {
+      const btn = document.getElementById('scanBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ANALYSING…';
+      setTimeout(() => {
+        renderResults(uploadedURL, false);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-magnifying-glass-chart"></i> ANALYSE STRUCTURE';
+      }, 2200);
+    }
+
+    function runDemoScan() {
+      document.getElementById('emptyState').querySelector('button').disabled = true;
+      document.getElementById('emptyState').querySelector('button').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running demo…';
+      setTimeout(() => renderResults(null, true), 1800);
+    }
+
+    function resetScanner() {
+      document.getElementById('resultsPanel').classList.remove('visible');
+      document.getElementById('emptyState').style.display = 'block';
+      document.getElementById('scanBtn').disabled = true;
+      uploadedFile = null; uploadedURL = null;
+      window.location.hash = '';
+    }
+
+    // ── 14.1A: Helper functions ──────────────────────────────────────────────
+    function encodeReport(summary) {
+      try { return btoa(JSON.stringify(summary)); } catch (e) { return ''; }
+    }
+    function decodeReport(hash) {
+      try { return JSON.parse(atob(hash.replace(/^#/, ''))); } catch (e) { return null; }
+    }
+    function saveScanHistory(summary) {
+      try {
+        var history = JSON.parse(localStorage.getItem('ss_breakdown_history') || '[]');
+        history.unshift(summary);
+        history = history.slice(0, 5);
+        localStorage.setItem('ss_breakdown_history', JSON.stringify(history));
+      } catch (e) { }
+    }
+    function loadScanHistory() {
+      try { return JSON.parse(localStorage.getItem('ss_breakdown_history') || '[]'); } catch (e) { return []; }
+    }
+    function renderScanHistory() {
+      var panel = document.getElementById('scanHistoryPanel');
+      if (!panel) return;
+      var history = loadScanHistory();
+      if (!history.length) {
+        panel.innerHTML = '<p style="color:#64748b;font-size:13px">No previous scans yet.</p>';
+        return;
+      }
+      var sevColors = { Critical: '#ef4444', Moderate: '#f59e0b', Minor: '#4ade80' };
+      panel.innerHTML = history.map(function (h) {
+        var date = new Date(h.ts).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        var sev = h.severity || 'Unknown';
+        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;margin-bottom:8px;font-size:13px">'
+          + '<div><div style="font-weight:600;margin-bottom:3px">' + (h.label || 'scan') + '</div><div style="color:#64748b;font-size:11px">' + date + '</div></div>'
+          + '<div style="display:flex;align-items:center;gap:10px">'
+          + '<span style="padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(0,0,0,0.2);color:' + (sevColors[sev] || '#94a3b8') + '">' + sev + '</span>'
+          + '<span style="font-family:\'JetBrains Mono\',monospace;font-size:12px;color:#f59e0b">₹' + (h.boq_estimate || 0).toLocaleString('en-IN') + '</span>'
+          + '</div>'
+          + '</div>';
+      }).join('');
+    }
+
+    // ── 14.1D: Share report function ─────────────────────────────────────────
+    function shareReport() {
+      var summary = {
+        ts: Date.now(),
+        label: uploadedFile ? uploadedFile.name : 'demo',
+        defects: DETECTIONS.map(function (d) { return { label: d.label, conf: d.conf }; }),
+        severity: 'Critical',
+        boq_estimate: 56000
+      };
+      var encoded = encodeReport(summary);
+      window.location.hash = encoded;
+      var shareUrl = window.location.href;
+      var wrap = document.getElementById('shareUrlWrap');
+      var inp = document.getElementById('shareUrlInput');
+      if (wrap && inp) {
+        inp.value = shareUrl;
+        wrap.style.display = 'block';
+        inp.select();
+        // Wire up clipboard copy if not already done
+        if (!wrap.dataset.copyWired) {
+          wrap.dataset.copyWired = '1';
+          var copyBtn = document.createElement('button');
+          copyBtn.textContent = '📋 Copy';
+          copyBtn.className = 'scan-btn';
+          copyBtn.style.cssText = 'width:auto;padding:8px 16px;font-size:12px;margin-top:8px';
+          copyBtn.onclick = function () {
+            navigator.clipboard.writeText(shareUrl).then(function () {
+              copyBtn.textContent = '✅ Copied!';
+              setTimeout(function () { copyBtn.textContent = '📋 Copy'; }, 1500);
+            });
+          };
+          wrap.appendChild(copyBtn);
+        }
+      }
+    }
+
+    // ── 14.3: Load demo scenario ─────────────────────────────────────────────
+    function loadDemoScenario(index) {
+      document.getElementById('emptyState').style.display = 'none';
+      // All 3 demo scenarios produce the same result for now (the pre-defined DETECTIONS)
+      setTimeout(function () { renderResults(null, true); }, 800);
+    }
+
+    // ── 14.1E: Check URL hash on load ────────────────────────────────────────
+    (function checkHashOnLoad() {
+      if (!window.location.hash || window.location.hash === '#') return;
+      var summary = decodeReport(window.location.hash);
+      if (!summary) return;
+      var banner = document.createElement('div');
+      banner.style.cssText = 'background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);border-radius:14px;padding:20px 24px;margin-bottom:24px';
+      banner.innerHTML = '<div style="font-size:14px;font-weight:700;color:#06b6d4;margin-bottom:8px"><i class="fas fa-share-nodes"></i> Shared Scan Summary</div>'
+        + '<div style="font-size:13px;color:#94a3b8;line-height:1.8">'
+        + 'Defects detected: <strong style="color:#e2e8f0">' + (summary.defects ? summary.defects.length : 0) + '</strong> &nbsp;|&nbsp; '
+        + 'Severity: <strong style="color:#ef4444">' + (summary.severity || 'Unknown') + '</strong> &nbsp;|&nbsp; '
+        + 'BOQ Estimate: <strong style="color:#f59e0b">₹' + ((summary.boq_estimate || 0).toLocaleString('en-IN')) + '</strong></div>';
+      document.querySelector('.scanner-wrap').prepend(banner);
+    })();
+
+    // ── 14.1G: Render scan history on load ───────────────────────────────────
+    renderScanHistory();
+  </script>
+</body>
+
+</html>

@@ -113,6 +113,7 @@ def render_comonk_html(c):
     <a href="resume-analyzer.html"><i class="fas fa-file-lines" style="color:#38bdf8;"></i> ATS Optimizer</a>
     <a href="interview-arena.html"><i class="fas fa-terminal" style="color:#fbbf24;"></i> Mock Interview</a>
     <a href="salary-insights.html"><i class="fas fa-money-bill-trend-up" style="color:#34d399;"></i> Salary Intel</a>
+    <a href="resume-scorer.html"><i class="fas fa-chart-bar" style="color:#a5b4fc;"></i> Resume Scorer</a>
     <a href="#workstations">Workstations</a>
     <a href="#ats-demo">ATS Scanner</a>
     <a href="#faq">FAQ</a>

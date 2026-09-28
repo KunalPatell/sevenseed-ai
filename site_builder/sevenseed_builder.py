@@ -65,6 +65,7 @@ def render_sevenseed_html(c):
     <a href="syndicate-ruv.html"><i class="fas fa-chart-pie" style="color:#6366f1;"></i> Syndicate & RUV</a>
     <a href="market-sizing.html"><i class="fas fa-calculator" style="color:#a855f7;"></i> TAM / SAM / SOM</a>
     <a href="ventures.html"><i class="fas fa-cubes" style="color:#38bdf8;"></i> Portfolio</a>
+    <a href="venture-dashboard.html"><i class="fas fa-gauge" style="color:#10b981;"></i> Dashboard</a>
     <a href="pricing.html"><i class="fas fa-tag" style="color:#34d399;"></i> Pricing</a>
     <a href="byok.html"><i class="fas fa-key" style="color:#fbbf24;"></i> BYOK Vault</a>
     <a href="#portfolio">Ventures</a>

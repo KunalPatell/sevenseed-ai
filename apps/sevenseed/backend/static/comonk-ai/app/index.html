@@ -28,7 +28,10 @@
   <link rel="stylesheet" href="portal.css"/>
 </head>
 <body class="antialiased text-slate-100 bg-[#040714]">
-  <!-- Aceternity Overhead Glow Lamp -->
+<script>
+(function coldStartBanner(){var HEALTH_URL='/comonk-ai/api/health',MAX_RETRIES=10,RETRY_DELAY=3e3,FETCH_TIMEOUT=3e3,attempts=0,banner=null;function showBanner(msg,isError){if(!banner){banner=document.createElement('div');banner.id='cold-start-banner';banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;padding:12px 20px;text-align:center;font-family:system-ui,sans-serif;font-size:14px;font-weight:500;transition:background .3s';document.body.prepend(banner);}banner.style.background=isError?'#7f1d1d':'#92400e';banner.style.color=isError?'#fca5a5':'#fef3c7';banner.textContent=msg;}function hideBanner(){if(banner){banner.style.opacity='0';setTimeout(function(){if(banner&&banner.parentNode)banner.parentNode.removeChild(banner);banner=null;},400);}}function attempt(){var ctrl=new AbortController(),timer=setTimeout(function(){ctrl.abort();},FETCH_TIMEOUT);fetch(HEALTH_URL,{signal:ctrl.signal}).then(function(r){clearTimeout(timer);if(r.ok){hideBanner();}else{throw new Error('non-2xx');}}).catch(function(){clearTimeout(timer);attempts++;if(attempts===1)showBanner('⏳ Waking up the backend (free-tier cold start, up to ~30s)…',false);if(attempts>=MAX_RETRIES){showBanner('⚠ Backend may be unavailable. Please try refreshing.',true);return;}setTimeout(attempt,RETRY_DELAY);});}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',attempt);}else{attempt();}})();
+</script>
+<!-- Aceternity Overhead Glow Lamp -->
   <div class="hero-lamp"></div>
   <div class="hero-lamp-line"></div>
 

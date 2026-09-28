@@ -182,12 +182,12 @@ def render_emart_html(c):
   </a>
   <div class="nav-links" id="navLinks">
     <a href="spec-compare.html"><i class="fas fa-scale-balanced" style="color:#c084fc;"></i> Smartprix Specs</a>
+    <a href="smart-compare.html"><i class="fas fa-magnifying-glass-chart" style="color:#a855f7;"></i> Smart Compare</a>
     <a href="price-tracker.html"><i class="fas fa-chart-line" style="color:#fbbf24;"></i> 90-Day Tracker</a>
     <a href="qcommerce.html"><i class="fas fa-bolt" style="color:#34d399;"></i> Quick Commerce</a>
     <a href="coupon-tester.html"><i class="fas fa-ticket" style="color:#38bdf8;"></i> Coupon Tester</a>
     <a href="deals-radar.html"><i class="fas fa-tags" style="color:#f472b6;"></i> Deals Radar</a>
     <a href="#trending">Price Drops</a>
-    <a href="#qcom-battle">Blinkit vs Zepto</a>
     <a href="#faq">FAQ</a>
   </div>
   <div class="nav-right">

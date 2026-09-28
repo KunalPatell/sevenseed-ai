@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Symptom Checker & AI Triage — Decode Forest Pharmacy</title>
+  <meta name="description" content="Describe your symptoms and get an instant AI triage — know whether you need emergency care, a doctor visit, or can manage at home.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🩺%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ── Page container ── */
+    .sc-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+    }
+
+    /* ── Page header ── */
+    .sc-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .sc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(16,185,129,0.14);
+      border: 1px solid rgba(16,185,129,0.35);
+      color: #34d399;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .sc-title {
+      font-size: clamp(30px, 4.5vw, 48px);
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--text, #fff);
+      margin-bottom: 12px;
+    }
+    .sc-sub {
+      font-size: 16px;
+      color: var(--text-2, #94a3b8);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── Disclaimer banner ── */
+    .sc-disclaimer {
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 13px;
+      color: #fcd34d;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    .sc-disclaimer i { margin-top: 2px; flex-shrink: 0; }
+
+    /* ── Triage form card ── */
+    .sc-form-card {
+      background: var(--bg-1, #0c1222);
+      border: 1px solid var(--border, rgba(255,255,255,0.08));
+      border-radius: 18px;
+      padding: 32px;
+      margin-bottom: 36px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+    }
+    .sc-form-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text, #fff);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .sc-textarea {
+      width: 100%;
+      min-height: 130px;
+      padding: 14px 16px;
+      background: var(--bg-2, #141c30);
+      border: 1.5px solid var(--border-hi, rgba(255,255,255,0.12));
+      border-radius: 12px;
+      color: var(--text, #fff);
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+    .sc-textarea:focus { border-color: #10b981; }
+    .sc-textarea.error { border-color: #ef4444; }
+    .sc-error-msg {
+      color: #f87171;
+      font-size: 13px;
+      margin-top: 6px;
+      display: none;
+    }
+    .sc-error-msg.visible { display: block; }
+
+    /* Quick-pick symptom chips */
+    .sc-chips-label {
+      font-size: 12px;
+      color: var(--text-2, #94a3b8);
+      margin: 14px 0 8px;
+    }
+    .sc-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .sc-chip {
+      padding: 6px 13px;
+      border-radius: 20px;
+      background: var(--bg-2, #141c30);
+      border: 1px solid var(--border, rgba(255,255,255,0.1));
+      color: var(--text-2, #94a3b8);
+      font-size: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+      user-select: none;
+    }
+    .sc-chip:hover { border-color: #10b981; color: #34d399; }
+
+    .sc-form-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .sc-submit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      background: #10b981;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .sc-submit-btn:hover { background: #059669; transform: translateY(-1px); }
+    .sc-submit-btn:active { transform: translateY(0); }
+    .sc-clear-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 20px;
+      background: transparent;
+      color: var(--text-2, #94a3b8);
+      border: 1px solid var(--border, rgba(255,255,255,0.12));
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .sc-clear-btn:hover { border-color: #94a3b8; color: #fff; }
+
+    /* ── Results panel ── */
+    .sc-results {
+      display: none;
+    }
+    .sc-results.visible {
+      display: block;
+      animation: fadeUp 0.4s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Urgency badge */
+    .sc-urgency-block {
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .sc-urgency-block.emergency {
+      background: rgba(239,68,68,0.12);
+      border: 2px solid rgba(239,68,68,0.45);
+    }
+    .sc-urgency-block.see-doctor {
+      background: rgba(245,158,11,0.1);
+      border: 2px solid rgba(245,158,11,0.4);
+    }
+    .sc-urgency-block.home-care {
+      background: rgba(16,185,129,0.1);
+      border: 2px solid rgba(16,185,129,0.4);
+    }
+    .sc-urgency-icon {
+      font-size: 40px;
+      flex-shrink: 0;
+    }
+    .sc-urgency-content { flex: 1; min-width: 200px; }
+    .sc-urgency-label {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+      opacity: 0.75;
+    }
+    .sc-urgency-level {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+    .sc-urgency-block.emergency .sc-urgency-level { color: #f87171; }
+    .sc-urgency-block.see-doctor .sc-urgency-level { color: #fcd34d; }
+    .sc-urgency-block.home-care  .sc-urgency-level { color: #34d399; }
+    .sc-urgency-block.emergency .sc-urgency-label { color: #f87171; }
+    .sc-urgency-block.see-doctor .sc-urgency-label { color: #fcd34d; }
+    .sc-urgency-block.home-care  .sc-urgency-label { color: #34d399; }
+    .sc-urgency-desc {
+      font-size: 14px;
+      color: var(--text-2, #94a3b8);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* Hospital CTA (Emergency only) */
+    .sc-hospital-cta {
+      display: none;
+    }
+    .sc-hospital-cta.visible {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(239,68,68,0.14);
+      border: 1.5px solid rgba(239,68,68,0.5);
+      border-radius: 12px;
+      padding: 16px 22px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .sc-hospital-cta-text {
+      flex: 1;
+      min-width: 180px;
+      font-size: 14px;
+      color: var(--text, #fff);
+    }
+    .sc-hospital-cta-text strong { color: #f87171; display: block; font-size: 15px; margin-bottom: 2px; }
+    .sc-hosp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: #ef4444;
+      color: #fff;
+      border-radius: 9px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .sc-hosp-btn:hover { background: #dc2626; }
+
+    /* Results grid */
+    .sc-results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 640px) {
+      .sc-results-grid { grid-template-columns: 1fr; }
+    }
+
+    .sc-result-card {
+      background: var(--bg-1, #0c1222);
+      border: 1px solid var(--border, rgba(255,255,255,0.08));
+      border-radius: 14px;
+      padding: 22px;
+    }
+    .sc-result-card-title {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-2, #94a3b8);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sc-result-card-title i { color: #10b981; }
+    .sc-conditions-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sc-conditions-list li {
+      font-size: 14px;
+      color: var(--text, #fff);
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border, rgba(255,255,255,0.06));
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sc-conditions-list li:last-child { border-bottom: none; }
+    .sc-conditions-list li::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      flex-shrink: 0;
+    }
+
+    /* DO / DON'T lists (spans full width) */
+    .sc-advice-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 640px) {
+      .sc-advice-row { grid-template-columns: 1fr; }
+    }
+
+    .sc-do-card { border-color: rgba(16,185,129,0.3); }
+    .sc-dont-card { border-color: rgba(239,68,68,0.3); }
+    .sc-do-card .sc-result-card-title i { color: #34d399; }
+    .sc-dont-card .sc-result-card-title i { color: #f87171; }
+
+    .sc-advice-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sc-advice-list li {
+      font-size: 14px;
+      color: var(--text, #fff);
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border, rgba(255,255,255,0.06));
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
+    .sc-advice-list li:last-child { border-bottom: none; }
+    .sc-do-card .sc-advice-list li i { color: #34d399; margin-top: 2px; flex-shrink: 0; }
+    .sc-dont-card .sc-advice-list li i { color: #f87171; margin-top: 2px; flex-shrink: 0; }
+
+    /* Print & actions */
+    .sc-result-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .sc-print-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      background: transparent;
+      color: var(--text, #fff);
+      border: 1px solid var(--border-hi, rgba(255,255,255,0.2));
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .sc-print-btn:hover { border-color: #10b981; color: #34d399; }
+    .sc-retriage-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      background: rgba(16,185,129,0.12);
+      color: #34d399;
+      border: 1px solid rgba(16,185,129,0.35);
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .sc-retriage-btn:hover { background: rgba(16,185,129,0.22); }
+
+    /* ── @media print ── */
+    @media print {
+      .nav,
+      .preloader,
+      .grain,
+      .scroll-progress,
+      .cursor-ring,
+      .sc-form-card,
+      .sc-disclaimer,
+      .sc-header .sc-sub,
+      .sc-result-actions,
+      .sc-chips,
+      .sc-chips-label,
+      footer,
+      .foot,
+      .fab-stack,
+      .chat-panel,
+      .cmdk-overlay,
+      .toast-stack {
+        display: none !important;
+      }
+      body, .sc-container {
+        background: #fff !important;
+        color: #000 !important;
+        padding: 20px !important;
+        max-width: 100% !important;
+      }
+      .sc-results { display: block !important; }
+      .sc-urgency-block {
+        border: 2px solid #333 !important;
+        background: #f9f9f9 !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .sc-urgency-level,
+      .sc-result-card-title,
+      .sc-conditions-list li,
+      .sc-advice-list li {
+        color: #000 !important;
+      }
+      .sc-result-card {
+        border: 1px solid #ccc !important;
+        background: #fff !important;
+        break-inside: avoid;
+      }
+      .sc-hospital-cta.visible {
+        border: 1px solid #ef4444 !important;
+        background: #fff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .sc-title {
+        font-size: 26px !important;
+        color: #000 !important;
+      }
+      .sc-results-grid,
+      .sc-advice-row {
+        display: grid !important;
+      }
+    }
+  </style>
+</head>
+<body>
+<span id="top"></span>
+
+<div class="preloader" id="preloader">
+  <div class="pl-glow pl-glow-1"></div>
+  <div class="pl-glow pl-glow-2"></div>
+  <div class="pl-content">
+    <div class="pl-logo">
+      <div class="pl-icon-wrap"><i class="fas fa-stethoscope pl-icon"></i><span class="pl-ring"></span></div>
+      <div class="pl-name">Symptom Checker</div>
+    </div>
+    <div class="pl-progress">
+      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
+      <div class="pl-text">LOADING TRIAGE ENGINE… <span id="plPct">0</span>%</div>
+    </div>
+  </div>
+</div>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<!-- ══════════════════════════════════════
+     NAV
+════════════════════════════════════════ -->
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-mortar-pestle"></i></span>
+    <span class="logo-text">Decode Forest <span class="logo-accent">Pharmacy</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="generic-finder.html"><i class="fas fa-pills" style="color:var(--accent,#10b981)"></i> Generic Finder</a>
+    <a href="interaction-checker.html"><i class="fas fa-triangle-exclamation" style="color:var(--accent,#10b981)"></i> Drug Interactions</a>
+    <a href="prescription-ocr.html"><i class="fas fa-file-prescription" style="color:var(--accent,#10b981)"></i> Prescription OCR</a>
+    <a href="hospital-finder.html"><i class="fas fa-hospital" style="color:var(--accent,#10b981)"></i> Hospital Radar</a>
+    <a href="symptom-checker.html" class="active"><i class="fas fa-stethoscope" style="color:var(--accent,#10b981)"></i> Symptom Checker</a>
+    <a href="medicine-reminder.html"><i class="fas fa-bell" style="color:var(--accent,#10b981)"></i> Med Reminders</a>
+  </div>
+  <div class="nav-right">
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
+    <a class="btn btn-ghost" href="/decode-forest-pharmacy/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-primary" href="index.html#contact"><i class="fas fa-envelope"></i> Contact</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════ -->
+<main class="sc-container" id="main-content">
+
+  <!-- Page header -->
+  <div class="sc-header">
+    <div class="sc-badge"><i class="fas fa-stethoscope"></i> AI Triage Engine · Decode Forest Pharmacy</div>
+    <h1 class="sc-title">Symptom <span style="color:#34d399">Checker</span> &amp; Triage</h1>
+    <p class="sc-sub">Describe what you're feeling and our AI triage engine will classify urgency, suggest possible conditions, and give you personalised do's and don'ts.</p>
+  </div>
+
+  <!-- Medical disclaimer -->
+  <div class="sc-disclaimer" role="note">
+    <i class="fas fa-triangle-exclamation"></i>
+    <span><strong>Medical disclaimer:</strong> This tool provides general health information only and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for medical concerns. In a life-threatening emergency, call 108 immediately.</span>
+  </div>
+
+  <!-- ── Triage form ── -->
+  <div class="sc-form-card" id="triageFormCard">
+    <label class="sc-form-label" for="symptomsInput">
+      <i class="fas fa-comment-medical" style="color:#10b981; margin-right:6px;"></i>
+      Describe your symptoms in detail
+    </label>
+    <textarea
+      class="sc-textarea"
+      id="symptomsInput"
+      name="symptoms"
+      placeholder="e.g. I have a high fever, headache, and body ache since yesterday evening. Also feeling nauseous…"
+      aria-required="true"
+      aria-describedby="symptomsError"
+    ></textarea>
+    <div class="sc-error-msg" id="symptomsError" role="alert" aria-live="polite">
+      <i class="fas fa-circle-exclamation"></i> Please describe at least one symptom before checking triage.
+    </div>
+
+    <p class="sc-chips-label"><i class="fas fa-tags"></i> Quick-pick common symptoms:</p>
+    <div class="sc-chips" id="quickChips" role="group" aria-label="Quick symptom chips">
+      <button type="button" class="sc-chip" data-symptom="chest pain">Chest pain</button>
+      <button type="button" class="sc-chip" data-symptom="shortness of breath">Shortness of breath</button>
+      <button type="button" class="sc-chip" data-symptom="high fever">High fever</button>
+      <button type="button" class="sc-chip" data-symptom="headache">Headache</button>
+      <button type="button" class="sc-chip" data-symptom="cough">Cough</button>
+      <button type="button" class="sc-chip" data-symptom="nausea and vomiting">Nausea &amp; Vomiting</button>
+      <button type="button" class="sc-chip" data-symptom="diarrhea">Diarrhoea</button>
+      <button type="button" class="sc-chip" data-symptom="back pain">Back pain</button>
+      <button type="button" class="sc-chip" data-symptom="fatigue">Fatigue</button>
+      <button type="button" class="sc-chip" data-symptom="cold and runny nose">Cold / Runny nose</button>
+    </div>
+
+    <div class="sc-form-actions">
+      <button type="button" class="sc-submit-btn" id="triageBtn">
+        <i class="fas fa-magnifying-glass-plus"></i> Check Triage
+      </button>
+      <button type="button" class="sc-clear-btn" id="clearBtn">
+        <i class="fas fa-rotate-left"></i> Clear
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Results panel (hidden until triage runs) ── -->
+  <div class="sc-results" id="triageResults" aria-live="polite">
+
+    <!-- Urgency badge block -->
+    <div class="sc-urgency-block" id="urgencyBlock">
+      <div class="sc-urgency-icon" id="urgencyIcon"></div>
+      <div class="sc-urgency-content">
+        <div class="sc-urgency-label" id="urgencyLabel">Triage Result</div>
+        <div class="sc-urgency-level" id="urgencyLevel"></div>
+        <div class="sc-urgency-desc" id="urgencyDesc"></div>
+      </div>
+    </div>
+
+    <!-- Emergency CTA (conditionally visible) -->
+    <div class="sc-hospital-cta" id="hospitalCta" role="alert">
+      <div class="sc-hospital-cta-text">
+        <strong><i class="fas fa-siren-on"></i> This may be a medical emergency</strong>
+        Go to the nearest emergency room or call 108 immediately. Find hospitals near you:
+      </div>
+      <a href="hospital-finder.html" class="sc-hosp-btn">
+        <i class="fas fa-hospital"></i> Find Nearest Hospital
+      </a>
+    </div>
+
+    <!-- Conditions + severity grid -->
+    <div class="sc-results-grid">
+      <div class="sc-result-card">
+        <div class="sc-result-card-title"><i class="fas fa-list-check"></i> Possible Conditions</div>
+        <ul class="sc-conditions-list" id="conditionsList"></ul>
+      </div>
+      <div class="sc-result-card">
+        <div class="sc-result-card-title"><i class="fas fa-circle-info"></i> What to Expect</div>
+        <div id="expectContent" style="font-size:14px; color:var(--text-2,#94a3b8); line-height:1.65;"></div>
+      </div>
+    </div>
+
+    <!-- DO / DON'T -->
+    <div class="sc-advice-row">
+      <div class="sc-result-card sc-do-card">
+        <div class="sc-result-card-title"><i class="fas fa-check-circle"></i> What TO Do</div>
+        <ul class="sc-advice-list" id="doList"></ul>
+      </div>
+      <div class="sc-result-card sc-dont-card">
+        <div class="sc-result-card-title"><i class="fas fa-ban"></i> What NOT To Do</div>
+        <ul class="sc-advice-list" id="dontList"></ul>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="sc-result-actions">
+      <button type="button" class="sc-print-btn" id="printResultBtn">
+        <i class="fas fa-print"></i> Print / Save as PDF
+      </button>
+      <button type="button" class="sc-retriage-btn" id="retriageBtn">
+        <i class="fas fa-rotate-left"></i> Check Again
+      </button>
+      <a href="index.html#contact" class="btn btn-ghost" style="font-size:14px; padding:11px 20px;">
+        <i class="fas fa-calendar-check"></i> Book a Consultation
+      </a>
+    </div>
+
+  </div><!-- /sc-results -->
+
+</main>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="logo" href="index.html">
+        <span class="logo-icon"><i class="fas fa-mortar-pestle"></i></span>
+        <span class="logo-text">Decode Forest <span class="logo-accent">Pharmacy</span></span>
+      </a>
+      <p>AI-powered pharmacy — prescriptions, interactions, and intelligent delivery for everyone.</p>
+    </div>
+    <div class="foot-col">
+      <h5>Healthcare Tools</h5>
+      <ul>
+        <li><a href="generic-finder.html">Generic Finder</a></li>
+        <li><a href="interaction-checker.html">Drug Interactions</a></li>
+        <li><a href="prescription-ocr.html">Prescription OCR</a></li>
+        <li><a href="hospital-finder.html">Hospital Radar</a></li>
+        <li><a href="symptom-checker.html">Symptom Checker</a></li>
+        <li><a href="medicine-reminder.html">Med Reminders</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Sevenseed Ventures</h5>
+      <ul>
+        <li><a href="../sevenseed/index.html">Sevenseed Hub</a></li>
+        <li><a href="../comonk/index.html">Comonk AI</a></li>
+        <li><a href="../sevenforce/index.html">Sevenforce</a></li>
+        <li><a href="../avp-charitable-trust/index.html">AVP Charitable Trust</a></li>
+        <li><a href="../avp-emart/index.html">AVP Emart</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Get in touch</h5>
+      <ul class="foot-contact">
+        <li><i class="fas fa-envelope"></i> care@decodeforest.in</li>
+        <li><i class="fas fa-phone"></i> +91 84908 61586</li>
+        <li><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© <span data-year></span> Decode Forest Pharmacy. All rights reserved.</span>
+    <span class="foot-venture"><i class="fas fa-seedling"></i> A Sevenseed AI venture</span>
+  </div>
+</footer>
+
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<div class="fab-stack">
+  <button class="fab" id="backToTop" type="button" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+</div>
+
+<!-- ══════════════════════════════════════
+     TRIAGE ENGINE  (vanilla JS)
+════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TRIAGE DATABASE
+// 20+ keyword entries across all three urgency levels.
+// Priority order (highest → lowest): Emergency > See Doctor > Home Care
+// ─────────────────────────────────────────────────────────────────────────────
+var URGENCY = { EMERGENCY: 0, SEE_DOCTOR: 1, HOME_CARE: 2 };
+
+var TRIAGE_DB = {
+
+  // ── EMERGENCY ──────────────────────────────────────────────────────────────
+  chest_pain: {
+    keys: ['chest pain', 'chest tightness', 'chest pressure', 'chest discomfort', 'heart pain', 'chest hurts'],
+    level: 'Emergency',
+    urgency: URGENCY.EMERGENCY,
+    conditions: ['Myocardial Infarction (Heart Attack)', 'Angina Pectoris', 'Pulmonary Embolism', 'Aortic Dissection'],
+    expect: 'Chest pain with radiation to the arm or jaw strongly suggests a cardiac event. Every minute matters — do not drive yourself.',
+    doList: [
+      'Call 108 emergency services immediately',
+      'Chew one aspirin (325 mg) if not allergic and no contraindication',
+      'Sit or lie down in a comfortable position',
+      'Loosen tight clothing and stay calm',
+      'Have someone stay with you until help arrives'
+    ],
+    dontList: [
+      'Do not drive to the hospital alone',
+      'Do not eat or drink anything',
+      'Do not ignore the pain and hope it passes',
+      'Do not take pain relievers other than aspirin without medical advice',
+      'Do not exert yourself or climb stairs'
+    ]
+  },
+
+  shortness_of_breath: {
+    keys: ['shortness of breath', 'difficulty breathing', 'can\'t breathe', 'cannot breathe', 'breathing difficulty', 'breathless', 'short of breath', 'laboured breathing', 'gasping'],
+    level: 'Emergency',
+    urgency: URGENCY.EMERGENCY,
+    conditions: ['Acute Asthma Attack', 'Pulmonary Embolism', 'Pneumothorax', 'Heart Failure Exacerbation'],
+    expect: 'Sudden or severe breathing difficulty can signal a life-threatening condition. Oxygen levels may be dropping rapidly.',
+    doList: [
+      'Call 108 or go to the nearest emergency room immediately',
+      'Sit upright and lean slightly forward to open the airway',
+      'Use a prescribed inhaler if you are asthmatic',
+      'Loosen any tight clothing around the chest and neck',
+      'Stay as calm as possible to reduce oxygen demand'
+    ],
+    dontList: [
+      'Do not lie flat — it may worsen breathing',
+      'Do not wait to see if it improves on its own',
+      'Do not take someone else\'s inhaler or medication',
+      'Do not cover your mouth or restrict airflow',
+      'Do not exercise or walk around excessively'
+    ]
+  },
+
+  stroke_symptoms: {
+    keys: ['face drooping', 'arm weakness', 'speech difficulty', 'slurred speech', 'sudden numbness', 'sudden confusion', 'vision loss', 'sudden severe headache', 'facial droop', 'stroke', 'paralysis', 'one side weakness'],
+    level: 'Emergency',
+    urgency: URGENCY.EMERGENCY,
+    conditions: ['Ischemic Stroke', 'Hemorrhagic Stroke', 'Transient Ischemic Attack (TIA)', 'Brain Bleed'],
+    expect: 'Use the FAST test: Face drooping, Arm weakness, Speech difficulty, Time to call 108. Stroke treatment is time-critical — every second counts.',
+    doList: [
+      'Call 108 immediately — note the exact time symptoms started',
+      'Keep the person lying down with head slightly elevated',
+      'Stay with them and monitor breathing',
+      'Reassure them calmly and keep them still',
+      'Tell paramedics the exact time symptoms began'
+    ],
+    dontList: [
+      'Do not give food, water, or medication by mouth',
+      'Do not leave the person alone',
+      'Do not wait to see if symptoms improve',
+      'Do not let them drive themselves',
+      'Do not give aspirin if stroke type is unknown (could worsen bleeding)'
+    ]
+  },
+
+  severe_allergic_reaction: {
+    keys: ['anaphylaxis', 'severe allergy', 'throat swelling', 'tongue swelling', 'hives all over', 'allergic shock', 'epipen', 'epinephrine', 'bee sting allergic'],
+    level: 'Emergency',
+    urgency: URGENCY.EMERGENCY,
+    conditions: ['Anaphylaxis', 'Severe Allergic Reaction', 'Angioedema'],
+    expect: 'Anaphylaxis can be fatal within minutes. Airways can swell shut rapidly — immediate epinephrine is required.',
+    doList: [
+      'Use an epinephrine auto-injector (EpiPen) if available immediately',
+      'Call 108 right after using the EpiPen',
+      'Lay the person flat with legs elevated unless breathing is difficult',
+      'Be prepared to give CPR if they stop breathing',
+      'Note the allergen that triggered the reaction'
+    ],
+    dontList: [
+      'Do not give antihistamines as the primary treatment — they are too slow',
+      'Do not leave the person alone',
+      'Do not have the person stand or walk',
+      'Do not assume one EpiPen dose is enough — a second may be needed',
+      'Do not delay calling emergency services'
+    ]
+  },
+
+  unconscious: {
+    keys: ['unconscious', 'unresponsive', 'fainted', 'collapsed', 'not waking up', 'passed out', 'loss of consciousness', 'knocked out'],
+    level: 'Emergency',
+    urgency: URGENCY.EMERGENCY,
+    conditions: ['Cardiac Arrest', 'Severe Hypoglycaemia', 'Seizure Postictal State', 'Severe Head Injury'],
+    expect: 'An unresponsive person may have a life-threatening condition. Start CPR if there is no pulse or breathing.',
+    doList: [
+      'Call 108 immediately',
+      'Check for breathing and a pulse',
+      'Begin CPR if trained and person is not breathing normally',
+      'Place in recovery position if breathing but unconscious',
+      'Stay with them until emergency services arrive'
+    ],
+    dontList: [
+      'Do not give fluids by mouth to an unconscious person',
+      'Do not leave them alone',
+      'Do not shake or slap them forcefully to rouse them',
+      'Do not remove a helmet if a head or neck injury is suspected',
+      'Do not delay starting CPR if needed'
+    ]
+  },
+
+  severe_bleeding: {
+    keys: ['severe bleeding', 'heavy bleeding', 'blood loss', 'deep cut', 'arterial bleeding', 'bleeding won\'t stop', 'coughing blood', 'vomiting blood'],
+    level: 'Emergency',
+    urgency: URGENCY.EMERGENCY,
+    conditions: ['Arterial Laceration', 'Gastrointestinal Bleed', 'Internal Haemorrhage', 'Traumatic Wound'],
+    expect: 'Uncontrolled or internal bleeding can lead to haemorrhagic shock rapidly. Direct pressure and immediate medical attention are critical.',
+    doList: [
+      'Apply firm, direct pressure with a clean cloth or bandage',
+      'Call 108 immediately for major bleeding',
+      'Keep the wound elevated above heart level if possible',
+      'Maintain pressure — do not peek or remove the cloth',
+      'Lay the person flat and keep them warm to prevent shock'
+    ],
+    dontList: [
+      'Do not remove an embedded object from the wound',
+      'Do not use a tourniquet unless life-threatening and you are trained',
+      'Do not give aspirin or ibuprofen — they worsen bleeding',
+      'Do not let the person walk around',
+      'Do not ignore internal bleeding signs such as rigid abdomen'
+    ]
+  },
+
+  // ── SEE DOCTOR ─────────────────────────────────────────────────────────────
+  fever: {
+    keys: ['fever', 'high temperature', 'high fever', 'pyrexia', 'temperature above 38', '38 degrees', '39 degrees', '40 degrees', 'body heat'],
+    level: 'See Doctor',
+    urgency: URGENCY.SEE_DOCTOR,
+    conditions: ['Influenza (Flu)', 'Typhoid Fever', 'Dengue Fever', 'Urinary Tract Infection', 'COVID-19'],
+    expect: 'Fever above 38.5°C lasting more than two days, or accompanied by stiff neck, rash, or difficulty breathing, warrants prompt medical review.',
+    doList: [
+      'Monitor temperature regularly and note any pattern',
+      'Stay well-hydrated with water, ORS, or clear broths',
+      'Take paracetamol (500–1000 mg) as directed to reduce temperature',
+      'Rest in a cool, well-ventilated room',
+      'See a doctor if fever exceeds 40°C or lasts more than 3 days'
+    ],
+    dontList: [
+      'Do not give aspirin to children — risk of Reye\'s syndrome',
+      'Do not bundle up in thick blankets — allow heat to escape',
+      'Do not ignore a fever with a stiff neck or severe headache',
+      'Do not delay medical care if the fever is in an infant under 3 months',
+      'Do not self-diagnose dengue or typhoid without blood tests'
+    ]
+  },
+
+  cough: {
+    keys: ['cough', 'persistent cough', 'dry cough', 'wet cough', 'productive cough', 'coughing blood', 'chronic cough', 'whooping cough'],
+    level: 'See Doctor',
+    urgency: URGENCY.SEE_DOCTOR,
+    conditions: ['Acute Bronchitis', 'Pneumonia', 'Allergic Bronchospasm', 'GERD', 'Tuberculosis (if persistent)'],
+    expect: 'A cough lasting more than 3 weeks, producing blood-stained or green sputum, or accompanied by fever and weight loss, should be medically evaluated.',
+    doList: [
+      'Stay hydrated to thin mucus secretions',
+      'Inhale steam to soothe the airway',
+      'Use honey and ginger for mild symptomatic relief',
+      'See a doctor if cough persists beyond 3 weeks or produces blood',
+      'Sleep with your head elevated to reduce nighttime coughing'
+    ],
+    dontList: [
+      'Do not suppress a productive cough — it clears the airway',
+      'Do not smoke or be around secondhand smoke',
+      'Do not ignore blood in the sputum',
+      'Do not use cough suppressants in children under 6 without medical advice',
+      'Do not delay if cough is accompanied by high fever and chest pain'
+    ]
+  },
+
+  diarrhea: {
+    keys: ['diarrhea', 'diarrhoea', 'loose stool', 'loose motion', 'watery stool', 'stomach upset', 'frequent stools', 'bloody stool'],
+    level: 'See Doctor',
+    urgency: URGENCY.SEE_DOCTOR,
+    conditions: ['Gastroenteritis', 'Food Poisoning', 'Irritable Bowel Syndrome', 'Cholera (severe)', 'Inflammatory Bowel Disease'],
+    expect: 'Diarrhoea for more than 2 days, blood in stool, or signs of dehydration (sunken eyes, dry mouth, no urination) require prompt medical attention.',
+    doList: [
+      'Drink ORS (oral rehydration solution) frequently to prevent dehydration',
+      'Eat light, bland foods such as rice, banana, toast, or curd',
+      'Visit a doctor if diarrhoea contains blood or mucus',
+      'Monitor urine output — dark or absent urine signals severe dehydration',
+      'Wash hands thoroughly before eating and after using the toilet'
+    ],
+    dontList: [
+      'Do not take antibiotics without a prescription',
+      'Do not drink fruit juices or sugary drinks — they worsen diarrhoea',
+      'Do not give anti-diarrhoeal drugs to children without medical advice',
+      'Do not eat spicy, oily, or fibrous foods during the episode',
+      'Do not ignore signs of dehydration in young children or elderly'
+    ]
+  },
+
+  vomiting: {
+    keys: ['vomiting', 'nausea', 'throwing up', 'nauseous', 'feeling sick', 'motion sickness', 'upset stomach', 'puking'],
+    level: 'See Doctor',
+    urgency: URGENCY.SEE_DOCTOR,
+    conditions: ['Acute Gastroenteritis', 'Food Poisoning', 'Migraine with Nausea', 'Appendicitis (if with right-lower pain)', 'Inner Ear Disorder (Vertigo)'],
+    expect: 'Vomiting for more than 24 hours, blood in vomit, or vomiting after a head injury requires medical evaluation. Risk of dehydration is significant.',
+    doList: [
+      'Sip small amounts of clear fluids frequently (water, ORS, clear broth)',
+      'Rest in a semi-upright position',
+      'Eat light crackers or dry toast once vomiting subsides',
+      'See a doctor if vomiting lasts more than 24 hours or contains blood',
+      'Seek emergency care if vomiting follows a head injury'
+    ],
+    dontList: [
+      'Do not eat solid food until vomiting has stopped for at least 2 hours',
+      'Do not take painkillers on an empty stomach during this time',
+      'Do not drink large amounts of water quickly — it may trigger more vomiting',
+      'Do not ignore vomiting of blood or coffee-ground material',
+      'Do not take anti-nausea medication without medical guidance in pregnancy'
+    ]
+  },
+
+  back_pain: {
+    keys: ['back pain', 'lower back pain', 'backache', 'spine pain', 'lumbar pain', 'back ache', 'upper back pain', 'neck pain'],
+    level: 'See Doctor',
+    urgency: URGENCY.SEE_DOCTOR,
+    conditions: ['Lumbar Muscle Strain', 'Herniated Disc (PLID)', 'Kidney Stone', 'Spondylitis', 'Sciatica'],
+    expect: 'Most back pain resolves within a week. However, back pain with leg weakness, numbness, or loss of bladder/bowel control requires urgent evaluation.',
+    doList: [
+      'Rest from activities that aggravate the pain, but avoid prolonged bed rest',
+      'Apply a warm compress or use a heating pad for muscle spasms',
+      'Take an OTC pain reliever such as ibuprofen or paracetamol as directed',
+      'Perform gentle stretches and maintain correct posture when sitting',
+      'See a doctor if pain radiates down the leg or persists beyond 2 weeks'
+    ],
+    dontList: [
+      'Do not stay in bed all day — gentle movement aids recovery',
+      'Do not lift heavy objects or make sudden twisting movements',
+      'Do not ignore numbness, tingling, or weakness in the legs',
+      'Do not apply ice directly to the skin without a cloth barrier',
+      'Do not self-medicate with steroids'
+    ]
+  },
+
+  headache: {
+    keys: ['headache', 'head pain', 'throbbing head', 'pounding head', 'migraine', 'cluster headache', 'head hurts', 'pressure in head'],
+    level: 'See Doctor',
+    urgency: URGENCY.SEE_DOCTOR,
+    conditions: ['Tension Headache', 'Migraine', 'Sinusitis', 'Hypertensive Headache', 'Cervicogenic Headache'],
+    expect: 'Most headaches are benign. A sudden "thunderclap" headache (the worst of your life), or headache with fever and stiff neck, needs emergency evaluation.',
+    doList: [
+      'Rest in a quiet, dark room and apply a cool compress to your forehead',
+      'Stay hydrated — dehydration is a common trigger',
+      'Take paracetamol or ibuprofen at the first sign of a migraine',
+      'Track headache frequency and triggers in a diary',
+      'See a doctor if headaches are becoming more frequent or severe'
+    ],
+    dontList: [
+      'Do not overuse pain medication — this can cause rebound headaches',
+      'Do not ignore a sudden, extremely severe headache (possible aneurysm)',
+      'Do not skip meals or fast for long periods',
+      'Do not strain your eyes on screens without adequate lighting',
+      'Do not ignore headaches accompanied by fever and neck stiffness'
+    ]
+  },
+
+  urinary_problems: {
+    keys: ['burning urination', 'painful urination', 'frequent urination', 'blood in urine', 'uti', 'urinary tract', 'dysuria', 'cloudy urine'],
+    level: 'See Doctor',
+    urgency: URGENCY.SEE_DOCTOR,
+    conditions: ['Urinary Tract Infection (UTI)', 'Kidney Infection (Pyelonephritis)', 'Kidney Stone', 'Cystitis'],
+    expect: 'UTIs are common and treatable with antibiotics but can progress to a kidney infection if untreated. Blood in urine always warrants medical evaluation.',
+    doList: [
+      'Drink at least 2–3 litres of water a day',
+      'See a doctor for antibiotic prescription — do not self-treat',
+      'Urinate frequently and do not hold urine for long periods',
+      'Maintain good personal hygiene',
+      'Seek urgent care if you have fever, chills, or flank pain with UTI symptoms'
+    ],
+    dontList: [
+      'Do not take leftover antibiotics without a fresh prescription',
+      'Do not ignore blood in the urine',
+      'Do not consume caffeine or alcohol which can irritate the bladder',
+      'Do not delay treatment — a UTI can spread to the kidneys',
+      'Do not douche or use scented products in the genital area'
+    ]
+  },
+
+  eye_problems: {
+    keys: ['red eye', 'eye pain', 'eye discharge', 'blurry vision', 'blurred vision', 'swollen eye', 'conjunctivitis', 'pink eye'],
+    level: 'See Doctor',
+    urgency: URGENCY.SEE_DOCTOR,
+    conditions: ['Conjunctivitis (Pink Eye)', 'Corneal Abrasion', 'Uveitis', 'Acute Angle-Closure Glaucoma (if painful + halos)'],
+    expect: 'Red eye with discharge is usually infectious conjunctivitis. Eye pain, halos around lights, or sudden vision loss requires same-day ophthalmology review.',
+    doList: [
+      'See a doctor or ophthalmologist for proper diagnosis',
+      'Use clean tissues to wipe discharge and wash hands frequently',
+      'Apply a prescribed antibiotic eye drop if infective conjunctivitis is confirmed',
+      'Avoid sharing towels, pillows, or eye makeup',
+      'Seek emergency care for sudden vision loss or severe eye pain'
+    ],
+    dontList: [
+      'Do not rub your eyes — it can worsen infection or abrasion',
+      'Do not use contact lenses until the eye is fully healed',
+      'Do not self-prescribe steroid eye drops',
+      'Do not ignore sudden changes in vision',
+      'Do not share eye drops with others'
+    ]
+  },
+
+  skin_rash: {
+    keys: ['rash', 'skin rash', 'itchy rash', 'redness', 'hives', 'eczema', 'psoriasis', 'chickenpox', 'measles rash'],
+    level: 'See Doctor',
+    urgency: URGENCY.SEE_DOCTOR,
+    conditions: ['Allergic Dermatitis', 'Urticaria (Hives)', 'Eczema', 'Chickenpox', 'Drug Rash'],
+    expect: 'Most rashes are benign but a spreading rash with fever, rash with blistering, or a rash following a new medication should be evaluated promptly.',
+    doList: [
+      'Identify and avoid the likely allergen or trigger',
+      'Apply calamine lotion or a mild OTC hydrocortisone cream for itch relief',
+      'Take an OTC antihistamine such as cetirizine to reduce itching',
+      'See a doctor for a spreading, blistering, or fever-accompanied rash',
+      'Keep the area clean and cool to reduce irritation'
+    ],
+    dontList: [
+      'Do not scratch — it can lead to secondary infection',
+      'Do not apply home remedies with unknown ingredients',
+      'Do not ignore a rash that spreads rapidly or blisters',
+      'Do not stop a prescribed medication without consulting your doctor first',
+      'Do not expose the rash to direct sunlight without advice'
+    ]
+  },
+
+  // ── HOME CARE ──────────────────────────────────────────────────────────────
+  cold: {
+    keys: ['cold', 'common cold', 'runny nose', 'stuffy nose', 'nasal congestion', 'sneezing', 'blocked nose', 'sore throat cold'],
+    level: 'Home Care',
+    urgency: URGENCY.HOME_CARE,
+    conditions: ['Common Cold (Rhinovirus)', 'Seasonal Allergy', 'Mild Upper Respiratory Infection'],
+    expect: 'The common cold typically resolves in 7–10 days. Rest, fluids, and symptomatic relief are usually all that is needed.',
+    doList: [
+      'Rest and allow your immune system to fight the infection',
+      'Drink warm fluids such as herbal tea, soups, and warm water with honey and ginger',
+      'Use a saline nasal spray or steam inhalation to ease congestion',
+      'Take paracetamol or ibuprofen if you also have a mild fever or headache',
+      'Wash hands frequently to prevent spreading the virus to others'
+    ],
+    dontList: [
+      'Do not take antibiotics — colds are caused by viruses, not bacteria',
+      'Do not smoke — it delays recovery and worsens symptoms',
+      'Do not go to work or school while infectious',
+      'Do not use nasal decongestant sprays for more than 3 days (rebound effect)',
+      'Do not dismiss cold symptoms in very young infants — consult a doctor'
+    ]
+  },
+
+  mild_headache: {
+    keys: ['mild headache', 'slight headache', 'tension headache', 'stress headache', 'screen headache', 'tired head'],
+    level: 'Home Care',
+    urgency: URGENCY.HOME_CARE,
+    conditions: ['Tension-Type Headache', 'Dehydration Headache', 'Eye Strain', 'Stress-Induced Headache'],
+    expect: 'Mild tension headaches usually respond well to over-the-counter pain relievers, hydration, and rest. They rarely indicate serious disease.',
+    doList: [
+      'Drink a large glass of water — dehydration is the most common cause',
+      'Take a 20-minute break from screens and rest in a dark, quiet room',
+      'Take paracetamol (500–1000 mg) or ibuprofen (400 mg) if needed',
+      'Apply a cold or warm compress to the forehead or neck',
+      'Practice slow deep breathing or gentle neck stretches'
+    ],
+    dontList: [
+      'Do not take more than the recommended dose of pain relievers',
+      'Do not ignore a headache that is significantly worse than usual',
+      'Do not skip meals — low blood sugar triggers headaches',
+      'Do not consume excessive caffeine as it can trigger rebound headaches',
+      'Do not lie in bed all day — light activity can help tension headaches'
+    ]
+  },
+
+  fatigue: {
+    keys: ['fatigue', 'tiredness', 'exhaustion', 'lack of energy', 'feeling tired', 'always tired', 'low energy', 'weakness'],
+    level: 'Home Care',
+    urgency: URGENCY.HOME_CARE,
+    conditions: ['General Fatigue', 'Sleep Deprivation', 'Anaemia (if persistent)', 'Hypothyroidism (if persistent)'],
+    expect: 'Fatigue is very common and usually improves with rest. If it persists for more than 2–3 weeks despite adequate sleep, a blood test is recommended.',
+    doList: [
+      'Aim for 7–9 hours of quality sleep per night',
+      'Eat balanced, nutrient-dense meals and stay hydrated',
+      'Do light-to-moderate exercise such as a 20-minute daily walk',
+      'Reduce caffeine after midday and limit alcohol',
+      'See a doctor if fatigue is persistent, unexplained, or accompanied by other symptoms'
+    ],
+    dontList: [
+      'Do not use energy drinks or excessive caffeine as a long-term solution',
+      'Do not ignore persistent fatigue with weight loss or night sweats',
+      'Do not skip meals to lose weight while already fatigued',
+      'Do not push through extreme tiredness without adequate rest',
+      'Do not self-diagnose thyroid or iron-deficiency without blood tests'
+    ]
+  },
+
+  minor_cut: {
+    keys: ['minor cut', 'small cut', 'scratch', 'scrape', 'graze', 'minor wound', 'superficial cut', 'paper cut'],
+    level: 'Home Care',
+    urgency: URGENCY.HOME_CARE,
+    conditions: ['Superficial Laceration', 'Skin Abrasion', 'Minor Wound'],
+    expect: 'Minor cuts and scrapes heal well with basic first aid. Keep the wound clean and dry. Signs of infection (redness, swelling, pus) need medical attention.',
+    doList: [
+      'Rinse the wound under clean running water for at least 1 minute',
+      'Apply gentle pressure with a clean cloth to stop bleeding',
+      'Clean with an antiseptic solution such as povidone-iodine',
+      'Cover with a sterile adhesive bandage and change it daily',
+      'Check for redness, warmth, or pus over the next few days'
+    ],
+    dontList: [
+      'Do not use cotton wool directly on the wound — fibres can embed',
+      'Do not blow on the wound — it introduces bacteria',
+      'Do not remove scabs prematurely',
+      'Do not ignore a cut that is deep, gaping, or will not stop bleeding',
+      'Do not skip a tetanus shot if you are not up to date (especially for rusty or dirty wounds)'
+    ]
+  },
+
+  indigestion: {
+    keys: ['indigestion', 'heartburn', 'acid reflux', 'acidity', 'bloating', 'gas', 'flatulence', 'stomach pain mild', 'stomach bloat', 'burping'],
+    level: 'Home Care',
+    urgency: URGENCY.HOME_CARE,
+    conditions: ['Acid Reflux (GERD)', 'Dyspepsia', 'Gastric Bloating', 'Lactose Intolerance'],
+    expect: 'Occasional indigestion and heartburn are common and manageable at home. Frequent symptoms may indicate GERD and warrant medical review.',
+    doList: [
+      'Eat smaller, more frequent meals instead of large portions',
+      'Avoid lying down for at least 2 hours after eating',
+      'Take an OTC antacid such as omeprazole or rantidine as directed',
+      'Elevate the head of your bed slightly for nighttime reflux',
+      'Identify and avoid trigger foods (spicy, fried, citrus, caffeine, alcohol)'
+    ],
+    dontList: [
+      'Do not eat too quickly or while stressed',
+      'Do not wear tight clothing around the abdomen',
+      'Do not smoke — it relaxes the lower oesophageal sphincter',
+      'Do not ignore persistent heartburn — it can damage the oesophagus over time',
+      'Do not confuse chest pain from reflux with cardiac chest pain — when in doubt, seek care'
+    ]
+  },
+
+  mild_anxiety: {
+    keys: ['anxiety', 'stress', 'nervousness', 'feeling anxious', 'panic', 'worry', 'overthinking', 'restless', 'heart racing mild'],
+    level: 'Home Care',
+    urgency: URGENCY.HOME_CARE,
+    conditions: ['Situational Anxiety', 'Stress Response', 'Mild Panic Episode'],
+    expect: 'Mild anxiety is very common and manageable. If anxiety is severe, persistent, or interfering with daily life, speaking with a mental health professional is recommended.',
+    doList: [
+      'Practice deep breathing: inhale for 4 counts, hold for 4, exhale for 6',
+      'Reduce caffeine and alcohol intake',
+      'Exercise regularly — even a 30-minute walk reduces stress hormones',
+      'Talk to a trusted friend, family member, or counsellor',
+      'Seek professional help if anxiety significantly impacts your daily life'
+    ],
+    dontList: [
+      'Do not self-medicate with alcohol or recreational substances',
+      'Do not avoid all anxiety-provoking situations — gradual exposure helps',
+      'Do not ignore severe anxiety with chest pain or fear of dying (could be panic attack)',
+      'Do not dismiss the impact of mental health on physical wellbeing',
+      'Do not rely solely on self-help if symptoms persist for weeks'
+    ]
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TRIAGE ENGINE
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Tokenise symptom text into a flat array of lowercase words/phrases,
+ * then match against TRIAGE_DB keywords.
+ *
+ * Returns the highest-urgency match object, or a generic fallback.
+ *
+ * @param {string} symptomsText - Raw user input
+ * @returns {{ level: string, urgencyClass: string, icon: string, desc: string,
+ *             conditions: string[], expect: string, doList: string[], dontList: string[] }}
+ */
+function triage(symptomsText) {
+  var lower = symptomsText.toLowerCase();
+
+  // Collect all matching DB entries
+  var matches = [];
+  var dbKeys = Object.keys(TRIAGE_DB);
+  for (var i = 0; i < dbKeys.length; i++) {
+    var entry = TRIAGE_DB[dbKeys[i]];
+    for (var j = 0; j < entry.keys.length; j++) {
+      if (lower.indexOf(entry.keys[j]) !== -1) {
+        matches.push(entry);
+        break; // one match per DB entry is enough
+      }
+    }
+  }
+
+  // If nothing matched, return generic Home Care
+  if (matches.length === 0) {
+    return buildGenericResult(lower);
+  }
+
+  // Sort by urgency ascending (0 = Emergency is highest priority)
+  matches.sort(function(a, b) { return a.urgency - b.urgency; });
+
+  // Primary result is the highest-urgency match
+  var primary = matches[0];
+
+  // Merge conditions from all matches (de-duplicated, max 6 shown)
+  var allConditions = [];
+  for (var k = 0; k < matches.length; k++) {
+    for (var m = 0; m < matches[k].conditions.length; m++) {
+      if (allConditions.indexOf(matches[k].conditions[m]) === -1) {
+        allConditions.push(matches[k].conditions[m]);
+      }
+    }
+  }
+  // Always have ≥ 2 conditions
+  var conditions = allConditions.slice(0, 6);
+  if (conditions.length < 2) {
+    conditions = conditions.concat(primary.conditions).slice(0, 6);
+  }
+
+  // Merge DO lists (primary + secondary, dedup, keep ≥ 5 but trim to 7)
+  var doItems = mergeList(matches, 'doList', 5, 7);
+  // Merge DON'T lists similarly
+  var dontItems = mergeList(matches, 'dontList', 5, 7);
+
+  return {
+    level: primary.level,
+    urgencyClass: levelToClass(primary.level),
+    icon: levelToIcon(primary.level),
+    desc: levelToDesc(primary.level),
+    conditions: conditions,
+    expect: primary.expect,
+    doList: doItems,
+    dontList: dontItems
+  };
+}
+
+/**
+ * Merge a list field from all match entries, dedup, guarantee minimum count.
+ */
+function mergeList(matches, field, minCount, maxCount) {
+  var combined = [];
+  for (var i = 0; i < matches.length; i++) {
+    var list = matches[i][field] || [];
+    for (var j = 0; j < list.length; j++) {
+      if (combined.indexOf(list[j]) === -1) combined.push(list[j]);
+    }
+  }
+  // Ensure minimum
+  if (combined.length < minCount) {
+    // pad with primary entries (already included, but handle edge case)
+    combined = combined.slice(0, maxCount);
+  }
+  return combined.slice(0, maxCount);
+}
+
+/**
+ * Fallback result when no DB keywords match.
+ */
+function buildGenericResult(lower) {
+  return {
+    level: 'Home Care',
+    urgencyClass: 'home-care',
+    icon: '🏠',
+    desc: 'Your symptoms do not match any flagged emergency or clinical patterns. Monitor at home and consult a pharmacist or doctor if symptoms worsen.',
+    conditions: [
+      'Possible viral or minor illness',
+      'Stress or fatigue-related presentation',
+      'Early-stage condition — monitor closely'
+    ],
+    expect: 'Keep an eye on your symptoms over the next 24–48 hours. If they worsen, develop a high fever, or new severe symptoms appear, seek medical advice.',
+    doList: [
+      'Rest and stay well-hydrated',
+      'Monitor your temperature if you feel warm',
+      'Eat light, nutritious foods',
+      'Call a pharmacist or visit a clinic if symptoms worsen or persist beyond 48 hours',
+      'Note which symptoms are present and how they change over time'
+    ],
+    dontList: [
+      'Do not self-prescribe antibiotics',
+      'Do not ignore worsening symptoms',
+      'Do not delay seeking care if new severe symptoms develop',
+      'Do not take multiple OTC medications simultaneously without guidance',
+      'Do not dismiss symptoms that feel unusual for you'
+    ]
+  };
+}
+
+function levelToClass(level) {
+  if (level === 'Emergency')   return 'emergency';
+  if (level === 'See Doctor')  return 'see-doctor';
+  return 'home-care';
+}
+
+function levelToIcon(level) {
+  if (level === 'Emergency')  return '🚨';
+  if (level === 'See Doctor') return '🩺';
+  return '🏠';
+}
+
+function levelToDesc(level) {
+  if (level === 'Emergency') {
+    return 'Call 108 or go to the nearest emergency room immediately. This may be life-threatening.';
+  }
+  if (level === 'See Doctor') {
+    return 'Book an appointment with your doctor within 24–48 hours. Do not ignore your symptoms.';
+  }
+  return 'Manage at home with rest, fluids, and over-the-counter remedies. Monitor for any worsening.';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UI HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
+function renderResults(result) {
+  // Urgency block
+  var block = document.getElementById('urgencyBlock');
+  block.className = 'sc-urgency-block ' + result.urgencyClass;
+  document.getElementById('urgencyIcon').textContent = result.icon;
+  document.getElementById('urgencyLabel').textContent = 'Triage Result';
+  document.getElementById('urgencyLevel').textContent = result.level;
+  document.getElementById('urgencyDesc').textContent = result.desc;
+
+  // Hospital CTA
+  var cta = document.getElementById('hospitalCta');
+  if (result.level === 'Emergency') {
+    cta.classList.add('visible');
+  } else {
+    cta.classList.remove('visible');
+  }
+
+  // Conditions list
+  var condEl = document.getElementById('conditionsList');
+  condEl.innerHTML = '';
+  result.conditions.forEach(function(c) {
+    var li = document.createElement('li');
+    li.textContent = c;
+    condEl.appendChild(li);
+  });
+
+  // What to expect
+  document.getElementById('expectContent').textContent = result.expect;
+
+  // DO list
+  var doEl = document.getElementById('doList');
+  doEl.innerHTML = '';
+  result.doList.forEach(function(item) {
+    var li = document.createElement('li');
+    li.innerHTML = '<i class="fas fa-check"></i><span>' + escapeHtml(item) + '</span>';
+    doEl.appendChild(li);
+  });
+
+  // DON'T list
+  var dontEl = document.getElementById('dontList');
+  dontEl.innerHTML = '';
+  result.dontList.forEach(function(item) {
+    var li = document.createElement('li');
+    li.innerHTML = '<i class="fas fa-xmark"></i><span>' + escapeHtml(item) + '</span>';
+    dontEl.appendChild(li);
+  });
+
+  // Show results panel
+  var resultsPanel = document.getElementById('triageResults');
+  resultsPanel.classList.add('visible');
+
+  // Scroll to results smoothly
+  setTimeout(function() {
+    resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 80);
+}
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EVENT LISTENERS
+// ─────────────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  var textarea    = document.getElementById('symptomsInput');
+  var errorMsg    = document.getElementById('symptomsError');
+  var triageBtn   = document.getElementById('triageBtn');
+  var clearBtn    = document.getElementById('clearBtn');
+  var printBtn    = document.getElementById('printResultBtn');
+  var retriageBtn = document.getElementById('retriageBtn');
+  var chips       = document.querySelectorAll('.sc-chip');
+
+  // Quick-chip click: append symptom text to textarea
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      var symptom = chip.dataset.symptom;
+      var current = textarea.value.trim();
+      textarea.value = current ? current + ', ' + symptom : symptom;
+      textarea.focus();
+      // Clear any validation error
+      textarea.classList.remove('error');
+      errorMsg.classList.remove('visible');
+    });
+  });
+
+  // Triage button
+  triageBtn.addEventListener('click', function() {
+    var text = textarea.value.trim();
+
+    // Validation
+    if (!text) {
+      textarea.classList.add('error');
+      errorMsg.classList.add('visible');
+      textarea.focus();
+      return;
+    }
+
+    // Clear any previous error
+    textarea.classList.remove('error');
+    errorMsg.classList.remove('visible');
+
+    // Run triage
+    var result = triage(text);
+    renderResults(result);
+  });
+
+  // Allow Enter key (without Shift) in textarea to submit
+  textarea.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      triageBtn.click();
+    }
+  });
+
+  // Clear validation on input
+  textarea.addEventListener('input', function() {
+    if (textarea.value.trim()) {
+      textarea.classList.remove('error');
+      errorMsg.classList.remove('visible');
+    }
+  });
+
+  // Clear button
+  clearBtn.addEventListener('click', function() {
+    textarea.value = '';
+    textarea.classList.remove('error');
+    errorMsg.classList.remove('visible');
+    document.getElementById('triageResults').classList.remove('visible');
+    document.getElementById('hospitalCta').classList.remove('visible');
+    textarea.focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Re-triage button (same as clear, scrolls to form)
+  retriageBtn.addEventListener('click', function() {
+    document.getElementById('triageResults').classList.remove('visible');
+    document.getElementById('hospitalCta').classList.remove('visible');
+    textarea.value = '';
+    textarea.classList.remove('error');
+    errorMsg.classList.remove('visible');
+    document.getElementById('triageFormCard').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(function() { textarea.focus(); }, 400);
+  });
+
+  // Print button
+  printBtn.addEventListener('click', function() {
+    window.print();
+  });
+});
+</script>
+
+<script src="app.js"></script>
+</body>
+</html>

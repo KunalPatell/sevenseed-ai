@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Volunteer Portal — AVP Charitable Trust</title>
+  <meta name="description" content="Register your skills and availability to be matched with open volunteer opportunities at AVP Charitable Trust. AI-powered volunteer coordination.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🤝%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Page shell ── */
+    .vp-page { max-width: 1180px; margin: 0 auto; padding: 100px 24px 80px; }
+
+    /* ── Sub-hero ── */
+    .vp-hero {
+      text-align: center;
+      padding: 40px 0 48px;
+      background: radial-gradient(circle at 50% 0%, rgba(244,63,94,.13), transparent 65%);
+    }
+    .vp-hero-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 999px;
+      background: rgba(244,63,94,.1); border: 1px solid rgba(244,63,94,.28);
+      color: #fda4af; font-size: 13px; font-weight: 600; margin-bottom: 18px;
+    }
+    .vp-hero-title {
+      font-size: clamp(30px, 5vw, 52px); font-weight: 900;
+      line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 14px;
+    }
+    .vp-hero-sub {
+      font-size: 16px; color: var(--text-2);
+      max-width: 620px; margin: 0 auto;
+    }
+
+    /* ── Two-column layout ── */
+    .vp-grid { display: grid; grid-template-columns: 380px 1fr; gap: 32px; align-items: start; }
+    @media (max-width: 900px) { .vp-grid { grid-template-columns: 1fr; } }
+
+    /* ── Registration card ── */
+    .reg-card {
+      background: var(--bg-1); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow);
+      position: sticky; top: calc(var(--nav-h) + 16px);
+    }
+    .reg-card h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .reg-card p { font-size: 13px; color: var(--text-2); margin-bottom: 24px; }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block; font-size: 13px; font-weight: 600;
+      color: var(--text-2); margin-bottom: 8px;
+    }
+    .form-group label span.req { color: #f43f5e; margin-left: 2px; }
+    .form-control {
+      width: 100%; padding: 11px 14px;
+      background: var(--bg-2); border: 1px solid var(--border-hi);
+      border-radius: 10px; color: var(--text);
+      font-family: inherit; font-size: 14px; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-control:focus { border-color: #ec4899; box-shadow: 0 0 0 3px rgba(236,72,153,.18); }
+    .form-control.error { border-color: #f43f5e; }
+
+    /* Skills grid */
+    .skills-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    }
+    .skill-checkbox {
+      display: flex; align-items: center; gap: 9px;
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 9px 12px; cursor: pointer;
+      transition: border-color .2s, background .2s; font-size: 13px;
+    }
+    .skill-checkbox:hover { border-color: rgba(236,72,153,.4); }
+    .skill-checkbox input { accent-color: #ec4899; width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; }
+    .skill-checkbox.checked { border-color: rgba(236,72,153,.5); background: rgba(236,72,153,.07); }
+    .skill-checkbox i { color: #fda4af; font-size: 12px; width: 14px; text-align: center; }
+
+    .field-error {
+      font-size: 12px; color: #f87171; margin-top: 5px;
+      display: none; align-items: center; gap: 5px;
+    }
+    .field-error.show { display: flex; }
+
+    .btn-register {
+      width: 100%; justify-content: center; margin-top: 8px;
+      background: linear-gradient(120deg,#ec4899,#db2777);
+      color: #fff; border: none; padding: 13px 20px; border-radius: 10px;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 9px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-register:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(236,72,153,.4); }
+    .btn-register:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    /* ── Confirmation card ── */
+    .confirm-card {
+      display: none; background: rgba(16,185,129,.08);
+      border: 1px solid rgba(16,185,129,.3); border-radius: var(--radius);
+      padding: 20px 24px; margin-bottom: 20px; align-items: flex-start; gap: 14px;
+    }
+    .confirm-card.show { display: flex; }
+    .confirm-icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: rgba(16,185,129,.15); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: #34d399; font-size: 18px;
+    }
+    .confirm-title { font-size: 15px; font-weight: 700; color: #34d399; margin-bottom: 4px; }
+    .confirm-sub { font-size: 13px; color: var(--text-2); }
+
+    /* ── Opportunities panel ── */
+    .opp-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .opp-header h2 { font-size: 20px; font-weight: 700; }
+    .opp-count-badge {
+      font-size: 12px; font-weight: 700; padding: 4px 12px;
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 999px; color: var(--text-2);
+    }
+
+    .opp-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .opp-card {
+      background: var(--bg-1); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .opp-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--border-hi); }
+
+    /* Highlighted / matched card */
+    .opp-card.matched {
+      border-color: rgba(16,185,129,.45);
+      box-shadow: 0 0 0 1px rgba(16,185,129,.15), var(--shadow);
+    }
+
+    .opp-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .opp-role { font-size: 16px; font-weight: 700; }
+    .match-badge {
+      display: none; align-items: center; gap: 6px;
+      background: rgba(16,185,129,.12); border: 1px solid rgba(16,185,129,.3);
+      color: #34d399; font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px; white-space: nowrap; flex-shrink: 0;
+    }
+    .match-badge.show { display: flex; }
+
+    .opp-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+    .opp-meta-item {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--text-2);
+    }
+    .opp-meta-item i { color: #fda4af; width: 13px; text-align: center; }
+
+    .opp-skills { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 16px; }
+    .skill-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 6px;
+      background: var(--bg-2); border: 1px solid var(--border);
+      color: var(--text-2); text-transform: capitalize;
+    }
+    .skill-tag.highlight {
+      background: rgba(236,72,153,.1); border-color: rgba(236,72,153,.3);
+      color: #fda4af;
+    }
+
+    .opp-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+    .btn-apply {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 20px; border-radius: 8px; border: none;
+      background: linear-gradient(120deg,#ec4899,#db2777); color: #fff;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-apply:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(236,72,153,.35); }
+    .btn-apply:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .applied-badge {
+      display: none; align-items: center; gap: 7px;
+      font-size: 13px; font-weight: 600; color: #34d399;
+      background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.25);
+      padding: 8px 14px; border-radius: 8px;
+    }
+    .applied-badge.show { display: inline-flex; }
+
+    .opp-urgency {
+      font-size: 11px; font-weight: 700; padding: 3px 10px;
+      border-radius: 6px; letter-spacing: .3px;
+    }
+    .urgency-high { background: rgba(239,68,68,.12); color: #fca5a5; border: 1px solid rgba(239,68,68,.25); }
+    .urgency-medium { background: rgba(245,158,11,.1); color: #fcd34d; border: 1px solid rgba(245,158,11,.25); }
+    .urgency-low { background: rgba(99,102,241,.1); color: #a5b4fc; border: 1px solid rgba(99,102,241,.25); }
+
+    /* ── Stats bar ── */
+    .vp-stats {
+      display: flex; gap: 0; margin-bottom: 32px;
+      background: var(--bg-1); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .vp-stat { flex: 1; padding: 16px 20px; text-align: center; border-right: 1px solid var(--border); }
+    .vp-stat:last-child { border-right: none; }
+    .vp-stat-num { font-size: 24px; font-weight: 800; color: #fda4af; }
+    .vp-stat-lbl { font-size: 11px; color: var(--text-2); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+
+    /* ── Print ── */
+    @media print {
+      .nav, .vp-hero, .reg-card, .vp-stats,
+      .btn-apply, .btn-register, .match-badge,
+      .cursor-ring { display: none !important; }
+      .vp-page { padding: 20px !important; }
+      .vp-grid { display: block !important; }
+      .opp-card { break-inside: avoid; border: 1px solid #ccc !important; margin-bottom: 16px; box-shadow: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .skills-grid { grid-template-columns: 1fr; }
+      .opp-card-footer { flex-direction: column; align-items: flex-start; }
+      .vp-stats { flex-wrap: wrap; }
+      .vp-stat { min-width: 50%; }
+    }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<!-- ── Navigation ── -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#ec4899,#db2777); display:flex; align-items:center; justify-content:center; color:#fff; flex-shrink:0;"><i class="fas fa-hand-holding-heart"></i></span>
+      <span style="font-weight:700; font-size:17px;">AVP <span style="color:#fda4af;">Charitable Trust</span></span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:4px;">
+      <a href="index.html" style="padding:7px 12px; border-radius:8px; color:var(--text-2); font-size:13px; font-weight:500;">Home</a>
+      <a href="tax-exemption.html" style="padding:7px 12px; border-radius:8px; color:var(--text-2); font-size:13px; font-weight:500;"><i class="fas fa-file-invoice-dollar" style="color:#fda4af;"></i> 80G Tax</a>
+      <a href="impact-tracker.html" style="padding:7px 12px; border-radius:8px; color:var(--text-2); font-size:13px; font-weight:500;"><i class="fas fa-chart-pie" style="color:#fda4af;"></i> Impact</a>
+      <a href="health-camps.html" style="padding:7px 12px; border-radius:8px; color:var(--text-2); font-size:13px; font-weight:500;"><i class="fas fa-kit-medical" style="color:#fda4af;"></i> Health Camps</a>
+      <a href="donation-ledger.html" style="padding:7px 12px; border-radius:8px; color:var(--text-2); font-size:13px; font-weight:500;"><i class="fas fa-book" style="color:#fda4af;"></i> Donations</a>
+      <a href="volunteer-portal.html" style="padding:7px 12px; border-radius:8px; color:#ec4899; font-size:13px; font-weight:700; background:rgba(236,72,153,.08);"><i class="fas fa-hands-helping"></i> Volunteer</a>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <a href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px; border-radius:999px; border:1px solid rgba(16,185,129,.3); color:#10b981; text-decoration:none; font-weight:600;"><i class="fas fa-seedling"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2); border:1px solid var(--border); color:var(--text); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+    </div>
+  </div>
+</nav>
+
+<div class="vp-page">
+
+  <!-- ── Hero ── -->
+  <div class="vp-hero">
+    <div class="vp-hero-pill"><i class="fas fa-hands-helping"></i> AI-Matched Volunteering · Open Opportunities</div>
+    <h1 class="vp-hero-title">Join the <span class="grad">AVP Volunteer Network</span></h1>
+    <p class="vp-hero-sub">Register your skills and availability — our AI coordinator matches you to programs where your contribution matters most.</p>
+  </div>
+
+  <!-- ── Stats bar ── -->
+  <div class="vp-stats">
+    <div class="vp-stat"><div class="vp-stat-num">4</div><div class="vp-stat-lbl">Open Roles</div></div>
+    <div class="vp-stat"><div class="vp-stat-num" id="statVolunteers">0</div><div class="vp-stat-lbl">Volunteers Registered</div></div>
+    <div class="vp-stat"><div class="vp-stat-num">6</div><div class="vp-stat-lbl">Skill Categories</div></div>
+    <div class="vp-stat"><div class="vp-stat-num">Gujarat</div><div class="vp-stat-lbl">Primary Region</div></div>
+  </div>
+
+  <!-- ── Two-column grid ── -->
+  <div class="vp-grid">
+
+    <!-- Left: Registration form -->
+    <aside class="reg-card">
+      <h2><i class="fas fa-user-plus" style="color:#fda4af; margin-right:8px;"></i>Register as Volunteer</h2>
+      <p>Tell us about yourself and your skills — we'll show you where you can help.</p>
+
+      <!-- Confirmation card -->
+      <div class="confirm-card" id="confirmCard">
+        <div class="confirm-icon"><i class="fas fa-check"></i></div>
+        <div>
+          <div class="confirm-title">Registration Saved!</div>
+          <div class="confirm-sub" id="confirmSubText">Your profile is active. Matching opportunities are highlighted below.</div>
+        </div>
+      </div>
+
+      <form id="regForm" novalidate>
+
+        <!-- Name -->
+        <div class="form-group">
+          <label for="reg-name">Full Name <span class="req">*</span></label>
+          <input type="text" id="reg-name" class="form-control" placeholder="e.g. Priya Sharma" autocomplete="name">
+          <div class="field-error" id="err-name"><i class="fas fa-circle-exclamation"></i> Name is required.</div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="reg-email">Email Address <span class="req">*</span></label>
+          <input type="email" id="reg-email" class="form-control" placeholder="you@example.com" autocomplete="email">
+          <div class="field-error" id="err-email"><i class="fas fa-circle-exclamation"></i> A valid email address is required.</div>
+        </div>
+
+        <!-- Skills -->
+        <div class="form-group">
+          <label>Skills <span class="req">*</span></label>
+          <div class="skills-grid" id="skillsGrid">
+            <label class="skill-checkbox" data-skill="teaching">
+              <input type="checkbox" value="teaching" name="skills">
+              <i class="fas fa-chalkboard-teacher"></i> Teaching
+            </label>
+            <label class="skill-checkbox" data-skill="medical">
+              <input type="checkbox" value="medical" name="skills">
+              <i class="fas fa-stethoscope"></i> Medical
+            </label>
+            <label class="skill-checkbox" data-skill="logistics">
+              <input type="checkbox" value="logistics" name="skills">
+              <i class="fas fa-truck"></i> Logistics
+            </label>
+            <label class="skill-checkbox" data-skill="tech">
+              <input type="checkbox" value="tech" name="skills">
+              <i class="fas fa-laptop-code"></i> Tech
+            </label>
+            <label class="skill-checkbox" data-skill="admin">
+              <input type="checkbox" value="admin" name="skills">
+              <i class="fas fa-clipboard-list"></i> Admin
+            </label>
+            <label class="skill-checkbox" data-skill="fundraising">
+              <input type="checkbox" value="fundraising" name="skills">
+              <i class="fas fa-hand-holding-dollar"></i> Fundraising
+            </label>
+          </div>
+          <div class="field-error" id="err-skills"><i class="fas fa-circle-exclamation"></i> Please select at least one skill.</div>
+        </div>
+
+        <!-- Availability -->
+        <div class="form-group">
+          <label for="reg-avail">Availability</label>
+          <select id="reg-avail" class="form-control">
+            <option value="weekends">Weekends only</option>
+            <option value="weekdays">Weekdays only</option>
+            <option value="both">Weekdays &amp; Weekends</option>
+            <option value="flexible">Fully flexible</option>
+          </select>
+        </div>
+
+        <!-- Location -->
+        <div class="form-group">
+          <label for="reg-location">Your Location</label>
+          <input type="text" id="reg-location" class="form-control" placeholder="e.g. Ahmedabad, Gujarat" autocomplete="address-level2">
+        </div>
+
+        <button type="submit" class="btn-register" id="regBtn">
+          <i class="fas fa-check-circle"></i> Register &amp; Find Matches
+        </button>
+
+      </form>
+    </aside>
+
+    <!-- Right: Opportunities -->
+    <main>
+      <div class="opp-header">
+        <h2>Open Volunteer Opportunities</h2>
+        <span class="opp-count-badge" id="matchCountBadge">4 opportunities</span>
+      </div>
+
+      <div class="opp-list" id="oppList">
+        <!-- Rendered by JS -->
+      </div>
+    </main>
+
+  </div><!-- /vp-grid -->
+</div><!-- /vp-page -->
+
+<!-- ── Footer ── -->
+<footer style="border-top:1px solid var(--border); padding:32px 24px; text-align:center; color:var(--text-2); font-size:13px; max-width:1180px; margin:0 auto;">
+  <span>© <span id="footYear"></span> AVP Charitable Trust · Ahmedabad, Gujarat</span>
+  <span style="margin:0 12px;">·</span>
+  <a href="index.html" style="color:var(--text-2);">avptrust.org</a>
+  <span style="margin:0 12px;">·</span>
+  <a href="mailto:connect@avptrust.org" style="color:var(--text-2);">connect@avptrust.org</a>
+  <span style="margin:0 12px;">·</span>
+  <span style="color:#10b981;"><i class="fas fa-seedling"></i> A Sevenseed AI venture</span>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Volunteer Portal — pure vanilla JS
+   localStorage key: ss_trust_volunteers
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Static opportunities data ── */
+const OPPORTUNITIES = [
+  {
+    id: 'opp-001',
+    role: 'Health Camp Coordinator',
+    requiredSkills: ['medical', 'logistics'],
+    location: 'Viramgam, Gujarat',
+    commitmentHours: '8 hrs/month',
+    urgency: 'high',
+    icon: 'fas fa-kit-medical',
+    description: 'Help organise and run rural health camps for eye checkups, dental clinics, and pediatric nutrition screenings.'
+  },
+  {
+    id: 'opp-002',
+    role: 'Tech Volunteer',
+    requiredSkills: ['tech'],
+    location: 'Remote / Ahmedabad',
+    commitmentHours: '10 hrs/month',
+    urgency: 'medium',
+    icon: 'fas fa-laptop-code',
+    description: 'Build and maintain digital tools, data dashboards, and AI-powered community assessment systems.'
+  },
+  {
+    id: 'opp-003',
+    role: 'Education Mentor',
+    requiredSkills: ['teaching'],
+    location: 'Dholka, Gujarat',
+    commitmentHours: '12 hrs/month',
+    urgency: 'high',
+    icon: 'fas fa-chalkboard-teacher',
+    description: 'Mentor scholarship recipients, run after-school coaching sessions, and support first-generation learners.'
+  },
+  {
+    id: 'opp-004',
+    role: 'Fundraising Lead',
+    requiredSkills: ['fundraising', 'admin'],
+    location: 'Ahmedabad / Remote',
+    commitmentHours: '6 hrs/month',
+    urgency: 'low',
+    icon: 'fas fa-hand-holding-dollar',
+    description: 'Drive CSR partnerships, donor outreach campaigns, and event fundraising for education and medical programs.'
+  }
+];
+
+/* ── localStorage helpers ── */
+const LS_KEY = 'ss_trust_volunteers';
+
+function saveRegistration(data) {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+  } catch (e) {
+    console.warn('localStorage quota exceeded:', e);
+  }
+}
+
+function loadRegistration() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+/* ── Skill matching ── */
+function matchOpportunities(registeredSkills, opportunities) {
+  if (!registeredSkills || registeredSkills.length === 0) return [];
+  return opportunities.filter(function(opp) {
+    return opp.requiredSkills.some(function(s) {
+      return registeredSkills.includes(s);
+    });
+  });
+}
+
+/* ── Apply to opportunity ── */
+function applyToOpportunity(oppId) {
+  var data = loadRegistration();
+  if (!data) return;
+
+  // Ensure applications array exists
+  if (!Array.isArray(data.applications)) {
+    data.applications = [];
+  }
+
+  // Check if already applied
+  var existing = data.applications.find(function(a) { return a.opportunityId === oppId; });
+  if (!existing) {
+    data.applications.push({ opportunityId: oppId, status: 'Applied — Pending Review' });
+    saveRegistration(data);
+  }
+
+  // Update the card UI
+  updateCardAppliedState(oppId);
+}
+
+function updateCardAppliedState(oppId) {
+  var card = document.querySelector('[data-opp-id="' + oppId + '"]');
+  if (!card) return;
+  var applyBtn = card.querySelector('.btn-apply');
+  var appliedBadge = card.querySelector('.applied-badge');
+  if (applyBtn) { applyBtn.disabled = true; applyBtn.style.display = 'none'; }
+  if (appliedBadge) { appliedBadge.classList.add('show'); }
+}
+
+/* ── Render opportunities ── */
+function renderOpportunities(registeredSkills) {
+  var list = document.getElementById('oppList');
+  var matched = registeredSkills ? matchOpportunities(registeredSkills, OPPORTUNITIES) : [];
+  var matchedIds = matched.map(function(o) { return o.id; });
+
+  var reg = loadRegistration();
+  var appliedIds = reg && Array.isArray(reg.applications)
+    ? reg.applications.map(function(a) { return a.opportunityId; })
+    : [];
+
+  // Sort: matched first
+  var sorted = OPPORTUNITIES.slice().sort(function(a, b) {
+    var aM = matchedIds.includes(a.id) ? 0 : 1;
+    var bM = matchedIds.includes(b.id) ? 0 : 1;
+    return aM - bM;
+  });
+
+  var html = sorted.map(function(opp) {
+    var isMatched = matchedIds.includes(opp.id);
+    var isApplied = appliedIds.includes(opp.id);
+
+    var skillTagsHtml = opp.requiredSkills.map(function(s) {
+      var isHighlit = registeredSkills && registeredSkills.includes(s);
+      return '<span class="skill-tag' + (isHighlit ? ' highlight' : '') + '">'
+        + '<i class="fas fa-circle" style="font-size:5px;"></i> ' + s
+        + '</span>';
+    }).join('');
+
+    var urgencyClass = { high: 'urgency-high', medium: 'urgency-medium', low: 'urgency-low' }[opp.urgency] || 'urgency-low';
+    var urgencyLabel = { high: 'Urgent', medium: 'Active', low: 'Open' }[opp.urgency];
+
+    return '<div class="opp-card' + (isMatched ? ' matched' : '') + '" data-opp-id="' + opp.id + '">'
+      + '<div class="opp-card-top">'
+        + '<div>'
+          + '<div class="opp-role"><i class="' + opp.icon + '" style="color:#fda4af; margin-right:8px;"></i>' + opp.role + '</div>'
+        + '</div>'
+        + '<div style="display:flex; align-items:center; gap:8px;">'
+          + '<span class="opp-urgency ' + urgencyClass + '">' + urgencyLabel + '</span>'
+          + '<span class="match-badge' + (isMatched ? ' show' : '') + '"><i class="fas fa-check-circle"></i> Skills Match!</span>'
+        + '</div>'
+      + '</div>'
+      + '<p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:12px;">' + opp.description + '</p>'
+      + '<div class="opp-meta">'
+        + '<span class="opp-meta-item"><i class="fas fa-location-dot"></i>' + opp.location + '</span>'
+        + '<span class="opp-meta-item"><i class="fas fa-clock"></i>' + opp.commitmentHours + '</span>'
+      + '</div>'
+      + '<div class="opp-skills">' + skillTagsHtml + '</div>'
+      + '<div class="opp-card-footer">'
+        + '<button class="btn-apply"'
+            + (isApplied ? ' disabled style="display:none;"' : '')
+            + ' onclick="applyToOpportunity(\'' + opp.id + '\')" type="button">'
+          + '<i class="fas fa-paper-plane"></i> Apply Now'
+        + '</button>'
+        + '<div class="applied-badge' + (isApplied ? ' show' : '') + '">'
+          + '<i class="fas fa-circle-check"></i> Applied — Pending Review'
+        + '</div>'
+      + '</div>'
+    + '</div>';
+  }).join('');
+
+  list.innerHTML = html;
+
+  // Update match count badge
+  var badge = document.getElementById('matchCountBadge');
+  if (matchedIds.length > 0 && registeredSkills) {
+    badge.textContent = matchedIds.length + ' of ' + OPPORTUNITIES.length + ' match your skills';
+    badge.style.background = 'rgba(16,185,129,.1)';
+    badge.style.borderColor = 'rgba(16,185,129,.3)';
+    badge.style.color = '#34d399';
+  } else {
+    badge.textContent = OPPORTUNITIES.length + ' opportunities';
+    badge.style.cssText = '';
+  }
+}
+
+/* ── Form validation ── */
+function getSelectedSkills() {
+  var boxes = document.querySelectorAll('#skillsGrid input[type="checkbox"]:checked');
+  return Array.from(boxes).map(function(b) { return b.value; });
+}
+
+function showError(fieldId, errId) {
+  document.getElementById(fieldId).classList.add('error');
+  document.getElementById(errId).classList.add('show');
+}
+
+function clearError(fieldId, errId) {
+  document.getElementById(fieldId).classList.remove('error');
+  document.getElementById(errId).classList.remove('show');
+}
+
+function validateForm() {
+  var valid = true;
+
+  var name = document.getElementById('reg-name').value.trim();
+  if (!name) { showError('reg-name', 'err-name'); valid = false; }
+  else clearError('reg-name', 'err-name');
+
+  var email = document.getElementById('reg-email').value.trim();
+  var emailOk = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (!emailOk) { showError('reg-email', 'err-email'); valid = false; }
+  else clearError('reg-email', 'err-email');
+
+  var skills = getSelectedSkills();
+  if (skills.length === 0) {
+    document.getElementById('err-skills').classList.add('show');
+    valid = false;
+  } else {
+    document.getElementById('err-skills').classList.remove('show');
+  }
+
+  return valid;
+}
+
+/* ── Pre-fill form from saved registration ── */
+function prefillForm(reg) {
+  document.getElementById('reg-name').value = reg.name || '';
+  document.getElementById('reg-email').value = reg.email || '';
+  document.getElementById('reg-avail').value = reg.availability || 'weekends';
+  document.getElementById('reg-location').value = reg.location || '';
+
+  // Skills
+  var boxes = document.querySelectorAll('#skillsGrid input[type="checkbox"]');
+  boxes.forEach(function(box) {
+    var checked = reg.skills && reg.skills.includes(box.value);
+    box.checked = checked;
+    var label = box.closest('.skill-checkbox');
+    if (label) label.classList.toggle('checked', checked);
+  });
+}
+
+/* ── Submit handler ── */
+document.getElementById('regForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  if (!validateForm()) return;
+
+  var name = document.getElementById('reg-name').value.trim();
+  var email = document.getElementById('reg-email').value.trim();
+  var skills = getSelectedSkills();
+  var availability = document.getElementById('reg-avail').value;
+  var location = document.getElementById('reg-location').value.trim();
+
+  // Preserve existing applications if re-registering
+  var existing = loadRegistration();
+  var applications = existing && Array.isArray(existing.applications) ? existing.applications : [];
+
+  var data = { name: name, email: email, skills: skills, availability: availability, location: location, applications: applications };
+  saveRegistration(data);
+
+  // Show confirmation
+  var confirmCard = document.getElementById('confirmCard');
+  document.getElementById('confirmSubText').textContent =
+    'Welcome, ' + name + '! Your profile is active. Matching opportunities are highlighted below.';
+  confirmCard.classList.add('show');
+
+  // Update volunteer count stat (simulated: local count + base)
+  var base = 47;
+  document.getElementById('statVolunteers').textContent = base + 1;
+
+  // Re-render opportunities with highlights
+  renderOpportunities(skills);
+
+  // Scroll to opportunities on mobile
+  if (window.innerWidth < 900) {
+    setTimeout(function() {
+      document.getElementById('oppList').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+  }
+});
+
+/* ── Skill checkbox toggle styling ── */
+document.querySelectorAll('#skillsGrid input[type="checkbox"]').forEach(function(box) {
+  box.addEventListener('change', function() {
+    var label = this.closest('.skill-checkbox');
+    if (label) label.classList.toggle('checked', this.checked);
+  });
+});
+
+/* ── Inline validation on blur ── */
+document.getElementById('reg-name').addEventListener('blur', function() {
+  if (this.value.trim()) clearError('reg-name', 'err-name');
+  else showError('reg-name', 'err-name');
+});
+document.getElementById('reg-email').addEventListener('blur', function() {
+  var ok = this.value.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim());
+  if (ok) clearError('reg-email', 'err-email');
+  else showError('reg-email', 'err-email');
+});
+
+/* ── On page load: restore registration & render ── */
+(function init() {
+  var reg = loadRegistration();
+  if (reg) {
+    prefillForm(reg);
+    // Show confirmation card as "previously registered"
+    var confirmCard = document.getElementById('confirmCard');
+    document.getElementById('confirmSubText').textContent =
+      'Welcome back, ' + (reg.name || 'volunteer') + '! Your saved registration is shown below.';
+    confirmCard.classList.add('show');
+    renderOpportunities(reg.skills);
+    document.getElementById('statVolunteers').textContent = 48;
+  } else {
+    renderOpportunities(null);
+    document.getElementById('statVolunteers').textContent = 47;
+  }
+
+  // Footer year
+  document.getElementById('footYear').textContent = new Date().getFullYear();
+})();
+
+/* ── Theme toggle ── */
+(function() {
+  var btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  var icon = btn.querySelector('i');
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    icon.className = t === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+    try { localStorage.setItem('ss-theme', t); } catch(e) {}
+  }
+  applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+  btn.addEventListener('click', function() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    applyTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+})();
+
+/* ── Nav scroll effect ── */
+(function() {
+  var nav = document.getElementById('mainNav');
+  if (!nav) return;
+  window.addEventListener('scroll', function() {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>

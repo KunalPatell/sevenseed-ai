@@ -174,6 +174,7 @@ def render_avpu_html(c):
   </a>
   <div class="nav-links" id="navLinks">
     <a href="learn-dag.html"><i class="fas fa-project-diagram" style="color:#60a5fa;"></i> Learn DAG</a>
+    <a href="gyan-ai-tutor.html"><i class="fas fa-robot" style="color:#3b82f6;"></i> Gyan AI Tutor</a>
     <a href="duo-league.html"><i class="fas fa-trophy" style="color:#fbbf24;"></i> Duolingo</a>
     <a href="code-lab.html"><i class="fas fa-code" style="color:#34d399;"></i> Code Lab</a>
     <a href="laws-of-ux.html"><i class="fas fa-brain" style="color:#c084fc;"></i> UX Laws</a>
@@ -181,7 +182,6 @@ def render_avpu_html(c):
     <a href="marketing-teardowns.html"><i class="fas fa-chart-line" style="color:#f472b6;"></i> Teardowns</a>
     <a href="courses.html"><i class="fas fa-book-open"></i> Courses</a>
     <a href="#tracks">Tracks</a>
-    <a href="#comparison">Why AVPU</a>
     <a href="#faq">FAQ</a>
   </div>
   <div class="nav-right">

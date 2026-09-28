@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATS Resume Scorer — Comonk AI</title>
+  <meta name="description"
+    content="Paste your resume and get an instant ATS score, section completeness check, formatting analysis, and AI-powered before/after improvement suggestions.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ATS Resume Scorer — Comonk AI">
+  <meta property="og:description"
+    content="Free ATS resume analysis: keyword scoring, section detection, formatting checks, and actionable rewrites.">
+  <meta property="og:url" content="https://sevenseed.onrender.com/comonk/resume-scorer.html">
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🧠%3C/text%3E%3C/svg%3E">
+  <script>(function () { try { var t = localStorage.getItem('ss-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); document.documentElement.setAttribute('data-theme', t); } catch (e) { } })();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Layout ── */
+    .sub-hero {
+      padding: 120px 24px 48px;
+      text-align: center;
+      background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, .18), transparent 70%);
+    }
+
+    .sub-hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    .sub-hero-title {
+      font-size: clamp(32px, 5vw, 54px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .sub-hero-sub {
+      font-size: 17px;
+      color: #94a3b8;
+      max-width: 680px;
+      margin: 0 auto 32px;
+    }
+
+    .scorer-wrap {
+      max-width: 960px;
+      margin: 0 auto 80px;
+      padding: 0 24px;
+    }
+
+    /* ── Input card ── */
+    .input-card {
+      background: rgba(15, 23, 42, .75);
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 20px;
+      padding: 32px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #cbd5e1;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(2, 6, 23, .6);
+      border: 1px solid rgba(255, 255, 255, .15);
+      border-radius: 10px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, .25);
+    }
+
+    .form-control.error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, .2);
+    }
+
+    .validation-msg {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #f87171;
+      display: none;
+    }
+
+    .validation-msg.visible {
+      display: block;
+    }
+
+    .char-count {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-analyse {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6366f1, #38bdf8);
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      transition: opacity .2s, transform .2s;
+    }
+
+    .btn-analyse:hover {
+      opacity: .88;
+      transform: translateY(-2px);
+    }
+
+    .btn-print {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .07);
+      border: 1px solid rgba(255, 255, 255, .14);
+      color: #cbd5e1;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .btn-print:hover {
+      background: rgba(255, 255, 255, .12);
+    }
+
+    /* ── Results section (hidden until analysis runs) ── */
+    #resultsSection {
+      display: none;
+    }
+
+    #resultsSection.visible {
+      display: block;
+    }
+
+    /* ── Score gauge ── */
+    .gauge-card {
+      background: rgba(15, 23, 42, .75);
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 20px;
+      padding: 32px;
+      backdrop-filter: blur(16px);
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .gauge-wrap {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      flex-shrink: 0;
+      margin: 0 auto;
+    }
+
+    .gauge-svg {
+      width: 140px;
+      height: 140px;
+      transform: rotate(-90deg);
+    }
+
+    .gauge-track {
+      fill: none;
+      stroke: rgba(255, 255, 255, .08);
+      stroke-width: 10;
+    }
+
+    .gauge-ring {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s cubic-bezier(.4, 0, .2, 1), stroke .4s;
+    }
+
+    .gauge-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+    }
+
+    .gauge-num {
+      font-size: 36px;
+      line-height: 1;
+    }
+
+    .gauge-lbl {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .gauge-meta {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .gauge-meta h2 {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .gauge-meta p {
+      color: #94a3b8;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .score-badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .score-green {
+      background: rgba(34, 197, 94, .15);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, .3);
+    }
+
+    .score-amber {
+      background: rgba(251, 191, 36, .15);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, .3);
+    }
+
+    .score-red {
+      background: rgba(239, 68, 68, .15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, .3);
+    }
+
+    /* ── Panel grid ── */
+    .panels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .panel-card {
+      background: rgba(15, 23, 42, .75);
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title i {
+      color: #6366f1;
+    }
+
+    /* ── Section checklist ── */
+    .check-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid rgba(255, 255, 255, .06);
+      font-size: 14px;
+    }
+
+    .check-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .check-label {
+      flex: 1;
+    }
+
+    .check-status {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .check-ok {
+      color: #4ade80;
+    }
+
+    .check-miss {
+      color: #f87171;
+    }
+
+    /* ── Formatting checklist ── */
+    .fmt-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid rgba(255, 255, 255, .06);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .fmt-icon {
+      font-size: 15px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .fmt-body {
+      flex: 1;
+    }
+
+    .fmt-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .fmt-hint {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    /* ── Before/After panel ── */
+    .ba-item {
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .ba-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .ba-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 560px) {
+      .ba-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ba-col {
+      padding: 14px 16px;
+    }
+
+    .ba-col.before {
+      background: rgba(239, 68, 68, .06);
+      border-right: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .ba-col.after {
+      background: rgba(34, 197, 94, .06);
+    }
+
+    .ba-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .ba-tag.b {
+      color: #f87171;
+    }
+
+    .ba-tag.a {
+      color: #4ade80;
+    }
+
+    .ba-text {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .ba-reason {
+      font-size: 12px;
+      color: #64748b;
+      padding: 8px 16px 12px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    /* ── Keyword chips ── */
+    .kw-section {
+      margin-top: 16px;
+    }
+
+    .kw-section h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+
+    .kw-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .kw-chip {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .kw-found {
+      background: rgba(99, 102, 241, .2);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, .35);
+    }
+
+    .kw-miss {
+      background: rgba(239, 68, 68, .12);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, .3);
+    }
+
+    /* ── Print ── */
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+
+      .nav,
+      .sub-hero,
+      .input-card,
+      .btn-row,
+      footer,
+      .fab-stack,
+      .preloader,
+      .scroll-progress,
+      .cursor-ring,
+      .grain {
+        display: none !important;
+      }
+
+      #resultsSection {
+        display: block !important;
+      }
+
+      .gauge-card,
+      .panel-card,
+      .ba-item,
+      .check-item,
+      .fmt-item {
+        border: 1px solid #ddd !important;
+        background: #fff !important;
+        box-shadow: none !important;
+      }
+
+      .gauge-meta h2,
+      .panel-title,
+      .ba-tag.b {
+        color: #000 !important;
+      }
+
+      .gauge-meta p,
+      .fmt-hint,
+      .ba-text,
+      .ba-reason {
+        color: #333 !important;
+      }
+
+      .check-ok {
+        color: #16a34a !important;
+      }
+
+      .check-miss {
+        color: #dc2626 !important;
+      }
+
+      .score-green {
+        background: #dcfce7 !important;
+        color: #15803d !important;
+      }
+
+      .score-amber {
+        background: #fef9c3 !important;
+        color: #a16207 !important;
+      }
+
+      .score-red {
+        background: #fee2e2 !important;
+        color: #b91c1c !important;
+      }
+
+      .kw-found {
+        background: #ede9fe !important;
+        color: #4338ca !important;
+      }
+
+      .kw-miss {
+        background: #fee2e2 !important;
+        color: #b91c1c !important;
+      }
+
+      .ba-col.before {
+        background: #fff5f5 !important;
+      }
+
+      .ba-col.after {
+        background: #f0fdf4 !important;
+      }
+
+      .scorer-wrap {
+        max-width: 100% !important;
+        padding: 0 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Preloader ── -->
+  <div class="preloader" id="preloader">
+    <div class="pl-glow pl-glow-1"></div>
+    <div class="pl-glow pl-glow-2"></div>
+    <div class="pl-content">
+      <div class="pl-logo">
+        <div class="pl-icon-wrap"><i class="fas fa-brain pl-icon"></i><span class="pl-ring"></span></div>
+        <div class="pl-name">Comonk AI</div>
+      </div>
+      <div class="pl-progress">
+        <div class="pl-bar-track">
+          <div class="pl-bar" id="plBar"></div>
+        </div>
+        <div class="pl-text">LOADING RESUME SCORER… <span id="plPct">0</span>%</div>
+      </div>
+    </div>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+  <!-- ── Nav ── -->
+  <nav class="nav" id="mainNav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="index.html">
+        <span class="nav-logo-wrap"><i class="fas fa-brain"></i></span>
+        <span class="nav-name">Comonk AI</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="resume-analyzer.html">ATS Optimizer</a>
+        <a href="interview-arena.html">Mock Interview</a>
+        <a href="salary-insights.html">Salary Insights</a>
+        <a href="resume-scorer.html" class="active">Resume Scorer</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme"><i
+            class="fas fa-moon"></i></button>
+        <a class="btn btn-primary sm" href="app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <header class="sub-hero">
+    <div class="sub-hero-pill"><i class="fas fa-file-circle-check" style="color:#6366f1"></i> ATS Resume Scorer · 100%
+      Free</div>
+    <h1 class="sub-hero-title">Know your <span class="grad">ATS score</span><br>before the recruiter does</h1>
+    <p class="sub-hero-sub">Paste your resume and get an instant keyword score, section completeness check, formatting
+      analysis, and AI-powered before/after rewrites — all client-side, no data leaves your browser.</p>
+  </header>
+
+  <!-- ── Main ── -->
+  <main>
+    <div class="scorer-wrap">
+
+      <!-- Input card -->
+      <div class="input-card">
+        <div class="form-group">
+          <label for="resumeInput"><i class="fas fa-paste" style="color:#6366f1; margin-right:6px;"></i>Paste Resume
+            Text</label>
+          <textarea id="resumeInput" class="form-control" rows="12"
+            placeholder="Paste the full text of your resume here — include all sections: contact info, summary, work experience, skills, and education…"
+            aria-describedby="resumeValidation resumeCharCount" oninput="updateCharCount()"></textarea>
+          <div class="char-count" id="resumeCharCount">0 characters (minimum 50 required)</div>
+          <div class="validation-msg" id="resumeValidation" role="alert">
+            <i class="fas fa-triangle-exclamation"></i> Please paste your resume text (at least 50 characters) before
+            analysing.
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-analyse" id="analyseBtn" onclick="runAnalysis()" type="button">
+            <i class="fas fa-wand-magic-sparkles"></i> Analyse Resume
+          </button>
+          <button class="btn-print" onclick="window.print()" type="button" title="Print / export results">
+            <i class="fas fa-file-arrow-down"></i> Print / Export
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Results (hidden until run) ── -->
+      <div id="resultsSection" aria-live="polite">
+
+        <!-- Score gauge -->
+        <div class="gauge-card" id="gaugeCard">
+          <div class="gauge-wrap" role="img" aria-labelledby="gaugeAriaLabel">
+            <svg class="gauge-svg" viewBox="0 0 140 140" aria-hidden="true">
+              <circle class="gauge-track" cx="70" cy="70" r="54" />
+              <circle class="gauge-ring" id="gaugeRing" cx="70" cy="70" r="54" stroke-dasharray="339.3"
+                stroke-dashoffset="339.3" />
+            </svg>
+            <div class="gauge-center">
+              <span class="gauge-num" id="gaugeNum">0</span>
+              <span class="gauge-lbl">/ 100</span>
+            </div>
+          </div>
+          <div class="gauge-meta">
+            <h2 id="gaugeTitle">ATS Score</h2>
+            <p id="gaugeDesc"></p>
+            <span id="gaugeBadge" class="score-badge"></span>
+            <span id="gaugeAriaLabel" class="sr-only"></span>
+          </div>
+        </div>
+
+        <!-- Section + Formatting row -->
+        <div class="panels-grid">
+
+          <!-- Section completeness -->
+          <div class="panel-card">
+            <div class="panel-title"><i class="fas fa-list-check"></i> Section Completeness</div>
+            <ul class="check-list" id="sectionList" aria-label="Section completeness results"></ul>
+          </div>
+
+          <!-- Formatting checklist -->
+          <div class="panel-card">
+            <div class="panel-title"><i class="fas fa-sliders"></i> Formatting Analysis</div>
+            <div id="formattingList"></div>
+          </div>
+
+        </div>
+
+        <!-- Keyword hits / misses -->
+        <div class="panel-card" style="margin-bottom:24px;">
+          <div class="panel-title"><i class="fas fa-tags"></i> Keyword Coverage</div>
+          <div class="kw-section">
+            <h4>Found in your resume</h4>
+            <div class="kw-chips" id="foundKeywords"></div>
+          </div>
+          <div class="kw-section" style="margin-top:16px;">
+            <h4>Missing keywords to add</h4>
+            <div class="kw-chips" id="missedKeywords"></div>
+          </div>
+        </div>
+
+        <!-- Before / After -->
+        <div class="panel-card">
+          <div class="panel-title"><i class="fas fa-arrows-left-right"></i> Before / After Improvements</div>
+          <div id="baList"></div>
+        </div>
+
+      </div><!-- /resultsSection -->
+
+    </div><!-- /scorer-wrap -->
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <div class="foot-inner">
+      <div class="foot-col">
+        <div class="foot-brand"><i class="fas fa-brain"></i> Comonk AI</div>
+        <p class="foot-tag">AI Career Intelligence — Part of the Sevenseed AI Venture Studio portfolio.</p>
+        <div class="foot-copy">© 2026 Comonk AI. 100% Free · Your data never leaves your browser.</div>
+      </div>
+      <div class="foot-col">
+        <h4>Navigation</h4>
+        <ul class="foot-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="resume-analyzer.html">ATS Optimizer</a></li>
+          <li><a href="interview-arena.html">Mock Interview</a></li>
+          <li><a href="salary-insights.html">Salary Insights</a></li>
+          <li><a href="../index.html">Sevenseed Hub</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <div class="fab-stack">
+    <button class="fab" id="backToTop" type="button" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+     ATS ANALYSIS ENGINE
+     All logic is pure-function, testable, no DOM side-effects.
+     ═══════════════════════════════════════════════════ -->
+  <script>
+    /* ─────────────────────────────────────────────────────────
+       1. ATS_KEYWORDS
+       ───────────────────────────────────────────────────────── */
+    var ATS_KEYWORDS = {
+      technical: ['python', 'javascript', 'typescript', 'react', 'node.js', 'sql', 'postgresql', 'mongodb', 'aws', 'azure', 'gcp', 'docker', 'kubernetes', 'git', 'rest', 'graphql', 'machine learning', 'tensorflow', 'pytorch', 'scikit-learn', 'pandas', 'numpy', 'fastapi', 'django', 'flask', 'spring', 'java', 'go', 'rust', 'redis', 'elasticsearch', 'ci/cd', 'terraform', 'ansible'],
+      soft: ['leadership', 'collaboration', 'communication', 'problem-solving', 'agile', 'scrum', 'mentoring', 'stakeholder', 'cross-functional', 'initiative', 'ownership', 'accountability', 'adaptability', 'analytical'],
+      action: ['developed', 'built', 'designed', 'architected', 'led', 'managed', 'optimised', 'delivered', 'launched', 'deployed', 'implemented', 'reduced', 'increased', 'improved', 'created', 'scaled', 'automated', 'streamlined', 'coordinated', 'achieved']
+    };
+
+    /* ─────────────────────────────────────────────────────────
+       2. SECTION_PATTERNS
+       ───────────────────────────────────────────────────────── */
+    var SECTION_PATTERNS = {
+      contact: /(email|phone|mobile|linkedin|github|@[\w.]+\.[\w]+)/i,
+      summary: /(summary|profile|objective|about me|overview)/i,
+      experience: /(experience|employment|work history|professional history|career)/i,
+      skills: /(skills|technologies|tech stack|tools|competencies|expertise)/i,
+      education: /(education|degree|bachelor|master|b\.tech|m\.tech|b\.e|university|college)/i
+    };
+
+    /* ─────────────────────────────────────────────────────────
+       3. atsScore(text) → number [0, 100]
+       ───────────────────────────────────────────────────────── */
+    function atsScore(text) {
+      if (typeof text !== 'string') return 0;
+      var lower = text.toLowerCase();
+      var allKw = [].concat(ATS_KEYWORDS.technical, ATS_KEYWORDS.soft, ATS_KEYWORDS.action);
+      var matched = 0;
+      for (var i = 0; i < allKw.length; i++) {
+        if (lower.indexOf(allKw[i]) !== -1) matched++;
+      }
+      var raw = (matched / allKw.length) * 120;
+      return Math.min(100, Math.max(0, Math.round(raw)));
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       4. checkSections(text) → { contact, summary, experience, skills, education }
+       Each value is a boolean.
+       ───────────────────────────────────────────────────────── */
+    function checkSections(text) {
+      if (typeof text !== 'string') {
+        return { contact: false, summary: false, experience: false, skills: false, education: false };
+      }
+      return {
+        contact: SECTION_PATTERNS.contact.test(text),
+        summary: SECTION_PATTERNS.summary.test(text),
+        experience: SECTION_PATTERNS.experience.test(text),
+        skills: SECTION_PATTERNS.skills.test(text),
+        education: SECTION_PATTERNS.education.test(text)
+      };
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       5. checkFormatting(text) → object with formatting flags
+       ───────────────────────────────────────────────────────── */
+    function checkFormatting(text) {
+      if (typeof text !== 'string') return _emptyFormatting();
+
+      // hasBullets: text includes '•' or lines starting with - or *
+      var hasBullets = text.indexOf('•') !== -1 || /^\s*[-*][\s]/m.test(text);
+
+      // shortLines: check if most lines are under 90 chars
+      var lines = text.split('\n').filter(function (l) { return l.trim().length > 0; });
+      var shortCount = lines.filter(function (l) { return l.length < 90; }).length;
+      var shortLines = lines.length === 0 || (shortCount / lines.length) >= 0.6;
+
+      // noSpecialChars: no occurrences of □ ■ ▪ ● (copy-paste artefacts)
+      var noSpecialChars = !/[□■▪●]/.test(text);
+
+      // hasQuantification: contains at least one % or ₹ or $ or a number like "20%", "3x", "50+"
+      var hasQuantification = /\d+%|\d+x|\d+\+|₹\s*\d+|\$\s*\d+/.test(text);
+
+      return [
+        {
+          label: 'Bullet Points Present',
+          pass: hasBullets,
+          hint: hasBullets
+            ? 'Good — bullet points make scannable, structured output that ATS engines love.'
+            : 'Add bullet points (•, -, *) to each experience item for better readability and ATS parsing.'
+        },
+        {
+          label: 'Concise Line Length',
+          pass: shortLines,
+          hint: shortLines
+            ? 'Most lines are under 90 chars — easy to scan and ATS-friendly.'
+            : 'Some lines exceed 90 characters. Trim long lines to improve readability in ATS parsers.'
+        },
+        {
+          label: 'No Special Characters',
+          pass: noSpecialChars,
+          hint: noSpecialChars
+            ? 'No copy-paste artefacts detected — safe for all ATS parsers.'
+            : 'Remove special characters like □ ■ ▪ ● — they are copy-paste artefacts that confuse ATS text extraction.'
+        },
+        {
+          label: 'Quantified Achievements',
+          pass: hasQuantification,
+          hint: hasQuantification
+            ? 'Great — your resume includes quantified results (%, ₹, $, numbers with multipliers).'
+            : 'Add metrics to your achievements — e.g. "reduced latency by 40%", "managed ₹2Cr budget", "grew team 3x".'
+        }
+      ];
+    }
+
+    function _emptyFormatting() {
+      return [
+        { label: 'Bullet Points Present', pass: false, hint: 'No text provided.' },
+        { label: 'Concise Line Length', pass: false, hint: 'No text provided.' },
+        { label: 'No Special Characters', pass: true, hint: 'No text provided.' },
+        { label: 'Quantified Achievements', pass: false, hint: 'No text provided.' }
+      ];
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       6. getImprovements(text) → array of ≥ 3 { before, after, tip }
+       Spec logic: 4 contextual conditions.
+       ───────────────────────────────────────────────────────── */
+    function getImprovements(text) {
+      var lower = typeof text === 'string' ? text.toLowerCase() : '';
+      var suggestions = [];
+
+      // Formatting check for context
+      var fmtItems = checkFormatting(text);
+      var hasBulletsR = fmtItems[0].pass;
+      var hasQuantR = fmtItems[3].pass;
+      var score = atsScore(text);
+
+      // Condition 1: If text contains "responsible for" → suggest replacing with action verb
+      if (lower.indexOf('responsible for') !== -1) {
+        suggestions.push({
+          before: '"Responsible for managing the backend team and delivering APIs on time."',
+          after: '"Led a 4-engineer backend team, shipping 12 REST APIs on time with 99.9% uptime."',
+          tip: 'Replace passive "Responsible for" with a strong action verb (Led, Architected, Delivered) and add a quantified outcome.'
+        });
+      }
+
+      // Condition 2: If hasBullets is false → suggest adding bullet points
+      if (!hasBulletsR) {
+        suggestions.push({
+          before: '"Worked on improving application performance and reduced latency across services."',
+          after: '• Reduced API p95 latency by 38% (650 ms → 400 ms) via query optimisation and Redis caching\n• Eliminated 3 N+1 query patterns, cutting DB load by 22%',
+          tip: 'Use bullet points (•, -, *) for each achievement. Bullets are easier for ATS parsers to tokenise and easier for recruiters to scan.'
+        });
+      }
+
+      // Condition 3: If hasQuantification is false → suggest adding metrics
+      if (!hasQuantR) {
+        suggestions.push({
+          before: '"Improved the deployment pipeline and reduced build times significantly."',
+          after: '"Automated the CI/CD pipeline using GitHub Actions + Docker, reducing build time by 55% (18 min → 8 min) and eliminating manual release steps."',
+          tip: 'Add concrete numbers — %, ₹, $, time saved, user counts. Quantified achievements are 40% more likely to pass ATS keyword scoring.'
+        });
+      }
+
+      // Condition 4: If score < 40 → suggest adding more technical keywords
+      if (score < 40) {
+        var missingTech = ATS_KEYWORDS.technical.filter(function (kw) {
+          return lower.indexOf(kw) === -1;
+        }).slice(0, 4);
+        suggestions.push({
+          before: '"Skills: Python, React, APIs, Databases."',
+          after: '"Skills: Python, React, Node.js, PostgreSQL, Docker, Kubernetes, REST, CI/CD' + (missingTech.length ? ', ' + missingTech.slice(0, 2).join(', ') : '') + '."',
+          tip: 'Your ATS score is low (' + score + '/100). Add role-specific technical keywords: ' + (missingTech.join(', ') || 'check the keyword coverage section above') + '.'
+        });
+      }
+
+      // Always include a fallback suggestion about action verbs if we have fewer than 3 so far
+      if (suggestions.length < 3) {
+        var missingTech2 = ATS_KEYWORDS.technical.filter(function (kw) {
+          return lower.indexOf(kw) === -1;
+        }).slice(0, 3);
+        if (missingTech2.length > 0) {
+          suggestions.push({
+            before: '"Skills: Python, React, REST APIs"',
+            after: '"Skills: Python, React, REST APIs, ' + missingTech2.slice(0, 2).join(', ') + (missingTech2.length > 2 ? ', ' + missingTech2[2] : '') + '"',
+            tip: 'Top missing keywords from your resume: ' + missingTech2.join(', ') + '. Adding even a few can meaningfully raise your ATS score.'
+          });
+        } else {
+          suggestions.push({
+            before: '"Experienced in software development and delivering projects."',
+            after: '"5+ years building distributed systems with Python, Docker, and Kubernetes — shipped 3 production microservices serving 100k+ monthly active users."',
+            tip: 'Great keyword coverage! Focus on adding a concise career summary at the top with role title, years of experience, and 2–3 impact metrics.'
+          });
+        }
+      }
+
+      // Bonus: LinkedIn / GitHub if missing from contact
+      var hasSocialLinks = /(linkedin\.com|github\.com)/i.test(text);
+      if (!hasSocialLinks && suggestions.length < 5) {
+        suggestions.push({
+          before: '"Contact: john@example.com  |  +91 98765 43210"',
+          after: '"Contact: john@example.com  |  +91 98765 43210  |  linkedin.com/in/john  |  github.com/john"',
+          tip: 'Include LinkedIn and GitHub URLs. Recruiters click these to validate your profile, and ATS systems score social presence positively.'
+        });
+      }
+
+      return suggestions;
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       HELPER: keyword split with found/missed arrays
+       ───────────────────────────────────────────────────────── */
+    function keywordSplit(text) {
+      var lower = text.toLowerCase();
+      var allKw = [].concat(ATS_KEYWORDS.technical, ATS_KEYWORDS.soft, ATS_KEYWORDS.action);
+      var found = [], missed = [];
+      for (var i = 0; i < allKw.length; i++) {
+        if (lower.indexOf(allKw[i]) !== -1) found.push(allKw[i]);
+        else missed.push(allKw[i]);
+      }
+      return { found: found, missed: missed };
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       CHARACTER COUNTER
+       ───────────────────────────────────────────────────────── */
+    function updateCharCount() {
+      var val = document.getElementById('resumeInput').value;
+      var cnt = val.length;
+      var el = document.getElementById('resumeCharCount');
+      el.textContent = cnt + ' characters' + (cnt < 50 ? ' (minimum 50 required)' : ' ✓');
+      el.style.color = cnt >= 50 ? '#4ade80' : '#64748b';
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       RENDER HELPERS
+       ───────────────────────────────────────────────────────── */
+    function renderGauge(score) {
+      var circumference = 339.3; // 2π × 54
+      var offset = circumference - (score / 100) * circumference;
+      var ring = document.getElementById('gaugeRing');
+      var numEl = document.getElementById('gaugeNum');
+      var titleEl = document.getElementById('gaugeTitle');
+      var descEl = document.getElementById('gaugeDesc');
+      var badgeEl = document.getElementById('gaugeBadge');
+      var ariaEl = document.getElementById('gaugeAriaLabel');
+
+      // Colour
+      var colour, cls, verdict, desc;
+      if (score >= 80) {
+        colour = '#4ade80'; cls = 'score-green'; verdict = 'Strong ATS Match';
+        desc = 'Your resume is well-optimised for ATS systems. Focus on quantified achievements and tailoring to specific JDs.';
+      } else if (score >= 50) {
+        colour = '#fbbf24'; cls = 'score-amber'; verdict = 'Needs Improvement';
+        desc = 'Moderate keyword coverage. Add more role-specific technical terms, action verbs, and quantified results to push past 80.';
+      } else {
+        colour = '#f87171'; cls = 'score-red'; verdict = 'Low ATS Score';
+        desc = 'Your resume is likely to be filtered out before a human sees it. Add relevant keywords, a clear summary, and structured sections.';
+      }
+
+      ring.style.stroke = colour;
+      ring.style.strokeDashoffset = circumference; // reset for animation
+      numEl.style.color = colour;
+      numEl.textContent = '0';
+
+      titleEl.textContent = verdict;
+      descEl.textContent = desc;
+
+      badgeEl.className = 'score-badge ' + cls;
+      badgeEl.textContent = score + ' / 100';
+      ariaEl.textContent = 'ATS Score: ' + score + ' out of 100 — ' + verdict;
+
+      // Animate number + ring
+      var startTime = null;
+      function animate(ts) {
+        if (!startTime) startTime = ts;
+        var progress = Math.min((ts - startTime) / 1000, 1);
+        var ease = 1 - Math.pow(1 - progress, 3);
+        var current = Math.round(ease * score);
+        numEl.textContent = current;
+        ring.style.strokeDashoffset = circumference - (current / 100) * circumference;
+        if (progress < 1) requestAnimationFrame(animate);
+        else {
+          numEl.textContent = score;
+          ring.style.strokeDashoffset = offset;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    function renderSections(sections) {
+      var labels = {
+        contact: { label: 'Contact Info', icon: 'fas fa-address-card' },
+        summary: { label: 'Professional Summary', icon: 'fas fa-align-left' },
+        experience: { label: 'Work Experience', icon: 'fas fa-briefcase' },
+        skills: { label: 'Skills', icon: 'fas fa-code' },
+        education: { label: 'Education', icon: 'fas fa-graduation-cap' }
+      };
+      var html = '';
+      for (var key in labels) {
+        var meta = labels[key];
+        var ok = sections[key];
+        html += '<li class="check-item">' +
+          '<span class="check-icon"><i class="' + meta.icon + '" style="color:' + (ok ? '#6366f1' : '#94a3b8') + '"></i></span>' +
+          '<span class="check-label">' + meta.label + '</span>' +
+          '<span class="check-status ' + (ok ? 'check-ok' : 'check-miss') + '">' +
+          (ok ? '✅ Detected' : '❌ Missing') +
+          '</span>' +
+          '</li>';
+      }
+      document.getElementById('sectionList').innerHTML = html;
+    }
+
+    function renderFormatting(fmtItems) {
+      var html = '';
+      fmtItems.forEach(function (item) {
+        var icon = item.pass
+          ? '<i class="fas fa-circle-check" style="color:#4ade80"></i>'
+          : '<i class="fas fa-circle-xmark" style="color:#f87171"></i>';
+        html +=
+          '<div class="fmt-item">' +
+          '<span class="fmt-icon">' + icon + '</span>' +
+          '<div class="fmt-body">' +
+          '<div class="fmt-title">' + item.label + '</div>' +
+          '<div class="fmt-hint">' + item.hint + '</div>' +
+          '</div>' +
+          '</div>';
+      });
+      document.getElementById('formattingList').innerHTML = html;
+    }
+
+    function renderKeywords(found, missed) {
+      var MAX_SHOW_FOUND = 24;
+      var MAX_SHOW_MISSED = 24;
+
+      var foundHtml = found.slice(0, MAX_SHOW_FOUND).map(function (kw) {
+        return '<span class="kw-chip kw-found">' + kw + '</span>';
+      }).join('');
+      if (found.length > MAX_SHOW_FOUND) {
+        foundHtml += '<span class="kw-chip kw-found">+' + (found.length - MAX_SHOW_FOUND) + ' more</span>';
+      }
+      if (!foundHtml) foundHtml = '<span style="color:#64748b;font-size:13px;">None detected — add role-specific keywords to your resume.</span>';
+
+      var missedHtml = missed.slice(0, MAX_SHOW_MISSED).map(function (kw) {
+        return '<span class="kw-chip kw-miss">' + kw + '</span>';
+      }).join('');
+      if (missed.length > MAX_SHOW_MISSED) {
+        missedHtml += '<span class="kw-chip kw-miss">+' + (missed.length - MAX_SHOW_MISSED) + ' more</span>';
+      }
+      if (!missedHtml) missedHtml = '<span style="color:#4ade80;font-size:13px;">🎉 All tracked keywords present!</span>';
+
+      document.getElementById('foundKeywords').innerHTML = foundHtml;
+      document.getElementById('missedKeywords').innerHTML = missedHtml;
+    }
+
+    function renderBeforeAfter(suggestions) {
+      var html = suggestions.map(function (s) {
+        return '<div class="ba-item">' +
+          '<div class="ba-row">' +
+          '<div class="ba-col before">' +
+          '<div class="ba-tag b">❌ Before</div>' +
+          '<div class="ba-text">' + escapeHtml(s.before) + '</div>' +
+          '</div>' +
+          '<div class="ba-col after">' +
+          '<div class="ba-tag a">✅ After</div>' +
+          '<div class="ba-text">' + escapeHtml(s.after) + '</div>' +
+          '</div>' +
+          '</div>' +
+          '<div class="ba-reason"><i class="fas fa-lightbulb" style="color:#fbbf24;margin-right:6px;"></i>' + escapeHtml(s.tip || s.reason || '') + '</div>' +
+          '</div>';
+      }).join('');
+      document.getElementById('baList').innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    /* ─────────────────────────────────────────────────────────
+       MAIN: runAnalysis()
+       ───────────────────────────────────────────────────────── */
+    function runAnalysis() {
+      var textarea = document.getElementById('resumeInput');
+      var validMsg = document.getElementById('resumeValidation');
+      var text = textarea.value;
+
+      // Validation: block if < 50 chars
+      if (text.trim().length < 50) {
+        textarea.classList.add('error');
+        validMsg.classList.add('visible');
+        textarea.focus();
+        return;
+      }
+      textarea.classList.remove('error');
+      validMsg.classList.remove('visible');
+
+      // Run engines
+      var score = atsScore(text);
+      var sections = checkSections(text);
+      var formatting = checkFormatting(text);
+      var improvements = getImprovements(text);
+      var kw = keywordSplit(text);
+
+      // Render
+      renderGauge(score);
+      renderSections(sections);
+      renderFormatting(formatting);
+      renderKeywords(kw.found, kw.missed);
+      renderBeforeAfter(improvements);
+
+      // Show results
+      var resultsEl = document.getElementById('resultsSection');
+      resultsEl.classList.add('visible');
+
+      // Smooth scroll to results
+      setTimeout(function () {
+        document.getElementById('gaugeCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+  </script>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

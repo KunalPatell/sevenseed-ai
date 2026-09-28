@@ -64,6 +64,7 @@ def render_breakdown_html(c):
     <a href="boq-estimator.html"><i class="fas fa-calculator" style="color:#fbbf24;"></i> BOQ Estimator</a>
     <a href="safety-audit.html"><i class="fas fa-clipboard-check" style="color:#34d399;"></i> Safety Audit</a>
     <a href="cv-scanner.html"><i class="fas fa-camera" style="color:#38bdf8;"></i> CV Site Scanner</a>
+    <a href="defect-scanner.html"><i class="fas fa-magnifying-glass-chart" style="color:#f59e0b;"></i> Defect Scanner</a>
     <a href="#workstations">Workstations</a>
     <a href="#faq">FAQ</a>
   </div>

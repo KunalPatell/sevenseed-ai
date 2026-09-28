@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Medicine Reminder — Decode Forest Pharmacy</title>
+  <meta name="description" content="Add and track your medicine schedules. Never miss a dose. Set browser notifications for each reminder and mark doses as taken.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🔔%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ── Page layout ── */
+    .mr-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+    }
+
+    /* ── Page header ── */
+    .mr-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .mr-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 18px;
+      border-radius: 999px;
+      background: rgba(16,185,129,0.14);
+      border: 1px solid rgba(16,185,129,0.35);
+      color: #34d399;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .mr-title {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff 40%, #a7f3d0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .mr-sub {
+      color: var(--text-2, #94a3b8);
+      font-size: 15px;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── Medical disclaimer ── */
+    .mr-disclaimer {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 13px;
+      color: #fbbf24;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 28px;
+      line-height: 1.55;
+    }
+    .mr-disclaimer i { flex-shrink: 0; margin-top: 2px; }
+
+    /* ── Add form card ── */
+    .mr-form-card {
+      background: var(--bg-1, #0c1222);
+      border: 1px solid var(--border, rgba(255,255,255,0.08));
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+    }
+    .mr-form-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mr-form-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1.2fr 1.2fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 800px) {
+      .mr-form-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 500px) {
+      .mr-form-grid { grid-template-columns: 1fr; }
+    }
+    .mr-form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .mr-form-field label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-2, #94a3b8);
+    }
+    .mr-input {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--bg-2, #141c30);
+      border: 1px solid var(--border, rgba(255,255,255,0.12));
+      border-radius: 9px;
+      color: #fff;
+      font-size: 13.5px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+    .mr-input:focus { border-color: #10b981; }
+    .mr-input.error { border-color: #ef4444 !important; }
+    .mr-field-error {
+      font-size: 11.5px;
+      color: #f87171;
+      display: none;
+      align-items: center;
+      gap: 5px;
+      margin-top: 3px;
+    }
+    .mr-field-error.visible { display: flex; }
+    .mr-form-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .mr-submit-btn {
+      padding: 12px 26px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(16,185,129,0.3);
+    }
+    .mr-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(16,185,129,0.45); }
+    .mr-notif-btn {
+      padding: 10px 18px;
+      background: transparent;
+      border: 1px solid rgba(16,185,129,0.35);
+      border-radius: 10px;
+      color: #34d399;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .mr-notif-btn:hover { background: rgba(16,185,129,0.1); }
+    .mr-notif-status {
+      font-size: 12px;
+      color: var(--text-2, #94a3b8);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── Reminders list header ── */
+    .mr-list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .mr-list-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mr-count-badge {
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.3);
+      color: #34d399;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .mr-print-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border, rgba(255,255,255,0.12));
+      border-radius: 8px;
+      color: var(--text-2, #94a3b8);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .mr-print-btn:hover { border-color: #10b981; color: #fff; }
+
+    /* ── Empty state ── */
+    .mr-empty {
+      text-align: center;
+      padding: 56px 24px;
+      background: var(--bg-1, #0c1222);
+      border: 1px dashed var(--border, rgba(255,255,255,0.12));
+      border-radius: 16px;
+      color: var(--text-2, #94a3b8);
+    }
+    .mr-empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    .mr-empty h3 { font-size: 18px; font-weight: 700; color: var(--text, #e2e8f0); margin-bottom: 8px; }
+    .mr-empty p { font-size: 14px; line-height: 1.6; max-width: 380px; margin: 0 auto; }
+
+    /* ── Reminder card ── */
+    .mr-card {
+      background: var(--bg-1, #0c1222);
+      border: 1px solid var(--border, rgba(255,255,255,0.08));
+      border-radius: 14px;
+      padding: 20px 22px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .mr-card:hover { border-color: rgba(16,185,129,0.25); box-shadow: 0 4px 20px rgba(0,0,0,0.25); }
+    .mr-card.taken {
+      border-color: rgba(16,185,129,0.3);
+      background: linear-gradient(135deg, rgba(16,185,129,0.05), var(--bg-1, #0c1222));
+      opacity: 0.75;
+    }
+    .mr-card.taken::after {
+      content: '✓ Taken Today';
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #34d399;
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.35);
+      border-radius: 999px;
+      padding: 2px 10px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    @media (max-width: 640px) {
+      .mr-card { flex-direction: column; align-items: flex-start; }
+    }
+
+    .mr-card-left { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0; }
+    .mr-card-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      color: #34d399;
+    }
+    .mr-card-info { min-width: 0; }
+    .mr-card-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mr-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-2, #94a3b8);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .mr-card-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: var(--bg-2, #141c30);
+      border: 1px solid var(--border, rgba(255,255,255,0.07));
+      font-size: 11.5px;
+    }
+    .mr-card-chip i { color: #10b981; }
+
+    /* ── Card actions ── */
+    .mr-card-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .mr-btn-taken {
+      padding: 8px 16px;
+      background: rgba(16,185,129,0.12);
+      border: 1px solid rgba(16,185,129,0.35);
+      border-radius: 8px;
+      color: #34d399;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .mr-btn-taken:hover { background: rgba(16,185,129,0.25); }
+    .mr-btn-taken:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .mr-btn-delete {
+      padding: 8px 14px;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 8px;
+      color: #f87171;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .mr-btn-delete:hover { background: rgba(239,68,68,0.22); }
+
+    /* ── Summary stats row ── */
+    .mr-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .mr-stat-card {
+      background: var(--bg-1, #0c1222);
+      border: 1px solid var(--border, rgba(255,255,255,0.08));
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .mr-stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .mr-stat-num {
+      font-size: 22px;
+      font-weight: 900;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.1;
+      color: #fff;
+    }
+    .mr-stat-lbl {
+      font-size: 11px;
+      color: var(--text-2, #94a3b8);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 3px;
+    }
+
+    /* ── Toast ── */
+    .mr-toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .mr-toast {
+      background: #1e2d40;
+      border: 1px solid rgba(16,185,129,0.35);
+      border-radius: 10px;
+      padding: 12px 18px;
+      color: #e2e8f0;
+      font-size: 13.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      animation: toastIn 0.3s ease forwards;
+      max-width: 320px;
+    }
+    .mr-toast i { color: #34d399; }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── @media print ── */
+    @media print {
+      /* Hide everything except the reminders list */
+      nav, .mr-header, .mr-badge, .mr-disclaimer, .mr-form-card,
+      .mr-list-header .mr-print-btn, .mr-notif-btn, .mr-notif-status,
+      .mr-btn-taken, .mr-btn-delete, .mr-card-actions,
+      .mr-toast-container, footer, .fab-stack, .chat-panel,
+      .cmdk-overlay, .preloader, .grain, .scroll-progress, .cursor-ring,
+      .mr-stats {
+        display: none !important;
+      }
+
+      body {
+        background: #fff !important;
+        color: #111 !important;
+      }
+
+      .mr-container {
+        padding: 20px !important;
+        max-width: 100% !important;
+      }
+
+      .mr-card {
+        border: 1px solid #ccc !important;
+        background: #fff !important;
+        margin-bottom: 12px !important;
+        page-break-inside: avoid;
+      }
+
+      .mr-card-name, .mr-card-meta, .mr-card-chip {
+        color: #111 !important;
+        background: #f4f4f4 !important;
+        border-color: #ccc !important;
+      }
+
+      .mr-card::after {
+        color: #10b981 !important;
+      }
+
+      .mr-list-title {
+        color: #111 !important;
+      }
+
+      .mr-count-badge {
+        background: #e8f5e9 !important;
+        color: #10b981 !important;
+        border-color: #ccc !important;
+      }
+
+      .print-only-title {
+        display: block !important;
+        font-size: 20px;
+        font-weight: 900;
+        color: #111;
+        margin-bottom: 6px;
+      }
+    }
+
+    .print-only-title {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Preloader (handled by app.js) -->
+<div class="preloader" id="preloader">
+  <div class="pl-glow pl-glow-1"></div>
+  <div class="pl-glow pl-glow-2"></div>
+  <div class="pl-content">
+    <div class="pl-logo">
+      <div class="pl-icon-wrap">
+        <i class="fas fa-bell pl-icon"></i>
+        <span class="pl-ring"></span>
+      </div>
+      <div class="pl-name">Medicine Reminders</div>
+    </div>
+    <div class="pl-progress">
+      <div class="pl-bar-track"><div class="pl-bar" id="plBar"></div></div>
+      <div class="pl-text">LOADING… <span id="plPct">0</span>%</div>
+    </div>
+  </div>
+</div>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<!-- ══════════════════════════════════════
+     NAV
+════════════════════════════════════════ -->
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-mortar-pestle"></i></span>
+    <span class="logo-text">Decode Forest <span class="logo-accent">Pharmacy</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="generic-finder.html"><i class="fas fa-pills" style="color:var(--accent,#10b981)"></i> Generic Finder</a>
+    <a href="interaction-checker.html"><i class="fas fa-triangle-exclamation" style="color:var(--accent,#10b981)"></i> Drug Interactions</a>
+    <a href="prescription-ocr.html"><i class="fas fa-file-prescription" style="color:var(--accent,#10b981)"></i> Prescription OCR</a>
+    <a href="hospital-finder.html"><i class="fas fa-hospital" style="color:var(--accent,#10b981)"></i> Hospital Radar</a>
+    <a href="symptom-checker.html"><i class="fas fa-stethoscope" style="color:var(--accent,#10b981)"></i> Symptom Checker</a>
+    <a href="medicine-reminder.html" class="active"><i class="fas fa-bell" style="color:var(--accent,#10b981)"></i> Med Reminders</a>
+  </div>
+  <div class="nav-right">
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
+    <a class="btn btn-ghost" href="/decode-forest-pharmacy/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-primary" href="index.html#contact"><i class="fas fa-envelope"></i> Contact</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════ -->
+<main class="mr-container" id="main-content">
+
+  <!-- Print-only heading -->
+  <div class="print-only-title">
+    Medicine Reminder Schedule — Decode Forest Pharmacy<br>
+    <small style="font-size:13px; font-weight:400; color:#555;">Printed on: <span id="printDate"></span></small>
+  </div>
+
+  <!-- Page header -->
+  <div class="mr-header">
+    <div class="mr-badge"><i class="fas fa-bell"></i> Medicine Reminder · Decode Forest Pharmacy</div>
+    <h1 class="mr-title">Medicine <span style="background:linear-gradient(135deg,#10b981,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Reminder</span></h1>
+    <p class="mr-sub">Add your medicines, set schedules, and never miss a dose. Your data stays private — all reminders are saved locally in your browser.</p>
+  </div>
+
+  <!-- Medical disclaimer -->
+  <div class="mr-disclaimer" role="note">
+    <i class="fas fa-triangle-exclamation"></i>
+    <span><strong>Reminder disclaimer:</strong> This tool helps you track self-prescribed doses and should not replace professional medical advice. Always follow your doctor's instructions. In an emergency, call <strong>108</strong>.</span>
+  </div>
+
+  <!-- Stats row -->
+  <div class="mr-stats" id="statsRow">
+    <div class="mr-stat-card">
+      <div class="mr-stat-icon" style="background:rgba(16,185,129,0.15); color:#10b981;"><i class="fas fa-capsules"></i></div>
+      <div>
+        <div class="mr-stat-num" id="statTotal">0</div>
+        <div class="mr-stat-lbl">Active Reminders</div>
+      </div>
+    </div>
+    <div class="mr-stat-card">
+      <div class="mr-stat-icon" style="background:rgba(52,211,153,0.15); color:#34d399;"><i class="fas fa-check-circle"></i></div>
+      <div>
+        <div class="mr-stat-num" id="statTaken">0</div>
+        <div class="mr-stat-lbl">Taken Today</div>
+      </div>
+    </div>
+    <div class="mr-stat-card">
+      <div class="mr-stat-icon" style="background:rgba(251,191,36,0.15); color:#fbbf24;"><i class="fas fa-clock"></i></div>
+      <div>
+        <div class="mr-stat-num" id="statPending">0</div>
+        <div class="mr-stat-lbl">Pending Today</div>
+      </div>
+    </div>
+    <div class="mr-stat-card">
+      <div class="mr-stat-icon" style="background:rgba(56,189,248,0.15); color:#38bdf8;"><i class="fas fa-bell"></i></div>
+      <div>
+        <div class="mr-stat-num" id="statNotif">—</div>
+        <div class="mr-stat-lbl">Notifications</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Add reminder form ── -->
+  <div class="mr-form-card">
+    <div class="mr-form-title">
+      <i class="fas fa-plus-circle" style="color:#10b981;"></i>
+      Add New Medicine Reminder
+    </div>
+
+    <form id="reminderForm" novalidate autocomplete="off">
+      <div class="mr-form-grid">
+
+        <!-- Medicine name -->
+        <div class="mr-form-field">
+          <label for="inpName">Medicine Name <span style="color:#f87171">*</span></label>
+          <input
+            type="text"
+            class="mr-input"
+            id="inpName"
+            placeholder="e.g. Metformin, Amlodipine"
+            aria-describedby="errName"
+          >
+          <div class="mr-field-error" id="errName" role="alert">
+            <i class="fas fa-circle-exclamation"></i> Medicine name is required.
+          </div>
+        </div>
+
+        <!-- Dose -->
+        <div class="mr-form-field">
+          <label for="inpDose">Dose <span style="color:#f87171">*</span></label>
+          <input
+            type="text"
+            class="mr-input"
+            id="inpDose"
+            placeholder="e.g. 500mg, 1 tablet"
+            aria-describedby="errDose"
+          >
+          <div class="mr-field-error" id="errDose" role="alert">
+            <i class="fas fa-circle-exclamation"></i> Dose is required.
+          </div>
+        </div>
+
+        <!-- Frequency -->
+        <div class="mr-form-field">
+          <label for="inpFrequency">Frequency <span style="color:#f87171">*</span></label>
+          <select
+            class="mr-input"
+            id="inpFrequency"
+            aria-describedby="errFrequency"
+          >
+            <option value="">-- Select --</option>
+            <option value="once">Once daily</option>
+            <option value="twice">Twice daily</option>
+            <option value="thrice">Thrice daily</option>
+            <option value="as_needed">As needed</option>
+          </select>
+          <div class="mr-field-error" id="errFrequency" role="alert">
+            <i class="fas fa-circle-exclamation"></i> Please select a frequency.
+          </div>
+        </div>
+
+        <!-- Time -->
+        <div class="mr-form-field">
+          <label for="inpTime">Time <span style="color:#f87171">*</span></label>
+          <input
+            type="time"
+            class="mr-input"
+            id="inpTime"
+            aria-describedby="errTime"
+          >
+          <div class="mr-field-error" id="errTime" role="alert">
+            <i class="fas fa-circle-exclamation"></i> Please set a reminder time.
+          </div>
+        </div>
+      </div>
+
+      <div class="mr-form-actions">
+        <button type="submit" class="mr-submit-btn" id="submitBtn">
+          <i class="fas fa-plus"></i> Add Reminder
+        </button>
+        <button type="button" class="mr-notif-btn" id="notifBtn">
+          <i class="fas fa-bell"></i> Enable Notifications
+        </button>
+        <span class="mr-notif-status" id="notifStatus">
+          <i class="fas fa-circle" style="font-size:8px;"></i>
+          Checking notification permission…
+        </span>
+      </div>
+    </form>
+  </div>
+
+  <!-- ── Reminders list ── -->
+  <div class="mr-list-header">
+    <div class="mr-list-title">
+      <i class="fas fa-calendar-check" style="color:#34d399;"></i>
+      Your Reminders
+      <span class="mr-count-badge" id="countBadge">0</span>
+    </div>
+    <button class="mr-print-btn" onclick="window.print()" type="button">
+      <i class="fas fa-print"></i> Print Schedule
+    </button>
+  </div>
+
+  <div id="remindersContainer" aria-live="polite" aria-label="Medicine reminders list">
+    <!-- Populated by JS -->
+  </div>
+
+</main>
+
+<!-- Toast container -->
+<div class="mr-toast-container" id="mrToastContainer"></div>
+
+<script src="app.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════════
+   MEDICINE REMINDER — Decode Forest Pharmacy
+   localStorage key: ss_pharmacy_reminders
+   Schema: { id, name, dose, frequency, time, takenDates[] }
+══════════════════════════════════════════════════════════════ */
+
+(function () {
+  'use strict';
+
+  var LS_KEY = 'ss_pharmacy_reminders';
+
+  /* ─── Utility: today as YYYY-MM-DD ─── */
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+
+  /* ─── Utility: toast ─── */
+  function showToast(msg, icon) {
+    var container = document.getElementById('mrToastContainer');
+    var toast = document.createElement('div');
+    toast.className = 'mr-toast';
+    toast.innerHTML = '<i class="fas fa-' + (icon || 'circle-check') + '"></i> ' + msg;
+    container.appendChild(toast);
+    setTimeout(function () {
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.4s ease';
+      setTimeout(function () { container.removeChild(toast); }, 500);
+    }, 3000);
+  }
+
+  /* ─────────────────────────────────────────
+     STORAGE FUNCTIONS
+  ───────────────────────────────────────── */
+
+  /**
+   * loadReminders() — Read the reminders array from localStorage.
+   * Returns an array (empty array on parse error or missing key).
+   */
+  function loadReminders() {
+    try {
+      var raw = localStorage.getItem(LS_KEY);
+      if (!raw) return [];
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.warn('ss_pharmacy_reminders parse error:', e);
+      return [];
+    }
+  }
+
+  /**
+   * saveRemindersToStorage(reminders) — Persist the full reminders array.
+   * Wraps setItem in try/catch to handle localStorage quota errors.
+   */
+  function saveRemindersToStorage(reminders) {
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify(reminders));
+    } catch (e) {
+      console.warn('localStorage quota exceeded:', e);
+    }
+  }
+
+  /**
+   * saveReminder(entry) — Append a new reminder entry and persist.
+   * @param {object} entry - { id, name, dose, frequency, time, takenDates }
+   */
+  function saveReminder(entry) {
+    var reminders = loadReminders();
+    reminders.push(entry);
+    saveRemindersToStorage(reminders);
+  }
+
+  /**
+   * deleteReminder(id) — Remove the entry with the given id and persist.
+   */
+  function deleteReminder(id) {
+    var reminders = loadReminders();
+    var updated = reminders.filter(function (r) { return r.id !== id; });
+    saveRemindersToStorage(updated);
+  }
+
+  /**
+   * markTaken(id) — Append today's ISO date to the entry's takenDates if not already present.
+   */
+  function markTaken(id) {
+    var reminders = loadReminders();
+    var today = todayISO();
+    var updated = reminders.map(function (r) {
+      if (r.id === id) {
+        var dates = r.takenDates || [];
+        if (!dates.includes(today)) {
+          dates = dates.concat([today]);
+        }
+        return Object.assign({}, r, { takenDates: dates });
+      }
+      return r;
+    });
+    saveRemindersToStorage(updated);
+  }
+
+  /* ─────────────────────────────────────────
+     NOTIFICATION API
+  ───────────────────────────────────────── */
+
+  function updateNotifStatus() {
+    var statusEl = document.getElementById('notifStatus');
+    var notifBtnEl = document.getElementById('notifBtn');
+
+    if (!('Notification' in window)) {
+      statusEl.innerHTML = '<i class="fas fa-circle" style="font-size:8px;color:#ef4444;"></i> Notifications not supported by this browser.';
+      if (notifBtnEl) notifBtnEl.style.display = 'none';
+      return;
+    }
+
+    var perm = Notification.permission;
+    if (perm === 'granted') {
+      statusEl.innerHTML = '<i class="fas fa-circle" style="font-size:8px;color:#34d399;"></i> Notifications are <strong style="color:#34d399;">enabled</strong>.';
+      document.getElementById('statNotif').textContent = 'On';
+      if (notifBtnEl) notifBtnEl.style.display = 'none';
+    } else if (perm === 'denied') {
+      statusEl.innerHTML = '<i class="fas fa-circle" style="font-size:8px;color:#f87171;"></i> Notifications blocked — enable in browser settings.';
+      document.getElementById('statNotif').textContent = 'Off';
+      if (notifBtnEl) notifBtnEl.style.display = 'none';
+    } else {
+      statusEl.innerHTML = '<i class="fas fa-circle" style="font-size:8px;color:#fbbf24;"></i> Notifications not yet allowed.';
+      document.getElementById('statNotif').textContent = 'Off';
+    }
+  }
+
+  /**
+   * requestNotificationPermission() — Ask the user for permission and update UI.
+   */
+  function requestNotificationPermission(callback) {
+    if (!('Notification' in window)) {
+      if (callback) callback(false);
+      return;
+    }
+    Notification.requestPermission().then(function (perm) {
+      updateNotifStatus();
+      if (callback) callback(perm === 'granted');
+    });
+  }
+
+  /**
+   * scheduleNotification(entry) — Schedule a browser notification at the reminder's next
+   * occurrence using setTimeout. If today's time has already passed, schedule for tomorrow.
+   */
+  function scheduleNotification(entry) {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+    var now = new Date();
+    var parts = entry.time.split(':');
+    var targetHour = parseInt(parts[0], 10);
+    var targetMin = parseInt(parts[1], 10);
+
+    var target = new Date();
+    target.setHours(targetHour, targetMin, 0, 0);
+
+    if (target <= now) {
+      // Already passed today — schedule for tomorrow
+      target.setDate(target.getDate() + 1);
+    }
+
+    var delay = target.getTime() - now.getTime();
+
+    setTimeout(function () {
+      try {
+        var n = new Notification('Medicine Reminder — ' + entry.name, {
+          body: 'Time to take ' + entry.dose + ' of ' + entry.name + ' (' + entry.frequency + ').',
+          icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E💊%3C/text%3E%3C/svg%3E",
+          tag: 'reminder-' + entry.id,
+        });
+        // Auto-close after 10s
+        setTimeout(function () { n.close(); }, 10000);
+      } catch (e) {
+        console.warn('Notification error:', e);
+      }
+    }, delay);
+  }
+
+  /**
+   * scheduleAllNotifications() — Re-schedule notifications for all current reminders.
+   */
+  function scheduleAllNotifications() {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    loadReminders().forEach(function (r) { scheduleNotification(r); });
+  }
+
+  /* ─────────────────────────────────────────
+     RENDER
+  ───────────────────────────────────────── */
+
+  var FREQ_LABELS = {
+    once: 'Once daily',
+    twice: 'Twice daily',
+    thrice: 'Thrice daily',
+    as_needed: 'As needed'
+  };
+
+  function isTakenToday(entry) {
+    var today = todayISO();
+    return Array.isArray(entry.takenDates) && entry.takenDates.includes(today);
+  }
+
+  /**
+   * renderCard(entry) — Create a DOM element for a reminder card.
+   */
+  function renderCard(entry) {
+    var taken = isTakenToday(entry);
+    var card = document.createElement('div');
+    card.className = 'mr-card' + (taken ? ' taken' : '');
+    card.id = 'card-' + entry.id;
+    card.setAttribute('data-id', entry.id);
+
+    // Format time to 12h
+    var timeParts = entry.time.split(':');
+    var hours = parseInt(timeParts[0], 10);
+    var mins = timeParts[1];
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    var h12 = hours % 12 || 12;
+    var displayTime = h12 + ':' + mins + ' ' + ampm;
+
+    card.innerHTML =
+      '<div class="mr-card-left">' +
+        '<div class="mr-card-icon"><i class="fas fa-capsules"></i></div>' +
+        '<div class="mr-card-info">' +
+          '<div class="mr-card-name">' + escapeHtml(entry.name) + '</div>' +
+          '<div class="mr-card-meta">' +
+            '<span class="mr-card-chip"><i class="fas fa-prescription-bottle-medical"></i>' + escapeHtml(entry.dose) + '</span>' +
+            '<span class="mr-card-chip"><i class="fas fa-repeat"></i>' + (FREQ_LABELS[entry.frequency] || entry.frequency) + '</span>' +
+            '<span class="mr-card-chip"><i class="fas fa-clock"></i>' + displayTime + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="mr-card-actions">' +
+        '<button class="mr-btn-taken" data-id="' + entry.id + '"' + (taken ? ' disabled aria-disabled="true"' : '') + '>' +
+          '<i class="fas fa-check"></i>' + (taken ? 'Taken' : 'Mark as Taken') +
+        '</button>' +
+        '<button class="mr-btn-delete" data-id="' + entry.id + '" aria-label="Delete reminder for ' + escapeHtml(entry.name) + '">' +
+          '<i class="fas fa-trash"></i> Delete' +
+        '</button>' +
+      '</div>';
+
+    // "Mark as Taken" handler
+    card.querySelector('.mr-btn-taken').addEventListener('click', function () {
+      var id = this.getAttribute('data-id');
+      markTaken(id);
+      var cardEl = document.getElementById('card-' + id);
+      if (cardEl) {
+        cardEl.classList.add('taken');
+        var btn = cardEl.querySelector('.mr-btn-taken');
+        if (btn) {
+          btn.disabled = true;
+          btn.setAttribute('aria-disabled', 'true');
+          btn.innerHTML = '<i class="fas fa-check"></i> Taken';
+        }
+      }
+      updateStats();
+      showToast(escapeHtml(entry.name) + ' marked as taken today.', 'check-circle');
+    });
+
+    // "Delete" handler
+    card.querySelector('.mr-btn-delete').addEventListener('click', function () {
+      var id = this.getAttribute('data-id');
+      if (!confirm('Delete reminder for ' + entry.name + '?')) return;
+      deleteReminder(id);
+      var cardEl = document.getElementById('card-' + id);
+      if (cardEl) {
+        cardEl.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        cardEl.style.opacity = '0';
+        cardEl.style.transform = 'translateX(20px)';
+        setTimeout(function () {
+          if (cardEl.parentNode) cardEl.parentNode.removeChild(cardEl);
+          renderEmptyIfNeeded();
+          updateStats();
+        }, 320);
+      }
+      showToast('Reminder for ' + escapeHtml(entry.name) + ' deleted.', 'trash');
+    });
+
+    return card;
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  /**
+   * renderEmptyIfNeeded() — Show empty state if container is empty.
+   */
+  function renderEmptyIfNeeded() {
+    var container = document.getElementById('remindersContainer');
+    var cards = container.querySelectorAll('.mr-card');
+    if (cards.length === 0) {
+      container.innerHTML =
+        '<div class="mr-empty">' +
+          '<div class="mr-empty-icon"><i class="fas fa-bell-slash"></i></div>' +
+          '<h3>No reminders yet</h3>' +
+          '<p>Add your first medicine reminder using the form above. Your schedule will appear here.</p>' +
+        '</div>';
+    }
+  }
+
+  /**
+   * updateStats() — Recalculate and update the stat counters.
+   */
+  function updateStats() {
+    var reminders = loadReminders();
+    var total = reminders.length;
+    var takenCount = reminders.filter(isTakenToday).length;
+    var pending = total - takenCount;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statTaken').textContent = takenCount;
+    document.getElementById('statPending').textContent = pending;
+    document.getElementById('countBadge').textContent = total;
+
+    // Print date
+    var printDate = document.getElementById('printDate');
+    if (printDate) {
+      var now = new Date();
+      printDate.textContent = now.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) +
+        ' at ' + now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    }
+  }
+
+  /**
+   * renderAllReminders() — Clear the container and re-render every saved reminder.
+   */
+  function renderAllReminders() {
+    var container = document.getElementById('remindersContainer');
+    container.innerHTML = '';
+    var reminders = loadReminders();
+    if (reminders.length === 0) {
+      renderEmptyIfNeeded();
+    } else {
+      reminders.forEach(function (entry) {
+        container.appendChild(renderCard(entry));
+      });
+    }
+    updateStats();
+  }
+
+  /* ─────────────────────────────────────────
+     FORM VALIDATION & SUBMIT
+  ───────────────────────────────────────── */
+
+  function setFieldError(fieldId, errId, show) {
+    var field = document.getElementById(fieldId);
+    var err = document.getElementById(errId);
+    if (!field || !err) return;
+    if (show) {
+      field.classList.add('error');
+      err.classList.add('visible');
+    } else {
+      field.classList.remove('error');
+      err.classList.remove('visible');
+    }
+  }
+
+  function clearAllErrors() {
+    ['inpName', 'inpDose', 'inpFrequency', 'inpTime'].forEach(function (id) {
+      var field = document.getElementById(id);
+      if (field) field.classList.remove('error');
+    });
+    ['errName', 'errDose', 'errFrequency', 'errTime'].forEach(function (id) {
+      var err = document.getElementById(id);
+      if (err) err.classList.remove('visible');
+    });
+  }
+
+  /**
+   * handleFormSubmit(e) — Validate all fields and either show errors or save the reminder.
+   */
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    clearAllErrors();
+
+    var name = document.getElementById('inpName').value.trim();
+    var dose = document.getElementById('inpDose').value.trim();
+    var frequency = document.getElementById('inpFrequency').value;
+    var time = document.getElementById('inpTime').value;
+
+    var valid = true;
+    if (!name) { setFieldError('inpName', 'errName', true); valid = false; }
+    if (!dose) { setFieldError('inpDose', 'errDose', true); valid = false; }
+    if (!frequency) { setFieldError('inpFrequency', 'errFrequency', true); valid = false; }
+    if (!time) { setFieldError('inpTime', 'errTime', true); valid = false; }
+
+    if (!valid) return;
+
+    // Generate ID using crypto.randomUUID if available, else fallback
+    var id;
+    try {
+      id = crypto.randomUUID();
+    } catch (_) {
+      id = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+    }
+
+    var entry = {
+      id: id,
+      name: name,
+      dose: dose,
+      frequency: frequency,
+      time: time,
+      takenDates: []
+    };
+
+    // First save — request notification permission
+    var firstSave = loadReminders().length === 0;
+    if (firstSave && 'Notification' in window && Notification.permission === 'default') {
+      requestNotificationPermission(function (granted) {
+        if (granted) {
+          scheduleNotification(entry);
+          showToast('Notification scheduled for ' + escapeHtml(entry.name) + '.', 'bell');
+        }
+        commitSave(entry);
+      });
+    } else {
+      commitSave(entry);
+      scheduleNotification(entry);
+    }
+  }
+
+  function commitSave(entry) {
+    saveReminder(entry);
+
+    // Re-render the list
+    var container = document.getElementById('remindersContainer');
+    // Remove empty state if present
+    var emptyEl = container.querySelector('.mr-empty');
+    if (emptyEl) container.removeChild(emptyEl);
+
+    var card = renderCard(entry);
+    // Brief entrance animation
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(-10px)';
+    card.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+    container.prepend(card);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        card.style.opacity = '';
+        card.style.transform = '';
+      });
+    });
+
+    updateStats();
+
+    // Reset form
+    document.getElementById('reminderForm').reset();
+    clearAllErrors();
+
+    showToast(escapeHtml(entry.name) + ' reminder added!', 'circle-check');
+  }
+
+  /* ─────────────────────────────────────────
+     INIT
+  ───────────────────────────────────────── */
+
+  function init() {
+    // Wire form
+    var form = document.getElementById('reminderForm');
+    if (form) form.addEventListener('submit', handleFormSubmit);
+
+    // Clear errors on input
+    ['inpName', 'inpDose', 'inpFrequency', 'inpTime'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', function () {
+          this.classList.remove('error');
+          var errId = 'err' + id.replace('inp', '');
+          var errEl = document.getElementById(errId);
+          if (errEl) errEl.classList.remove('visible');
+        });
+        el.addEventListener('change', function () {
+          this.classList.remove('error');
+          var errId = 'err' + id.replace('inp', '');
+          var errEl = document.getElementById(errId);
+          if (errEl) errEl.classList.remove('visible');
+        });
+      }
+    });
+
+    // Enable notifications button
+    var notifBtn = document.getElementById('notifBtn');
+    if (notifBtn) {
+      notifBtn.addEventListener('click', function () {
+        requestNotificationPermission(function (granted) {
+          if (granted) {
+            scheduleAllNotifications();
+            showToast('Notifications enabled. Reminders will alert you on time.', 'bell');
+          }
+        });
+      });
+    }
+
+    // Load and render saved reminders
+    renderAllReminders();
+
+    // Update notification status indicator
+    updateNotifStatus();
+
+    // Re-schedule notifications for existing reminders (if permission already granted)
+    scheduleAllNotifications();
+  }
+
+  // Run after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+</body>
+</html>
