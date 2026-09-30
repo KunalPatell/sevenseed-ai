@@ -24,7 +24,7 @@ for root, dirs, files in os.walk(SITES_DIR):
         hrefs = re.findall(r'href=["\']([^"\']+)["\']', content)
         for h in hrefs:
             h = h.strip()
-            if not h or h.startswith("#") or h.startswith("javascript:") or h.startswith("mailto:") or h.startswith("tel:") or h.startswith("data:"):
+            if not h or h.startswith("#") or h.startswith("javascript:") or h.startswith("mailto:") or h.startswith("tel:") or h.startswith("data:") or h.startswith("${"):
                 continue
             if h.startswith("http://") or h.startswith("https://"):
                 continue
