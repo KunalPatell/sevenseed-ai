@@ -857,7 +857,7 @@
     function copyTerminal() {
       const text = document.getElementById('terminalBody').innerText;
       navigator.clipboard.writeText(text).then(() => {
-        const btn = document.querySelector('.term-btn:last-child');
+        const btn = document.querySelector('.term-btn[onclick="copyTerminal()"]');
         btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
         setTimeout(() => { btn.innerHTML = '<i class="far fa-copy"></i> Copy'; }, 1500);
       });

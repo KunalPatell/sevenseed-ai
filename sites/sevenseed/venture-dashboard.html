@@ -834,9 +834,14 @@
       if (!section) return;
       if (!recents.length) { section.style.display = 'none'; return; }
       section.style.display = 'block';
+      // Store recents in a temporary global for onclick access
+      window._recentsMap = {};
+      recents.forEach(function (v) { window._recentsMap[v.id] = v; });
       section.innerHTML = '<h3 style="font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px"><i class="fas fa-clock-rotate-left" style="color:#10b981"></i> Recently Visited</h3>' +
         '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">' +
-        recents.map(v => '<a href="' + v.url + '" onclick="pushRecent(' + JSON.stringify(v).replace(/"/g, "'") + ')" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:12px;text-decoration:none;color:#e2e8f0;font-size:13px;font-weight:600"><span style="font-size:20px">' + v.emoji + '</span>' + v.name + '</a>').join('') +
+        recents.map(function (v) {
+          return '<a href="' + v.url + '" onclick="pushRecent(window._recentsMap[\'' + v.id + '\'])" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:12px;text-decoration:none;color:#e2e8f0;font-size:13px;font-weight:600"><span style="font-size:20px">' + (v.emoji || '🌱') + '</span>' + v.name + '</a>';
+        }).join('') +
         '</div>';
     }
 

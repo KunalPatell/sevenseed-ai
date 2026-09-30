@@ -1363,8 +1363,14 @@
       if (quizState.wrongTopics.length) {
         const wt = document.getElementById('weakTopics');
         wt.style.display = 'block';
-        document.getElementById('weakTopicsList').innerHTML = quizState.wrongAnswerDetails.map(d =>
-          `<div class="weak-topic-item"><i class="fas fa-exclamation-circle"></i><span style="flex:1">${d.questionText.substring(0, 50)}…</span><button class="explain-btn" onclick="explainAnswer(${JSON.stringify(d.questionText)}, ${JSON.stringify(d.wrongChoice)})">Explain this</button></div>`).join('');
+        document.getElementById('weakTopicsList').innerHTML = quizState.wrongAnswerDetails.map(d => {
+          const detail = d || {};
+          if (!detail.questionText) return '';
+          const escapedQ = detail.questionText.replace(/"/g, '&quot;').replace(/'/g, "\\'");
+          const escapedA = detail.wrongChoice.replace(/"/g, '&quot;').replace(/'/g, "\\'");
+          const explainBtn = '<button class="explain-btn" onclick="explainAnswer(\'' + escapedQ + '\',\'' + escapedA + '\')">Explain this</button>';
+          return `<div class="weak-topic-item"><i class="fas fa-exclamation-circle"></i><span style="flex:1">${detail.questionText.substring(0, 50)}…</span>${explainBtn}</div>`;
+        }).join('');
       }
       results.scrollIntoView({ behavior: 'smooth' });
     }

@@ -1,0 +1,861 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create `sites/decode-forest-pharmacy/symptom-checker.html` with full triage engine": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571310167
+      },
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571329033
+      },
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790572142389
+      }
+    ],
+    "1.3 Register nav link in `site_builder/pharmacy_builder.py`": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571311077
+      },
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790572484978
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790574748260
+      }
+    ],
+    "2.1 Create/replace `sites/decode-forest-pharmacy/medicine-reminder.html` with full reminder system": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571311456
+      },
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571334128
+      },
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790572454655
+      }
+    ],
+    "2.3 Register nav link in `site_builder/pharmacy_builder.py`": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571311774
+      },
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790572492325
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790574754079
+      }
+    ],
+    "3. Checkpoint — Decode Forest Pharmacy pages complete": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571312070
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790575106973
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790575113413
+      }
+    ],
+    "4.1 Create `sites/trust/donation-ledger.html` with animated ledger": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571312401
+      },
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571339584
+      },
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790572465056
+      }
+    ],
+    "4.3 Register nav link in `site_builder/trust_builder.py`": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571312638
+      },
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790572501009
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790574759558
+      }
+    ],
+    "5.1 Create `sites/trust/volunteer-portal.html` with registration and matching system": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571312795
+      },
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571344741
+      },
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790572473357
+      }
+    ],
+    "5.3 Register nav link in `site_builder/trust_builder.py`": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571313104
+      },
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790572506696
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790574766305
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790574779663
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790574785726
+      }
+    ],
+    "6. Checkpoint — AVP Charitable Trust pages complete": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571313251
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790575118079
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790575123019
+      }
+    ],
+    "7.1 Create complete `sites/comonk/salary-insights.html` replacing the existing stub": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571313376
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790575144578
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790577302166
+      }
+    ],
+    "7.2 Register updated nav link in `site_builder/comonk_builder.py`": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571313563
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790578840301
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579809569
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579829658
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580942658
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580969249
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790581862346
+      }
+    ],
+    "8.1 Create `sites/comonk/resume-scorer.html` with full ATS analysis engine": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571313709
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790575151110
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790577309621
+      }
+    ],
+    "8.3 Register nav link in `site_builder/comonk_builder.py`": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571313864
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790578862185
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579810180
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579836052
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580943437
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580975293
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790581883869
+      }
+    ],
+    "9. Checkpoint — Comonk AI pages complete": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571314019
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579810492
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580943634
+      },
+      {
+        "executionId": "7c5390a1-6422-4844-8822-d6002a07bdc5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790588070537
+      },
+      {
+        "executionId": "7c5390a1-6422-4844-8822-d6002a07bdc5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790588078696
+      }
+    ],
+    "10.1 Add localStorage chat history persistence and restoration": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571314183
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790575158410
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790577945939
+      }
+    ],
+    "10.3 Add \"Explain this answer\" button to quiz results and topic tracker panel": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571314338
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790578871036
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579810698
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579843280
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580943837
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580982270
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790581891473
+      }
+    ],
+    "10.5 Add keyboard shortcuts": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571314523
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579811009
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580159045
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580944192
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580987953
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790581900807
+      }
+    ],
+    "11.1 Add Wishlist save/load and price-drop alert opt-in": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571314705
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790575169731
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790578810018
+      }
+    ],
+    "11.3 Animate SVG trend chart": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571314859
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579811304
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580225367
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580944632
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580994152
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790581918730
+      }
+    ],
+    "12.1 Add typewriter output streaming": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571315022
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790575177676
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790578832750
+      }
+    ],
+    "12.2 Add \"Export as Markdown\" download and agent performance stats panel": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571315170
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790578895566
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579811471
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580945920
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790581926414
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582236951
+      }
+    ],
+    "12.4 Add Ctrl+Enter keyboard shortcut": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571315389
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579811649
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580946187
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582244321
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582253400
+      }
+    ],
+    "13. Checkpoint — Improvements to existing pages (part 1) complete": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571315526
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579811855
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580946454
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582788679
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582796709
+      }
+    ],
+    "14.1 Add share-report URL hash encoding and scan history timeline": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571315673
+      },
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790578943486
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579812028
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580947397
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582571639
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582579261
+      }
+    ],
+    "14.3 Add sample image gallery to empty state": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571315954
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579812221
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580950738
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582587147
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582595390
+      }
+    ],
+    "15.1 Add search/filter, ecosystem health gauge, and recently visited section": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571316420
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579812370
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580954637
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582603499
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582779172
+      }
+    ],
+    "16. Checkpoint — Improvements to existing pages (part 2) complete": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571316670
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579812603
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580955161
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582802942
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582809855
+      }
+    ],
+    "17.1 Write the cold-start banner inline script snippet": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571316989
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579812742
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580956347
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582818987
+      },
+      {
+        "executionId": "7c5390a1-6422-4844-8822-d6002a07bdc5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790588121826
+      },
+      {
+        "executionId": "b80bf614-4747-4d63-b37a-e64c9a215980",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790589757296
+      },
+      {
+        "executionId": "b80bf614-4747-4d63-b37a-e64c9a215980",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790589779093
+      },
+      {
+        "executionId": "b80bf614-4747-4d63-b37a-e64c9a215980",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790590115150
+      }
+    ],
+    "17.3 Inject cold-start banner script into all 8 venture app/index.html files": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571317120
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579812891
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580958199
+      },
+      {
+        "executionId": "b80bf614-4747-4d63-b37a-e64c9a215980",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790589766139
+      },
+      {
+        "executionId": "b80bf614-4747-4d63-b37a-e64c9a215980",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790590131293
+      },
+      {
+        "executionId": "b80bf614-4747-4d63-b37a-e64c9a215980",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790590164060
+      }
+    ],
+    "18. Final checkpoint — Ensure all tests pass": [
+      {
+        "executionId": "c232e6fa-e048-4668-b2de-6ad970f9e0b2",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790571317302
+      },
+      {
+        "executionId": "77e03b88-5d72-41a6-ab23-9d7ff85bfcf5",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790579813100
+      },
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790580959745
+      },
+      {
+        "executionId": "b80bf614-4747-4d63-b37a-e64c9a215980",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790589769594
+      },
+      {
+        "executionId": "b80bf614-4747-4d63-b37a-e64c9a215980",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790590214220
+      },
+      {
+        "executionId": "b80bf614-4747-4d63-b37a-e64c9a215980",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790590220504
+      }
+    ],
+    "1. Implement Symptom Checker page (Decode Forest Pharmacy)": [
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790574748566
+      }
+    ],
+    "2. Implement Medicine Reminder page (Decode Forest Pharmacy)": [
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790574754298
+      }
+    ],
+    "4. Implement Donation Ledger page (AVP Charitable Trust)": [
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790574759794
+      }
+    ],
+    "5. Implement Volunteer Portal page (AVP Charitable Trust)": [
+      {
+        "executionId": "3cd5ed3b-52e7-4166-b1c3-9d4e564b34d7",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790574786136
+      }
+    ],
+    "7. Build Salary Insights page (Comonk AI) — full replacement": [
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790581877575
+      }
+    ],
+    "8. Build Resume Scorer page (Comonk AI)": [
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790581884615
+      }
+    ],
+    "10. Improve Gyan AI Tutor (avpu/gyan-ai-tutor.html)": [
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790581903220
+      }
+    ],
+    "11. Improve Smart Comparator (avp-emart/smart-compare.html)": [
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790581919003
+      }
+    ],
+    "12. Improve Agent Dispatch Console (sevenforce/agent-dispatch.html)": [
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582258476
+      }
+    ],
+    "14. Improve Defect Scanner (breakdown/defect-scanner.html)": [
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582595769
+      }
+    ],
+    "15. Improve Venture Dashboard (sevenseed/venture-dashboard.html)": [
+      {
+        "executionId": "0b5fdaca-f159-499e-aac4-690607cf0ba8",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790582780342
+      }
+    ],
+    "17. Implement Cold-Start Banner Component and apply to all ventures": [
+      {
+        "executionId": "b80bf614-4747-4d63-b37a-e64c9a215980",
+        "chatSessionId": "sess_18e27313-49b5-4fa4-9059-d9f4b03b765d",
+        "timestamp": 1790590204261
+      }
+    ]
+  }
+}

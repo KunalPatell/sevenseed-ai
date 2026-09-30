@@ -1,1290 +1,479 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Salary Intelligence — India Tech Compensation Benchmark | Comonk AI</title>
-  <meta name="description"
-    content="Query salary ranges by role, city, and experience level. P10/P50/P90 percentiles, company pay bands, skills premiums, and AI negotiation scripts — 100% free.">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Salary Intelligence — Comonk AI">
-  <meta property="og:description"
-    content="India tech salary benchmarks by role, city, and YoE. Negotiation scripts, company pay bands, and skills premiums — all free.">
-  <meta property="og:url" content="https://sevenseed.onrender.com/comonk/salary-insights.html">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Salary Intelligence — Comonk AI">
-  <meta name="twitter:description"
-    content="India tech salary benchmarks by role, city, and YoE. Negotiation scripts, company pay bands, and skills premiums — all free.">
-  <link rel="icon"
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🧠%3C/text%3E%3C/svg%3E">
-  <script>(function () { try { var t = localStorage.getItem('ss-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); document.documentElement.setAttribute('data-theme', t); } catch (e) { } })();</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Levels.fyi Real-Time Tech Compensation & Career Roadmaps — Comonk AI</title>
+  <meta name="description" content="Explore verified tech compensation percentiles in India (₹ LPA) & US ($), 90-day learning roadmaps, and AI salary negotiation counter-offer engine. 100% Free with BYOK.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ── Sub-hero ─────────────────────────────────────────────── */
-    .sub-hero {
-      padding: calc(var(--nav-h, 72px) + 64px) 24px 52px;
-      text-align: center;
-      background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, .18), transparent 72%);
-    }
-
-    .sub-hero-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, .06);
-      border: 1px solid rgba(255, 255, 255, .12);
-      font-size: 13px;
-      margin-bottom: 16px;
-      color: var(--primary-l, #a5b4fc);
-    }
-
-    .sub-hero-title {
-      font-size: clamp(30px, 5vw, 52px);
-      font-weight: 800;
-      line-height: 1.12;
-      margin-bottom: 14px;
-      letter-spacing: -1.5px;
-    }
-
-    .sub-hero-sub {
-      font-size: 16px;
-      color: var(--text-2, #94a3b8);
-      max-width: 640px;
-      margin: 0 auto 32px;
-      line-height: 1.7;
-    }
-
-    /* ── Main container ───────────────────────────────────────── */
-    .si-wrap {
-      max-width: 1060px;
-      margin: 0 auto;
-      padding: 0 clamp(16px, 4vw, 40px) 80px;
-    }
-
-    /* ── Input card ───────────────────────────────────────────── */
-    .si-form-card {
-      background: rgba(15, 23, 42, .75);
-      border: 1px solid rgba(255, 255, 255, .1);
-      border-radius: 20px;
-      padding: 32px;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
-      margin-bottom: 40px;
-    }
-
-    .si-form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 18px;
-      align-items: end;
-    }
-
-    .si-fg {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .si-fg label {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-2, #94a3b8);
-      text-transform: uppercase;
-      letter-spacing: .7px;
-    }
-
-    .si-select {
-      width: 100%;
-      padding: 12px 16px;
-      background: rgba(2, 6, 23, .7);
-      border: 1px solid rgba(255, 255, 255, .15);
-      border-radius: 10px;
-      color: #fff;
-      font-family: inherit;
-      font-size: 14px;
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%239aa0b8'%3E%3Cpath d='M5.5 7.5l4.5 4.5 4.5-4.5' stroke='%239aa0b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 38px;
-      transition: border-color .2s, box-shadow .2s;
-    }
-
-    .si-select:focus {
-      outline: none;
-      border-color: #6366f1;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, .25);
-    }
-
-    .si-select option {
-      background: #0d0d1a;
-      color: #fff;
-    }
-
-    .si-btn {
-      padding: 13px 28px;
-      border-radius: 10px;
-      background: linear-gradient(120deg, #6366f1, #0ea5e9);
-      color: #fff;
-      font-weight: 700;
-      font-size: 15px;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      transition: all .25s;
-      white-space: nowrap;
-      width: 100%;
-      justify-content: center;
-    }
-
-    .si-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 32px rgba(99, 102, 241, .4);
-    }
-
-    .si-btn:disabled {
-      opacity: .55;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .si-err {
-      color: #f87171;
-      font-size: 13px;
-      font-weight: 600;
-      margin-top: -8px;
-      display: none;
-    }
-
-    .si-err.show {
-      display: block;
-    }
-
-    /* ── Results wrapper ──────────────────────────────────────── */
-    #si-results {
-      display: none;
-    }
-
-    #si-results.show {
-      display: block;
-    }
-
-    /* ── Section titles ───────────────────────────────────────── */
-    .si-section-head {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .si-section-head i {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
-      font-size: 16px;
-      color: #fff;
-      background: linear-gradient(135deg, #6366f1, #0ea5e9);
-      flex-shrink: 0;
-    }
-
-    .si-section-head h2 {
-      font-size: 20px;
-      font-weight: 800;
-      margin: 0;
-      letter-spacing: -.4px;
-    }
-
-    .si-section-head span {
-      font-size: 13px;
-      color: var(--text-2, #94a3b8);
-      margin-left: auto;
-    }
-
-    /* ── Percentile banner ────────────────────────────────────── */
-    .si-pct-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 36px;
-    }
-
-    .si-pct-card {
-      background: var(--bg-2, rgba(30, 41, 59, .8));
-      border: 1px solid var(--border, rgba(255, 255, 255, .1));
-      border-radius: 14px;
-      padding: 24px;
-      text-align: center;
-      transition: transform .2s;
-    }
-
-    .si-pct-card:hover {
-      transform: translateY(-3px);
-    }
-
-    .si-pct-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-2, #94a3b8);
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      margin-bottom: 8px;
-    }
-
-    .si-pct-value {
-      font-size: clamp(22px, 3vw, 32px);
-      font-weight: 900;
-      letter-spacing: -1px;
-      line-height: 1;
-    }
-
-    .si-pct-card.p10 .si-pct-value {
-      background: linear-gradient(120deg, #38bdf8, #818cf8);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .si-pct-card.p50 .si-pct-value {
-      background: linear-gradient(120deg, #6366f1, #8b5cf6);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-size: clamp(28px, 4vw, 40px);
-    }
-
-    .si-pct-card.p90 .si-pct-value {
-      background: linear-gradient(120deg, #a855f7, #ec4899);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .si-pct-sub {
-      font-size: 11.5px;
-      color: var(--text-3, #64748b);
-      margin-top: 6px;
-    }
-
-    /* ── Generic card wrapper ─────────────────────────────────── */
-    .si-card {
-      background: var(--bg-2, rgba(30, 41, 59, .8));
-      border: 1px solid var(--border, rgba(255, 255, 255, .1));
-      border-radius: 16px;
-      padding: 28px;
-      margin-bottom: 24px;
-    }
-
-    /* ── SVG charts ───────────────────────────────────────────── */
-    .si-svg-wrap {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .si-svg-wrap svg {
-      display: block;
-      min-width: 420px;
-    }
-
-    /* ── Skills table ─────────────────────────────────────────── */
-    .si-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .si-table th {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .7px;
-      color: var(--text-2, #94a3b8);
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border, rgba(255, 255, 255, .1));
-      text-align: left;
-    }
-
-    .si-table td {
-      padding: 12px 14px;
-      font-size: 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, .04);
-      vertical-align: middle;
-    }
-
-    .si-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .si-table tr:hover td {
-      background: rgba(255, 255, 255, .025);
-    }
-
-    .si-skill-bar-wrap {
-      background: rgba(255, 255, 255, .06);
-      border-radius: 4px;
-      height: 6px;
-      width: 140px;
-      overflow: hidden;
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .si-skill-bar {
-      height: 100%;
-      border-radius: 4px;
-      background: linear-gradient(90deg, #6366f1, #0ea5e9);
-    }
-
-    .si-premium-val {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      color: #4ade80;
-      font-size: 13px;
-    }
-
-    /* ── Negotiation script ───────────────────────────────────── */
-    .si-script-box {
-      background: rgba(2, 6, 23, .6);
-      border: 1px solid rgba(99, 102, 241, .3);
-      border-radius: 12px;
-      padding: 22px 24px;
-      font-size: 14.5px;
-      line-height: 1.8;
-      color: var(--text, #eeeef8);
-      white-space: pre-wrap;
-      font-family: inherit;
-    }
-
-    .si-script-highlight {
-      color: #7dd3fc;
-      font-weight: 700;
-    }
-
-    /* ── Print button bar ─────────────────────────────────────── */
-    .si-print-bar {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 28px;
-    }
-
-    .si-print-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border-radius: 9px;
-      border: 1px solid var(--border-hi, rgba(255, 255, 255, .2));
-      background: var(--bg-2, rgba(30, 41, 59, .8));
-      color: var(--text, #eeeef8);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all .2s;
-    }
-
-    .si-print-btn:hover {
-      border-color: rgba(99, 102, 241, .5);
-      color: #a5b4fc;
-    }
-
-    /* ── Legend for YoE chart ─────────────────────────────────── */
-    .si-legend {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-      font-size: 12px;
-      color: var(--text-2, #94a3b8);
-    }
-
-    .si-legend-dot {
-      display: inline-block;
-      width: 28px;
-      height: 3px;
-      border-radius: 2px;
-      margin-right: 6px;
-      vertical-align: middle;
-    }
-
-    /* ── Footer CTA strip ────────────────────────────────────── */
-    .si-footer-strip {
-      background: linear-gradient(120deg, rgba(99, 102, 241, .12), rgba(14, 165, 233, .08));
-      border: 1px solid rgba(99, 102, 241, .2);
-      border-radius: 16px;
-      padding: 32px;
-      text-align: center;
-      margin-top: 40px;
-    }
-
-    .si-footer-strip h3 {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .si-footer-strip p {
-      color: var(--text-2, #94a3b8);
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-
-    /* ── Print styles ─────────────────────────────────────────── */
-    @media print {
-      * {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      body {
-        background: #fff !important;
-        color: #111 !important;
-      }
-
-      .nav,
-      .preloader,
-      .grain,
-      .scroll-progress,
-      .cursor-ring,
-      .fab-stack,
-      .chat-panel,
-      .cmdk-overlay,
-      .sub-hero,
-      .si-form-card,
-      .si-print-bar,
-      .si-footer-strip,
-      footer,
-      .foot {
-        display: none !important;
-      }
-
-      #si-results {
-        display: block !important;
-      }
-
-      .si-wrap {
-        max-width: 100%;
-        padding: 20px;
-      }
-
-      .si-pct-card {
-        border: 1px solid #ccc !important;
-        background: #f9f9fb !important;
-      }
-
-      .si-pct-value {
-        -webkit-text-fill-color: #111 !important;
-        background: none !important;
-      }
-
-      .si-card {
-        background: #f9f9fb !important;
-        border: 1px solid #ccc !important;
-      }
-
-      .si-table th,
-      .si-table td {
-        color: #111 !important;
-      }
-
-      .si-script-box {
-        background: #f9f9fb !important;
-        border: 1px solid #ccc !important;
-        color: #111 !important;
-      }
-
-      .si-script-highlight {
-        color: #1d4ed8 !important;
-      }
-
-      .si-svg-wrap svg text {
-        fill: #111 !important;
-      }
-
-      .si-section-head i {
-        background: #6366f1 !important;
-      }
-    }
-
-    /* ── Responsive ───────────────────────────────────────────── */
-    @media (max-width: 640px) {
-      .si-pct-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .si-form-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    .sal-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
+    .sal-header { text-align: center; margin-bottom: 32px; }
+    .sal-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .sal-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+
+    /* BYOK Bar */
+    .byok-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.25); border-radius: 10px; padding: 12px 20px; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
+    .byok-status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #bae6fd; font-weight: 600; }
+    .byok-tag { background: rgba(56,189,248,0.2); color: #38bdf8; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+
+    /* Visual Banner */
+    .hero-banner-box { max-width: 1280px; margin: 0 auto 36px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(56,189,248,0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
+    .hero-banner-img { width: 100%; height: auto; max-height: 340px; object-fit: cover; display: block; }
+    .hero-banner-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(8,11,20,0.95) 100%); display: flex; align-items: flex-end; padding: 24px 32px; }
+    .hero-banner-caption { color: #fff; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+
+    /* AI Negotiation Tool Card */
+    .nego-tool-card { background: var(--bg-1); border: 1px solid #38bdf8; border-radius: var(--radius); padding: 32px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(56,189,248,0.1); }
+    .nego-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px; }
+    .nego-input { width: 100%; padding: 12px 14px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 8px; color: #fff; font-size: 13.5px; outline: none; box-sizing: border-box; }
+    .nego-input:focus { border-color: #38bdf8; }
+
+    .nego-output { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.7; color: #cbd5e1; min-height: 180px; white-space: pre-wrap; display: none; }
+
+    /* Interactive Filters */
+    .filter-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 32px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+    .select-group { display: flex; gap: 12px; flex-wrap: wrap; }
+    .custom-select { padding: 10px 16px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 8px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
+    .custom-select:focus { border-color: #38bdf8; }
+
+    /* Total Comp Card */
+    .tc-overview-card { background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(56,189,248,0.05)); border: 1px solid #38bdf8; border-radius: var(--radius); padding: 36px; margin-bottom: 32px; text-align: center; box-shadow: var(--shadow); }
+    .tc-label { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-2); margin-bottom: 6px; }
+    .tc-val { font-size: 56px; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: #fff; margin-bottom: 14px; }
+
+    .tc-breakdown-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; max-width: 800px; margin: 0 auto; }
+    .tc-sub-box { background: var(--bg-1); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .sub-lbl { font-size: 11px; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px; }
+    .sub-amt { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #38bdf8; }
+
+    /* Indian Tech Roles Grid */
+    .sec-title-wrap { text-align: center; margin: 48px 0 28px; }
+    .sec-title-wrap h2 { font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .sec-title-wrap p { color: var(--text-2); font-size: 15px; }
+
+    .careers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; margin-bottom: 48px; }
+    .career-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 26px; box-shadow: var(--shadow); display: flex; flex-direction: column; transition: transform 0.2s, border-color 0.2s; }
+    .career-card:hover { transform: translateY(-4px); border-color: rgba(56,189,248,0.5); }
+    
+    .c-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .c-icon { font-size: 28px; }
+    .c-demand { font-size: 11px; padding: 4px 10px; border-radius: 99px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); font-weight: 700; }
+    
+    .c-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .c-desc { font-size: 13px; color: var(--text-2); line-height: 1.55; margin-bottom: 16px; }
+
+    .c-salaries { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+    .sal-tier-row { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 6px; }
+    .sal-tier-row:last-child { margin-bottom: 0; }
+    .sal-tier-row span { color: var(--text-3); }
+    .sal-tier-row strong { color: #38bdf8; font-family: 'JetBrains Mono', monospace; }
+
+    .skill-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+    .sk-tag { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-2); }
+
+    /* Comparison Table */
+    .table-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; box-shadow: var(--shadow); margin-bottom: 40px; }
+    .sal-table { width: 100%; border-collapse: collapse; text-align: left; min-width: 800px; }
+    .sal-table th, .sal-table td { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .sal-table th { background: var(--bg-2); color: var(--text-2); font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .sal-table tr:hover td { background: var(--bg-2); }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal-box { background: var(--bg-1, #0f172a); border: 1px solid var(--border, #334155); border-radius: 16px; width: 100%; max-width: 520px; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
   </style>
 </head>
-
 <body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
-  <!-- Preloader -->
-  <div class="preloader" id="preloader">
-    <div class="pl-glow pl-glow-1"></div>
-    <div class="pl-glow pl-glow-2"></div>
-    <div class="pl-content">
-      <div class="pl-logo">
-        <div class="pl-icon-wrap"><i class="fas fa-brain pl-icon"></i><span class="pl-ring"></span></div>
-        <div class="pl-name">Comonk AI</div>
-      </div>
-      <div class="pl-progress">
-        <div class="pl-bar-track">
-          <div class="pl-bar" id="plBar"></div>
-        </div>
-        <div class="pl-text">LOADING SALARY DATA… <span id="plPct">0</span>%</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="grain" aria-hidden="true"></div>
-  <div class="scroll-progress" id="scrollProgress"></div>
-  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
-
-  <!-- Navigation -->
-  <nav class="nav" id="mainNav">
-    <a class="logo" href="index.html">
-      <span class="logo-icon"><i class="fas fa-brain"></i></span>
-      <span class="logo-text">Comonk <span class="logo-accent">AI</span></span>
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#38bdf8,#2563eb); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-brain"></i></span>
+      <span style="font-weight:700; font-size:18px;">Comonk AI</span>
     </a>
-    <div class="nav-links" id="navLinks">
-      <a href="index.html"><i class="fas fa-house" style="color:var(--primary-l,#a5b4fc)"></i> Home</a>
-      <a href="resume-analyzer.html"><i class="fas fa-file-lines" style="color:var(--primary-l,#a5b4fc)"></i> ATS
-        Optimizer</a>
-      <a href="interview-arena.html"><i class="fas fa-terminal" style="color:var(--primary-l,#a5b4fc)"></i> Mock
-        Interview</a>
-      <a href="salary-insights.html" class="active"><i class="fas fa-money-bill-trend-up"
-          style="color:var(--primary-l,#a5b4fc)"></i> Salary Intel</a>
-      <a href="resume-scorer.html"><i class="fas fa-chart-bar" style="color:var(--primary-l,#a5b4fc)"></i> Resume
-        Scorer</a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="resume-analyzer.html">ATS Resume Scorer</a>
+      <a href="interview-arena.html">Mock Interview Arena</a>
+      <a href="salary-insights.html" style="color:#38bdf8; font-weight:600;">Salary Insights</a>
+      <a href="marketing-examples.html">Marketing Gallery</a>
     </div>
-    <div class="nav-right">
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme"
-        title="Toggle theme"><i class="fas fa-moon"></i></button>
-      <a class="btn btn-ghost" href="app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
-      <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <button class="btn btn-ghost sm" onclick="openTokenModal()" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; border:1px solid rgba(56,189,248,0.3); color:#38bdf8;">
+        <i class="fas fa-key"></i> Self-API & Token
+      </button>
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <!-- Sub-hero -->
-  <header class="sub-hero">
-    <div class="sub-hero-pill"><i class="fas fa-chart-line"></i> <span>100% Free · India Tech Compensation
-        Intelligence</span></div>
-    <h1 class="sub-hero-title">Salary <span class="grad">Intelligence</span> &amp; Offer Benchmarking</h1>
-    <p class="sub-hero-sub">Query P10 / P50 / P90 salary ranges for any role, city, and experience band. Get company pay
-      breakdowns, skills premiums, a YoE growth curve, and a personalised negotiation script — all in seconds.</p>
-  </header>
-
-  <main class="si-wrap">
-
-    <!-- ── Input card ─────────────────────────────────────────── -->
-    <div class="si-form-card reveal">
-      <div class="si-form-grid">
-        <div class="si-fg">
-          <label for="si-role"><i class="fas fa-user-tie"></i> Role</label>
-          <select id="si-role" class="si-select" aria-label="Select role">
-            <option value="software-engineer">Software Engineer</option>
-            <option value="data-scientist">Data Scientist</option>
-            <option value="product-manager">Product Manager</option>
-            <option value="devops-engineer">DevOps Engineer</option>
-            <option value="ui-ux-designer">UI/UX Designer</option>
-          </select>
-        </div>
-        <div class="si-fg">
-          <label for="si-city"><i class="fas fa-location-dot"></i> City</label>
-          <select id="si-city" class="si-select" aria-label="Select city">
-            <option value="bangalore">Bangalore</option>
-            <option value="mumbai">Mumbai</option>
-            <option value="hyderabad">Hyderabad</option>
-            <option value="pune">Pune</option>
-          </select>
-        </div>
-        <div class="si-fg">
-          <label for="si-yoe"><i class="fas fa-clock-rotate-left"></i> Experience</label>
-          <select id="si-yoe" class="si-select" aria-label="Select years of experience">
-            <option value="0-2">0 – 2 Years (Fresher / Junior)</option>
-            <option value="3-5">3 – 5 Years (Mid-Level)</option>
-            <option value="6-10">6 – 10 Years (Senior)</option>
-          </select>
-        </div>
-        <div class="si-fg" style="justify-content:flex-end">
-          <button id="si-submit" class="si-btn" type="button" onclick="runInsights()">
-            <i class="fas fa-magnifying-glass-chart"></i> Get Insights
-          </button>
-          <div class="si-err" id="si-err" role="alert">Please select all fields before getting insights.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── Results section (hidden until query) ──────────────── -->
-    <div id="si-results" aria-live="polite">
-
-      <!-- Print bar -->
-      <div class="si-print-bar">
-        <button class="si-print-btn" type="button" onclick="window.print()">
-          <i class="fas fa-file-arrow-down"></i> Print / Export Results
-        </button>
-      </div>
-
-      <!-- Percentile cards -->
-      <div class="si-section-head">
-        <i class="fas fa-chart-bar" aria-hidden="true"></i>
-        <h2>Salary Range</h2>
-        <span id="si-range-label">— Select a combination above</span>
-      </div>
-      <div class="si-pct-grid" id="si-pct-grid">
-        <div class="si-pct-card p10">
-          <div class="si-pct-label">P10 · Entry Band</div>
-          <div class="si-pct-value" id="si-p10">—</div>
-          <div class="si-pct-sub">10th percentile</div>
-        </div>
-        <div class="si-pct-card p50">
-          <div class="si-pct-label">P50 · Median</div>
-          <div class="si-pct-value" id="si-p50">—</div>
-          <div class="si-pct-sub">Market midpoint</div>
-        </div>
-        <div class="si-pct-card p90">
-          <div class="si-pct-label">P90 · Top Band</div>
-          <div class="si-pct-value" id="si-p90">—</div>
-          <div class="si-pct-sub">90th percentile</div>
-        </div>
-      </div>
-
-      <!-- Company pay band SVG chart -->
-      <div class="si-card">
-        <div class="si-section-head" style="margin-bottom:16px">
-          <i class="fas fa-building" aria-hidden="true"></i>
-          <h2>Company Pay Bands</h2>
-          <span id="si-company-label"></span>
-        </div>
-        <div class="si-svg-wrap">
-          <svg id="si-company-svg" viewBox="0 0 740 260" width="740" height="260" aria-label="Company pay band chart">
-            <!-- injected by JS -->
-          </svg>
-        </div>
-      </div>
-
-      <!-- YoE curve SVG chart -->
-      <div class="si-card">
-        <div class="si-section-head" style="margin-bottom:12px">
-          <i class="fas fa-arrow-trend-up" aria-hidden="true"></i>
-          <h2>Salary Growth Curve (0 – 10 YoE)</h2>
-        </div>
-        <div class="si-legend" id="si-yoe-legend">
-          <span><span class="si-legend-dot" style="background:#38bdf8;display:inline-block"></span>P10 Band</span>
-          <span><span class="si-legend-dot" style="background:#6366f1;display:inline-block"></span>P50 Median</span>
-          <span><span class="si-legend-dot" style="background:#a855f7;display:inline-block"></span>P90 Band</span>
-        </div>
-        <div class="si-svg-wrap">
-          <svg id="si-yoe-svg" viewBox="0 0 740 260" width="740" height="260"
-            aria-label="Years of experience vs salary curve chart">
-            <!-- injected by JS -->
-          </svg>
-        </div>
-      </div>
-
-      <!-- Skills premium table -->
-      <div class="si-card">
-        <div class="si-section-head" style="margin-bottom:16px">
-          <i class="fas fa-code" aria-hidden="true"></i>
-          <h2>Skills-to-Salary Impact</h2>
-        </div>
-        <table class="si-table" id="si-skills-table">
-          <thead>
-            <tr>
-              <th scope="col">Skill</th>
-              <th scope="col">Annual Premium</th>
-              <th scope="col">Impact</th>
-            </tr>
-          </thead>
-          <tbody id="si-skills-tbody"><!-- injected by JS --></tbody>
-        </table>
-      </div>
-
-      <!-- Negotiation script -->
-      <div class="si-card">
-        <div class="si-section-head" style="margin-bottom:16px">
-          <i class="fas fa-handshake" aria-hidden="true"></i>
-          <h2>Negotiation Script</h2>
-        </div>
-        <div class="si-script-box" id="si-script-box" role="region" aria-label="Negotiation script">
-          <!-- injected by JS --></div>
-      </div>
-
-      <!-- Footer CTA -->
-      <div class="si-footer-strip">
-        <h3>Ready to land your offer?</h3>
-        <p>Practice your negotiation with Comonk's AI mock interview module — get scored, then go in confident.</p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-          <a class="btn btn-primary" href="interview-arena.html"><i class="fas fa-terminal"></i> Mock Interview</a>
-          <a class="btn btn-ghost" href="resume-analyzer.html"><i class="fas fa-file-lines"></i> ATS Optimizer</a>
-        </div>
-      </div>
-
-    </div><!-- /#si-results -->
-
-  </main>
-
-  <!-- Footer -->
-  <footer class="foot">
-    <div class="foot-grid">
-      <div class="foot-brand">
-        <a class="logo" href="index.html">
-          <span class="logo-icon"><i class="fas fa-brain"></i></span>
-          <span class="logo-text">Comonk <span class="logo-accent">AI</span></span>
-        </a>
-        <p>Free AI career intelligence for the Ahmedabad / Gandhinagar tech market — resume tailoring, AI autopilot,
-          mock interviews, salary benchmarks, and a full application tracker in one place.</p>
-        <div class="foot-social">
-          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="mailto:hello@comonk.ai" aria-label="Email"><i class="fas fa-envelope"></i></a>
-        </div>
-      </div>
-      <div class="foot-col">
-        <h5>Explore</h5>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="resume-analyzer.html">ATS Optimizer</a></li>
-          <li><a href="interview-arena.html">Mock Interview</a></li>
-          <li><span class="foot-current">Salary Intelligence</span></li>
-          <li><a href="resume-scorer.html">Resume Scorer</a></li>
-        </ul>
-      </div>
-      <div class="foot-col">
-        <h5>The AI Group</h5>
-        <ul>
-          <li><a href="../sevenseed/index.html">Sevenseed</a></li>
-          <li><a href="../sevenforce/index.html">Sevenforce</a></li>
-          <li><a href="../avpu/index.html">AVPU</a></li>
-          <li><a href="../decode-forest-pharmacy/index.html">Decode Forest Pharmacy</a></li>
-          <li><a href="../rakshak-ai/index.html">Rakshak AI Safety</a></li>
-        </ul>
-      </div>
-      <div class="foot-col">
-        <h5>Get in touch</h5>
-        <ul class="foot-contact">
-          <li><i class="fas fa-envelope"></i> hello@comonk.ai</li>
-          <li><i class="fas fa-phone"></i> +91 84908 61586</li>
-          <li><i class="fas fa-location-dot"></i> Ahmedabad, Gujarat, India</li>
-        </ul>
-      </div>
-    </div>
-    <div class="foot-bottom">
-      <span>© <span data-year></span> Comonk AI. All rights reserved.</span>
-      <span class="foot-venture"><i class="fas fa-seedling"></i> A Sevenseed AI venture</span>
-    </div>
-  </footer>
-
-  <div class="fab-stack">
-    <button class="fab" id="backToTop" type="button" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+<div class="sal-container">
+  <div class="sal-header">
+    <div class="sal-badge"><i class="fas fa-chart-bar"></i> Tech Compensation &amp; Counter-Offer Intelligence</div>
+    <h1 class="sal-title">Real-Time Tech Compensation &amp; Career Roadmaps</h1>
+    <p style="color:var(--text-2); max-width:740px; margin:0 auto;">Explore verified salary packages, stock grants (RSUs), ₹ LPA percentiles in India, and generate AI-negotiated counter-offers to unlock 20-40% higher packages.</p>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       DATA + ENGINE
-  ════════════════════════════════════════════════════════════════ -->
-  <script>
-    'use strict';
+  <!-- BYOK Status -->
+  <div class="byok-bar">
+    <div class="byok-status">
+      <i class="fas fa-robot" style="color:#38bdf8;"></i>
+      <span>Compensation Intelligence Model: <strong>Google Gemini</strong></span>
+      <span class="byok-tag" id="byokTag"><i class="fas fa-bolt"></i> Studio Key Active</span>
+    </div>
+    <button class="btn btn-ghost sm" onclick="openTokenModal()" style="font-size:12px; padding:4px 10px; border-radius:6px; background:rgba(255,255,255,0.05); color:#cbd5e1;">
+      <i class="fas fa-sliders"></i> Change Token
+    </button>
+  </div>
 
-    // ── SALARY_DB ─────────────────────────────────────────────────────────────────
-    // Structure: SALARY_DB[role][city][yoe_band] → { p10, p50, p90 }  (annual CTC ₹)
-    const SALARY_DB = {
-      'software-engineer': {
-        'bangalore': { '0-2': { p10: 420000, p50: 650000, p90: 950000 }, '3-5': { p10: 700000, p50: 1050000, p90: 1600000 }, '6-10': { p10: 1100000, p50: 1700000, p90: 2800000 } },
-        'mumbai': { '0-2': { p10: 380000, p50: 600000, p90: 880000 }, '3-5': { p10: 650000, p50: 980000, p90: 1500000 }, '6-10': { p10: 1000000, p50: 1600000, p90: 2600000 } },
-        'hyderabad': { '0-2': { p10: 400000, p50: 620000, p90: 920000 }, '3-5': { p10: 680000, p50: 1020000, p90: 1550000 }, '6-10': { p10: 1050000, p50: 1650000, p90: 2700000 } },
-        'pune': { '0-2': { p10: 360000, p50: 560000, p90: 840000 }, '3-5': { p10: 600000, p50: 900000, p90: 1380000 }, '6-10': { p10: 950000, p50: 1480000, p90: 2400000 } }
-      },
-      'data-scientist': {
-        'bangalore': { '0-2': { p10: 450000, p50: 700000, p90: 1050000 }, '3-5': { p10: 750000, p50: 1150000, p90: 1800000 }, '6-10': { p10: 1200000, p50: 1900000, p90: 3200000 } },
-        'mumbai': { '0-2': { p10: 420000, p50: 660000, p90: 1000000 }, '3-5': { p10: 700000, p50: 1080000, p90: 1700000 }, '6-10': { p10: 1100000, p50: 1750000, p90: 2900000 } },
-        'hyderabad': { '0-2': { p10: 430000, p50: 680000, p90: 1020000 }, '3-5': { p10: 720000, p50: 1100000, p90: 1750000 }, '6-10': { p10: 1150000, p50: 1820000, p90: 3000000 } },
-        'pune': { '0-2': { p10: 390000, p50: 620000, p90: 940000 }, '3-5': { p10: 660000, p50: 1020000, p90: 1600000 }, '6-10': { p10: 1050000, p50: 1680000, p90: 2750000 } }
-      },
-      'product-manager': {
-        'bangalore': { '0-2': { p10: 500000, p50: 800000, p90: 1200000 }, '3-5': { p10: 900000, p50: 1400000, p90: 2200000 }, '6-10': { p10: 1500000, p50: 2500000, p90: 4000000 } },
-        'mumbai': { '0-2': { p10: 480000, p50: 760000, p90: 1150000 }, '3-5': { p10: 850000, p50: 1320000, p90: 2100000 }, '6-10': { p10: 1400000, p50: 2300000, p90: 3800000 } },
-        'hyderabad': { '0-2': { p10: 460000, p50: 740000, p90: 1120000 }, '3-5': { p10: 820000, p50: 1280000, p90: 2000000 }, '6-10': { p10: 1350000, p50: 2200000, p90: 3600000 } },
-        'pune': { '0-2': { p10: 440000, p50: 700000, p90: 1060000 }, '3-5': { p10: 780000, p50: 1220000, p90: 1900000 }, '6-10': { p10: 1280000, p50: 2080000, p90: 3400000 } }
-      },
-      'devops-engineer': {
-        'bangalore': { '0-2': { p10: 400000, p50: 620000, p90: 920000 }, '3-5': { p10: 680000, p50: 1020000, p90: 1580000 }, '6-10': { p10: 1100000, p50: 1750000, p90: 2900000 } },
-        'mumbai': { '0-2': { p10: 370000, p50: 580000, p90: 870000 }, '3-5': { p10: 640000, p50: 960000, p90: 1480000 }, '6-10': { p10: 1020000, p50: 1620000, p90: 2700000 } },
-        'hyderabad': { '0-2': { p10: 380000, p50: 600000, p90: 900000 }, '3-5': { p10: 660000, p50: 990000, p90: 1530000 }, '6-10': { p10: 1060000, p50: 1680000, p90: 2800000 } },
-        'pune': { '0-2': { p10: 350000, p50: 540000, p90: 820000 }, '3-5': { p10: 600000, p50: 900000, p90: 1400000 }, '6-10': { p10: 960000, p50: 1540000, p90: 2550000 } }
-      },
-      'ui-ux-designer': {
-        'bangalore': { '0-2': { p10: 350000, p50: 550000, p90: 820000 }, '3-5': { p10: 580000, p50: 880000, p90: 1360000 }, '6-10': { p10: 920000, p50: 1480000, p90: 2400000 } },
-        'mumbai': { '0-2': { p10: 330000, p50: 520000, p90: 780000 }, '3-5': { p10: 550000, p50: 840000, p90: 1300000 }, '6-10': { p10: 880000, p50: 1420000, p90: 2300000 } },
-        'hyderabad': { '0-2': { p10: 320000, p50: 510000, p90: 760000 }, '3-5': { p10: 540000, p50: 820000, p90: 1260000 }, '6-10': { p10: 860000, p50: 1380000, p90: 2250000 } },
-        'pune': { '0-2': { p10: 300000, p50: 480000, p90: 720000 }, '3-5': { p10: 510000, p50: 780000, p90: 1200000 }, '6-10': { p10: 820000, p50: 1320000, p90: 2150000 } }
-      }
-    };
+  <!-- Hero Visual Banner -->
+  <div class="hero-banner-box">
+    <img src="img/careers-hero.jpg" alt="Comonk AI Career Paths and Salary Insights" class="hero-banner-img">
+    <div class="hero-banner-overlay">
+      <div class="hero-banner-caption">
+        <i class="fas fa-arrow-trend-up" style="color:#38bdf8;"></i>
+        <span>AI &amp; ML Engineer Packages: ₹18 - 85 LPA · 90-Day Step-by-Step Curriculum</span>
+      </div>
+    </div>
+  </div>
 
-    // ── SKILLS_PREMIUM ────────────────────────────────────────────────────────────
-    // Maps skill name → annual ₹ premium
-    const SKILLS_PREMIUM = {
-      'AWS Solutions Architect': 130000,
-      'System Design': 120000,
-      'Python / ML': 110000,
-      'Kubernetes': 95000,
-      'React / Next.js': 75000,
-      'Data Analysis': 65000,
-      'TypeScript': 55000,
-      'SQL / PostgreSQL': 45000
-    };
+  <!-- LIVE AI Salary Negotiation Counter-Offer Engine -->
+  <div class="nego-tool-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+      <div>
+        <span style="font-size:12px; font-weight:700; text-transform:uppercase; color:#38bdf8; letter-spacing:0.05em;"><i class="fas fa-handshake"></i> Negotiation Copilot</span>
+        <h3 style="font-size:22px; font-weight:800; color:#fff; margin-top:2px;">AI Salary Counter-Offer &amp; CTC Teardown Generator</h3>
+      </div>
+      <span style="font-size:12px; padding:4px 12px; border-radius:99px; background:rgba(16,185,129,0.15); color:#34d399; font-weight:700;">100% Free · Real-Time</span>
+    </div>
 
-    // ── Company pay band configuration ────────────────────────────────────────────
-    // multiplier applied to P50 of selected role+city to get each company's median
-    const COMPANY_CONFIG = [
-      { name: 'TCS', type: 'Service', multiplier: 0.75 },
-      { name: 'Wipro', type: 'Service', multiplier: 0.80 },
-      { name: 'Infosys', type: 'Service', multiplier: 0.85 },
-      { name: 'Flipkart', type: 'Product', multiplier: 1.05 },
-      { name: 'Amazon', type: 'Product', multiplier: 1.18 },
-      { name: 'Goldman Sachs', type: 'BFSI', multiplier: 1.28 },
-      { name: 'JP Morgan', type: 'BFSI', multiplier: 1.35 }
-    ];
+    <div class="nego-grid">
+      <div>
+        <label style="font-size:12px; font-weight:700; color:var(--text-3); display:block; margin-bottom:6px;">Target Role</label>
+        <input type="text" id="negoRole" class="nego-input" value="Senior Backend / AI Engineer">
+      </div>
+      <div>
+        <label style="font-size:12px; font-weight:700; color:var(--text-3); display:block; margin-bottom:6px;">Experience (Years)</label>
+        <input type="number" id="negoExp" class="nego-input" value="5">
+      </div>
+      <div>
+        <label style="font-size:12px; font-weight:700; color:var(--text-3); display:block; margin-bottom:6px;">Current CTC (₹ LPA)</label>
+        <input type="number" id="negoCurrent" class="nego-input" value="22">
+      </div>
+      <div>
+        <label style="font-size:12px; font-weight:700; color:var(--text-3); display:block; margin-bottom:6px;">Target Company</label>
+        <input type="text" id="negoCompany" class="nego-input" value="Google / Flipkart / Fast-growing AI Startup">
+      </div>
+    </div>
 
-    // ── Type tag colours for chart labels ────────────────────────────────────────
-    const TYPE_COLOURS = {
-      'Service': '#64748b',
-      'Product': '#0ea5e9',
-      'BFSI': '#a855f7'
-    };
+    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+      <button class="btn btn-primary" id="btnNego" onclick="generateCounterOffer()" style="padding:12px 24px; font-weight:800;">
+        <i class="fas fa-wand-magic-sparkles"></i> Generate Counter-Offer Strategy &amp; Email Script
+      </button>
+      <span style="font-size:12px; color:var(--text-3);">Generates Base vs RSU distribution + polite recruiter counter-offer email</span>
+    </div>
 
-    // ── Role display labels ───────────────────────────────────────────────────────
-    const ROLE_LABELS = {
-      'software-engineer': 'Software Engineer',
-      'data-scientist': 'Data Scientist',
-      'product-manager': 'Product Manager',
-      'devops-engineer': 'DevOps Engineer',
-      'ui-ux-designer': 'UI/UX Designer'
-    };
+    <div class="nego-output" id="negoOutput"></div>
+  </div>
 
-    const CITY_LABELS = {
-      'bangalore': 'Bangalore',
-      'mumbai': 'Mumbai',
-      'hyderabad': 'Hyderabad',
-      'pune': 'Pune'
-    };
+  <!-- Interactive Indian Tech Roles Section -->
+  <div class="sec-title-wrap">
+    <div class="sal-badge" style="background:rgba(16,185,129,0.12); color:#34d399; border-color:rgba(16,185,129,0.3);"><i class="fas fa-indian-rupee-sign"></i> Indian Tech Market Benchmark</div>
+    <h2>High-Paying AI Engineering Roles (₹ LPA)</h2>
+    <p>Calibrated against verified compensation at top product startups and US-remote engineering teams.</p>
+  </div>
 
-    const YOE_LABELS = {
-      '0-2': '0–2 yrs',
-      '3-5': '3–5 yrs',
-      '6-10': '6–10 yrs'
-    };
+  <div class="careers-grid" id="careersContainer">
+    <!-- Populated via JavaScript from data/careers.json -->
+  </div>
 
-    // ── Formatting helpers ────────────────────────────────────────────────────────
-    function formatINR(val) {
-      if (val >= 100000) {
-        const lakh = val / 100000;
-        return '₹' + (Number.isInteger(lakh) ? lakh : lakh.toFixed(1)) + 'L';
-      }
-      return '₹' + val.toLocaleString('en-IN');
-    }
+  <div class="filter-card">
+    <div class="select-group">
+      <select id="roleSelect" class="custom-select" onchange="updateComp()">
+        <option value="sde1">Software Engineer (L3 / SDE-1)</option>
+        <option value="sde2">Mid-Level Software Engineer (L4 / SDE-2)</option>
+        <option value="senior" selected>Senior AI Engineer (L5 / Senior)</option>
+        <option value="staff">Staff AI Infrastructure Engineer (L6 / Staff)</option>
+      </select>
+      <select id="companySelect" class="custom-select" onchange="updateComp()">
+        <option value="google">Google</option>
+        <option value="meta">Meta (Facebook)</option>
+        <option value="microsoft">Microsoft</option>
+        <option value="openai">OpenAI / Anthropic</option>
+      </select>
+    </div>
+    <div style="font-size:13px; color:var(--text-2);">
+      Median Location: <strong>San Francisco Bay Area / Remote US</strong>
+    </div>
+  </div>
 
-    function formatINRFull(val) {
-      return '₹' + val.toLocaleString('en-IN');
-    }
+  <!-- Total Comp Box -->
+  <div class="tc-overview-card">
+    <div class="tc-label">Total Median Annual Compensation (TC)</div>
+    <div class="tc-val" id="totalComp">$392,000</div>
+    
+    <div class="tc-breakdown-bar">
+      <div class="tc-sub-box">
+        <div class="sub-lbl">Base Salary</div>
+        <div class="sub-amt" id="baseSalary">$210,000</div>
+      </div>
+      <div class="tc-sub-box">
+        <div class="sub-lbl">Stock Grants (RSUs/Yr)</div>
+        <div class="sub-amt" id="stockSalary">$145,000</div>
+      </div>
+      <div class="tc-sub-box">
+        <div class="sub-lbl">Target Bonus</div>
+        <div class="sub-amt" id="bonusSalary">$37,000</div>
+      </div>
+    </div>
+  </div>
 
-    // ── Linear interpolation ──────────────────────────────────────────────────────
-    function lerp(a, b, t) { return Math.round(a + (b - a) * t); }
+  <!-- Levels.fyi Comparative Table -->
+  <div class="table-card">
+    <table class="sal-table">
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Level / Title</th>
+          <th>Base Pay</th>
+          <th>Stock / Equity</th>
+          <th>Total Comp (USD)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Google</strong></td>
+          <td>Senior SWE (L5)</td>
+          <td>$215,000</td>
+          <td>$150,000 (RSU)</td>
+          <td style="color:#34d399; font-weight:800; font-family:'JetBrains Mono';">$398,000</td>
+        </tr>
+        <tr>
+          <td><strong>Meta</strong></td>
+          <td>Senior Engineer (E5)</td>
+          <td>$210,000</td>
+          <td>$160,000 (RSU)</td>
+          <td style="color:#34d399; font-weight:800; font-family:'JetBrains Mono';">$405,000</td>
+        </tr>
+        <tr>
+          <td><strong>Microsoft</strong></td>
+          <td>Senior SDE (Level 63)</td>
+          <td>$185,000</td>
+          <td>$90,000 (RSU)</td>
+          <td style="color:#34d399; font-weight:800; font-family:'JetBrains Mono';">$305,000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-    // ── Build YoE curve points (0 → 10) for a given percentile key ───────────────
-    // Uses band endpoints with linear interpolation inside each band
-    function buildYoeCurveForPct(cityData, pct) {
-      const pts = [];
-      for (let yr = 0; yr <= 10; yr++) {
-        let val;
-        if (yr <= 2) {
-          val = lerp(cityData['0-2'][pct], cityData['0-2'][pct], yr / 2);
-          // Start from slightly below at yr=0: interpolate p10→band[pct]
-          if (yr === 0) val = cityData['0-2'][pct];
-          else val = lerp(cityData['0-2'][pct], cityData['3-5'][pct], (yr - 0) / 5);
-        } else if (yr <= 5) {
-          val = lerp(cityData['0-2'][pct], cityData['3-5'][pct], (yr - 0) / 5);
-        } else {
-          val = lerp(cityData['3-5'][pct], cityData['6-10'][pct], (yr - 5) / 5);
-        }
-        pts.push({ yr, val });
-      }
-      return pts;
-    }
+<!-- BYOK Modal -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <h3 style="font-size:18px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-key" style="color:#38bdf8;"></i> Self-API &amp; Token (BYOK)
+      </h3>
+      <button onclick="closeTokenModal()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;"><i class="fas fa-xmark"></i></button>
+    </div>
+    <p style="font-size:13px; color:var(--text-2, #94a3b8); margin-bottom:18px; line-height:1.5;">
+      Sevenseed Studio is <strong>100% Free</strong>. We provide a pre-seeded working Gemini token, or you can plug in your own private API key:
+    </p>
+    <div style="margin-bottom:16px;">
+      <label style="display:block; font-size:12px; font-weight:700; color:#e2e8f0; margin-bottom:6px;">Google Gemini API Key</label>
+      <input type="password" id="customGeminiKey" class="add-input" style="width:100%; box-sizing:border-box; padding:10px 14px; background:var(--bg-2); border:1px solid var(--border); color:#fff; border-radius:8px;" placeholder="AIzaSy...">
+      <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Active Key: Pre-seeded studio Gemini token verified & operational.</span>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn btn-ghost sm" onclick="resetStudioKey()">Reset to Default</button>
+      <button class="btn btn-primary sm" onclick="saveCustomKey()">Save Token</button>
+    </div>
+  </div>
+</div>
 
-    // ── Build company bands from P50 base ────────────────────────────────────────
-    function buildCompanyBands(p50) {
-      return COMPANY_CONFIG.map(function (cfg) {
-        const mid = Math.round(p50 * cfg.multiplier);
-        const lo = Math.round(mid * 0.82);
-        const hi = Math.round(mid * 1.22);
-        return { name: cfg.name, type: cfg.type, lo, mid, hi };
+<script>
+const STUDIO_GEMINI_KEY = "";
+
+function getActiveGeminiKey() {
+  return localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || STUDIO_GEMINI_KEY;
+}
+
+const COMP_DATA = {
+  sde1: { base: 145000, stock: 45000, bonus: 18000 },
+  sde2: { base: 175000, stock: 85000, bonus: 25000 },
+  senior: { base: 210000, stock: 145000, bonus: 37000 },
+  staff: { base: 265000, stock: 275000, bonus: 55000 }
+};
+
+function updateComp() {
+  const role = document.getElementById('roleSelect').value;
+  const data = COMP_DATA[role];
+  const total = data.base + data.stock + data.bonus;
+
+  document.getElementById('totalComp').innerText = '$' + total.toLocaleString();
+  document.getElementById('baseSalary').innerText = '$' + data.base.toLocaleString();
+  document.getElementById('stockSalary').innerText = '$' + data.stock.toLocaleString();
+  document.getElementById('bonusSalary').innerText = '$' + data.bonus.toLocaleString();
+}
+
+// Resilient multi-model Gemini caller with automatic failover
+async function callGeminiReliable(prompt, apiKey) {
+  const models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+  let lastErr = null;
+  for (const m of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
       });
-    }
-
-    // ── Negotiation script builder ────────────────────────────────────────────────
-    function buildNegotiationScript(roleLabel, p50, p90, city) {
-      const cityLabel = CITY_LABELS[city] || city;
-      const ask = Math.round(p50 * 1.10);
-      const walk = Math.round(p50 * 1.08);
-      const sign = Math.round(p50 * 1.10);
-      return [
-        'Opening statement:',
-        '"Thank you for the offer. Based on my research into the ' + cityLabel + ' market for',
-        '' + roleLabel + ' roles, the median total compensation sits around',
-        '' + formatINRFull(p50) + ' annually.',
-        'Given my background and what I bring to this position, I was targeting something',
-        'closer to ' + formatINRFull(ask) + ' – ' + formatINRFull(p90) + '.',
-        'Is there flexibility to move the base or equity in that direction?"',
-        '',
-        'If they push back on base salary:',
-        '"I understand base budget constraints. Could we explore a signing bonus,',
-        'an accelerated 6-month review cycle, or additional stock / equity vesting',
-        'to bridge that gap? I want to make this work for both sides."',
-        '',
-        'If they ask for your current CTC:',
-        '"Rather than anchor to my current number, I\u2019d prefer to focus on the market',
-        'rate for this specific role in ' + cityLabel + ' \u2014 which benchmarks at ' + formatINRFull(p50) + ' median.',
-        'My expectation is ' + formatINRFull(walk) + '."',
-        '',
-        'Closing the offer:',
-        '"I\u2019m very excited about this opportunity. If you can get to ' + formatINRFull(sign) + ',',
-        'I\u2019m ready to sign by end of the week."'
-      ].join('\n');
-    }
-
-    // ── SVG helpers ───────────────────────────────────────────────────────────────
-    const NS = 'http://www.w3.org/2000/svg';
-    function svgEl(tag, attrs) {
-      const el = document.createElementNS(NS, tag);
-      Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
-      return el;
-    }
-    function svgText(content, attrs) {
-      const el = svgEl('text', attrs);
-      el.textContent = content;
-      return el;
-    }
-
-    // ── Draw company pay band chart ───────────────────────────────────────────────
-    function drawCompanyChart(companies) {
-      const svg = document.getElementById('si-company-svg');
-      while (svg.firstChild) svg.removeChild(svg.firstChild);
-
-      const W = 740, H = 260;
-      const pL = 120, pR = 90, pT = 18, pB = 44;
-      const chartW = W - pL - pR;
-      const chartH = H - pT - pB;
-      const rowH = chartH / companies.length;
-
-      // Value range
-      const allVals = [];
-      companies.forEach(function (c) { allVals.push(c.lo, c.hi); });
-      const minV = Math.min.apply(null, allVals) * 0.88;
-      const maxV = Math.max.apply(null, allVals) * 1.06;
-      const range = maxV - minV;
-      function xS(v) { return pL + (v - minV) / range * chartW; }
-
-      // Defs
-      const defs = svgEl('defs', {});
-      const grad = svgEl('linearGradient', { id: 'cBarGrad', x1: '0%', y1: '0%', x2: '100%', y2: '0%' });
-      [['0%', '#6366f1'], ['100%', '#38bdf8']].forEach(function (s) {
-        grad.appendChild(svgEl('stop', { offset: s[0], 'stop-color': s[1] }));
-      });
-      defs.appendChild(grad);
-      svg.appendChild(defs);
-
-      // Grid lines + x-axis labels
-      const ticks = 5;
-      for (let t = 0; t <= ticks; t++) {
-        const gv = minV + (range / ticks) * t;
-        const gx = xS(gv);
-        svg.appendChild(svgEl('line', {
-          x1: gx, y1: pT, x2: gx, y2: pT + chartH,
-          stroke: 'rgba(255,255,255,0.07)', 'stroke-width': '1'
-        }));
-        svg.appendChild(svgText(formatINR(gv), {
-          x: gx, y: pT + chartH + 16,
-          'text-anchor': 'middle', fill: '#9aa0b8',
-          'font-size': '10.5', 'font-family': 'Inter,sans-serif'
-        }));
+      if (res.ok) {
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (reply) return reply;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        lastErr = new Error(errData.error?.message || `HTTP ${res.status}`);
       }
-
-      // Bars
-      companies.forEach(function (c, i) {
-        const y = pT + i * rowH + rowH * 0.18;
-        const bH = rowH * 0.64;
-        const xLo = xS(c.lo);
-        const xMid = xS(c.mid);
-        const xHi = xS(c.hi);
-
-        // Range background (lo → hi)
-        svg.appendChild(svgEl('rect', {
-          x: xLo, y, width: xHi - xLo, height: bH, rx: 4,
-          fill: 'rgba(99,102,241,0.18)'
-        }));
-        // Filled median bar (lo → mid)
-        svg.appendChild(svgEl('rect', {
-          x: xLo, y, width: xMid - xLo, height: bH, rx: 4,
-          fill: 'url(#cBarGrad)'
-        }));
-        // Median tick line
-        svg.appendChild(svgEl('line', {
-          x1: xMid, y1: y - 2, x2: xMid, y2: y + bH + 2,
-          stroke: '#fff', 'stroke-width': '2', 'stroke-opacity': '0.85'
-        }));
-
-        // Company name label (left)
-        svg.appendChild(svgText(c.name, {
-          x: pL - 8, y: y + bH / 2 + 4.5,
-          'text-anchor': 'end', fill: '#e2e8f0',
-          'font-size': '12', 'font-family': 'Inter,sans-serif', 'font-weight': '600'
-        }));
-
-        // Type badge (below name)
-        svg.appendChild(svgText(c.type, {
-          x: pL - 8, y: y + bH / 2 + 17,
-          'text-anchor': 'end', fill: TYPE_COLOURS[c.type] || '#9aa0b8',
-          'font-size': '9.5', 'font-family': 'Inter,sans-serif', 'font-weight': '600',
-          'letter-spacing': '0.5'
-        }));
-
-        // Median value (right of bar)
-        svg.appendChild(svgText(formatINR(c.mid), {
-          x: xHi + 7, y: y + bH / 2 + 4.5,
-          'text-anchor': 'start', fill: '#7dd3fc',
-          'font-size': '11', 'font-family': "'JetBrains Mono',monospace", 'font-weight': '700'
-        }));
-      });
+    } catch(e) {
+      lastErr = e;
     }
+  }
+  throw lastErr || new Error('Google AI service busy, please retry in a moment.');
+}
 
-    // ── Draw YoE curve (3 bands: P10, P50, P90) ───────────────────────────────────
-    function drawYoeCurve(role, city) {
-      const svg = document.getElementById('si-yoe-svg');
-      while (svg.firstChild) svg.removeChild(svg.firstChild);
+async function generateCounterOffer() {
+  const role = document.getElementById('negoRole').value.trim();
+  const exp = document.getElementById('negoExp').value;
+  const curr = document.getElementById('negoCurrent').value;
+  const comp = document.getElementById('negoCompany').value.trim();
+  const output = document.getElementById('negoOutput');
+  const btn = document.getElementById('btnNego');
 
-      const cityData = SALARY_DB[role][city];
-      const curveP10 = buildYoeCurveForPct(cityData, 'p10');
-      const curveP50 = buildYoeCurveForPct(cityData, 'p50');
-      const curveP90 = buildYoeCurveForPct(cityData, 'p90');
+  output.style.display = 'block';
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing Compensation Brackets...';
+  output.innerHTML = '// Running market percentile simulation and drafting recruiter negotiation script...';
 
-      const W = 740, H = 260;
-      const pL = 72, pR = 32, pT = 20, pB = 44;
-      const chartW = W - pL - pR;
-      const chartH = H - pT - pB;
+  const apiKey = getActiveGeminiKey();
+  const prompt = `You are an elite Tech Compensation & Executive Negotiation Coach.
+Candidate Profile:
+- Role: ${role}
+- Experience: ${exp} years
+- Current CTC: ₹${curr} LPA (Indian Tech Market)
+- Target Company / Offerer: ${comp}
 
-      // Value scale across all three curves
-      const allVals = [...curveP10, ...curveP50, ...curveP90].map(function (d) { return d.val; });
-      const minV = Math.min.apply(null, allVals) * 0.88;
-      const maxV = Math.max.apply(null, allVals) * 1.06;
-      const xStep = chartW / 10;
+Provide an actionable, strategic compensation teardown:
+1. **REALISTIC TARGET CTC BRACKET (₹ LPA)**:
+   - Base Pay: ₹X LPA
+   - Performance Bonus: ₹Y LPA
+   - Annual Stock / ESOPs / RSUs: ₹Z LPA
+   - Total Target CTC: ₹Total LPA (with realistic % hike)
+2. **ESTIMATED MONTHLY IN-HAND (AFTER TAX)**:
+   - Approximate monthly take-home salary after PF and Indian Income Tax (New Regime u/s 115BAC).
+3. **HIGH-CONVERTING NEGOTIATION EMAIL SCRIPT**:
+   - Write a polite, confident, professional email ready to copy-paste and send to the HR recruiter.
+   - Anchor high without sounding demanding, express excitement for the mission, and articulate value.
+4. **TACTICAL LEVERAGE TIPS**:
+   - 2 key levers to unlock signing bonuses or faster equity vesting.`;
 
-      function xS(yr) { return pL + yr * xStep; }
-      function yS(val) { return pT + chartH - (val - minV) / (maxV - minV) * chartH; }
-      function ptsStr(curve) { return curve.map(function (d) { return xS(d.yr) + ',' + yS(d.val); }).join(' '); }
+  try {
+    const reply = await callGeminiReliable(prompt, apiKey);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Counter-Offer Strategy & Email Script';
+    output.innerHTML = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  } catch(err) {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Counter-Offer Strategy & Email Script';
+    output.innerHTML = `Error: ${err.message}. Please verify your API token in BYOK settings.`;
+  }
+}
 
-      // Defs
-      const defs = svgEl('defs', {});
-      const lineGrad = svgEl('linearGradient', { id: 'yLineGrad', x1: '0%', y1: '0%', x2: '100%', y2: '0%' });
-      [['0%', '#6366f1'], ['100%', '#38bdf8']].forEach(function (s) {
-        lineGrad.appendChild(svgEl('stop', { offset: s[0], 'stop-color': s[1] }));
-      });
-      // Area fill gradient (under P50)
-      const areaGrad = svgEl('linearGradient', { id: 'yAreaGrad', x1: '0%', y1: '0%', x2: '0%', y2: '100%' });
-      areaGrad.appendChild(svgEl('stop', { offset: '0%', 'stop-color': '#6366f1', 'stop-opacity': '0.3' }));
-      areaGrad.appendChild(svgEl('stop', { offset: '100%', 'stop-color': '#6366f1', 'stop-opacity': '0.02' }));
-      defs.appendChild(lineGrad);
-      defs.appendChild(areaGrad);
-      svg.appendChild(defs);
+// Load Careers Data
+fetch('data/careers.json')
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    var tracks = data.tracks || [];
+    var container = document.getElementById('careersContainer');
+    if (!container) return;
+    container.innerHTML = tracks.map(function(t) {
+      var skHtml = (t.skills_required || []).map(function(s) {
+        return '<span class="sk-tag">' + s + '</span>';
+      }).join('');
 
-      // Horizontal grid lines
-      for (let h = 0; h <= 4; h++) {
-        const hv = minV + (maxV - minV) * (h / 4);
-        const hy = yS(hv);
-        svg.appendChild(svgEl('line', {
-          x1: pL, y1: hy, x2: pL + chartW, y2: hy,
-          stroke: 'rgba(255,255,255,0.07)', 'stroke-width': '1'
-        }));
-        svg.appendChild(svgText(formatINR(hv), {
-          x: pL - 6, y: hy + 4,
-          'text-anchor': 'end', fill: '#9aa0b8',
-          'font-size': '10', 'font-family': 'Inter,sans-serif'
-        }));
-      }
+      return '<div class="career-card">' +
+        '<div class="c-top">' +
+          '<span class="c-icon">' + t.icon + '</span>' +
+          '<span class="c-demand">' + t.growth_rate + ' Demand</span>' +
+        '</div>' +
+        '<h3 class="c-title">' + t.title + '</h3>' +
+        '<p class="c-desc">' + t.description + '</p>' +
+        '<div class="c-salaries">' +
+          '<div class="sal-tier-row"><span>Fresher (0-2 Yrs):</span><strong>' + t.salary_range.fresher + '</strong></div>' +
+          '<div class="sal-tier-row"><span>Mid-Level (3-5 Yrs):</span><strong>' + t.salary_range.mid + '</strong></div>' +
+          '<div class="sal-tier-row"><span>Senior (6+ Yrs):</span><strong style="color:#34d399;">' + t.salary_range.senior + '</strong></div>' +
+          '<div class="sal-tier-row"><span>US Remote:</span><strong style="color:#fbbf24;">' + t.salary_range.us_remote + '</strong></div>' +
+        '</div>' +
+        '<div class="skill-badges">' + skHtml + '</div>' +
+        '<a href="interview-arena.html" class="btn btn-ghost sm" style="width:100%; text-align:center;"><i class="fas fa-play"></i> Practice Role Questions →</a>' +
+      '</div>';
+    }).join('');
+  })
+  .catch(function(err) {
+    console.error('Failed loading careers.json:', err);
+  });
 
-      // X-axis labels
-      for (let yr = 0; yr <= 10; yr += 2) {
-        svg.appendChild(svgText(yr + 'yr', {
-          x: xS(yr), y: pT + chartH + 18,
-          'text-anchor': 'middle', fill: '#9aa0b8',
-          'font-size': '10.5', 'font-family': 'Inter,sans-serif'
-        }));
-      }
+// Token Modal handlers
+function openTokenModal() {
+  const m = document.getElementById('tokenModal');
+  m.classList.add('active');
+  const stored = localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || '';
+  document.getElementById('customGeminiKey').value = stored;
+}
 
-      // Area fill under P50
-      const areaPts = ptsStr(curveP50)
-        + ' ' + xS(10) + ',' + (pT + chartH)
-        + ' ' + pL + ',' + (pT + chartH);
-      svg.appendChild(svgEl('polygon', { points: areaPts, fill: 'url(#yAreaGrad)' }));
+function closeTokenModal() {
+  document.getElementById('tokenModal').classList.remove('active');
+}
 
-      // P10 line (dashed, sky-blue)
-      svg.appendChild(svgEl('polyline', {
-        points: ptsStr(curveP10), fill: 'none',
-        stroke: '#38bdf8', 'stroke-width': '1.8',
-        'stroke-dasharray': '5 3', 'stroke-linejoin': 'round', 'stroke-linecap': 'round'
-      }));
+function saveCustomKey() {
+  const k = document.getElementById('customGeminiKey').value.trim();
+  if (k) {
+    localStorage.setItem('user_gemini_key', k);
+    localStorage.setItem('ss_key_gemini', k);
+    document.getElementById('byokTag').innerHTML = '<i class="fas fa-check"></i> Custom Token Active';
+  } else {
+    resetStudioKey();
+  }
+  closeTokenModal();
+}
 
-      // P90 line (dashed, purple)
-      svg.appendChild(svgEl('polyline', {
-        points: ptsStr(curveP90), fill: 'none',
-        stroke: '#a855f7', 'stroke-width': '1.8',
-        'stroke-dasharray': '5 3', 'stroke-linejoin': 'round', 'stroke-linecap': 'round'
-      }));
+function resetStudioKey() {
+  localStorage.removeItem('user_gemini_key');
+  localStorage.removeItem('ss_key_gemini');
+  document.getElementById('customGeminiKey').value = '';
+  document.getElementById('byokTag').innerHTML = '<i class="fas fa-bolt"></i> Studio Key Active';
+  closeTokenModal();
+}
 
-      // P50 line (solid, gradient)
-      svg.appendChild(svgEl('polyline', {
-        points: ptsStr(curveP50), fill: 'none',
-        stroke: 'url(#yLineGrad)', 'stroke-width': '2.8',
-        'stroke-linejoin': 'round', 'stroke-linecap': 'round'
-      }));
-
-      // Dots + labels on P50 at yrs 0, 2, 5, 8, 10
-      [0, 2, 5, 8, 10].forEach(function (yr) {
-        const d = curveP50[yr];
-        const cx = xS(yr);
-        const cy = yS(d.val);
-        svg.appendChild(svgEl('circle', {
-          cx, cy, r: '5', fill: '#6366f1', stroke: '#fff', 'stroke-width': '1.5'
-        }));
-        svg.appendChild(svgText(formatINR(d.val), {
-          x: cx, y: cy - 10,
-          'text-anchor': 'middle', fill: '#7dd3fc',
-          'font-size': '10', 'font-family': "'JetBrains Mono',monospace", 'font-weight': '700'
-        }));
-      });
-    }
-
-    // ── Render skills premium table ───────────────────────────────────────────────
-    function renderSkillsTable() {
-      const entries = Object.entries(SKILLS_PREMIUM);
-      const maxPremium = Math.max.apply(null, entries.map(function (e) { return e[1]; }));
-      const tbody = document.getElementById('si-skills-tbody');
-      tbody.innerHTML = '';
-      entries.forEach(function (entry) {
-        const skill = entry[0];
-        const premium = entry[1];
-        const pct = Math.round((premium / maxPremium) * 100);
-        const tr = document.createElement('tr');
-        tr.innerHTML =
-          '<td style="font-weight:600">' + skill + '</td>' +
-          '<td><span class="si-premium-val">+' + formatINRFull(premium) + ' / yr</span></td>' +
-          '<td>' +
-          '<div class="si-skill-bar-wrap">' +
-          '<div class="si-skill-bar" style="width:' + pct + '%"></div>' +
-          '</div>' +
-          '<span style="font-size:11px;color:var(--text-3,#64748b);margin-left:8px">' + pct + '%</span>' +
-          '</td>';
-        tbody.appendChild(tr);
-      });
-    }
-
-    // ── Render negotiation script ─────────────────────────────────────────────────
-    function renderScript(scriptText) {
-      const box = document.getElementById('si-script-box');
-      // Escape HTML then highlight ₹ values
-      const escaped = scriptText
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-      box.innerHTML = escaped.replace(/(₹[\d,]+)/g, '<span class="si-script-highlight">$1</span>');
-    }
-
-    // ── Main entry: runInsights() ─────────────────────────────────────────────────
-    function runInsights() {
-      const role = document.getElementById('si-role').value;
-      const city = document.getElementById('si-city').value;
-      const yoe = document.getElementById('si-yoe').value;
-      const errEl = document.getElementById('si-err');
-
-      // Belt-and-suspenders validation
-      if (!role || !city || !yoe || !SALARY_DB[role] || !SALARY_DB[role][city] || !SALARY_DB[role][city][yoe]) {
-        errEl.classList.add('show');
-        return;
-      }
-      errEl.classList.remove('show');
-
-      const btn = document.getElementById('si-submit');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analysing…';
-
-      // Short delay for a less jarring UI transition
-      setTimeout(function () {
-        try {
-          const band = SALARY_DB[role][city][yoe];
-          const roleLabel = ROLE_LABELS[role];
-          const companies = buildCompanyBands(band.p50);
-          const scriptText = buildNegotiationScript(roleLabel, band.p50, band.p90, city);
-
-          // Percentile display
-          document.getElementById('si-p10').textContent = formatINR(band.p10);
-          document.getElementById('si-p50').textContent = formatINR(band.p50);
-          document.getElementById('si-p90').textContent = formatINR(band.p90);
-          document.getElementById('si-range-label').textContent =
-            roleLabel + ' · ' + CITY_LABELS[city] + ' · ' + YOE_LABELS[yoe];
-          document.getElementById('si-company-label').textContent =
-            'P50 base: ' + formatINR(band.p50);
-
-          // Charts
-          drawCompanyChart(companies);
-          drawYoeCurve(role, city);
-
-          // Skills table
-          renderSkillsTable();
-
-          // Negotiation script
-          renderScript(scriptText);
-
-          // Show results panel
-          const resultsEl = document.getElementById('si-results');
-          resultsEl.classList.add('show');
-
-          // Smooth scroll after a short paint delay
-          setTimeout(function () {
-            resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 60);
-
-        } catch (e) {
-          console.error('Salary insights error:', e);
-        }
-
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-magnifying-glass-chart"></i> Get Insights';
-      }, 320);
-    }
-
-    // ── Keyboard shortcut: Enter key on any select triggers insights ──────────────
-    ['si-role', 'si-city', 'si-yoe'].forEach(function (id) {
-      document.getElementById(id).addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') runInsights();
-      });
-    });
-  </script>
-
-  <script src="app.js"></script>
+// Theme handler
+var tBtn = document.getElementById('themeToggle');
+if (tBtn) {
+  tBtn.addEventListener('click', function() {
+    var now = document.documentElement.getAttribute('data-theme') || 'dark';
+    var next = now === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('ss-theme', next);
+  });
+}
+</script>
 </body>
-
 </html>
