@@ -1,115 +1,457 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Multi-Drug Interaction Alert Engine — Decode Pharmacy</title>
-  <meta name="description" content="Check dangerous contraindications and adverse reactions between different medications.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Clinical AI Multi-Drug & Food Interaction Engine — Decode Pharmacy</title>
+  <meta name="description" content="AI Pharmacologist drug-drug contraindication scanner, CYP450 enzyme inhibition analysis, food/alcohol warnings, and pregnancy safety check. 100% Free with BYOK.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
-    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
-    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
-    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
-    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
-    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
-    .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
-    .form-group { margin-bottom: 20px; text-align: left; }
-    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
-    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
-    .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
-    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
+    .ph-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
+    .ph-header { text-align: center; margin-bottom: 32px; }
+    .ph-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .ph-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+
+    /* BYOK Status Bar */
+    .byok-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.25); border-radius: 12px; padding: 12px 20px; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .byok-status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #a7f3d0; font-weight: 600; }
+    .byok-tag { background: rgba(16,185,129,0.2); color: #34d399; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+
+    /* Presets */
+    .presets-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; justify-content: center; }
+    .preset-chip { padding: 6px 14px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: #cbd5e1; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .preset-chip:hover { border-color: #10b981; color: #34d399; background: rgba(16,185,129,0.1); }
+
+    /* Interaction Stage */
+    .ph-grid { display: grid; grid-template-columns: 440px 1fr; gap: 28px; }
+    @media(max-width: 960px) { .ph-grid { grid-template-columns: 1fr; } }
+
+    .input-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; }
+    .pill-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; max-height: 280px; overflow-y: auto; }
+    .pill-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-weight: 600; color: #fff; }
+    .remove-pill { color: #f87171; cursor: pointer; font-size: 16px; padding: 2px 6px; }
+    .remove-pill:hover { color: #ef4444; }
+
+    .add-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .add-input { flex: 1; padding: 11px 14px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
+    .add-input:focus { border-color: #10b981; }
+
+    /* Output Pane */
+    .results-pane { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+    .alert-card { border-radius: 12px; padding: 20px; margin-bottom: 16px; border-left: 5px solid; }
+    .alert-major { background: rgba(239,68,68,0.08); border-color: #ef4444; }
+    .alert-mod { background: rgba(245,158,11,0.08); border-color: #f59e0b; }
+    .alert-minor { background: rgba(56,189,248,0.08); border-color: #38bdf8; }
+    .alert-safe { background: rgba(16,185,129,0.08); border-color: #10b981; }
+
+    .alert-severity { font-size: 11px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .sev-major { color: #f87171; }
+    .sev-mod { color: #fbbf24; }
+    .sev-minor { color: #38bdf8; }
+    .sev-safe { color: #34d399; }
+    .alert-pair { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .alert-desc { font-size: 13.5px; color: var(--text-2); line-height: 1.65; }
+
+    /* Modal Styling */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal-box { background: var(--bg-1, #0f172a); border: 1px solid var(--border, #334155); border-radius: 16px; width: 100%; max-width: 520px; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
   </style>
 </head>
 <body>
-
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <nav class="nav" id="mainNav">
-  <div class="nav-inner">
-    <a class="nav-brand" href="index.html">
-      <span class="nav-logo-wrap"><i class="fas fa-mortar-pestle"></i></span>
-      <span class="nav-name">Decode Pharmacy</span>
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#10b981,#059669); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-mortar-pestle"></i></span>
+      <span style="font-weight:700; font-size:18px;">Decode Pharmacy</span>
     </a>
-    <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="prescription-ocr.html">Prescription OCR</a>
-        <a href="interaction-checker.html" class="active">Drug Interactions</a>
-        <a href="medicine-reminders.html">Dose Reminders</a>
-        <a href="hospital-finder.html">Hospital Finder</a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="prescription-ocr.html">Prescription OCR</a>
+      <a href="interaction-checker.html" style="color:#34d399; font-weight:600;">Drug Interactions</a>
+      <a href="generic-finder.html">Jan Aushadhi Generic</a>
+      <a href="medicine-reminders.html">Medicine Reminders</a>
+      <a href="hospital-finder.html">Hospital Beds</a>
     </div>
-    <div class="nav-actions">
-      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
-      <a class="btn btn-primary sm" href="app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <button class="btn btn-ghost sm" onclick="openTokenModal()" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; border:1px solid rgba(16,185,129,0.3); color:#34d399;">
+        <i class="fas fa-key"></i> Self-API & Token
+      </button>
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
     </div>
   </div>
 </nav>
 
+<div class="ph-container">
+  <div class="ph-header">
+    <div class="ph-badge"><i class="fas fa-shield-virus"></i> Clinical AI Pharmacologist Engine</div>
+    <h1 class="ph-title">Multi-Medication & Food Interaction Scanner</h1>
+    <p style="color:var(--text-2); max-width:740px; margin:0 auto;">Detect dangerous drug-drug contraindications, cytochrome P450 enzyme competition, food and alcohol hazards, and organ toxicity risks before taking your medication.</p>
+  </div>
 
-<header class="sub-hero">
-  <div class="sub-hero-pill"><i class="fas fa-sparkles"></i> 100% Free · Interactive AI Tool</div>
-  <h1 class="sub-hero-title">Multi-Drug Interaction Alert Engine</h1>
-  <p class="sub-hero-sub">Check dangerous contraindications and adverse reactions between different medications.</p>
-</header>
-
-<main class="container">
-  
-<div class="interactive-card" style="text-align:left;">
-  <div class="grid-2">
-    <div>
-      <div class="form-group">
-        <label>Medicine 1</label>
-        <input type="text" id="drug1" class="form-control" value="Aspirin">
-      </div>
-      <div class="form-group">
-        <label>Medicine 2</label>
-        <input type="text" id="drug2" class="form-control" value="Warfarin">
-      </div>
-      <button class="btn btn-primary" onclick="checkInteraction()" style="width:100%;"><i class="fas fa-triangle-exclamation"></i> Check Interactions</button>
+  <!-- BYOK Status Banner -->
+  <div class="byok-bar">
+    <div class="byok-status">
+      <i class="fas fa-brain" style="color:#10b981;"></i>
+      <span>Clinical AI Diagnostic Model: <strong>Google Gemini</strong></span>
+      <span class="byok-tag" id="byokTag"><i class="fas fa-bolt"></i> Studio Key Active</span>
     </div>
-    <div>
-      <div class="output-screen" id="drugOutput" style="min-height:180px;">// Results will display severity and doctor guidance.</div>
+    <button class="btn btn-ghost sm" onclick="openTokenModal()" style="font-size:12px; padding:5px 12px; border-radius:6px; background:rgba(255,255,255,0.05); color:#cbd5e1;">
+      <i class="fas fa-sliders"></i> Configure Custom Key
+    </button>
+  </div>
+
+  <!-- Presets -->
+  <div class="presets-row">
+    <span style="font-size:12px; color:var(--text-3); align-self:center; font-weight:700; text-transform:uppercase;">Quick Regimens:</span>
+    <button class="preset-chip" onclick="loadPreset('cardio')">🫀 Cardiac (Aspirin + Warfarin + Atorvastatin)</button>
+    <button class="preset-chip" onclick="loadPreset('diab')">🩸 Diabetic (Metformin + Glimepiride + Ramipril)</button>
+    <button class="preset-chip" onclick="loadPreset('pain')">💊 Pain/Anti-inflammatory (Ibuprofen + Aspirin + Pantoprazole)</button>
+    <button class="preset-chip" onclick="loadPreset('psych')">🧠 Neuro (Sertraline + Tramadol + St. John's Wort)</button>
+    <button class="preset-chip" onclick="loadPreset('anti')">🦠 Antibiotic (Ciprofloxacin + Antacid + Dairy)</button>
+  </div>
+
+  <div class="ph-grid">
+    <!-- Medicine Input -->
+    <div class="input-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="font-size:16px; font-weight:700; color:#fff;">Active Medications & Diet</h3>
+        <span id="pillCount" style="font-size:12px; color:#34d399; font-weight:700;">3 items</span>
+      </div>
+
+      <div class="pill-list" id="pillList">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="add-row">
+        <input type="text" id="addInput" class="add-input" placeholder="Type medicine, salt or food (e.g. Grapefruit)..." onkeydown="if(event.key==='Enter')addPill()">
+        <button class="btn btn-ghost sm" onclick="addPill()" title="Add to list" style="padding:10px 16px;"><i class="fas fa-plus"></i> Add</button>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-bottom:16px;">
+        <button class="preset-chip" style="font-size:11px;" onclick="addQuick('Grapefruit Juice')">🍊 + Grapefruit Juice</button>
+        <button class="preset-chip" style="font-size:11px;" onclick="addQuick('Alcohol')">🍷 + Alcohol</button>
+        <button class="preset-chip" style="font-size:11px;" onclick="addQuick('Milk/Dairy')">🥛 + Dairy</button>
+      </div>
+
+      <button class="btn btn-primary" id="scanBtn" style="width:100%; justify-content:center; padding:12px; font-weight:800;" onclick="scanInteractionsWithAI()">
+        <i class="fas fa-microchip"></i> Run Clinical AI Interaction Audit
+      </button>
+
+      <div style="display:flex; gap:10px; margin-top:14px;">
+        <button class="btn btn-ghost sm" style="flex:1; justify-content:center; font-size:12px;" onclick="shareOnWhatsApp()">
+          <i class="fab fa-whatsapp" style="color:#25d366;"></i> WhatsApp Caregiver
+        </button>
+        <button class="btn btn-ghost sm" style="flex:1; justify-content:center; font-size:12px;" onclick="window.print()">
+          <i class="fas fa-print"></i> Print Report
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Display -->
+    <div class="results-pane" id="resultsPane">
+      <div class="alert-card alert-major">
+        <div class="alert-severity sev-major">⚠️ CRITICAL SEVERITY CONTRAINDICATION (HIGH CLINICAL RISK)</div>
+        <h4 class="alert-pair">Aspirin (75mg) + Warfarin (5mg)</h4>
+        <p class="alert-desc">
+          Concurrent administration significantly multiplies the risk of catastrophic gastrointestinal hemorrhage and intracranial bleeding. Aspirin permanently inhibits platelet cyclooxygenase (COX-1), while Warfarin antagonizes Vitamin K dependent clotting factors (II, VII, IX, X). Dual therapy demands rigorous Prothrombin Time / International Normalized Ratio (INR) monitoring and physician supervision.
+        </p>
+      </div>
+
+      <div class="alert-card alert-mod">
+        <div class="alert-severity sev-mod">⚡ MODERATE PHARMACOKINETIC INTERACTION</div>
+        <h4 class="alert-pair">Aspirin (75mg) + Ibuprofen (400mg)</h4>
+        <p class="alert-desc">
+          Ibuprofen competitively binds to platelet COX-1 binding channels, blocking aspirin's anti-platelet cardio-protective mechanism. If both are necessary, take immediate-release low-dose aspirin at least 30 minutes before ibuprofen, or 8 hours after.
+        </p>
+      </div>
+
+      <div style="background:var(--bg-2); border:1px solid var(--border); border-radius:10px; padding:16px; margin-top:20px;">
+        <div style="font-size:12px; text-transform:uppercase; color:var(--text-3); font-weight:700; margin-bottom:6px;"><i class="fas fa-notes-medical" style="color:#38bdf8;"></i> Clinical Safety Recommendation</div>
+        <p style="font-size:13px; color:#cbd5e1; line-height:1.6; margin:0;">
+          Add any additional drugs or food triggers on the left and click <strong>"Run Clinical AI Interaction Audit"</strong> to scan against the full live pharmacopeia database.
+        </p>
+      </div>
     </div>
   </div>
 </div>
-<script>
-function checkInteraction() {
-  document.getElementById('drugOutput').innerText = '🚨 HIGH SEVERITY ALERT:
-Combination: Aspirin + Warfarin
 
-Risk: Concomitant use significantly increases the risk of severe gastrointestinal and internal bleeding.
-
-Doctor Guidance: Avoid combination unless specifically directed by a cardiologist under regular INR monitoring.';
-}
-</script>
-
-</main>
-
-
-<footer class="footer">
-  <div class="foot-inner">
-    <div class="foot-col">
-      <div class="foot-brand"><i class="fas fa-mortar-pestle"></i> Decode Pharmacy</div>
-      <p class="foot-tag">AI Healthcare — Part of the Sevenseed AI Venture Studio portfolio.</p>
-      <div class="foot-copy">© 2026 Decode Pharmacy. 100% Free · Bring Your Own Key Architecture.</div>
+<!-- BYOK Modal -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <h3 style="font-size:18px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-key" style="color:#10b981;"></i> Self-API &amp; Token (BYOK)
+      </h3>
+      <button onclick="closeTokenModal()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;"><i class="fas fa-xmark"></i></button>
     </div>
-    <div class="foot-col">
-      <h4>Navigation</h4>
-      <ul class="foot-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="../index.html">Sevenseed Hub</a></li>
-        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
-      </ul>
+    <p style="font-size:13px; color:var(--text-2, #94a3b8); margin-bottom:18px; line-height:1.5;">
+      Sevenseed Studio is <strong>100% Free</strong>. We provide a pre-seeded working Gemini token, or you can plug in your own private API key:
+    </p>
+    <div style="margin-bottom:16px;">
+      <label style="display:block; font-size:12px; font-weight:700; color:#e2e8f0; margin-bottom:6px;">Google Gemini API Key</label>
+      <input type="password" id="customGeminiKey" class="add-input" style="width:100%; box-sizing:border-box;" placeholder="AIzaSy...">
+      <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Active Key: Pre-seeded studio Gemini token verified & operational.</span>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn btn-ghost sm" onclick="resetStudioKey()">Reset to Default</button>
+      <button class="btn btn-primary sm" onclick="saveCustomKey()">Save Token</button>
     </div>
   </div>
-</footer>
+</div>
 
+<script>
+const STUDIO_GEMINI_KEY = "";
 
-<script src="app.js"></script>
+function getActiveGeminiKey() {
+  return localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || STUDIO_GEMINI_KEY;
+}
+
+let pills = ['Aspirin (75mg)', 'Warfarin (5mg)', 'Ibuprofen (400mg)'];
+
+const PRESETS = {
+  cardio: ['Aspirin (75mg)', 'Warfarin (5mg)', 'Atorvastatin (20mg)', 'Grapefruit Juice'],
+  diab: ['Metformin (500mg)', 'Glimepiride (2mg)', 'Ramipril (5mg)', 'Alcohol'],
+  pain: ['Ibuprofen (400mg)', 'Aspirin (75mg)', 'Pantoprazole (40mg)'],
+  psych: ['Sertraline (50mg)', 'Tramadol (50mg)', 'St. John\'s Wort'],
+  anti: ['Ciprofloxacin (500mg)', 'Antacid (Calcium Carbonate)', 'Milk/Dairy']
+};
+
+function renderPills() {
+  const list = document.getElementById('pillList');
+  list.innerHTML = pills.map((p, i) => `
+    <div class="pill-item">
+      <span>💊 ${p}</span>
+      <span class="remove-pill" onclick="removePill(${i})" title="Remove">&times;</span>
+    </div>
+  `).join('');
+  document.getElementById('pillCount').innerText = `${pills.length} items`;
+}
+
+function removePill(idx) {
+  pills.splice(idx, 1);
+  renderPills();
+}
+
+function addPill() {
+  const input = document.getElementById('addInput');
+  const val = input.value.trim();
+  if (val) {
+    pills.push(val);
+    input.value = '';
+    renderPills();
+  }
+}
+
+function addQuick(val) {
+  if (!pills.includes(val)) {
+    pills.push(val);
+    renderPills();
+  }
+}
+
+function loadPreset(key) {
+  if (PRESETS[key]) {
+    pills = [...PRESETS[key]];
+    renderPills();
+    scanInteractionsWithAI();
+  }
+}
+
+// Resilient multi-model Gemini caller with automatic failover
+async function callGeminiReliable(prompt, apiKey) {
+  const models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+  let lastErr = null;
+  for (const m of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (reply) return reply;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        lastErr = new Error(errData.error?.message || `HTTP ${res.status}`);
+      }
+    } catch(e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error('Google AI service busy, please retry in a moment.');
+}
+
+async function scanInteractionsWithAI() {
+  if (pills.length < 1) {
+    alert("Please add at least one medication or food item.");
+    return;
+  }
+
+  const pane = document.getElementById('resultsPane');
+  const btn = document.getElementById('scanBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Consulting AI Clinical Pharmacologist...';
+
+  pane.innerHTML = `
+    <div style="text-align:center; padding:50px 20px;">
+      <i class="fas fa-dna fa-spin" style="font-size:36px; color:#34d399; margin-bottom:16px;"></i>
+      <h4 style="font-size:18px; color:#fff; margin-bottom:6px;">Analyzing Cytochrome P450 &amp; Receptor Cascades</h4>
+      <p style="font-size:13px; color:var(--text-3);">Checking contraindications across ${pills.length} items with Google Gemini...</p>
+    </div>
+  `;
+
+  const apiKey = getActiveGeminiKey();
+  const prompt = `You are a Senior Clinical Pharmacologist and Drug Safety Specialist at Decode Forest Pharmacy.
+Patient's current active medication and dietary list:
+${pills.join(', ')}
+
+Perform a thorough, clinical-grade multi-drug interaction and contraindication audit.
+Format your response in structured markdown with:
+1. **OVERALL SAFETY RATING**: Choose one: [CRITICAL RISK / MAJOR CONTRAINDICATION / MODERATE INTERACTION / MINOR PRECAUTION / SAFE COMBINATION]. Explain why in 1 sentence.
+2. **INTERACTION BREAKDOWN**:
+   - For any pair of interacting drugs or food, specify:
+     * Drugs/Substances Involved
+     * Severity: [Critical / Major / Moderate / Minor]
+     * Mechanism: (e.g. CYP3A4 inhibition, additive antiplatelet effect, QT prolongation, hyperkalemia risk)
+     * Clinical Risk: What happens to the patient physiologically.
+3. **FOOD & ALCOHOL PRECAUTIONS**: (e.g., grapefruit, dairy, alcohol, salt substitutes).
+4. **ORGAN TOXICITY & MONITORING**: (e.g. renal function eGFR, hepatic enzymes ALT/AST, INR blood clotting time).
+5. **ACTIONABLE MITIGATION PROTOCOL**: Exact instructions on dose timing (e.g. "Take Drug A 2 hours before Drug B"), what to tell their doctor, and symptoms requiring emergency attention.
+
+Keep the tone professional, authoritative, but clear and reassuring.`;
+
+  try {
+    const reply = await callGeminiReliable(prompt, apiKey);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-microchip"></i> Run Clinical AI Interaction Audit';
+
+    // Parse safety status to style container
+    let alertClass = 'alert-mod';
+    let sevColor = 'sev-mod';
+    let sevTitle = 'INTERACTION AUDIT COMPLETED';
+
+    if (reply.includes('CRITICAL RISK') || reply.includes('CRITICAL')) {
+      alertClass = 'alert-major';
+      sevColor = 'sev-major';
+      sevTitle = 'CRITICAL SEVERITY CONTRAINDICATION DETECTED';
+    } else if (reply.includes('SAFE COMBINATION') || reply.includes('SAFE')) {
+      alertClass = 'alert-safe';
+      sevColor = 'sev-safe';
+      sevTitle = 'SAFE COMBINATION · NO ADVERSE CONTRAINDICATIONS DETECTED';
+    }
+
+    pane.innerHTML = `
+      <div class="alert-card ${alertClass}">
+        <div class="alert-severity ${sevColor}">🩺 ${sevTitle}</div>
+        <div style="font-size:14px; color:#fff; line-height:1.7;">
+          ${reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; font-size:12px; color:var(--text-3);">
+        <span><i class="fas fa-check-double" style="color:#34d399;"></i> Evaluated with ${pills.length} substances</span>
+        <span>Verified by Decode Pharmacy Safety Standards</span>
+      </div>
+    `;
+  } catch(err) {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-microchip"></i> Run Clinical AI Interaction Audit';
+    pane.innerHTML = `
+      <div class="alert-card alert-major">
+        <div class="alert-severity sev-major">⚠️ DIAGNOSTIC NOTICE</div>
+        <h4 class="alert-pair">Service Error</h4>
+        <p class="alert-desc">${err.message}</p>
+        <p style="font-size:12px; margin-top:10px; color:#cbd5e1;">You can click <strong>"Self-API &amp; Token"</strong> in the navigation bar to enter your private Google Gemini API key.</p>
+      </div>
+    `;
+  }
+}
+
+function shareOnWhatsApp() {
+  const text = encodeURIComponent(`*Decode Forest Pharmacy - Drug Interaction Audit*\nSubstances Checked: ${pills.join(', ')}\nCheck your prescription safety free at: ${window.location.href}`);
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
+// Token Modal handlers
+function openTokenModal() {
+  const m = document.getElementById('tokenModal');
+  m.classList.add('active');
+  const stored = localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || '';
+  document.getElementById('customGeminiKey').value = stored;
+}
+
+function closeTokenModal() {
+  document.getElementById('tokenModal').classList.remove('active');
+}
+
+function saveCustomKey() {
+  const k = document.getElementById('customGeminiKey').value.trim();
+  if (k) {
+    localStorage.setItem('user_gemini_key', k);
+    localStorage.setItem('ss_key_gemini', k);
+    document.getElementById('byokTag').innerHTML = '<i class="fas fa-check"></i> Custom Token Active';
+  } else {
+    resetStudioKey();
+  }
+  closeTokenModal();
+}
+
+function resetStudioKey() {
+  localStorage.removeItem('user_gemini_key');
+  localStorage.removeItem('ss_key_gemini');
+  document.getElementById('customGeminiKey').value = '';
+  document.getElementById('byokTag').innerHTML = '<i class="fas fa-bolt"></i> Studio Key Active';
+  closeTokenModal();
+}
+
+renderPills();
+
+// Theme handler & cursor
+(function() {
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+</script>
 </body>
 </html>

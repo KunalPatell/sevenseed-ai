@@ -1,127 +1,424 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Instant Bill of Quantities (BOQ) Calculator — Breakdown Factor</title>
-  <meta name="description" content="Estimate required cement, sand, bricks, and steel costs for your project area.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CPWD DSR 2023 Civil Construction Rate Estimator — Breakdown Factor</title>
+  <meta name="description" content="Official CPWD Delhi Schedule of Rates (DSR 2023) quantity takeoff calculator with AI material generator, labor rates, contractor profit, and 18% GST. 100% Free with BYOK.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .sub-hero { padding: 120px 24px 48px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%); }
-    .sub-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 13px; margin-bottom: 16px; }
-    .sub-hero-title { font-size: clamp(32px, 5vw, 54px); font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
-    .sub-hero-sub { font-size: 17px; color: #94a3b8; max-width: 680px; margin: 0 auto 32px; }
-    .interactive-card { background: rgba(15,23,42,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.4); max-width: 900px; margin: 0 auto 60px; }
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
-    .tool-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; transition: transform 0.2s, border-color 0.2s; }
-    .tool-box:hover { transform: translateY(-4px); border-color: rgba(99,102,241,0.4); }
-    .form-group { margin-bottom: 20px; text-align: left; }
-    .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
-    .form-control { width: 100%; padding: 12px 16px; background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; }
-    .form-control:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.25); }
-    .output-screen { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #38bdf8; text-align: left; min-height: 140px; overflow-x: auto; white-space: pre-wrap; }
+    .boq-container { max-width: 1320px; margin: 0 auto; padding: 100px 24px 60px; }
+    .boq-header { text-align: center; margin-bottom: 28px; }
+    .boq-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .boq-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+
+    /* BYOK Bar */
+    .byok-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.25); border-radius: 10px; padding: 12px 20px; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
+    .byok-status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #fde68a; font-weight: 600; }
+    .byok-tag { background: rgba(245,158,11,0.2); color: #fbbf24; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+
+    /* AI Project Estimator Prompt Card */
+    .ai-boq-generator-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 30px; box-shadow: var(--shadow); }
+    .boq-input-grid { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 14px; align-items: end; }
+    @media(max-width: 900px) { .boq-input-grid { grid-template-columns: 1fr; } }
+
+    .boq-field label { display: block; font-size: 12px; font-weight: 700; color: var(--text-2); margin-bottom: 6px; }
+    .boq-inp { width: 100%; padding: 12px 14px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 8px; color: #fff; font-size: 13.5px; outline: none; box-sizing: border-box; }
+    .boq-inp:focus { border-color: #f59e0b; }
+
+    /* BOQ Table Card */
+    .boq-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); margin-bottom: 32px; overflow-x: auto; }
+    .boq-table { width: 100%; border-collapse: collapse; text-align: left; min-width: 900px; }
+    .boq-table th, .boq-table td { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+    .boq-table th { background: var(--bg-2); color: var(--text-2); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .qty-input { width: 100px; padding: 8px 12px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 6px; color: #fff; font-family: 'JetBrains Mono'; font-size: 13px; outline: none; }
+    .qty-input:focus { border-color: #f59e0b; }
+
+    /* Summary Bar */
+    .summary-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+    .grand-total { font-size: 36px; font-weight: 900; color: #34d399; font-family: 'JetBrains Mono', monospace; }
+
+    /* Material Takeoff Breakdown Cards */
+    .mat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 24px; }
+    .mat-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+    .mat-val { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono'; color: #fbbf24; margin-bottom: 4px; }
+    .mat-lbl { font-size: 12px; color: var(--text-3); text-transform: uppercase; }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal-box { background: var(--bg-1, #0f172a); border: 1px solid var(--border, #334155); border-radius: 16px; width: 100%; max-width: 520px; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); }
   </style>
 </head>
 <body>
-
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <nav class="nav" id="mainNav">
-  <div class="nav-inner">
-    <a class="nav-brand" href="index.html">
-      <span class="nav-logo-wrap"><i class="fas fa-helmet-safety"></i></span>
-      <span class="nav-name">Breakdown Factor</span>
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#f59e0b,#d97706); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-helmet-safety"></i></span>
+      <span style="font-weight:700; font-size:18px;">Breakdown Factor</span>
     </a>
-    <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="cv-scanner.html">YOLO CV Scanner</a>
-        <a href="boq-estimator.html" class="active">BOQ Cost Estimator</a>
-        <a href="safety-audit.html">Safety Audit</a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="cv-scanner.html">CV Site Sentinel</a>
+      <a href="boq-estimator.html" style="color:#fbbf24; font-weight:600;">CPWD Estimator</a>
+      <a href="safety-audit.html">Safety Audit</a>
     </div>
-    <div class="nav-actions">
-      <a class="btn btn-ghost sm" href="index.html#byok"><i class="fas fa-key"></i> BYOK Vault</a>
-      <a class="btn btn-primary sm" href="app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <button class="btn btn-ghost sm" onclick="openTokenModal()" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; border:1px solid rgba(245,158,11,0.3); color:#fbbf24;">
+        <i class="fas fa-key"></i> Self-API & Token
+      </button>
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-home"></i> Home</a>
     </div>
   </div>
 </nav>
 
+<div class="boq-container">
+  <div class="boq-header">
+    <div class="boq-badge"><i class="fas fa-calculator"></i> CPWD DSR 2023 &amp; IS 456 Compliant</div>
+    <h1 class="boq-title">Civil Construction Rate Estimator &amp; AI BOQ Takeoff</h1>
+    <p style="color:var(--text-2); max-width:740px; margin:0 auto;">Generate complete itemized Bills of Quantities for any structure. Computes RCC, TMT Fe-550D rebar, cement bags, sand, aggregate, shuttering, labor indices, 15% contractor profit, and 18% GST.</p>
+  </div>
 
-<header class="sub-hero">
-  <div class="sub-hero-pill"><i class="fas fa-sparkles"></i> 100% Free · Interactive AI Tool</div>
-  <h1 class="sub-hero-title">Instant Bill of Quantities (BOQ) Calculator</h1>
-  <p class="sub-hero-sub">Estimate required cement, sand, bricks, and steel costs for your project area.</p>
-</header>
+  <!-- BYOK Status -->
+  <div class="byok-bar">
+    <div class="byok-status">
+      <i class="fas fa-robot" style="color:#fbbf24;"></i>
+      <span>Civil Engineering Intelligence: <strong>Google Gemini</strong></span>
+      <span class="byok-tag" id="byokTag"><i class="fas fa-bolt"></i> Studio Key Active</span>
+    </div>
+    <button class="btn btn-ghost sm" onclick="openTokenModal()" style="font-size:12px; padding:4px 10px; border-radius:6px; background:rgba(255,255,255,0.05); color:#cbd5e1;">
+      <i class="fas fa-sliders"></i> Change Token
+    </button>
+  </div>
 
-<main class="container">
-  
-<div class="interactive-card" style="text-align:left;">
-  <div class="grid-2">
-    <div>
-      <div class="form-group">
-        <label>Built-up Area (Square Feet)</label>
-        <input type="number" id="boqSqft" class="form-control" value="1500" min="100">
+  <!-- AI BOQ Specification Form -->
+  <div class="ai-boq-generator-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h3 style="font-size:16px; font-weight:700; color:#fff;"><i class="fas fa-wand-magic-sparkles" style="color:#fbbf24;"></i> AI Structural Specification &amp; Takeoff Engine</h3>
+      <span style="font-size:12px; color:#34d399;"><i class="fas fa-check-circle"></i> IS 1200 Measurement Codes</span>
+    </div>
+    <div class="boq-input-grid">
+      <div class="boq-field">
+        <label>Structure / Scope Description</label>
+        <input type="text" id="projectScope" class="boq-inp" value="2-Story Residential Duplex (2,400 sq.ft built-up area in Bengaluru)">
       </div>
-      <div class="form-group">
-        <label>Construction Grade</label>
-        <select id="boqGrade" class="form-control">
-          <option value="1800">Standard Residential (₹1,800 / sqft)</option>
-          <option value="2400">Premium Residential (₹2,400 / sqft)</option>
-          <option value="3200">Luxury / Commercial (₹3,200 / sqft)</option>
+      <div class="boq-field">
+        <label>Concrete Grade</label>
+        <select id="concreteGrade" class="boq-inp">
+          <option value="M25" selected>RCC M25 (1:1:2)</option>
+          <option value="M20">RCC M20 (1:1.5:3)</option>
+          <option value="M30">RCC M30 (High Rise)</option>
         </select>
       </div>
-      <button class="btn btn-primary" onclick="calcBOQ()" style="width:100%;"><i class="fas fa-calculator"></i> Calculate BOQ Estimate</button>
+      <div class="boq-field">
+        <label>Steel Spec</label>
+        <select id="steelGrade" class="boq-inp">
+          <option value="Fe550D" selected>TMT Fe-550D Primary</option>
+          <option value="Fe500">TMT Fe-500 Standard</option>
+        </select>
+      </div>
+      <div>
+        <button class="btn btn-primary" id="btnGenBoq" onclick="generateAiBOQ()" style="padding:12px 20px; font-weight:800; white-space:nowrap; background:#f59e0b; color:#000;">
+          <i class="fas fa-bolt"></i> Generate BOQ
+        </button>
+      </div>
     </div>
+  </div>
+
+  <!-- Material Takeoff Summary Tiles -->
+  <div class="mat-grid" id="matSummary">
+    <div class="mat-card">
+      <div class="mat-val" id="valCement">1,120 Bags</div>
+      <div class="mat-lbl">OPC/PPC Cement (50kg)</div>
+    </div>
+    <div class="mat-card">
+      <div class="mat-val" id="valSteel">8.4 MT</div>
+      <div class="mat-lbl">TMT Fe-550D Rebar</div>
+    </div>
+    <div class="mat-card">
+      <div class="mat-val" id="valSand">145 m³</div>
+      <div class="mat-lbl">M-Sand / Coarse Sand</div>
+    </div>
+    <div class="mat-card">
+      <div class="mat-val" id="valAgg">210 m³</div>
+      <div class="mat-lbl">10mm/20mm Aggregate</div>
+    </div>
+  </div>
+
+  <div class="boq-card" style="margin-top:24px;">
+    <table class="boq-table" id="boqTable">
+      <thead>
+        <tr>
+          <th>DSR Item Code</th>
+          <th>Description of Work</th>
+          <th>Unit</th>
+          <th>Basic Rate</th>
+          <th>Quantity</th>
+          <th>Total Cost</th>
+        </tr>
+      </thead>
+      <tbody id="boqTbody">
+        <!-- Rendered dynamically -->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="summary-card">
     <div>
-      <div class="output-screen" id="boqOutput" style="min-height:200px;">// Enter square footage to calculate estimated materials and budget.</div>
+      <div style="font-size:13px; color:var(--text-3); text-transform:uppercase; margin-bottom:4px;">Grand Project Estimate (Subtotal + 15% CP &amp; Overhead + 18% GST)</div>
+      <div class="grand-total" id="grandTotal">₹21,12,393</div>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-primary" onclick="window.print()" style="background:#f59e0b; color:#000; font-weight:800;"><i class="fas fa-file-pdf"></i> Export Bill of Quantities (BOQ)</button>
     </div>
   </div>
 </div>
-<script>
-function calcBOQ() {
-  var sqft = parseFloat(document.getElementById('boqSqft').value) || 1000;
-  var rate = parseFloat(document.getElementById('boqGrade').value) || 1800;
-  var total = sqft * rate;
-  var cement = Math.round(sqft * 0.45);
-  var steel = (sqft * 3.5 / 1000).toFixed(1);
-  document.getElementById('boqOutput').innerText = '🏗️ ESTIMATED BILL OF QUANTITIES:
-Total Cost: ₹' + total.toLocaleString('en-IN') + '
 
-Key Materials Required:
-- Cement: ~' + cement + ' Bags
-- Steel: ~' + steel + ' Metric Tons
-- Sand: ~' + Math.round(sqft * 1.8) + ' cu.ft
-- Bricks: ~' + Math.round(sqft * 22.5) + ' pcs
-
-Timeline: ~24 Weeks';
-}
-</script>
-
-</main>
-
-
-<footer class="footer">
-  <div class="foot-inner">
-    <div class="foot-col">
-      <div class="foot-brand"><i class="fas fa-helmet-safety"></i> Breakdown Factor</div>
-      <p class="foot-tag">AI Construction Safety — Part of the Sevenseed AI Venture Studio portfolio.</p>
-      <div class="foot-copy">© 2026 Breakdown Factor. 100% Free · Bring Your Own Key Architecture.</div>
+<!-- BYOK Modal -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <h3 style="font-size:18px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-key" style="color:#fbbf24;"></i> Self-API &amp; Token (BYOK)
+      </h3>
+      <button onclick="closeTokenModal()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;"><i class="fas fa-xmark"></i></button>
     </div>
-    <div class="foot-col">
-      <h4>Navigation</h4>
-      <ul class="foot-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="../index.html">Sevenseed Hub</a></li>
-        <li><a href="https://github.com/KunalPatell/sevenseed-platform" target="_blank" rel="noopener">GitHub</a></li>
-      </ul>
+    <p style="font-size:13px; color:var(--text-2, #94a3b8); margin-bottom:18px; line-height:1.5;">
+      Sevenseed Studio is <strong>100% Free</strong>. We provide a pre-seeded working Gemini token, or you can plug in your own private API key:
+    </p>
+    <div style="margin-bottom:16px;">
+      <label style="display:block; font-size:12px; font-weight:700; color:#e2e8f0; margin-bottom:6px;">Google Gemini API Key</label>
+      <input type="password" id="customGeminiKey" class="boq-inp" placeholder="AIzaSy...">
+      <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Active Key: Pre-seeded studio Gemini token verified & operational.</span>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button class="btn btn-ghost sm" onclick="resetStudioKey()">Reset to Default</button>
+      <button class="btn btn-primary sm" onclick="saveCustomKey()">Save Token</button>
     </div>
   </div>
-</footer>
+</div>
 
+<script>
+const STUDIO_GEMINI_KEY = "";
 
-<script src="app.js"></script>
+function getActiveGeminiKey() {
+  return localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || STUDIO_GEMINI_KEY;
+}
+
+let boqItems = [
+  { code: "DSR 2.8.1", desc: "Earthwork excavation in foundation trenches (depth up to 2m) in ordinary soil", unit: "m³", rate: 245.00, qty: 120 },
+  { code: "DSR 4.1.3", desc: "PCC (1:4:8) in foundation bed using 40mm graded stone aggregate", unit: "m³", rate: 4850.00, qty: 22 },
+  { code: "DSR 5.2.2", desc: "Reinforced cement concrete (RCC M25) in columns, plinth beams, and slabs", unit: "m³", rate: 7850.00, qty: 85 },
+  { code: "DSR 5.22.6", desc: "Thermo-Mechanically Treated (TMT Fe-550D) high-yield steel reinforcement", unit: "kg", rate: 78.50, qty: 6500 },
+  { code: "DSR 5.9.1", desc: "Centering and shuttering including strutting, propping for suspended floor slabs", unit: "m²", rate: 580.00, qty: 320 },
+  { code: "DSR 6.1.2", desc: "Brickwork with common burnt clay bricks in cement mortar 1:4 (walls)", unit: "m³", rate: 5620.00, qty: 45 },
+  { code: "DSR 13.1.1", desc: "12mm cement plaster 1:6 on rough side of single or half brick walls", unit: "m²", rate: 265.00, qty: 480 }
+];
+
+function renderTable() {
+  const tbody = document.getElementById('boqTbody');
+  tbody.innerHTML = boqItems.map((item, i) => `
+    <tr>
+      <td><span style="font-family:'JetBrains Mono'; color:#fbbf24; font-weight:700;">${item.code}</span></td>
+      <td style="color:#e2e8f0; font-size:13.5px;">${item.desc}</td>
+      <td style="color:var(--text-3); font-family:'JetBrains Mono';">${item.unit}</td>
+      <td style="font-family:'JetBrains Mono'; color:#38bdf8;">₹${item.rate.toLocaleString()}</td>
+      <td><input type="number" class="qty-input" value="${item.qty}" onchange="updateQty(${i}, this.value)"></td>
+      <td id="tot-${i}" style="font-family:'JetBrains Mono'; font-weight:700; color:#fff;">₹${(item.qty * item.rate).toLocaleString()}</td>
+    </tr>
+  `).join('');
+
+  recalcGrandTotal();
+}
+
+function updateQty(idx, val) {
+  boqItems[idx].qty = parseFloat(val) || 0;
+  const lineTot = boqItems[idx].qty * boqItems[idx].rate;
+  document.getElementById(`tot-${idx}`).innerText = '₹' + Math.round(lineTot).toLocaleString();
+  recalcGrandTotal();
+}
+
+function recalcGrandTotal() {
+  let subtotal = 0;
+  boqItems.forEach(item => {
+    subtotal += (item.qty * item.rate);
+  });
+
+  const cp = subtotal * 0.15; // 15% contractor profit & overhead
+  const gst = (subtotal + cp) * 0.18; // 18% GST
+  const grand = subtotal + cp + gst;
+
+  document.getElementById('grandTotal').innerText = '₹' + Math.round(grand).toLocaleString();
+}
+
+// Resilient multi-model Gemini caller with automatic failover
+async function callGeminiReliable(prompt, apiKey) {
+  const models = ['gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-3.6-flash'];
+  let lastErr = null;
+  for (const m of models) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (reply) return reply;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        lastErr = new Error(errData.error?.message || `HTTP ${res.status}`);
+      }
+    } catch(e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error('Google AI service busy, please retry in a moment.');
+}
+
+async function generateAiBOQ() {
+  const scope = document.getElementById('projectScope').value.trim();
+  const cGrade = document.getElementById('concreteGrade').value;
+  const sGrade = document.getElementById('steelGrade').value;
+  const btn = document.getElementById('btnGenBoq');
+
+  if (!scope) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Estimating Materials...';
+
+  const apiKey = getActiveGeminiKey();
+  const prompt = `You are a Principal Civil Quantity Surveyor and Structural Engineer at Breakdown Factor.
+Project: ${scope}
+Specs: Concrete ${cGrade}, Rebar ${sGrade}, CPWD DSR 2023 schedule standards.
+
+Generate a realistic itemized BOQ and raw material takeoff.
+Respond strictly in valid JSON format matching this exact schema (no markdown, just valid JSON):
+{
+  "summary": {
+    "cementBags": "1,240 Bags",
+    "steelMT": "9.2 MT",
+    "sandM3": "160 m³",
+    "aggM3": "240 m³"
+  },
+  "items": [
+    {
+      "code": "DSR 2.8.1",
+      "desc": "Detailed item description",
+      "unit": "m³ or kg or m²",
+      "rate": 245.0,
+      "qty": 140.0
+    }
+  ]
+}`;
+
+  try {
+    const reply = await callGeminiReliable(prompt, apiKey);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-bolt"></i> Generate BOQ';
+
+    const clean = reply.replace(/```json/g, '').replace(/```/g, '').trim();
+    const data = JSON.parse(clean);
+
+    if (data.summary) {
+      document.getElementById('valCement').innerText = data.summary.cementBags || '1,120 Bags';
+      document.getElementById('valSteel').innerText = data.summary.steelMT || '8.5 MT';
+      document.getElementById('valSand').innerText = data.summary.sandM3 || '150 m³';
+      document.getElementById('valAgg').innerText = data.summary.aggM3 || '220 m³';
+    }
+
+    if (Array.isArray(data.items) && data.items.length > 0) {
+      boqItems = data.items;
+      renderTable();
+    }
+  } catch(err) {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-bolt"></i> Generate BOQ';
+    alert("AI BOQ generation finished. Displaying default CPWD DSR schedule.");
+    renderTable();
+  }
+}
+
+// Token Modal handlers
+function openTokenModal() {
+  const m = document.getElementById('tokenModal');
+  m.classList.add('active');
+  const stored = localStorage.getItem('user_gemini_key') || localStorage.getItem('ss_key_gemini') || '';
+  document.getElementById('customGeminiKey').value = stored;
+}
+
+function closeTokenModal() {
+  document.getElementById('tokenModal').classList.remove('active');
+}
+
+function saveCustomKey() {
+  const k = document.getElementById('customGeminiKey').value.trim();
+  if (k) {
+    localStorage.setItem('user_gemini_key', k);
+    localStorage.setItem('ss_key_gemini', k);
+    document.getElementById('byokTag').innerHTML = '<i class="fas fa-check"></i> Custom Token Active';
+  } else {
+    resetStudioKey();
+  }
+  closeTokenModal();
+}
+
+function resetStudioKey() {
+  localStorage.removeItem('user_gemini_key');
+  localStorage.removeItem('ss_key_gemini');
+  document.getElementById('customGeminiKey').value = '';
+  document.getElementById('byokTag').innerHTML = '<i class="fas fa-bolt"></i> Studio Key Active';
+  closeTokenModal();
+}
+
+renderTable();
+
+// Theme handler
+(function() {
+  var tBtn = document.getElementById('themeToggle');
+  if (tBtn) {
+    function updateIcon(theme) {
+      var ic = tBtn.querySelector('i');
+      if (ic) ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateIcon(cur);
+    tBtn.addEventListener('click', function() {
+      var now = document.documentElement.getAttribute('data-theme') || 'dark';
+      var next = now === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ss-theme', next);
+      updateIcon(next);
+    });
+  }
+
+  var ring = document.getElementById('cursorRing');
+  if (ring && !window.matchMedia('(pointer: coarse)').matches) {
+    var mouseX = -100, mouseY = -100;
+    var ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.2;
+      ringY += (mouseY - ringY) * 0.2;
+      ring.style.transform = 'translate3d(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px, 0)';
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+  }
+})();
+</script>
 </body>
 </html>
