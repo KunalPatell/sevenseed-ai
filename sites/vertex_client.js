@@ -66,7 +66,7 @@ const Vertex = (() => {
     el.innerHTML = online
       ? `<span style="color:#34d399;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;"></span>
-           Vertex AI (Gemini 2.5 Flash) — Ready
+           Vertex AI (Gemini 3.8 Flash) — Ready
          </span>`
       : `<span style="color:#f87171;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444;"></span>
