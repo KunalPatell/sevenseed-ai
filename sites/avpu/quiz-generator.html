@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AI Quiz & Flashcard Assessment Generator — AVPU</title>
+  <meta name="description" content="Generate high-yield interactive multiple-choice quizzes and active recall flashcards from any topic, study notes, or syllabus powered by Vertex AI.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🎓%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .qg-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 80px; }
+    .qg-header { text-align: center; margin-bottom: 36px; }
+    .qg-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 999px; background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3); color: #818cf8; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+    .qg-title { font-size: clamp(28px, 4.2vw, 48px); font-weight: 900; line-height: 1.2; margin-bottom: 12px; }
+    .qg-sub { color: var(--text-2); font-size: 16px; max-width: 680px; margin: 0 auto 24px; line-height: 1.6; }
+
+    .qg-grid { display: grid; grid-template-columns: 440px 1fr; gap: 28px; }
+    @media(max-width: 1024px) { .qg-grid { grid-template-columns: 1fr; } }
+
+    .form-panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 26px; }
+    .form-panel h3 { font-size: 18px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; color: #fff; }
+    .field-group { margin-bottom: 16px; }
+    .field-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 6px; }
+    .field-input, .field-textarea, .field-select { width: 100%; padding: 11px 14px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; transition: border-color .2s; }
+    .field-input:focus, .field-textarea:focus, .field-select:focus { border-color: #6366f1; }
+    .field-textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
+
+    .topic-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .chip { padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); cursor: pointer; transition: all .15s; }
+    .chip:hover, .chip.active { border-color: #6366f1; color: #a5b4fc; background: rgba(99,102,241,0.12); }
+
+    .btn-create { width: 100%; padding: 14px; background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: opacity .2s, transform .1s; box-shadow: 0 4px 20px rgba(99,102,241,0.3); }
+    .btn-create:hover { opacity: .92; transform: translateY(-1px); }
+    .btn-create:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .quiz-panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 26px; display: flex; flex-direction: column; min-height: 600px; }
+    .quiz-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 12px; }
+    .score-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(16,185,129,0.15); color: #34d399; padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 13px; }
+
+    .q-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 18px; transition: border-color .2s; }
+    .q-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .q-num { font-size: 12px; font-weight: 700; color: #818cf8; text-transform: uppercase; letter-spacing: .05em; }
+    .q-prompt { font-size: 16px; font-weight: 600; color: #fff; line-height: 1.5; margin-bottom: 16px; }
+
+    .opt-grid { display: flex; flex-direction: column; gap: 9px; }
+    .opt-btn { text-align: left; padding: 12px 16px; border-radius: 10px; background: var(--bg-1); border: 1px solid var(--border); color: #e2e8f0; font-family: inherit; font-size: 14px; cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 12px; }
+    .opt-btn:hover:not(:disabled) { border-color: #6366f1; background: rgba(99,102,241,0.06); }
+    .opt-letter { width: 24px; height: 24px; border-radius: 6px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    
+    .opt-btn.correct { background: rgba(16,185,129,0.15) !important; border-color: #10b981 !important; color: #34d399 !important; }
+    .opt-btn.correct .opt-letter { background: #10b981; color: #fff; }
+    .opt-btn.incorrect { background: rgba(239,68,68,0.15) !important; border-color: #ef4444 !important; color: #f87171 !important; }
+    .opt-btn.incorrect .opt-letter { background: #ef4444; color: #fff; }
+
+    .q-expl { display: none; margin-top: 14px; padding: 12px 16px; border-radius: 8px; background: rgba(255,255,255,0.03); border-left: 3px solid #6366f1; font-size: 13.5px; color: var(--text-2); line-height: 1.6; }
+    .q-expl.show { display: block; animation: fadeIn .2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .placeholder-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; color: var(--text-3); padding: 60px 20px; }
+    .placeholder-state i { font-size: 48px; color: var(--text-3); margin-bottom: 16px; opacity: 0.5; }
+    
+    .status-strip { margin-top: 14px; font-size: 12.5px; display: flex; align-items: center; justify-content: space-between; }
+  </style>
+</head>
+<body class="site-body">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <span class="nav-brand-icon">🎓</span>
+        <span class="nav-brand-text">AVP<span class="brand-accent">University</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Campuses</a>
+        <a href="courses.html" class="nav-link">Curriculum</a>
+        <a href="flashcards.html" class="nav-link">Flashcards</a>
+        <a href="quiz-generator.html" class="nav-link active">Quiz AI</a>
+        <a href="gyan-ai-tutor.html" class="nav-link">Gyan AI Tutor</a>
+        <a href="certifications.html" class="nav-link">Certifications</a>
+      </div>
+      <div class="nav-actions">
+        <a href="gyan-ai-tutor.html" class="btn btn-primary" style="background:#6366f1;"><i class="fa-solid fa-graduation-cap"></i> AI Campus</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="qg-container">
+    <div class="qg-header">
+      <div class="qg-badge"><i class="fa-solid fa-brain"></i> Active Recall & Spaced Repetition</div>
+      <h1 class="qg-title">AI Assessment & Quiz Generator</h1>
+      <p class="qg-sub">Generate interactive, exam-calibrated multiple-choice tests with deep step-by-step reasoning on any computer science, medicine, finance, or legal topic.</p>
+    </div>
+
+    <div class="qg-grid">
+      <!-- Controls -->
+      <div class="form-panel">
+        <h3><i class="fa-solid fa-sliders" style="color:#6366f1;"></i> Quiz Specifications</h3>
+
+        <div class="field-group">
+          <label class="field-label">Quick Subject Presets</label>
+          <div class="topic-chips">
+            <button type="button" class="chip active" onclick="setTopic('Distributed Systems & Raft Consensus')">Distributed Systems</button>
+            <button type="button" class="chip" onclick="setTopic('Transformer Attention & LLM Architecture')">Transformers / LLMs</button>
+            <button type="button" class="chip" onclick="setTopic('Constitutional Law: Fundamental Rights & Writs')">Indian Polity</button>
+            <button type="button" class="chip" onclick="setTopic('Pharmacokinetics: ADME & Half-life Elimination')">Pharmacokinetics</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Topic or Source Notes</label>
+          <textarea id="quizTopic" class="field-textarea" placeholder="Paste lecture notes or enter any subject...">Distributed Systems: Raft Consensus, leader election, log replication, split brain prevention, and Byzantine fault tolerance.</textarea>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+          <div>
+            <label class="field-label">Difficulty</label>
+            <select id="difficulty" class="field-select">
+              <option value="Undergraduate / Intermediate" selected>Intermediate</option>
+              <option value="Beginner / Fundamentals">Beginner</option>
+              <option value="Advanced / Graduate Level">Advanced</option>
+              <option value="Hardcore Olympiad / GATE">Hardcore / GATE</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Question Count</label>
+            <select id="qCount" class="field-select">
+              <option value="5" selected>5 Questions</option>
+              <option value="8">8 Questions</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="button" id="btnGenQuiz" class="btn-create" onclick="generateQuiz()">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Interactive Quiz
+        </button>
+
+        <div class="status-strip">
+          <span id="aiStatus"><i class="fa-solid fa-circle-nodes"></i> Vertex AI Connecting...</span>
+          <span style="color:var(--text-3);font-size:12px;">Gemini 2.5 Flash</span>
+        </div>
+      </div>
+
+      <!-- Quiz Interactive Arena -->
+      <div class="quiz-panel">
+        <div class="quiz-top">
+          <h3 style="font-size:18px;font-weight:700;color:#fff;display:flex;align-items:center;gap:10px;">
+            <i class="fa-solid fa-circle-question" style="color:#6366f1;"></i> Assessment Chamber
+          </h3>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div id="scoreBox" class="score-badge" style="display:none;">Score: <span id="scoreVal">0</span> / <span id="totalVal">0</span></div>
+            <button class="act-btn" onclick="window.print()" style="padding:6px 12px;border-radius:8px;background:var(--bg-2);border:1px solid var(--border);color:#fff;cursor:pointer;"><i class="fa-solid fa-print"></i> Print</button>
+          </div>
+        </div>
+
+        <div id="quizContainer">
+          <div class="placeholder-state">
+            <i class="fa-solid fa-flask"></i>
+            <h4 style="color:#fff;margin-bottom:8px;font-size:16px;">Ready to Test Your Mastery</h4>
+            <p style="font-size:13.5px;max-width:420px;">Pick a subject and difficulty, then click "Generate Interactive Quiz" to trigger intelligent question generation with instant grading.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../vertex_client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Vertex.showStatus('aiStatus');
+    });
+
+    let currentQuestions = [];
+    let correctCount = 0;
+    let answeredCount = 0;
+
+    function setTopic(text) {
+      document.getElementById('quizTopic').value = text;
+      document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.textContent === event.target.textContent));
+    }
+
+    async function generateQuiz() {
+      const btn = document.getElementById('btnGenQuiz');
+      const container = document.getElementById('quizContainer');
+      const topic = document.getElementById('quizTopic').value.trim();
+      const diff = document.getElementById('difficulty').value;
+      const count = document.getElementById('qCount').value;
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Formulating Questions...';
+      container.innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--text-2);"><i class="fa-solid fa-spinner fa-spin fa-2x" style="color:#6366f1;margin-bottom:14px;"></i><p>Generating ' + count + ' ' + diff + ' questions via Gemini 2.5 Flash...</p></div>';
+
+      const prompt = `You are a distinguished university professor creating an exam assessment.
+Generate an interactive multiple choice quiz based on this topic:
+Topic: "${topic}"
+Difficulty: ${diff}
+Number of Questions: ${count}
+
+Return ONLY valid JSON matching this schema:
+[
+  {
+    "question": "Clear, precise question stem",
+    "options": ["Option A text", "Option B text", "Option C text", "Option D text"],
+    "answerIndex": 0,
+    "explanation": "Deep conceptual explanation of why the correct option is true and key nuances to remember."
+  }
+]
+No markdown code fences, no extra text, just raw parseable JSON array.`;
+
+      try {
+        const raw = await Vertex.ask(prompt, { temperature: 0.2 });
+        const clean = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
+        currentQuestions = JSON.parse(clean);
+        renderQuiz(currentQuestions);
+      } catch (err) {
+        container.innerHTML = `<div style="padding:24px;color:#f87171;background:rgba(239,68,68,0.1);border-radius:12px;border:1px solid rgba(239,68,68,0.3);">
+          ⚠️ Failed to generate quiz: ${err.message}<br><br>Make sure the server is running: <code>cd vertex_dev && node server.js</code>
+        </div>`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generate Interactive Quiz';
+      }
+    }
+
+    function renderQuiz(questions) {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = '';
+      correctCount = 0;
+      answeredCount = 0;
+
+      document.getElementById('scoreBox').style.display = 'inline-flex';
+      document.getElementById('scoreVal').textContent = '0';
+      document.getElementById('totalVal').textContent = questions.length;
+
+      const letters = ['A', 'B', 'C', 'D'];
+
+      questions.forEach((q, qIdx) => {
+        const card = document.createElement('div');
+        card.className = 'q-card';
+        card.id = `qCard_${qIdx}`;
+
+        card.innerHTML = `
+          <div class="q-head">
+            <span class="q-num">Question ${qIdx + 1} of ${questions.length}</span>
+          </div>
+          <div class="q-prompt">${escapeHtml(q.question)}</div>
+          <div class="opt-grid">
+            ${q.options.map((opt, oIdx) => `
+              <button type="button" class="opt-btn" onclick="selectAnswer(${qIdx}, ${oIdx})">
+                <span class="opt-letter">${letters[oIdx]}</span>
+                <span>${escapeHtml(opt)}</span>
+              </button>
+            `).join('')}
+          </div>
+          <div class="q-expl" id="expl_${qIdx}">
+            <strong>💡 Explanation:</strong> ${escapeHtml(q.explanation)}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectAnswer(qIdx, selectedIdx) {
+      const q = currentQuestions[qIdx];
+      const card = document.getElementById(`qCard_${qIdx}`);
+      const buttons = card.querySelectorAll('.opt-btn');
+      const expl = document.getElementById(`expl_${qIdx}`);
+
+      // Disable all buttons in this question
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === q.answerIndex) {
+          btn.classList.add('correct');
+        } else if (idx === selectedIdx) {
+          btn.classList.add('incorrect');
+        }
+      });
+
+      if (selectedIdx === q.answerIndex) {
+        correctCount++;
+      }
+      answeredCount++;
+
+      document.getElementById('scoreVal').textContent = correctCount;
+      expl.classList.add('show');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>
