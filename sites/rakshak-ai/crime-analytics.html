@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Crime Analytics Dashboard — AI Heatmap & Pattern Analysis | Rakshak AI</title>
+  <meta name="description" content="Real-time AI-powered crime analytics dashboard for India — interactive heatmaps, BNS offence type breakdown, time-of-day patterns, district-level statistics and predictive insights.">
+  <meta property="og:title" content="Crime Analytics Dashboard — Rakshak AI">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E📊%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .ca-container { max-width: 1400px; margin: 0 auto; padding: 100px 24px 80px; }
+    .ca-header { text-align: center; margin-bottom: 36px; }
+    .ca-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 999px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #f87171; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+    .ca-title { font-size: clamp(28px,4.5vw,52px); font-weight: 900; line-height: 1.15; margin-bottom: 12px; }
+    .ca-sub { color: var(--text-2); font-size: 16px; max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+    /* ── Control Bar ── */
+    .controls-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 28px; background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; }
+    .ctrl-group { display: flex; align-items: center; gap: 8px; }
+    .ctrl-label { font-size: 12px; font-weight: 700; color: var(--text-3); text-transform: uppercase; }
+    .ctrl-select { padding: 8px 12px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 8px; color: #fff; font-size: 13px; font-family: inherit; outline: none; cursor: pointer; }
+    .ctrl-select:focus { border-color: #ef4444; }
+    .refresh-btn { margin-left: auto; padding: 8px 16px; background: linear-gradient(135deg,#ef4444,#dc2626); border: none; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .refresh-btn:hover { opacity: .85; }
+
+    /* ── KPI Row ── */
+    .kpi-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; margin-bottom: 28px; }
+    @media(max-width:900px){ .kpi-row { grid-template-columns: repeat(3,1fr); } }
+    @media(max-width:600px){ .kpi-row { grid-template-columns: repeat(2,1fr); } }
+
+    .kpi-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 20px 18px; text-align: center; transition: border-color .2s; }
+    .kpi-card:hover { border-color: rgba(239,68,68,0.4); }
+    .kpi-num { font-size: 28px; font-weight: 900; font-family: 'JetBrains Mono'; margin-bottom: 4px; }
+    .kpi-lbl { font-size: 12px; color: var(--text-3); }
+    .kpi-delta { font-size: 12px; font-weight: 700; margin-top: 6px; }
+    .kpi-delta.up { color: #f87171; }
+    .kpi-delta.down { color: #34d399; }
+
+    /* ── Main Dashboard Grid ── */
+    .dash-grid { display: grid; grid-template-columns: 1fr 380px; gap: 22px; margin-bottom: 22px; }
+    @media(max-width:1100px){ .dash-grid { grid-template-columns: 1fr; } }
+
+    .dash-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+    .dash-card-title { font-size: 15px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+    .dash-card-title i { color: #f87171; }
+
+    /* ── Heatmap ── */
+    .heatmap-grid { display: grid; grid-template-columns: 40px repeat(24,1fr); gap: 3px; align-items: center; }
+    .hm-label { font-size: 10px; color: var(--text-3); font-family: 'JetBrains Mono'; text-align: center; }
+    .hm-row-label { font-size: 10px; color: var(--text-3); font-family: 'JetBrains Mono'; text-align: right; padding-right: 8px; white-space: nowrap; }
+    .hm-cell { height: 22px; border-radius: 3px; cursor: pointer; transition: transform .1s, opacity .1s; position: relative; }
+    .hm-cell:hover { transform: scale(1.3); z-index: 10; }
+    .hm-legend { display: flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 11px; color: var(--text-3); }
+    .hm-grad { width: 120px; height: 10px; border-radius: 4px; background: linear-gradient(to right,#1e293b,#7f1d1d,#ef4444); }
+
+    /* ── Bar Charts ── */
+    .bar-chart { display: flex; flex-direction: column; gap: 10px; }
+    .bar-row { display: flex; align-items: center; gap: 10px; }
+    .bar-name { font-size: 12.5px; color: var(--text-2); width: 140px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar-track { flex: 1; height: 20px; background: var(--bg-2); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width 1.2s cubic-bezier(.25,.46,.45,.94); display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; }
+    .bar-val { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.85); font-family: 'JetBrains Mono'; white-space: nowrap; }
+
+    /* ── Time Distribution ── */
+    .time-dist { display: flex; gap: 4px; align-items: flex-end; height: 120px; margin-bottom: 10px; }
+    .time-bar { flex: 1; border-radius: 4px 4px 0 0; background: rgba(239,68,68,0.6); min-height: 4px; transition: height 1s ease; cursor: pointer; position: relative; }
+    .time-bar:hover { background: #ef4444; }
+    .time-bar::after { content: attr(data-hour); position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: 9px; color: var(--text-3); font-family: 'JetBrains Mono'; }
+    .time-labels { display: flex; gap: 4px; padding-top: 24px; }
+
+    /* ── Map Placeholder ── */
+    .india-map-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+    .map-placeholder { height: 320px; background: radial-gradient(ellipse at center, rgba(239,68,68,0.08) 0%, transparent 70%); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: var(--text-3); position: relative; overflow: hidden; }
+
+    /* ── State Rankings ── */
+    .state-rank-list { display: flex; flex-direction: column; gap: 8px; }
+    .state-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--bg-2); border-radius: 10px; transition: background .15s; cursor: pointer; }
+    .state-row:hover { background: rgba(239,68,68,0.08); }
+    .state-rank-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(239,68,68,0.15); color: #f87171; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono'; flex-shrink: 0; }
+    .state-name { flex: 1; font-size: 14px; font-weight: 600; }
+    .state-count { font-size: 13px; font-weight: 700; font-family: 'JetBrains Mono'; color: #f87171; }
+    .state-bar-mini { width: 60px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .state-bar-mini-fill { height: 100%; background: linear-gradient(90deg,#ef4444,#dc2626); border-radius: 3px; }
+
+    /* ── Insight Cards ── */
+    .insights-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    @media(max-width:900px){ .insights-grid { grid-template-columns: 1fr; } }
+
+    .insight-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+    .insight-card-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 14px; }
+    .insight-card-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+    .insight-card-body { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+    .insight-card-metric { font-size: 24px; font-weight: 900; font-family: 'JetBrains Mono'; margin-bottom: 6px; }
+
+    /* ── Live Feed ── */
+    .live-feed { display: flex; flex-direction: column; gap: 10px; max-height: 340px; overflow-y: auto; }
+    .live-feed::-webkit-scrollbar { width: 4px; }
+    .live-feed::-webkit-scrollbar-track { background: transparent; }
+    .live-feed::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .feed-item { display: flex; gap: 12px; padding: 12px 14px; background: var(--bg-2); border-radius: 10px; border-left: 3px solid #ef4444; }
+    .feed-dot { width: 8px; height: 8px; border-radius: 50%; background: #f87171; margin-top: 5px; flex-shrink: 0; box-shadow: 0 0 6px #ef4444; }
+    .feed-content { flex: 1; }
+    .feed-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .feed-meta { font-size: 11.5px; color: var(--text-3); display: flex; gap: 10px; }
+    .feed-time { font-family: 'JetBrains Mono'; }
+
+    /* ── Disclaimer ── */
+    .disclaimer { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); border-radius: 10px; padding: 14px 18px; margin-top: 24px; display: flex; gap: 10px; align-items: flex-start; }
+    .disclaimer i { color: #fbbf24; margin-top: 2px; flex-shrink: 0; }
+    .disclaimer p { font-size: 12.5px; color: var(--text-2); margin: 0; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex;align-items:center;gap:10px;">
+      <span style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;color:#fff;"><i class="fas fa-shield-halved"></i></span>
+      <span style="font-weight:700;font-size:18px;">Rakshak AI</span>
+    </a>
+    <div class="nav-links" style="display:flex;gap:18px;font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="fir-generator.html">BNS Auto-FIR</a>
+      <a href="sentinel-vision.html">CCTV Sentinel</a>
+      <a href="threat-radar.html">Threat Radar</a>
+      <a href="legal-rights.html">Know Your Rights</a>
+      <a href="police-station-locator.html">Police Locator</a>
+      <a href="crime-analytics.html" style="color:#f87171;font-weight:600;">Crime Analytics</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary" href="/rakshak-ai/app/" style="background:linear-gradient(135deg,#ef4444,#dc2626);border:none;"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    </div>
+  </div>
+</nav>
+
+<main class="ca-container">
+
+  <!-- Header -->
+  <div class="ca-header">
+    <div class="ca-badge"><i class="fas fa-chart-bar"></i> NCRB Data · AI Pattern Analysis · BNS 2023 Categories</div>
+    <h1 class="ca-title">Crime <span class="grad">Analytics</span> Dashboard</h1>
+    <p class="ca-sub">AI-driven analysis of crime patterns, time distributions, offence breakdowns and state-level rankings — for public safety research.</p>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-bar">
+    <div class="ctrl-group">
+      <span class="ctrl-label">Year</span>
+      <select class="ctrl-select" id="yearSel" onchange="refreshData()">
+        <option>2023</option><option>2022</option><option>2021</option><option>2020</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">State / UT</span>
+      <select class="ctrl-select" id="stateSel" onchange="refreshData()">
+        <option value="all">All India</option>
+        <option>Maharashtra</option><option>Delhi</option><option>Uttar Pradesh</option>
+        <option>Tamil Nadu</option><option>Karnataka</option><option>Rajasthan</option>
+        <option>Gujarat</option><option>Madhya Pradesh</option><option>West Bengal</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">Offence Type</span>
+      <select class="ctrl-select" id="offenceSel" onchange="refreshData()">
+        <option value="all">All Offences</option>
+        <option>Violent Crimes (BNS Ch. III)</option>
+        <option>Property Crimes (BNS Ch. XVII)</option>
+        <option>Cyber Crimes (IT Act)</option>
+        <option>Women Against Crimes</option>
+        <option>Economic Offences</option>
+      </select>
+    </div>
+    <button class="refresh-btn" onclick="refreshData()"><i class="fas fa-arrows-rotate"></i> Refresh</button>
+    <div style="font-size:12px;color:var(--text-3);font-family:'JetBrains Mono';margin-left:auto;display:flex;align-items:center;gap:6px;">
+      <span style="width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 6px #34d399;display:inline-block;animation:pulse-dot 2s infinite;"></span>
+      Last updated: <span id="lastUpdated">Oct 2023</span>
+    </div>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="kpi-row" id="kpiRow">
+    <div class="kpi-card">
+      <div class="kpi-num" style="color:#f87171;" id="kpi1">44.2L</div>
+      <div class="kpi-lbl">Total IPC/BNS Cases</div>
+      <div class="kpi-delta up" id="kpi1d">▲ 4.5% vs prev year</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num" style="color:#fbbf24;" id="kpi2">58.1%</div>
+      <div class="kpi-lbl">Chargesheet Rate</div>
+      <div class="kpi-delta down" id="kpi2d">▼ 1.2% improvement</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num" style="color:#38bdf8;" id="kpi3">4.9L</div>
+      <div class="kpi-lbl">Cyber Crimes</div>
+      <div class="kpi-delta up" id="kpi3d">▲ 24.4% vs prev year</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num" style="color:#c084fc;" id="kpi4">4.5L</div>
+      <div class="kpi-lbl">Crimes Against Women</div>
+      <div class="kpi-delta up" id="kpi4d">▲ 4.0% registered</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-num" style="color:#34d399;" id="kpi5">23.4%</div>
+      <div class="kpi-lbl">Conviction Rate</div>
+      <div class="kpi-delta down" id="kpi5d">▼ Needs improvement</div>
+    </div>
+  </div>
+
+  <!-- Main Grid: Heatmap + Side -->
+  <div class="dash-grid">
+    <div class="dash-card">
+      <div class="dash-card-title"><i class="fas fa-fire"></i> Crime Heatmap — Day × Hour (Simulated NCRB Pattern)</div>
+      <div class="heatmap-grid" id="heatmapGrid">
+        <!-- Generated by JS -->
+      </div>
+      <div class="hm-legend">
+        <span>Low</span>
+        <div class="hm-grad"></div>
+        <span>High</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-3);">Hover cell for details</span>
+      </div>
+      <div id="heatmapTooltip" style="display:none;font-size:12px;color:var(--text-2);margin-top:10px;background:var(--bg-2);padding:8px 12px;border-radius:8px;border:1px solid var(--border);"></div>
+    </div>
+
+    <div class="dash-card" style="display:flex;flex-direction:column;gap:20px;">
+      <!-- Time Distribution -->
+      <div>
+        <div class="dash-card-title" style="margin-bottom:10px;"><i class="fas fa-clock"></i> Hourly Distribution</div>
+        <div class="time-dist" id="timeDistChart"></div>
+        <div style="font-size:10px;color:var(--text-3);text-align:center;margin-top:22px;">Hour of Day (0–23)</div>
+      </div>
+      <!-- Quick Stats -->
+      <div style="border-top:1px solid var(--border);padding-top:16px;">
+        <div class="dash-card-title" style="margin-bottom:12px;"><i class="fas fa-bolt"></i> Peak Insights</div>
+        <div style="display:flex;flex-direction:column;gap:8px;" id="peakInsights">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bg-2);border-radius:8px;">
+            <span style="color:var(--text-2);">Peak Crime Hour</span>
+            <span style="font-weight:700;color:#f87171;font-family:'JetBrains Mono';" id="peakHour">20:00–22:00</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bg-2);border-radius:8px;">
+            <span style="color:var(--text-2);">Safest Hour</span>
+            <span style="font-weight:700;color:#34d399;font-family:'JetBrains Mono';" id="safeHour">04:00–06:00</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bg-2);border-radius:8px;">
+            <span style="color:var(--text-2);">Highest Crime Day</span>
+            <span style="font-weight:700;color:#fbbf24;font-family:'JetBrains Mono';" id="peakDay">Friday</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bg-2);border-radius:8px;">
+            <span style="color:var(--text-2);">Top Offence Type</span>
+            <span style="font-weight:700;color:#c084fc;font-family:'JetBrains Mono';" id="topOffence">Theft (BNS §303)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offence Breakdown + State Rankings -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:22px;">
+
+    <div class="dash-card">
+      <div class="dash-card-title"><i class="fas fa-chart-bar"></i> Top Offence Categories (BNS 2023)</div>
+      <div class="bar-chart" id="offenceChart"></div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-title"><i class="fas fa-map-location-dot"></i> State Rankings — Registered Cases</div>
+      <div class="state-rank-list" id="stateRankings"></div>
+    </div>
+
+  </div>
+
+  <!-- AI Insights Grid -->
+  <div style="margin-bottom:22px;">
+    <div style="font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+      <i class="fas fa-brain" style="color:#f87171;"></i> AI-Generated Safety Insights
+    </div>
+    <div class="insights-grid">
+      <div class="insight-card">
+        <div class="insight-card-icon" style="background:rgba(239,68,68,0.15);color:#f87171;"><i class="fas fa-triangle-exclamation"></i></div>
+        <div class="insight-card-metric" style="color:#f87171;" id="ins1num">↑ 24.4%</div>
+        <div class="insight-card-title">Cyber Crime Surge</div>
+        <div class="insight-card-body">Financial fraud, UPI scams and identity theft are the fastest-growing category — up 24.4% in 2023. Concentrate awareness in tier-2 cities where digital literacy is lower.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-card-icon" style="background:rgba(99,102,241,0.15);color:#a5b4fc;"><i class="fas fa-moon"></i></div>
+        <div class="insight-card-metric" style="color:#a5b4fc;">8PM–11PM</div>
+        <div class="insight-card-title">Evening Peak Window</div>
+        <div class="insight-card-body">Street crimes (snatching, assault) spike between 8PM–11PM. Patrol density should be 40% higher during this window in urban police stations.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-card-icon" style="background:rgba(16,185,129,0.15);color:#34d399;"><i class="fas fa-arrow-trend-down"></i></div>
+        <div class="insight-card-metric" style="color:#34d399;">−8.2%</div>
+        <div class="insight-card-title">Property Crimes Declining</div>
+        <div class="insight-card-body">Burglary, vehicle theft and dacoity showed a combined 8.2% decline since 2020 — attributed to improved CCTV coverage and community policing programs.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Incident Feed -->
+  <div class="dash-card" style="margin-bottom:22px;">
+    <div class="dash-card-title"><i class="fas fa-rss"></i> Simulated Incident Feed — Anonymized Patterns
+      <span style="margin-left:auto;font-size:12px;font-weight:400;color:var(--text-3);">AI-generated for research purposes</span>
+    </div>
+    <div class="live-feed" id="liveFeed"></div>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="disclaimer">
+    <i class="fas fa-circle-info"></i>
+    <p><strong>Research Tool Only:</strong> Crime statistics are sourced from NCRB Annual Reports (public data). AI insights are pattern-based projections for public safety research and awareness. This tool does not identify individuals or predict specific incidents. Data is anonymized and aggregated at state level.</p>
+  </div>
+
+</main>
+
+<script src="../../frontend/public/site.js" onerror="void 0"></script>
+<script>
+// ── Theme ──
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const d = document.documentElement;
+  const next = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  d.setAttribute('data-theme', next);
+  localStorage.setItem('ss-theme', next);
+});
+
+// ── NCRB-inspired Data ──
+const OFFENCES = [
+  { name: 'Theft & Burglary (BNS §303)', val: 38.2, color: '#ef4444' },
+  { name: 'Assault & Hurt (BNS §115-117)', val: 22.6, color: '#f97316' },
+  { name: 'Cyber Crimes (IT Act)', val: 12.4, color: '#38bdf8' },
+  { name: 'Fraud & Cheating (BNS §318)', val: 10.8, color: '#fbbf24' },
+  { name: 'Crimes Against Women', val: 9.7, color: '#c084fc' },
+  { name: 'Kidnapping (BNS §137)', val: 4.1, color: '#34d399' },
+  { name: 'Murder & Culpable Homicide', val: 2.2, color: '#f87171' },
+];
+
+const STATES = [
+  { name: 'Uttar Pradesh', count: '8,10,433', pct: 100 },
+  { name: 'Maharashtra', count: '4,24,651', pct: 52 },
+  { name: 'Madhya Pradesh', count: '3,92,712', pct: 48 },
+  { name: 'Rajasthan', count: '3,06,498', pct: 38 },
+  { name: 'Kerala', count: '2,81,329', pct: 35 },
+  { name: 'Delhi (UT)', count: '2,20,875', pct: 27 },
+  { name: 'Tamil Nadu', count: '2,04,516', pct: 25 },
+  { name: 'Karnataka', count: '1,89,843', pct: 23 },
+];
+
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const INCIDENTS = [
+  { title: 'UPI Fraud Pattern Detected', location: 'Mumbai, Maharashtra', type: 'Cyber Crime', time: '2 min ago' },
+  { title: 'Vehicle Theft Cluster — Night Hours', location: 'Lucknow, UP', type: 'Property Crime', time: '7 min ago' },
+  { title: 'Chain Snatching Hotspot Identified', location: 'Bengaluru, Karnataka', type: 'Street Crime', time: '12 min ago' },
+  { title: 'Fraudulent Job Offer Scam Network', location: 'Hyderabad, Telangana', type: 'Cyber Crime', time: '18 min ago' },
+  { title: 'Commercial Burglary Pattern — Weekend', location: 'Pune, Maharashtra', type: 'Property Crime', time: '25 min ago' },
+  { title: 'ATM Skimming Device Alerts', location: 'Delhi NCR', type: 'Financial Fraud', time: '31 min ago' },
+  { title: 'Road Rage Incident Cluster — Highways', location: 'NH-44 Corridor', type: 'Violent Crime', time: '38 min ago' },
+  { title: 'Phishing SMS Campaign Identified', location: 'All India', type: 'Cyber Crime', time: '45 min ago' },
+];
+
+// ── Heatmap ──
+function buildHeatmap() {
+  const grid = document.getElementById('heatmapGrid');
+  grid.innerHTML = '';
+  const hrs = Array.from({length:24},(_,i)=>i);
+
+  // Header row
+  grid.appendChild(Object.assign(document.createElement('div'),{className:'hm-row-label'}));
+  hrs.forEach(h => {
+    const el = Object.assign(document.createElement('div'),{className:'hm-label',textContent:h%4===0?String(h).padStart(2,'0'):''});
+    grid.appendChild(el);
+  });
+
+  // Data rows
+  DAYS.forEach((day, di) => {
+    const rowLabel = Object.assign(document.createElement('div'),{className:'hm-row-label',textContent:day});
+    grid.appendChild(rowLabel);
+    hrs.forEach(h => {
+      const base = (di===4||di===5)?0.7:0.3;
+      const timeBoost = (h>=20&&h<=23)?0.9:(h>=8&&h<=12)?0.5:0.1;
+      const val = Math.min(1, base * Math.random() * 0.5 + timeBoost * Math.random() * 0.5 + 0.05);
+      const r = Math.round(30 + val * 180);
+      const g = Math.round(5 + (1-val)*40);
+      const b = Math.round(10 + (1-val)*50);
+      const cell = document.createElement('div');
+      cell.className = 'hm-cell';
+      cell.style.background = `rgb(${r},${g},${b})`;
+      cell.style.opacity = 0.2 + val * 0.8;
+      cell.title = `${day} ${String(h).padStart(2,'0')}:00 — Risk: ${Math.round(val*100)}%`;
+      cell.addEventListener('mouseenter', () => {
+        document.getElementById('heatmapTooltip').style.display = 'block';
+        document.getElementById('heatmapTooltip').textContent = `📍 ${day} ${String(h).padStart(2,'0')}:00–${String((h+1)%24).padStart(2,'0')}:00 | Relative Crime Index: ${Math.round(val*100)}% | Click FIR Generator to report`;
+      });
+      grid.appendChild(cell);
+    });
+  });
+}
+
+// ── Time Distribution ──
+function buildTimeDist() {
+  const chart = document.getElementById('timeDistChart');
+  chart.innerHTML = '';
+  const pattern = [10,8,5,4,4,6,12,18,22,24,26,25,22,20,21,22,25,30,38,44,48,42,32,20];
+  const max = Math.max(...pattern);
+  pattern.forEach((v,i) => {
+    const bar = document.createElement('div');
+    bar.className = 'time-bar';
+    bar.style.height = (v/max*100) + '%';
+    bar.setAttribute('data-hour', i%6===0?i:'');
+    bar.title = `${String(i).padStart(2,'0')}:00 — Index: ${v}`;
+    chart.appendChild(bar);
+  });
+}
+
+// ── Offence Chart ──
+function buildOffenceChart() {
+  const chart = document.getElementById('offenceChart');
+  chart.innerHTML = '';
+  const max = OFFENCES[0].val;
+  OFFENCES.forEach(o => {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `
+      <div class="bar-name" title="${o.name}">${o.name}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(o.val/max*100)}%;background:${o.color};"><span class="bar-val">${o.val}%</span></div></div>
+    `;
+    chart.appendChild(row);
+  });
+}
+
+// ── State Rankings ──
+function buildStateRankings() {
+  const list = document.getElementById('stateRankings');
+  list.innerHTML = '';
+  STATES.forEach((s,i) => {
+    list.innerHTML += `
+      <div class="state-row">
+        <div class="state-rank-num">${i+1}</div>
+        <div class="state-name">${s.name}</div>
+        <div class="state-bar-mini"><div class="state-bar-mini-fill" style="width:${s.pct}%"></div></div>
+        <div class="state-count">${s.count}</div>
+      </div>
+    `;
+  });
+}
+
+// ── Live Feed ──
+function buildFeed() {
+  const feed = document.getElementById('liveFeed');
+  feed.innerHTML = '';
+  INCIDENTS.forEach(inc => {
+    const item = document.createElement('div');
+    item.className = 'feed-item';
+    item.innerHTML = `
+      <div class="feed-dot"></div>
+      <div class="feed-content">
+        <div class="feed-title">${inc.title}</div>
+        <div class="feed-meta">
+          <span>📍 ${inc.location}</span>
+          <span style="background:rgba(239,68,68,0.12);padding:2px 7px;border-radius:4px;color:#f87171;">${inc.type}</span>
+          <span class="feed-time">${inc.time}</span>
+        </div>
+      </div>
+    `;
+    feed.appendChild(item);
+  });
+}
+
+// ── Refresh ──
+function refreshData() {
+  buildHeatmap();
+  buildTimeDist();
+  buildOffenceChart();
+  buildStateRankings();
+  buildFeed();
+  document.getElementById('lastUpdated').textContent = new Date().toLocaleString('en-IN',{month:'short',year:'numeric'});
+}
+
+// ── Init ──
+refreshData();
+
+// Cursor ring
+const ring = document.getElementById('cursorRing');
+if (ring) {
+  document.addEventListener('mousemove', e => {
+    ring.style.left = e.clientX+'px';
+    ring.style.top = e.clientY+'px';
+  });
+}
+
+// Auto-rotate feed
+setInterval(() => {
+  const feed = document.getElementById('liveFeed');
+  if (feed && feed.children.length) {
+    const first = feed.firstElementChild.cloneNode(true);
+    feed.removeChild(feed.firstElementChild);
+    first.querySelector('.feed-meta .feed-time').textContent = 'just now';
+    feed.appendChild(first);
+  }
+}, 8000);
+</script>
+</body>
+</html>

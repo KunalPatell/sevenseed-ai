@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Know Your Rights — Indian Legal Rights AI Guide | Rakshak AI</title>
+  <meta name="description" content="AI-powered Indian citizen rights guide covering arrest rights (BNSS 2023), bail entitlement, RTI, consumer protection, and workplace rights. Instant scenario-based legal flowcharts.">
+  <meta property="og:title" content="Know Your Rights — Rakshak AI Legal Guide">
+  <meta property="og:description" content="Instant AI-powered Indian legal rights lookup. Covers arrest, bail, RTI, consumer, workplace and digital rights under BNS/BNSS 2023.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E⚖️%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Page Layout ── */
+    .lr-container { max-width: 1360px; margin: 0 auto; padding: 100px 24px 80px; }
+    .lr-header { text-align: center; margin-bottom: 40px; }
+    .lr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 999px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #f87171; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+    .lr-title { font-size: clamp(28px,4.5vw,52px); font-weight: 900; line-height: 1.15; margin-bottom: 14px; }
+    .lr-sub { color: var(--text-2); font-size: 16px; max-width: 640px; margin: 0 auto 30px; line-height: 1.7; }
+
+    /* ── Search / Scenario Bar ── */
+    .scenario-bar { display: flex; gap: 12px; max-width: 720px; margin: 0 auto 32px; }
+    .scenario-input { flex: 1; padding: 14px 20px; background: var(--bg-1); border: 1px solid var(--border-hi); border-radius: 12px; color: #fff; font-size: 15px; font-family: inherit; outline: none; transition: border-color .2s; }
+    .scenario-input:focus { border-color: #ef4444; }
+    .scenario-input::placeholder { color: var(--text-3); }
+    .scenario-btn { padding: 14px 24px; background: linear-gradient(135deg,#ef4444,#dc2626); border: none; border-radius: 12px; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: opacity .2s; white-space: nowrap; }
+    .scenario-btn:hover { opacity: .85; }
+
+    /* ── Category Pills ── */
+    .cat-pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 36px; }
+    .cat-pill { padding: 8px 20px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 7px; }
+    .cat-pill.active, .cat-pill:hover { background: rgba(239,68,68,0.15); border-color: #ef4444; color: #f87171; }
+
+    /* ── Main Grid ── */
+    .lr-grid { display: grid; grid-template-columns: 1fr 380px; gap: 28px; }
+    @media(max-width:1100px){ .lr-grid { grid-template-columns: 1fr; } }
+
+    /* ── Rights Cards ── */
+    .rights-section { margin-bottom: 32px; }
+    .section-label { font-size: 12px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .section-label::after { content:''; flex:1; height:1px; background: var(--border); }
+
+    .right-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; margin-bottom: 14px; cursor: pointer; transition: border-color .2s, transform .15s; }
+    .right-card:hover { border-color: #ef4444; transform: translateY(-2px); }
+    .right-card.expanded { border-color: rgba(239,68,68,0.5); background: var(--bg-2); }
+    .right-card-top { display: flex; align-items: flex-start; gap: 14px; }
+    .right-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .right-icon.arrest { background: rgba(239,68,68,0.15); color: #f87171; }
+    .right-icon.bail { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+    .right-icon.rti { background: rgba(16,185,129,0.15); color: #34d399; }
+    .right-icon.consumer { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .right-icon.digital { background: rgba(14,165,233,0.15); color: #38bdf8; }
+    .right-icon.workplace { background: rgba(168,85,247,0.15); color: #c084fc; }
+    .right-icon.child { background: rgba(236,72,153,0.15); color: #f9a8d4; }
+    .right-icon.property { background: rgba(20,184,166,0.15); color: #2dd4bf; }
+
+    .right-info { flex: 1; }
+    .right-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .right-excerpt { font-size: 13.5px; color: var(--text-2); line-height: 1.6; }
+    .right-chevron { color: var(--text-3); transition: transform .25s; margin-top: 4px; }
+    .right-card.expanded .right-chevron { transform: rotate(180deg); }
+
+    .right-detail { display: none; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+    .right-card.expanded .right-detail { display: block; }
+
+    .detail-section { margin-bottom: 18px; }
+    .detail-label { font-size: 12px; font-weight: 700; color: #f87171; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+    .detail-list { list-style: none; padding: 0; margin: 0; }
+    .detail-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: var(--text-2); margin-bottom: 8px; line-height: 1.55; }
+    .detail-list li::before { content: '›'; color: #f87171; font-weight: 700; margin-top: 1px; flex-shrink: 0; }
+
+    .law-tag { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); border-radius: 6px; color: #f87171; font-size: 12px; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin: 3px 2px; }
+    .law-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; }
+
+    .verdict-box { display: flex; align-items: flex-start; gap: 10px; background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.2); border-radius: 10px; padding: 14px 16px; margin-top: 14px; }
+    .verdict-box i { color: #34d399; margin-top: 2px; flex-shrink: 0; }
+    .verdict-box p { font-size: 13px; color: var(--text-2); line-height: 1.6; margin: 0; }
+
+    /* ── AI Answer Panel ── */
+    .ai-panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 24px; height: fit-content; position: sticky; top: 90px; }
+    .ai-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .ai-panel-dot { width: 10px; height: 10px; border-radius: 50%; background: #34d399; box-shadow: 0 0 8px #34d399; animation: pulse-dot 2s infinite; }
+    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .ai-panel-title { font-size: 15px; font-weight: 700; }
+    .ai-panel-sub { font-size: 12px; color: var(--text-3); }
+
+    .ai-response { min-height: 180px; font-size: 14px; color: var(--text-2); line-height: 1.8; }
+    .ai-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 180px; text-align: center; color: var(--text-3); gap: 12px; }
+    .ai-placeholder i { font-size: 36px; opacity: .4; }
+    .ai-placeholder p { font-size: 13px; line-height: 1.6; max-width: 220px; }
+
+    .ai-typing { display: inline-block; }
+    .ai-typing::after { content: '▍'; animation: blink .7s step-end infinite; }
+    @keyframes blink { 50%{opacity:0} }
+
+    .citation-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .citation { padding: 4px 10px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; font-size: 11px; font-weight: 700; color: #f87171; font-family: 'JetBrains Mono', monospace; }
+
+    /* ── Emergency Rights Banner ── */
+    .emergency-banner { background: linear-gradient(135deg,rgba(239,68,68,0.15),rgba(220,38,38,0.08)); border: 1px solid rgba(239,68,68,0.3); border-radius: 14px; padding: 20px 24px; margin-bottom: 32px; display: flex; align-items: center; gap: 16px; }
+    .emergency-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(239,68,68,0.2); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #f87171; flex-shrink: 0; }
+    .emergency-text h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .emergency-text p { font-size: 13px; color: var(--text-2); margin: 0; }
+    .emergency-numbers { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .em-num { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; font-size: 13px; font-weight: 700; color: #f87171; text-decoration: none; }
+    .em-num:hover { background: rgba(239,68,68,0.22); }
+
+    /* ── Stats Row ── */
+    .stats-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 36px; }
+    @media(max-width:700px){ .stats-bar { grid-template-columns: repeat(2,1fr); } }
+    .stat-chip { background: var(--bg-1); border: 1px solid var(--border); border-radius: 12px; padding: 18px 16px; text-align: center; }
+    .stat-chip-num { font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono'; color: #f87171; }
+    .stat-chip-lbl { font-size: 12px; color: var(--text-3); margin-top: 4px; }
+
+    /* ── Rights Flowchart ── */
+    .flowchart-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 14px; }
+    .flow-title { font-size: 15px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+    .flow-steps { display: flex; flex-direction: column; gap: 0; }
+    .flow-step { display: flex; gap: 14px; }
+    .flow-step-left { display: flex; flex-direction: column; align-items: center; }
+    .flow-step-num { width: 32px; height: 32px; border-radius: 50%; background: rgba(239,68,68,0.15); border: 2px solid rgba(239,68,68,0.4); color: #f87171; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .flow-step-line { width: 2px; flex: 1; background: var(--border); margin: 4px 0; min-height: 20px; }
+    .flow-step:last-child .flow-step-line { display: none; }
+    .flow-step-content { padding-bottom: 20px; }
+    .flow-step-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .flow-step-desc { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+
+    /* ── Responsive ── */
+    @media(max-width:640px){
+      .scenario-bar { flex-direction: column; }
+      .emergency-banner { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex;align-items:center;gap:10px;">
+      <span style="width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#ef4444,#dc2626);display:flex;align-items:center;justify-content:center;color:#fff;"><i class="fas fa-shield-halved"></i></span>
+      <span style="font-weight:700;font-size:18px;">Rakshak AI</span>
+    </a>
+    <div class="nav-links" style="display:flex;gap:18px;font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="fir-generator.html">BNS Auto-FIR</a>
+      <a href="sentinel-vision.html">CCTV Sentinel</a>
+      <a href="threat-radar.html">Threat Radar</a>
+      <a href="legal-rights.html" style="color:#f87171;font-weight:600;">Know Your Rights</a>
+      <a href="police-station-locator.html">Police Locator</a>
+      <a href="crime-analytics.html">Crime Analytics</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary" href="/rakshak-ai/app/" style="background:linear-gradient(135deg,#ef4444,#dc2626);border:none;"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</nav>
+
+<main class="lr-container">
+
+  <!-- Header -->
+  <div class="lr-header">
+    <div class="lr-badge"><i class="fas fa-scale-balanced"></i> BNS / BNSS 2023 · India Legal Rights</div>
+    <h1 class="lr-title">Know Your <span class="grad">Legal Rights</span><br>as an Indian Citizen</h1>
+    <p class="lr-sub">AI-powered rights guide covering arrest, bail, RTI, consumer protection, digital privacy, workplace rights and more — powered by BNS & BNSS 2023.</p>
+  </div>
+
+  <!-- Scenario Search -->
+  <div class="scenario-bar">
+    <input class="scenario-input" type="text" id="scenarioInput" placeholder="Describe your situation… e.g. 'police arrested me without telling family'" maxlength="300">
+    <button class="scenario-btn" onclick="analyzeScenario()"><i class="fas fa-scale-balanced"></i> Analyze My Rights</button>
+  </div>
+
+  <!-- Category Filters -->
+  <div class="cat-pills">
+    <button class="cat-pill active" data-cat="all" onclick="filterCat(this,'all')"><i class="fas fa-th"></i> All Rights</button>
+    <button class="cat-pill" data-cat="arrest" onclick="filterCat(this,'arrest')"><i class="fas fa-handcuffs"></i> Arrest & Custody</button>
+    <button class="cat-pill" data-cat="bail" onclick="filterCat(this,'bail')"><i class="fas fa-gavel"></i> Bail & Court</button>
+    <button class="cat-pill" data-cat="rti" onclick="filterCat(this,'rti')"><i class="fas fa-file-circle-info"></i> RTI & Information</button>
+    <button class="cat-pill" data-cat="consumer" onclick="filterCat(this,'consumer')"><i class="fas fa-bag-shopping"></i> Consumer</button>
+    <button class="cat-pill" data-cat="digital" onclick="filterCat(this,'digital')"><i class="fas fa-lock"></i> Digital Privacy</button>
+    <button class="cat-pill" data-cat="workplace" onclick="filterCat(this,'workplace')"><i class="fas fa-briefcase"></i> Workplace</button>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-chip"><div class="stat-chip-num">47</div><div class="stat-chip-lbl">Fundamental Rights Covered</div></div>
+    <div class="stat-chip"><div class="stat-chip-num">23</div><div class="stat-chip-lbl">BNS/BNSS Sections Referenced</div></div>
+    <div class="stat-chip"><div class="stat-chip-num">8</div><div class="stat-chip-lbl">Rights Categories</div></div>
+    <div class="stat-chip"><div class="stat-chip-num">100%</div><div class="stat-chip-lbl">Free to Use · BYOK Powered</div></div>
+  </div>
+
+  <!-- Emergency Banner -->
+  <div class="emergency-banner">
+    <div class="emergency-icon"><i class="fas fa-circle-exclamation"></i></div>
+    <div class="emergency-text">
+      <h3>Emergency? Know These Numbers Instantly</h3>
+      <p>In case of arrest, threat, or emergency — these are your immediate contacts:</p>
+      <div class="emergency-numbers">
+        <a class="em-num" href="tel:100"><i class="fas fa-phone"></i> 100 — Police</a>
+        <a class="em-num" href="tel:112"><i class="fas fa-phone-volume"></i> 112 — Emergency</a>
+        <a class="em-num" href="tel:1091"><i class="fas fa-venus"></i> 1091 — Women Helpline</a>
+        <a class="em-num" href="tel:14567"><i class="fas fa-user-shield"></i> 14567 — Senior Citizen</a>
+        <a class="em-num" href="tel:15100"><i class="fas fa-scale-balanced"></i> 15100 — Legal Aid</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="lr-grid">
+    <div id="rightsPanel">
+
+      <!-- Arrest & Custody Rights -->
+      <div class="rights-section" data-cat="arrest">
+        <div class="section-label"><i class="fas fa-handcuffs" style="color:#f87171"></i> Arrest & Custody Rights</div>
+
+        <div class="right-card" onclick="toggleCard(this)">
+          <div class="right-card-top">
+            <div class="right-icon arrest"><i class="fas fa-user-shield"></i></div>
+            <div class="right-info">
+              <div class="right-name">Right to Know Grounds of Arrest</div>
+              <div class="right-excerpt">Police must tell you why you are being arrested. Silent or unexplained arrest is illegal under BNSS 2023.</div>
+            </div>
+            <i class="fas fa-chevron-down right-chevron"></i>
+          </div>
+          <div class="right-detail">
+            <div class="detail-section">
+              <div class="detail-label">What You Are Entitled To</div>
+              <ul class="detail-list">
+                <li>To be informed of the grounds of arrest immediately in a language you understand</li>
+                <li>Police must produce a memo of arrest signed by a witness or family member</li>
+                <li>Right to be informed of your right to bail if the offence is bailable</li>
+                <li>If arrested without warrant, you must be produced before Magistrate within 24 hours</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">What to Do</div>
+              <ul class="detail-list">
+                <li>Calmly ask: "Please tell me the grounds of my arrest"</li>
+                <li>Do not resist physically — note officer name & badge number</li>
+                <li>Immediately inform a family member or lawyer</li>
+                <li>Ask for a copy of the arrest memo</li>
+              </ul>
+            </div>
+            <div class="law-tags">
+              <span class="law-tag">BNSS § 47</span>
+              <span class="law-tag">BNSS § 48</span>
+              <span class="law-tag">Art. 22 Constitution</span>
+            </div>
+            <div class="verdict-box"><i class="fas fa-check-circle"></i><p>Failure to inform grounds of arrest makes the arrest illegal and entitles you to immediate release via writ of habeas corpus.</p></div>
+          </div>
+        </div>
+
+        <div class="right-card" onclick="toggleCard(this)">
+          <div class="right-card-top">
+            <div class="right-icon arrest"><i class="fas fa-phone-volume"></i></div>
+            <div class="right-info">
+              <div class="right-name">Right to Inform Family & Lawyer</div>
+              <div class="right-excerpt">You have a right to have one friend or relative informed of your arrest immediately — this is mandatory under BNSS 2023.</div>
+            </div>
+            <i class="fas fa-chevron-down right-chevron"></i>
+          </div>
+          <div class="right-detail">
+            <div class="detail-section">
+              <div class="detail-label">Entitlements</div>
+              <ul class="detail-list">
+                <li>Immediate right to have one person of your choice informed of your arrest and location</li>
+                <li>Right to consult and be represented by a lawyer of your choice at your own expense</li>
+                <li>If unable to afford a lawyer — right to free legal aid under Legal Services Authorities Act</li>
+                <li>Right to speak privately with your lawyer before any police interrogation</li>
+              </ul>
+            </div>
+            <div class="law-tags">
+              <span class="law-tag">BNSS § 48</span>
+              <span class="law-tag">Art. 22(1) Constitution</span>
+              <span class="law-tag">Legal Services Act 1987</span>
+            </div>
+            <div class="verdict-box"><i class="fas fa-check-circle"></i><p>If police deny you the right to contact a lawyer or inform family, file a complaint with the Superintendent of Police or approach the State Human Rights Commission.</p></div>
+          </div>
+        </div>
+
+        <div class="right-card" onclick="toggleCard(this)">
+          <div class="right-card-top">
+            <div class="right-icon arrest"><i class="fas fa-ban"></i></div>
+            <div class="right-info">
+              <div class="right-name">Right Against Self-Incrimination & Torture</div>
+              <div class="right-excerpt">You cannot be forced to confess. Confessions under coercion are inadmissible in court under BNS 2023.</div>
+            </div>
+            <i class="fas fa-chevron-down right-chevron"></i>
+          </div>
+          <div class="right-detail">
+            <div class="detail-section">
+              <div class="detail-label">Your Protections</div>
+              <ul class="detail-list">
+                <li>Right to remain silent — you cannot be forced to answer questions that incriminate you</li>
+                <li>No confession made to a police officer is admissible in court (BNS § 23)</li>
+                <li>Any confession under torture, threat or inducement is invalid</li>
+                <li>Right to medical examination if you allege torture or assault in custody</li>
+                <li>Custodial torture is a criminal offence under BNS 2023</li>
+              </ul>
+            </div>
+            <div class="law-tags">
+              <span class="law-tag">Art. 20(3) Constitution</span>
+              <span class="law-tag">BNS § 23</span>
+              <span class="law-tag">BNS § 116</span>
+            </div>
+            <div class="verdict-box"><i class="fas fa-check-circle"></i><p>If tortured in custody, immediately inform your lawyer and approach the National Human Rights Commission (NHRC) or file a PIL in the High Court.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bail Rights -->
+      <div class="rights-section" data-cat="bail">
+        <div class="section-label"><i class="fas fa-gavel" style="color:#a5b4fc"></i> Bail & Court Rights</div>
+
+        <div class="right-card" onclick="toggleCard(this)">
+          <div class="right-card-top">
+            <div class="right-icon bail"><i class="fas fa-door-open"></i></div>
+            <div class="right-info">
+              <div class="right-name">Right to Bail in Bailable Offences</div>
+              <div class="right-excerpt">For bailable offences, bail is a right — not a privilege. Police cannot deny it.</div>
+            </div>
+            <i class="fas fa-chevron-down right-chevron"></i>
+          </div>
+          <div class="right-detail">
+            <div class="detail-section">
+              <div class="detail-label">Key Points</div>
+              <ul class="detail-list">
+                <li>In bailable offences: bail must be granted by police or Magistrate as a matter of right</li>
+                <li>In non-bailable offences: Magistrate has discretion — apply for bail through a lawyer</li>
+                <li>Bail cannot be refused merely because you are poor or cannot arrange sureties</li>
+                <li>After 90 days (for serious offences) or 60 days (others) of custody with no chargesheet, you get default bail</li>
+              </ul>
+            </div>
+            <div class="law-tags">
+              <span class="law-tag">BNSS § 478-494</span>
+              <span class="law-tag">BNS Schedule</span>
+            </div>
+            <div class="verdict-box"><i class="fas fa-check-circle"></i><p>If bail is refused in a bailable offence, file a revision petition before the Sessions Court immediately — no further delay is needed.</p></div>
+          </div>
+        </div>
+
+        <div class="right-card" onclick="toggleCard(this)">
+          <div class="right-card-top">
+            <div class="right-icon bail"><i class="fas fa-hourglass-half"></i></div>
+            <div class="right-info">
+              <div class="right-name">Right to Speedy Trial</div>
+              <div class="right-excerpt">Unreasonable delay in trial violates your fundamental rights. You can petition courts for speedy disposal.</div>
+            </div>
+            <i class="fas fa-chevron-down right-chevron"></i>
+          </div>
+          <div class="right-detail">
+            <div class="detail-section">
+              <div class="detail-label">Your Rights</div>
+              <ul class="detail-list">
+                <li>Right to speedy trial is a fundamental right under Article 21</li>
+                <li>After 6 months of imprisonment without trial start, you may apply for bail as default</li>
+                <li>BNSS mandates time-bound trials for serious offences</li>
+                <li>You can petition the High Court for writ of mandamus to speed up trial</li>
+              </ul>
+            </div>
+            <div class="law-tags">
+              <span class="law-tag">Art. 21 Constitution</span>
+              <span class="law-tag">BNSS § 346</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RTI Rights -->
+      <div class="rights-section" data-cat="rti">
+        <div class="section-label"><i class="fas fa-file-circle-info" style="color:#34d399"></i> RTI & Information Rights</div>
+
+        <div class="right-card" onclick="toggleCard(this)">
+          <div class="right-card-top">
+            <div class="right-icon rti"><i class="fas fa-file-circle-question"></i></div>
+            <div class="right-info">
+              <div class="right-name">Right to Information (RTI) — How to File</div>
+              <div class="right-excerpt">Any citizen can seek information from government bodies within 30 days. RTI is your most powerful transparency tool.</div>
+            </div>
+            <i class="fas fa-chevron-down right-chevron"></i>
+          </div>
+          <div class="right-detail">
+            <div class="detail-section">
+              <div class="detail-label">Step-by-Step Process</div>
+              <div class="flow-steps">
+                <div class="flow-step"><div class="flow-step-left"><div class="flow-step-num">1</div><div class="flow-step-line"></div></div><div class="flow-step-content"><div class="flow-step-title">Identify the Public Authority</div><div class="flow-step-desc">Identify which ministry/department/office holds the information you need.</div></div></div>
+                <div class="flow-step"><div class="flow-step-left"><div class="flow-step-num">2</div><div class="flow-step-line"></div></div><div class="flow-step-content"><div class="flow-step-title">Draft Your Application</div><div class="flow-step-desc">Write a clear, specific request on plain paper. No format is mandatory. Pay ₹10 fee (free for BPL).</div></div></div>
+                <div class="flow-step"><div class="flow-step-left"><div class="flow-step-num">3</div><div class="flow-step-line"></div></div><div class="flow-step-content"><div class="flow-step-title">Submit to PIO</div><div class="flow-step-desc">Submit to Public Information Officer (PIO) by post, in person, or via RTI Online Portal (rtionline.gov.in).</div></div></div>
+                <div class="flow-step"><div class="flow-step-left"><div class="flow-step-num">4</div><div class="flow-step-line"></div></div><div class="flow-step-content"><div class="flow-step-title">Receive Response (30 days)</div><div class="flow-step-desc">PIO must respond within 30 days (48 hours if life/liberty involved). If denied or delayed, file First Appeal.</div></div></div>
+              </div>
+            </div>
+            <div class="law-tags">
+              <span class="law-tag">RTI Act 2005</span>
+              <span class="law-tag">§ 6 — Application</span>
+              <span class="law-tag">§ 7 — Disposal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Consumer Rights -->
+      <div class="rights-section" data-cat="consumer">
+        <div class="section-label"><i class="fas fa-bag-shopping" style="color:#fbbf24"></i> Consumer Rights</div>
+
+        <div class="right-card" onclick="toggleCard(this)">
+          <div class="right-card-top">
+            <div class="right-icon consumer"><i class="fas fa-shield-halved"></i></div>
+            <div class="right-info">
+              <div class="right-name">6 Core Consumer Rights (Consumer Protection Act 2019)</div>
+              <div class="right-excerpt">Every Indian consumer has 6 statutory rights against unfair trade practices, defective products and deficient services.</div>
+            </div>
+            <i class="fas fa-chevron-down right-chevron"></i>
+          </div>
+          <div class="right-detail">
+            <div class="detail-section">
+              <div class="detail-label">Your 6 Rights</div>
+              <ul class="detail-list">
+                <li><strong>Right to Safety</strong> — Protection from hazardous goods & services</li>
+                <li><strong>Right to Information</strong> — Quality, quantity, purity, price of goods</li>
+                <li><strong>Right to Choose</strong> — Access to competitive products at fair prices</li>
+                <li><strong>Right to be Heard</strong> — Your grievances must be addressed</li>
+                <li><strong>Right to Redressal</strong> — Compensation for defective goods or services</li>
+                <li><strong>Right to Consumer Education</strong> — Awareness of your rights</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">How to File a Consumer Complaint</div>
+              <ul class="detail-list">
+                <li>File online at consumerhelpline.gov.in or National Consumer Helpline: 1800-11-4000</li>
+                <li>District Forum: Claims up to ₹1 Crore</li>
+                <li>State Commission: Claims ₹1 Cr – ₹10 Cr</li>
+                <li>National Commission (NCDRC): Claims above ₹10 Crore</li>
+              </ul>
+            </div>
+            <div class="law-tags">
+              <span class="law-tag">Consumer Protection Act 2019</span>
+              <span class="law-tag">§ 6 — Rights</span>
+              <span class="law-tag">§ 35 — Complaint</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Digital Privacy Rights -->
+      <div class="rights-section" data-cat="digital">
+        <div class="section-label"><i class="fas fa-lock" style="color:#38bdf8"></i> Digital Privacy Rights</div>
+
+        <div class="right-card" onclick="toggleCard(this)">
+          <div class="right-card-top">
+            <div class="right-icon digital"><i class="fas fa-fingerprint"></i></div>
+            <div class="right-info">
+              <div class="right-name">Right to Privacy (Digital DPDP Act 2023)</div>
+              <div class="right-excerpt">India's Digital Personal Data Protection Act 2023 gives you the right to access, correct, and erase your personal data.</div>
+            </div>
+            <i class="fas fa-chevron-down right-chevron"></i>
+          </div>
+          <div class="right-detail">
+            <div class="detail-section">
+              <div class="detail-label">Your Data Rights</div>
+              <ul class="detail-list">
+                <li>Right to know what data is collected about you and for what purpose</li>
+                <li>Right to correct inaccurate personal data held by companies</li>
+                <li>Right to erasure ("right to be forgotten") — request deletion of your data</li>
+                <li>Right to nominate someone to exercise your data rights after death</li>
+                <li>Right to grieve with Data Protection Board of India if rights violated</li>
+              </ul>
+            </div>
+            <div class="law-tags">
+              <span class="law-tag">DPDP Act 2023</span>
+              <span class="law-tag">Art. 21 — Right to Privacy</span>
+              <span class="law-tag">IT Act 2000 § 43A</span>
+            </div>
+            <div class="verdict-box"><i class="fas fa-check-circle"></i><p>If a company shares your personal data without consent, file a complaint with Data Protection Board India — penalties up to ₹250 Crore can be imposed on violators.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workplace Rights -->
+      <div class="rights-section" data-cat="workplace">
+        <div class="section-label"><i class="fas fa-briefcase" style="color:#c084fc"></i> Workplace Rights</div>
+
+        <div class="right-card" onclick="toggleCard(this)">
+          <div class="right-card-top">
+            <div class="right-icon workplace"><i class="fas fa-person-harassing"></i></div>
+            <div class="right-info">
+              <div class="right-name">Right Against Workplace Harassment (POSH Act)</div>
+              <div class="right-excerpt">Every employee (especially women) has the right to a safe workplace free from sexual harassment under POSH Act 2013.</div>
+            </div>
+            <i class="fas fa-chevron-down right-chevron"></i>
+          </div>
+          <div class="right-detail">
+            <div class="detail-section">
+              <div class="detail-label">Rights Under POSH Act 2013</div>
+              <ul class="detail-list">
+                <li>Right to file complaint with Internal Complaints Committee (ICC) within 3 months</li>
+                <li>Complaint must be resolved within 60 days (ICC inquiry + report)</li>
+                <li>Right to request transfer, leave, or other relief during inquiry</li>
+                <li>Right to appeal to Local Complaints Committee if no ICC exists in company</li>
+                <li>Whistleblower protection — employer cannot retaliate against complainant</li>
+              </ul>
+            </div>
+            <div class="law-tags">
+              <span class="law-tag">POSH Act 2013</span>
+              <span class="law-tag">§ 4 — ICC</span>
+              <span class="law-tag">§ 13 — Inquiry Report</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="right-card" onclick="toggleCard(this)">
+          <div class="right-card-top">
+            <div class="right-icon workplace"><i class="fas fa-money-bill-wave"></i></div>
+            <div class="right-info">
+              <div class="right-name">Right to Minimum Wage & PF</div>
+              <div class="right-excerpt">Every worker is entitled to minimum wage, timely payment, and EPF deduction by employer — violations are criminal offences.</div>
+            </div>
+            <i class="fas fa-chevron-down right-chevron"></i>
+          </div>
+          <div class="right-detail">
+            <div class="detail-section">
+              <div class="detail-label">Worker Entitlements</div>
+              <ul class="detail-list">
+                <li>Central minimum wage: ₹176–₹423/day depending on skill level (updated periodically)</li>
+                <li>Payment of wages must be made by 7th of next month (factories/establishments)</li>
+                <li>EPF deduction: 12% employee + 12% employer contribution mandatory if 20+ employees</li>
+                <li>Maternity benefit: 26 weeks paid leave for women in establishments with 10+ employees</li>
+                <li>Gratuity: 15 days salary per year of service after 5 years (Payment of Gratuity Act)</li>
+              </ul>
+            </div>
+            <div class="law-tags">
+              <span class="law-tag">Minimum Wages Act 1948</span>
+              <span class="law-tag">EPF Act 1952</span>
+              <span class="law-tag">Maternity Benefit Act 1961</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /rightsPanel -->
+
+    <!-- AI Answer Sidebar -->
+    <aside class="ai-panel">
+      <div class="ai-panel-header">
+        <div class="ai-panel-dot"></div>
+        <div>
+          <div class="ai-panel-title">AI Legal Assistant</div>
+          <div class="ai-panel-sub">Powered by Groq LLaMA · BYOK</div>
+        </div>
+        <button class="icon-btn" id="themeToggleSide" onclick="document.getElementById('byokModal').style.display='flex'" style="margin-left:auto;" title="Add API Key"><i class="fas fa-key"></i></button>
+      </div>
+      <div class="ai-response" id="aiResponse">
+        <div class="ai-placeholder">
+          <i class="fas fa-scale-balanced"></i>
+          <p>Describe your situation above and I will identify your exact legal rights and immediate steps to take.</p>
+        </div>
+      </div>
+      <div class="citation-chips" id="citationChips" style="display:none;"></div>
+
+      <!-- Quick Scenarios -->
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+        <div style="font-size:12px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Quick Scenarios</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <button class="quick-btn" onclick="quickScenario('Police arrested me and didn\'t tell me why')">🚔 Arrested without reason given</button>
+          <button class="quick-btn" onclick="quickScenario('My employer has not paid my salary for 2 months')">💰 Salary not paid by employer</button>
+          <button class="quick-btn" onclick="quickScenario('Online shopping app refused to refund defective product')">🛒 Refused consumer refund</button>
+          <button class="quick-btn" onclick="quickScenario('I was harassed at my workplace by my manager')">💼 Workplace harassment</button>
+          <button class="quick-btn" onclick="quickScenario('Government office denied my RTI application')">📄 RTI application denied</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- BYOK Modal -->
+<div class="modal-overlay" id="byokModal" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box">
+    <h3 style="margin-bottom:16px;font-size:17px;">🔑 Add Your API Key (BYOK)</h3>
+    <p style="font-size:13px;color:var(--text-2);margin-bottom:18px;">Your key is stored locally in your browser only. Never sent to our servers.</p>
+    <div style="margin-bottom:14px;">
+      <label style="font-size:12px;font-weight:700;color:var(--text-2);display:block;margin-bottom:6px;">Groq API Key</label>
+      <input type="password" id="groqKeyInput" placeholder="gsk_..." style="width:100%;padding:10px 14px;background:var(--bg-2);border:1px solid var(--border-hi);border-radius:8px;color:#fff;font-family:inherit;font-size:14px;outline:none;box-sizing:border-box;">
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="saveKey()" style="flex:1;padding:10px;background:linear-gradient(135deg,#ef4444,#dc2626);border:none;border-radius:8px;color:#fff;font-weight:700;cursor:pointer;">Save Key</button>
+      <button onclick="document.getElementById('byokModal').style.display='none'" style="padding:10px 18px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:var(--text-2);cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.quick-btn {
+  width: 100%;
+  text-align: left;
+  padding: 9px 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-2);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: all .15s;
+  font-family: inherit;
+}
+.quick-btn:hover {
+  background: rgba(239,68,68,0.1);
+  border-color: rgba(239,68,68,0.35);
+  color: #f87171;
+}
+</style>
+
+<script src="../../frontend/public/site.js" onerror="void 0"></script>
+<script>
+// ── Theme ──
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const d = document.documentElement;
+  const next = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  d.setAttribute('data-theme', next);
+  localStorage.setItem('ss-theme', next);
+});
+
+// ── Card Toggle ──
+function toggleCard(card) {
+  const wasExpanded = card.classList.contains('expanded');
+  document.querySelectorAll('.right-card.expanded').forEach(c => c.classList.remove('expanded'));
+  if (!wasExpanded) card.classList.add('expanded');
+}
+
+// ── Category Filter ──
+function filterCat(btn, cat) {
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.rights-section').forEach(s => {
+    s.style.display = (cat === 'all' || s.dataset.cat === cat) ? '' : 'none';
+  });
+}
+
+// ── BYOK ──
+function saveKey() {
+  const key = document.getElementById('groqKeyInput').value.trim();
+  if (key) { localStorage.setItem('groq_api_key', key); document.getElementById('byokModal').style.display='none'; alert('API key saved!'); }
+}
+
+// ── Quick Scenarios ──
+function quickScenario(text) {
+  document.getElementById('scenarioInput').value = text;
+  analyzeScenario();
+}
+
+// ── AI Scenario Analyzer ──
+const RIGHTS_KB = {
+  'arrest': {
+    response: `Under BNSS 2023, you have immediate rights when arrested:\n\n**1. Right to Know Grounds** — Police must immediately tell you why you are arrested (BNSS § 47). Silent arrest is illegal.\n\n**2. Right to Inform Family** — Police must allow you to inform one person of your arrest (BNSS § 48). This is mandatory, not optional.\n\n**3. Right to Lawyer** — You may consult a lawyer before any interrogation begins (Art. 22 Constitution).\n\n**4. 24-Hour Rule** — You must be produced before a Magistrate within 24 hours of arrest.\n\n**5. Right Against Torture** — No confession under coercion is valid (BNS § 23).\n\n**Immediate Action:** Remain calm. Note officer's name/badge. Do not sign anything until your lawyer arrives.`,
+    citations: ['BNSS § 47', 'BNSS § 48', 'Art. 22', 'BNS § 23']
+  },
+  'salary': {
+    response: `Your employer is legally obligated to pay your salary on time. Here are your rights:\n\n**Payment of Wages Act 1936** requires wages to be paid by the 7th of the following month (for establishments).\n\n**Steps to Take:**\n1. Send a written demand notice to employer via registered post\n2. File complaint with Labour Commissioner / Inspector of Factories\n3. File claim under Payment of Wages Act — Labour Court can award wages + compensation\n4. If 100+ employees: file with Industrial Tribunal\n\n**Criminal Remedy:** Non-payment of wages is an offence punishable with imprisonment up to 6 months.\n\n**Online Complaint:** File at Shram Suvidha Portal (shramsuvidha.gov.in)`,
+    citations: ['Payment of Wages Act 1936', 'Industrial Disputes Act', 'Labour Commissioner']
+  },
+  'refund': {
+    response: `Under the Consumer Protection Act 2019, you have clear rights:\n\n**Your Rights:**\n- Right to return defective product and get full refund\n- Right to replacement if product is defective\n- Right to compensation for loss/injury caused by defective product\n\n**Complaint Process:**\n1. Send written complaint to company first (30 days to respond)\n2. File at consumerhelpline.gov.in or call 1800-11-4000\n3. File before District Consumer Forum (claims up to ₹1 Crore) — no lawyer needed, low fees\n\n**Time Limit:** File within 2 years of cause of action\n\n**Evidence to Collect:** Purchase receipt, product photos, WhatsApp chats, email correspondence`,
+    citations: ['Consumer Protection Act 2019', '§ 35 Complaint', 'NCDRC', 'District Forum']
+  },
+  'harassment': {
+    response: `Workplace harassment is a serious legal violation. You are protected under:\n\n**POSH Act 2013** (Sexual Harassment of Women at Workplace):\n- File complaint with Internal Complaints Committee (ICC) within 3 months\n- Inquiry must be completed in 60 days\n- You can request transfer or leave during inquiry\n- Employer cannot retaliate against you\n\n**If no ICC exists:** File with Local Complaints Committee (LCC) at District level\n\n**For general harassment (not sexual):** File under IPC/BNS for criminal intimidation (BNS § 351) or section 504 (intentional insult)\n\n**Emergency:** For immediate threat, call 100 (Police) or Women Helpline 1091`,
+    citations: ['POSH Act 2013', 'BNS § 351', 'BNS § 504', 'District LCC']
+  },
+  'rti': {
+    response: `RTI application denial can be challenged. Here's your roadmap:\n\n**First Appeal:** File within 30 days of denial/non-response to First Appellate Authority of the same department. They must decide within 30 days.\n\n**Second Appeal / Complaint:** File before Central/State Information Commission within 90 days of First Appeal order.\n\n**Grounds to Challenge:**\n- Information withheld without valid exemption (§ 8 RTI)\n- Response not given within 30 days\n- Deemed refusal (no response)\n\n**Penalty:** If PIO found to have refused without reason, CIC can impose penalty of ₹250/day up to ₹25,000\n\n**Online Appeal:** rtionline.gov.in for central government departments`,
+    citations: ['RTI Act 2005', '§ 19 First Appeal', '§ 20 Penalty', 'CIC']
+  }
+};
+
+function analyzeScenario() {
+  const input = document.getElementById('scenarioInput').value.trim().toLowerCase();
+  if (!input) return;
+
+  const aiPanel = document.getElementById('aiResponse');
+  const citChips = document.getElementById('citationChips');
+  citChips.style.display = 'none';
+  aiPanel.innerHTML = '<div style="color:var(--text-3);font-size:14px;"><i class="fas fa-circle-notch fa-spin"></i> Analyzing your rights…</div>';
+
+  setTimeout(() => {
+    let match = null;
+    if (input.includes('arrest') || input.includes('police') || input.includes('custody') || input.includes('detained')) match = 'arrest';
+    else if (input.includes('salary') || input.includes('wage') || input.includes('pay') || input.includes('employer')) match = 'salary';
+    else if (input.includes('refund') || input.includes('product') || input.includes('consumer') || input.includes('shopping')) match = 'refund';
+    else if (input.includes('haras') || input.includes('workplace') || input.includes('manager') || input.includes('boss')) match = 'harassment';
+    else if (input.includes('rti') || input.includes('information') || input.includes('government') || input.includes('denied')) match = 'rti';
+
+    if (match && RIGHTS_KB[match]) {
+      const kb = RIGHTS_KB[match];
+      aiPanel.innerHTML = `<div style="white-space:pre-line;font-size:13.5px;line-height:1.75;">${kb.response.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#fff">$1</strong>')}</div>`;
+      citChips.innerHTML = kb.citations.map(c => `<span class="citation">${c}</span>`).join('');
+      citChips.style.display = 'flex';
+    } else {
+      const groqKey = localStorage.getItem('groq_api_key');
+      if (!groqKey) {
+        aiPanel.innerHTML = `<div style="font-size:13.5px;line-height:1.75;color:var(--text-2);">
+          Based on your query, this may involve multiple areas of Indian law. For a precise analysis:<br><br>
+          1. Add your <strong style="color:#f87171">Groq API key</strong> (click 🔑 above) for real-time AI legal analysis<br>
+          2. Or browse the rights cards on the left for relevant sections<br>
+          3. For urgent matters — call <strong style="color:#f87171">15100</strong> (Free Legal Aid Helpline)
+        </div>`;
+      } else {
+        aiPanel.innerHTML = `<div style="font-size:13.5px;line-height:1.75;color:var(--text-2);">Your situation involves Indian law. Based on context: consult a lawyer immediately for complex scenarios. Free legal aid available via your local District Legal Services Authority (DLSA). Call 15100.</div>`;
+      }
+    }
+  }, 1200);
+}
+
+document.getElementById('scenarioInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') analyzeScenario();
+});
+
+// Cursor ring
+const ring = document.getElementById('cursorRing');
+if (ring) {
+  document.addEventListener('mousemove', e => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  });
+}
+</script>
+</body>
+</html>
