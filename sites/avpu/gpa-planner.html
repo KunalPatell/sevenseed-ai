@@ -73,10 +73,200 @@
     .nt-big{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.1}
     .nt-mono{font-family:'JetBrains Mono',monospace}
     @media print{.nt-nav,.nt-btn{display:none!important}}
+  
+    /* ════════════════════ PREMIUM VISUAL EFFECTS ════════════════════ */
+
+    /* Animated dark gradient background */
+    @keyframes bgShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    body.nt-body{
+      background:linear-gradient(135deg,#060609 0%,#0a0a20 25%,#10061a 50%,#060615 75%,#060609 100%)!important;
+      background-size:400% 400%!important;
+      animation:bgShift 25s ease infinite!important;
+      overflow-x:hidden;
+    }
+
+    /* Scroll progress bar */
+    .nt-progress{position:fixed;top:0;left:0;height:3px;z-index:999;background:linear-gradient(90deg,var(--primary,#f97316),#a855f7,#06b6d4);border-radius:0 2px 2px 0;transition:width .1s;box-shadow:0 0 10px var(--primary,#f97316)}
+
+    /* Floating blurred orbs */
+    .nt-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;opacity:.10;will-change:transform}
+    .nt-orb:nth-child(1){width:550px;height:550px;top:-12%;left:-8%;background:var(--primary,#f97316);filter:blur(120px);animation:orbA 22s ease-in-out infinite}
+    .nt-orb:nth-child(2){width:420px;height:420px;bottom:-10%;right:-8%;background:#a855f7;filter:blur(110px);animation:orbB 28s ease-in-out infinite}
+    .nt-orb:nth-child(3){width:350px;height:350px;top:35%;left:55%;background:#06b6d4;filter:blur(100px);animation:orbC 32s ease-in-out infinite}
+    @keyframes orbA{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-50px) scale(1.08)}66%{transform:translate(-30px,40px) scale(.94)}}
+    @keyframes orbB{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-40px,30px) scale(1.05)}66%{transform:translate(35px,-35px) scale(.96)}}
+    @keyframes orbC{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-50px,25px) scale(1.1)}}
+
+    /* Particle canvas */
+    #nt-particles{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+    .nt-wrap,.nt-nav{position:relative;z-index:2}
+
+    /* ─── 3D Card effects ─── */
+    .nt-card{
+      position:relative;overflow:hidden;
+      transition:transform .45s cubic-bezier(.25,.46,.45,.94),box-shadow .45s ease,border-color .3s;
+      will-change:transform;
+    }
+    .nt-card:hover{
+      box-shadow:0 25px 50px -12px rgba(0,0,0,.4),0 0 30px rgba(var(--primary-rgb,249,115,22),.08);
+      border-color:rgba(var(--primary-rgb,249,115,22),.25);
+    }
+    /* Spotlight radial gradient that follows cursor */
+    .nt-card::after{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(circle 300px at var(--mx,50%) var(--my,50%),rgba(var(--primary-rgb,249,115,22),.07),transparent 70%);
+      pointer-events:none;opacity:0;transition:opacity .4s;border-radius:inherit;
+    }
+    .nt-card:hover::after{opacity:1}
+
+    /* Animated top-border glow line */
+    .nt-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,transparent,var(--primary,#f97316),transparent);
+      opacity:0;transition:opacity .4s;
+    }
+    .nt-card:hover::before{opacity:.7}
+
+    /* ─── Entry animations (scroll reveal) ─── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(40px) scale(.97)}to{opacity:1;transform:none}}
+    @keyframes scaleIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:none}}
+    @keyframes slideRight{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+    .nt-reveal{opacity:0}
+    .nt-visible{animation:fadeUp .7s cubic-bezier(.22,1,.36,1) forwards}
+    .nt-visible.nt-scale{animation-name:scaleIn}
+
+    /* ─── Stat card glow pulse ─── */
+    .nt-stat{transition:transform .3s,box-shadow .3s;will-change:transform}
+    .nt-stat:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(0,0,0,.2)}
+    .nt-stat.hl{
+      box-shadow:0 0 25px rgba(var(--primary-rgb,249,115,22),.12),inset 0 1px 0 rgba(255,255,255,.05);
+      animation:statPulse 3.5s ease-in-out infinite;
+    }
+    @keyframes statPulse{
+      0%,100%{box-shadow:0 0 20px rgba(var(--primary-rgb,249,115,22),.10),inset 0 1px 0 rgba(255,255,255,.05)}
+      50%{box-shadow:0 0 40px rgba(var(--primary-rgb,249,115,22),.22),inset 0 1px 0 rgba(255,255,255,.08)}
+    }
+
+    /* ─── Animated gradient title ─── */
+    .nt-title{
+      background:linear-gradient(135deg,var(--text,#eee) 0%,var(--text,#eee) 40%,var(--primary,#f97316) 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      background-clip:text;background-size:200% 200%;
+      animation:titleShift 6s ease-in-out infinite;
+    }
+    @keyframes titleShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+    /* ─── Badge breathing ─── */
+    .nt-badge{animation:badgeBreathe 2.8s ease-in-out infinite}
+    @keyframes badgeBreathe{
+      0%,100%{box-shadow:0 0 0 0 rgba(var(--primary-rgb,249,115,22),.35);transform:scale(1)}
+      50%{box-shadow:0 0 0 10px rgba(var(--primary-rgb,249,115,22),0);transform:scale(1.03)}
+    }
+
+    /* ─── Enhanced glassmorphism nav ─── */
+    .nt-nav{
+      background:rgba(8,8,14,.65)!important;
+      box-shadow:0 4px 30px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.04)!important;
+      border-bottom:1px solid rgba(255,255,255,.04)!important;
+    }
+    .nt-links a{transition:all .25s cubic-bezier(.22,1,.36,1)}
+    .nt-links a:hover{transform:translateY(-2px);text-shadow:0 0 12px rgba(var(--primary-rgb,249,115,22),.3)}
+
+    /* ─── Shimmer on primary button ─── */
+    .nt-btn.pri{position:relative;overflow:hidden;transition:all .25s}
+    .nt-btn.pri::after{
+      content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+      animation:shimmer 3s ease-in-out infinite;
+    }
+    @keyframes shimmer{0%{left:-100%}50%,100%{left:100%}}
+
+    /* ─── Button hover lift ─── */
+    .nt-btn{transition:all .25s cubic-bezier(.22,1,.36,1)}
+    .nt-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.25)}
+    .nt-btn.pri:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(var(--primary-rgb,249,115,22),.3)}
+
+    /* ─── Bar chart animation ─── */
+    @keyframes barGrow{from{width:0%!important;opacity:0}to{opacity:1}}
+    .nt-bar>i{animation:barGrow .9s cubic-bezier(.22,1,.36,1)}
+
+    /* ─── Input focus neon glow ─── */
+    .nt-f input:focus,.nt-f select:focus,.nt-f textarea:focus{
+      box-shadow:0 0 0 3px rgba(var(--primary-rgb,249,115,22),.15),0 0 20px rgba(var(--primary-rgb,249,115,22),.1);
+      border-color:var(--primary,#f97316)!important;
+    }
+    .nt-f input,.nt-f select,.nt-f textarea{transition:all .25s}
+
+    /* ─── Table row hover ─── */
+    .nt-table tbody tr{transition:background .2s,transform .2s}
+    .nt-table tbody tr:hover{background:rgba(var(--primary-rgb,249,115,22),.04)}
+
+    /* ─── Chip hover lift + glow ─── */
+    .nt-chip{transition:all .25s cubic-bezier(.22,1,.36,1)}
+    .nt-chip:hover{
+      transform:translateY(-3px);
+      box-shadow:0 8px 20px rgba(var(--primary-rgb,249,115,22),.15);
+      border-color:var(--primary,#f97316);color:var(--primary,#f97316);
+    }
+
+    /* ─── Note bar glow ─── */
+    .nt-note{box-shadow:-4px 0 20px rgba(var(--primary-rgb,249,115,22),.08);transition:box-shadow .3s}
+    .nt-note:hover{box-shadow:-4px 0 30px rgba(var(--primary-rgb,249,115,22),.18)}
+
+    /* ─── SVG chart glow ─── */
+    svg polyline{filter:drop-shadow(0 0 8px var(--primary,#f97316));transition:filter .3s}
+    svg circle{filter:drop-shadow(0 0 5px var(--primary,#f97316));transition:all .3s}
+    svg:hover polyline{filter:drop-shadow(0 0 14px var(--primary,#f97316))}
+    svg:hover circle{filter:drop-shadow(0 0 10px var(--primary,#f97316))}
+
+    /* ─── Big number glow ─── */
+    .nt-big{text-shadow:0 0 40px rgba(var(--primary-rgb,249,115,22),.25);transition:text-shadow .3s}
+
+    /* ─── Pill pop-in ─── */
+    .nt-pill{animation:pillPop .45s cubic-bezier(.22,1,.36,1)}
+    @keyframes pillPop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+
+    /* ─── Header area glow ─── */
+    .nt-head{position:relative}
+    .nt-head::before{
+      content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+      width:600px;height:300px;
+      background:radial-gradient(ellipse,rgba(var(--primary-rgb,249,115,22),.10),transparent 70%);
+      pointer-events:none;animation:headGlow 5s ease-in-out infinite;
+    }
+    @keyframes headGlow{0%,100%{opacity:.5;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.15)}}
+
+    /* ─── Grid column glow divider (desktop) ─── */
+    @media(min-width:981px){
+      .nt-grid>section:first-child{border-right:1px solid rgba(var(--primary-rgb,249,115,22),.06);padding-right:26px}
+    }
+
+    /* ─── Scroll-bar styling ─── */
+    ::-webkit-scrollbar{width:6px;height:6px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:rgba(var(--primary-rgb,249,115,22),.25);border-radius:99px}
+    ::-webkit-scrollbar-thumb:hover{background:rgba(var(--primary-rgb,249,115,22),.5)}
+    html{scroll-behavior:smooth;scrollbar-color:rgba(var(--primary-rgb,249,115,22),.25) transparent}
+
+    /* ─── Stat counter num animation ─── */
+    .nt-stat strong{transition:color .3s,text-shadow .3s}
+    .nt-stat:hover strong{text-shadow:0 0 12px rgba(var(--primary-rgb,249,115,22),.25)}
+
+    /* ─── Accessible reduced motion ─── */
+    @media(prefers-reduced-motion:reduce){
+      *,::before,::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+      .nt-orb,.nt-progress,#nt-particles{display:none!important}
+    }
+
   </style>
 </head>
 <body class="nt-body">
   <!-- ss-new-tool -->
+<!-- ss-enhanced-v2 -->
+  <div class="nt-progress" id="ntProg"></div>
+  <div class="nt-orb"></div><div class="nt-orb"></div><div class="nt-orb"></div>
+  <canvas id="nt-particles"></canvas>
+
   <header class="nt-nav">
     <a href="index.html" class="nt-brand"><span>🎓</span> AVP<b>University</b></a>
     <nav class="nt-links" aria-label="Tools">
@@ -158,5 +348,85 @@
     }
     render();
   </script>
+
+  <script>
+  (function(){
+    /* ── Scroll progress bar ── */
+    const prog=document.getElementById('ntProg');
+    if(prog){window.addEventListener('scroll',()=>{
+      const h=document.documentElement.scrollHeight-window.innerHeight;
+      prog.style.width=h>0?(window.scrollY/h*100)+'%':'0%';
+    },{passive:true});}
+
+    /* ── 3D Tilt + Spotlight on cards ── */
+    document.querySelectorAll('.nt-card').forEach(card=>{
+      card.addEventListener('mousemove',e=>{
+        const r=card.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+        card.style.setProperty('--mx',(x*100)+'%');
+        card.style.setProperty('--my',(y*100)+'%');
+        const rx=(y-.5)*6,ry=-(x-.5)*6;
+        card.style.transform='perspective(800px) rotateX('+rx+'deg) rotateY('+ry+'deg) translateY(-6px) scale(1.01)';
+      });
+      card.addEventListener('mouseleave',()=>{
+        card.style.transform='';
+      });
+    });
+
+    /* ── Scroll reveal (IntersectionObserver) ── */
+    const revealEls=document.querySelectorAll('.nt-card,.nt-stats,.nt-head,.nt-note');
+    revealEls.forEach(el=>el.classList.add('nt-reveal'));
+    const revObs=new IntersectionObserver((entries)=>{
+      entries.forEach((en,i)=>{
+        if(en.isIntersecting){
+          setTimeout(()=>{en.target.classList.remove('nt-reveal');en.target.classList.add('nt-visible');},i*60);
+          revObs.unobserve(en.target);
+        }
+      });
+    },{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+    revealEls.forEach(el=>revObs.observe(el));
+
+    /* ── Lightweight particle system ── */
+    const cv=document.getElementById('nt-particles');
+    if(cv){
+      const ctx=cv.getContext('2d');
+      let W,H;
+      function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+      resize();window.addEventListener('resize',resize);
+      const N=45,ps=[];
+      for(let i=0;i<N;i++)ps.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.4,dx:(Math.random()-.5)*.35,dy:(Math.random()-.5)*.35,o:Math.random()*.5+.15});
+      function draw(){
+        ctx.clearRect(0,0,W,H);
+        const cs=getComputedStyle(document.documentElement);
+        const prim=cs.getPropertyValue('--primary').trim()||'#f97316';
+        ps.forEach(p=>{
+          p.x+=p.dx;p.y+=p.dy;
+          if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+          ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=prim;ctx.globalAlpha=p.o;ctx.fill();
+        });
+        /* Connect nearby particles */
+        for(let i=0;i<N;i++){for(let j=i+1;j<N;j++){
+          const dx=ps[i].x-ps[j].x,dy=ps[i].y-ps[j].y,d=Math.sqrt(dx*dx+dy*dy);
+          if(d<140){ctx.beginPath();ctx.moveTo(ps[i].x,ps[i].y);ctx.lineTo(ps[j].x,ps[j].y);ctx.strokeStyle=prim;ctx.globalAlpha=(1-d/140)*.12;ctx.lineWidth=.6;ctx.stroke();}
+        }}
+        ctx.globalAlpha=1;
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    /* ── Stat card stagger animation ── */
+    document.querySelectorAll('.nt-stats').forEach(grid=>{
+      const stats=grid.querySelectorAll('.nt-stat');
+      stats.forEach((s,i)=>{s.style.opacity='0';s.style.animation='scaleIn .5s cubic-bezier(.22,1,.36,1) '+(0.1+i*0.08)+'s forwards';});
+    });
+
+    /* ── Navbar link active glow ── */
+    document.querySelectorAll('.nt-links a.on').forEach(a=>{
+      a.style.boxShadow='0 0 14px rgba(var(--primary-rgb,249,115,22),.25)';
+    });
+  })();
+  </script>
+
 </body>
 </html>
