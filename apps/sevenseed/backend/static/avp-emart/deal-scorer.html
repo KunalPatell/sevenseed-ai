@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Deal Scorer & Fake-Discount Detector — AVP Emart</title>
+  <meta name="description" content="Score any product deal 0–100 using MRP, 90-day price history, seller rating and return policy, and spot inflated MRPs.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🎯%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee)}
+    .nt-brand b{color:var(--primary,#f97316)}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:var(--primary,#f97316);border-color:rgba(var(--primary-rgb,249,115,22),.4);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-wrap{max-width:1240px;margin:0 auto;padding:44px 24px 80px}
+    .nt-head{text-align:center;margin-bottom:34px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:14px;color:var(--primary,#f97316);background:rgba(var(--primary-rgb,249,115,22),.1);border:1px solid rgba(var(--primary-rgb,249,115,22),.3)}
+    .nt-title{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.15;margin-bottom:12px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:16px;max-width:700px;margin:0 auto;line-height:1.6}
+    .nt-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:26px;align-items:start}
+    @media(max-width:980px){.nt-grid{grid-template-columns:1fr}}
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:16px;padding:24px}
+    .nt-card+.nt-card{margin-top:22px}
+    .nt-card h2{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:var(--primary,#f97316)}
+    .nt-f{margin-bottom:14px}
+    .nt-f label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2,#9aa0b8);margin-bottom:6px}
+    .nt-f input,.nt-f select,.nt-f textarea{width:100%;padding:10px 12px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px;color:var(--text,#eee);font:inherit;font-size:14px;outline:none;transition:border-color .15s}
+    .nt-f input:focus,.nt-f select:focus,.nt-f textarea:focus{border-color:var(--primary,#f97316)}
+    .nt-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .nt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+    .nt-stat{background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:12px;padding:14px 16px}
+    .nt-stat small{display:block;color:var(--text-3,#5b5f78);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:5px}
+    .nt-stat strong{font-size:22px;font-weight:800;line-height:1.2;word-break:break-word}
+    .nt-stat.hl{border-color:rgba(var(--primary-rgb,249,115,22),.5);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-table{width:100%;border-collapse:collapse;font-size:13px}
+    .nt-table th,.nt-table td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border,rgba(255,255,255,.07));white-space:nowrap}
+    .nt-table th:first-child,.nt-table td:first-child{text-align:left}
+    .nt-table th{color:var(--text-3,#5b5f78);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg-1,#0d0d16)}
+    .nt-scroll{max-height:320px;overflow:auto;border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px}
+    .nt-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700}
+    .nt-good{background:rgba(16,185,129,.15);color:#10b981}
+    .nt-warn{background:rgba(245,158,11,.15);color:#f59e0b}
+    .nt-bad{background:rgba(239,68,68,.15);color:#ef4444}
+    .nt-bar{height:8px;background:var(--bg-3,#18182a);border-radius:99px;overflow:hidden}
+    .nt-bar>i{display:block;height:100%;background:var(--primary,#f97316);border-radius:99px;transition:width .35s}
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-btn.pri{background:var(--primary,#f97316);border-color:var(--primary,#f97316);color:#fff}
+    .nt-btn.pri:hover{opacity:.9;color:#fff}
+    .nt-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .nt-chip{padding:6px 12px;font-size:12px;font-weight:600;border-radius:999px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));color:var(--text-2,#9aa0b8);cursor:pointer}
+    .nt-chip:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-note{font-size:12px;color:var(--text-3,#7d7f9a);line-height:1.65;margin-top:18px;padding:12px 14px;border-left:3px solid var(--primary,#f97316);background:var(--bg-2,#12121e);border-radius:0 8px 8px 0}
+    .nt-list{list-style:none;display:grid;gap:8px;font-size:13.5px}
+    .nt-list li{display:flex;gap:10px;align-items:flex-start;color:var(--text-2,#9aa0b8)}
+    .nt-bd{display:grid;gap:12px}
+    .nt-bd .r{display:grid;grid-template-columns:150px 1fr 54px;gap:12px;align-items:center;font-size:13px;color:var(--text-2,#9aa0b8)}
+    .nt-bd .r span:last-child{text-align:right;font-weight:700;color:var(--text,#eee)}
+    .nt-rowx{display:grid;grid-template-columns:1.4fr .7fr .8fr 34px;gap:8px;margin-bottom:8px;align-items:center}
+    .nt-rowx input,.nt-rowx select{width:100%;padding:8px 10px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:8px;color:var(--text,#eee);font:inherit;font-size:13px;outline:none;min-width:0}
+    .nt-x{width:34px;height:34px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,.07));background:transparent;color:var(--text-3,#7d7f9a);cursor:pointer}
+    .nt-x:hover{color:#ef4444;border-color:#ef4444}
+    .nt-big{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.1}
+    .nt-mono{font-family:'JetBrains Mono',monospace}
+    @media print{.nt-nav,.nt-btn{display:none!important}}
+  </style>
+</head>
+<body class="nt-body">
+  <!-- ss-new-tool -->
+  <header class="nt-nav">
+    <a href="index.html" class="nt-brand"><span>🎯</span> AVP<b>Emart</b></a>
+    <nav class="nt-links" aria-label="Tools">
+      <a href="index.html">Home</a>
+      <a href="deal-scorer.html" class="on">Deal Scorer</a>
+      <a href="emi-calculator.html">EMI Truth</a>
+      <a href="/">Sevenseed Hub</a>
+    </nav>
+  </header>
+
+  <main class="nt-wrap">
+    <div class="nt-head">
+      <div class="nt-badge"><i class="fa-solid fa-bullseye"></i> Is it really a good deal?</div>
+      <h1 class="nt-title">Score Any Deal Before You Buy</h1>
+      <p class="nt-sub">Plug in today’s price and the 90-day price history from any tracker. Get a transparent 0–100 score with a breakdown, plus a flag if the MRP looks inflated.</p>
+    </div>
+
+    <div class="nt-grid">
+      <section class="nt-card">
+        <h2><i class="fa-solid fa-tags"></i> Deal details</h2>
+        <div class="nt-f"><label for="mrp">Listed MRP (₹)</label><input id="mrp" type="number" min="0" value="29999" oninput="calc()"></div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="cur">Current price (₹)</label><input id="cur" type="number" min="0" value="18999" oninput="calc()"></div>
+          <div class="nt-f"><label for="off">Bank / coupon offer (₹)</label><input id="off" type="number" min="0" value="1500" oninput="calc()"></div>
+        </div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="avg">90-day average (₹)</label><input id="avg" type="number" min="0" value="21500" oninput="calc()"></div>
+          <div class="nt-f"><label for="low">90-day lowest (₹)</label><input id="low" type="number" min="0" value="17499" oninput="calc()"></div>
+        </div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="high">90-day highest (₹)</label><input id="high" type="number" min="0" value="24999" oninput="calc()"></div>
+          <div class="nt-f"><label for="rate">Seller rating (1–5)</label><input id="rate" type="number" min="1" max="5" step="0.1" value="4.3" oninput="calc()"></div>
+        </div>
+        <div class="nt-f"><label for="ret">Return window (days)</label><input id="ret" type="number" min="0" value="10" oninput="calc()"></div>
+      </section>
+      <section>
+        <div class="nt-card" style="text-align:center">
+          <div class="nt-big" id="score">—</div>
+          <div style="margin:10px 0 4px" id="label"></div>
+          <p id="advice" style="color:var(--text-2);font-size:14px;line-height:1.7;max-width:520px;margin:8px auto 0"></p>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-chart-simple"></i> Score breakdown</h2>
+          <div class="nt-bd" id="bd"></div>
+          <p id="flags" style="margin-top:16px;font-size:13px;line-height:1.7"></p>
+        </div>
+      </section>
+    </div>
+    <p class="nt-note">Method: discount vs MRP (20) + position vs 90-day average (30) + closeness to the 90-day low (25) + seller rating (15) + return window (10). It is a decision aid, not a price guarantee.</p>
+  </main>
+
+  <script>
+    const $=id=>document.getElementById(id);
+    const nv=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0;};
+    const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+    const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+
+    function row(name,pts,max){return '<div class="r"><span>'+name+'</span><div class="nt-bar"><i style="width:'+(pts/max*100)+'%"></i></div><span>'+pts.toFixed(0)+'/'+max+'</span></div>';}
+    function calc(){
+      const mrp=nv('mrp'),eff=Math.max(0,nv('cur')-nv('off')),avg=nv('avg'),low=nv('low'),high=nv('high'),rate=nv('rate'),ret=nv('ret');
+      const dm=mrp>0?(mrp-eff)/mrp*100:0,pa=avg>0?(avg-eff)/avg*100:0,gl=low>0?(eff-low)/low*100:0;
+      const p1=clamp(dm/2,0,20),p2=clamp(15+pa*1.5,0,30),p3=clamp(25-gl*2.5,0,25),p4=clamp((rate-3)/2*15,0,15),p5=clamp(ret/3,0,10);
+      const s=Math.round(p1+p2+p3+p4+p5);
+      $('score').textContent=s+'/100';
+      let cls='nt-bad',lab='Skip it',adv='Price is well above its usual range. Wait for a real sale or look at other sellers.';
+      if(s>=80){cls='nt-good';lab='Buy now';adv='Strong deal: priced near its 90-day low from a trustworthy seller.';}
+      else if(s>=60){cls='nt-good';lab='Good deal';adv='Better than usual. Buy if you need it now; otherwise a small extra drop may come.';}
+      else if(s>=40){cls='nt-warn';lab='Fair — consider waiting';adv='About average. Set a price alert and wait for a bigger drop.';}
+      $('label').innerHTML='<span class="nt-pill '+cls+'">'+lab+'</span>';$('advice').textContent=adv;
+      $('bd').innerHTML=row('Discount vs MRP',p1,20)+row('vs 90-day average',p2,30)+row('Near 90-day low',p3,25)+row('Seller rating',p4,15)+row('Return window',p5,10);
+      const f=[];
+      f.push('Effective price after offers: <b>'+inr(eff)+'</b> ('+dm.toFixed(0)+'% below MRP).');
+      if(high>0&&mrp>high*1.5)f.push('<span class="nt-pill nt-bad">Inflated MRP?</span> MRP is '+(mrp/high).toFixed(1)+'× the highest price in 90 days — the “discount” is mostly cosmetic.');
+      if(eff>avg&&avg>0)f.push('<span class="nt-pill nt-warn">Above average</span> You would pay more than the 90-day average.');
+      if(low>0&&eff<=low*1.02)f.push('<span class="nt-pill nt-good">At 90-day low</span> This is essentially the lowest price seen recently.');
+      if(ret<7)f.push('<span class="nt-pill nt-warn">Short returns</span> Less than a 7-day return window adds risk.');
+      $('flags').innerHTML=f.join('<br>');
+    }
+    calc();
+  </script>
+</body>
+</html>

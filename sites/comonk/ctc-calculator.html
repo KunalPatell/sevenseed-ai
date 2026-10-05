@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>CTC to In-Hand Salary Calculator (India) — Comonk AI</title>
+  <meta name="description" content="Convert CTC to monthly in-hand salary with PF, gratuity, professional tax and income tax under old and new regimes.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E💼%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee)}
+    .nt-brand b{color:var(--primary,#f97316)}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:var(--primary,#f97316);border-color:rgba(var(--primary-rgb,249,115,22),.4);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-wrap{max-width:1240px;margin:0 auto;padding:44px 24px 80px}
+    .nt-head{text-align:center;margin-bottom:34px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:14px;color:var(--primary,#f97316);background:rgba(var(--primary-rgb,249,115,22),.1);border:1px solid rgba(var(--primary-rgb,249,115,22),.3)}
+    .nt-title{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.15;margin-bottom:12px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:16px;max-width:700px;margin:0 auto;line-height:1.6}
+    .nt-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:26px;align-items:start}
+    @media(max-width:980px){.nt-grid{grid-template-columns:1fr}}
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:16px;padding:24px}
+    .nt-card+.nt-card{margin-top:22px}
+    .nt-card h2{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:var(--primary,#f97316)}
+    .nt-f{margin-bottom:14px}
+    .nt-f label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2,#9aa0b8);margin-bottom:6px}
+    .nt-f input,.nt-f select,.nt-f textarea{width:100%;padding:10px 12px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px;color:var(--text,#eee);font:inherit;font-size:14px;outline:none;transition:border-color .15s}
+    .nt-f input:focus,.nt-f select:focus,.nt-f textarea:focus{border-color:var(--primary,#f97316)}
+    .nt-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .nt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+    .nt-stat{background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:12px;padding:14px 16px}
+    .nt-stat small{display:block;color:var(--text-3,#5b5f78);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:5px}
+    .nt-stat strong{font-size:22px;font-weight:800;line-height:1.2;word-break:break-word}
+    .nt-stat.hl{border-color:rgba(var(--primary-rgb,249,115,22),.5);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-table{width:100%;border-collapse:collapse;font-size:13px}
+    .nt-table th,.nt-table td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border,rgba(255,255,255,.07));white-space:nowrap}
+    .nt-table th:first-child,.nt-table td:first-child{text-align:left}
+    .nt-table th{color:var(--text-3,#5b5f78);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg-1,#0d0d16)}
+    .nt-scroll{max-height:320px;overflow:auto;border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px}
+    .nt-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700}
+    .nt-good{background:rgba(16,185,129,.15);color:#10b981}
+    .nt-warn{background:rgba(245,158,11,.15);color:#f59e0b}
+    .nt-bad{background:rgba(239,68,68,.15);color:#ef4444}
+    .nt-bar{height:8px;background:var(--bg-3,#18182a);border-radius:99px;overflow:hidden}
+    .nt-bar>i{display:block;height:100%;background:var(--primary,#f97316);border-radius:99px;transition:width .35s}
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-btn.pri{background:var(--primary,#f97316);border-color:var(--primary,#f97316);color:#fff}
+    .nt-btn.pri:hover{opacity:.9;color:#fff}
+    .nt-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .nt-chip{padding:6px 12px;font-size:12px;font-weight:600;border-radius:999px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));color:var(--text-2,#9aa0b8);cursor:pointer}
+    .nt-chip:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-note{font-size:12px;color:var(--text-3,#7d7f9a);line-height:1.65;margin-top:18px;padding:12px 14px;border-left:3px solid var(--primary,#f97316);background:var(--bg-2,#12121e);border-radius:0 8px 8px 0}
+    .nt-list{list-style:none;display:grid;gap:8px;font-size:13.5px}
+    .nt-list li{display:flex;gap:10px;align-items:flex-start;color:var(--text-2,#9aa0b8)}
+    .nt-bd{display:grid;gap:12px}
+    .nt-bd .r{display:grid;grid-template-columns:150px 1fr 54px;gap:12px;align-items:center;font-size:13px;color:var(--text-2,#9aa0b8)}
+    .nt-bd .r span:last-child{text-align:right;font-weight:700;color:var(--text,#eee)}
+    .nt-rowx{display:grid;grid-template-columns:1.4fr .7fr .8fr 34px;gap:8px;margin-bottom:8px;align-items:center}
+    .nt-rowx input,.nt-rowx select{width:100%;padding:8px 10px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:8px;color:var(--text,#eee);font:inherit;font-size:13px;outline:none;min-width:0}
+    .nt-x{width:34px;height:34px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,.07));background:transparent;color:var(--text-3,#7d7f9a);cursor:pointer}
+    .nt-x:hover{color:#ef4444;border-color:#ef4444}
+    .nt-big{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.1}
+    .nt-mono{font-family:'JetBrains Mono',monospace}
+    @media print{.nt-nav,.nt-btn{display:none!important}}
+  </style>
+</head>
+<body class="nt-body">
+  <!-- ss-new-tool -->
+  <header class="nt-nav">
+    <a href="index.html" class="nt-brand"><span>💼</span> Comonk<b>AI</b></a>
+    <nav class="nt-links" aria-label="Tools">
+      <a href="index.html">Home</a>
+      <a href="ctc-calculator.html" class="on">CTC → In-hand</a>
+      <a href="/">Sevenseed Hub</a>
+    </nav>
+  </header>
+
+  <main class="nt-wrap">
+    <div class="nt-head">
+      <div class="nt-badge"><i class="fa-solid fa-indian-rupee-sign"></i> Old vs new tax regime</div>
+      <h1 class="nt-title">What Will You Actually Take Home?</h1>
+      <p class="nt-sub">Turn any CTC into your real monthly in-hand pay. Compares the old and new tax regimes (FY 2025-26) and tells you which saves more.</p>
+    </div>
+
+    <div class="nt-grid">
+      <section class="nt-card">
+        <h2><i class="fa-solid fa-sack-dollar"></i> Salary structure</h2>
+        <div class="nt-f"><label for="ctc">Annual CTC (₹)</label><input id="ctc" type="number" min="0" value="1800000" oninput="calc()"></div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="varp">Variable pay (% of CTC)</label><input id="varp" type="number" min="0" max="60" value="10" oninput="calc()"></div>
+          <div class="nt-f"><label for="basp">Basic (% of fixed pay)</label><input id="basp" type="number" min="10" max="80" value="45" oninput="calc()"></div>
+        </div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="pt">Professional tax (₹/year)</label><input id="pt" type="number" min="0" value="2400" oninput="calc()"></div>
+          <div class="nt-f"><label for="cap">PF base</label><select id="cap" onchange="calc()"><option value="0">12% of full basic</option><option value="1">Capped at ₹15,000 basic/month</option></select></div>
+        </div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="d80c">Extra 80C investments (₹)</label><input id="d80c" type="number" min="0" value="50000" oninput="calc()"></div>
+          <div class="nt-f"><label for="doth">Other deductions: 80D, NPS… (₹)</label><input id="doth" type="number" min="0" value="25000" oninput="calc()"></div>
+        </div>
+        <p class="nt-note">Estimate only. Assumes CTC includes employer PF and gratuity (4.81% of basic). Old-regime deductions apply to the “old” column only. HRA and other exemptions are not modelled. Confirm with your payroll/CA.</p>
+      </section>
+      <section>
+        <div class="nt-stats">
+          <div class="nt-stat hl"><small>Monthly in-hand (best regime)</small><strong id="oBest">—</strong></div>
+          <div class="nt-stat"><small>Better regime</small><strong id="oReg">—</strong></div>
+          <div class="nt-stat"><small>Yearly tax saved by switching</small><strong id="oSave">—</strong></div>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-code-compare"></i> Regime comparison</h2>
+          <div class="nt-scroll" style="max-height:none"><table class="nt-table">
+            <thead><tr><th>Item (per year)</th><th>New regime</th><th>Old regime</th></tr></thead>
+            <tbody id="cmp"></tbody></table></div>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-diagram-project"></i> Where your CTC goes</h2>
+          <div class="nt-bd" id="bd"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const $=id=>document.getElementById(id);
+    const nv=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0;};
+    const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+    const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+
+    const NEW=[[400000,0],[800000,.05],[1200000,.10],[1600000,.15],[2000000,.20],[2400000,.25],[Infinity,.30]];
+    const OLD=[[250000,0],[500000,.05],[1000000,.20],[Infinity,.30]];
+    function slabTax(inc,sl){let t=0,prev=0;for(const [lim,rt] of sl){if(inc>prev)t+=(Math.min(inc,lim)-prev)*rt;prev=lim;}return t;}
+    function newTax(ti){let t=slabTax(ti,NEW);if(ti<=1200000)t=0;else t=Math.min(t,ti-1200000);return t*1.04;}
+    function oldTax(ti){let t=slabTax(ti,OLD);if(ti<=500000)t=0;return t*1.04;}
+    function row(name,pts,max){return '<div class="r"><span>'+name+'</span><div class="nt-bar"><i style="width:'+(max>0?pts/max*100:0)+'%"></i></div><span>'+(max>0?(pts/max*100).toFixed(0):0)+'%</span></div>';}
+    function calc(){
+      const ctc=nv('ctc'),vp=nv('varp')/100,bp=nv('basp')/100,pt=nv('pt');
+      const variable=ctc*vp,fixed=ctc-variable,basic=fixed*bp;
+      const pfBasic=$('cap').value==='1'?Math.min(basic,15000*12):basic;
+      const pf=pfBasic*0.12,grat=basic*0.0481;
+      const gross=ctc-pf-grat;
+      const ti_new=Math.max(0,gross-75000);
+      const ded80c=Math.min(150000,pf+nv('d80c'));
+      const ti_old=Math.max(0,gross-50000-pt-ded80c-nv('doth'));
+      const tn=newTax(ti_new),to=oldTax(ti_old);
+      const inN=gross-pf-pt-tn,inO=gross-pf-pt-to;
+      const bestNew=inN>=inO;
+      $('oBest').textContent=inr(Math.max(inN,inO)/12);
+      $('oReg').textContent=bestNew?'New regime':'Old regime';
+      $('oSave').textContent=inr(Math.abs(tn-to));
+      const R=(a,b,c)=>'<tr><td>'+a+'</td><td>'+b+'</td><td>'+c+'</td></tr>';
+      $('cmp').innerHTML=R('Gross cash pay (CTC − employer PF − gratuity)',inr(gross),inr(gross))+
+        R('Taxable income',inr(ti_new),inr(ti_old))+R('Income tax + 4% cess',inr(tn),inr(to))+
+        R('Employee PF + prof. tax',inr(pf+pt),inr(pf+pt))+
+        R('<b>Annual in-hand</b>','<b>'+inr(inN)+'</b>','<b>'+inr(inO)+'</b>')+
+        R('<b>Monthly in-hand</b>','<b>'+inr(inN/12)+'</b>','<b>'+inr(inO/12)+'</b>');
+      const best=Math.max(inN,inO),tax=bestNew?tn:to;
+      $('bd').innerHTML=row('Take-home',best,ctc)+row('Income tax',tax,ctc)+row('PF (you)',pf,ctc)+row('Employer PF + gratuity',pf+grat,ctc)+row('Variable (not guaranteed)',variable,ctc);
+    }
+    calc();
+  </script>
+</body>
+</html>

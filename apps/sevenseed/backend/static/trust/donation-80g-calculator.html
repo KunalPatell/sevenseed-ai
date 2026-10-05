@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Section 80G Donation Tax Saving Calculator — AVP Charitable Trust</title>
+  <meta name="description" content="Calculate your 80G deduction and tax saved on a donation, with cash-limit and qualifying-limit rules, and the net cost of giving.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🤝%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee)}
+    .nt-brand b{color:var(--primary,#f97316)}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:var(--primary,#f97316);border-color:rgba(var(--primary-rgb,249,115,22),.4);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-wrap{max-width:1240px;margin:0 auto;padding:44px 24px 80px}
+    .nt-head{text-align:center;margin-bottom:34px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:14px;color:var(--primary,#f97316);background:rgba(var(--primary-rgb,249,115,22),.1);border:1px solid rgba(var(--primary-rgb,249,115,22),.3)}
+    .nt-title{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.15;margin-bottom:12px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:16px;max-width:700px;margin:0 auto;line-height:1.6}
+    .nt-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:26px;align-items:start}
+    @media(max-width:980px){.nt-grid{grid-template-columns:1fr}}
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:16px;padding:24px}
+    .nt-card+.nt-card{margin-top:22px}
+    .nt-card h2{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:var(--primary,#f97316)}
+    .nt-f{margin-bottom:14px}
+    .nt-f label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2,#9aa0b8);margin-bottom:6px}
+    .nt-f input,.nt-f select,.nt-f textarea{width:100%;padding:10px 12px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px;color:var(--text,#eee);font:inherit;font-size:14px;outline:none;transition:border-color .15s}
+    .nt-f input:focus,.nt-f select:focus,.nt-f textarea:focus{border-color:var(--primary,#f97316)}
+    .nt-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .nt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+    .nt-stat{background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:12px;padding:14px 16px}
+    .nt-stat small{display:block;color:var(--text-3,#5b5f78);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:5px}
+    .nt-stat strong{font-size:22px;font-weight:800;line-height:1.2;word-break:break-word}
+    .nt-stat.hl{border-color:rgba(var(--primary-rgb,249,115,22),.5);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-table{width:100%;border-collapse:collapse;font-size:13px}
+    .nt-table th,.nt-table td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border,rgba(255,255,255,.07));white-space:nowrap}
+    .nt-table th:first-child,.nt-table td:first-child{text-align:left}
+    .nt-table th{color:var(--text-3,#5b5f78);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg-1,#0d0d16)}
+    .nt-scroll{max-height:320px;overflow:auto;border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px}
+    .nt-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700}
+    .nt-good{background:rgba(16,185,129,.15);color:#10b981}
+    .nt-warn{background:rgba(245,158,11,.15);color:#f59e0b}
+    .nt-bad{background:rgba(239,68,68,.15);color:#ef4444}
+    .nt-bar{height:8px;background:var(--bg-3,#18182a);border-radius:99px;overflow:hidden}
+    .nt-bar>i{display:block;height:100%;background:var(--primary,#f97316);border-radius:99px;transition:width .35s}
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-btn.pri{background:var(--primary,#f97316);border-color:var(--primary,#f97316);color:#fff}
+    .nt-btn.pri:hover{opacity:.9;color:#fff}
+    .nt-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .nt-chip{padding:6px 12px;font-size:12px;font-weight:600;border-radius:999px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));color:var(--text-2,#9aa0b8);cursor:pointer}
+    .nt-chip:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-note{font-size:12px;color:var(--text-3,#7d7f9a);line-height:1.65;margin-top:18px;padding:12px 14px;border-left:3px solid var(--primary,#f97316);background:var(--bg-2,#12121e);border-radius:0 8px 8px 0}
+    .nt-list{list-style:none;display:grid;gap:8px;font-size:13.5px}
+    .nt-list li{display:flex;gap:10px;align-items:flex-start;color:var(--text-2,#9aa0b8)}
+    .nt-bd{display:grid;gap:12px}
+    .nt-bd .r{display:grid;grid-template-columns:150px 1fr 54px;gap:12px;align-items:center;font-size:13px;color:var(--text-2,#9aa0b8)}
+    .nt-bd .r span:last-child{text-align:right;font-weight:700;color:var(--text,#eee)}
+    .nt-rowx{display:grid;grid-template-columns:1.4fr .7fr .8fr 34px;gap:8px;margin-bottom:8px;align-items:center}
+    .nt-rowx input,.nt-rowx select{width:100%;padding:8px 10px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:8px;color:var(--text,#eee);font:inherit;font-size:13px;outline:none;min-width:0}
+    .nt-x{width:34px;height:34px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,.07));background:transparent;color:var(--text-3,#7d7f9a);cursor:pointer}
+    .nt-x:hover{color:#ef4444;border-color:#ef4444}
+    .nt-big{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.1}
+    .nt-mono{font-family:'JetBrains Mono',monospace}
+    @media print{.nt-nav,.nt-btn{display:none!important}}
+  </style>
+</head>
+<body class="nt-body">
+  <!-- ss-new-tool -->
+  <header class="nt-nav">
+    <a href="index.html" class="nt-brand"><span>🤝</span> AVP<b>Trust</b></a>
+    <nav class="nt-links" aria-label="Tools">
+      <a href="index.html">Home</a>
+      <a href="donation-80g-calculator.html" class="on">80G Tax Saver</a>
+      <a href="impact-estimator.html">Impact Estimator</a>
+      <a href="/">Sevenseed Hub</a>
+    </nav>
+  </header>
+
+  <main class="nt-wrap">
+    <div class="nt-head">
+      <div class="nt-badge"><i class="fa-solid fa-file-invoice"></i> Section 80G deduction</div>
+      <h1 class="nt-title">How Much Tax Does Your Donation Save?</h1>
+      <p class="nt-sub">Enter your donation and tax details. We apply the 50%/100% category, the 10% qualifying limit and the ₹2,000 cash rule to estimate your deduction and net cost.</p>
+    </div>
+
+    <div class="nt-grid">
+      <section class="nt-card">
+        <h2><i class="fa-solid fa-hand-holding-heart"></i> Donation details</h2>
+        <div class="nt-f"><label for="amt">Donation amount (₹)</label><input id="amt" type="number" min="0" value="50000" oninput="calc()"></div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="mode">Payment mode</label><select id="mode" onchange="calc()"><option value="d">Online / cheque / UPI</option><option value="c">Cash</option></select></div>
+          <div class="nt-f"><label for="cat">80G category</label><select id="cat" onchange="calc()"><option value="100-0">100% — no limit</option><option value="50-0" selected>50% — no limit</option><option value="100-1">100% — subject to 10% limit</option><option value="50-1">50% — subject to 10% limit</option></select></div>
+        </div>
+        <div class="nt-f"><label for="agti">Adjusted gross total income (₹/year)</label><input id="agti" type="number" min="0" value="1500000" oninput="calc()"></div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="reg">Tax regime</label><select id="reg" onchange="calc()"><option value="old">Old regime</option><option value="new">New regime</option></select></div>
+          <div class="nt-f"><label for="slab">Your marginal tax rate</label><select id="slab" onchange="calc()"><option value="0.05">5%</option><option value="0.10">10%</option><option value="0.15">15%</option><option value="0.20">20%</option><option value="0.25">25%</option><option value="0.30" selected>30%</option></select></div>
+        </div>
+        <p class="nt-note">General guidance for resident individuals — not tax advice. Deduction is available only under the old regime and only if the trust holds a valid 80G registration; cash gifts above ₹2,000 do not qualify. Keep the donation receipt (with 80G details) and check Form 10BE with your CA.</p>
+      </section>
+      <section>
+        <div class="nt-stats">
+          <div class="nt-stat"><small>Eligible amount</small><strong id="oElig">—</strong></div>
+          <div class="nt-stat hl"><small>Deduction under 80G</small><strong id="oDed">—</strong></div>
+          <div class="nt-stat hl"><small>Tax saved (incl. 4% cess)</small><strong id="oSave">—</strong></div>
+          <div class="nt-stat"><small>Net cost of your donation</small><strong id="oNet">—</strong></div>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-circle-info"></i> How this was worked out</h2>
+          <ul class="nt-list" id="why"></ul>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const $=id=>document.getElementById(id);
+    const nv=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0;};
+    const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+    const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+
+    function calc(){
+      const amt=nv('amt'),agti=nv('agti'),rate=parseFloat($('slab').value);
+      const [pc,lim]=$('cat').value.split('-').map(Number);
+      const why=[];let elig=amt,ded=0,save=0;
+      if($('mode').value==='c'&&amt>2000){elig=0;why.push('<i class="fa-solid fa-circle-xmark" style="color:#ef4444"></i> Cash donations above ₹2,000 are not eligible — pay by UPI, card or cheque.');}
+      else{
+        if(lim===1){const cap=agti*0.10;if(amt>cap){elig=cap;why.push('<i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b"></i> Qualifying limit applied: only '+inr(cap)+' (10% of adjusted income) counts.');}else why.push('<i class="fa-solid fa-circle-check" style="color:#10b981"></i> Within the 10% qualifying limit ('+inr(agti*0.10)+').');}
+        else why.push('<i class="fa-solid fa-circle-check" style="color:#10b981"></i> This category has no qualifying limit.');
+        ded=elig*pc/100;why.push('<i class="fa-solid fa-percent" style="color:var(--primary)"></i> '+pc+'% of the eligible amount = '+inr(ded)+' deduction.');
+      }
+      if($('reg').value==='new'){why.push('<i class="fa-solid fa-circle-xmark" style="color:#ef4444"></i> The new tax regime does not allow the 80G deduction, so tax saved is ₹0.');save=0;}
+      else{save=ded*rate*1.04;if(ded>0)why.push('<i class="fa-solid fa-indian-rupee-sign" style="color:var(--primary)"></i> '+inr(ded)+' × '+(rate*100)+'% × 1.04 (cess) = '+inr(save)+' saved.');}
+      $('oElig').textContent=inr(elig);$('oDed').textContent=inr(ded);$('oSave').textContent=inr(save);$('oNet').textContent=inr(amt-save);
+      $('why').innerHTML=why.map(w=>'<li>'+w+'</li>').join('');
+    }
+    calc();
+  </script>
+</body>
+</html>

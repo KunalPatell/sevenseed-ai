@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>BMI, Calorie & Hydration Calculator — Decode Forest Pharmacy</title>
+  <meta name="description" content="Calculate BMI with Asian-Indian cut-offs, daily calories (BMR/TDEE), macros, ideal weight range and water intake.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🌿%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee)}
+    .nt-brand b{color:var(--primary,#f97316)}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:var(--primary,#f97316);border-color:rgba(var(--primary-rgb,249,115,22),.4);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-wrap{max-width:1240px;margin:0 auto;padding:44px 24px 80px}
+    .nt-head{text-align:center;margin-bottom:34px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:14px;color:var(--primary,#f97316);background:rgba(var(--primary-rgb,249,115,22),.1);border:1px solid rgba(var(--primary-rgb,249,115,22),.3)}
+    .nt-title{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.15;margin-bottom:12px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:16px;max-width:700px;margin:0 auto;line-height:1.6}
+    .nt-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:26px;align-items:start}
+    @media(max-width:980px){.nt-grid{grid-template-columns:1fr}}
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:16px;padding:24px}
+    .nt-card+.nt-card{margin-top:22px}
+    .nt-card h2{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:var(--primary,#f97316)}
+    .nt-f{margin-bottom:14px}
+    .nt-f label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2,#9aa0b8);margin-bottom:6px}
+    .nt-f input,.nt-f select,.nt-f textarea{width:100%;padding:10px 12px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px;color:var(--text,#eee);font:inherit;font-size:14px;outline:none;transition:border-color .15s}
+    .nt-f input:focus,.nt-f select:focus,.nt-f textarea:focus{border-color:var(--primary,#f97316)}
+    .nt-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .nt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+    .nt-stat{background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:12px;padding:14px 16px}
+    .nt-stat small{display:block;color:var(--text-3,#5b5f78);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:5px}
+    .nt-stat strong{font-size:22px;font-weight:800;line-height:1.2;word-break:break-word}
+    .nt-stat.hl{border-color:rgba(var(--primary-rgb,249,115,22),.5);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-table{width:100%;border-collapse:collapse;font-size:13px}
+    .nt-table th,.nt-table td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border,rgba(255,255,255,.07));white-space:nowrap}
+    .nt-table th:first-child,.nt-table td:first-child{text-align:left}
+    .nt-table th{color:var(--text-3,#5b5f78);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg-1,#0d0d16)}
+    .nt-scroll{max-height:320px;overflow:auto;border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px}
+    .nt-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700}
+    .nt-good{background:rgba(16,185,129,.15);color:#10b981}
+    .nt-warn{background:rgba(245,158,11,.15);color:#f59e0b}
+    .nt-bad{background:rgba(239,68,68,.15);color:#ef4444}
+    .nt-bar{height:8px;background:var(--bg-3,#18182a);border-radius:99px;overflow:hidden}
+    .nt-bar>i{display:block;height:100%;background:var(--primary,#f97316);border-radius:99px;transition:width .35s}
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-btn.pri{background:var(--primary,#f97316);border-color:var(--primary,#f97316);color:#fff}
+    .nt-btn.pri:hover{opacity:.9;color:#fff}
+    .nt-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .nt-chip{padding:6px 12px;font-size:12px;font-weight:600;border-radius:999px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));color:var(--text-2,#9aa0b8);cursor:pointer}
+    .nt-chip:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-note{font-size:12px;color:var(--text-3,#7d7f9a);line-height:1.65;margin-top:18px;padding:12px 14px;border-left:3px solid var(--primary,#f97316);background:var(--bg-2,#12121e);border-radius:0 8px 8px 0}
+    .nt-list{list-style:none;display:grid;gap:8px;font-size:13.5px}
+    .nt-list li{display:flex;gap:10px;align-items:flex-start;color:var(--text-2,#9aa0b8)}
+    .nt-bd{display:grid;gap:12px}
+    .nt-bd .r{display:grid;grid-template-columns:150px 1fr 54px;gap:12px;align-items:center;font-size:13px;color:var(--text-2,#9aa0b8)}
+    .nt-bd .r span:last-child{text-align:right;font-weight:700;color:var(--text,#eee)}
+    .nt-rowx{display:grid;grid-template-columns:1.4fr .7fr .8fr 34px;gap:8px;margin-bottom:8px;align-items:center}
+    .nt-rowx input,.nt-rowx select{width:100%;padding:8px 10px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:8px;color:var(--text,#eee);font:inherit;font-size:13px;outline:none;min-width:0}
+    .nt-x{width:34px;height:34px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,.07));background:transparent;color:var(--text-3,#7d7f9a);cursor:pointer}
+    .nt-x:hover{color:#ef4444;border-color:#ef4444}
+    .nt-big{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.1}
+    .nt-mono{font-family:'JetBrains Mono',monospace}
+    @media print{.nt-nav,.nt-btn{display:none!important}}
+  </style>
+</head>
+<body class="nt-body">
+  <!-- ss-new-tool -->
+  <header class="nt-nav">
+    <a href="index.html" class="nt-brand"><span>🌿</span> Forest<b>Pharmacy</b></a>
+    <nav class="nt-links" aria-label="Tools">
+      <a href="index.html">Home</a>
+      <a href="bmi-health.html" class="on">Health Calculator</a>
+      <a href="/">Sevenseed Hub</a>
+    </nav>
+  </header>
+
+  <main class="nt-wrap">
+    <div class="nt-head">
+      <div class="nt-badge"><i class="fa-solid fa-heart-pulse"></i> BMI · Calories · Hydration</div>
+      <h1 class="nt-title">Know Your Numbers: BMI, Calories, Water</h1>
+      <p class="nt-sub">A quick health snapshot using Asian-Indian BMI cut-offs and the Mifflin-St Jeor equation, with a calorie target for your goal.</p>
+    </div>
+
+    <div class="nt-grid">
+      <section class="nt-card">
+        <h2><i class="fa-solid fa-user"></i> About you</h2>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="age">Age (years)</label><input id="age" type="number" min="15" max="90" value="30" oninput="calc()"></div>
+          <div class="nt-f"><label for="sex">Sex</label><select id="sex" onchange="calc()"><option value="m">Male</option><option value="f">Female</option></select></div>
+        </div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="ht">Height (cm)</label><input id="ht" type="number" min="100" max="230" value="170" oninput="calc()"></div>
+          <div class="nt-f"><label for="wt">Weight (kg)</label><input id="wt" type="number" min="25" max="250" step="0.1" value="72" oninput="calc()"></div>
+        </div>
+        <div class="nt-f"><label for="act">Activity level</label><select id="act" onchange="calc()"><option value="1.2">Sedentary (desk job)</option><option value="1.375" selected>Light (1–3 workouts/week)</option><option value="1.55">Moderate (3–5/week)</option><option value="1.725">Very active (6–7/week)</option><option value="1.9">Athlete / physical job</option></select></div>
+        <div class="nt-f"><label for="goal">Goal</label><select id="goal" onchange="calc()"><option value="-500">Lose weight (≈0.5 kg/week)</option><option value="0" selected>Maintain</option><option value="300">Gain muscle (lean)</option></select></div>
+        <p class="nt-note">Educational estimates, not medical advice. BMI ignores muscle mass and body fat. Consult a doctor or dietitian before changing diet, especially with a medical condition, pregnancy or under 18.</p>
+      </section>
+      <section>
+        <div class="nt-card" style="text-align:center">
+          <div class="nt-big" id="oBmi">—</div>
+          <div style="margin:10px 0" id="oCat"></div>
+          <div style="position:relative;height:12px;border-radius:99px;background:linear-gradient(90deg,#60a5fa 0%,#10b981 28%,#f59e0b 55%,#ef4444 80%);margin:18px 6px 6px"><i id="marker" style="position:absolute;top:-5px;width:4px;height:22px;background:var(--text);border-radius:2px;left:0"></i></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);margin:0 6px"><span>15</span><span>18.5</span><span>23</span><span>25</span><span>35+</span></div>
+        </div>
+        <div class="nt-stats" style="margin-top:18px">
+          <div class="nt-stat"><small>BMR (at rest)</small><strong id="oBmr">—</strong></div>
+          <div class="nt-stat"><small>Maintenance (TDEE)</small><strong id="oTdee">—</strong></div>
+          <div class="nt-stat hl"><small>Daily target</small><strong id="oTgt">—</strong></div>
+          <div class="nt-stat"><small>Water / day</small><strong id="oWater">—</strong></div>
+          <div class="nt-stat"><small>Healthy weight range</small><strong id="oIdeal">—</strong></div>
+          <div class="nt-stat"><small>Protein · Fat · Carbs</small><strong id="oMac" style="font-size:16px">—</strong></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const $=id=>document.getElementById(id);
+    const nv=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0;};
+    const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+    const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+
+    function calc(){
+      const age=nv('age'),ht=nv('ht'),wt=nv('wt'),m=$('sex').value==='m',hm=ht/100;
+      const bmi=hm>0?wt/(hm*hm):0;
+      $('oBmi').textContent=bmi.toFixed(1);
+      let cat=['nt-good','Normal (18.5–22.9)'];
+      if(bmi<18.5)cat=['nt-warn','Underweight'];else if(bmi>=25)cat=['nt-bad','Obese (≥25, Asian cut-off)'];else if(bmi>=23)cat=['nt-warn','Overweight (23–24.9)'];
+      $('oCat').innerHTML='<span class="nt-pill '+cat[0]+'">'+cat[1]+'</span>';
+      $('marker').style.left='calc('+clamp((bmi-15)/20*100,0,100)+'% - 2px)';
+      const bmr=10*wt+6.25*ht-5*age+(m?5:-161),tdee=bmr*parseFloat($('act').value),tgt=Math.max(1200,tdee+parseFloat($('goal').value));
+      $('oBmr').textContent=Math.round(bmr)+' kcal';$('oTdee').textContent=Math.round(tdee)+' kcal';$('oTgt').textContent=Math.round(tgt)+' kcal';
+      $('oWater').textContent=(wt*0.035).toFixed(1)+' L';
+      $('oIdeal').textContent=(18.5*hm*hm).toFixed(1)+'–'+(22.9*hm*hm).toFixed(1)+' kg';
+      const pr=wt*1.2,fat=tgt*0.25/9,carb=Math.max(0,(tgt-pr*4-fat*9)/4);
+      $('oMac').textContent=Math.round(pr)+'g · '+Math.round(fat)+'g · '+Math.round(carb)+'g';
+    }
+    calc();
+  </script>
+</body>
+</html>

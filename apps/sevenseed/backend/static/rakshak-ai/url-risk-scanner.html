@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Suspicious Link & Phishing URL Checker — Rakshak AI</title>
+  <meta name="description" content="Paste a link to spot phishing red flags — fake bank domains, shorteners, IP hosts, lookalike characters — without opening it.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🛡️%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee)}
+    .nt-brand b{color:var(--primary,#f97316)}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:var(--primary,#f97316);border-color:rgba(var(--primary-rgb,249,115,22),.4);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-wrap{max-width:1240px;margin:0 auto;padding:44px 24px 80px}
+    .nt-head{text-align:center;margin-bottom:34px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:14px;color:var(--primary,#f97316);background:rgba(var(--primary-rgb,249,115,22),.1);border:1px solid rgba(var(--primary-rgb,249,115,22),.3)}
+    .nt-title{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.15;margin-bottom:12px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:16px;max-width:700px;margin:0 auto;line-height:1.6}
+    .nt-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:26px;align-items:start}
+    @media(max-width:980px){.nt-grid{grid-template-columns:1fr}}
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:16px;padding:24px}
+    .nt-card+.nt-card{margin-top:22px}
+    .nt-card h2{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:var(--primary,#f97316)}
+    .nt-f{margin-bottom:14px}
+    .nt-f label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2,#9aa0b8);margin-bottom:6px}
+    .nt-f input,.nt-f select,.nt-f textarea{width:100%;padding:10px 12px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px;color:var(--text,#eee);font:inherit;font-size:14px;outline:none;transition:border-color .15s}
+    .nt-f input:focus,.nt-f select:focus,.nt-f textarea:focus{border-color:var(--primary,#f97316)}
+    .nt-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .nt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+    .nt-stat{background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:12px;padding:14px 16px}
+    .nt-stat small{display:block;color:var(--text-3,#5b5f78);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:5px}
+    .nt-stat strong{font-size:22px;font-weight:800;line-height:1.2;word-break:break-word}
+    .nt-stat.hl{border-color:rgba(var(--primary-rgb,249,115,22),.5);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-table{width:100%;border-collapse:collapse;font-size:13px}
+    .nt-table th,.nt-table td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border,rgba(255,255,255,.07));white-space:nowrap}
+    .nt-table th:first-child,.nt-table td:first-child{text-align:left}
+    .nt-table th{color:var(--text-3,#5b5f78);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg-1,#0d0d16)}
+    .nt-scroll{max-height:320px;overflow:auto;border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px}
+    .nt-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700}
+    .nt-good{background:rgba(16,185,129,.15);color:#10b981}
+    .nt-warn{background:rgba(245,158,11,.15);color:#f59e0b}
+    .nt-bad{background:rgba(239,68,68,.15);color:#ef4444}
+    .nt-bar{height:8px;background:var(--bg-3,#18182a);border-radius:99px;overflow:hidden}
+    .nt-bar>i{display:block;height:100%;background:var(--primary,#f97316);border-radius:99px;transition:width .35s}
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-btn.pri{background:var(--primary,#f97316);border-color:var(--primary,#f97316);color:#fff}
+    .nt-btn.pri:hover{opacity:.9;color:#fff}
+    .nt-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .nt-chip{padding:6px 12px;font-size:12px;font-weight:600;border-radius:999px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));color:var(--text-2,#9aa0b8);cursor:pointer}
+    .nt-chip:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-note{font-size:12px;color:var(--text-3,#7d7f9a);line-height:1.65;margin-top:18px;padding:12px 14px;border-left:3px solid var(--primary,#f97316);background:var(--bg-2,#12121e);border-radius:0 8px 8px 0}
+    .nt-list{list-style:none;display:grid;gap:8px;font-size:13.5px}
+    .nt-list li{display:flex;gap:10px;align-items:flex-start;color:var(--text-2,#9aa0b8)}
+    .nt-bd{display:grid;gap:12px}
+    .nt-bd .r{display:grid;grid-template-columns:150px 1fr 54px;gap:12px;align-items:center;font-size:13px;color:var(--text-2,#9aa0b8)}
+    .nt-bd .r span:last-child{text-align:right;font-weight:700;color:var(--text,#eee)}
+    .nt-rowx{display:grid;grid-template-columns:1.4fr .7fr .8fr 34px;gap:8px;margin-bottom:8px;align-items:center}
+    .nt-rowx input,.nt-rowx select{width:100%;padding:8px 10px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:8px;color:var(--text,#eee);font:inherit;font-size:13px;outline:none;min-width:0}
+    .nt-x{width:34px;height:34px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,.07));background:transparent;color:var(--text-3,#7d7f9a);cursor:pointer}
+    .nt-x:hover{color:#ef4444;border-color:#ef4444}
+    .nt-big{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.1}
+    .nt-mono{font-family:'JetBrains Mono',monospace}
+    @media print{.nt-nav,.nt-btn{display:none!important}}
+  </style>
+</head>
+<body class="nt-body">
+  <!-- ss-new-tool -->
+  <header class="nt-nav">
+    <a href="index.html" class="nt-brand"><span>🛡️</span> Rakshak<b>AI</b></a>
+    <nav class="nt-links" aria-label="Tools">
+      <a href="index.html">Home</a>
+      <a href="url-risk-scanner.html" class="on">Link Risk Scanner</a>
+      <a href="password-checker.html">Password Checker</a>
+      <a href="/">Sevenseed Hub</a>
+    </nav>
+  </header>
+
+  <main class="nt-wrap">
+    <div class="nt-head">
+      <div class="nt-badge"><i class="fa-solid fa-link-slash"></i> Offline heuristic check</div>
+      <h1 class="nt-title">Is This Link Safe to Tap?</h1>
+      <p class="nt-sub">Paste a link from SMS, WhatsApp or email. We analyse the address itself for scam patterns — nothing is opened or sent to any server.</p>
+    </div>
+
+    <div class="nt-grid">
+      <section class="nt-card">
+        <h2><i class="fa-solid fa-magnifying-glass"></i> Paste a link</h2>
+        <div class="nt-f"><label for="u">URL</label><textarea id="u" rows="3" spellcheck="false" placeholder="https://..." oninput="calc()"></textarea></div>
+        <p style="font-size:12.5px;color:var(--text-3);margin-bottom:8px">Try an example:</p>
+        <div class="nt-chips">
+          <button class="nt-chip" type="button" onclick="ex(0)">Fake bank KYC</button>
+          <button class="nt-chip" type="button" onclick="ex(1)">Shortened link</button>
+          <button class="nt-chip" type="button" onclick="ex(2)">Lookalike prize</button>
+          <button class="nt-chip" type="button" onclick="ex(3)">Genuine site</button>
+        </div>
+        <p class="nt-note">This is a heuristic helper, not a guarantee. A “low risk” result does not prove a link is safe. When in doubt, do not click — open the official app or type the website yourself. Report scams at cybercrime.gov.in or call 1930.</p>
+      </section>
+      <section>
+        <div class="nt-card" style="text-align:center">
+          <div class="nt-big" id="oScore">—</div>
+          <div style="margin:10px 0" id="oLabel"></div>
+          <p id="oAdvice" style="color:var(--text-2);font-size:14px;line-height:1.7;max-width:520px;margin:6px auto 0"></p>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-flag"></i> What we found</h2>
+          <ul class="nt-list" id="flags"><li>Paste a link to begin.</li></ul>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-circle-info"></i> Parsed address</h2>
+          <div class="nt-mono" id="parsed" style="font-size:13px;line-height:1.8;word-break:break-all;color:var(--text-2)">—</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const $=id=>document.getElementById(id);
+    const nv=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0;};
+    const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+    const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+
+    const EXAMPLES=['http://sbi-kyc-update.verify-account.top/login?otp=1','https://bit.ly/3xYzAbc','https://www.amaz0n-prize-winner.xyz/claim/refund','https://www.irctc.co.in/nget/train-search'];
+    const LEGIT={sbi:['sbi.co.in','onlinesbi.sbi','sbi.bank.in'],hdfc:['hdfcbank.com'],icici:['icicibank.com'],axis:['axisbank.com'],paytm:['paytm.com'],phonepe:['phonepe.com'],amazon:['amazon.in','amazon.com'],flipkart:['flipkart.com'],google:['google.com','google.co.in'],npci:['npci.org.in'],uidai:['uidai.gov.in'],irctc:['irctc.co.in'],incometax:['incometax.gov.in'],whatsapp:['whatsapp.com'],netflix:['netflix.com'],paypal:['paypal.com']};
+    const SHORT=['bit.ly','tinyurl.com','goo.gl','t.co','rb.gy','cutt.ly','is.gd','ow.ly','shorturl.at','tiny.cc'];
+    const BADTLD=['zip','mov','xyz','top','click','tk','ml','ga','cf','gq','work','support','loan','country','cyou','icu','buzz','rest','monster'];
+    const URGENT=['verify','kyc','update','suspend','blocked','lottery','prize','winner','reward','refund','otp','secure','confirm','unlock','claim','urgent','password'];
+    function ex(i){$('u').value=EXAMPLES[i];calc();}
+    function onLegit(h,list){return list.some(d=>h===d||h.endsWith('.'+d));}
+    function calc(){
+      let raw=$('u').value.trim();
+      if(!raw){$('oScore').textContent='—';$('oLabel').innerHTML='';$('oAdvice').textContent='';$('flags').innerHTML='<li>Paste a link to begin.</li>';$('parsed').textContent='—';return;}
+      if(/^(javascript|data|vbscript):/i.test(raw)){$('oScore').textContent='100';$('oLabel').innerHTML='<span class="nt-pill nt-bad">Dangerous</span>';$('oAdvice').textContent='This is not a normal web link — it can run code. Do not open it.';$('flags').innerHTML='<li><i class="fa-solid fa-circle-xmark" style="color:#ef4444"></i> Uses a script/data scheme.</li>';$('parsed').textContent=raw.slice(0,200);return;}
+      let u;try{u=new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(raw)?raw:'http://'+raw);}catch(e){$('oScore').textContent='?';$('oLabel').innerHTML='<span class="nt-pill nt-warn">Invalid</span>';$('oAdvice').textContent='That does not look like a valid link.';$('flags').innerHTML='<li>Could not parse this address.</li>';$('parsed').textContent=raw;return;}
+      const host=u.hostname.toLowerCase(),parts=host.split('.'),F=[];let s=0;
+      const add=(pts,txt)=>{s+=pts;F.push('<li><i class="fa-solid fa-triangle-exclamation" style="color:'+(pts>=3?'#ef4444':'#f59e0b')+'"></i> '+txt+'</li>');};
+      if(u.protocol!=='https:')add(2,'Not using HTTPS — data can be intercepted and genuine banks always use HTTPS.');
+      if(/^\d{1,3}(\.\d{1,3}){3}$/.test(host))add(3,'Host is a raw IP address instead of a name.');
+      if(raw.includes('@'))add(3,'Contains “@” — can disguise the real destination.');
+      if(host.includes('xn--'))add(3,'Punycode (xn--) host — may use lookalike foreign characters.');
+      if(parts.length>4)add(2,'Many sub-domains ('+parts.length+' levels) — a common way to hide the true domain.');
+      if(raw.length>100)add(1,'Very long URL ('+raw.length+' characters).');
+      const tld=parts[parts.length-1];if(BADTLD.includes(tld))add(2,'Uses “.'+tld+'”, a TLD frequently abused for scams.');
+      if(SHORT.includes(host))add(2,'URL shortener — the real destination is hidden until you click.');
+      if((host.match(/-/g)||[]).length>=3)add(1,'Many hyphens in the domain name.');
+      if(u.port&&!['80','443'].includes(u.port))add(1,'Unusual port number ('+u.port+').');
+      if(/\d/.test(parts[Math.max(0,parts.length-2)]||'')&&/[a-z]/.test(parts[Math.max(0,parts.length-2)]||''))add(1,'Digits mixed into the main domain (e.g. “amaz0n”).');
+      const norm=host.replace(/0/g,'o').replace(/1/g,'l').replace(/3/g,'e').replace(/\$/g,'s');
+      for(const b of Object.keys(LEGIT)){
+        if((host.includes(b)||norm.includes(b))&&!onLegit(host,LEGIT[b])){add(3,'Mentions “'+b+'” but is not an official '+b+' domain ('+LEGIT[b].join(', ')+').');break;}
+      }
+      const path=(u.pathname+u.search).toLowerCase(),hits=URGENT.filter(w=>path.includes(w)||host.includes(w));
+      if(hits.length)add(Math.min(3,hits.length),'Pressure/credential words: '+hits.slice(0,4).join(', ')+'.');
+      if(!F.length)F.push('<li><i class="fa-solid fa-circle-check" style="color:#10b981"></i> No common phishing patterns found in the address.</li>');
+      s=Math.min(100,s*11);
+      let c='nt-good',l='Low risk',a='No obvious red flags in the link itself. Still, only enter passwords or OTPs on sites you opened yourself.';
+      if(s>=55){c='nt-bad';l='High risk';a='Strong scam indicators. Do not tap, log in or share any OTP. Report it at cybercrime.gov.in or call 1930.';}
+      else if(s>=25){c='nt-warn';l='Suspicious';a='Several warning signs. Avoid opening it; reach the service via its official app or website instead.';}
+      $('oScore').textContent=s;$('oLabel').innerHTML='<span class="nt-pill '+c+'">'+l+'</span>';$('oAdvice').textContent=a;$('flags').innerHTML=F.join('');
+      $('parsed').innerHTML='Scheme: '+u.protocol.replace(':','')+'<br>Host: <b>'+host.replace(/</g,'&lt;')+'</b><br>Path: '+(u.pathname||'/').replace(/</g,'&lt;').slice(0,120)+'<br>Query: '+(u.search||'(none)').replace(/</g,'&lt;').slice(0,120);
+    }
+    calc();
+  </script>
+</body>
+</html>

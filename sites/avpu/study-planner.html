@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Smart Exam Study Planner — AVP University</title>
+  <meta name="description" content="Build a day-by-day study plan from your exam date, daily hours and subject difficulty, with a built-in Pomodoro timer.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🗓️%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee)}
+    .nt-brand b{color:var(--primary,#f97316)}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:var(--primary,#f97316);border-color:rgba(var(--primary-rgb,249,115,22),.4);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-wrap{max-width:1240px;margin:0 auto;padding:44px 24px 80px}
+    .nt-head{text-align:center;margin-bottom:34px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:14px;color:var(--primary,#f97316);background:rgba(var(--primary-rgb,249,115,22),.1);border:1px solid rgba(var(--primary-rgb,249,115,22),.3)}
+    .nt-title{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.15;margin-bottom:12px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:16px;max-width:700px;margin:0 auto;line-height:1.6}
+    .nt-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:26px;align-items:start}
+    @media(max-width:980px){.nt-grid{grid-template-columns:1fr}}
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:16px;padding:24px}
+    .nt-card+.nt-card{margin-top:22px}
+    .nt-card h2{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:var(--primary,#f97316)}
+    .nt-f{margin-bottom:14px}
+    .nt-f label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2,#9aa0b8);margin-bottom:6px}
+    .nt-f input,.nt-f select,.nt-f textarea{width:100%;padding:10px 12px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px;color:var(--text,#eee);font:inherit;font-size:14px;outline:none;transition:border-color .15s}
+    .nt-f input:focus,.nt-f select:focus,.nt-f textarea:focus{border-color:var(--primary,#f97316)}
+    .nt-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .nt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+    .nt-stat{background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:12px;padding:14px 16px}
+    .nt-stat small{display:block;color:var(--text-3,#5b5f78);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:5px}
+    .nt-stat strong{font-size:22px;font-weight:800;line-height:1.2;word-break:break-word}
+    .nt-stat.hl{border-color:rgba(var(--primary-rgb,249,115,22),.5);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-table{width:100%;border-collapse:collapse;font-size:13px}
+    .nt-table th,.nt-table td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border,rgba(255,255,255,.07));white-space:nowrap}
+    .nt-table th:first-child,.nt-table td:first-child{text-align:left}
+    .nt-table th{color:var(--text-3,#5b5f78);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg-1,#0d0d16)}
+    .nt-scroll{max-height:320px;overflow:auto;border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px}
+    .nt-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700}
+    .nt-good{background:rgba(16,185,129,.15);color:#10b981}
+    .nt-warn{background:rgba(245,158,11,.15);color:#f59e0b}
+    .nt-bad{background:rgba(239,68,68,.15);color:#ef4444}
+    .nt-bar{height:8px;background:var(--bg-3,#18182a);border-radius:99px;overflow:hidden}
+    .nt-bar>i{display:block;height:100%;background:var(--primary,#f97316);border-radius:99px;transition:width .35s}
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-btn.pri{background:var(--primary,#f97316);border-color:var(--primary,#f97316);color:#fff}
+    .nt-btn.pri:hover{opacity:.9;color:#fff}
+    .nt-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .nt-chip{padding:6px 12px;font-size:12px;font-weight:600;border-radius:999px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));color:var(--text-2,#9aa0b8);cursor:pointer}
+    .nt-chip:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-note{font-size:12px;color:var(--text-3,#7d7f9a);line-height:1.65;margin-top:18px;padding:12px 14px;border-left:3px solid var(--primary,#f97316);background:var(--bg-2,#12121e);border-radius:0 8px 8px 0}
+    .nt-list{list-style:none;display:grid;gap:8px;font-size:13.5px}
+    .nt-list li{display:flex;gap:10px;align-items:flex-start;color:var(--text-2,#9aa0b8)}
+    .nt-bd{display:grid;gap:12px}
+    .nt-bd .r{display:grid;grid-template-columns:150px 1fr 54px;gap:12px;align-items:center;font-size:13px;color:var(--text-2,#9aa0b8)}
+    .nt-bd .r span:last-child{text-align:right;font-weight:700;color:var(--text,#eee)}
+    .nt-rowx{display:grid;grid-template-columns:1.4fr .7fr .8fr 34px;gap:8px;margin-bottom:8px;align-items:center}
+    .nt-rowx input,.nt-rowx select{width:100%;padding:8px 10px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:8px;color:var(--text,#eee);font:inherit;font-size:13px;outline:none;min-width:0}
+    .nt-x{width:34px;height:34px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,.07));background:transparent;color:var(--text-3,#7d7f9a);cursor:pointer}
+    .nt-x:hover{color:#ef4444;border-color:#ef4444}
+    .nt-big{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.1}
+    .nt-mono{font-family:'JetBrains Mono',monospace}
+    @media print{.nt-nav,.nt-btn{display:none!important}}
+  </style>
+</head>
+<body class="nt-body">
+  <!-- ss-new-tool -->
+  <header class="nt-nav">
+    <a href="index.html" class="nt-brand"><span>🗓️</span> AVP<b>University</b></a>
+    <nav class="nt-links" aria-label="Tools">
+      <a href="index.html">Home</a>
+      <a href="study-planner.html" class="on">Study Planner</a>
+      <a href="gpa-planner.html">GPA Planner</a>
+      <a href="/">Sevenseed Hub</a>
+    </nav>
+  </header>
+
+  <main class="nt-wrap">
+    <div class="nt-head">
+      <div class="nt-badge"><i class="fa-solid fa-calendar-check"></i> Exam countdown · Pomodoro</div>
+      <h1 class="nt-title">Plan Your Exam Prep in 30 Seconds</h1>
+      <p class="nt-sub">Tell us your exam date, daily study hours and how strong you are in each subject. We split your time by difficulty and weakness, and keep a revision buffer.</p>
+    </div>
+
+    <div class="nt-grid">
+      <section class="nt-card">
+        <h2><i class="fa-solid fa-sliders"></i> Your setup</h2>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="exam">Exam date</label><input id="exam" type="date" oninput="calc()"></div>
+          <div class="nt-f"><label for="hpd">Study hours / day</label><input id="hpd" type="number" min="0.5" step="0.5" value="5" oninput="calc()"></div>
+        </div>
+        <div class="nt-f"><label for="buf">Final revision days (no new topics)</label><input id="buf" type="number" min="0" value="2" oninput="calc()"></div>
+        <div style="display:grid;grid-template-columns:1.4fr .8fr .8fr 34px;gap:8px;font-size:11px;color:var(--text-3);margin:6px 0 6px;font-weight:700;text-transform:uppercase"><span>Subject</span><span>Difficulty 1–5</span><span>Confidence 1–5</span><span></span></div>
+        <div id="subs"></div>
+        <button class="nt-btn" type="button" onclick="addSub()"><i class="fa-solid fa-plus"></i> Add subject</button>
+      </section>
+      <section>
+        <div class="nt-stats">
+          <div class="nt-stat hl"><small>Days left</small><strong id="oDays">—</strong></div>
+          <div class="nt-stat"><small>Total study hours</small><strong id="oHrs">—</strong></div>
+          <div class="nt-stat"><small>Pomodoros (25 min)</small><strong id="oPomo">—</strong></div>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-list-check"></i> Time allocation</h2>
+          <div class="nt-scroll"><table class="nt-table"><thead><tr><th>Subject</th><th>Total hours</th><th>Per day</th><th>Priority</th></tr></thead><tbody id="plan"></tbody></table></div>
+        </div>
+        <div class="nt-card" style="text-align:center">
+          <h2 style="justify-content:center"><i class="fa-solid fa-stopwatch"></i> Pomodoro focus timer</h2>
+          <div class="nt-big nt-mono" id="clock">25:00</div>
+          <div style="margin:6px 0 14px;color:var(--text-2);font-size:13px" id="phase">Focus session</div>
+          <button class="nt-btn pri" type="button" id="pbtn" onclick="toggleTimer()">Start</button>
+          <button class="nt-btn" type="button" onclick="resetTimer()">Reset</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const $=id=>document.getElementById(id);
+    const nv=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0;};
+    const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+    const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+
+    let subs=[{n:'Data Structures',d:5,c:2},{n:'Operating Systems',d:4,c:3},{n:'Maths III',d:4,c:2},{n:'DBMS',d:3,c:4}];
+    function render(){
+      $('subs').innerHTML=subs.map((s,i)=>'<div class="nt-rowx" style="grid-template-columns:1.4fr .8fr .8fr 34px"><input value="'+s.n.replace(/"/g,'&quot;')+'" aria-label="Subject" oninput="upd('+i+',\'n\',this.value)">'+
+        '<input type="number" min="1" max="5" value="'+s.d+'" aria-label="Difficulty" oninput="upd('+i+',\'d\',this.value)">'+
+        '<input type="number" min="1" max="5" value="'+s.c+'" aria-label="Confidence" oninput="upd('+i+',\'c\',this.value)">'+
+        '<button class="nt-x" type="button" aria-label="Remove" onclick="del('+i+')">×</button></div>').join('');
+      calc();
+    }
+    function upd(i,k,v){subs[i][k]=(k==='n')?v:clamp(parseFloat(v)||1,1,5);calc();}
+    function del(i){subs.splice(i,1);render();}
+    function addSub(){subs.push({n:'Subject '+(subs.length+1),d:3,c:3});render();}
+    function calc(){
+      const ex=$('exam').value;const today=new Date();today.setHours(0,0,0,0);
+      const days=ex?Math.max(0,Math.ceil((new Date(ex+'T00:00:00')-today)/86400000)):0;
+      const study=Math.max(0,days-nv('buf')),total=study*nv('hpd');
+      $('oDays').textContent=days;$('oHrs').textContent=total.toFixed(0);$('oPomo').textContent=Math.floor(total*60/25);
+      const w=subs.map(s=>s.d*(6-s.c)),sw=w.reduce((a,b)=>a+b,0)||1;
+      $('plan').innerHTML=subs.length&&study>0?subs.map((s,i)=>{const h=total*w[i]/sw,share=w[i]/sw;
+        const pr=share>0.3?['nt-bad','High']:share>0.2?['nt-warn','Medium']:['nt-good','Steady'];
+        return '<tr><td>'+s.n.replace(/</g,'&lt;')+'</td><td>'+h.toFixed(1)+' h</td><td>'+(h/study).toFixed(1)+' h</td><td><span class="nt-pill '+pr[0]+'">'+pr[1]+'</span></td></tr>';}).join(''):'<tr><td colspan="4">Pick a future exam date and add at least one subject.</td></tr>';
+    }
+    (function(){const d=new Date();d.setDate(d.getDate()+30);$('exam').value=d.toISOString().slice(0,10);})();
+    let tLeft=1500,tRun=null,tFocus=true;
+    function paint(){const m=Math.floor(tLeft/60),s=tLeft%60;$('clock').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');$('phase').textContent=tFocus?'Focus session':'Short break';}
+    function toggleTimer(){
+      if(tRun){clearInterval(tRun);tRun=null;$('pbtn').textContent='Resume';return;}
+      $('pbtn').textContent='Pause';
+      tRun=setInterval(()=>{tLeft--;if(tLeft<=0){tFocus=!tFocus;tLeft=tFocus?1500:300;}paint();},1000);
+    }
+    function resetTimer(){clearInterval(tRun);tRun=null;tFocus=true;tLeft=1500;$('pbtn').textContent='Start';paint();}
+    render();
+  </script>
+</body>
+</html>

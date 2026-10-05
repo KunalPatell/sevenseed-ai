@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AI Workforce ROI Calculator — Sevenforce</title>
+  <meta name="description" content="Estimate hours saved, monthly savings, ROI and payback when automating repetitive work with AI employees.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🤖%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee)}
+    .nt-brand b{color:var(--primary,#f97316)}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:var(--primary,#f97316);border-color:rgba(var(--primary-rgb,249,115,22),.4);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-wrap{max-width:1240px;margin:0 auto;padding:44px 24px 80px}
+    .nt-head{text-align:center;margin-bottom:34px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:14px;color:var(--primary,#f97316);background:rgba(var(--primary-rgb,249,115,22),.1);border:1px solid rgba(var(--primary-rgb,249,115,22),.3)}
+    .nt-title{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.15;margin-bottom:12px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:16px;max-width:700px;margin:0 auto;line-height:1.6}
+    .nt-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:26px;align-items:start}
+    @media(max-width:980px){.nt-grid{grid-template-columns:1fr}}
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:16px;padding:24px}
+    .nt-card+.nt-card{margin-top:22px}
+    .nt-card h2{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:var(--primary,#f97316)}
+    .nt-f{margin-bottom:14px}
+    .nt-f label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2,#9aa0b8);margin-bottom:6px}
+    .nt-f input,.nt-f select,.nt-f textarea{width:100%;padding:10px 12px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px;color:var(--text,#eee);font:inherit;font-size:14px;outline:none;transition:border-color .15s}
+    .nt-f input:focus,.nt-f select:focus,.nt-f textarea:focus{border-color:var(--primary,#f97316)}
+    .nt-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .nt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+    .nt-stat{background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:12px;padding:14px 16px}
+    .nt-stat small{display:block;color:var(--text-3,#5b5f78);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:5px}
+    .nt-stat strong{font-size:22px;font-weight:800;line-height:1.2;word-break:break-word}
+    .nt-stat.hl{border-color:rgba(var(--primary-rgb,249,115,22),.5);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-table{width:100%;border-collapse:collapse;font-size:13px}
+    .nt-table th,.nt-table td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border,rgba(255,255,255,.07));white-space:nowrap}
+    .nt-table th:first-child,.nt-table td:first-child{text-align:left}
+    .nt-table th{color:var(--text-3,#5b5f78);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg-1,#0d0d16)}
+    .nt-scroll{max-height:320px;overflow:auto;border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px}
+    .nt-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700}
+    .nt-good{background:rgba(16,185,129,.15);color:#10b981}
+    .nt-warn{background:rgba(245,158,11,.15);color:#f59e0b}
+    .nt-bad{background:rgba(239,68,68,.15);color:#ef4444}
+    .nt-bar{height:8px;background:var(--bg-3,#18182a);border-radius:99px;overflow:hidden}
+    .nt-bar>i{display:block;height:100%;background:var(--primary,#f97316);border-radius:99px;transition:width .35s}
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-btn.pri{background:var(--primary,#f97316);border-color:var(--primary,#f97316);color:#fff}
+    .nt-btn.pri:hover{opacity:.9;color:#fff}
+    .nt-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .nt-chip{padding:6px 12px;font-size:12px;font-weight:600;border-radius:999px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));color:var(--text-2,#9aa0b8);cursor:pointer}
+    .nt-chip:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-note{font-size:12px;color:var(--text-3,#7d7f9a);line-height:1.65;margin-top:18px;padding:12px 14px;border-left:3px solid var(--primary,#f97316);background:var(--bg-2,#12121e);border-radius:0 8px 8px 0}
+    .nt-list{list-style:none;display:grid;gap:8px;font-size:13.5px}
+    .nt-list li{display:flex;gap:10px;align-items:flex-start;color:var(--text-2,#9aa0b8)}
+    .nt-bd{display:grid;gap:12px}
+    .nt-bd .r{display:grid;grid-template-columns:150px 1fr 54px;gap:12px;align-items:center;font-size:13px;color:var(--text-2,#9aa0b8)}
+    .nt-bd .r span:last-child{text-align:right;font-weight:700;color:var(--text,#eee)}
+    .nt-rowx{display:grid;grid-template-columns:1.4fr .7fr .8fr 34px;gap:8px;margin-bottom:8px;align-items:center}
+    .nt-rowx input,.nt-rowx select{width:100%;padding:8px 10px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:8px;color:var(--text,#eee);font:inherit;font-size:13px;outline:none;min-width:0}
+    .nt-x{width:34px;height:34px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,.07));background:transparent;color:var(--text-3,#7d7f9a);cursor:pointer}
+    .nt-x:hover{color:#ef4444;border-color:#ef4444}
+    .nt-big{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.1}
+    .nt-mono{font-family:'JetBrains Mono',monospace}
+    @media print{.nt-nav,.nt-btn{display:none!important}}
+  </style>
+</head>
+<body class="nt-body">
+  <!-- ss-new-tool -->
+  <header class="nt-nav">
+    <a href="index.html" class="nt-brand"><span>🤖</span> Seven<b>force</b></a>
+    <nav class="nt-links" aria-label="Tools">
+      <a href="index.html">Home</a>
+      <a href="roi-calculator.html" class="on">ROI Calculator</a>
+      <a href="/">Sevenseed Hub</a>
+    </nav>
+  </header>
+
+  <main class="nt-wrap">
+    <div class="nt-head">
+      <div class="nt-badge"><i class="fa-solid fa-chart-line"></i> AI workforce business case</div>
+      <h1 class="nt-title">What Is an AI Employee Worth to You?</h1>
+      <p class="nt-sub">Model how much repetitive work your team can hand to AI agents, what it costs, and how fast it pays back. All numbers are yours to edit.</p>
+    </div>
+
+    <div class="nt-grid">
+      <section class="nt-card">
+        <h2><i class="fa-solid fa-users-gear"></i> Your team</h2>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="ppl">People doing repetitive work</label><input id="ppl" type="number" min="1" value="8" oninput="calc()"></div>
+          <div class="nt-f"><label for="hrs">Hours/week each on such tasks</label><input id="hrs" type="number" min="0" value="12" oninput="calc()"></div>
+        </div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="cost">Loaded cost per hour (₹)</label><input id="cost" type="number" min="0" value="450" oninput="calc()"></div>
+          <div class="nt-f"><label for="auto">% the AI can automate</label><input id="auto" type="number" min="0" max="100" value="60" oninput="calc()"></div>
+        </div>
+        <h2 style="margin-top:8px"><i class="fa-solid fa-robot"></i> AI cost</h2>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="agents">AI employees (seats)</label><input id="agents" type="number" min="1" max="7" value="3" oninput="calc()"></div>
+          <div class="nt-f"><label for="seat">Cost per AI employee / month (₹)</label><input id="seat" type="number" min="0" value="4999" oninput="calc()"></div>
+        </div>
+        <div class="nt-f"><label for="setup">One-time setup / training (₹)</label><input id="setup" type="number" min="0" value="25000" oninput="calc()"></div>
+        <p class="nt-note">Enter the price of your actual Sevenforce plan in “cost per AI employee”. Savings assume freed hours are redeployed or avoid new hiring; results are scenario estimates, not guarantees.</p>
+      </section>
+      <section>
+        <div class="nt-stats">
+          <div class="nt-stat"><small>Hours saved / month</small><strong id="oHrs">—</strong></div>
+          <div class="nt-stat"><small>Value of time saved</small><strong id="oVal">—</strong></div>
+          <div class="nt-stat"><small>AI cost / month</small><strong id="oAi">—</strong></div>
+          <div class="nt-stat hl"><small>Net savings / month</small><strong id="oNet">—</strong></div>
+          <div class="nt-stat hl"><small>12-month ROI</small><strong id="oRoi">—</strong></div>
+          <div class="nt-stat"><small>Payback period</small><strong id="oPay">—</strong></div>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-chart-column"></i> Cumulative net position (12 months)</h2>
+          <svg id="chart" viewBox="0 0 600 220" style="width:100%;height:auto" role="img" aria-label="Cumulative net savings chart"></svg>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const $=id=>document.getElementById(id);
+    const nv=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0;};
+    const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+    const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+
+    function calc(){
+      const ppl=nv('ppl'),hrs=nv('hrs'),cost=nv('cost'),auto=clamp(nv('auto'),0,100)/100,agents=nv('agents'),seat=nv('seat'),setup=nv('setup');
+      const saved=ppl*hrs*4.33*auto,val=saved*cost,ai=agents*seat,net=val-ai;
+      const cum=[];let c=-setup;for(let m=1;m<=12;m++){c+=net;cum.push(c);}
+      const roi=(ai*12+setup)>0?(cum[11]+setup+ai*12-ai*12-setup+setup)/(ai*12+setup)*100:0;
+      $('oHrs').textContent=Math.round(saved);$('oVal').textContent=inr(val);$('oAi').textContent=inr(ai);
+      $('oNet').textContent=(net<0?'−':'')+inr(Math.abs(net));
+      const invest=ai*12+setup,gain=val*12;
+      $('oRoi').textContent=invest>0?((gain-invest)/invest*100).toFixed(0)+'%':'—';
+      $('oPay').textContent=net>0?(setup/net<=0?'Immediate':(setup/net).toFixed(1)+' months'):'Not reached';
+      const w=600,h=220,pad=28,mx=Math.max(...cum,1),mn=Math.min(...cum,0),span=(mx-mn)||1;
+      const X=i=>pad+i*(w-2*pad)/11,Y=v=>h-pad-(v-mn)/span*(h-2*pad);
+      let s='<line x1="'+pad+'" x2="'+(w-pad)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="currentColor" opacity=".25"/>';
+      let pts=cum.map((v,i)=>X(i)+','+Y(v)).join(' ');
+      s+='<polyline fill="none" stroke="var(--primary,#06b6d4)" stroke-width="3" points="'+pts+'"/>';
+      cum.forEach((v,i)=>{s+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="4" fill="var(--primary,#06b6d4)"/>';});
+      s+='<text x="'+pad+'" y="14" fill="currentColor" opacity=".6" font-size="11">'+inr(mx)+'</text><text x="'+pad+'" y="'+(h-6)+'" fill="currentColor" opacity=".6" font-size="11">Month 1</text><text x="'+(w-pad)+'" y="'+(h-6)+'" text-anchor="end" fill="currentColor" opacity=".6" font-size="11">Month 12 · '+inr(cum[11])+'</text>';
+      $('chart').innerHTML=s;
+    }
+    calc();
+  </script>
+</body>
+</html>

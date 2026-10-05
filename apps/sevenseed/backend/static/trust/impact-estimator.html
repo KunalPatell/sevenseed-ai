@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Donation Impact Estimator — AVP Charitable Trust</title>
+  <meta name="description" content="Split a donation across education, health camps and nutrition and see an illustrative estimate of the lives it can touch.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🤝%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee)}
+    .nt-brand b{color:var(--primary,#f97316)}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:var(--primary,#f97316);border-color:rgba(var(--primary-rgb,249,115,22),.4);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-wrap{max-width:1240px;margin:0 auto;padding:44px 24px 80px}
+    .nt-head{text-align:center;margin-bottom:34px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:14px;color:var(--primary,#f97316);background:rgba(var(--primary-rgb,249,115,22),.1);border:1px solid rgba(var(--primary-rgb,249,115,22),.3)}
+    .nt-title{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.15;margin-bottom:12px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:16px;max-width:700px;margin:0 auto;line-height:1.6}
+    .nt-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:26px;align-items:start}
+    @media(max-width:980px){.nt-grid{grid-template-columns:1fr}}
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:16px;padding:24px}
+    .nt-card+.nt-card{margin-top:22px}
+    .nt-card h2{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:var(--primary,#f97316)}
+    .nt-f{margin-bottom:14px}
+    .nt-f label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2,#9aa0b8);margin-bottom:6px}
+    .nt-f input,.nt-f select,.nt-f textarea{width:100%;padding:10px 12px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px;color:var(--text,#eee);font:inherit;font-size:14px;outline:none;transition:border-color .15s}
+    .nt-f input:focus,.nt-f select:focus,.nt-f textarea:focus{border-color:var(--primary,#f97316)}
+    .nt-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .nt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+    .nt-stat{background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:12px;padding:14px 16px}
+    .nt-stat small{display:block;color:var(--text-3,#5b5f78);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:5px}
+    .nt-stat strong{font-size:22px;font-weight:800;line-height:1.2;word-break:break-word}
+    .nt-stat.hl{border-color:rgba(var(--primary-rgb,249,115,22),.5);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-table{width:100%;border-collapse:collapse;font-size:13px}
+    .nt-table th,.nt-table td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border,rgba(255,255,255,.07));white-space:nowrap}
+    .nt-table th:first-child,.nt-table td:first-child{text-align:left}
+    .nt-table th{color:var(--text-3,#5b5f78);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg-1,#0d0d16)}
+    .nt-scroll{max-height:320px;overflow:auto;border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px}
+    .nt-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700}
+    .nt-good{background:rgba(16,185,129,.15);color:#10b981}
+    .nt-warn{background:rgba(245,158,11,.15);color:#f59e0b}
+    .nt-bad{background:rgba(239,68,68,.15);color:#ef4444}
+    .nt-bar{height:8px;background:var(--bg-3,#18182a);border-radius:99px;overflow:hidden}
+    .nt-bar>i{display:block;height:100%;background:var(--primary,#f97316);border-radius:99px;transition:width .35s}
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-btn.pri{background:var(--primary,#f97316);border-color:var(--primary,#f97316);color:#fff}
+    .nt-btn.pri:hover{opacity:.9;color:#fff}
+    .nt-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .nt-chip{padding:6px 12px;font-size:12px;font-weight:600;border-radius:999px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));color:var(--text-2,#9aa0b8);cursor:pointer}
+    .nt-chip:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-note{font-size:12px;color:var(--text-3,#7d7f9a);line-height:1.65;margin-top:18px;padding:12px 14px;border-left:3px solid var(--primary,#f97316);background:var(--bg-2,#12121e);border-radius:0 8px 8px 0}
+    .nt-list{list-style:none;display:grid;gap:8px;font-size:13.5px}
+    .nt-list li{display:flex;gap:10px;align-items:flex-start;color:var(--text-2,#9aa0b8)}
+    .nt-bd{display:grid;gap:12px}
+    .nt-bd .r{display:grid;grid-template-columns:150px 1fr 54px;gap:12px;align-items:center;font-size:13px;color:var(--text-2,#9aa0b8)}
+    .nt-bd .r span:last-child{text-align:right;font-weight:700;color:var(--text,#eee)}
+    .nt-rowx{display:grid;grid-template-columns:1.4fr .7fr .8fr 34px;gap:8px;margin-bottom:8px;align-items:center}
+    .nt-rowx input,.nt-rowx select{width:100%;padding:8px 10px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:8px;color:var(--text,#eee);font:inherit;font-size:13px;outline:none;min-width:0}
+    .nt-x{width:34px;height:34px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,.07));background:transparent;color:var(--text-3,#7d7f9a);cursor:pointer}
+    .nt-x:hover{color:#ef4444;border-color:#ef4444}
+    .nt-big{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.1}
+    .nt-mono{font-family:'JetBrains Mono',monospace}
+    @media print{.nt-nav,.nt-btn{display:none!important}}
+  </style>
+</head>
+<body class="nt-body">
+  <!-- ss-new-tool -->
+  <header class="nt-nav">
+    <a href="index.html" class="nt-brand"><span>🤝</span> AVP<b>Trust</b></a>
+    <nav class="nt-links" aria-label="Tools">
+      <a href="index.html">Home</a>
+      <a href="impact-estimator.html" class="on">Impact Estimator</a>
+      <a href="donation-80g-calculator.html">80G Tax Saver</a>
+      <a href="/">Sevenseed Hub</a>
+    </nav>
+  </header>
+
+  <main class="nt-wrap">
+    <div class="nt-head">
+      <div class="nt-badge"><i class="fa-solid fa-seedling"></i> See what your gift can do</div>
+      <h1 class="nt-title">See What Your Gift Can Do</h1>
+      <p class="nt-sub">Choose an amount and how to split it across programmes. Unit costs are editable planning figures so you can see an illustrative impact.</p>
+    </div>
+
+    <div class="nt-grid">
+      <section class="nt-card">
+        <h2><i class="fa-solid fa-sliders"></i> Your gift</h2>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="amt">Amount (₹)</label><input id="amt" type="number" min="0" value="25000" oninput="calc()"></div>
+          <div class="nt-f"><label for="freq">Giving</label><select id="freq" onchange="calc()"><option value="1">One-time</option><option value="12">Monthly for 12 months</option></select></div>
+        </div>
+        <div class="nt-f"><label for="wE">Education <span id="pE">40</span>%</label><input id="wE" type="range" min="0" max="100" value="40" oninput="calc()"></div>
+        <div class="nt-f"><label for="wH">Health camps <span id="pH">35</span>%</label><input id="wH" type="range" min="0" max="100" value="35" oninput="calc()"></div>
+        <div class="nt-f"><label for="wN">Nutrition <span id="pN">25</span>%</label><input id="wN" type="range" min="0" max="100" value="25" oninput="calc()"></div>
+        <h2 style="margin-top:8px"><i class="fa-solid fa-calculator"></i> Unit costs (editable)</h2>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="cE">School support / child / year (₹)</label><input id="cE" type="number" min="1" value="6000" oninput="calc()"></div>
+          <div class="nt-f"><label for="cH">Health screening / patient (₹)</label><input id="cH" type="number" min="1" value="150" oninput="calc()"></div>
+        </div>
+        <div class="nt-f"><label for="cN">Nutritious meal (₹)</label><input id="cN" type="number" min="1" value="25" oninput="calc()"></div>
+        <p class="nt-note">Illustrative planning estimates only — not audited figures of the Trust. Edit the unit costs to match real programme costs. Actual outcomes depend on programme delivery.</p>
+      </section>
+      <section>
+        <div class="nt-stats">
+          <div class="nt-stat hl"><small>Children supported for a year</small><strong id="oE">—</strong></div>
+          <div class="nt-stat hl"><small>Patients screened</small><strong id="oH">—</strong></div>
+          <div class="nt-stat hl"><small>Meals served</small><strong id="oN">—</strong></div>
+          <div class="nt-stat"><small>Total given</small><strong id="oT">—</strong></div>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-chart-pie"></i> Where the money goes</h2>
+          <div class="nt-bd" id="bd"></div>
+          <p id="msg" style="margin-top:16px;font-size:14px;line-height:1.7;color:var(--text-2)"></p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const $=id=>document.getElementById(id);
+    const nv=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0;};
+    const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+    const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+
+    function row(n,p,v){return '<div class="r"><span>'+n+'</span><div class="nt-bar"><i style="width:'+p+'%"></i></div><span>'+inr(v)+'</span></div>';}
+    function calc(){
+      const total=nv('amt')*parseInt($('freq').value);
+      let e=nv('wE'),h=nv('wH'),n=nv('wN');const sw=(e+h+n)||1;
+      const pe=e/sw*100,ph=h/sw*100,pn=n/sw*100;
+      $('pE').textContent=Math.round(pe);$('pH').textContent=Math.round(ph);$('pN').textContent=Math.round(pn);
+      const ve=total*pe/100,vh=total*ph/100,vn=total*pn/100;
+      const kids=ve/Math.max(1,nv('cE')),pat=vh/Math.max(1,nv('cH')),meals=vn/Math.max(1,nv('cN'));
+      $('oE').textContent=kids.toFixed(1).replace(/\.0$/,'');$('oH').textContent=Math.floor(pat).toLocaleString('en-IN');$('oN').textContent=Math.floor(meals).toLocaleString('en-IN');
+      $('oT').textContent=inr(total);
+      $('bd').innerHTML=row('Education',pe,ve)+row('Health camps',ph,vh)+row('Nutrition',pn,vn);
+      $('msg').textContent='Your '+inr(total)+' could fund about '+Math.floor(kids)+' child'+(Math.floor(kids)===1?'':'ren')+' in school, '+Math.floor(pat).toLocaleString('en-IN')+' health screenings and '+Math.floor(meals).toLocaleString('en-IN')+' meals (illustrative).';
+    }
+    calc();
+  </script>
+</body>
+</html>

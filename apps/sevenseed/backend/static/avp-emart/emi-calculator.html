@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>True EMI & No-Cost EMI Calculator — AVP Emart</title>
+  <meta name="description" content="Find the real cost of EMI: interest, GST on interest and fees, and the effective annual rate versus paying upfront.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E💳%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee)}
+    .nt-brand b{color:var(--primary,#f97316)}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:var(--primary,#f97316);border-color:rgba(var(--primary-rgb,249,115,22),.4);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-wrap{max-width:1240px;margin:0 auto;padding:44px 24px 80px}
+    .nt-head{text-align:center;margin-bottom:34px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:14px;color:var(--primary,#f97316);background:rgba(var(--primary-rgb,249,115,22),.1);border:1px solid rgba(var(--primary-rgb,249,115,22),.3)}
+    .nt-title{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.15;margin-bottom:12px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:16px;max-width:700px;margin:0 auto;line-height:1.6}
+    .nt-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:26px;align-items:start}
+    @media(max-width:980px){.nt-grid{grid-template-columns:1fr}}
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:16px;padding:24px}
+    .nt-card+.nt-card{margin-top:22px}
+    .nt-card h2{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:var(--primary,#f97316)}
+    .nt-f{margin-bottom:14px}
+    .nt-f label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2,#9aa0b8);margin-bottom:6px}
+    .nt-f input,.nt-f select,.nt-f textarea{width:100%;padding:10px 12px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px;color:var(--text,#eee);font:inherit;font-size:14px;outline:none;transition:border-color .15s}
+    .nt-f input:focus,.nt-f select:focus,.nt-f textarea:focus{border-color:var(--primary,#f97316)}
+    .nt-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .nt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+    .nt-stat{background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:12px;padding:14px 16px}
+    .nt-stat small{display:block;color:var(--text-3,#5b5f78);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:5px}
+    .nt-stat strong{font-size:22px;font-weight:800;line-height:1.2;word-break:break-word}
+    .nt-stat.hl{border-color:rgba(var(--primary-rgb,249,115,22),.5);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-table{width:100%;border-collapse:collapse;font-size:13px}
+    .nt-table th,.nt-table td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border,rgba(255,255,255,.07));white-space:nowrap}
+    .nt-table th:first-child,.nt-table td:first-child{text-align:left}
+    .nt-table th{color:var(--text-3,#5b5f78);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg-1,#0d0d16)}
+    .nt-scroll{max-height:320px;overflow:auto;border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px}
+    .nt-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700}
+    .nt-good{background:rgba(16,185,129,.15);color:#10b981}
+    .nt-warn{background:rgba(245,158,11,.15);color:#f59e0b}
+    .nt-bad{background:rgba(239,68,68,.15);color:#ef4444}
+    .nt-bar{height:8px;background:var(--bg-3,#18182a);border-radius:99px;overflow:hidden}
+    .nt-bar>i{display:block;height:100%;background:var(--primary,#f97316);border-radius:99px;transition:width .35s}
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-btn.pri{background:var(--primary,#f97316);border-color:var(--primary,#f97316);color:#fff}
+    .nt-btn.pri:hover{opacity:.9;color:#fff}
+    .nt-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .nt-chip{padding:6px 12px;font-size:12px;font-weight:600;border-radius:999px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));color:var(--text-2,#9aa0b8);cursor:pointer}
+    .nt-chip:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-note{font-size:12px;color:var(--text-3,#7d7f9a);line-height:1.65;margin-top:18px;padding:12px 14px;border-left:3px solid var(--primary,#f97316);background:var(--bg-2,#12121e);border-radius:0 8px 8px 0}
+    .nt-list{list-style:none;display:grid;gap:8px;font-size:13.5px}
+    .nt-list li{display:flex;gap:10px;align-items:flex-start;color:var(--text-2,#9aa0b8)}
+    .nt-bd{display:grid;gap:12px}
+    .nt-bd .r{display:grid;grid-template-columns:150px 1fr 54px;gap:12px;align-items:center;font-size:13px;color:var(--text-2,#9aa0b8)}
+    .nt-bd .r span:last-child{text-align:right;font-weight:700;color:var(--text,#eee)}
+    .nt-rowx{display:grid;grid-template-columns:1.4fr .7fr .8fr 34px;gap:8px;margin-bottom:8px;align-items:center}
+    .nt-rowx input,.nt-rowx select{width:100%;padding:8px 10px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:8px;color:var(--text,#eee);font:inherit;font-size:13px;outline:none;min-width:0}
+    .nt-x{width:34px;height:34px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,.07));background:transparent;color:var(--text-3,#7d7f9a);cursor:pointer}
+    .nt-x:hover{color:#ef4444;border-color:#ef4444}
+    .nt-big{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.1}
+    .nt-mono{font-family:'JetBrains Mono',monospace}
+    @media print{.nt-nav,.nt-btn{display:none!important}}
+  </style>
+</head>
+<body class="nt-body">
+  <!-- ss-new-tool -->
+  <header class="nt-nav">
+    <a href="index.html" class="nt-brand"><span>💳</span> AVP<b>Emart</b></a>
+    <nav class="nt-links" aria-label="Tools">
+      <a href="index.html">Home</a>
+      <a href="emi-calculator.html" class="on">EMI Truth</a>
+      <a href="deal-scorer.html">Deal Scorer</a>
+      <a href="/">Sevenseed Hub</a>
+    </nav>
+  </header>
+
+  <main class="nt-wrap">
+    <div class="nt-head">
+      <div class="nt-badge"><i class="fa-solid fa-credit-card"></i> True cost of credit</div>
+      <h1 class="nt-title">No-Cost EMI? See What It Really Costs</h1>
+      <p class="nt-sub">Enter the price, offer and loan terms. We add GST on interest and fees, compare against paying upfront, and compute the effective annual rate you are really paying.</p>
+    </div>
+
+    <div class="nt-grid">
+      <section class="nt-card">
+        <h2><i class="fa-solid fa-sliders"></i> Purchase &amp; loan</h2>
+        <div class="nt-f"><label for="price">Listed price (₹)</label><input id="price" type="number" min="0" value="79999" oninput="calc()"></div>
+        <div class="nt-f"><label for="cashdisc">Instant discount if you pay in full today (₹)</label><input id="cashdisc" type="number" min="0" value="4000" oninput="calc()"></div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="down">Down payment (₹)</label><input id="down" type="number" min="0" value="0" oninput="calc()"></div>
+          <div class="nt-f"><label for="rate">Interest (% per year)</label><input id="rate" type="number" min="0" step="0.1" value="15" oninput="calc()"></div>
+        </div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="tenure">Tenure (months)</label><select id="tenure" onchange="calc()"><option>3</option><option>6</option><option selected>9</option><option>12</option><option>18</option><option>24</option><option>36</option></select></div>
+          <div class="nt-f"><label for="fee">Processing fee (₹)</label><input id="fee" type="number" min="0" value="199" oninput="calc()"></div>
+        </div>
+        <div class="nt-chips">
+          <button class="nt-chip" type="button" onclick="preset(0)">Bank 0% (no-cost)</button>
+          <button class="nt-chip" type="button" onclick="preset(15)">Card EMI 15%</button>
+          <button class="nt-chip" type="button" onclick="preset(24)">Pay-later 24%</button>
+        </div>
+        <p class="nt-note">GST of 18% is applied on interest and processing fee, as banks and NBFCs do in India. “Pay in full” means paying the listed price minus the instant discount you would lose by choosing EMI.</p>
+      </section>
+      <section>
+        <div class="nt-stats">
+          <div class="nt-stat hl"><small>Monthly EMI</small><strong id="oEmi">—</strong></div>
+          <div class="nt-stat"><small>Total interest</small><strong id="oInt">—</strong></div>
+          <div class="nt-stat"><small>GST + fees</small><strong id="oGst">—</strong></div>
+          <div class="nt-stat"><small>Total you pay</small><strong id="oTot">—</strong></div>
+          <div class="nt-stat"><small>Pay upfront instead</small><strong id="oCash">—</strong></div>
+          <div class="nt-stat hl"><small>Hidden extra cost</small><strong id="oExtra">—</strong></div>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-scale-balanced"></i> Verdict</h2>
+          <p id="verdict" style="font-size:15px;line-height:1.7"></p>
+          <p style="margin-top:10px;font-size:13px;color:var(--text-2)">Effective annual cost of this credit: <b id="oApr" style="color:var(--primary)">—</b></p>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-table-list"></i> Repayment schedule</h2>
+          <div class="nt-scroll"><table class="nt-table"><thead><tr><th>Month</th><th>EMI</th><th>Interest</th><th>Principal</th><th>Balance</th></tr></thead><tbody id="sched"></tbody></table></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const $=id=>document.getElementById(id);
+    const nv=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0;};
+    const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+    const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+
+    function preset(r){$('rate').value=r;if(r===0){$('fee').value=0;}calc();}
+    function calc(){
+      const price=nv('price'),down=Math.min(nv('down'),nv('price')),rate=nv('rate'),n=+$('tenure').value,fee=nv('fee'),cd=nv('cashdisc');
+      const P=Math.max(0,price-down),r=rate/1200;
+      const emi=P<=0?0:(r===0?P/n:P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1));
+      const interest=Math.max(0,emi*n-P),gst=0.18*(interest+fee);
+      const total=down+emi*n+fee+gst,cash=Math.max(0,price-cd),extra=total-cash;
+      const M=emi+0.18*interest/n,F=cash-down-fee*1.18;
+      let apr=0;
+      if(F>0&&M*n>F){let lo=0,hi=1;for(let i=0;i<80;i++){const m=(lo+hi)/2;const pv=M*(1-Math.pow(1+m,-n))/m;if(pv>F)lo=m;else hi=m;}apr=(Math.pow(1+(lo+hi)/2,12)-1)*100;}
+      $('oEmi').textContent=inr(emi);$('oInt').textContent=inr(interest);$('oGst').textContent=inr(gst+fee);
+      $('oTot').textContent=inr(total);$('oCash').textContent=inr(cash);
+      $('oExtra').textContent=(extra>=0?'+':'−')+inr(Math.abs(extra));
+      $('oApr').textContent=apr.toFixed(1)+'% per year';
+      const ep=cash>0?extra/cash*100:0;
+      let cls='nt-good',txt='Cheap credit',msg;
+      if(ep>=8){cls='nt-bad';txt='Expensive';}else if(ep>=3){cls='nt-warn';txt='Costly';}
+      if(extra<=0){msg='EMI works out cheaper than paying upfront here — the offer is genuinely good value.';}
+      else{msg='Choosing EMI costs you '+inr(extra)+' more ('+ep.toFixed(1)+'%) than paying upfront. '+(rate===0?'The “0%” label hides it: the discount you give up and GST on fees are the real price of the credit.':'Interest plus GST drives this; a shorter tenure or higher down payment reduces it.');}
+      $('verdict').innerHTML='<span class="nt-pill '+cls+'">'+txt+'</span> '+msg;
+      let bal=P,rows='';
+      for(let m=1;m<=n&&P>0;m++){const it=bal*r,pr=emi-it;bal=Math.max(0,bal-pr);
+        rows+='<tr><td>'+m+'</td><td>'+inr(emi)+'</td><td>'+inr(it)+'</td><td>'+inr(pr)+'</td><td>'+inr(bal)+'</td></tr>';}
+      $('sched').innerHTML=rows||'<tr><td colspan="5">No loan needed</td></tr>';
+    }
+    calc();
+  </script>
+</body>
+</html>
