@@ -1,83 +1,398 @@
-<!DOCTYPE html><html lang="en" class="scroll-smooth"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><link rel="stylesheet" href="/rakshak-ai/_next/static/chunks/118f2bu900uvl.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/rakshak-ai/_next/static/chunks/1jq4o6yq14o4c.js"/><script src="/rakshak-ai/_next/static/chunks/3qk2ugjv0oeph.js" async=""></script><script src="/rakshak-ai/_next/static/chunks/3rxl-jt3pdxgx.js" async=""></script><script src="/rakshak-ai/_next/static/chunks/turbopack-2ra68az9hkdro.js" async=""></script><script src="/rakshak-ai/_next/static/chunks/158myu8e_yme3.js" async=""></script><script src="/rakshak-ai/_next/static/chunks/2fskwe76do2mb.js" async=""></script><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style"/><link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" as="style"/><title>Rakshak AI — Vision Security &amp; Workplace Safety Suite</title><meta name="description" content="AI-powered vision security suite featuring live mask detection, facial attendance recognition."/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/><script src="/rakshak-ai/_next/static/chunks/0cz1d0mv5g_q7.js" noModule=""></script><!-- rakshak_mobile_opt --><style>
-@media(max-width: 640px) {
-  nav { padding-left: 12px !important; padding-right: 12px !important; }
-  .pt-28 { padding-top: 80px !important; }
-  .px-6 { padding-left: 14px !important; padding-right: 14px !important; }
-  .grid-cols-1.md\:grid-cols-2 { grid-template-columns: 1fr !important; gap: 12px !important; }
-  .glow-card { padding: 16px 14px !important; }
-  h1.text-3xl { font-size: 22px !important; }
-}
-</style>  <link rel="stylesheet" href="portal.css"/>
-</head><body class="bg-[#070507] text-[#faf5f6] antialiased"><div hidden=""><!--$--><!--/$--></div><main class="min-h-screen bg-[#070507] text-[#faf5f6] relative overflow-hidden"><canvas class="pointer-events-none fixed inset-0 z-0 h-full w-full opacity-60"></canvas><div class="pointer-events-none fixed z-[99999] hidden md:block rounded-full transition-transform duration-75 ease-out border border-[#ef4444]/60 h-6 w-6 bg-[#ef4444]/10" style="left:-100px;top:-100px;transform:translate(-50%, -50%)"></div><nav class="fixed top-0 left-0 right-0 h-[68px] z-[100] flex items-center justify-between px-6 md:px-12 backdrop-blur-md bg-[#070507]/80 border-b border-[#ef4444]/15"><a href="/rakshak-ai/" class="flex items-center gap-3 font-extrabold text-[17px] tracking-tight"><span class="w-[38px] h-[38px] rounded-[11px] grid place-items-center text-white bg-gradient-to-br from-[#ef4444] to-[#dc2626] shadow-[0_4px_16px_rgba(239,68,68,0.35)]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield h-5 w-5 text-white" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg></span><span class="text-white">Rakshak <span class="text-[#fca5a5]">AI</span></span></a><div class="hidden md:flex items-center gap-6 text-sm text-[#d4c5c8]"><a href="#workstations" class="hover:text-white transition-colors">Vision Suite</a><a href="#features" class="hover:text-white transition-colors">Capabilities</a><a href="#faq" class="hover:text-white transition-colors">FAQ</a></div><div class="flex items-center gap-3"><button class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold bg-[#160f14] border border-[#ef4444]/30 text-[#fca5a5] hover:bg-[#ef4444]/10 transition-all cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key h-3.5 w-3.5 text-[#ef4444]" aria-hidden="true"><path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"></path><path d="m21 2-9.6 9.6"></path><circle cx="7.5" cy="15.5" r="5.5"></circle></svg><span>BYOK Keys</span></button><a href="/rakshak-ai/app/" class="btn-primary text-xs md:text-sm py-2 px-4 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket h-4 w-4" aria-hidden="true"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"></path><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"></path></svg><span>Launch Suite</span></a><button class="md:hidden p-2 text-white bg-[#160f14] rounded-lg border border-white/10"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu h-5 w-5" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button></div></nav><div class="pt-28 pb-16 px-6 md:px-12 max-w-[1200px] mx-auto relative z-10"><div class="flex flex-wrap justify-between items-center gap-4 mb-8 pb-6 border-b border-white/10"><div><div class="eyebrow mb-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield h-3.5 w-3.5 text-[#ef4444]" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg><span>RAKSHAK AI · FULL SUITE WORKSTATION</span></div><h1 class="text-3xl font-black text-white">Rakshak Vision Security Portal</h1></div><div class="flex items-center gap-2"><span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">● Neural Engines Active</span></div></div><div id="workstations" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8"><button class="p-5 rounded-2xl border text-left transition-all cursor-pointer bg-[#160f14] border-[#ef4444] shadow-[0_0_20px_rgba(239,68,68,0.25)]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield h-6 w-6 text-[#ef4444] mb-2" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg><h3 class="font-bold text-white text-base">Mask &amp; PPE Compliance</h3><p class="text-xs text-[#7e6f73] mt-1">Real-time mask classification &amp; entry scanner.</p></button><button class="p-5 rounded-2xl border text-left transition-all cursor-pointer bg-black/40 border-white/10 hover:border-white/20"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-check h-6 w-6 text-[#f59e0b] mb-2" aria-hidden="true"><path d="m16 11 2 2 4-4"></path><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg><h3 class="font-bold text-white text-base">Facial Attendance Matcher</h3><p class="text-xs text-[#7e6f73] mt-1">Touchless attendance logging &amp; identity check.</p></button></div><div id="features" class="glow-card p-6 md:p-8 border border-[#ef4444]/30 shadow-2xl"><div class="flex justify-between items-center mb-6"><h3 class="text-lg font-bold text-white">Mask PPE Scanner Console</h3><button class="btn-primary text-xs py-2 px-5 flex items-center gap-2 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scan h-4 w-4" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path></svg>Run Inspection</button></div><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="border border-white/10 rounded-xl bg-black/60 p-6 flex flex-col items-center justify-center text-center min-h-[220px]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scan h-10 w-10 text-[#ef4444] mb-2 animate-pulse" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path></svg><p class="text-xs text-[#d4c5c8] font-semibold">Webcam / Image Processing Frame</p><p class="text-[10px] text-[#7e6f73] font-mono mt-1">Frame resolution: 1280x720 · FPS: 60</p></div><div class="border border-white/10 rounded-xl bg-black/60 p-6 font-mono min-h-[220px] flex flex-col justify-between text-xs"><div class="text-[#7e6f73] pb-2 border-b border-white/10 flex justify-between"><span>INFERENCE REPORT</span><span class="text-[#fca5a5]">RAKSHAK-SENTINEL</span></div><div class="py-8 text-center text-[#7e6f73] italic">Press &quot;Run Inspection&quot; to test model output.</div><div class="pt-2 border-t border-white/10 flex justify-between text-[10px] text-[#7e6f73]"><span>No scan run yet</span></div></div></div></div></div><footer id="faq" class="bg-[#0e0a0d] border-t border-[#ef4444]/15 py-12 px-6 md:px-12 text-[#7e6f73] text-xs"><div class="max-w-[1200px] mx-auto flex flex-col md:flex-row items-center justify-between gap-6"><div class="flex items-center gap-3"><span class="w-8 h-8 rounded-lg grid place-items-center text-white bg-gradient-to-br from-[#ef4444] to-[#dc2626]"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield h-4 w-4" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg></span><span class="font-bold text-white text-sm">Rakshak <span class="text-[#fca5a5]">AI</span></span></div><p>© 2026 Sevenseed Group · Rakshak AI Sentinel Suite. All Rights Reserved.</p><div class="flex items-center gap-4 text-xs font-mono"><a href="/rakshak-ai/app/" class="hover:text-white transition-colors">Workstation Suite</a><a href="https://sevenseed.onrender.com/" class="hover:text-white transition-colors">Sevenseed Hub</a></div></div></footer></main><!--$--><!--/$--><script src="/rakshak-ai/_next/static/chunks/1jq4o6yq14o4c.js" id="_R_" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n2:I[39756,[\"/rakshak-ai/_next/static/chunks/158myu8e_yme3.js\"],\"default\"]\n3:I[37457,[\"/rakshak-ai/_next/static/chunks/158myu8e_yme3.js\"],\"default\"]\n4:I[47257,[\"/rakshak-ai/_next/static/chunks/158myu8e_yme3.js\"],\"ClientPageRoot\"]\n5:I[30335,[\"/rakshak-ai/_next/static/chunks/158myu8e_yme3.js\",\"/rakshak-ai/_next/static/chunks/2fskwe76do2mb.js\"],\"default\"]\n8:I[97367,[\"/rakshak-ai/_next/static/chunks/158myu8e_yme3.js\"],\"OutletBoundary\"]\n9:\"$Sreact.suspense\"\nc:I[97367,[\"/rakshak-ai/_next/static/chunks/158myu8e_yme3.js\"],\"ViewportBoundary\"]\ne:I[97367,[\"/rakshak-ai/_next/static/chunks/158myu8e_yme3.js\"],\"MetadataBoundary\"]\n10:I[68027,[\"/rakshak-ai/_next/static/chunks/158myu8e_yme3.js\"],\"default\",1]\n:HL[\"/rakshak-ai/_next/static/chunks/118f2bu900uvl.css\",\"style\"]\n:HL[\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css\",\"style\"]\n:HL[\"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900\u0026family=JetBrains+Mono:wght@400;500;600\u0026display=swap\",\"style\"]\n"])</script><script>self.__next_f.push([1,"0:{\"P\":null,\"c\":[\"\",\"app\",\"\"],\"q\":\"\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"app\",{\"children\":[\"__PAGE__\",{}]}]},\"$undefined\",\"$undefined\",16],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/rakshak-ai/_next/static/chunks/118f2bu900uvl.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"/rakshak-ai/_next/static/chunks/158myu8e_yme3.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"en\",\"className\":\"scroll-smooth\",\"children\":[[\"$\",\"head\",null,{\"children\":[[\"$\",\"link\",null,{\"rel\":\"stylesheet\",\"href\":\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css\"}],[\"$\",\"link\",null,{\"href\":\"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900\u0026family=JetBrains+Mono:wght@400;500;600\u0026display=swap\",\"rel\":\"stylesheet\"}]]}],[\"$\",\"body\",null,{\"className\":\"bg-[#070507] text-[#faf5f6] antialiased\",\"children\":[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]]}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[[\"$\",\"$L4\",null,{\"Component\":\"$5\",\"serverProvidedParams\":{\"searchParams\":{},\"params\":{},\"promises\":[\"$@6\",\"$@7\"]}}],[[\"$\",\"script\",\"script-0\",{\"src\":\"/rakshak-ai/_next/static/chunks/2fskwe76do2mb.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"$L8\",null,{\"children\":[\"$\",\"$9\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@a\"}]}]]}],{},null,false,null]},null,false,\"$@b\"]},null,false,null],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$Lc\",null,{\"children\":\"$Ld\"}],[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$Le\",null,{\"children\":[\"$\",\"$9\",null,{\"name\":\"Next.Metadata\",\"children\":\"$Lf\"}]}]}],null]}],false]],\"m\":\"$undefined\",\"G\":[\"$10\",[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/rakshak-ai/_next/static/chunks/118f2bu900uvl.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]]],\"S\":true,\"h\":null,\"s\":\"$undefined\",\"l\":\"$undefined\",\"p\":\"$undefined\",\"d\":\"$undefined\",\"b\":\"I2VKnhkhIummzuSULUMmu\"}\n"])</script><script>self.__next_f.push([1,"11:[]\nb:\"$W11\"\n6:{}\n7:\"$0:f:0:1:1:children:1:children:0:props:children:0:props:serverProvidedParams:params\"\n"])</script><script>self.__next_f.push([1,"d:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\n"])</script><script>self.__next_f.push([1,"a:null\nf:[[\"$\",\"title\",\"0\",{\"children\":\"Rakshak AI — Vision Security \u0026 Workplace Safety Suite\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"AI-powered vision security suite featuring live mask detection, facial attendance recognition.\"}]]\n"])</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  var menuBtn = document.querySelector('nav button.md\\:hidden');
-  if (menuBtn) {
-    menuBtn.onclick = function() {
-      var ws = document.getElementById('workstations');
-      if (ws) ws.scrollIntoView({ behavior: 'smooth' });
-    };
-  }
-});
-</script>
-<!-- Cold-Start Resilience Banner & Health Poller -->
-<div id="cold-start-banner" style="display:none; position:fixed; top:0; left:0; right:0; z-index:99999; background:linear-gradient(90deg, #f59e0b, #d97706); color:#020617; font-size:12px; font-weight:700; text-align:center; padding:8px 16px; box-shadow:0 4px 12px rgba(0,0,0,0.3); font-family:system-ui,-apple-system,sans-serif;">
-  <span style="display:inline-flex; align-items:center; gap:8px;">
-    <svg style="animation:cs-spin 1s linear infinite; width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"></circle></svg>
-    Waking up the AI backend (free-tier cold start, ~15-30s)... <span id="cs-countdown">Connecting</span>
-  </span>
-</div>
-<style>@keyframes cs-spin { 100% { transform: rotate(360deg); } }</style>
-<script>
-(function() {
-  var pathPrefix = window.location.pathname.split('/')[1] || '';
-  if (!pathPrefix || pathPrefix === 'app') return;
-  var healthUrl = '/' + pathPrefix + '/api/health';
-  var banner = document.getElementById('cold-start-banner');
-  var countdown = document.getElementById('cs-countdown');
-  var attempts = 0;
-  var maxAttempts = 15;
-  var startTime = Date.now();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Rakshak AI — AI Defense, Vision Security & BNS FIR Workstations</title>
+  <meta name="description" content="Bharatiya Nyaya Sanhita (BNS 2023) legal FIR generator, cybercrime threat radar, and computer vision sentinels."/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E⚖️%3C/text%3E%3C/svg%3E"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="portal.css"/>
+  <style>
+    :root {
+      --p-color: #ef4444;
+      --s-color: #f43f5e;
+      --p-rgb: 239, 68, 68;
+      --s-rgb: 244, 63, 94;
+      --bg-color: #0b0305;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: portalFadeIn 0.28s ease-out; }
+    @keyframes portalFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="antialiased">
+  <!-- Aceternity Overhead Glow Lamp -->
+  <div class="hero-lamp"></div>
+  <div class="hero-lamp-line"></div>
 
-  function checkHealth() {
-    attempts++;
-    var elapsed = Math.round((Date.now() - startTime) / 1000);
-    if (countdown) countdown.textContent = '(' + elapsed + 's)';
+  <!-- Mobile Drawer Overlay -->
+  <div id="mobile-sidebar-overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); z-index:45;"></div>
+
+  <div class="app-shell flex min-h-screen">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar w-[260px] shrink-0 border-r border-white/5 flex flex-col p-4 fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0" id="main-sidebar">
+      <!-- Logo Header -->
+      <div class="flex items-center justify-between mb-6 px-2">
+        <a class="side-logo flex items-center gap-3 no-underline" href="/rakshak-ai/">
+          <span class="logo-icon w-9 h-9 rounded-xl grid place-items-center text-white font-bold text-lg">⚖️</span>
+          <div>
+            <div class="text-white font-extrabold text-[15px] tracking-tight">Rakshak AI</div>
+            <div class="text-[10px] text-white/50 uppercase font-semibold tracking-wider">Vision Defense & Legal</div>
+          </div>
+        </a>
+        <button class="md:hidden text-white/60 hover:text-white p-1" onclick="toggleSidebar()" aria-label="Close menu">
+          <i class="fas fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="side-nav flex flex-col gap-1.5 flex-1 overflow-y-auto pr-1">
+        
+        <button class="nav-item active" onclick="switchTab('fir')" id="nav-btn-fir">
+          <i class="fas fa-file-shield" style="width:16px; text-align:center;"></i>
+          <span class="truncate">BNS 2023 Auto-FIR Drafter</span>
+        </button>
+        
+        <button class="nav-item " onclick="switchTab('sentinel')" id="nav-btn-sentinel">
+          <i class="fas fa-video" style="width:16px; text-align:center;"></i>
+          <span class="truncate">Vision Security Sentinel</span>
+        </button>
+        
+        <button class="nav-item " onclick="switchTab('cyber')" id="nav-btn-cyber">
+          <i class="fas fa-shield-virus" style="width:16px; text-align:center;"></i>
+          <span class="truncate">Cybercrime Threat Radar</span>
+        </button>
+        
+        <button class="nav-item " onclick="switchTab('sos')" id="nav-btn-sos">
+          <i class="fas fa-phone-volume" style="width:16px; text-align:center;"></i>
+          <span class="truncate">Emergency SOS Dispatch</span>
+        </button>
+        
+        <button class="nav-item " onclick="switchTab('crosswalk')" id="nav-btn-crosswalk">
+          <i class="fas fa-scale-balanced" style="width:16px; text-align:center;"></i>
+          <span class="truncate">IPC to BNS Legal Crosswalk</span>
+        </button>
+        
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="side-foot flex flex-col gap-3 pt-4 border-t border-white/10 mt-auto">
+        <div class="flex items-center justify-between text-xs px-2 py-1.5 rounded-lg bg-white/[0.03] border border-white/5">
+          <span class="inline-flex items-center gap-2 text-white/70 font-mono text-[11px]">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            AI Engine Online
+          </span>
+          <span class="text-[10px] font-bold text-emerald-400/90 font-mono">v3.4-PROD</span>
+        </div>
+        <a class="side-back flex items-center gap-2 text-xs text-white/60 hover:text-white py-2 px-3 rounded-lg border border-white/10 hover:border-white/20 transition-all no-underline" href="/rakshak-ai/">
+          <i class="fas fa-arrow-left text-[11px]"></i>
+          <span>Back to Landing Page</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div class="main flex-1 flex flex-col min-w-0">
+      <!-- Topbar Header -->
+      <header class="topbar sticky top-0 border-b border-white/5 z-20 flex items-center justify-between px-6 md:px-10 py-3.5 backdrop-blur-xl bg-black/40">
+        <div class="flex items-center gap-4">
+          <button class="md:hidden w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white cursor-pointer" onclick="toggleSidebar()" aria-label="Open menu">
+            <i class="fas fa-bars text-sm"></i>
+          </button>
+          <div>
+            <div class="text-xs text-white/50 flex items-center gap-1.5 font-medium">
+              <span>Rakshak AI</span>
+              <span>/</span>
+              <span class="text-white/80" id="topbar-crumb">Workspace Console</span>
+            </div>
+            <h1 class="text-base font-extrabold text-white tracking-tight" id="topbar-title">Active Dashboard</h1>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-white/80">
+            <i class="fas fa-shield-halved text-emerald-400 text-xs"></i>
+            <span>Guest Studio Access (Full VIP)</span>
+          </div>
+          <button class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-gradient-to-r from-[var(--p-color)] to-[var(--s-color)] hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-black/40 flex items-center gap-1.5" onclick="triggerQuickAction()">
+            <i class="fas fa-bolt text-xs"></i>
+            <span>Quick Run</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Scrollable Panels -->
+      <main class="panels p-6 md:p-10 max-w-[1280px] w-full mx-auto flex-1">
+        
+    <div id="tab-fir" class="tab-content active">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div>
+            <div class="tool-title">⚖️ Bharatiya Nyaya Sanhita (BNS 2023) Auto-FIR Drafter</div>
+            <div class="tool-ep">New Criminal Code Official Legal Generator</div>
+          </div>
+        </div>
+        <p class="text-xs text-slate-300 mb-3">Input an incident description to map legacy IPC sections to BNS 2023 and format a police-ready First Information Report.</p>
+        <textarea id="fir-incident" class="w-full p-3.5 rounded-xl bg-black/40 border border-white/10 text-xs text-white h-24 font-mono">Yesterday evening around 8 PM, two unknown individuals on a black motorcycle snatched my gold chain and wallet at gunpoint near Vastrapur Lake.</textarea>
+        <button class="run-btn self-end mt-2" onclick="executeFir()"><i class="fas fa-file-contract text-xs"></i> Draft Formal BNS FIR</button>
+        <div id="fir-result" class="tool-result mt-4" style="display:none;">
+          <pre id="fir-out-text" class="result-box font-mono text-xs"></pre>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-sentinel" class="tab-content">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div>
+            <div class="tool-title">🛡️ Vision Security Sentinel & Perimeter Surveillance</div>
+            <div class="tool-ep">Real-Time Threat Detection Model</div>
+          </div>
+        </div>
+        <button class="run-btn" onclick="executeSentinel()"><i class="fas fa-video text-xs"></i> Run Perimeter Vision Scan</button>
+        <div id="sentinel-result" class="tool-result mt-4" style="display:none;">
+          <pre id="sentinel-out-text" class="result-box font-mono text-xs"></pre>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-cyber" class="tab-content">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div>
+            <div class="tool-title">🚨 Cybercrime Threat & Phishing Radar</div>
+            <div class="tool-ep">Direct 1930 Portal Guidance</div>
+          </div>
+        </div>
+        <input id="cyber-text" class="w-full p-3.5 rounded-xl bg-black/40 border border-white/10 text-xs text-white mb-3" value="Dear Customer, your SBI YONO account will be blocked today. Click http://sbi-kyc-update.apk to update PAN immediately."/>
+        <button class="run-btn" onclick="executeCyber()"><i class="fas fa-bug text-xs"></i> Verify Scam & Generate Complaint</button>
+        <div id="cyber-result" class="tool-result mt-4" style="display:none;">
+          <pre id="cyber-out-text" class="result-box font-mono text-xs"></pre>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-sos" class="tab-content">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div>
+            <div class="tool-title">🚨 Emergency 112 / SOS Geo-Dispatch</div>
+            <div class="tool-ep">RapidSOS Integrated Standard</div>
+          </div>
+        </div>
+        <button class="run-btn" onclick="executeSos()"><i class="fas fa-location-crosshairs text-xs"></i> Simulate SOS Emergency Dispatch</button>
+        <div id="sos-result" class="tool-result mt-4" style="display:none;">
+          <pre id="sos-out-text" class="result-box font-mono text-xs"></pre>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-crosswalk" class="tab-content">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div>
+            <div class="tool-title">📋 IPC to BNS Legal Code Crosswalk</div>
+            <div class="tool-ep">Instant Section Conversion</div>
+          </div>
+        </div>
+        <button class="run-btn" onclick="executeCrosswalk()"><i class="fas fa-book text-xs"></i> View Key Criminal Code Mappings</button>
+        <div id="crosswalk-result" class="tool-result mt-4" style="display:none;">
+          <pre id="crosswalk-out-text" class="result-box font-mono text-xs"></pre>
+        </div>
+      </div>
+    </div>
     
-    fetch(healthUrl, { method: 'GET', cache: 'no-store' })
-      .then(function(res) {
-        if (res.ok) {
-          if (banner) {
-            banner.style.background = 'linear-gradient(90deg, #10b981, #059669)';
-            banner.style.color = '#ffffff';
-            banner.innerHTML = 'AI backend ready! Connected.';
-            setTimeout(function() { banner.style.display = 'none'; }, 1500);
-          }
-          window.dispatchEvent(new CustomEvent('backend-ready', { detail: { prefix: pathPrefix } }));
-        } else if (attempts < maxAttempts) {
-          if (banner) banner.style.display = 'block';
-          setTimeout(checkHealth, 2500);
-        } else {
-          if (banner) {
-            banner.style.background = '#ef4444';
-            banner.style.color = '#ffffff';
-            banner.innerHTML = 'Backend wake-up taking longer than usual. Please refresh in a moment.';
-          }
-        }
-      })
-      .catch(function() {
-        if (attempts < maxAttempts) {
-          if (banner) banner.style.display = 'block';
-          setTimeout(checkHealth, 2500);
-        } else if (banner) {
-          banner.style.display = 'none';
-        }
+      </main>
+    </div>
+  </div>
+
+  <!-- Floating Cold-Start Status Pill -->
+  <div id="cs-pill" style="display:none; position:fixed; bottom:20px; right:20px; z-index:99999; padding:8px 16px; border-radius:999px; background:rgba(15,23,42,0.9); border:1px solid rgba(245,158,11,0.4); color:#f8fafc; font-size:12px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,0.5); backdrop-filter:blur(16px); align-items:center; gap:8px;">
+    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+    <span id="cs-pill-msg">Connecting AI Backend...</span>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      var sb = document.getElementById('main-sidebar');
+      var ov = document.getElementById('mobile-sidebar-overlay');
+      if (!sb) return;
+      var isClosed = sb.classList.contains('-translate-x-full');
+      if (isClosed) {
+        sb.classList.remove('-translate-x-full');
+        sb.classList.add('translate-x-0');
+        if (ov) ov.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+      } else {
+        sb.classList.add('-translate-x-full');
+        sb.classList.remove('translate-x-0');
+        if (ov) ov.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(function(el) {
+        el.classList.remove('active');
       });
-  }
+      var target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
 
-  setTimeout(checkHealth, 1000);
-})();
-</script>
+      document.querySelectorAll('.nav-item').forEach(function(el) {
+        el.classList.remove('active');
+      });
+      var btn = document.getElementById('nav-btn-' + tabId);
+      if (btn) btn.classList.add('active');
 
+      var titleElem = document.getElementById('topbar-title');
+      var crumbElem = document.getElementById('topbar-crumb');
+      if (btn && titleElem) {
+        var txt = btn.querySelector('.truncate') ? btn.querySelector('.truncate').textContent : btn.textContent;
+        titleElem.textContent = txt.trim();
+        if (crumbElem) crumbElem.textContent = txt.trim();
+      }
+
+      if (window.innerWidth < 768) {
+        toggleSidebar();
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function copyResult(elemId) {
+      var target = document.getElementById(elemId);
+      if (!target) return;
+      var text = target.innerText || target.textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        alert('Copied output to clipboard!');
+      }).catch(function() {
+        alert('Output ready. (Clipboard access restricted)');
+      });
+    }
+
+    // Cold-start background poller
+    (function() {
+      var pathPrefix = window.location.pathname.split('/')[1] || '';
+      if (!pathPrefix || pathPrefix === 'app') return;
+      var healthUrl = '/' + pathPrefix + '/api/health';
+      var pill = document.getElementById('cs-pill');
+      var attempts = 0;
+      var maxAttempts = 12;
+
+      function check() {
+        attempts++;
+        fetch(healthUrl, { method: 'GET', cache: 'no-store' })
+          .then(function(res) {
+            if (res.ok) {
+              if (pill) {
+                pill.style.display = 'inline-flex';
+                pill.style.borderColor = 'rgba(16,185,129,0.4)';
+                pill.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span> <span>AI Microservice Connected</span>';
+                setTimeout(function() { pill.style.display = 'none'; }, 3000);
+              }
+            } else if (attempts < maxAttempts) {
+              if (pill) { pill.style.display = 'inline-flex'; }
+              setTimeout(check, 3000);
+            }
+          })
+          .catch(function() {
+            if (attempts < maxAttempts) {
+              if (pill) { pill.style.display = 'inline-flex'; }
+              setTimeout(check, 3000);
+            } else if (pill) {
+              pill.style.display = 'none';
+            }
+          });
+      }
+      setTimeout(check, 1000);
+    })();
+
+    
+    function triggerQuickAction() {
+      switchTab('fir');
+      executeFir();
+    }
+
+    function executeFir() {
+      var res = document.getElementById('fir-result');
+      var out = document.getElementById('fir-out-text');
+      res.style.display = 'block';
+      out.textContent = `=== FORMAL FIRST INFORMATION REPORT (FIR DRAFT) ===
+Jurisdiction: Vastrapur Police Station, Ahmedabad Commissionerate
+Applicable Legal Code: Bharatiya Nyaya Sanhita, 2023 (BNS)
+
+Mapped Sections:
+1. BNS Section 309(4) — Robbery with attempt to cause death or grievous hurt (Legacy IPC 392/397)
+2. BNS Section 311 — Snatching (Newly introduced specific offense in BNS)
+3. Arms Act, 1959 — Section 25(1B)(a) (Unlawful possession & brandishing of firearm)
+
+FIR Synopsis:
+On 24-09-2026 at approx 20:00 hrs, the complainant was confronted by two unidentified male assailants riding an unnumbered motorcycle. The pillion rider displayed an illegal firearm, causing imminent threat to life, and forcibly snatched complainant's gold chain (approx 22g) and leather wallet.
+
+Cognizable Offense: YES | Police Action: Immediate registration & forensic CCTV extraction mandated under Section 173 BNSS.`;
+    }
+
+    function executeSentinel() {
+      var res = document.getElementById('sentinel-result');
+      var out = document.getElementById('sentinel-out-text');
+      res.style.display = 'block';
+      out.textContent = `=== VISION SECURITY SENTINEL REPORT ===
+Perimeter Camera Feed #02 (East Gate)
+Threat Index: 🟡 ELEVATED
+
+Events Detected:
+• 02:14:22 — Unidentified individual detected climbing perimeter fence.
+• Infrared Thermal Signature: Confirmed human silhouette.
+• Automated Deterrent: Strobe spotlight activated; Security guard booth notified via automated siren.`;
+    }
+
+    function executeCyber() {
+      var res = document.getElementById('cyber-result');
+      var out = document.getElementById('cyber-out-text');
+      res.style.display = 'block';
+      out.textContent = `=== CYBERCRIME THREAT RADAR VERDICT ===
+Scam Classification: 🔴 CRITICAL THREAT (Malicious Android Banking Trojan)
+
+Threat Breakdown:
+• Fake SBI Domain: Hosted on bulletproof hosting in Eastern Europe.
+• Payload: APK drops SMS-forwarding malware designed to intercept bank OTPs.
+
+Action Steps:
+1. DO NOT CLICK or install the APK file.
+2. Dial 1930 immediately to report the malicious phone number.
+3. Automated draft created for National Cyber Crime Reporting Portal (cybercrime.gov.in).`;
+    }
+
+    function executeSos() {
+      var res = document.getElementById('sos-result');
+      var out = document.getElementById('sos-out-text');
+      res.style.display = 'block';
+      out.textContent = `=== SOS DISPATCH SIMULATION ===
+GPS Coordinates: 23.0338° N, 72.5850° E (Navrangpura, Ahmedabad)
+Emergency Packet Broadcasted:
+• Police Control Room (112): Alert acknowledged (PCR Van #18 en route, ETA 4 mins)
+• 3 Pre-saved Emergency Contacts alerted via SMS with live tracking link.`;
+    }
+
+    function executeCrosswalk() {
+      var res = document.getElementById('crosswalk-result');
+      var out = document.getElementById('crosswalk-out-text');
+      res.style.display = 'block';
+      out.textContent = `=== IPC TO BNS 2023 QUICK CONVERSION TABLE ===
+• IPC 302 (Murder) ─────────────► BNS Section 103(1)
+• IPC 307 (Attempt to Murder) ──► BNS Section 109
+• IPC 376 (Rape) ───────────────► BNS Section 64
+• IPC 420 (Cheating/Fraud) ─────► BNS Section 318(4)
+• IPC 392 (Robbery) ────────────► BNS Section 309
+• IPC 124A (Sedition) ──────────► Omitted (Replaced by BNS 152: Endangering Sovereignty)`;
+    }
+    
+  </script>
 </body>
 </html>

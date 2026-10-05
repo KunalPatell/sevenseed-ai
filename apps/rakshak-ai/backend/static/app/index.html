@@ -1,110 +1,97 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Rakshak AI — AI Vision Security & BNS 2024 Legal FIR Workstation</title>
-  <meta name="description" content="Real-time 4-camera CCTV stream analytics, Bharatiya Nyaya Sanhita (BNS 2024) FIR drafting, and biometric face attendance."/>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🛡️%3C/text%3E%3C/svg%3E"/>
+  <title>Rakshak AI — AI Defense, Vision Security & BNS FIR Workstations</title>
+  <meta name="description" content="Bharatiya Nyaya Sanhita (BNS 2023) legal FIR generator, cybercrime threat radar, and computer vision sentinels."/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E⚖️%3C/text%3E%3C/svg%3E"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: '#ef4444',
-            brandSec: '#f43f5e',
-            darkBg: '#0b0305'
-          }
-        }
-      }
-    };
-  </script>
   <link rel="stylesheet" href="portal.css"/>
+  <style>
+    :root {
+      --p-color: #ef4444;
+      --s-color: #f43f5e;
+      --p-rgb: 239, 68, 68;
+      --s-rgb: 244, 63, 94;
+      --bg-color: #0b0305;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: portalFadeIn 0.28s ease-out; }
+    @keyframes portalFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body class="antialiased text-slate-100 bg-[#0b0305]">
+<body class="antialiased">
   <!-- Aceternity Overhead Glow Lamp -->
   <div class="hero-lamp"></div>
   <div class="hero-lamp-line"></div>
 
   <!-- Mobile Drawer Overlay -->
-  <div id="mobile-sidebar-overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(6px); z-index:45;"></div>
+  <div id="mobile-sidebar-overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); z-index:45;"></div>
 
   <div class="app-shell flex min-h-screen">
     <!-- Sidebar Navigation -->
-    <aside class="sidebar w-[270px] shrink-0 border-r border-white/5 flex flex-col p-4 fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0" id="main-sidebar">
+    <aside class="sidebar w-[260px] shrink-0 border-r border-white/5 flex flex-col p-4 fixed top-0 bottom-0 z-50 h-screen transition-transform duration-300 md:sticky -translate-x-full md:translate-x-0" id="main-sidebar">
       <!-- Logo Header -->
-      <div class="flex items-center justify-between mb-4 px-2">
+      <div class="flex items-center justify-between mb-6 px-2">
         <a class="side-logo flex items-center gap-3 no-underline" href="/rakshak-ai/">
-          <span class="w-10 h-10 rounded-xl grid place-items-center text-white font-bold text-xl bg-gradient-to-br from-[#ef4444] to-[#f43f5e] shadow-lg shadow-black/40 border border-white/10">🛡️</span>
+          <span class="logo-icon w-9 h-9 rounded-xl grid place-items-center text-white font-bold text-lg">⚖️</span>
           <div>
             <div class="text-white font-extrabold text-[15px] tracking-tight">Rakshak AI</div>
-            <div class="text-[10px] text-white/50 uppercase font-semibold tracking-wider">AI Vision Security & BNS FIR Workstations</div>
+            <div class="text-[10px] text-white/50 uppercase font-semibold tracking-wider">Vision Defense & Legal</div>
           </div>
         </a>
-        <button class="md:hidden text-white/60 hover:text-white p-1 cursor-pointer" onclick="toggleSidebar()" aria-label="Close menu">
+        <button class="md:hidden text-white/60 hover:text-white p-1" onclick="toggleSidebar()" aria-label="Close menu">
           <i class="fas fa-xmark text-lg"></i>
         </button>
-      </div>
-
-      <!-- Venture Switcher -->
-      <div class="mb-4 px-1">
-        <label class="block text-[10px] uppercase font-bold text-white/40 mb-1.5 px-1 tracking-wider">Switch Venture Console</label>
-        <select onchange="if(this.value) window.location.href=this.value;" class="w-full bg-white/[0.04] border border-white/10 rounded-xl py-2 px-2.5 text-xs text-white/80 font-medium outline-none cursor-pointer hover:border-white/20 transition-all">
-          <option value="/app/" >Sevenseed Studio Hub</option><option value="/sevenforce/app/" >Sevenforce AI Workforce</option><option value="/comonk-ai/app/" >Comonk Career AI</option><option value="/avpu/app/" >AVP University</option><option value="/avp-emart/app/" >AVP Emart Price Radar</option><option value="/breakdown-factor/app/" >Breakdown Factor</option><option value="/decode-forest-pharmacy/app/" >Decode Pharmacy</option><option value="/rakshak-ai/app/" selected>Rakshak AI Security</option><option value="/avp-charitable-trust/app/" >AVP Charitable Trust</option>
-        </select>
       </div>
 
       <!-- Navigation Links -->
       <nav class="side-nav flex flex-col gap-1.5 flex-1 overflow-y-auto pr-1">
         
-        <button class="nav-item active" onclick="switchTab('cctv')" id="nav-btn-cctv">
-          <i class="fas fa-video" style="width:18px; text-align:center;"></i>
-          <span class="truncate">Sentinel Vision Streams</span>
-          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Live 4</span>
+        <button class="nav-item active" onclick="switchTab('fir')" id="nav-btn-fir">
+          <i class="fas fa-file-shield" style="width:16px; text-align:center;"></i>
+          <span class="truncate">BNS 2023 Auto-FIR Drafter</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('fir')" id="nav-btn-fir">
-          <i class="fas fa-scale-balanced" style="width:18px; text-align:center;"></i>
-          <span class="truncate">BNS 2024 Legal FIR</span>
-          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Legal</span>
+        <button class="nav-item " onclick="switchTab('sentinel')" id="nav-btn-sentinel">
+          <i class="fas fa-video" style="width:16px; text-align:center;"></i>
+          <span class="truncate">Vision Security Sentinel</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('attendance')" id="nav-btn-attendance">
-          <i class="fas fa-user-check" style="width:18px; text-align:center;"></i>
-          <span class="truncate">Biometric Face Audit</span>
-          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">98.8%</span>
+        <button class="nav-item " onclick="switchTab('cyber')" id="nav-btn-cyber">
+          <i class="fas fa-shield-virus" style="width:16px; text-align:center;"></i>
+          <span class="truncate">Cybercrime Threat Radar</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('incidents')" id="nav-btn-incidents">
-          <i class="fas fa-shield-halved" style="width:18px; text-align:center;"></i>
-          <span class="truncate">Incident Risk Matrix</span>
-          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">Low Risk</span>
+        <button class="nav-item " onclick="switchTab('sos')" id="nav-btn-sos">
+          <i class="fas fa-phone-volume" style="width:16px; text-align:center;"></i>
+          <span class="truncate">Emergency SOS Dispatch</span>
         </button>
         
-        <button class="nav-item " onclick="switchTab('dispatch')" id="nav-btn-dispatch">
-          <i class="fas fa-person-military-pointing" style="width:18px; text-align:center;"></i>
-          <span class="truncate">Guard Patrol GPS Mesh</span>
-          <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-white/80">GPS</span>
+        <button class="nav-item " onclick="switchTab('crosswalk')" id="nav-btn-crosswalk">
+          <i class="fas fa-scale-balanced" style="width:16px; text-align:center;"></i>
+          <span class="truncate">IPC to BNS Legal Crosswalk</span>
         </button>
         
       </nav>
 
       <!-- Sidebar Footer -->
       <div class="side-foot flex flex-col gap-3 pt-4 border-t border-white/10 mt-auto">
-        <div class="flex items-center justify-between text-xs px-2.5 py-2 rounded-xl bg-white/[0.03] border border-white/5">
+        <div class="flex items-center justify-between text-xs px-2 py-1.5 rounded-lg bg-white/[0.03] border border-white/5">
           <span class="inline-flex items-center gap-2 text-white/70 font-mono text-[11px]">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             AI Engine Online
           </span>
-          <span class="text-[10px] font-bold text-emerald-400 font-mono">v4.2-PROD</span>
+          <span class="text-[10px] font-bold text-emerald-400/90 font-mono">v3.4-PROD</span>
         </div>
-        <a class="side-back flex items-center justify-center gap-2 text-xs font-semibold text-white/70 hover:text-white py-2 px-3 rounded-xl border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all no-underline" href="/rakshak-ai/">
+        <a class="side-back flex items-center gap-2 text-xs text-white/60 hover:text-white py-2 px-3 rounded-lg border border-white/10 hover:border-white/20 transition-all no-underline" href="/rakshak-ai/">
           <i class="fas fa-arrow-left text-[11px]"></i>
           <span>Back to Landing Page</span>
         </a>
@@ -125,27 +112,16 @@
               <span>/</span>
               <span class="text-white/80" id="topbar-crumb">Workspace Console</span>
             </div>
-            <h1 class="text-base font-extrabold text-white tracking-tight" id="topbar-title">Active Workstation</h1>
+            <h1 class="text-base font-extrabold text-white tracking-tight" id="topbar-title">Active Dashboard</h1>
           </div>
         </div>
 
-        <div class="flex items-center gap-2 md:gap-3">
-          <button onclick="openAiCopilot()" class="px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 bg-amber-500/15 border border-amber-500/30 hover:bg-amber-500/25 transition-all cursor-pointer flex items-center gap-1.5 shadow-lg shadow-black/20">
-            <i class="fas fa-sparkles text-amber-400"></i>
-            <span>AI Co-Pilot</span>
-          </button>
-
-          <button onclick="openIdeasModal()" class="hidden md:flex px-3 py-1.5 rounded-xl text-xs font-semibold text-white/80 bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer items-center gap-1.5">
-            <i class="fas fa-bookmark text-indigo-400"></i>
-            <span>Vault</span>
-          </button>
-
-          <button id="topbar-auth-btn" onclick="openAuthModal()" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-white/80 bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer flex items-center gap-1.5">
-            <i class="fas fa-user-circle text-slate-400" id="topbar-auth-icon"></i>
-            <span id="topbar-auth-label">Sign In</span>
-          </button>
-
-          <button class="px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-[#ef4444] to-[#f43f5e] hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-black/40 flex items-center gap-1.5" onclick="triggerQuickAction()">
+        <div class="flex items-center gap-3">
+          <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-white/80">
+            <i class="fas fa-shield-halved text-emerald-400 text-xs"></i>
+            <span>Guest Studio Access (Full VIP)</span>
+          </div>
+          <button class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-gradient-to-r from-[var(--p-color)] to-[var(--s-color)] hover:opacity-90 transition-all cursor-pointer shadow-lg shadow-black/40 flex items-center gap-1.5" onclick="triggerQuickAction()">
             <i class="fas fa-bolt text-xs"></i>
             <span>Quick Run</span>
           </button>
@@ -153,325 +129,82 @@
       </header>
 
       <!-- Main Scrollable Panels -->
-      <main class="panels p-6 md:p-10 max-w-[1360px] w-full mx-auto flex-1">
-        <!-- Top KPI Stats Row -->
-        <div class="stats-grid">
-          
-        <div class="stat-card">
-          <div class="stat-num">100%</div>
-          <div class="stat-label">Perimeter Coverage</div>
-          <div class="stat-pill stat-pill-green">
-            <i class="fas fa-arrow-trend-up text-[10px]"></i>
-            <span>32 Edge Vision Nodes</span>
-          </div>
-        </div>
+      <main class="panels p-6 md:p-10 max-w-[1280px] w-full mx-auto flex-1">
         
-        <div class="stat-card">
-          <div class="stat-num">0.4s</div>
-          <div class="stat-label">Intrusion Detection Latency</div>
-          <div class="stat-pill stat-pill-blue">
-            <i class="fas fa-arrow-trend-up text-[10px]"></i>
-            <span>YOLOv10-Security Core</span>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-num">148 / 148</div>
-          <div class="stat-label">Biometric Liveness Validated</div>
-          <div class="stat-pill stat-pill-purple">
-            <i class="fas fa-arrow-trend-up text-[10px]"></i>
-            <span>Zero Deepfake Spoofs</span>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-num">BNS 2024</div>
-          <div class="stat-label">Compliant Legal Formats</div>
-          <div class="stat-pill stat-pill-green">
-            <i class="fas fa-arrow-trend-up text-[10px]"></i>
-            <span>Sec 303, 318, 329 Codified</span>
-          </div>
-        </div>
-        
-        </div>
-
-        <!-- Tab Contents -->
-        
-    <!-- TAB 1: SENTINEL VISION STREAMS -->
-    <div id="tab-cctv" class="tab-content active">
-      <div class="welcome-box mb-8 p-8 rounded-2xl border border-white/10 bg-gradient-to-r from-red-500/15 via-rose-500/10 to-transparent relative overflow-hidden">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+    <div id="tab-fir" class="tab-content active">
+      <div class="tool-card">
+        <div class="tool-header">
           <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-rose-300 text-xs font-bold mb-3">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              Sentinel Vision Core v4.2 Active — Sector 9 Facility
-            </div>
-            <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">AI Vision Security & Incident Intelligence</h2>
-            <p class="text-sm text-slate-300 mt-2 max-w-[680px] leading-relaxed">
-              Real-time multi-camera CCTV analytics with neural object tracking, automatic perimeter intrusion deterrence, biometric facial verification with 3D liveness, and instant Bharatiya Nyaya Sanhita (BNS) 2024 FIR drafting.
-            </p>
-          </div>
-          <div class="flex items-center gap-3">
-            <button onclick="switchTab('fir')" class="run-btn px-5 py-3 rounded-xl text-xs font-bold text-white flex items-center gap-2">
-              <i class="fas fa-file-shield"></i> Draft Legal FIR
-            </button>
-            <button onclick="switchTab('attendance')" class="px-4 py-3 rounded-xl text-xs font-bold text-white/80 bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center gap-2">
-              <i class="fas fa-user-check"></i> Face Audit
-            </button>
+            <div class="tool-title">⚖️ Bharatiya Nyaya Sanhita (BNS 2023) Auto-FIR Drafter</div>
+            <div class="tool-ep">New Criminal Code Official Legal Generator</div>
           </div>
         </div>
-      </div>
-
-      <!-- 4-Camera Multi-View Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div class="p-3.5 rounded-2xl bg-black/60 border border-white/10 relative overflow-hidden">
-          <div class="aspect-video bg-slate-950 rounded-xl relative flex items-center justify-center overflow-hidden border border-white/5">
-            <canvas id="cctv-canvas" width="640" height="360" class="w-full h-full object-cover"></canvas>
-            <div class="absolute top-3 left-3 px-2 py-0.5 rounded bg-red-600/90 text-[10px] font-mono font-bold text-white flex items-center gap-1.5 z-10">
-              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> LIVE: CAM-01 (SYNTHETIC FEED)
-            </div>
-            <button onclick="toggleNightVision()" class="absolute top-3 right-3 text-[10px] text-white/90 font-mono bg-black/70 hover:bg-black px-2 py-1 rounded border border-white/20 transition-all z-10 flex items-center gap-1.5 cursor-pointer">
-              <i class="fas fa-eye text-emerald-400"></i> <span id="nv-label">IR Night Vision: OFF</span>
-            </button>
-            <div class="absolute bottom-3 left-3 text-xs text-white font-mono bg-black/70 px-2 py-1 rounded border border-white/10 z-10">
-              GATE 1: MAIN ENTRY & VEHICLE ANPR
-            </div>
-            <div class="absolute bottom-3 right-3 text-xs text-emerald-400 font-mono bg-emerald-950/70 px-2 py-1 rounded border border-emerald-500/30 z-10">
-              VEHICLE: DL-01-AB-1234 [AUTHORIZED]
-            </div>
-          </div>
-        </div>
-
-        <div class="p-3.5 rounded-2xl bg-black/60 border border-white/10 relative overflow-hidden">
-          <div class="aspect-video bg-slate-950 rounded-xl relative flex items-center justify-center overflow-hidden border border-white/5">
-            <i class="fas fa-server text-4xl text-slate-800"></i>
-            <div class="absolute top-3 left-3 px-2 py-0.5 rounded bg-red-600/90 text-[10px] font-mono font-bold text-white flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> LIVE: CAM-02
-            </div>
-            <div class="absolute top-3 right-3 text-[10px] text-white/70 font-mono bg-black/60 px-2 py-0.5 rounded">60 FPS • 4K ULTRA</div>
-            <div class="absolute bottom-3 left-3 text-xs text-white font-mono bg-black/70 px-2 py-1 rounded border border-white/10">
-              SERVER ROOM & CRYPTO VAULT
-            </div>
-            <div class="absolute bottom-3 right-3 text-xs text-emerald-400 font-mono bg-emerald-950/60 px-2 py-1 rounded border border-emerald-500/30">
-              SECURITY: LOCKED & SEALED
-            </div>
-          </div>
-        </div>
-
-        <div class="p-3.5 rounded-2xl bg-black/60 border border-white/10 relative overflow-hidden">
-          <div class="aspect-video bg-slate-950 rounded-xl relative flex items-center justify-center overflow-hidden border border-white/5">
-            <i class="fas fa-industry text-4xl text-slate-800"></i>
-            <div class="absolute top-3 left-3 px-2 py-0.5 rounded bg-red-600/90 text-[10px] font-mono font-bold text-white flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> LIVE: CAM-03
-            </div>
-            <div class="absolute top-3 right-3 text-[10px] text-white/70 font-mono bg-black/60 px-2 py-0.5 rounded">60 FPS • 4K ULTRA</div>
-            <div class="absolute bottom-3 left-3 text-xs text-white font-mono bg-black/70 px-2 py-1 rounded border border-white/10">
-              CENTRAL WORKSHOP & LOGISTICS
-            </div>
-            <div class="absolute bottom-3 right-3 text-xs text-emerald-400 font-mono bg-emerald-950/60 px-2 py-1 rounded border border-emerald-500/30">
-              PERSONNEL: 12 WORKERS [VERIFIED]
-            </div>
-          </div>
-        </div>
-
-        <div class="p-3.5 rounded-2xl bg-black/60 border border-white/10 relative overflow-hidden">
-          <div class="aspect-video bg-slate-950 rounded-xl relative flex items-center justify-center overflow-hidden border border-white/5">
-            <i class="fas fa-tree text-4xl text-slate-800"></i>
-            <div class="absolute top-3 left-3 px-2 py-0.5 rounded bg-red-600/90 text-[10px] font-mono font-bold text-white flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> LIVE: CAM-04
-            </div>
-            <div class="absolute top-3 right-3 text-[10px] text-white/70 font-mono bg-black/60 px-2 py-0.5 rounded">60 FPS • 4K ULTRA</div>
-            <div class="absolute bottom-3 left-3 text-xs text-white font-mono bg-black/70 px-2 py-1 rounded border border-white/10">
-              NORTH PERIMETER FENCE & TRIPWIRE
-            </div>
-            <div class="absolute bottom-3 right-3 text-xs text-emerald-400 font-mono bg-emerald-950/60 px-2 py-1 rounded border border-emerald-500/30">
-              INFRARED: NO BREACH DETECTED
-            </div>
-          </div>
+        <p class="text-xs text-slate-300 mb-3">Input an incident description to map legacy IPC sections to BNS 2023 and format a police-ready First Information Report.</p>
+        <textarea id="fir-incident" class="w-full p-3.5 rounded-xl bg-black/40 border border-white/10 text-xs text-white h-24 font-mono">Yesterday evening around 8 PM, two unknown individuals on a black motorcycle snatched my gold chain and wallet at gunpoint near Vastrapur Lake.</textarea>
+        <button class="run-btn self-end mt-2" onclick="executeFir()"><i class="fas fa-file-contract text-xs"></i> Draft Formal BNS FIR</button>
+        <div id="fir-result" class="tool-result mt-4" style="display:none;">
+          <pre id="fir-out-text" class="result-box font-mono text-xs"></pre>
         </div>
       </div>
     </div>
 
-    <!-- TAB 2: BNS 2024 LEGAL FIR GENERATOR -->
-    <div id="tab-fir" class="tab-content">
-      <div class="workbench-grid">
-        <div class="workbench-card">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
-              <i class="fas fa-gavel text-rose-400"></i> Bharatiya Nyaya Sanhita (BNS 2024) FIR Generator
-            </h3>
-            <span class="text-xs text-rose-400 font-mono font-bold">Bharatiya Nagarik Suraksha Sanhita</span>
-          </div>
-
-          <div class="space-y-4">
-            <div>
-              <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Incident Offense Category</label>
-              <select id="fir-offense" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-rose-500">
-                <option value="bns_303">Theft / Larceny of Corporate Property (BNS Section 303)</option>
-                <option value="bns_318">Cheating & Cyber Financial Fraud (BNS Section 318)</option>
-                <option value="bns_329">Criminal Trespass & Perimeter Intrusion (BNS Section 329)</option>
-                <option value="bns_351">Criminal Intimidation & Workplace Harassment (BNS Section 351)</option>
-              </select>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Date & Time of Occurrence</label>
-                <input type="text" id="fir-time" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-rose-500" value="2026-09-25 02:40 AM IST"/>
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Place of Occurrence</label>
-                <input type="text" id="fir-place" class="w-full bg-black/40 border border-white/10 rounded-xl py-2 px-3 text-xs text-white outline-none focus:border-rose-500" value="Sector 9 Warehouse, North Yard"/>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-white/70 mb-1.5 uppercase">Incident Statement & Evidence Hashes</label>
-              <textarea id="fir-statement" rows="5" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-slate-200 font-mono outline-none focus:border-rose-500">Unidentified intruder attempted to breach North Perimeter Gate via cutting razor wire. Automated Sentinel Vision CAM-04 triggered spotlight and alarm at 02:41 AM. Suspect fled on unnumbered two-wheeler towards Outer Ring Road. SHA-256 optical hash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.</textarea>
-            </div>
-
-            <button onclick="generateLegalFir()" class="run-btn w-full py-3 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
-              <i class="fas fa-file-contract"></i> Generate Court-Admissible BNS Legal FIR Draft
-            </button>
+    <div id="tab-sentinel" class="tab-content">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div>
+            <div class="tool-title">🛡️ Vision Security Sentinel & Perimeter Surveillance</div>
+            <div class="tool-ep">Real-Time Threat Detection Model</div>
           </div>
         </div>
-
-        <div class="terminal-card">
-          <div class="terminal-header">
-            <div class="terminal-dots">
-              <div class="terminal-dot bg-rose-500"></div>
-              <div class="terminal-dot bg-amber-500"></div>
-              <div class="terminal-dot bg-emerald-500"></div>
-            </div>
-            <span class="text-xs font-mono text-slate-400">bns_legal_fir_draft.txt</span>
-            <button onclick="copyResult('fir-console')" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer">
-              <i class="fas fa-copy"></i> Copy
-            </button>
-          </div>
-          <div class="terminal-body" id="fir-console">
-[LEGAL DRAFTING CONSOLE] Click 'Generate Court-Admissible BNS Legal FIR Draft' to structure incident facts under Bharatiya Nagarik Suraksha Sanhita (BNSS) Section 173 for police submission.
-          </div>
+        <button class="run-btn" onclick="executeSentinel()"><i class="fas fa-video text-xs"></i> Run Perimeter Vision Scan</button>
+        <div id="sentinel-result" class="tool-result mt-4" style="display:none;">
+          <pre id="sentinel-out-text" class="result-box font-mono text-xs"></pre>
         </div>
       </div>
     </div>
 
-    <!-- TAB 3: BIOMETRIC FACE AUDIT -->
-    <div id="tab-attendance" class="tab-content">
-      <div class="workbench-grid">
-        <div class="workbench-card">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
-              <i class="fas fa-id-card-clip text-rose-400"></i> Facial Recognition Roster (Today's Shift)
-            </h3>
-            <span class="text-xs text-emerald-400 font-mono font-bold">142 / 148 Checked In</span>
-          </div>
-
-          <div class="space-y-3">
-            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 font-black text-xs grid place-items-center">VK</div>
-                <div>
-                  <div class="text-xs font-bold text-white">Vikram Kulkarni (Chief Security Officer)</div>
-                  <div class="text-[11px] text-slate-400">Badge #SEC-01 • In: 07:45 AM • Gate 1 Face Scanner</div>
-                </div>
-              </div>
-              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-mono font-bold">Verified (99.8% match)</span>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 font-black text-xs grid place-items-center">RS</div>
-                <div>
-                  <div class="text-xs font-bold text-white">Ritu Sharma (Operations Lead)</div>
-                  <div class="text-[11px] text-slate-400">Badge #OPS-14 • In: 08:12 AM • Turnstile B</div>
-                </div>
-              </div>
-              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-mono font-bold">Verified (99.4% match)</span>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 font-black text-xs grid place-items-center">AM</div>
-                <div>
-                  <div class="text-xs font-bold text-white">Anand Mishra (Warehouse Incharge)</div>
-                  <div class="text-[11px] text-slate-400">Badge #WH-09 • In: 08:30 AM • Loading Bay Camera</div>
-                </div>
-              </div>
-              <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-mono font-bold">Verified (99.6% match)</span>
-            </div>
+    <div id="tab-cyber" class="tab-content">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div>
+            <div class="tool-title">🚨 Cybercrime Threat & Phishing Radar</div>
+            <div class="tool-ep">Direct 1930 Portal Guidance</div>
           </div>
         </div>
-
-        <div class="workbench-card">
-          <h3 class="text-base font-extrabold text-white mb-4 flex items-center gap-2">
-            <i class="fas fa-shield-virus text-rose-400"></i> Anti-Spoofing Liveness Diagnostics
-          </h3>
-          <div class="space-y-3 text-xs">
-            <div class="p-3 rounded-lg bg-emerald-500/10 text-emerald-300 flex items-center gap-2">
-              <i class="fas fa-check-circle"></i>
-              <span>3D Flash Reflection Liveness: Active (Zero photo/screen bypasses)</span>
-            </div>
-            <div class="p-3 rounded-lg bg-emerald-500/10 text-emerald-300 flex items-center gap-2">
-              <i class="fas fa-check-circle"></i>
-              <span>Infrared Depth Map Check: 100% Pass Rate</span>
-            </div>
-            <div class="p-3 rounded-lg bg-emerald-500/10 text-emerald-300 flex items-center gap-2">
-              <i class="fas fa-check-circle"></i>
-              <span>Blink & Micro-tremor Validation: Active</span>
-            </div>
-          </div>
+        <input id="cyber-text" class="w-full p-3.5 rounded-xl bg-black/40 border border-white/10 text-xs text-white mb-3" value="Dear Customer, your SBI YONO account will be blocked today. Click http://sbi-kyc-update.apk to update PAN immediately."/>
+        <button class="run-btn" onclick="executeCyber()"><i class="fas fa-bug text-xs"></i> Verify Scam & Generate Complaint</button>
+        <div id="cyber-result" class="tool-result mt-4" style="display:none;">
+          <pre id="cyber-out-text" class="result-box font-mono text-xs"></pre>
         </div>
       </div>
     </div>
 
-    <!-- TAB 4: INCIDENT RISK MATRIX -->
-    <div id="tab-incidents" class="tab-content">
-      <div class="workbench-card">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-base font-extrabold text-white flex items-center gap-2">
-            <i class="fas fa-chart-pie text-rose-400"></i> Facility Security Threat Assessment
-          </h3>
-          <span class="text-xs text-emerald-400 font-mono font-bold">DEFCON 4 — LOW THREAT LEVEL</span>
+    <div id="tab-sos" class="tab-content">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div>
+            <div class="tool-title">🚨 Emergency 112 / SOS Geo-Dispatch</div>
+            <div class="tool-ep">RapidSOS Integrated Standard</div>
+          </div>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
-            <div class="text-xs font-bold text-emerald-400 mb-1">PERIMETER BREACH RISK</div>
-            <div class="text-sm font-bold text-white mb-2">0.2% (Very Low)</div>
-            <p class="text-[11px] text-slate-300">Infrared sensors and PTZ cameras patrolling 360-degree perimeter.</p>
-          </div>
-
-          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
-            <div class="text-xs font-bold text-emerald-400 mb-1">INTERNAL ACCESS AUDIT</div>
-            <div class="text-sm font-bold text-white mb-2">0 Unauthorized Swipes</div>
-            <p class="text-[11px] text-slate-300">All server room and vault entries matched biometric identities.</p>
-          </div>
-
-          <div class="p-4 rounded-xl bg-white/[0.03] border border-white/10">
-            <div class="text-xs font-bold text-emerald-400 mb-1">EMERGENCY RESPONSE TIME</div>
-            <div class="text-sm font-bold text-white mb-2">42 Seconds Average</div>
-            <p class="text-[11px] text-slate-300">On-site rapid response armed guards stationed at Gate 1 and Gate 3.</p>
-          </div>
+        <button class="run-btn" onclick="executeSos()"><i class="fas fa-location-crosshairs text-xs"></i> Simulate SOS Emergency Dispatch</button>
+        <div id="sos-result" class="tool-result mt-4" style="display:none;">
+          <pre id="sos-out-text" class="result-box font-mono text-xs"></pre>
         </div>
       </div>
     </div>
 
-    <!-- TAB 5: GUARD PATROL GPS MESH -->
-    <div id="tab-dispatch" class="tab-content">
-      <div class="workbench-card">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-base font-extrabold text-white flex items-center gap-2">
-            <i class="fas fa-location-crosshairs text-rose-400"></i> Guard Patrol GPS Mesh & RFID Checkpoints
-          </h3>
-          <span class="text-xs text-emerald-400 font-mono font-bold">Patrol Route A Active</span>
+    <div id="tab-crosswalk" class="tab-content">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div>
+            <div class="tool-title">📋 IPC to BNS Legal Code Crosswalk</div>
+            <div class="tool-ep">Instant Section Conversion</div>
+          </div>
         </div>
-
-        <div class="p-4 rounded-xl bg-black/40 border border-white/10 space-y-3 font-mono text-xs">
-          <div class="text-slate-300">PATROL SQUAD: Guard Alpha (Officer S. Rao) • GPS Tracked</div>
-          <div class="text-emerald-400">✓ CHECKPOINT 1: North Substation RFID Tag - Scanned at 02:15 AM</div>
-          <div class="text-emerald-400">✓ CHECKPOINT 2: West Logistics Gate RFID Tag - Scanned at 02:30 AM</div>
-          <div class="text-sky-400">▶ CHECKPOINT 3: Diesel Generator Yard - Due in 8 Minutes</div>
-          <div class="text-slate-400 pt-2 border-t border-white/10">SOS PANIC BUTTON STATUS: Operational & Test Pings Acknowledged</div>
+        <button class="run-btn" onclick="executeCrosswalk()"><i class="fas fa-book text-xs"></i> View Key Criminal Code Mappings</button>
+        <div id="crosswalk-result" class="tool-result mt-4" style="display:none;">
+          <pre id="crosswalk-out-text" class="result-box font-mono text-xs"></pre>
         </div>
       </div>
     </div>
@@ -480,596 +213,185 @@
     </div>
   </div>
 
-  <!-- Slide-Over AI Co-Pilot Drawer -->
-  <div id="copilot-backdrop" class="drawer-backdrop" onclick="closeAiCopilot()"></div>
-  <aside id="copilot-drawer" class="ai-copilot-drawer">
-    <div class="p-4 border-b border-white/10 flex items-center justify-between bg-black/40">
-      <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
-        <h3 class="text-sm font-extrabold text-white flex items-center gap-1.5">
-          <i class="fas fa-wand-magic-sparkles text-amber-400"></i>
-          Studio AI Co-Pilot
-        </h3>
-      </div>
-      <button onclick="closeAiCopilot()" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white grid place-items-center text-xs cursor-pointer">
-        <i class="fas fa-xmark text-sm"></i>
-      </button>
-    </div>
-
-    <div class="p-4 border-b border-white/5 bg-white/[0.02]">
-      <div class="flex items-center justify-between text-[11px] text-slate-400 mb-2 font-mono">
-        <span>GATEWAY: Groq LLaMA 3.3 70B & Gemini</span>
-        <span class="text-emerald-400 font-bold">ONLINE (34ms)</span>
-      </div>
-      <div class="flex flex-wrap gap-1.5">
-        <button onclick="runAiCopilot('swot')" class="filter-tag">📊 SWOT</button>
-        <button onclick="runAiCopilot('competitor')" class="filter-tag">⚔️ Competitor</button>
-        <button onclick="runAiCopilot('growth')" class="filter-tag">🚀 Growth</button>
-        <button onclick="runAiCopilot('unit')" class="filter-tag">💰 Unit Econ</button>
-        <button onclick="runAiCopilot('prd')" class="filter-tag">📑 Tech PRD</button>
-      </div>
-    </div>
-
-    <div class="flex-1 p-4 overflow-y-auto flex flex-col gap-3">
-      <div class="input-group">
-        <label class="input-label">Custom Venture Instruction / Prompt</label>
-        <textarea id="copilot-input" rows="3" class="input-field" placeholder="Ask AI Co-Pilot to synthesize strategy, analyze competitors, or draft investor memos for Rakshak AI..."></textarea>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <button onclick="runAiCopilot('custom')" class="run-btn flex-1 py-2.5 text-xs font-bold flex items-center justify-center gap-1.5">
-          <i class="fas fa-bolt"></i> Run AI Synthesis
-        </button>
-      </div>
-
-      <div class="terminal-card flex-1 min-h-[260px] flex flex-col mt-2">
-        <div class="terminal-header">
-          <span class="text-xs font-mono text-amber-300">ai_copilot.stdout</span>
-          <div class="flex items-center gap-2">
-            <button onclick="copyResult('copilot-output')" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer">
-              <i class="fas fa-copy"></i> Copy
-            </button>
-          </div>
-        </div>
-        <div id="copilot-output" class="terminal-body flex-1 overflow-y-auto font-mono text-xs text-slate-200">
-[AI CO-PILOT STANDBY] Select an analysis chip above or type custom directives to invoke the live LangGraph AI engine.
-        </div>
-      </div>
-    </div>
-
-    <div class="p-3 border-t border-white/10 bg-black/60 flex items-center gap-2">
-      <button onclick="downloadCopilotDocx()" class="flex-1 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white text-xs font-bold flex items-center justify-center gap-1.5">
-        <i class="fas fa-download text-indigo-400"></i> Export (.docx)
-      </button>
-      <button onclick="saveCopilotToVault()" class="flex-1 py-2 rounded-xl bg-indigo-500/20 border border-indigo-500/40 hover:bg-indigo-500/30 text-indigo-300 text-xs font-bold flex items-center justify-center gap-1.5">
-        <i class="fas fa-bookmark"></i> Save to Vault
-      </button>
-    </div>
-  </aside>
-
-  <!-- Founder Auth Modal -->
-  <div id="auth-modal" class="portal-modal-backdrop" onclick="if(event.target===this) closeAuthModal()">
-    <div class="portal-modal p-6">
-      <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">🌿</span>
-          <h3 class="text-base font-extrabold text-white" id="auth-modal-title">Founder Authentication</h3>
-        </div>
-        <button onclick="closeAuthModal()" class="text-white/60 hover:text-white p-1">
-          <i class="fas fa-xmark text-lg"></i>
-        </button>
-      </div>
-
-      <div class="flex border-b border-white/10 mb-4" id="auth-tabs">
-        <button id="auth-tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2 text-xs font-bold text-indigo-400 border-b-2 border-indigo-400">Sign In</button>
-        <button id="auth-tab-signup" onclick="switchAuthTab('signup')" class="flex-1 py-2 text-xs font-bold text-white/50 hover:text-white">Register Studio Account</button>
-      </div>
-
-      <div id="auth-form-signup-name" class="input-group" style="display:none;">
-        <label class="input-label">Founder Full Name</label>
-        <input id="auth-name" type="text" class="input-field" placeholder="e.g. Kunal Patel"/>
-      </div>
-
-      <div class="input-group">
-        <label class="input-label">Corporate / Founder Email</label>
-        <input id="auth-email" type="email" class="input-field" placeholder="founder@sevenseed.in"/>
-      </div>
-
-      <div class="input-group">
-        <label class="input-label">Password</label>
-        <input id="auth-password" type="password" class="input-field" placeholder="••••••••••••"/>
-      </div>
-
-      <div id="auth-status" class="text-xs mb-3 font-mono" style="display:none;"></div>
-
-      <div class="flex items-center gap-3 mt-4">
-        <button id="auth-submit-btn" onclick="handleAuthSubmit()" class="run-btn w-full py-3 text-xs font-bold flex items-center justify-center gap-2">
-          <i class="fas fa-lock"></i> <span id="auth-btn-label">Sign In to Workstation</span>
-        </button>
-      </div>
-    </div>
+  <!-- Floating Cold-Start Status Pill -->
+  <div id="cs-pill" style="display:none; position:fixed; bottom:20px; right:20px; z-index:99999; padding:8px 16px; border-radius:999px; background:rgba(15,23,42,0.9); border:1px solid rgba(245,158,11,0.4); color:#f8fafc; font-size:12px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,0.5); backdrop-filter:blur(16px); align-items:center; gap:8px;">
+    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+    <span id="cs-pill-msg">Connecting AI Backend...</span>
   </div>
 
-  <!-- Ideas & Insights Vault Modal -->
-  <div id="ideas-modal" class="portal-modal-backdrop" onclick="if(event.target===this) closeIdeasModal()">
-    <div class="portal-modal p-6">
-      <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
-        <div class="flex items-center gap-2">
-          <i class="fas fa-bookmark text-indigo-400"></i>
-          <h3 class="text-base font-extrabold text-white">Founder Idea & Milestone Vault</h3>
-        </div>
-        <button onclick="closeIdeasModal()" class="text-white/60 hover:text-white p-1">
-          <i class="fas fa-xmark text-lg"></i>
-        </button>
-      </div>
-
-      <div class="p-3 bg-white/[0.02] border border-white/5 rounded-xl mb-4">
-        <div class="text-xs font-bold text-white mb-2">Store New Venture Idea or Research Brief</div>
-        <div class="flex gap-2 mb-2">
-          <input id="new-idea-title" type="text" placeholder="Title (e.g. BioBERT Edge Model)" class="input-field flex-1 py-1.5 text-xs"/>
-          <select id="new-idea-sector" class="bg-black/50 border border-white/10 rounded-xl px-2 text-xs text-white">
-            <option value="AI Workforce">AI Workforce</option>
-            <option value="EdTech">EdTech</option>
-            <option value="HealthTech">HealthTech</option>
-            <option value="Vision AI">Vision AI</option>
-            <option value="FinTech">FinTech</option>
-          </select>
-        </div>
-        <textarea id="new-idea-notes" rows="2" placeholder="Brief thesis, TAM estimate, or key architecture..." class="input-field mb-2 text-xs"></textarea>
-        <button onclick="addIdeaToVault()" class="run-btn w-full py-2 text-xs font-bold">
-          <i class="fas fa-plus"></i> Save to SQLite & Cloud Vault
-        </button>
-      </div>
-
-      <div class="text-xs font-bold text-white/70 mb-2">Saved Insights & Research Items</div>
-      <div id="vault-list" class="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
-        <!-- Rendered dynamically -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Global Script -->
   <script>
     function toggleSidebar() {
-      const sb = document.getElementById('main-sidebar');
-      const ov = document.getElementById('mobile-sidebar-overlay');
-      if (sb.classList.contains('-translate-x-full')) {
+      var sb = document.getElementById('main-sidebar');
+      var ov = document.getElementById('mobile-sidebar-overlay');
+      if (!sb) return;
+      var isClosed = sb.classList.contains('-translate-x-full');
+      if (isClosed) {
         sb.classList.remove('-translate-x-full');
         sb.classList.add('translate-x-0');
-        ov.style.display = 'block';
+        if (ov) ov.style.display = 'block';
+        document.body.style.overflow = 'hidden';
       } else {
         sb.classList.add('-translate-x-full');
         sb.classList.remove('translate-x-0');
-        ov.style.display = 'none';
+        if (ov) ov.style.display = 'none';
+        document.body.style.overflow = '';
       }
     }
 
     function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-
-      const target = document.getElementById('tab-' + tabId);
+      document.querySelectorAll('.tab-content').forEach(function(el) {
+        el.classList.remove('active');
+      });
+      var target = document.getElementById('tab-' + tabId);
       if (target) target.classList.add('active');
 
-      const btn = document.getElementById('nav-btn-' + tabId);
+      document.querySelectorAll('.nav-item').forEach(function(el) {
+        el.classList.remove('active');
+      });
+      var btn = document.getElementById('nav-btn-' + tabId);
       if (btn) btn.classList.add('active');
 
-      const crumb = document.getElementById('topbar-crumb');
-      if (crumb && btn) {
-        const span = btn.querySelector('span');
-        if (span) crumb.textContent = span.textContent;
+      var titleElem = document.getElementById('topbar-title');
+      var crumbElem = document.getElementById('topbar-crumb');
+      if (btn && titleElem) {
+        var txt = btn.querySelector('.truncate') ? btn.querySelector('.truncate').textContent : btn.textContent;
+        titleElem.textContent = txt.trim();
+        if (crumbElem) crumbElem.textContent = txt.trim();
       }
-      window.location.hash = tabId;
+
+      if (window.innerWidth < 768) {
+        toggleSidebar();
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      if (window.innerWidth < 768) toggleSidebar();
     }
 
-    function copyResult(elementId) {
-      const el = document.getElementById(elementId);
-      if (!el) return;
-      navigator.clipboard.writeText(el.innerText || el.textContent);
-      showNotification('Output copied to clipboard!');
+    function copyResult(elemId) {
+      var target = document.getElementById(elemId);
+      if (!target) return;
+      var text = target.innerText || target.textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        alert('Copied output to clipboard!');
+      }).catch(function() {
+        alert('Output ready. (Clipboard access restricted)');
+      });
     }
 
-    function showNotification(msg) {
-      const notif = document.createElement('div');
-      notif.className = 'fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs shadow-2xl flex items-center gap-2';
-      notif.innerHTML = '<i class="fas fa-check"></i> ' + msg;
-      document.body.appendChild(notif);
-      setTimeout(() => notif.remove(), 2500);
-    }
+    // Cold-start background poller
+    (function() {
+      var pathPrefix = window.location.pathname.split('/')[1] || '';
+      if (!pathPrefix || pathPrefix === 'app') return;
+      var healthUrl = '/' + pathPrefix + '/api/health';
+      var pill = document.getElementById('cs-pill');
+      var attempts = 0;
+      var maxAttempts = 12;
 
-    function triggerQuickAction() {
-      const activeTab = document.querySelector('.tab-content.active');
-      if (!activeTab) return;
-      const firstBtn = activeTab.querySelector('.run-btn');
-      if (firstBtn) firstBtn.click();
-    }
-
-    /* AI Co-Pilot Drawer */
-    function openAiCopilot() {
-      document.getElementById('copilot-drawer').classList.add('open');
-      document.getElementById('copilot-backdrop').classList.add('open');
-    }
-    function closeAiCopilot() {
-      document.getElementById('copilot-drawer').classList.remove('open');
-      document.getElementById('copilot-backdrop').classList.remove('open');
-    }
-
-    async function runAiCopilot(mode) {
-      const out = document.getElementById('copilot-output');
-      const input = document.getElementById('copilot-input').value;
-      const venture = "Rakshak AI";
-
-      out.innerHTML = '[AI CO-PILOT] Dispatching request to LangGraph orchestrator...\n>> Analysis mode: ' + mode.toUpperCase() + '\n>> Target venture: ' + venture + '\n>> Querying ChromaDB embeddings & Groq model...';
-
-      // Try calling live backend endpoints
-      try {
-        let endpoint = '/api/agent/run';
-        let body = { prompt: 'Analyze ' + mode + ' for ' + venture + '. User notes: ' + input };
-        if (mode === 'swot') {
-          endpoint = '/api/tools/swot';
-          body = { idea: venture + ' - AI Venture Workstation', sector: 'Artificial Intelligence' };
-        } else if (mode === 'competitor') {
-          endpoint = '/api/tools/competitor';
-          body = { idea: venture, competitors: 'Devin, Harvey, Cursor, Levels.fyi' };
-        }
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-        if (res.ok) {
-          const data = await res.json();
-          out.innerHTML = '========================================================================\nAI CO-PILOT ANALYSIS: ' + mode.toUpperCase() + ' FOR ' + venture.toUpperCase() + '\n========================================================================\n' + (data.result || JSON.stringify(data, null, 2));
-          return;
-        }
-      } catch (e) {}
-
-      setTimeout(() => {
-        let report = "";
-        if (mode === 'swot') {
-          report = '========================================================================\nSWOT STRATEGIC MATRIX: ' + venture.toUpperCase() + '\n========================================================================\n1. STRENGTHS\n• Zero-margin BYOK architecture eliminates gross margin compression.\n• Consolidated ChromaDB embeddings cross-pollinate vector intelligence across ventures.\n• Sub-second inference latency via edge-deployed FastAPI and Groq hardware.\n\n2. WEAKNESSES\n• High reliance on initial developer onboarding curve for domain workstations.\n• Requires sustained compute credits for high-throughput batch OCR and video frames.\n\n3. OPPORTUNITIES\n• Expansion into Tier-2/3 Indian regional languages (Hindi, Gujarati, Tamil, Telugu).\n• Government integrations via PMBJP Jan Aushadhi and State Police CCTNS networks.\n\n4. THREATS\n• Foundation model commoditization (mitigated by proprietary local workflows).\n• Regulatory compliance updates under BNS 2024 and CDSCO digital pharma laws.';
-        } else if (mode === 'competitor') {
-          report = '========================================================================\nCOMPETITIVE TEARDOWN & MOAT: ' + venture.toUpperCase() + '\n========================================================================\n• Primary Competitors: US-centric legacy incumbents ($20-50/mo per seat).\n• Sevenseed Asymmetry: 100% Zero-Margin BYOK + Indian market regulatory compliance.\n• Margin Advantage: 82% lower total cost of ownership (TCO) for enterprises.\n• Local Moat: Hardwired BNS 2024 penal code, CPWD construction schedules, and PMBJP pharma.';
-        } else if (mode === 'growth') {
-          report = '========================================================================\n90-DAY GROWTH SPRINT STRATEGY: ' + venture.toUpperCase() + '\n========================================================================\n• Sprint 1 (Days 1-30): Launch 50 enterprise pilots with zero-risk SLA guarantee.\n• Sprint 2 (Days 31-60): Product-led viral loop with interactive calculators and shareable memos.\n• Sprint 3 (Days 61-90): Scale enterprise ACV to ₹1.5 Lakhs with dedicated account executives.';
-        } else {
-          report = '========================================================================\nSTRATEGIC CO-PILOT MEMO: ' + venture.toUpperCase() + '\n========================================================================\nDirectives: ' + (input || 'Standard Venture Audit') + '\nStatus: AUDIT PASSED (High Capital Efficiency)\n\nKey Architecture:\n• Frontend: Dense Aceternity Glassmorphism + TailwindCSS.\n• Backend: Distributed FastAPI with LangGraph multi-agent supervisors.\n• Storage: High-concurrency PostgreSQL / SQLite with async WAL mode.';
-        }
-        out.innerHTML = report;
-      }, 450);
-    }
-
-    function downloadCopilotDocx() {
-      const text = document.getElementById('copilot-output').innerText || document.getElementById('copilot-output').textContent;
-      const blob = new Blob([text], { type: 'text/plain' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'Rakshak AI_AI_Memo_' + Date.now() + '.txt';
-      a.click();
-      showNotification('Report exported successfully!');
-    }
-
-    function saveCopilotToVault() {
-      const text = document.getElementById('copilot-output').innerText || document.getElementById('copilot-output').textContent;
-      const title = "Rakshak AI AI Synthesis";
-      let vault = JSON.parse(localStorage.getItem('sevenseed_vault') || '[]');
-      vault.unshift({ title, notes: text.slice(0, 160) + '...', date: new Date().toLocaleDateString(), sector: 'AI Venture' });
-      localStorage.setItem('sevenseed_vault', JSON.stringify(vault));
-      showNotification('Saved to Founder Vault!');
-    }
-
-    /* Founder Auth Modal */
-    let authMode = 'login';
-    function openAuthModal() {
-      const user = JSON.parse(localStorage.getItem('sevenseed_user') || 'null');
-      if (user) {
-        if (confirm('Logged in as ' + user.name + ' (' + user.email + '). Sign out?')) {
-          doAuthLogout();
-        }
-        return;
+      function check() {
+        attempts++;
+        fetch(healthUrl, { method: 'GET', cache: 'no-store' })
+          .then(function(res) {
+            if (res.ok) {
+              if (pill) {
+                pill.style.display = 'inline-flex';
+                pill.style.borderColor = 'rgba(16,185,129,0.4)';
+                pill.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span> <span>AI Microservice Connected</span>';
+                setTimeout(function() { pill.style.display = 'none'; }, 3000);
+              }
+            } else if (attempts < maxAttempts) {
+              if (pill) { pill.style.display = 'inline-flex'; }
+              setTimeout(check, 3000);
+            }
+          })
+          .catch(function() {
+            if (attempts < maxAttempts) {
+              if (pill) { pill.style.display = 'inline-flex'; }
+              setTimeout(check, 3000);
+            } else if (pill) {
+              pill.style.display = 'none';
+            }
+          });
       }
-      document.getElementById('auth-modal').classList.add('open');
-    }
-    function closeAuthModal() {
-      document.getElementById('auth-modal').classList.remove('open');
-    }
-    function switchAuthTab(mode) {
-      authMode = mode;
-      const tabL = document.getElementById('auth-tab-login');
-      const tabS = document.getElementById('auth-tab-signup');
-      const nameFld = document.getElementById('auth-form-signup-name');
-      const btnLbl = document.getElementById('auth-btn-label');
-      if (mode === 'signup') {
-        tabS.className = 'flex-1 py-2 text-xs font-bold text-indigo-400 border-b-2 border-indigo-400';
-        tabL.className = 'flex-1 py-2 text-xs font-bold text-white/50 hover:text-white';
-        nameFld.style.display = 'block';
-        btnLbl.textContent = 'Create Studio Account';
-      } else {
-        tabL.className = 'flex-1 py-2 text-xs font-bold text-indigo-400 border-b-2 border-indigo-400';
-        tabS.className = 'flex-1 py-2 text-xs font-bold text-white/50 hover:text-white';
-        nameFld.style.display = 'none';
-        btnLbl.textContent = 'Sign In to Workstation';
-      }
-    }
-
-    async function handleAuthSubmit() {
-      const email = document.getElementById('auth-email').value;
-      const password = document.getElementById('auth-password').value;
-      const name = document.getElementById('auth-name').value;
-      const statusEl = document.getElementById('auth-status');
-      statusEl.style.display = 'block';
-      statusEl.innerHTML = '<span class="text-indigo-400"><i class="fas fa-spinner fa-spin"></i> Authenticating with Sevenseed Cloud...</span>';
-
-      try {
-        const url = authMode === 'signup' ? '/api/auth/signup' : '/api/auth/login';
-        const body = authMode === 'signup' ? { name, email, password } : { email, password };
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-        const data = await res.json();
-        if (data.token) {
-          localStorage.setItem('sevenseed_token', data.token);
-          localStorage.setItem('sevenseed_user', JSON.stringify(data.user));
-          checkAuthSession();
-          closeAuthModal();
-          showNotification('Welcome back, ' + data.user.name + '!');
-          return;
-        } else if (data.error) {
-          statusEl.innerHTML = '<span class="text-rose-400">' + data.error + '</span>';
-          return;
-        }
-      } catch (e) {}
-
-      // Offline simulation fallback
-      const mockUser = { name: name || 'Founder VIP', email: email || 'founder@sevenseed.in' };
-      localStorage.setItem('sevenseed_token', 'offline-token-' + Date.now());
-      localStorage.setItem('sevenseed_user', JSON.stringify(mockUser));
-      checkAuthSession();
-      closeAuthModal();
-      showNotification('Signed in as ' + mockUser.name + '!');
-    }
-
-    function doAuthLogout() {
-      localStorage.removeItem('sevenseed_token');
-      localStorage.removeItem('sevenseed_user');
-      checkAuthSession();
-      showNotification('Signed out.');
-    }
-
-    function checkAuthSession() {
-      const user = JSON.parse(localStorage.getItem('sevenseed_user') || 'null');
-      const label = document.getElementById('topbar-auth-label');
-      const icon = document.getElementById('topbar-auth-icon');
-      if (user && label) {
-        label.textContent = user.name.split(' ')[0];
-        if (icon) icon.className = 'fas fa-check-circle text-emerald-400';
-      } else if (label) {
-        label.textContent = 'Sign In';
-        if (icon) icon.className = 'fas fa-user-circle text-slate-400';
-      }
-    }
-
-    /* Ideas & Vault Modal */
-    function openIdeasModal() {
-      document.getElementById('ideas-modal').classList.add('open');
-      loadIdeasVault();
-    }
-    function closeIdeasModal() {
-      document.getElementById('ideas-modal').classList.remove('open');
-    }
-    function loadIdeasVault() {
-      const container = document.getElementById('vault-list');
-      const vault = JSON.parse(localStorage.getItem('sevenseed_vault') || '[]');
-      if (vault.length === 0) {
-        vault.push(
-          { title: 'Autonomous Raft Consensus Lab', notes: 'Semester VI distributed systems lab syllabus.', date: '2026-09-25', sector: 'EdTech' },
-          { title: 'Jan Aushadhi PMBJP Price Scraper', notes: 'Comparing 14,800 drug formulations against MRP.', date: '2026-09-24', sector: 'HealthTech' },
-          { title: 'Sentinel Vision CCTV ANPR', notes: 'Vehicle license plate OCR at 60 FPS edge latency.', date: '2026-09-23', sector: 'Vision AI' }
-        );
-        localStorage.setItem('sevenseed_vault', JSON.stringify(vault));
-      }
-      container.innerHTML = vault.map(function(v, i) {
-        return '<div class="p-3 rounded-xl bg-white/[0.03] border border-white/5 flex items-start justify-between gap-3">' +
-          '<div>' +
-            '<div class="text-xs font-bold text-white flex items-center gap-2">' +
-              '<span>' + v.title + '</span>' +
-              '<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300">' + (v.sector || 'General') + '</span>' +
-            '</div>' +
-            '<p class="text-[11px] text-slate-300 mt-1">' + v.notes + '</p>' +
-            '<div class="text-[10px] text-slate-500 mt-1 font-mono">' + v.date + '</div>' +
-          '</div>' +
-          '<button onclick="deleteVaultItem(' + i + ')" class="text-slate-500 hover:text-rose-400 p-1 text-xs">' +
-            '<i class="fas fa-trash"></i>' +
-          '</button>' +
-        '</div>';
-      }).join('');
-    }er:text-rose-400 p-1 text-xs">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-      `).join('');
-    }
-
-    function addIdeaToVault() {
-      const title = document.getElementById('new-idea-title').value;
-      const sector = document.getElementById('new-idea-sector').value;
-      const notes = document.getElementById('new-idea-notes').value;
-      if (!title) return;
-
-      let vault = JSON.parse(localStorage.getItem('sevenseed_vault') || '[]');
-      vault.unshift({ title, sector, notes, date: new Date().toLocaleDateString() });
-      localStorage.setItem('sevenseed_vault', JSON.stringify(vault));
-      document.getElementById('new-idea-title').value = '';
-      document.getElementById('new-idea-notes').value = '';
-      loadIdeasVault();
-      showNotification('Saved to Founder Vault!');
-    }
-
-    function deleteVaultItem(idx) {
-      let vault = JSON.parse(localStorage.getItem('sevenseed_vault') || '[]');
-      vault.splice(idx, 1);
-      localStorage.setItem('sevenseed_vault', JSON.stringify(vault));
-      loadIdeasVault();
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      checkAuthSession();
-      const hash = window.location.hash.replace('#', '');
-      if (hash && document.getElementById('tab-' + hash)) {
-        switchTab(hash);
-      }
-    });
+      setTimeout(check, 1000);
+    })();
 
     
-    let nightVision = false;
-    let cctvAnimId = null;
-
-    function toggleNightVision() {
-      nightVision = !nightVision;
-      const lbl = document.getElementById('nv-label');
-      if (lbl) lbl.textContent = nightVision ? 'IR Night Vision: ON' : 'IR Night Vision: OFF';
+    function triggerQuickAction() {
+      switchTab('fir');
+      executeFir();
     }
 
-    function initCctvCanvas() {
-      const canvas = document.getElementById('cctv-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      let t = 0;
+    function executeFir() {
+      var res = document.getElementById('fir-result');
+      var out = document.getElementById('fir-out-text');
+      res.style.display = 'block';
+      out.textContent = `=== FORMAL FIRST INFORMATION REPORT (FIR DRAFT) ===
+Jurisdiction: Vastrapur Police Station, Ahmedabad Commissionerate
+Applicable Legal Code: Bharatiya Nyaya Sanhita, 2023 (BNS)
 
-      function render() {
-        t += 0.04;
-        const w = canvas.width;
-        const h = canvas.height;
+Mapped Sections:
+1. BNS Section 309(4) — Robbery with attempt to cause death or grievous hurt (Legacy IPC 392/397)
+2. BNS Section 311 — Snatching (Newly introduced specific offense in BNS)
+3. Arms Act, 1959 — Section 25(1B)(a) (Unlawful possession & brandishing of firearm)
 
-        // Background
-        if (nightVision) {
-          ctx.fillStyle = '#061a0e';
-          ctx.fillRect(0, 0, w, h);
-          // Green phosphorescent noise grid
-          ctx.strokeStyle = 'rgba(34, 197, 94, 0.12)';
-          ctx.lineWidth = 1;
-          for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-          for (let y = 0; y < h; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
-        } else {
-          ctx.fillStyle = '#0a0e1a';
-          ctx.fillRect(0, 0, w, h);
-          // Dark surveillance grid
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
-          ctx.lineWidth = 1;
-          for (let x = 0; x < w; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-          for (let y = 0; y < h; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
-        }
+FIR Synopsis:
+On 24-09-2026 at approx 20:00 hrs, the complainant was confronted by two unidentified male assailants riding an unnumbered motorcycle. The pillion rider displayed an illegal firearm, causing imminent threat to life, and forcibly snatched complainant's gold chain (approx 22g) and leather wallet.
 
-        // Animated Vehicle / Pedestrian Tracking Target 1
-        const x1 = (Math.sin(t * 0.7) * 0.35 + 0.5) * w;
-        const y1 = (Math.cos(t * 0.5) * 0.2 + 0.55) * h;
-        const bw1 = 90;
-        const bh1 = 70;
-
-        ctx.strokeStyle = nightVision ? '#22c55e' : '#38bdf8';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(x1 - bw1 / 2, y1 - bh1 / 2, bw1, bh1);
-
-        // Corner ticks
-        ctx.fillStyle = nightVision ? '#22c55e' : '#38bdf8';
-        ctx.fillRect(x1 - bw1 / 2 - 2, y1 - bh1 / 2 - 2, 8, 3);
-        ctx.fillRect(x1 - bw1 / 2 - 2, y1 - bh1 / 2 - 2, 3, 8);
-        ctx.fillRect(x1 + bw1 / 2 - 6, y1 - bh1 / 2 - 2, 8, 3);
-        ctx.fillRect(x1 + bw1 / 2 - 1, y1 - bh1 / 2 - 2, 3, 8);
-
-        // Label Tag
-        ctx.fillStyle = nightVision ? 'rgba(34, 197, 94, 0.2)' : 'rgba(56, 189, 248, 0.2)';
-        ctx.fillRect(x1 - bw1 / 2, y1 - bh1 / 2 - 18, bw1, 16);
-        ctx.fillStyle = nightVision ? '#86efac' : '#e0f2fe';
-        ctx.font = '10px monospace';
-        ctx.fillText('ID: AMIT S. 99.4%', x1 - bw1 / 2 + 4, y1 - bh1 / 2 - 6);
-
-        // Secondary Target: Vehicle Gate
-        const x2 = w * 0.78;
-        const y2 = h * 0.42;
-        ctx.strokeStyle = nightVision ? '#86efac' : '#10b981';
-        ctx.strokeRect(x2 - 50, y2 - 35, 100, 70);
-        ctx.fillStyle = nightVision ? 'rgba(34, 197, 94, 0.2)' : 'rgba(16, 185, 129, 0.2)';
-        ctx.fillRect(x2 - 50, y2 - 51, 100, 16);
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText('ANPR: DL-01-AB', x2 - 46, y2 - 39);
-
-        // Crosshair Center
-        ctx.strokeStyle = nightVision ? 'rgba(34, 197, 94, 0.4)' : 'rgba(255, 255, 255, 0.3)';
-        ctx.beginPath();
-        ctx.moveTo(w / 2 - 15, h / 2); ctx.lineTo(w / 2 + 15, h / 2);
-        ctx.moveTo(w / 2, h / 2 - 15); ctx.lineTo(w / 2, h / 2 + 15);
-        ctx.stroke();
-
-        // HUD Timestamp
-        ctx.fillStyle = nightVision ? '#86efac' : 'rgba(255,255,255,0.7)';
-        ctx.font = '10px monospace';
-        ctx.fillText(`EDGE_FPS: 59.8 | LATENCY: 22ms | SENSORS: 4/4 OK`, 12, h - 14);
-
-        cctvAnimId = requestAnimationFrame(render);
-      }
-      render();
+Cognizable Offense: YES | Police Action: Immediate registration & forensic CCTV extraction mandated under Section 173 BNSS.`;
     }
 
-    function generateLegalFir() {
-      const offense = document.getElementById('fir-offense').value;
-      const t = document.getElementById('fir-time').value;
-      const p = document.getElementById('fir-place').value;
-      const stmt = document.getElementById('fir-statement').value;
-      const consoleEl = document.getElementById('fir-console');
+    function executeSentinel() {
+      var res = document.getElementById('sentinel-result');
+      var out = document.getElementById('sentinel-out-text');
+      res.style.display = 'block';
+      out.textContent = `=== VISION SECURITY SENTINEL REPORT ===
+Perimeter Camera Feed #02 (East Gate)
+Threat Index: 🟡 ELEVATED
 
-      consoleEl.innerHTML = `<span class="text-yellow-400">>> [LEGAL CORE] Structuring formal First Information Report under BNSS Section 173...</span>\n>> Binding digital CCTV evidence hashes and legal clauses...`;
-
-      setTimeout(() => {
-        consoleEl.innerHTML = `========================================================================
-FIRST INFORMATION REPORT (DRAFT)
-[Under Section 173 of Bharatiya Nagarik Suraksha Sanhita, 2023 / 2024]
-========================================================================
-POLICE STATION JURISDICTION: Cyber & Crime Branch, Sector 9
-DISTRICT: Central Industrial Division
-DATE & TIME OF REPORT: ${new Date().toLocaleString()}
-
-1. DETAILS OF COMPLAINANT:
-   Name: Vikram Kulkarni (Chief Security Officer)
-   Entity: Sevenseed Rakshak Autonomous Facility Infrastructure
-
-2. DETAILS OF OCCURRENCE:
-   Date & Time: ${t}
-   Place of Occurrence: ${p}
-
-3. APPLICABLE STATUTORY SECTIONS:
-   • Bharatiya Nyaya Sanhita (BNS), 2023 - Section 329(3) [Criminal Trespass at Night]
-   • Section 303(2) [Attempted Theft of Corporate Property]
-   • Bharatiya Sakshya Adhiniyam, 2023 - Section 61 (Admissibility of Electronic Records)
-
-4. STATEMENT OF FACTS:
-   "${stmt}"
-
-5. DIGITAL FORENSIC EVIDENCE ATTACHMENTS:
-   ✓ 4K CCTV Video Hash: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-   ✓ Infrared Sensor Log Timestamp: 02:41:12 IST
-   ✓ Automated Incident Dispatch Log #INC-2026-9908
-
-STATUS: VERIFIED & READY FOR SUBMISSION TO STATION HOUSE OFFICER (SHO).`;
-      }, 500);
+Events Detected:
+• 02:14:22 — Unidentified individual detected climbing perimeter fence.
+• Infrared Thermal Signature: Confirmed human silhouette.
+• Automated Deterrent: Strobe spotlight activated; Security guard booth notified via automated siren.`;
     }
 
-    function downloadFirDocx() {
-      const text = document.getElementById('fir-console').innerText || document.getElementById('fir-console').textContent;
-      const blob = new Blob([text], { type: 'text/plain' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'BNS_2024_FIR_Draft_' + Date.now() + '.txt';
-      a.click();
+    function executeCyber() {
+      var res = document.getElementById('cyber-result');
+      var out = document.getElementById('cyber-out-text');
+      res.style.display = 'block';
+      out.textContent = `=== CYBERCRIME THREAT RADAR VERDICT ===
+Scam Classification: 🔴 CRITICAL THREAT (Malicious Android Banking Trojan)
+
+Threat Breakdown:
+• Fake SBI Domain: Hosted on bulletproof hosting in Eastern Europe.
+• Payload: APK drops SMS-forwarding malware designed to intercept bank OTPs.
+
+Action Steps:
+1. DO NOT CLICK or install the APK file.
+2. Dial 1930 immediately to report the malicious phone number.
+3. Automated draft created for National Cyber Crime Reporting Portal (cybercrime.gov.in).`;
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      initCctvCanvas();
-    });
+    function executeSos() {
+      var res = document.getElementById('sos-result');
+      var out = document.getElementById('sos-out-text');
+      res.style.display = 'block';
+      out.textContent = `=== SOS DISPATCH SIMULATION ===
+GPS Coordinates: 23.0338° N, 72.5850° E (Navrangpura, Ahmedabad)
+Emergency Packet Broadcasted:
+• Police Control Room (112): Alert acknowledged (PCR Van #18 en route, ETA 4 mins)
+• 3 Pre-saved Emergency Contacts alerted via SMS with live tracking link.`;
+    }
+
+    function executeCrosswalk() {
+      var res = document.getElementById('crosswalk-result');
+      var out = document.getElementById('crosswalk-out-text');
+      res.style.display = 'block';
+      out.textContent = `=== IPC TO BNS 2023 QUICK CONVERSION TABLE ===
+• IPC 302 (Murder) ─────────────► BNS Section 103(1)
+• IPC 307 (Attempt to Murder) ──► BNS Section 109
+• IPC 376 (Rape) ───────────────► BNS Section 64
+• IPC 420 (Cheating/Fraud) ─────► BNS Section 318(4)
+• IPC 392 (Robbery) ────────────► BNS Section 309
+• IPC 124A (Sedition) ──────────► Omitted (Replaced by BNS 152: Endangering Sovereignty)`;
+    }
     
   </script>
 </body>

@@ -44,7 +44,7 @@ for v in ventures:
         broken = []
         for nl in nav_links:
             clean = nl.strip().split("?")[0].split("#")[0]
-            if not clean or clean.startswith("http") or clean.startswith("javascript:") or clean.startswith("mailto:"):
+            if not clean or clean.startswith("http") or clean.startswith("javascript:") or clean.startswith("mailto:") or clean.startswith("tel:"):
                 continue
             if clean == "/":
                 target = os.path.join(SITES_DIR, "index.html")

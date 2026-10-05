@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Engineering Site Visit & Field Inspection Report Generator — Breakdown Factor</title>
+  <meta name="description" content="Generate ISO/OSHA compliant engineering site visit reports, defect severity assessments, and CAPA corrective action plans powered by Vertex AI.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏗️%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .svr-container { max-width: 1320px; margin: 0 auto; padding: 100px 24px 80px; }
+    .svr-header { text-align: center; margin-bottom: 36px; }
+    .svr-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 999px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+    .svr-title { font-size: clamp(28px, 4.2vw, 48px); font-weight: 900; line-height: 1.2; margin-bottom: 12px; }
+    .svr-sub { color: var(--text-2); font-size: 16px; max-width: 680px; margin: 0 auto 24px; line-height: 1.6; }
+
+    .svr-grid { display: grid; grid-template-columns: 460px 1fr; gap: 28px; }
+    @media(max-width: 1024px) { .svr-grid { grid-template-columns: 1fr; } }
+
+    .form-panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 26px; }
+    .form-panel h3 { font-size: 18px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; color: #fff; }
+    .field-group { margin-bottom: 16px; }
+    .field-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 6px; }
+    .field-input, .field-textarea, .field-select { width: 100%; padding: 11px 14px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; transition: border-color .2s; }
+    .field-input:focus, .field-textarea:focus, .field-select:focus { border-color: #f59e0b; }
+    .field-textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
+
+    .preset-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .p-btn { padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); cursor: pointer; transition: all .15s; }
+    .p-btn:hover, .p-btn.active { border-color: #f59e0b; color: #fbbf24; background: rgba(245,158,11,0.1); }
+
+    .btn-report { width: 100%; padding: 14px; background: linear-gradient(135deg, #d97706, #b45309); color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: opacity .2s, transform .1s; box-shadow: 0 4px 20px rgba(217,119,6,0.3); }
+    .btn-report:hover { opacity: .92; transform: translateY(-1px); }
+    .btn-report:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .result-panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 26px; display: flex; flex-direction: column; min-height: 600px; }
+    .result-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 12px; }
+    .result-title { font-size: 18px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
+    .result-actions { display: flex; gap: 8px; }
+    .act-btn { padding: 8px 14px; border-radius: 8px; background: var(--bg-2); border: 1px solid var(--border); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all .15s; }
+    .act-btn:hover { border-color: #f59e0b; color: #fbbf24; }
+
+    .report-output { flex: 1; background: #0c0f17; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 24px; font-family: 'Inter', sans-serif; font-size: 14.5px; line-height: 1.75; color: #e2e8f0; white-space: pre-wrap; overflow-y: auto; max-height: 720px; }
+    .placeholder-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; color: var(--text-3); padding: 40px 20px; }
+    .placeholder-state i { font-size: 46px; color: var(--text-3); margin-bottom: 16px; opacity: 0.5; }
+
+    .status-strip { margin-top: 14px; font-size: 12.5px; display: flex; align-items: center; justify-content: space-between; }
+  </style>
+</head>
+<body class="site-body">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <span class="nav-brand-icon">⚙️</span>
+        <span class="nav-brand-text">Breakdown<span class="brand-accent">Factor</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Overview</a>
+        <a href="defect-scanner.html" class="nav-link">Defect Scanner</a>
+        <a href="safety-audit.html" class="nav-link">Safety Audit</a>
+        <a href="site-visit-report.html" class="nav-link active">Site Report AI</a>
+        <a href="boq-estimator.html" class="nav-link">BOQ Estimator</a>
+      </div>
+      <div class="nav-actions">
+        <a href="defect-scanner.html" class="btn btn-primary" style="background:#f59e0b;"><i class="fa-solid fa-camera"></i> Scan Defects</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="svr-container">
+    <div class="svr-header">
+      <div class="svr-badge"><i class="fa-solid fa-clipboard-check"></i> ISO 9001 / OSHA Engineering Auditor</div>
+      <h1 class="svr-title">Engineering Site Visit Report Generator</h1>
+      <p class="svr-sub">Instantly compile raw field notes and inspection photographs into an executive-ready structural report, complete with CAPA corrective actions and code citations.</p>
+    </div>
+
+    <div class="svr-grid">
+      <!-- Input Panel -->
+      <div class="form-panel">
+        <h3><i class="fa-solid fa-ruler-combined" style="color:#f59e0b;"></i> Inspection Record</h3>
+
+        <div class="field-group">
+          <label class="field-label">Inspection Type</label>
+          <div class="preset-chips">
+            <button type="button" class="p-btn active" onclick="setPreset('civil')">Civil / Bridge</button>
+            <button type="button" class="p-btn" onclick="setPreset('industrial')">Turbine & Plant</button>
+            <button type="button" class="p-btn" onclick="setPreset('solar')">Solar Farm</button>
+            <button type="button" class="p-btn" onclick="setPreset('electrical')">Substation HV</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Project & Location</label>
+          <input type="text" id="projectLoc" class="field-input" value="Metro Rail Elevated Viaduct — Pier Cap 104-108, Zone 3">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Lead Inspector & Date</label>
+          <input type="text" id="inspectorMeta" class="field-input" value="Er. Vikram Mehta, Lead Structural QA (Chartered Engineer)">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Raw Field Observations & Anomalies</label>
+          <textarea id="fieldNotes" class="field-textarea">Pier 106 cantilever overhang shows diagonal shear crack (~1.8mm width) extending 42cm. Efflorescence and moisture seepage observed near expansion joint rubber seal. Rebar exposure noted at footing pedestal with superficial surface rust. Scaffolding crew operating without secondary harness tie-offs at +14m elevation.</textarea>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Observed Weather / Operating Conditions</label>
+          <input type="text" id="siteConditions" class="field-input" value="Ambient Temp: 34°C, Humidity: 78%, Moderate wind, Post-monsoon ground saturation">
+        </div>
+
+        <button type="button" id="btnReport" class="btn-report" onclick="generateReport()">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Engineering Report
+        </button>
+
+        <div class="status-strip">
+          <span id="aiStatus"><i class="fa-solid fa-circle-nodes"></i> Vertex AI Connecting...</span>
+          <span style="color:var(--text-3);font-size:12px;">Gemini 2.5 Flash</span>
+        </div>
+      </div>
+
+      <!-- Result Panel -->
+      <div class="result-panel">
+        <div class="result-top">
+          <div class="result-title">
+            <i class="fa-solid fa-file-contract" style="color:#f59e0b;"></i> Inspection Dossier & CAPA Plan
+          </div>
+          <div class="result-actions">
+            <button class="act-btn" onclick="copyReport()"><i class="fa-regular fa-copy"></i> Copy</button>
+            <button class="act-btn" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
+          </div>
+        </div>
+
+        <div id="reportOutput" class="report-output">
+          <div class="placeholder-state">
+            <i class="fa-solid fa-helmet-safety"></i>
+            <h4 style="color:#fff;margin-bottom:8px;font-size:16px;">Ready to Compile Inspection Report</h4>
+            <p style="font-size:13.5px;max-width:440px;">Select an inspection preset and enter your field observations to generate a formal audit report with severity rankings and repair remediation protocols.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../vertex_client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Vertex.showStatus('aiStatus');
+    });
+
+    const presets = {
+      civil: {
+        proj: 'Metro Rail Elevated Viaduct — Pier Cap 104-108, Zone 3',
+        notes: 'Pier 106 cantilever overhang shows diagonal shear crack (~1.8mm width) extending 42cm. Efflorescence and moisture seepage observed near expansion joint rubber seal. Rebar exposure noted at footing pedestal with superficial surface rust. Scaffolding crew operating without secondary harness tie-offs at +14m elevation.'
+      },
+      industrial: {
+        proj: 'Thermal Power Station Unit 2 — Boiler Feed Pump & Steam Turbine Deck',
+        notes: 'Vibration monitoring reveals 7.4 mm/s RMS on Drive End bearing of Boiler Feed Pump #3 (exceeds ISO 10816 Zone C threshold). Minor lube oil dripping from gasket seal into cable trench. High acoustic screeching during load step-change.'
+      },
+      solar: {
+        proj: '150MW Utility Solar Park — Inverter Block 12, Rajasthan',
+        notes: 'String Inverter 12B reporting ground fault insulation resistance < 0.2 MΩ. Thermal imaging reveals 3 hot-spot bypassed solar modules on Table 4 with cell delta-T exceeding 45°C. DC combiner box terminal lugs show galvanic discoloration.'
+      },
+      electrical: {
+        proj: '400kV Gas Insulated Substation (GIS) — Bay 4 Bay Controller & GIS Enclosure',
+        notes: 'SF6 gas pressure gauge reading 0.58 MPa (nominal 0.62 MPa, alarm threshold 0.59 MPa). Partial discharge sensors detecting intermittent acoustic pulses on Phase B bus duct. Earth continuity conductor disconnected on marshalling kiosk door.'
+      }
+    };
+
+    function setPreset(key) {
+      const p = presets[key];
+      if (!p) return;
+      document.getElementById('projectLoc').value = p.proj;
+      document.getElementById('fieldNotes').value = p.notes;
+      document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    async function generateReport() {
+      const btn = document.getElementById('btnReport');
+      const out = document.getElementById('reportOutput');
+      const proj = document.getElementById('projectLoc').value.trim();
+      const meta = document.getElementById('inspectorMeta').value.trim();
+      const notes = document.getElementById('fieldNotes').value.trim();
+      const cond = document.getElementById('siteConditions').value.trim();
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Compiling Engineering Report...';
+      out.textContent = 'Analyzing field conditions, safety standards, and remediation protocols via Gemini 2.5 Flash...';
+
+      const prompt = `You are a Senior Principal Quality Assurance and Structural Safety Auditor.
+Convert the following raw field notes into a formal, ISO 9001 / OSHA-compliant Engineering Site Visit & Inspection Report:
+
+PROJECT DETAILS:
+- Location / Structure: ${proj}
+- Inspector: ${meta}
+- Environmental Conditions: ${cond}
+- Field Notes: ${notes}
+
+REPORT STRUCTURE:
+1. EXECUTIVE SUMMARY & OVERALL HEALTH INDEX (Green / Amber / Red status).
+2. DETAILED DEFECT AUDIT & RISK CLASSIFICATION:
+   - Defect / Observation
+   - Engineering Severity (Critical P0 / High P1 / Medium P2)
+   - Relevant Technical Standard / Code (e.g. IS 456, ACI 318, Eurocode 2, OSHA 1926)
+   - Structural & Safety Risk Analysis
+3. CORRECTIVE & PREVENTIVE ACTION PLAN (CAPA):
+   - Immediate Containment Action (Within 24 Hours)
+   - Long-term Remediation Protocol (Method statement: e.g. polyurethane injection, epoxy grouting, ultrasonic pulse testing)
+   - Estimated repair window & specialized equipment required
+4. SIGN-OFF BLOCK & RECOMMENDED NEXT INSPECTION TIMELINE.
+
+Format in a clean engineering layout with clear headers and bullet points.`;
+
+      try {
+        const reply = await Vertex.ask(prompt, { temperature: 0.2 });
+        await Vertex.typeInto(out, reply, 1);
+      } catch (err) {
+        out.innerHTML = `<span style="color:#f87171;">⚠️ Error generating report: ${err.message}<br><br>Make sure the Vertex server is running: <code>cd vertex_dev && node server.js</code></span>`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generate Engineering Report';
+      }
+    }
+
+    function copyReport() {
+      const text = document.getElementById('reportOutput').innerText;
+      if (!text || text.includes('Ready to Compile')) return;
+      navigator.clipboard.writeText(text);
+      alert('Inspection report copied to clipboard!');
+    }
+  </script>
+</body>
+</html>

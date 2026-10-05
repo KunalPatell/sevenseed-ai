@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Interactive Anatomical Symptom Body Map — Forest Pharmacy</title>
+  <meta name="description" content="Visual anatomical human body symptom explorer with glowing interactive pulse zones and real-time Gemini 3.8 Flash clinical triage.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🫀%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .bm-container { max-width: 1360px; margin: 0 auto; padding: 90px 24px 60px; }
+    .bm-header { text-align: center; margin-bottom: 24px; }
+    .bm-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .bm-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.2; margin-bottom: 8px; }
+    .bm-sub { color: var(--text-2); font-size: 15px; max-width: 650px; margin: 0 auto; }
+
+    .bm-grid { display: grid; grid-template-columns: 500px 1fr; gap: 24px; min-height: 660px; }
+    @media(max-width: 1024px) { .bm-grid { grid-template-columns: 1fr; } }
+
+    /* Visual Body Stage */
+    .body-stage { background: #050a10; border: 1px solid rgba(16,185,129,0.25); border-radius: 16px; position: relative; display: flex; align-items: center; justify-content: center; padding: 24px; box-shadow: 0 0 40px rgba(16,185,129,0.06) inset; }
+    
+    .body-svg { width: 100%; max-width: 380px; height: auto; filter: drop-shadow(0 0 16px rgba(16,185,129,0.15)); }
+    .zone-hotspot { cursor: pointer; transition: all .2s; }
+    .zone-hotspot circle { fill: rgba(16,185,129,0.3); stroke: #34d399; stroke-width: 2; transition: all .2s; }
+    .zone-hotspot:hover circle, .zone-hotspot.active circle { fill: rgba(16,185,129,0.8); stroke: #fff; stroke-width: 3; filter: drop-shadow(0 0 10px #34d399); }
+    .zone-pulse { animation: organPulse 2s infinite ease-in-out; transform-origin: center; }
+    @keyframes organPulse {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 0.3; }
+    }
+
+    /* Diagnosis Panel */
+    .diag-panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+    .zone-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
+    .zone-title { font-size: 17px; font-weight: 700; color: #fff; }
+    
+    .symptom-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .s-chip { padding: 6px 14px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; }
+    .s-chip:hover, .s-chip.active { background: rgba(16,185,129,0.15); border-color: #10b981; color: #34d399; }
+
+    .ai-diag-output { flex: 1; background: #06090e; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; font-size: 14px; line-height: 1.7; color: #e2e8f0; white-space: pre-wrap; overflow-y: auto; max-height: 480px; }
+    
+    .btn-triage { padding: 13px; background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 18px rgba(16,185,129,0.3); }
+    .btn-triage:hover { opacity: .9; }
+    .btn-triage:disabled { opacity: 0.6; cursor: not-allowed; }
+  </style>
+</head>
+<body class="site-body">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <span class="nav-brand-icon">🌿</span>
+        <span class="nav-brand-text">Forest<span class="brand-accent">Pharmacy</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="symptom-checker.html" class="nav-link">Symptom Checker</a>
+        <a href="body-map.html" class="nav-link active">Visual Body Map</a>
+        <a href="interaction-checker.html" class="nav-link">Drug Interactions</a>
+        <a href="medicine-reminders.html" class="nav-link">Reminders</a>
+      </div>
+      <div class="nav-actions">
+        <div id="aiStatus" style="font-size:12px;"></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="bm-container">
+    <div class="bm-header">
+      <div class="bm-badge"><i class="fa-solid fa-person-dots-from-line"></i> Interactive Anatomical Diagnostics</div>
+      <h1 class="bm-title">Visual Human Body Symptom Map</h1>
+      <p class="bm-sub">Click on any anatomical pulse point on the interactive body diagram to trigger localized symptom analysis powered by Gemini 3.8 Flash.</p>
+    </div>
+
+    <div class="bm-grid">
+      <!-- SVG Body Diagram -->
+      <div class="body-stage">
+        <svg class="body-svg" viewBox="0 0 300 620" xmlns="http://www.w3.org/2000/svg">
+          <!-- Stylized Human Body Contour -->
+          <path d="M150 40 C165 40 175 52 175 70 C175 88 165 100 150 100 C135 100 125 88 125 70 C125 52 135 40 150 40 Z" fill="#0d1926" stroke="#1e3a5f" stroke-width="2"/>
+          <!-- Neck & Torso -->
+          <path d="M142 100 L158 100 L185 125 L215 220 L195 235 L175 160 L175 290 L160 320 L160 460 L175 580 L148 580 L140 450 L135 450 L127 580 L100 580 L115 460 L115 320 L100 290 L100 160 L80 235 L60 220 L90 125 Z" fill="#0b1420" stroke="#1e3a5f" stroke-width="2"/>
+          
+          <!-- Interactive Hotspot 1: Head / Neurological -->
+          <g class="zone-hotspot active" id="zone_head" onclick="selectZone('Head & Neurological', ['Throbbing Migraine', 'Dizziness / Vertigo', 'Tension Headache', 'Brain Fog'])">
+            <circle class="zone-pulse" cx="150" cy="70" r="16" fill="rgba(16,185,129,0.2)"/>
+            <circle cx="150" cy="70" r="8"/>
+            <text x="175" y="74" fill="#34d399" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">Cranial / Brain</text>
+          </g>
+
+          <!-- Hotspot 2: Eyes / ENT -->
+          <g class="zone-hotspot" id="zone_ent" onclick="selectZone('ENT & Throat', ['Sore Throat', 'Sinus Pressure', 'Ear Ache', 'Loss of Smell'])">
+            <circle class="zone-pulse" cx="150" cy="115" r="14" fill="rgba(6,182,212,0.2)"/>
+            <circle cx="150" cy="115" r="7"/>
+            <text x="175" y="118" fill="#38bdf8" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">ENT / Throat</text>
+          </g>
+
+          <!-- Hotspot 3: Chest / Lungs / Heart -->
+          <g class="zone-hotspot" id="zone_chest" onclick="selectZone('Chest, Heart & Lungs', ['Chest Tightness', 'Shortness of Breath', 'Palpitations', 'Persistent Cough'])">
+            <circle class="zone-pulse" cx="150" cy="175" r="18" fill="rgba(239,68,68,0.2)"/>
+            <circle cx="150" cy="175" r="9"/>
+            <text x="180" y="178" fill="#f87171" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">Chest & Lungs</text>
+          </g>
+
+          <!-- Hotspot 4: Abdomen / Gastrointestinal -->
+          <g class="zone-hotspot" id="zone_abdomen" onclick="selectZone('Abdomen & Gastrointestinal', ['Sharp Stomach Cramp', 'Acid Reflux / GERD', 'Bloating & Nausea', 'Acute Diarrhea'])">
+            <circle class="zone-pulse" cx="150" cy="245" r="18" fill="rgba(245,158,11,0.2)"/>
+            <circle cx="150" cy="245" r="9"/>
+            <text x="180" y="248" fill="#fbbf24" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">Abdomen / GI</text>
+          </g>
+
+          <!-- Hotspot 5: Joints / Knees / Lower Extremities -->
+          <g class="zone-hotspot" id="zone_joints" onclick="selectZone('Joints & Musculoskeletal', ['Knee Swelling', 'Sciatic Nerve Pain', 'Lower Back Spasm', 'Muscle Stiffness'])">
+            <circle class="zone-pulse" cx="140" cy="460" r="16" fill="rgba(168,85,247,0.2)"/>
+            <circle cx="140" cy="460" r="8"/>
+            <text x="170" y="464" fill="#c084fc" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">Joints & Spine</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Diagnosis Panel -->
+      <div class="diag-panel">
+        <div class="zone-card">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;">Selected Region</div>
+            <div class="zone-title" id="zoneName">Head & Neurological</div>
+          </div>
+          <span style="font-size:24px;">🧠</span>
+        </div>
+
+        <div>
+          <label style="font-size:12.5px;font-weight:600;color:var(--text-2);display:block;margin-bottom:8px;">Common Localized Symptoms</label>
+          <div class="symptom-chips" id="chipsContainer">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:12.5px;font-weight:600;color:var(--text-2);display:block;margin-bottom:6px;">Additional Observations (Duration, Intensity)</label>
+          <input type="text" id="symptomNotes" class="field-input" style="width:100%;padding:10px 14px;background:var(--bg-2);border:1px solid var(--border);border-radius:9px;color:#fff;font-family:inherit;font-size:13.5px;" value="Started 6 hours ago, pulsating sensation behind eyes with mild light sensitivity.">
+        </div>
+
+        <button type="button" id="btnTriage" class="btn-triage" onclick="runTriage()">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Evaluate with Gemini 3.8 Flash
+        </button>
+
+        <div class="ai-diag-output" id="diagOutput">Click "Evaluate with Gemini 3.8 Flash" to receive structured medical differential analysis, red-flag emergency checks, and evidence-based self-care advice.</div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../vertex_client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Vertex.showStatus('aiStatus');
+      selectZone('Head & Neurological', ['Throbbing Migraine', 'Dizziness / Vertigo', 'Tension Headache', 'Brain Fog']);
+    });
+
+    let currentZone = 'Head & Neurological';
+    let selectedSymptoms = [];
+
+    function selectZone(name, symptoms) {
+      currentZone = name;
+      document.getElementById('zoneName').textContent = name;
+      document.querySelectorAll('.zone-hotspot').forEach(z => z.classList.remove('active'));
+      
+      const container = document.getElementById('chipsContainer');
+      selectedSymptoms = [symptoms[0]]; // select first by default
+      container.innerHTML = symptoms.map((s, idx) => `
+        <button type="button" class="s-chip ${idx === 0 ? 'active' : ''}" onclick="toggleSymptom('${s}', this)">
+          ${s}
+        </button>
+      `).join('');
+    }
+
+    function toggleSymptom(s, btn) {
+      if (selectedSymptoms.includes(s)) {
+        selectedSymptoms = selectedSymptoms.filter(x => x !== s);
+        btn.classList.remove('active');
+      } else {
+        selectedSymptoms.push(s);
+        btn.classList.add('active');
+      }
+    }
+
+    async function runTriage() {
+      const btn = document.getElementById('btnTriage');
+      const out = document.getElementById('diagOutput');
+      const notes = document.getElementById('symptomNotes').value.trim();
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing with Gemini 3.8 Flash...';
+      out.textContent = `Performing clinical assessment on ${currentZone} via Gemini 3.8 Flash...`;
+
+      const prompt = `You are a Senior Clinical Decision Support Doctor for Forest Pharmacy.
+A patient is reporting localized symptoms in the anatomical region: "${currentZone}".
+Reported specific symptoms: ${selectedSymptoms.join(', ') || 'General discomfort'}.
+Patient Notes: "${notes}".
+
+Provide a structured clinical breakdown:
+1. URGENCY LEVEL: (Self-Care / Routine Doctor Visit / Urgent Care / Emergency 911/108) with justification.
+2. TOP 3 DIFFERENTIAL CONDITIONS (Most probable causes with clinical reasoning).
+3. RED FLAG WARNING SIGNS (Symptoms that require immediate emergency room triage).
+4. EVIDENCE-BASED PROTOCOLS (Hydration, OTC non-prescription relief like Paracetamol/Ibuprofen contraindications, resting positions).
+5. MEDICAL DISCLAIMER: Clear warning that this is an AI advisory and not a definitive physician substitute.`;
+
+      try {
+        const reply = await Vertex.ask(prompt, { temperature: 0.2 });
+        await Vertex.typeInto(out, reply, 1);
+      } catch (err) {
+        out.innerHTML = `<span style="color:#f87171;">⚠️ Error: ${err.message}</span>`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Evaluate with Gemini 3.8 Flash';
+      }
+    }
+  </script>
+</body>
+</html>

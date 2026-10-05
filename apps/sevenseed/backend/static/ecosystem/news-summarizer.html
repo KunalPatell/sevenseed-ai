@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AI News & Strategic Intelligence Summarizer — Sevenseed Ecosystem</title>
+  <meta name="description" content="Turn long-form news, whitepapers, earnings calls, and tech articles into executive intelligence briefs, fact-checks, and entity maps powered by Vertex AI.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E📰%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .ns-container { max-width: 1320px; margin: 0 auto; padding: 100px 24px 80px; }
+    .ns-header { text-align: center; margin-bottom: 36px; }
+    .ns-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 999px; background: rgba(14,165,233,0.12); border: 1px solid rgba(14,165,233,0.3); color: #38bdf8; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+    .ns-title { font-size: clamp(28px, 4.2vw, 48px); font-weight: 900; line-height: 1.2; margin-bottom: 12px; }
+    .ns-sub { color: var(--text-2); font-size: 16px; max-width: 680px; margin: 0 auto 24px; line-height: 1.6; }
+
+    .ns-grid { display: grid; grid-template-columns: 460px 1fr; gap: 28px; }
+    @media(max-width: 1024px) { .ns-grid { grid-template-columns: 1fr; } }
+
+    .form-panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 26px; }
+    .form-panel h3 { font-size: 18px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; color: #fff; }
+    .field-group { margin-bottom: 16px; }
+    .field-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 6px; }
+    .field-input, .field-textarea, .field-select { width: 100%; padding: 11px 14px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; transition: border-color .2s; }
+    .field-input:focus, .field-textarea:focus, .field-select:focus { border-color: #0ea5e9; }
+    .field-textarea { min-height: 140px; resize: vertical; line-height: 1.5; }
+
+    .news-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .n-btn { padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); cursor: pointer; transition: all .15s; }
+    .n-btn:hover, .n-btn.active { border-color: #0ea5e9; color: #38bdf8; background: rgba(14,165,233,0.1); }
+
+    .btn-brief { width: 100%; padding: 14px; background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: opacity .2s, transform .1s; box-shadow: 0 4px 20px rgba(2,132,199,0.3); }
+    .btn-brief:hover { opacity: .92; transform: translateY(-1px); }
+    .btn-brief:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .result-panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 26px; display: flex; flex-direction: column; min-height: 600px; }
+    .result-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 12px; }
+    .result-title { font-size: 18px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
+    .result-actions { display: flex; gap: 8px; }
+    .act-btn { padding: 8px 14px; border-radius: 8px; background: var(--bg-2); border: 1px solid var(--border); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all .15s; }
+    .act-btn:hover { border-color: #0ea5e9; color: #38bdf8; }
+
+    .brief-output { flex: 1; background: #0c0f17; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 24px; font-family: 'Inter', sans-serif; font-size: 14.5px; line-height: 1.75; color: #e2e8f0; white-space: pre-wrap; overflow-y: auto; max-height: 720px; }
+    .placeholder-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; color: var(--text-3); padding: 40px 20px; }
+    .placeholder-state i { font-size: 46px; color: var(--text-3); margin-bottom: 16px; opacity: 0.5; }
+
+    .status-strip { margin-top: 14px; font-size: 12.5px; display: flex; align-items: center; justify-content: space-between; }
+  </style>
+</head>
+<body class="site-body">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../sevenseed/index.html" class="nav-brand">
+        <span class="nav-brand-icon">🌐</span>
+        <span class="nav-brand-text">Ecosystem<span class="brand-accent">Intel</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="../sevenseed/index.html" class="nav-link">Studio Hub</a>
+        <a href="news-summarizer.html" class="nav-link active">AI News Intel</a>
+        <a href="../comonk/resume-analyzer.html" class="nav-link">Resume Scorer</a>
+        <a href="../sevenseed/pitch-deck.html" class="nav-link">Pitch Deck AI</a>
+      </div>
+      <div class="nav-actions">
+        <a href="../sevenseed/ventures.html" class="btn btn-primary" style="background:#0284c7;"><i class="fa-solid fa-cubes"></i> Ventures</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="ns-container">
+    <div class="ns-header">
+      <div class="ns-badge"><i class="fa-solid fa-newspaper"></i> Executive Intelligence Briefing</div>
+      <h1 class="ns-title">AI News & Strategic Briefing Engine</h1>
+      <p class="ns-sub">Condense technical papers, regulatory filings, and market news into crisp 30-second bullet summaries, bull/bear impact analysis, and key entity breakdowns.</p>
+    </div>
+
+    <div class="ns-grid">
+      <!-- Input Form -->
+      <div class="form-panel">
+        <h3><i class="fa-solid fa-file-lines" style="color:#0ea5e9;"></i> News & Report Source</h3>
+
+        <div class="field-group">
+          <label class="field-label">Sample News Dispatches</label>
+          <div class="news-chips">
+            <button type="button" class="n-btn active" onclick="loadStory('semiconductor')">Semiconductors</button>
+            <button type="button" class="n-btn" onclick="loadStory('ai-regulation')">EU AI Act</button>
+            <button type="button" class="n-btn" onclick="loadStory('fed-rates')">Fed Rates & VC</button>
+            <button type="button" class="n-btn" onclick="loadStory('space-tech')">Commercial Space</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Headline / Source URL</label>
+          <input type="text" id="newsHeadline" class="field-input" value="NVIDIA and TSMC Unveil 2nm CoWoS-L Advanced Packaging Breakthrough for Next-Gen Blackwell Ultra Accelerators">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Raw Article Text / Body</label>
+          <textarea id="newsContent" class="field-textarea">TAIPEI — In a joint announcement today, Taiwan Semiconductor Manufacturing Co. (TSMC) and NVIDIA revealed a major leap in high-density chiplet integration. The new packaging architecture leverages TSMC's 2-nanometer N2 process paired with second-generation CoWoS-L (Chip-on-Wafer-on-Substrate with local silicon interconnects), enabling up to 8 High Bandwidth Memory 4 (HBM4) stacks per interposer. This yields an unprecedented 12.8 Terabytes-per-second memory bandwidth, representing a 2.4x throughput gain over current Hopper H100 hardware. Hyperscalers including Microsoft Azure, AWS, and Google Cloud have reportedly secured upfront allocations totaling $14.2 billion for 2026 delivery, while competitors faces severe packaging substrate shortages.</textarea>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Summary Perspective</label>
+          <select id="perspective" class="field-select">
+            <option value="Executive & Venture Capital Investor (TAM, CapEx, Moats)" selected>Venture Investor (CapEx, Moats, TAM)</option>
+            <option value="Chief Technology Officer (Architecture, Latency, Tradeoffs)">CTO / Engineering Leader</option>
+            <option value="Market Competitor / Strategy Analyst (Pricing power, Risks)">Strategic Competitor</option>
+          </select>
+        </div>
+
+        <button type="button" id="btnSummarize" class="btn-brief" onclick="generateSummary()">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Intelligence Brief
+        </button>
+
+        <div class="status-strip">
+          <span id="aiStatus"><i class="fa-solid fa-circle-nodes"></i> Vertex AI Connecting...</span>
+          <span style="color:var(--text-3);font-size:12px;">Gemini 2.5 Flash</span>
+        </div>
+      </div>
+
+      <!-- Output Panel -->
+      <div class="result-panel">
+        <div class="result-top">
+          <div class="result-title">
+            <i class="fa-solid fa-clipboard-list" style="color:#0ea5e9;"></i> Executive Intelligence Brief
+          </div>
+          <div class="result-actions">
+            <button class="act-btn" onclick="copyBrief()"><i class="fa-regular fa-copy"></i> Copy</button>
+            <button class="act-btn" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
+          </div>
+        </div>
+
+        <div id="briefOutput" class="brief-output">
+          <div class="placeholder-state">
+            <i class="fa-solid fa-newspaper"></i>
+            <h4 style="color:#fff;margin-bottom:8px;font-size:16px;">Ready to Digest Intelligence</h4>
+            <p style="font-size:13.5px;max-width:440px;">Select a sample dispatch or paste any raw article or newsletter text to generate a decision-grade executive brief with key metric extraction.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../vertex_client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Vertex.showStatus('aiStatus');
+    });
+
+    const dispatches = {
+      'semiconductor': {
+        title: 'NVIDIA and TSMC Unveil 2nm CoWoS-L Advanced Packaging Breakthrough for Next-Gen Blackwell Ultra Accelerators',
+        text: 'TAIPEI — In a joint announcement today, Taiwan Semiconductor Manufacturing Co. (TSMC) and NVIDIA revealed a major leap in high-density chiplet integration. The new packaging architecture leverages TSMC 2-nanometer N2 process paired with second-generation CoWoS-L (Chip-on-Wafer-on-Substrate with local silicon interconnects), enabling up to 8 High Bandwidth Memory 4 (HBM4) stacks per interposer. This yields an unprecedented 12.8 Terabytes-per-second memory bandwidth, representing a 2.4x throughput gain over current Hopper H100 hardware. Hyperscalers including Microsoft Azure, AWS, and Google Cloud have reportedly secured upfront allocations totaling $14.2 billion for 2026 delivery, while competitors face severe packaging substrate shortages.'
+      },
+      'ai-regulation': {
+        title: 'European Union Enforces Stringent Tier-2 Frontier AI Audits Under EU AI Act',
+        text: 'BRUSSELS — The European AI Office has finalized its conformity enforcement guidelines for general-purpose AI (GPAI) models exceeding 10^25 FLOPs training compute threshold. Foundation model providers will be mandated to submit systemic risk evaluations, adversarial red-teaming logs, and energy consumption metrics by Q3. Non-compliance carries fines up to €35 million or 7% of annual worldwide turnover. Silicon Valley tech groups warn that ambiguous copyright transparency obligations may force certain open-weights models to geoblock EU distribution.'
+      },
+      'fed-rates': {
+        title: 'Federal Reserve Cuts Benchmark Interest Rates by 50 Bps Amid Cooling Inflation and Resilient Labor Data',
+        text: 'WASHINGTON — The Federal Open Market Committee voted to reduce the federal funds rate target range to 4.75%–5.00%, marking the first policy easing cycle in four years. Chair Jerome Powell emphasized that the economy remains in solid shape, citing sustained GDP growth and low layoffs. Venture capital deployment into seed and Series A tech startups rebounded 18% quarter-over-quarter as LP capital calls unlocked previously dry powder reserves, particularly in enterprise vertical software.'
+      },
+      'space-tech': {
+        title: 'Private LEO Satellite Constellation Operators Consolidate Amid Optical Inter-Satellite Link Standard Race',
+        text: 'PARIS — Commercial low-Earth orbit broadband operators are experiencing rapid M&A consolidation driven by standardizations in optical laser cross-links (OISL). As telecom operators transition backhaul traffic from terrestrial fiber to orbital mesh networks, sub-millisecond inter-satellite routing has emerged as the critical differentiator. Three European satellite builders announced a joint manufacturing consortium to lower satellite bus production costs below €450,000 per unit.'
+      }
+    };
+
+    function loadStory(key) {
+      const d = dispatches[key];
+      if (!d) return;
+      document.getElementById('newsHeadline').value = d.title;
+      document.getElementById('newsContent').value = d.text;
+      document.querySelectorAll('.n-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    async function generateSummary() {
+      const btn = document.getElementById('btnSummarize');
+      const out = document.getElementById('briefOutput');
+      const headline = document.getElementById('newsHeadline').value.trim();
+      const content = document.getElementById('newsContent').value.trim();
+      const perspective = document.getElementById('perspective').value;
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing Intelligence...';
+      out.textContent = 'Parsing entities, bull/bear dynamics, and strategic takeaways via Gemini 2.5 Flash...';
+
+      const prompt = `You are a Principal Strategic Intelligence Analyst and Investment Partner.
+Analyze the following news dispatch and deliver an executive intelligence briefing tailored for: "${perspective}".
+
+DISPATCH:
+Headline: ${headline}
+Body: ${content}
+
+BRIEFING FORMAT:
+1. EXECUTIVE TL;DR (3 bullet points, < 30 seconds reading time).
+2. KEY FACTS & QUANTITATIVE DATA (Bullet points highlighting exact metrics, dollar amounts, dates, and technical specs).
+3. STRATEGIC IMPLICATIONS:
+   - Opportunities / Bull Case
+   - Headwinds / Bear Case & Systemic Risks
+4. EXTRACTED ENTITY DIRECTORY (Key companies, institutions, individuals, and jurisdictions involved).
+5. RECOMMENDED IMMEDIATE ACTION / WATCHLIST (What leadership or investors should monitor over the next 30-90 days).
+
+Tone: Concise, high-density, authoritative, zero fluff.`;
+
+      try {
+        const reply = await Vertex.ask(prompt, { temperature: 0.2 });
+        await Vertex.typeInto(out, reply, 1);
+      } catch (err) {
+        out.innerHTML = `<span style="color:#f87171;">⚠️ Error generating brief: ${err.message}<br><br>Make sure the Vertex server is running: <code>cd vertex_dev && node server.js</code></span>`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generate Intelligence Brief';
+      }
+    }
+
+    function copyBrief() {
+      const text = document.getElementById('briefOutput').innerText;
+      if (!text || text.includes('Ready to Digest')) return;
+      navigator.clipboard.writeText(text);
+      alert('Intelligence brief copied to clipboard!');
+    }
+  </script>
+</body>
+</html>
