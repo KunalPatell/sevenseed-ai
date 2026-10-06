@@ -6,6 +6,7 @@ from itsdangerous import URLSafeTimedSerializer
 from fastapi import APIRouter, Header, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel
+from typing import Optional, List, Dict, Any
 
 try:
     from app.ratelimit import check_rate_limit
@@ -1625,5 +1626,93 @@ def agent_tool_execute(req: AgenticToolExecuteReq):
         return run_single_tool(tool_id=req.tool_id, params=req.parameters)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Breakdown Factor: Computer Vision Defect & Damage Recognition (best.tflite) ──
+
+try:
+    import cv_engine as _cv_engine
+except ImportError:
+    _cv_engine = None
+
+try:
+    import health_engine as _health_engine
+except ImportError:
+    _health_engine = None
+
+
+class BreakdownDetectReq(BaseModel):
+    image_base64: Optional[str] = None
+    confidence_threshold: float = 0.25
+    sample_id: Optional[str] = None
+    engine: str = "auto"
+
+
+@router.get("/api/breakdown/model-info")
+def breakdown_model_info():
+    """Returns metadata for mounted models: best.tflite (Google LiteRT) & best.onnx (ONNXRuntime)."""
+    if _cv_engine:
+        return _cv_engine.get_model_info()
+    return {"status": "unavailable", "models": {}}
+
+
+@router.post("/api/breakdown/detect")
+def breakdown_detect_damage(req: BreakdownDetectReq):
+    """
+    Executes trained YOLOv8 defect detection model (best.tflite / best.onnx)
+    on property & infrastructure damage images. Returns bounding boxes, IS Code citations,
+    and CPWD BOQ repair estimates.
+    """
+    import base64
+    image_bytes = b""
+    if req.image_base64:
+        try:
+            raw = req.image_base64
+            if "," in raw:
+                raw = raw.split(",", 1)[1]
+            image_bytes = base64.b64decode(raw)
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Invalid base64 image: {e}")
+
+    if _cv_engine:
+        return _cv_engine.detect_damage(
+            image_bytes,
+            conf_thresh=req.confidence_threshold,
+            sample_id=req.sample_id,
+            engine=req.engine
+        )
+    else:
+        raise HTTPException(status_code=503, detail="Computer vision engine unavailable")
+
+
+# ── Decode Forest Pharmacy: Community Healthcare & Jan Aushadhi Hub ──────────────
+
+class DrugInteractionReq(BaseModel):
+    drugs: List[str] = []
+
+
+@router.get("/api/health/generics")
+def health_generic_medicines(q: str = ""):
+    """Returns Jan Aushadhi generic equivalents, savings percentages, and dosage indications."""
+    if _health_engine:
+        return {"results": _health_engine.search_generic_medicines(q)}
+    return {"results": []}
+
+
+@router.post("/api/health/interactions")
+def health_drug_interactions(req: DrugInteractionReq):
+    """Evaluates multi-drug prescriptions for clinical contraindications, food interactions, and CDSCO advisories."""
+    if _health_engine:
+        return _health_engine.check_drug_interactions(req.drugs)
+    return {"status": "unavailable", "message": "Clinical pharmacy engine offline"}
+
+
+@router.get("/api/health/emergency-directory")
+def health_emergency_directory(city: str = "Ahmedabad"):
+    """Returns 24/7 free/charitable emergency hospitals, Jan Aushadhi stores, and blood donation camps."""
+    if _health_engine:
+        return _health_engine.get_emergency_directory(city)
+    return {"city": city, "hospitals": []}
+
 
 

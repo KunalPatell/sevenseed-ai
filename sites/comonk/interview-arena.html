@@ -144,7 +144,10 @@
             <div class="interviewer-role">L6 Systems &amp; Distributed Infrastructure</div>
           </div>
         </div>
-        <button class="voice-btn" onclick="speakQuestion()"><i class="fas fa-volume-high"></i> Listen Prompt</button>
+        <div style="display:flex; gap:6px;">
+          <button class="voice-btn" onclick="speakQuestion()"><i class="fas fa-volume-high"></i> Listen Prompt</button>
+          <button class="voice-btn" id="btnMicRecord" onclick="toggleMicRecording()"><i class="fas fa-microphone"></i> Answer via Mic</button>
+        </div>
       </div>
 
       <div class="problem-body">
@@ -396,6 +399,75 @@ function speakQuestion() {
     window.speechSynthesis.speak(msg);
   } else {
     alert('Voice synthesis not supported in this browser.');
+  }
+}
+
+let micRecognition = null;
+let isMicRecording = false;
+
+function toggleMicRecording() {
+  const btn = document.getElementById('btnMicRecord');
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Voice speech recognition is not supported in this browser. Please use Google Chrome, Microsoft Edge, or Safari.");
+    return;
+  }
+
+  if (isMicRecording) {
+    if (micRecognition) micRecognition.stop();
+    isMicRecording = false;
+    btn.innerHTML = '<i class="fas fa-microphone"></i> Answer via Mic';
+    btn.style.background = 'rgba(56,189,248,0.12)';
+    btn.style.color = '#38bdf8';
+    return;
+  }
+
+  try {
+    micRecognition = new SpeechRecognition();
+    micRecognition.continuous = true;
+    micRecognition.interimResults = true;
+    micRecognition.lang = 'en-US';
+
+    micRecognition.onstart = function() {
+      isMicRecording = true;
+      btn.innerHTML = '<i class="fas fa-circle-dot fa-beat" style="color:#ef4444;"></i> Recording... Click to Stop';
+      btn.style.background = 'rgba(239,68,68,0.2)';
+      btn.style.color = '#f87171';
+    };
+
+    micRecognition.onresult = function(event) {
+      let finalTranscript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript + ' ';
+        }
+      }
+      if (finalTranscript) {
+        const editor = document.getElementById('codeEditor');
+        editor.value += (editor.value ? '\n' : '') + finalTranscript.trim();
+      }
+    };
+
+    micRecognition.onerror = function(event) {
+      console.warn('Speech recognition error:', event.error);
+      isMicRecording = false;
+      btn.innerHTML = '<i class="fas fa-microphone"></i> Answer via Mic';
+      btn.style.background = 'rgba(56,189,248,0.12)';
+      btn.style.color = '#38bdf8';
+    };
+
+    micRecognition.onend = function() {
+      isMicRecording = false;
+      btn.innerHTML = '<i class="fas fa-microphone"></i> Answer via Mic';
+      btn.style.background = 'rgba(56,189,248,0.12)';
+      btn.style.color = '#38bdf8';
+    };
+
+    micRecognition.start();
+  } catch(e) {
+    console.error('Failed starting mic:', e);
+    alert('Could not access microphone: ' + e.message);
   }
 }
 
