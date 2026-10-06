@@ -276,6 +276,8 @@ async function runAtsScan() {
       renderAtsUI(data.ats_score, data.matched_skills, data.missing_skills);
       if (data.recommended_xyz_bullet) {
         document.getElementById('rewriteText').innerHTML = data.recommended_xyz_bullet;
+      } else if (data.google_xyz_recommendations && data.google_xyz_recommendations.length > 0) {
+        document.getElementById('rewriteText').innerHTML = data.google_xyz_recommendations[0].bullet;
       }
       return;
     }

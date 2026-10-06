@@ -1025,7 +1025,7 @@ ORDER BY avg_cac DESC;
       }, 48); // ~20 chars/sec
     }
 
-    function runDispatch() {
+    async function runDispatch() {
       const brief = document.getElementById('taskBrief').value.trim();
       const taskType = document.getElementById('taskType').value;
       if (!brief && !taskType) {
@@ -1046,54 +1046,65 @@ ORDER BY avg_cac DESC;
       termLine('t-sys', `$ dispatch --agent=${currentAgent} --task="${task}"`);
       termLine('t-sys', '');
 
+      // Trigger live backend API call in parallel with terminal execution steps
+      const apiPromise = fetch('/api/sevenforce/dispatch-employee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          employee_name: agentName,
+          role: document.getElementById('selectedAgentRole')?.textContent || 'Autonomous Specialist',
+          objective: brief || task
+        })
+      }).then(r => r.ok ? r.json() : null).catch(() => null);
+
       let i = 0;
-      const interval = setInterval(() => {
+      const interval = setInterval(async () => {
         if (i < steps.length) {
           termLine(steps[i][0], steps[i][1]);
           i++;
         } else {
           clearInterval(interval);
-          setTimeout(() => {
+          const data = await apiPromise;
+          const output = (data && data.deliverable) ? data.deliverable : (SAMPLE_OUTPUTS[currentAgent] || `[${agentName}] Task completed successfully.\n\nYour output has been generated based on the brief: "${task}"\n\nConnect your BYOK API key for live AI-powered results.`);
+
+          termLine('t-sys', '');
+          termLine('t-agent', `[${agentName.toUpperCase()}] ✅ Task execution complete. Generating output…`);
+          termLine('t-sys', '');
+          const twDiv = document.createElement('div');
+          twDiv.className = 't-output';
+          twDiv.id = 'typewriterTarget';
+          body.appendChild(twDiv);
+          body.scrollTop = body.scrollHeight;
+
+          typewriter(document.getElementById('typewriterTarget'), output, function () {
             termLine('t-sys', '');
-            termLine('t-agent', `[${agentName.toUpperCase()}] ✅ Task execution complete. Generating output…`);
-            termLine('t-sys', '');
-            const output = SAMPLE_OUTPUTS[currentAgent] || `[${agentName}] Task completed successfully.\n\nYour output has been generated based on the brief: "${task}"\n\nConnect your BYOK API key for live AI-powered results.`;
-            const twDiv = document.createElement('div');
-            twDiv.className = 't-output';
-            twDiv.id = 'typewriterTarget';
-            body.appendChild(twDiv);
-            body.scrollTop = body.scrollHeight;
+            termLine('t-success', `✅ Done · ${agentName} · ${(Math.random() * 2000 + 500) | 0} tokens · ${((Math.random() * 8 + 2)).toFixed(1)}s`);
 
-            typewriter(document.getElementById('typewriterTarget'), output, function () {
-              termLine('t-sys', '');
-              termLine('t-success', `✅ Done · ${agentName} · ${(Math.random() * 2000 + 500) | 0} tokens · ${((Math.random() * 8 + 2)).toFixed(1)}s`);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-play"></i> Dispatch Agent';
 
-              btn.disabled = false;
-              btn.innerHTML = '<i class="fas fa-play"></i> Dispatch Agent';
-
-              // Add to history
-              const hl = document.getElementById('historyList');
-              const avatars = { maya: '✍️', vibe: '📱', wave: '💬', nova: '📋', echo: '🎙️', scout: '🔍', sage: '📊' };
-              const suites = { maya: 'Growth AI', vibe: 'Growth AI', wave: 'Growth AI', nova: 'Agency AI', echo: 'Agency AI', scout: 'Agency AI', sage: 'Agency AI' };
-              const item = document.createElement('div');
-              item.className = 'history-item';
-              item.innerHTML = `
-            <div class="hi-left">
-              <div class="hi-avatar">${avatars[currentAgent]}</div>
-              <div class="hi-info">
-                <div class="hi-task">${task.substring(0, 70)}</div>
-                <div class="hi-meta">${agentName} · ${suites[currentAgent]} · Just now</div>
-              </div>
+            // Add to history
+            const hl = document.getElementById('historyList');
+            const avatars = { maya: '✍️', vibe: '📱', wave: '💬', nova: '📋', echo: '🎙️', scout: '🔍', sage: '📊' };
+            const suites = { maya: 'Growth AI', vibe: 'Growth AI', wave: 'Growth AI', nova: 'Agency AI', echo: 'Agency AI', scout: 'Agency AI', sage: 'Agency AI' };
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            item.innerHTML = `
+          <div class="hi-left">
+            <div class="hi-avatar">${avatars[currentAgent] || '🤖'}</div>
+            <div class="hi-info">
+              <div class="hi-task">${task.substring(0, 70)}</div>
+              <div class="hi-meta">${agentName} · ${suites[currentAgent] || 'Enterprise AI'} · Just now</div>
             </div>
-            <span class="hi-badge badge-done"><i class="fas fa-check"></i> Done</span>`;
-              hl.prepend(item);
+          </div>
+          <span class="hi-badge badge-done"><i class="fas fa-check"></i> Done</span>`;
+            hl.prepend(item);
 
-              // Update agent performance stats
-              updateStats(currentAgent, Math.round(Math.random() * 3000 + 1000));
-            });
-          }, 400);
+            // Update agent performance stats
+            updateStats(currentAgent, Math.round(Math.random() * 3000 + 1000));
+          });
         }
-      }, 320);
+      }, 300);
     }
 
     // ── Export as Markdown ──
