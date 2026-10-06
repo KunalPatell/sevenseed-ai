@@ -1660,6 +1660,16 @@ try:
 except ImportError:
     _recruitment_engine = None
 
+try:
+    import education_engine as _education_engine
+except ImportError:
+    _education_engine = None
+
+try:
+    import growth_engine as _growth_engine
+except ImportError:
+    _growth_engine = None
+
 
 class BreakdownDetectReq(BaseModel):
     image_base64: Optional[str] = None
@@ -2043,6 +2053,144 @@ def sevenforce_dispatch_employee(req: EmployeeDispatchReq):
     }
 
 
+# ── AVPU: Cognitive Science & Educational AI Engine ──────────────────────────
+
+class DagResolveReq(BaseModel):
+    completed_nodes: List[str] = []
+    target_node: Optional[str] = None
 
 
+@router.post("/api/education/dag-resolve")
+def education_dag_resolve(req: DagResolveReq):
+    """
+    Kahn's Algorithm (O(V+E)) prerequisite resolver for curriculum topics.
+    Computes unlocked ready nodes, locked nodes, and critical learning path.
+    """
+    if _education_engine:
+        return _education_engine.resolve_topological_dag(req.completed_nodes, req.target_node)
+    return {"status": "unavailable", "message": "Education engine offline"}
 
+
+class Sm2IntervalReq(BaseModel):
+    quality: int = 4
+    repetition_count: int = 0
+    ease_factor: float = 2.5
+    previous_interval: int = 0
+
+
+@router.post("/api/education/sm2-interval")
+def education_sm2_interval(req: Sm2IntervalReq):
+    """
+    Computes SuperMemo SM-2 spaced repetition ease factor, intervals, and 30-day forecast.
+    """
+    if _education_engine:
+        return _education_engine.compute_sm2_interval(
+            req.quality, req.repetition_count, req.ease_factor, req.previous_interval
+        )
+    return {"status": "unavailable", "message": "Education engine offline"}
+
+
+class CodeAssertReq(BaseModel):
+    code: str
+    assertions: Optional[List[Dict[str, Any]]] = None
+
+
+@router.post("/api/education/code-assert")
+def education_code_assert(req: CodeAssertReq):
+    """
+    Evaluates sandboxed assertions and pattern tests on code submissions.
+    """
+    if _education_engine:
+        return _education_engine.verify_code_assertions(req.code, req.assertions)
+    return {"status": "unavailable", "message": "Education engine offline"}
+
+
+class IssueCertReq(BaseModel):
+    student_name: str
+    course_slug: str
+    student_id: Optional[str] = None
+
+
+@router.post("/api/education/issue-cert")
+def education_issue_certificate(req: IssueCertReq):
+    """
+    Issues a tamper-proof cryptographic SHA-256 certificate verifiable at /avpu/verify.html
+    """
+    if _education_engine:
+        return _education_engine.issue_verifiable_certificate(
+            req.student_name, req.course_slug, req.student_id
+        )
+    return {"status": "unavailable", "message": "Education engine offline"}
+
+
+class CurriculumSprintReq(BaseModel):
+    goal: str = "Autonomous Multi-Agent AI Engineering"
+    daily_hours: float = 2.0
+    total_weeks: int = 4
+
+
+@router.post("/api/education/curriculum-sprint")
+def education_curriculum_sprint(req: CurriculumSprintReq):
+    """
+    Generates dynamic multi-week curriculum sprint with daily hour pacing and milestones.
+    """
+    if _education_engine:
+        return _education_engine.dynamic_curriculum_sprint(
+            req.goal, req.daily_hours, req.total_weeks
+        )
+    return {"status": "unavailable", "message": "Education engine offline"}
+
+
+# ── Growth Engineering & Marketing Teardown Engine ───────────────────────────
+
+class CopyAnalyzeReq(BaseModel):
+    text: str
+
+
+@router.post("/api/growth/analyze-copy")
+def growth_analyze_copy(req: CopyAnalyzeReq):
+    """
+    Computes copy fluff score, identifies buzzword bloat, and provides
+    Google XYZ high-converting rewrite recommendations.
+    """
+    if _growth_engine:
+        return _growth_engine.analyze_copy_and_fluff(req.text)
+    return {"status": "unavailable", "message": "Growth engine offline"}
+
+
+class FlywheelSimReq(BaseModel):
+    starting_users: int = 1000
+    monthly_churn_rate: float = 0.05
+    viral_k_factor: float = 0.25
+    monthly_paid_acquisitions: int = 200
+    arpu_monthly: float = 49.0
+    gross_margin: float = 0.85
+    cac: float = 120.0
+    months: int = 12
+
+
+@router.post("/api/growth/flywheel-simulate")
+def growth_flywheel_simulate(req: FlywheelSimReq):
+    """
+    Simulates compounding viral growth loops and calculates CAC, LTV, Payback, and ARR.
+    """
+    if _growth_engine:
+        return _growth_engine.simulate_growth_flywheel(
+            req.starting_users,
+            req.monthly_churn_rate,
+            req.viral_k_factor,
+            req.monthly_paid_acquisitions,
+            req.arpu_monthly,
+            req.gross_margin,
+            req.cac,
+            req.months
+        )
+    return {"status": "unavailable", "message": "Growth engine offline"}
+
+
+@router.get("/api/growth/teardowns")
+def growth_get_teardowns():
+    """Returns curated Growth In Reverse founder flywheel benchmarks."""
+    if _growth_engine:
+        return {"teardowns": _growth_engine.get_curated_growth_teardowns()}
+    return {"teardowns": []}
