@@ -261,9 +261,28 @@ function updateWordCounts() {
   document.getElementById('resumeWordCount').innerText = `${resWords} words`;
 }
 
-function runAtsScan() {
-  const jdText = document.getElementById('jdInput').value.toLowerCase();
-  const resText = document.getElementById('resumeInput').value.toLowerCase();
+async function runAtsScan() {
+  const jdRaw = document.getElementById('jdInput').value;
+  const resRaw = document.getElementById('resumeInput').value;
+
+  try {
+    const apiRes = await fetch('/api/recruitment/resume-match', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ resume_text: resRaw, job_description: jdRaw })
+    });
+    if (apiRes.ok) {
+      const data = await apiRes.json();
+      renderAtsUI(data.ats_score, data.matched_skills, data.missing_skills);
+      if (data.recommended_xyz_bullet) {
+        document.getElementById('rewriteText').innerHTML = data.recommended_xyz_bullet;
+      }
+      return;
+    }
+  } catch(e) {}
+
+  const jdText = jdRaw.toLowerCase();
+  const resText = resRaw.toLowerCase();
 
   // Extract key technical tokens from JD
   const potentialKeywords = [
@@ -295,7 +314,11 @@ function runAtsScan() {
 
   const total = matched.length + missing.length;
   const score = total > 0 ? Math.round((matched.length / total) * 100) : 75;
+  renderAtsUI(score, matched, missing);
+}
 
+function renderAtsUI(score, matched, missing) {
+  const total = matched.length + missing.length;
   document.getElementById('atsScore').innerText = `${score}%`;
   document.getElementById('atsScore').style.color = score >= 75 ? '#34d399' : (score >= 50 ? '#f59e0b' : '#f87171');
   

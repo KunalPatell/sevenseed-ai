@@ -734,6 +734,9 @@
       <button class="btn btn-primary" onclick="exportAuditCertificate()">
         <i class="fas fa-file-shield"></i> Export ISO Audit Certificate
       </button>
+      <button class="btn btn-ghost" onclick="downloadAnnotatedImage()" title="Download annotated defect photo with bounding boxes as PNG">
+        <i class="fas fa-camera"></i> Save Defect PNG
+      </button>
       <button class="btn btn-ghost" onclick="focusChatConsultant()">
         <i class="fas fa-comment-dots"></i> Ask AI Engineer
       </button>
@@ -1170,6 +1173,15 @@ function exportAuditCertificate() {
   a.href = url;
   a.download = 'breakdown_factor_audit_' + Date.now() + '.txt';
   a.click();
+}
+
+function downloadAnnotatedImage() {
+  var canvas = document.getElementById('visionCanvas');
+  if (!canvas) return;
+  var link = document.createElement('a');
+  link.download = 'breakdown_factor_defect_scan_' + Date.now() + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
 }
 
 function focusChatConsultant() {

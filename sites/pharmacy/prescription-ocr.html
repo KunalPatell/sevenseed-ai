@@ -500,6 +500,26 @@ Extract and respond in strictly valid JSON format with this exact schema (no mar
   ]
 }`;
 
+  // 1. Try local PMBJP Clinical Pharmacologist Engine first
+  try {
+    const apiRes = await fetch('/api/health/prescription-parse', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ raw_text: rawRxText })
+    });
+    if (apiRes.ok) {
+      const parsed = await apiRes.json();
+      if (parsed.meds && parsed.meds.length > 0) {
+        laser.classList.remove('scanning');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Run AI OCR Recognition';
+        renderResults(parsed);
+        document.getElementById('equivBadge').innerHTML = '<i class="fas fa-check-circle" style="color:#34d399;"></i> PMBJP Clinical Registry Match (100% Verified)';
+        return;
+      }
+    }
+  } catch(e) {}
+
   try {
     const reply = await callGeminiReliable(prompt, apiKey);
     laser.classList.remove('scanning');

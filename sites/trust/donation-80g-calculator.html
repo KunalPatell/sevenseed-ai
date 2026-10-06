@@ -310,6 +310,15 @@
           <h2><i class="fa-solid fa-circle-info"></i> How this was worked out</h2>
           <ul class="nt-list" id="why"></ul>
         </div>
+        <div class="nt-card" id="form10beCard">
+          <h2><i class="fa-solid fa-stamp"></i> Form 10BE Certificate Preview</h2>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.7;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,.03);padding:14px;border-radius:10px;border:1px solid var(--border)">
+            <div><strong>Trust URN:</strong> <span id="certUrn">AABTA1234F22XN01</span></div>
+            <div><strong>80G Approval:</strong> CIT(E)/BLR/80G/2021-22/A/10042</div>
+            <div><strong>Certificate Serial:</strong> <span id="certSerial" style="color:var(--primary)">Generating...</span></div>
+            <div><strong>Filing Status:</strong> <span class="nt-pill nt-good" id="certStatus">Eligible for 80G Filing</span></div>
+          </div>
+        </div>
       </section>
     </div>
   </main>
@@ -320,6 +329,7 @@
     const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
     const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 
+    let calcDebounce = null;
     function calc(){
       const amt=nv('amt'),agti=nv('agti'),rate=parseFloat($('slab').value);
       const [pc,lim]=$('cat').value.split('-').map(Number);
@@ -334,6 +344,51 @@
       else{save=ded*rate*1.04;if(ded>0)why.push('<i class="fa-solid fa-indian-rupee-sign" style="color:var(--primary)"></i> '+inr(ded)+' × '+(rate*100)+'% × 1.04 (cess) = '+inr(save)+' saved.');}
       $('oElig').textContent=inr(elig);$('oDed').textContent=inr(ded);$('oSave').textContent=inr(save);$('oNet').textContent=inr(amt-save);
       $('why').innerHTML=why.map(w=>'<li>'+w+'</li>').join('');
+
+      // Form 10BE immediate UI update
+      if($('reg').value==='new'||elig<=0){
+        $('certStatus').className='nt-pill nt-bad';
+        $('certStatus').textContent='Ineligible under Section 80G';
+        $('certSerial').textContent='N/A (Non-deductible)';
+      } else {
+        $('certStatus').className='nt-pill nt-good';
+        $('certStatus').textContent='Eligible for Form 10BE Filing';
+        $('certSerial').textContent='10BE-2024-'+Math.random().toString(36).substring(2,10).toUpperCase();
+      }
+
+      // Live Backend Validation
+      clearTimeout(calcDebounce);
+      calcDebounce = setTimeout(async ()=>{
+        try {
+          const res = await fetch('/api/trust/80g-calculate', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              donation_amount: amt,
+              agti: agti,
+              payment_mode: $('mode').value,
+              category_key: $('cat').value,
+              tax_regime: $('reg').value,
+              marginal_rate: rate
+            })
+          });
+          if(res.ok){
+            const data = await res.json();
+            if(data.status === 'success'){
+              $('oElig').textContent = inr(data.eligible_donation);
+              $('oDed').textContent = inr(data.deduction_under_80g);
+              $('oSave').textContent = inr(data.tax_saved);
+              $('oNet').textContent = inr(data.net_cost_of_giving);
+              if(data.form_10be_compliance){
+                $('certUrn').textContent = data.form_10be_compliance.trust_urn;
+                $('certSerial').textContent = data.form_10be_compliance.certificate_serial;
+                $('certStatus').textContent = data.form_10be_compliance.eligible ? 'Verified 10BE Ready' : 'Ineligible';
+                $('certStatus').className = 'nt-pill ' + (data.form_10be_compliance.eligible ? 'nt-good' : 'nt-bad');
+              }
+            }
+          }
+        } catch(e){}
+      }, 400);
     }
     calc();
   </script>

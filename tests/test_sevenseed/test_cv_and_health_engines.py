@@ -123,3 +123,19 @@ def test_api_endpoints():
     r5 = client.get('/api/health/emergency-directory?city=Ahmedabad')
     assert r5.status_code == 200
     assert len(r5.json()['hospitals']) >= 1
+
+    # 6. Prescription parse
+    r6 = client.post('/api/health/prescription-parse', json={'raw_text': 'Tab Augmentin 625 Duo, Tab Pantocid 40mg'})
+    assert r6.status_code == 200
+    assert r6.json()['status'] == 'success'
+    assert len(r6.json()['meds']) >= 2
+
+    # 7. Resume match
+    r7 = client.post('/api/recruitment/resume-match', json={
+        'job_description': 'Senior Python, FastAPI, Docker, and Kubernetes Engineer',
+        'resume_text': 'Full stack developer with extensive Python and Docker experience'
+    })
+    assert r7.status_code == 200
+    assert r7.json()['status'] == 'success'
+    assert 'Python' in r7.json()['matched_skills']
+    assert 'Fastapi' in r7.json()['missing_skills'] or 'Kubernetes' in r7.json()['missing_skills']
