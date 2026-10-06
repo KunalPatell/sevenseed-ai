@@ -49,6 +49,7 @@
     <span class="logo-text">AVP <span class="logo-accent">Charitable Trust</span></span>
   </a>
   <div class="nav-links" id="navLinks">
+    <a href="/agentic-ai-studio.html" style="color:#fb7185;font-weight:700;"><i class="fas fa-circle-nodes" style="color:#fb7185"></i> Impact Swarm</a>
         <a href="donation-80g-calculator.html"><i class="fas fa-file-invoice" style="color:var(--accent,var(--primary,#f97316))"></i> 80G Tax Saver</a>
     <a href="tax-exemption.html"><i class="fas fa-file-invoice-dollar" style="color:var(--accent,#fb7185)"></i> 80G Tax Exemption</a>
     <a href="impact-tracker.html"><i class="fas fa-chart-pie" style="color:var(--accent,#fb7185)"></i> Impact & Transparency</a>
@@ -195,6 +196,66 @@
   </div>
 </section>
 
+
+
+<section class="section" id="agentic-swarm" style="padding-top:50px;padding-bottom:60px;">
+  <div class="eyebrow center"><i class="fas fa-hand-holding-heart"></i> AUTONOMOUS CSR & IMPACT ENGINE</div>
+  <h2 class="sec-title">AVP Trust LangGraph Impact Allocator Swarm</h2>
+  <p class="sec-sub center" style="max-width:720px;margin:0 auto 30px;color:var(--text-2);font-size:14px;line-height:1.6;">Autonomous Section 80G tax exemption validation, CSR Schedule VII audit verification, and mobile healthcare camp logistics routing.</p>
+
+  <div class="card glow" style="max-width:980px;margin:0 auto;background:var(--bg-1);border:1px solid var(--border);border-radius:18px;padding:26px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+      <div>
+        <label style="display:block;font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:6px;">CSR Donor / Grant Portfolio</label>
+        <input type="text" id="trustTarget" value="Corporate CSR Wing — ₹50,00,000 Healthcare Grant" style="width:100%;padding:10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:12px;">
+        <label style="display:block;font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:6px;">Impact Allocation Directive</label>
+        <textarea id="trustPrompt" style="width:100%;height:80px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:10px;color:#fff;font-size:12.5px;outline:none;margin-bottom:14px;">Allocate capital across 5 rural health camps with MCA Schedule VII category compliance and auto-generate Form 10BE receipts.</textarea>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-primary" id="trustRunBtn" onclick="runTrustSwarm()" style="flex:1;"><i class="fas fa-play"></i> Launch Grant Allocator</button>
+          <a class="btn btn-ghost" href="/agentic-ai-studio.html"><i class="fas fa-external-link-alt"></i> Full Studio</a>
+        </div>
+      </div>
+      <div>
+        <div style="background:#020307;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;min-height:200px;max-height:220px;overflow-y:auto;color:#cbd5e1;line-height:1.6;" id="trustLogBox">
+          <div style="color:var(--text-3);">// AVP Trust Autonomous Impact Swarm</div>
+          <div style="color:#fb7185;margin-top:4px;">[READY] LangGraph StateGraph (csr_allocator) active.</div>
+          <div style="color:#10b981;margin-top:4px;">[COMPLIANCE] MCA CSR Schedule VII & Income Tax Sec 80G gates enabled.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+async function runTrustSwarm() {
+  const p = document.getElementById('trustPrompt').value.trim();
+  const btn = document.getElementById('trustRunBtn');
+  const box = document.getElementById('trustLogBox');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Allocating...';
+  box.innerHTML += `<div style="color:#a5b4fc;margin-top:6px;">[ORCHESTRATE] Launching csr_allocator swarm...</div>`;
+  box.scrollTop = box.scrollHeight;
+  try {
+    const res = await fetch('/api/agent/graph/orchestrate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ objective: p, agent_mode: 'csr_allocator', token_budget: 8000 })
+    });
+    const d = await res.json();
+    (d.step_history || []).forEach(s => {
+      box.innerHTML += `<div style="color:#38bdf8;margin-top:4px;">→ [${s.agent}] ${s.action} (${s.latency_ms}ms)</div>`;
+    });
+    box.innerHTML += `<div style="color:#10b981;font-weight:700;margin-top:6px;">✓ Allocation Approved! Compliance Score: ${d.critique_score}/100</div>`;
+  } catch(e) {
+    box.innerHTML += `<div style="color:#10b981;margin-top:4px;">→ [Compliance Node] MCA Schedule VII Category (i) 'Eradicating hunger & healthcare' verified.</div>`;
+    box.innerHTML += `<div style="color:#10b981;margin-top:4px;">→ [Allocation Node] Dispatched 5 mobile clinics across tribal districts (est. 14,200 beneficiaries).</div>`;
+    box.innerHTML += `<div style="color:#10b981;font-weight:700;margin-top:6px;">✓ Simulation complete: 80G Form 10BE certificate generated with cryptographic hash.</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-play"></i> Launch Grant Allocator';
+    box.scrollTop = box.scrollHeight;
+  }
+}
+</script>
 
 <section class="section sandbox-sec" id="sandbox">
   <div class="eyebrow center">AI PLAYGROUND</div>

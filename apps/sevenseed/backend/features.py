@@ -1411,6 +1411,28 @@ def agent_presets():
                 "default_prompt": "Analyze portfolio health across all 9 ventures — flag CRITICAL runway ventures and generate board report",
                 "hitl_required": False,
                 "estimated_ms": 4800
+            },
+            {
+                "id": "ecom_arbitrage",
+                "name": "🛒 AVP Emart Price & Cart Arbitrage Swarm",
+                "venture": "AVP Emart",
+                "badge": "Autonomous E-Commerce Agent",
+                "tools": ["WebIntelTool", "VentureIntelTool", "AutomationDispatcher", "NotificationSender"],
+                "description": "Scrapes multi-channel marketplace prices, applies card rewards & EMI amortization, and optimizes cart value.",
+                "default_prompt": "Compare live price deltas for Apple iPhone 16 Pro Max across Amazon, Flipkart and Reliance Digital with card discounts",
+                "hitl_required": False,
+                "estimated_ms": 3900
+            },
+            {
+                "id": "csr_allocator",
+                "name": "🤝 AVP Trust CSR Grant & Impact Allocator",
+                "venture": "AVP Charitable Trust",
+                "badge": "Social Impact & 80G Agent",
+                "tools": ["ComplianceTool", "FinancialRunwayTool", "AutomationDispatcher", "NotificationSender"],
+                "description": "Validates MCA Section 135 CSR compliance, formulates 80G tax receipts, and orchestrates healthcare camp logistics.",
+                "default_prompt": "Allocate a ₹50 Lakh CSR grant across rural health camps with MCA Schedule VII compliance audit",
+                "hitl_required": True,
+                "estimated_ms": 4600
             }
         ]
     }

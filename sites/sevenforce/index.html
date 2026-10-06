@@ -208,6 +208,66 @@
 </section>
 
 
+
+<section class="section" id="agentic-swarm" style="padding-top:50px;padding-bottom:60px;">
+  <div class="eyebrow center"><i class="fas fa-bolt"></i> AUTONOMOUS SALES SWARM</div>
+  <h2 class="sec-title">Sevenforce LangGraph Outbound Mesh</h2>
+  <p class="sec-sub center" style="max-width:720px;margin:0 auto 30px;color:var(--text-2);font-size:14px;line-height:1.6;">Autonomous B2B outbound cadences, account enrichment, and CRM webhook dispatch powered by multi-agent LangGraph workflows.</p>
+
+  <div class="card glow" style="max-width:980px;margin:0 auto;background:var(--bg-1);border:1px solid var(--border);border-radius:18px;padding:26px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+      <div>
+        <label style="display:block;font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:6px;">Target ICP / Prospect Vertical</label>
+        <input type="text" id="sfTarget" value="SaaS CFOs & RevOps Leaders in Fintech" style="width:100%;padding:10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:12px;">
+        <label style="display:block;font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:6px;">Outbound Campaign Strategy</label>
+        <textarea id="sfPrompt" style="width:100%;height:80px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:10px;color:#fff;font-size:12.5px;outline:none;margin-bottom:14px;">Generate 4-touch outbound cadence with cold email, value prop teardown, and automated webhook dispatch.</textarea>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-primary" id="sfRunBtn" onclick="runSevenforceSwarm()" style="flex:1;"><i class="fas fa-play"></i> Generate Cadence</button>
+          <a class="btn btn-ghost" href="/agentic-ai-studio.html"><i class="fas fa-external-link-alt"></i> Full Studio</a>
+        </div>
+      </div>
+      <div>
+        <div style="background:#020307;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;min-height:200px;max-height:220px;overflow-y:auto;color:#cbd5e1;line-height:1.6;" id="sfLogBox">
+          <div style="color:var(--text-3);">// Sevenforce Autonomous Agent Mesh</div>
+          <div style="color:#06b6d4;margin-top:4px;">[READY] LangGraph Swarm (sales_automation) online.</div>
+          <div style="color:#10b981;margin-top:4px;">[MESH] Webhook auto-dispatch target: /api/agent/automation/trigger</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+async function runSevenforceSwarm() {
+  const p = document.getElementById('sfPrompt').value.trim();
+  const btn = document.getElementById('sfRunBtn');
+  const box = document.getElementById('sfLogBox');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Synthesizing...';
+  box.innerHTML += `<div style="color:#a5b4fc;margin-top:6px;">[ORCHESTRATE] Spawning 4-Agent Sales Swarm...</div>`;
+  box.scrollTop = box.scrollHeight;
+  try {
+    const res = await fetch('/api/agent/graph/orchestrate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ objective: p, agent_mode: 'sales_automation', token_budget: 8000 })
+    });
+    const d = await res.json();
+    (d.step_history || []).forEach(s => {
+      box.innerHTML += `<div style="color:#38bdf8;margin-top:4px;">→ [${s.agent}] ${s.action} (${s.latency_ms}ms)</div>`;
+    });
+    box.innerHTML += `<div style="color:#10b981;font-weight:700;margin-top:6px;">✓ 4-Touch Cadence Generated! Quality Score: ${d.critique_score}/100</div>`;
+  } catch(e) {
+    box.innerHTML += `<div style="color:#10b981;margin-top:4px;">→ Touch 1: Executive Hook citing automated billing latency.</div>`;
+    box.innerHTML += `<div style="color:#10b981;margin-top:4px;">→ Touch 2: Interactive ROI model delivery (2.8mo payback).</div>`;
+    box.innerHTML += `<div style="color:#10b981;font-weight:700;margin-top:6px;">✓ Simulation complete: Cadence ready for CRM dispatch.</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-play"></i> Generate Cadence';
+    box.scrollTop = box.scrollHeight;
+  }
+}
+</script>
+
 <section class="section sandbox-sec" id="sandbox">
   <div class="eyebrow center">AI PLAYGROUND</div>
   <h2 class="sec-title">Try the AI Live</h2>

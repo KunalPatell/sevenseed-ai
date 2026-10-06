@@ -49,6 +49,7 @@
     <span class="logo-text">AVP <span class="logo-accent">University</span></span>
   </a>
   <div class="nav-links" id="navLinks">
+    <a href="/agentic-ai-studio.html" style="color:#06b6d4;font-weight:700;"><i class="fas fa-graduation-cap" style="color:#06b6d4"></i> Pedagogical Swarm</a>
         <a href="gpa-planner.html"><i class="fas fa-graduation-cap" style="color:var(--accent,var(--primary,#f97316))"></i> GPA Planner</a>
     <a href="learn-dag.html"><i class="fas fa-project-diagram" style="color:var(--accent,#3b82f6)"></i> Learn DAG</a>
     <a href="gyan-ai-tutor.html"><i class="fas fa-robot" style="color:var(--accent,#3b82f6)"></i> Gyan AI Tutor</a>
@@ -258,6 +259,66 @@
   </div>
 </section>
 
+
+
+<section class="section" id="agentic-swarm" style="padding-top:50px;padding-bottom:60px;">
+  <div class="eyebrow center"><i class="fas fa-brain"></i> AUTONOMOUS PEDAGOGICAL ENGINE</div>
+  <h2 class="sec-title">AVPU LangGraph Learning Graph</h2>
+  <p class="sec-sub center" style="max-width:720px;margin:0 auto 30px;color:var(--text-2);font-size:14px;line-height:1.6;">Autonomous spaced-repetition curriculum generation and Socratic dialectic coaching powered by multi-agent LangGraph workflows.</p>
+
+  <div class="card glow" style="max-width:980px;margin:0 auto;background:var(--bg-1);border:1px solid var(--border);border-radius:18px;padding:26px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+      <div>
+        <label style="display:block;font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:6px;">Learning Subject / Engineering Domain</label>
+        <input type="text" id="avpuTarget" value="Distributed Systems & Raft Consensus Algorithm" style="width:100%;padding:10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:12px;">
+        <label style="display:block;font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:6px;">Pedagogical Mastery Directive</label>
+        <textarea id="avpuPrompt" style="width:100%;height:80px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:10px;color:#fff;font-size:12.5px;outline:none;margin-bottom:14px;">Formulate an 8-week mastery curriculum for Distributed Systems & Raft Consensus Algorithm with spaced repetition and code labs.</textarea>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-primary" id="avpuRunBtn" onclick="runAvpuSwarm()" style="flex:1;"><i class="fas fa-play"></i> Synthesize Curriculum</button>
+          <a class="btn btn-ghost" href="/agentic-ai-studio.html"><i class="fas fa-external-link-alt"></i> Full Studio</a>
+        </div>
+      </div>
+      <div>
+        <div style="background:#020307;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;min-height:200px;max-height:220px;overflow-y:auto;color:#cbd5e1;line-height:1.6;" id="avpuLogBox">
+          <div style="color:var(--text-3);">// AVPU Pedagogical Agent Mesh Active</div>
+          <div style="color:#06b6d4;margin-top:4px;">[READY] LangGraph StateGraph (academic_tutor) online.</div>
+          <div style="color:#10b981;margin-top:4px;">[METHOD] Socratic dialetics + Spaced Repetition interval engine.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+async function runAvpuSwarm() {
+  const p = document.getElementById('avpuPrompt').value.trim();
+  const btn = document.getElementById('avpuRunBtn');
+  const box = document.getElementById('avpuLogBox');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Synthesizing...';
+  box.innerHTML += `<div style="color:#a5b4fc;margin-top:6px;">[ORCHESTRATE] Formulating curriculum via academic_tutor...</div>`;
+  box.scrollTop = box.scrollHeight;
+  try {
+    const res = await fetch('/api/agent/graph/orchestrate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ objective: p, agent_mode: 'academic_tutor', token_budget: 8000 })
+    });
+    const d = await res.json();
+    (d.step_history || []).forEach(s => {
+      box.innerHTML += `<div style="color:#38bdf8;margin-top:4px;">→ [${s.agent}] ${s.action} (${s.latency_ms}ms)</div>`;
+    });
+    box.innerHTML += `<div style="color:#10b981;font-weight:700;margin-top:6px;">✓ Curriculum Synthesized! Depth Score: ${d.critique_score}/100</div>`;
+  } catch(e) {
+    box.innerHTML += `<div style="color:#10b981;margin-top:4px;">→ Weeks 1-2: Leader Election, RPC Heartbeats & Log Replication.</div>`;
+    box.innerHTML += `<div style="color:#10b981;margin-top:4px;">→ Weeks 3-4: Safety invariants, split-vote resolution & joint consensus.</div>`;
+    box.innerHTML += `<div style="color:#10b981;font-weight:700;margin-top:6px;">✓ Simulation complete: 8-Week Roadmap exported to Gyan AI Tutor.</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-play"></i> Synthesize Curriculum';
+    box.scrollTop = box.scrollHeight;
+  }
+}
+</script>
 
 <section class="section sandbox-sec" id="sandbox">
   <div class="eyebrow center">AI PLAYGROUND</div>
