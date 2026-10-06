@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Executive ATS Resume Builder & XYZ Bullet Wizard — Comonk AI</title>
+  <meta name="description" content="Build 100% ATS-parseable single-column executive resumes with 4 vetted corporate color themes, Google XYZ formula live validator, and print-ready PDF export.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E📄%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee);text-decoration:none}
+    .nt-brand b{color:var(--primary,#f97316)}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s;text-decoration:none}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:var(--primary,#f97316);border-color:rgba(var(--primary-rgb,249,115,22),.4);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-wrap{max-width:1440px;margin:0 auto;padding:36px 20px 80px}
+    .nt-head{text-align:center;margin-bottom:28px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:12px;color:var(--primary,#f97316);background:rgba(var(--primary-rgb,249,115,22),.1);border:1px solid rgba(var(--primary-rgb,249,115,22),.3)}
+    .nt-title{font-size:clamp(26px,3.8vw,42px);font-weight:900;line-height:1.15;margin-bottom:10px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:15px;max-width:760px;margin:0 auto;line-height:1.55}
+
+    /* Layout split: Form Editor vs Live Paper Preview */
+    .builder-layout{display:grid;grid-template-columns:minmax(0,540px) minmax(0,1fr);gap:24px;align-items:start}
+    @media(max-width:1100px){.builder-layout{grid-template-columns:1fr}}
+
+    .editor-pane{display:flex;flex-direction:column;gap:18px}
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:14px;padding:20px}
+    .nt-card h2{font-size:15.5px;font-weight:700;margin-bottom:14px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:var(--primary,#f97316)}
+
+    /* Theme Picker Chips */
+    .theme-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+    .theme-btn{padding:10px;border-radius:10px;border:1px solid var(--border,rgba(255,255,255,.07));background:var(--bg-2,#12121e);color:var(--text,#eee);cursor:pointer;display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:600;transition:all .15s;text-align:left}
+    .theme-btn:hover{border-color:var(--primary,#f97316)}
+    .theme-btn.active{border-color:var(--primary,#f97316);background:rgba(var(--primary-rgb,249,115,22),.1)}
+    .swatch{width:16px;height:16px;border-radius:50%;display:inline-block;flex-shrink:0}
+
+    /* Form Fields */
+    .nt-f{margin-bottom:12px}
+    .nt-f label{display:block;font-size:12px;font-weight:600;color:var(--text-2,#9aa0b8);margin-bottom:5px}
+    .nt-f input,.nt-f textarea,.nt-f select{width:100%;padding:8px 11px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:8px;color:var(--text,#eee);font:inherit;font-size:13.5px;outline:none;transition:border-color .15s}
+    .nt-f input:focus,.nt-f textarea:focus{border-color:var(--primary,#f97316)}
+    .nt-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .nt-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+    /* Google XYZ Wizard Pill */
+    .xyz-helper{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px;margin-top:8px}
+    .xyz-meter{display:flex;gap:6px;align-items:center;margin-top:6px;font-size:11px}
+    .xyz-pill{padding:2px 8px;border-radius:4px;font-weight:700}
+    .xyz-pill.on{background:rgba(16,185,129,.2);color:#34d399;border:1px solid rgba(16,185,129,.4)}
+    .xyz-pill.off{background:rgba(255,255,255,.05);color:var(--text-3,#666);border:1px solid transparent}
+
+    /* Resume Paper Stage */
+    .preview-sticky{position:sticky;top:84px;display:flex;flex-direction:column;gap:14px}
+    .preview-actions{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;background:var(--bg-1,#0d0d16);padding:12px 18px;border-radius:12px;border:1px solid var(--border,rgba(255,255,255,.07))}
+    .ats-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.3)}
+
+    /* The Paper itself: Exact 8.5x11 A4/Letter replica with print media styles */
+    .resume-sheet{background:#ffffff;color:#1e293b;width:100%;max-width:800px;min-height:1020px;padding:34px 40px;border-radius:4px;box-shadow:0 12px 36px rgba(0,0,0,.35);font-family:'Inter',system-ui,sans-serif;line-height:1.45;position:relative;margin:0 auto}
+    
+    /* Executive Palette CSS variables for Paper */
+    .theme-slate { --p-primary:#1e293b; --p-accent:#0284c7; --p-text:#334155; --p-border:#1e293b; }
+    .theme-emerald { --p-primary:#065f46; --p-accent:#059669; --p-text:#1f2937; --p-border:#065f46; }
+    .theme-charcoal { --p-primary:#0f172a; --p-accent:#475569; --p-text:#334155; --p-border:#0f172a; }
+    .theme-sapphire { --p-primary:#1e3a8a; --p-accent:#2563eb; --p-text:#1e293b; --p-border:#1e3a8a; }
+
+    .res-name{font-size:24px;font-weight:800;color:var(--p-primary);letter-spacing:-.01em;margin-bottom:3px;text-transform:uppercase}
+    .res-tagline{font-size:13px;font-weight:700;color:var(--p-accent);margin-bottom:6px;letter-spacing:.02em}
+    .res-contacts{font-size:11px;color:var(--p-text);display:flex;flex-wrap:wrap;gap:10px;padding-bottom:10px;border-bottom:1.5pt solid var(--p-border);margin-bottom:12px}
+    .res-contacts a{color:inherit;text-decoration:none}
+    
+    .res-sec{margin-bottom:12px}
+    .res-sec-title{font-size:12px;font-weight:800;color:var(--p-primary);text-transform:uppercase;letter-spacing:.06em;padding-bottom:2px;border-bottom:1.5pt solid var(--p-border);margin-bottom:7px}
+    .res-summary{font-size:11px;color:var(--p-text);line-height:1.5;margin-bottom:8px}
+
+    .res-job{margin-bottom:8px}
+    .res-job-head{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;margin-bottom:1px}
+    .res-job-title{font-weight:700;color:var(--p-primary)}
+    .res-job-dates{font-size:10.5px;color:#64748b;font-weight:600}
+    .res-job-sub{display:flex;justify-content:space-between;font-size:10.5px;color:var(--p-accent);font-weight:600;margin-bottom:3px}
+    .res-ul{margin:0;padding-left:15px;font-size:10.5px;color:var(--p-text)}
+    .res-ul li{margin-bottom:2.5px;line-height:1.42}
+
+    .res-skills-grid{display:grid;grid-template-columns:110px 1fr;gap:4px;font-size:10.5px;margin-bottom:2px}
+    .res-skill-lbl{font-weight:700;color:var(--p-primary)}
+    .res-skill-val{color:var(--p-text)}
+
+    /* Page budgeting bar */
+    .page-budget-bar{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:6px}
+    .page-budget-fill{height:100%;background:#10b981;transition:width .3s}
+
+    /* Print rules for true ATS output */
+    @media print {
+      body * { visibility: hidden !important; }
+      #printableResume, #printableResume * { visibility: visible !important; }
+      #printableResume {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        box-shadow: none !important;
+        padding: 0.35in 0.40in !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 0.35in 0.40in;
+      }
+    }
+  </style>
+</head>
+<body class="nt-body">
+
+<nav class="nt-nav">
+  <a class="nt-brand" href="index.html">
+    <i class="fas fa-brain" style="color:var(--primary,#f97316);"></i>
+    <span>Comonk <b>AI</b></span>
+  </a>
+  <div class="nt-links">
+    <a href="index.html">Overview</a>
+    <a href="resume-builder.html" class="on">ATS Resume Builder</a>
+    <a href="ctc-calculator.html">CTC Calculator</a>
+    <a href="job-challenge.html">100-Day Challenge</a>
+    <a href="marketing-examples.html">Google XYZ Wizard</a>
+    <a href="interview-arena.html">Interview Arena</a>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="/" style="color:var(--text-2);font-size:12.5px;text-decoration:none;padding:6px 12px;border-radius:8px;background:var(--bg-2);border:1px solid var(--border);"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+  </div>
+</nav>
+
+<div class="nt-wrap">
+  <div class="nt-head">
+    <div class="nt-badge"><i class="fas fa-shield-halved"></i> 100% Parseable Single-Column ATS Standards</div>
+    <h1 class="nt-title">Executive ATS Resume Builder</h1>
+    <p class="nt-sub">Engineered with vetted corporate color themes, Google XYZ accomplishment formula validation, strict 0.35" margin budgeting, and print-ready ATS export.</p>
+  </div>
+
+  <div class="builder-layout">
+    <!-- Left: Profile & Experience Editor -->
+    <div class="editor-pane">
+      
+      <!-- Palette Switcher -->
+      <div class="nt-card">
+        <h2><i class="fas fa-palette"></i> Executive Color Palette (4 Vetted Themes)</h2>
+        <div class="theme-grid">
+          <button class="theme-btn active" id="btnThemeSlate" onclick="setTheme('slate')">
+            <span class="swatch" style="background:#1e293b;border:2px solid #0284c7;"></span>
+            <div>
+              <strong>Executive Slate</strong>
+              <small style="display:block;color:var(--text-3);font-size:10.5px;">VP Eng & Corporate</small>
+            </div>
+          </button>
+          <button class="theme-btn" id="btnThemeEmerald" onclick="setTheme('emerald')">
+            <span class="swatch" style="background:#065f46;border:2px solid #10b981;"></span>
+            <div>
+              <strong>Emerald Teal</strong>
+              <small style="display:block;color:var(--text-3);font-size:10.5px;">Fintech & Healthcare</small>
+            </div>
+          </button>
+          <button class="theme-btn" id="btnThemeCharcoal" onclick="setTheme('charcoal')">
+            <span class="swatch" style="background:#0f172a;border:2px solid #64748b;"></span>
+            <div>
+              <strong>Charcoal Carbon</strong>
+              <small style="display:block;color:var(--text-3);font-size:10.5px;">AI / Quant Minimalist</small>
+            </div>
+          </button>
+          <button class="theme-btn" id="btnThemeSapphire" onclick="setTheme('sapphire')">
+            <span class="swatch" style="background:#1e3a8a;border:2px solid #2563eb;"></span>
+            <div>
+              <strong>Royal Sapphire</strong>
+              <small style="display:block;color:var(--text-3);font-size:10.5px;">Enterprise SaaS</small>
+            </div>
+          </button>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button class="nt-btn" style="flex:1;font-size:12px;" onclick="loadSample('ai')"><i class="fas fa-robot"></i> Load AI Eng Sample</button>
+          <button class="nt-btn" style="flex:1;font-size:12px;" onclick="loadSample('lead')"><i class="fas fa-code"></i> Load Full-Stack Lead</button>
+        </div>
+      </div>
+
+      <!-- Contact Details -->
+      <div class="nt-card">
+        <h2><i class="fas fa-id-card"></i> Contact Information</h2>
+        <div class="nt-row2">
+          <div class="nt-f">
+            <label>Full Name</label>
+            <input type="text" id="inName" value="Kunal Patel" oninput="renderResume()">
+          </div>
+          <div class="nt-f">
+            <label>Target Executive Title</label>
+            <input type="text" id="inTitle" value="Senior AI Systems Engineer & Full-Stack Architect" oninput="renderResume()">
+          </div>
+        </div>
+        <div class="nt-row3">
+          <div class="nt-f">
+            <label>Email</label>
+            <input type="text" id="inEmail" value="kunal@example.com" oninput="renderResume()">
+          </div>
+          <div class="nt-f">
+            <label>Phone / WhatsApp</label>
+            <input type="text" id="inPhone" value="+91 98765 43210" oninput="renderResume()">
+          </div>
+          <div class="nt-f">
+            <label>Location</label>
+            <input type="text" id="inLoc" value="Ahmedabad & GIFT City, India" oninput="renderResume()">
+          </div>
+        </div>
+        <div class="nt-row2">
+          <div class="nt-f">
+            <label>LinkedIn / Portfolio URL</label>
+            <input type="text" id="inLinkedin" value="linkedin.com/in/kunalpatel" oninput="renderResume()">
+          </div>
+          <div class="nt-f">
+            <label>GitHub Profile</label>
+            <input type="text" id="inGithub" value="github.com/kunalpatel" oninput="renderResume()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Executive Summary -->
+      <div class="nt-card">
+        <h2><i class="fas fa-align-left"></i> Executive Summary</h2>
+        <div class="nt-f">
+          <label>2-3 Sentence High-Impact Overview</label>
+          <textarea id="inSummary" rows="3" oninput="renderResume()">Pragmatic AI Systems Engineer with 5+ years of experience architecting distributed multi-provider LLM pipelines, autonomous agents, and sub-second computer vision platforms. Proven track record reducing inference costs by 68% while sustaining 99.9% production availability.</textarea>
+        </div>
+      </div>
+
+      <!-- Experience & Google XYZ Bullet Builder -->
+      <div class="nt-card">
+        <h2><i class="fas fa-briefcase"></i> Work Experience & Google XYZ Wizard</h2>
+        <div id="experienceContainer">
+          <!-- Dynamically populated -->
+        </div>
+        <button class="nt-btn pri" style="width:100%;margin-top:10px;" onclick="addExperience()"><i class="fas fa-plus"></i> Add Position</button>
+      </div>
+
+      <!-- Technical Skills Taxonomy -->
+      <div class="nt-card">
+        <h2><i class="fas fa-cubes"></i> Technical Skills Matrix</h2>
+        <div class="nt-f">
+          <label>Languages & Core Runtimes</label>
+          <input type="text" id="inSkillsLang" value="Python 3.12, TypeScript, JavaScript (ES6+), C++, SQL, Bash" oninput="renderResume()">
+        </div>
+        <div class="nt-f">
+          <label>AI & Frameworks</label>
+          <input type="text" id="inSkillsAI" value="FastAPI, LangGraph, LiteLLM, PyTorch, OpenCV, ONNX Runtime, HuggingFace, NumPy, Pandas" oninput="renderResume()">
+        </div>
+        <div class="nt-f">
+          <label>Cloud, Databases & DevOps</label>
+          <input type="text" id="inSkillsCloud" value="Docker, PostgreSQL, SQLite, Redis, AWS (ECS, S3), GitHub Actions, Vercel, Render" oninput="renderResume()">
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div class="nt-card">
+        <h2><i class="fas fa-graduation-cap"></i> Education & Credentials</h2>
+        <div class="nt-row2">
+          <div class="nt-f">
+            <label>Degree & Field</label>
+            <input type="text" id="inDegree" value="B.Tech in Computer Engineering" oninput="renderResume()">
+          </div>
+          <div class="nt-f">
+            <label>Institution & Year</label>
+            <input type="text" id="inSchool" value="Gujarat Technological University (GTU) · 2021" oninput="renderResume()">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Live ATS Preview & Telemetry -->
+    <div class="preview-sticky">
+      <!-- Toolbar -->
+      <div class="preview-actions">
+        <div>
+          <span class="ats-badge" id="atsScoreBadge"><i class="fas fa-check-circle"></i> ATS Score: 98% (Workday, Taleo Ready)</span>
+          <div style="font-size:11px;color:var(--text-3);margin-top:4px;">
+            Estimated Height: <b id="budgetPages">1.0 Page (Optimal)</b>
+          </div>
+          <div class="page-budget-bar" style="width:200px;">
+            <div class="page-budget-fill" id="budgetBar" style="width:88%;"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="nt-btn" onclick="exportJSON()"><i class="fas fa-download"></i> Save JSON</button>
+          <button class="nt-btn pri" onclick="window.print()"><i class="fas fa-print"></i> Print / PDF</button>
+        </div>
+      </div>
+
+      <!-- Paper Preview Stage -->
+      <div id="printableResume" class="resume-sheet theme-slate">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Default experiences
+let experiences = [
+  {
+    role: "Senior AI Systems Engineer",
+    company: "Sevenseed Ecosystem",
+    location: "Ahmedabad, India",
+    dates: "2023 – Present",
+    bullets: [
+      "Architected distributed BYOK token routing layer across Groq and Gemini, reducing SaaS API costs by 74% across 8 enterprise applications.",
+      "Engineered real-time OpenCV YuNet face detection and SFace biometric matcher delivering 99.2% accuracy in sub-120ms CPU execution.",
+      "Built tamper-proof SHA-256 hash-chained audit ledger ensuring Section 63 BSA compliance for digital evidence preservation."
+    ]
+  },
+  {
+    role: "Full-Stack AI Developer",
+    company: "Autonomous Agent Studio",
+    location: "Remote",
+    dates: "2021 – 2023",
+    bullets: [
+      "Engineered Kahn's Algorithm topological DAG dependency resolver handling 500+ course prerequisites with zero circular deadlocks.",
+      "Spearheaded SuperMemo SM-2 spaced repetition engine implementation, boosting student retention rates by 38% across 14,000 active learners."
+    ]
+  }
+];
+
+let activeTheme = 'slate';
+
+function setTheme(theme) {
+  activeTheme = theme;
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btnTheme' + theme.charAt(0).toUpperCase() + theme.slice(1)).classList.add('active');
+  const sheet = document.getElementById('printableResume');
+  sheet.className = 'resume-sheet theme-' + theme;
+}
+
+function analyzeXYZ(text) {
+  const verbs = /\b(built|architected|engineered|spearheaded|developed|optimized|reduced|accelerated|delivered|designed|implemented|automated|scaled|led|created)\b/i;
+  const metrics = /([0-9]+%|\$[0-9]+[kmb]?|[0-9]+x|[0-9]+ms|[0-9]+,[0-9]+|[0-9]+\+)/i;
+  const impact = /\b(by|resulting in|enabling|reducing|boosting|ensuring|increasing|decreasing|delivering|with)\b/i;
+
+  const hasVerb = verbs.test(text);
+  const hasMetric = metrics.test(text);
+  const hasImpact = impact.test(text);
+
+  let score = 0;
+  if(hasVerb) score += 35;
+  if(hasMetric) score += 45;
+  if(hasImpact) score += 20;
+
+  return { hasVerb, hasMetric, hasImpact, score };
+}
+
+function renderEditor() {
+  const container = document.getElementById('experienceContainer');
+  container.innerHTML = '';
+
+  experiences.forEach((exp, expIdx) => {
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--bg-2,#12121e);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;';
+    
+    let bulletsHtml = '';
+    exp.bullets.forEach((bullet, bIdx) => {
+      const xyz = analyzeXYZ(bullet);
+      bulletsHtml += `
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;gap:6px;">
+            <input type="text" value="${bullet.replace(/"/g, '&quot;')}" oninput="updateBullet(${expIdx}, ${bIdx}, this.value)" style="flex:1;padding:6px 10px;background:var(--bg-1);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12.5px;">
+            <button class="nt-btn" style="padding:4px 8px;font-size:11px;color:#ef4444;" onclick="deleteBullet(${expIdx}, ${bIdx})"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="xyz-meter">
+            <span style="color:var(--text-3);font-size:10.5px;">Google XYZ:</span>
+            <span class="xyz-pill ${xyz.hasVerb ? 'on' : 'off'}">Action Verb</span>
+            <span class="xyz-pill ${xyz.hasMetric ? 'on' : 'off'}">Metric</span>
+            <span class="xyz-pill ${xyz.hasImpact ? 'on' : 'off'}">Impact / Method</span>
+            <span style="margin-left:auto;font-weight:700;color:${xyz.score >= 80 ? '#34d399' : (xyz.score >= 50 ? '#f59e0b' : '#ef4444')};">${xyz.score}%</span>
+          </div>
+        </div>
+      `;
+    });
+
+    card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <strong style="font-size:13px;color:var(--primary);"><i class="fas fa-building"></i> Position #${expIdx+1}</strong>
+        <button class="nt-btn" style="padding:4px 8px;font-size:11px;color:#ef4444;" onclick="deleteExperience(${expIdx})"><i class="fas fa-trash"></i> Remove</button>
+      </div>
+      <div class="nt-row2" style="margin-bottom:8px;">
+        <input type="text" placeholder="Job Title" value="${exp.role}" oninput="updateExpField(${expIdx}, 'role', this.value)" style="padding:6px 10px;background:var(--bg-1);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12.5px;">
+        <input type="text" placeholder="Company Name" value="${exp.company}" oninput="updateExpField(${expIdx}, 'company', this.value)" style="padding:6px 10px;background:var(--bg-1);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12.5px;">
+      </div>
+      <div class="nt-row2" style="margin-bottom:10px;">
+        <input type="text" placeholder="Dates (e.g. 2022 – Present)" value="${exp.dates}" oninput="updateExpField(${expIdx}, 'dates', this.value)" style="padding:6px 10px;background:var(--bg-1);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12.5px;">
+        <input type="text" placeholder="Location" value="${exp.location}" oninput="updateExpField(${expIdx}, 'location', this.value)" style="padding:6px 10px;background:var(--bg-1);border:1px solid var(--border);border-radius:6px;color:#fff;font-size:12.5px;">
+      </div>
+      <div style="margin-top:6px;">
+        <label style="font-size:11.5px;color:var(--text-3);font-weight:600;display:block;margin-bottom:4px;">Achievement Bullets (Google XYZ)</label>
+        ${bulletsHtml}
+        <button class="nt-btn" style="font-size:11px;padding:4px 10px;" onclick="addBullet(${expIdx})"><i class="fas fa-plus"></i> Add Bullet</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function updateExpField(idx, field, val) {
+  experiences[idx][field] = val;
+  renderResume();
+}
+
+function updateBullet(expIdx, bIdx, val) {
+  experiences[expIdx].bullets[bIdx] = val;
+  renderResume();
+}
+
+function addBullet(expIdx) {
+  experiences[expIdx].bullets.push("Spearheaded [Initiative] as measured by [Metric] by executing [Strategy].");
+  renderEditor();
+  renderResume();
+}
+
+function deleteBullet(expIdx, bIdx) {
+  experiences[expIdx].bullets.splice(bIdx, 1);
+  renderEditor();
+  renderResume();
+}
+
+function addExperience() {
+  experiences.push({
+    role: "Software Engineer",
+    company: "Tech Enterprise",
+    location: "Ahmedabad, India",
+    dates: "2020 – 2022",
+    bullets: ["Implemented core API endpoints resulting in 25% lower response latency."]
+  });
+  renderEditor();
+  renderResume();
+}
+
+function deleteExperience(idx) {
+  experiences.splice(idx, 1);
+  renderEditor();
+  renderResume();
+}
+
+function renderResume() {
+  const name = document.getElementById('inName').value || 'Full Name';
+  const title = document.getElementById('inTitle').value || 'Target Executive Role';
+  const email = document.getElementById('inEmail').value;
+  const phone = document.getElementById('inPhone').value;
+  const loc = document.getElementById('inLoc').value;
+  const linkedin = document.getElementById('inLinkedin').value;
+  const github = document.getElementById('inGithub').value;
+  const summary = document.getElementById('inSummary').value;
+  const skillsLang = document.getElementById('inSkillsLang').value;
+  const skillsAI = document.getElementById('inSkillsAI').value;
+  const skillsCloud = document.getElementById('inSkillsCloud').value;
+  const degree = document.getElementById('inDegree').value;
+  const school = document.getElementById('inSchool').value;
+
+  const contactsArr = [];
+  if(email) contactsArr.push(`<i class="fas fa-envelope"></i> ${email}`);
+  if(phone) contactsArr.push(`<i class="fas fa-phone"></i> ${phone}`);
+  if(loc) contactsArr.push(`<i class="fas fa-map-marker-alt"></i> ${loc}`);
+  if(linkedin) contactsArr.push(`<i class="fab fa-linkedin"></i> ${linkedin}`);
+  if(github) contactsArr.push(`<i class="fab fa-github"></i> ${github}`);
+
+  let expHtml = '';
+  experiences.forEach(exp => {
+    let bHtml = '';
+    exp.bullets.forEach(b => {
+      bHtml += `<li>${b}</li>`;
+    });
+    expHtml += `
+      <div class="res-job">
+        <div class="res-job-head">
+          <span class="res-job-title">${exp.role}</span>
+          <span class="res-job-dates">${exp.dates}</span>
+        </div>
+        <div class="res-job-sub">
+          <span>${exp.company}</span>
+          <span>${exp.location}</span>
+        </div>
+        <ul class="res-ul">${bHtml}</ul>
+      </div>
+    `;
+  });
+
+  const sheet = document.getElementById('printableResume');
+  sheet.innerHTML = `
+    <div class="res-name">${name}</div>
+    <div class="res-tagline">${title}</div>
+    <div class="res-contacts">${contactsArr.join(' &nbsp;·&nbsp; ')}</div>
+
+    <div class="res-sec">
+      <div class="res-sec-title">Executive Summary</div>
+      <div class="res-summary">${summary}</div>
+    </div>
+
+    <div class="res-sec">
+      <div class="res-sec-title">Core Competencies & Technical Skills</div>
+      <div class="res-skills-grid">
+        <span class="res-skill-lbl">Languages:</span>
+        <span class="res-skill-val">${skillsLang}</span>
+      </div>
+      <div class="res-skills-grid">
+        <span class="res-skill-lbl">AI & Architecture:</span>
+        <span class="res-skill-val">${skillsAI}</span>
+      </div>
+      <div class="res-skills-grid">
+        <span class="res-skill-lbl">Cloud & Systems:</span>
+        <span class="res-skill-val">${skillsCloud}</span>
+      </div>
+    </div>
+
+    <div class="res-sec">
+      <div class="res-sec-title">Professional Experience</div>
+      ${expHtml}
+    </div>
+
+    <div class="res-sec">
+      <div class="res-sec-title">Education & Credentials</div>
+      <div class="res-job">
+        <div class="res-job-head">
+          <span class="res-job-title">${degree}</span>
+          <span class="res-job-dates">${school}</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Telemetry page height calculation
+  setTimeout(() => {
+    const height = sheet.offsetHeight;
+    const standardPageHeight = 1040; // Approx pixels for 1 A4 page
+    const pageRatio = height / standardPageHeight;
+    const bar = document.getElementById('budgetBar');
+    const lbl = document.getElementById('budgetPages');
+
+    if(pageRatio <= 1.05) {
+      lbl.innerHTML = `${pageRatio.toFixed(2)} Pages · <span style="color:#10b981;">Clean 1-Page Layout</span>`;
+      bar.style.width = Math.min(100, (pageRatio * 100)) + '%';
+      bar.style.background = '#10b981';
+    } else if(pageRatio <= 1.25) {
+      lbl.innerHTML = `${pageRatio.toFixed(2)} Pages · <span style="color:#f59e0b;">Spillover Warning! Trim 3 lines</span>`;
+      bar.style.width = '100%';
+      bar.style.background = '#f59e0b';
+    } else {
+      lbl.innerHTML = `${pageRatio.toFixed(2)} Pages · <span style="color:#38bdf8;">2-Page Executive Layout</span>`;
+      bar.style.width = Math.min(100, ((pageRatio - 1) * 100)) + '%';
+      bar.style.background = '#38bdf8';
+    }
+  }, 50);
+}
+
+function loadSample(type) {
+  if(type === 'ai') {
+    document.getElementById('inName').value = "Kunal Patel";
+    document.getElementById('inTitle').value = "AI Systems Architect & Full-Stack Lead";
+    experiences = [
+      {
+        role: "Principal AI Systems Architect",
+        company: "Sevenseed Ecosystem",
+        location: "Ahmedabad / GIFT City",
+        dates: "2023 – Present",
+        bullets: [
+          "Architected zero-markup BYOK token vault, reducing SaaS operational overhead by 76% across 8 enterprise applications.",
+          "Designed sub-second CPU OpenCV YuNet and SFace biometric scanner achieving 99.4% accuracy under adverse CCTV lighting.",
+          "Engineered SHA-256 hash-chained immutable audit ledger ensuring Section 63 BSA legal admissibility for digital evidence."
+        ]
+      },
+      {
+        role: "Senior AI Engineer",
+        company: "Autonomous Agent Systems",
+        location: "Remote",
+        dates: "2021 – 2023",
+        bullets: [
+          "Developed Kahn's Algorithm topological DAG dependency resolver preventing circular deadlocks across 500+ syllabus modules.",
+          "Implemented SuperMemo SM-2 spaced repetition interval formula, driving 38% higher retention across 14,000 active students."
+        ]
+      }
+    ];
+  } else {
+    document.getElementById('inName').value = "Aarav Sharma";
+    document.getElementById('inTitle').value = "VP of Engineering & Distributed Systems Lead";
+    experiences = [
+      {
+        role: "VP of Engineering",
+        company: "Apex Cloud Technologies",
+        location: "Bengaluru, India",
+        dates: "2022 – Present",
+        bullets: [
+          "Spearheaded cloud migration of 14 core microservices to Kubernetes, cutting infrastructure expenditure by $340,000 annually.",
+          "Scaled engineering organization from 12 to 58 developers while maintaining a 94% retention rate and 4.2 sprint velocity."
+        ]
+      },
+      {
+        role: "Lead Systems Architect",
+        company: "Fintech Nexus",
+        location: "Mumbai, India",
+        dates: "2019 – 2022",
+        bullets: [
+          "Engineered distributed ledger settlement engine processing $18M in daily transactional volume with zero data loss.",
+          "Reduced p99 database latency from 450ms to 42ms by implementing distributed multi-tier Redis caching."
+        ]
+      }
+    ];
+  }
+  renderEditor();
+  renderResume();
+}
+
+function exportJSON() {
+  const profile = {
+    name: document.getElementById('inName').value,
+    title: document.getElementById('inTitle').value,
+    email: document.getElementById('inEmail').value,
+    phone: document.getElementById('inPhone').value,
+    location: document.getElementById('inLoc').value,
+    linkedin: document.getElementById('inLinkedin').value,
+    github: document.getElementById('inGithub').value,
+    summary: document.getElementById('inSummary').value,
+    experiences: experiences,
+    skills: {
+      languages: document.getElementById('inSkillsLang').value,
+      ai: document.getElementById('inSkillsAI').value,
+      cloud: document.getElementById('inSkillsCloud').value
+    }
+  };
+  const blob = new Blob([JSON.stringify(profile, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'executive_ats_resume_profile.json';
+  a.click();
+}
+
+// Initial setup
+renderEditor();
+renderResume();
+</script>
+
+</body>
+</html>

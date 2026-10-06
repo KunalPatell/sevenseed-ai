@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Concrete Crack Forensics & NDT Schmidt Hammer Estimator — Breakdown Factor</title>
+  <meta name="description" content="Civil engineering structural forensics: IS 456 crack width hazard assessment, IS 13311 Schmidt Rebound Hammer compressive strength estimator, and remediation planning.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏗️%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee);text-decoration:none}
+    .nt-brand b{color:#f59e0b}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s;text-decoration:none}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:#fbbf24;border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.08)}
+    .nt-wrap{max-width:1380px;margin:0 auto;padding:36px 20px 80px}
+    .nt-head{text-align:center;margin-bottom:30px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:12px;color:#fbbf24;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3)}
+    .nt-title{font-size:clamp(26px,3.8vw,42px);font-weight:900;line-height:1.15;margin-bottom:10px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:15px;max-width:760px;margin:0 auto;line-height:1.55}
+
+    .forensic-grid{display:grid;grid-template-columns:minmax(0,540px) minmax(0,1fr);gap:24px;align-items:start}
+    @media(max-width:1040px){.forensic-grid{grid-template-columns:1fr}}
+
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:14px;padding:22px}
+    .nt-card+.nt-card{margin-top:18px}
+    .nt-card h2{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:#f59e0b}
+
+    /* Slider Field */
+    .slider-f{margin-bottom:14px}
+    .slider-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600;margin-bottom:4px}
+    .slider-top span{color:var(--text-2,#9aa0b8)}
+    .slider-top strong{font-family:'JetBrains Mono',monospace;color:#fbbf24;font-size:13px}
+    input[type=range]{width:100%;accent-color:#f59e0b;background:var(--bg-2,#12121e);height:6px;border-radius:4px;outline:none}
+
+    /* Telemetry readout box */
+    .out-box{background:var(--bg-2,#12121e);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+    .out-num{font-family:'JetBrains Mono';font-size:26px;font-weight:900;display:block}
+
+    /* Remediation Card */
+    .fix-box{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:14px;font-size:12.5px;color:var(--text-2);line-height:1.55}
+
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;border-radius:8px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:#f59e0b;color:#f59e0b}
+    .nt-btn.pri{background:#f59e0b;border-color:#f59e0b;color:#000}
+  </style>
+</head>
+<body class="nt-body">
+
+<nav class="nt-nav">
+  <a class="nt-brand" href="index.html">
+    <i class="fas fa-building-circle-check" style="color:#f59e0b;"></i>
+    <span>Breakdown <b>Factor</b></span>
+  </a>
+  <div class="nt-links">
+    <a href="index.html">Home</a>
+    <a href="crack-forensics.html" class="on">Crack Forensics</a>
+    <a href="defect-scanner.html">Defect Scanner</a>
+    <a href="boq-estimator.html">BOQ Estimator</a>
+    <a href="rcc-estimator.html">RCC Calculator</a>
+    <a href="safety-audit.html">Safety Audit</a>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="/" style="color:var(--text-2);font-size:12.5px;text-decoration:none;padding:6px 12px;border-radius:8px;background:var(--bg-2);border:1px solid var(--border);"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+  </div>
+</nav>
+
+<div class="nt-wrap">
+  <div class="nt-head">
+    <div class="nt-badge"><i class="fas fa-microscope"></i> Civil Engineering IS 456 & IS 13311 NDT Standards</div>
+    <h1 class="nt-title">Concrete Crack Forensics & NDT Schmidt Hammer Estimator</h1>
+    <p class="nt-sub">Evaluate reinforced concrete crack width hazard levels under IS 456, compute in-situ compressive strength via Schmidt rebound number, and generate structural remediation plans.</p>
+  </div>
+
+  <div class="forensic-grid">
+    <!-- Left: Inputs -->
+    <div>
+      <div class="nt-card">
+        <h2><i class="fas fa-ruler-combined"></i> Crack Characterization (IS 456:2000)</h2>
+        
+        <div class="slider-f">
+          <div class="slider-top">
+            <span>Measured Crack Width (w)</span>
+            <strong id="valWidth">0.22 mm</strong>
+          </div>
+          <input type="range" id="rngWidth" min="0.05" max="2.5" step="0.01" value="0.22" oninput="calcForensics()">
+        </div>
+
+        <div class="slider-f">
+          <div class="slider-top">
+            <span>Structural Exposure Environment</span>
+            <strong id="valExposure">Moderate (Standard External)</strong>
+          </div>
+          <select id="selExposure" style="width:100%;padding:8px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:13px;" onchange="calcForensics()">
+            <option value="mild">Mild (Protected Internal Concrete, w_lim = 0.30 mm)</option>
+            <option value="moderate" selected>Moderate (Normal Coastal / External, w_lim = 0.20 mm)</option>
+            <option value="severe">Severe (Aggressive Industrial / Sea Spray, w_lim = 0.10 mm)</option>
+          </select>
+        </div>
+
+        <div class="slider-f">
+          <div class="slider-top">
+            <span>Crack Orientation & Structural Mechanism</span>
+            <strong id="valMech">Flexural Tension</strong>
+          </div>
+          <select id="selMech" style="width:100%;padding:8px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:13px;" onchange="calcForensics()">
+            <option value="flex">Flexural Tension (Vertical at Mid-Span of Beam / Slab)</option>
+            <option value="shear">Diagonal Shear (45° angle near Beam Supports)</option>
+            <option value="settle">Differential Settlement (Diagonal across Masonry / Grade Beam)</option>
+            <option value="shrink">Plastic / Thermal Shrinkage (Map / Craze Cracking on Surface)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="nt-card">
+        <h2><i class="fas fa-hammer"></i> NDT Rebound Hammer Test (IS 13311 Part 2)</h2>
+        <div class="slider-f">
+          <div class="slider-top">
+            <span>Mean Rebound Number (R)</span>
+            <strong id="valRebound">34.0 (Type N Hammer)</strong>
+          </div>
+          <input type="range" id="rngRebound" min="15" max="55" step="1" value="34" oninput="calcForensics()">
+        </div>
+        <p style="font-size:11.5px;color:var(--text-3);margin:0;">
+          Horizontal impact on smooth, non-carbonated concrete surface. Formula: $f_{ck} = 1.15 \times R - 12.5\text{ MPa}$.
+        </p>
+      </div>
+    </div>
+
+    <!-- Right: Outputs & Forensics Report -->
+    <div>
+      <div class="nt-card">
+        <h2><i class="fas fa-clipboard-check"></i> Structural Hazard & Integrity Verdict</h2>
+        
+        <div class="out-box">
+          <small style="color:var(--text-3);font-size:11px;font-weight:700;text-transform:uppercase;">Crack Severity Category</small>
+          <span class="out-num" id="outSeverity" style="color:#fbbf24;">Moderate (Water Permeable)</span>
+          <small id="outCompliance" style="color:var(--text-3);font-size:11.5px;">Permissible limit exceeded by +0.02 mm under IS 456</small>
+        </div>
+
+        <div class="out-box">
+          <small style="color:var(--text-3);font-size:11px;font-weight:700;text-transform:uppercase;">Estimated In-Situ Compressive Strength (f_ck)</small>
+          <span class="out-num" id="outFck" style="color:#10b981;">26.6 MPa</span>
+          <small id="outGrade" style="color:var(--text-3);font-size:11.5px;">Equivalent Grade: M25 Structural Concrete (Good Quality)</small>
+        </div>
+
+        <!-- Remediation Plan -->
+        <div class="fix-box" id="fixBox">
+          <b style="color:#fbbf24;display:block;margin-bottom:6px;"><i class="fas fa-wrench"></i> Recommended Remediation Engineering:</b>
+          <div id="remediationText">
+            • <b>Low-Viscosity Epoxy Injection:</b> Drill injection ports at 150mm centers along crack line. Pressure inject structural epoxy resin (viscosity < 200 cps) to restore monolithic structural integrity.<br>
+            • <b>Moisture Barrier:</b> Apply elastomeric silane-siloxane hydrophobic sealer over exposed surface to stop carbonation.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function calcForensics() {
+  const w = parseFloat(document.getElementById('rngWidth').value);
+  const exposure = document.getElementById('selExposure').value;
+  const mech = document.getElementById('selMech').value;
+  const r = parseFloat(document.getElementById('rngRebound').value);
+
+  document.getElementById('valWidth').innerText = w.toFixed(2) + ' mm';
+  document.getElementById('valRebound').innerText = r.toFixed(1) + ' (Type N Hammer)';
+
+  // Limit check
+  let wLim = 0.20;
+  if(exposure === 'mild') wLim = 0.30;
+  if(exposure === 'severe') wLim = 0.10;
+
+  const outSev = document.getElementById('outSeverity');
+  const outComp = document.getElementById('outCompliance');
+  const fix = document.getElementById('remediationText');
+
+  if(w <= wLim * 0.7) {
+    outSev.innerText = "Negligible / Hairline (Cosmetic)";
+    outSev.style.color = "#10b981";
+    outComp.innerText = `Within safe IS 456 threshold (${w.toFixed(2)} mm ≤ ${wLim.toFixed(2)} mm). No immediate structural risk.`;
+    fix.innerHTML = `• <b>Surface Sealant:</b> Clean crack with compressed air and seal with acrylic polymer modified cement slurry.<br>• <b>Monitoring:</b> Place glass tell-tale monitor to observe crack active displacement over 90 days.`;
+  } else if(w <= wLim * 1.3) {
+    outSev.innerText = "Moderate (Water Permeable)";
+    outSev.style.color = "#fbbf24";
+    outComp.innerText = `Approaching or slightly exceeding limit (${w.toFixed(2)} mm vs ${wLim.toFixed(2)} mm limit). Carbonation & rebar corrosion risk.`;
+    fix.innerHTML = `• <b>Epoxy Pressure Injection:</b> Drill injection ports at 150mm spacing. Inject low-viscosity structural epoxy (< 200 cps).<br>• <b>Protective Coating:</b> Apply breathable elastomeric anti-carbonation coating.`;
+  } else {
+    outSev.innerText = "CRITICAL STRUCTURAL HAZARD";
+    outSev.style.color = "#ef4444";
+    outComp.innerText = `CRITICAL DEFECT: Exceeds safe limit by +${(w - wLim).toFixed(2)} mm. Severe rebar corrosion and loss of load capacity.`;
+    fix.innerHTML = `• <b>Propping:</b> Immediate auxiliary steel propping below affected spans.<br>• <b>Structural Strengthening:</b> External post-tensioning or Carbon Fiber Reinforced Polymer (CFRP) composite wrapping.<br>• <b>Core Drilling:</b> Extract 75mm core samples to verify compressive loss and carbonation depth.`;
+  }
+
+  // Schmidt Hammer IS 13311
+  const fck = Math.max(8.0, 1.15 * r - 12.5);
+  document.getElementById('outFck').innerText = fck.toFixed(1) + ' MPa';
+  
+  let gradeText = "";
+  if(r >= 40) gradeText = "Equivalent Grade: M35+ Concrete (Excellent Structural Quality)";
+  else if(r >= 30) gradeText = "Equivalent Grade: M25 Concrete (Good Structural Quality)";
+  else if(r >= 20) gradeText = "Equivalent Grade: M15-M20 Concrete (Fair / Aging Concrete)";
+  else gradeText = "Equivalent Grade: < M15 (Poor / Delaminated Concrete Layer)";
+  document.getElementById('outGrade').innerText = gradeText;
+}
+
+calcForensics();
+</script>
+
+</body>
+</html>

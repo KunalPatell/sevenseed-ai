@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>B2B Recruiter Reachout & Workforce Console — Sevenforce</title>
+  <meta name="description" content="Vetted tech employer directory, automated multi-touch candidate outreach sequences, and shift productivity calculators.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E⚡%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee);text-decoration:none}
+    .nt-brand b{color:#6366f1}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s;text-decoration:none}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:#818cf8;border-color:rgba(99,102,241,.4);background:rgba(99,102,241,.08)}
+    .nt-wrap{max-width:1380px;margin:0 auto;padding:36px 20px 80px}
+    .nt-head{text-align:center;margin-bottom:30px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:12px;color:#818cf8;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.3)}
+    .nt-title{font-size:clamp(26px,3.8vw,42px);font-weight:900;line-height:1.15;margin-bottom:10px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:15px;max-width:760px;margin:0 auto;line-height:1.55}
+
+    .pipeline-grid{display:grid;grid-template-columns:minmax(0,480px) minmax(0,1fr);gap:24px;align-items:start}
+    @media(max-width:1040px){.pipeline-grid{grid-template-columns:1fr}}
+
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:14px;padding:22px}
+    .nt-card+.nt-card{margin-top:18px}
+    .nt-card h2{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:#818cf8}
+
+    /* Company List */
+    .company-item{padding:10px 14px;border-radius:8px;background:var(--bg-2,#12121e);border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;cursor:pointer;transition:all .15s}
+    .company-item:hover{border-color:#818cf8;background:rgba(99,102,241,.06)}
+    .company-item.selected{border-color:#818cf8;background:rgba(99,102,241,.12)}
+
+    /* Sequence Steps */
+    .step-box{background:var(--bg-2,#12121e);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}
+    .step-head{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:700;color:#818cf8;margin-bottom:8px}
+    .step-body{font-size:12.5px;color:var(--text-2);line-height:1.55;white-space:pre-wrap;background:#05070e;padding:10px;border-radius:6px;border:1px solid rgba(255,255,255,.05);font-family:inherit}
+
+    /* Workforce Punch Calculator */
+    .calc-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+    .calc-row input{padding:8px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;font:inherit;font-size:13px}
+
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:#818cf8;color:#818cf8}
+    .nt-btn.pri{background:#6366f1;border-color:#6366f1;color:#fff}
+  </style>
+</head>
+<body class="nt-body">
+
+<nav class="nt-nav">
+  <a class="nt-brand" href="index.html">
+    <i class="fas fa-bolt" style="color:#6366f1;"></i>
+    <span>Seven<b>force</b></span>
+  </a>
+  <div class="nt-links">
+    <a href="index.html">Home</a>
+    <a href="agent-dispatch.html">Agent Dispatch</a>
+    <a href="recruiter-reachout.html" class="on">Outbound Recruiter Console</a>
+    <a href="company-intel.html">Company Intel</a>
+    <a href="flywheel-simulator.html">Flywheel Simulator</a>
+    <a href="roi-calculator.html">ROI Calculator</a>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="/" style="color:var(--text-2);font-size:12.5px;text-decoration:none;padding:6px 12px;border-radius:8px;background:var(--bg-2);border:1px solid var(--border);"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+  </div>
+</nav>
+
+<div class="nt-wrap">
+  <div class="nt-head">
+    <div class="nt-badge"><i class="fas fa-briefcase"></i> B2B Talent Pipeline & Outbound Outreach</div>
+    <h1 class="nt-title">Outbound Recruiter & Workforce Console</h1>
+    <p class="nt-sub">Access vetted Gujarat & Pan-India tech employers, generate high-converting 3-touch candidate reachout sequences, and calculate workforce shift productivity.</p>
+  </div>
+
+  <div class="pipeline-grid">
+    <!-- Left: Vetted Company List & Workforce Shift Calculator -->
+    <div>
+      <div class="nt-card">
+        <h2><i class="fas fa-building"></i> Vetted Tech Employers Directory</h2>
+        <p style="font-size:12px;color:var(--text-2);margin-bottom:12px;">Derived from local employer intelligence database across GIFT City & India:</p>
+        
+        <div id="companyList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <div class="nt-card">
+        <h2><i class="fas fa-clock"></i> Workforce Shift & Overtime Calculator</h2>
+        <div class="calc-row">
+          <div>
+            <label style="font-size:11.5px;color:var(--text-3);display:block;margin-bottom:4px;">Punch-In Time</label>
+            <input type="time" id="punchIn" value="09:30" onchange="calcShift()">
+          </div>
+          <div>
+            <label style="font-size:11.5px;color:var(--text-3);display:block;margin-bottom:4px;">Punch-Out Time</label>
+            <input type="time" id="punchOut" value="19:00" onchange="calcShift()">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;background:var(--bg-2);padding:12px;border-radius:8px;border:1px solid var(--border);">
+          <div>
+            <small style="color:var(--text-3);font-size:10px;text-transform:uppercase;">Gross Hours</small>
+            <strong id="valGross" style="font-family:'JetBrains Mono';font-size:15px;display:block;color:#fff;">9.5 hrs</strong>
+          </div>
+          <div>
+            <small style="color:var(--text-3);font-size:10px;text-transform:uppercase;">Mandatory Break</small>
+            <strong id="valBreak" style="font-family:'JetBrains Mono';font-size:15px;display:block;color:#f59e0b;">1.0 hr</strong>
+          </div>
+          <div>
+            <small style="color:var(--text-3);font-size:10px;text-transform:uppercase;">Net Productive</small>
+            <strong id="valNet" style="font-family:'JetBrains Mono';font-size:15px;display:block;color:#10b981;">8.5 hrs</strong>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:12px;color:var(--text-2);" id="valOT">
+          <b>Overtime:</b> 0.5 hours recorded (over standard 8.0h day).
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Automated 3-Touch Sequence -->
+    <div>
+      <div class="nt-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h2><i class="fas fa-paper-plane"></i> Automated 3-Touch Outreach Sequence</h2>
+          <span id="targetCompanyBadge" style="padding:4px 10px;border-radius:99px;background:rgba(99,102,241,.15);color:#818cf8;font-size:11px;font-weight:700;">Simform</span>
+        </div>
+
+        <!-- Touch 1 -->
+        <div class="step-box">
+          <div class="step-head">
+            <span>TOUCH 1 (DAY 1): THE VALUE HOOK (PAS FORMULA)</span>
+            <button class="nt-btn" style="padding:2px 8px;font-size:11px;" onclick="copyStep(1)"><i class="fas fa-copy"></i> Copy</button>
+          </div>
+          <div class="step-body" id="step1Text">Subject: High-Impact AI Systems Engineer for [Company] Tech Team
+
+Hi [Hiring Manager],
+
+Noticed your team at [Company] is scaling distributed Python & FastAPI backends. Most candidates come with surface-level prompt engineering, but few understand sub-second CPU ONNX runtimes and zero-markup BYOK token routing architectures.
+
+I recently engineered an enterprise AI pipeline that slashed inference costs by 68% while sustaining 99.9% availability across 14,000 active users.
+
+Would you be open to a 10-minute technical chat this Thursday at 3 PM?</div>
+        </div>
+
+        <!-- Touch 2 -->
+        <div class="step-box">
+          <div class="step-head">
+            <span>TOUCH 2 (DAY 3): THE QUANTITATIVE PROOF (GOOGLE XYZ)</span>
+            <button class="nt-btn" style="padding:2px 8px;font-size:11px;" onclick="copyStep(2)"><i class="fas fa-copy"></i> Copy</button>
+          </div>
+          <div class="step-body" id="step2Text">Hi [Hiring Manager],
+
+Following up on my previous note. Thought you'd appreciate this live artifact:
+
+• Live Portfolio: https://sevenseed.onrender.com/
+• Solved circular prerequisite deadlocks across 500+ syllabus DAG nodes using Kahn's Algorithm in $O(V+E)$ time.
+• Built Section 63 BSA compliant electronic investigation dossiers with SHA-256 hash chains.
+
+Happy to share the exact architectural teardown if you're interested.</div>
+        </div>
+
+        <!-- Touch 3 -->
+        <div class="step-box">
+          <div class="step-head">
+            <span>TOUCH 3 (DAY 7): THE POLITE BREAK-UP</span>
+            <button class="nt-btn" style="padding:2px 8px;font-size:11px;" onclick="copyStep(3)"><i class="fas fa-copy"></i> Copy</button>
+          </div>
+          <div class="step-body" id="step3Text">Hi [Hiring Manager],
+
+I know your schedule is packed right now. I'll pause outreach for now so as not to clutter your inbox.
+
+If you ever need a battle-tested AI Systems Architect who can deliver production-grade code on Day 1, my profile remains available at linkedin.com/in/kunalpatel.
+
+Wishing [Company] continued growth!</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const COMPANIES = [
+  { name: "Simform", location: "Ahmedabad, India", roles: "Senior Python & Cloud Architect", ctc: "₹ 18 - 32 LPA", manager: "VP of Engineering" },
+  { name: "Bacancy Technology", location: "Ahmedabad / GIFT City", roles: "Full-Stack AI Lead", ctc: "₹ 15 - 28 LPA", manager: "Talent Acquisition Lead" },
+  { name: "Radixweb", location: "Ahmedabad, India", roles: "Principal Systems Engineer", ctc: "₹ 20 - 35 LPA", manager: "Head of Tech Sourcing" },
+  { name: "Crest Data Systems", location: "Ahmedabad, India", roles: "Cybersecurity & Data Pipeline Lead", ctc: "₹ 18 - 30 LPA", manager: "Engineering Director" },
+  { name: "Etech Global Services", location: "Gandhinagar, India", roles: "AI Operations Specialist", ctc: "₹ 12 - 22 LPA", manager: "HR Partner" }
+];
+
+let selectedCompany = COMPANIES[0];
+
+function renderCompanies() {
+  const container = document.getElementById('companyList');
+  container.innerHTML = '';
+  COMPANIES.forEach((comp, idx) => {
+    const div = document.createElement('div');
+    div.className = 'company-item ' + (selectedCompany.name === comp.name ? 'selected' : '');
+    div.onclick = () => selectCompany(comp);
+    div.innerHTML = `
+      <div>
+        <strong style="font-size:13px;color:#fff;">${comp.name}</strong>
+        <div style="font-size:11px;color:var(--text-3);">${comp.location} · ${comp.roles}</div>
+      </div>
+      <div style="text-align:right;">
+        <span style="font-size:11px;font-weight:700;color:#10b981;font-family:'JetBrains Mono';">${comp.ctc}</span>
+        <small style="display:block;font-size:10px;color:var(--text-3);">${comp.manager}</small>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function selectCompany(comp) {
+  selectedCompany = comp;
+  document.getElementById('targetCompanyBadge').innerText = comp.name;
+  renderCompanies();
+  updateSequences();
+}
+
+function updateSequences() {
+  const name = selectedCompany.name;
+  const manager = selectedCompany.manager;
+
+  document.getElementById('step1Text').innerText = `Subject: High-Impact AI Systems Engineer for ${name} Tech Team\n\nHi ${manager},\n\nNoticed your team at ${name} is scaling distributed Python & FastAPI backends. Most candidates come with surface-level prompt engineering, but few understand sub-second CPU ONNX runtimes and zero-markup BYOK token routing architectures.\n\nI recently engineered an enterprise AI pipeline that slashed inference costs by 68% while sustaining 99.9% availability across 14,000 active users.\n\nWould you be open to a 10-minute technical chat this Thursday at 3 PM?`;
+
+  document.getElementById('step2Text').innerText = `Hi ${manager},\n\nFollowing up on my previous note. Thought you'd appreciate these verified artifacts relevant to ${name}:\n\n• Live Portfolio: https://sevenseed.onrender.com/\n• Solved circular prerequisite deadlocks across 500+ syllabus DAG nodes using Kahn's Algorithm in O(V+E) time.\n• Built Section 63 BSA compliant electronic investigation dossiers with SHA-256 hash chains.\n\nHappy to share the exact architectural teardown if you're interested.`;
+
+  document.getElementById('step3Text').innerText = `Hi ${manager},\n\nI know your schedule at ${name} is packed right now. I'll pause outreach for now so as not to clutter your inbox.\n\nIf you ever need a battle-tested AI Systems Architect who can deliver production-grade code on Day 1, my profile remains available at linkedin.com/in/kunalpatel.\n\nWishing ${name} continued growth!`;
+}
+
+function copyStep(num) {
+  const text = document.getElementById('step' + num + 'Text').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    alert(`Touch ${num} copied to clipboard!`);
+  });
+}
+
+function calcShift() {
+  const tIn = document.getElementById('punchIn').value;
+  const tOut = document.getElementById('punchOut').value;
+  if(!tIn || !tOut) return;
+
+  const [h1, m1] = tIn.split(':').map(Number);
+  const [h2, m2] = tOut.split(':').map(Number);
+
+  let minutes = (h2 * 60 + m2) - (h1 * 60 + m1);
+  if(minutes < 0) minutes += 24 * 60;
+
+  const grossHours = minutes / 60;
+  const breakHours = grossHours >= 5.0 ? 1.0 : 0.0;
+  const netHours = Math.max(0, grossHours - breakHours);
+  const overtime = Math.max(0, netHours - 8.0);
+
+  document.getElementById('valGross').innerText = grossHours.toFixed(1) + ' hrs';
+  document.getElementById('valBreak').innerText = breakHours.toFixed(1) + ' hr';
+  document.getElementById('valNet').innerText = netHours.toFixed(1) + ' hrs';
+  document.getElementById('valOT').innerHTML = overtime > 0 
+    ? `<b>Overtime:</b> <span style="color:#10b981;">+${overtime.toFixed(1)} hours</span> recorded (over standard 8.0h day).`
+    : `<b>Overtime:</b> 0.0 hours (standard shift fulfilled).`;
+}
+
+renderCompanies();
+updateSequences();
+calcShift();
+</script>
+
+</body>
+</html>

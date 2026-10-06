@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Clinical Surgical & Rehabilitation Protocols — Decode Forest Pharmacy</title>
+  <meta name="description" content="Hospital-grade physiotherapy and surgical recovery workstations: Burns Parkland formula, Cardiopulmonary Karvonen rehab, and peripheral nerve splinting.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏥%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee);text-decoration:none}
+    .nt-brand b{color:#06b6d4}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s;text-decoration:none}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:#06b6d4;border-color:rgba(6,182,212,.4);background:rgba(6,182,212,.08)}
+    .nt-wrap{max-width:1380px;margin:0 auto;padding:36px 20px 80px}
+    .nt-head{text-align:center;margin-bottom:30px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:12px;color:#22d3ee;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.3)}
+    .nt-title{font-size:clamp(26px,3.8vw,42px);font-weight:900;line-height:1.15;margin-bottom:10px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:15px;max-width:760px;margin:0 auto;line-height:1.55}
+
+    /* Tabs Bar */
+    .tab-bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:26px}
+    .tab-btn{padding:9px 18px;border-radius:999px;background:var(--bg-1,#0d0d16);border:1px solid var(--border);color:var(--text-2);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s}
+    .tab-btn:hover{color:#fff;border-color:rgba(6,182,212,.4)}
+    .tab-btn.active{background:rgba(6,182,212,.15);border-color:#06b6d4;color:#22d3ee}
+
+    /* Tab Panes */
+    .tab-pane{display:none}
+    .tab-pane.active{display:grid;grid-template-columns:minmax(0,540px) minmax(0,1fr);gap:24px;align-items:start}
+    @media(max-width:1040px){.tab-pane.active{grid-template-columns:1fr}}
+
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:14px;padding:22px}
+    .nt-card+.nt-card{margin-top:18px}
+    .nt-card h2{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:#06b6d4}
+
+    /* Wallace Rule of Nines Checkbox Grid */
+    .nines-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+    .nine-item{background:var(--bg-2,#12121e);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;font-size:12.5px;cursor:pointer;user-select:none;transition:all .15s}
+    .nine-item:hover{border-color:rgba(6,182,212,.4)}
+    .nine-item.checked{background:rgba(6,182,212,.12);border-color:#06b6d4;color:#fff}
+    .nine-item input{accent-color:#06b6d4;width:16px;height:16px}
+
+    /* Parkland Telemetry */
+    .park-box{background:var(--bg-2,#12121e);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+    .park-num{font-family:'JetBrains Mono';font-size:26px;font-weight:900;color:#22d3ee;display:block}
+
+    /* Splint Cards */
+    .splint-card{background:var(--bg-2,#12121e);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}
+    .splint-card h3{font-size:13.5px;font-weight:700;color:#22d3ee;margin-bottom:4px}
+    .splint-card p{font-size:12px;color:var(--text-2);line-height:1.5;margin:0}
+
+    /* Kegel Timer Visualizer */
+    .kegel-ring{width:160px;height:160px;border-radius:50%;border:8px solid #06b6d4;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:20px auto;transition:all .4s}
+    .kegel-ring.relax{border-color:#64748b;transform:scale(0.85)}
+
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;border-radius:8px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:#06b6d4;color:#06b6d4}
+    .nt-btn.pri{background:#06b6d4;border-color:#06b6d4;color:#000}
+  </style>
+</head>
+<body class="nt-body">
+
+<nav class="nt-nav">
+  <a class="nt-brand" href="index.html">
+    <i class="fas fa-prescription-bottle-medical" style="color:#06b6d4;"></i>
+    <span>Decode <b>Pharmacy</b></span>
+  </a>
+  <div class="nt-links">
+    <a href="index.html">Home</a>
+    <a href="generic-finder.html">Generic Finder</a>
+    <a href="clinical-protocols.html" class="on">Clinical Protocols</a>
+    <a href="health-wiki.html">Health Wiki</a>
+    <a href="medicine-reminders.html">Pill Reminders</a>
+    <a href="bmi-health.html">BMR & TDEE</a>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="/" style="color:var(--text-2);font-size:12.5px;text-decoration:none;padding:6px 12px;border-radius:8px;background:var(--bg-2);border:1px solid var(--border);"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+  </div>
+</nav>
+
+<div class="nt-wrap">
+  <div class="nt-head">
+    <div class="nt-badge"><i class="fas fa-user-doctor"></i> Hospital-Grade Physical Rehabilitation Guidelines</div>
+    <h1 class="nt-title">Clinical Surgical & Rehabilitation Protocols</h1>
+    <p class="nt-sub">Interactive clinical manual covering Burns fluid resuscitation (Wallace Rule of Nines & Parkland), Cardiopulmonary Phase I–III rehab, peripheral nerve splinting, and pelvic floor recovery.</p>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="setTab('burns')"><i class="fas fa-fire-flame-curved"></i> Burns & Fluid Resuscitation</button>
+    <button class="tab-btn" onclick="setTab('cardio')"><i class="fas fa-heart-pulse"></i> Cardiopulmonary Rehab</button>
+    <button class="tab-btn" onclick="setTab('nerves')"><i class="fas fa-hand"></i> Nerve Injury Splints</button>
+    <button class="tab-btn" onclick="setTab('pelvic')"><i class="fas fa-person"></i> Pelvic & Diastasis Recti</button>
+  </div>
+
+  <!-- Tab 1: Burns & Fluid Resuscitation -->
+  <div class="tab-pane active" id="paneBurns">
+    <div>
+      <div class="nt-card">
+        <h2><i class="fas fa-person-dots-from-line"></i> Wallace Rule of Nines Assessment</h2>
+        <p style="font-size:12px;color:var(--text-2);margin-bottom:14px;">Select burned anatomical regions to compute Total Body Surface Area (% TBSA):</p>
+        
+        <div class="nines-grid">
+          <label class="nine-item"><input type="checkbox" value="9" onchange="calcBurns()"> Head & Neck (9%)</label>
+          <label class="nine-item"><input type="checkbox" value="18" onchange="calcBurns()"> Anterior Torso (18%)</label>
+          <label class="nine-item"><input type="checkbox" value="18" onchange="calcBurns()"> Posterior Torso (18%)</label>
+          <label class="nine-item"><input type="checkbox" value="9" onchange="calcBurns()"> Left Arm (9%)</label>
+          <label class="nine-item"><input type="checkbox" value="9" onchange="calcBurns()"> Right Arm (9%)</label>
+          <label class="nine-item"><input type="checkbox" value="18" onchange="calcBurns()"> Left Leg (18%)</label>
+          <label class="nine-item"><input type="checkbox" value="18" onchange="calcBurns()"> Right Leg (18%)</label>
+          <label class="nine-item"><input type="checkbox" value="1" onchange="calcBurns()"> Perineum / Genitalia (1%)</label>
+        </div>
+
+        <div style="margin-top:14px;">
+          <label style="font-size:12px;font-weight:600;color:var(--text-2);display:block;margin-bottom:4px;">Patient Weight (kg)</label>
+          <input type="number" id="burnWeight" value="70" min="20" max="180" style="padding:8px 12px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;width:140px;" oninput="calcBurns()">
+        </div>
+      </div>
+
+      <div class="nt-card">
+        <h2><i class="fas fa-shield-halved"></i> Antideformity Positioning Chart</h2>
+        <div style="font-size:12px;color:var(--text-2);line-height:1.55;">
+          <div style="margin-bottom:6px;"><b>Neck:</b> Full extension (no pillow under occiput; use small shoulder roll).</div>
+          <div style="margin-bottom:6px;"><b>Axilla:</b> 90° Abduction + 30° horizontal flexion (airplane splint).</div>
+          <div style="margin-bottom:6px;"><b>Elbow:</b> Full extension with supination.</div>
+          <div style="margin-bottom:6px;"><b>Wrist:</b> 20°–30° Dorsiflexion extension.</div>
+          <div><b>Hand:</b> Intrinsic Plus (MCP 70°–90° flexion, IP full extension, thumb abducted).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Parkland Formula Output -->
+    <div>
+      <div class="nt-card">
+        <h2><i class="fas fa-droplet"></i> Parkland Fluid Resuscitation Equation</h2>
+        <div style="font-size:12.5px;color:var(--text-3);margin-bottom:12px;font-family:'JetBrains Mono';">
+          V = 4 mL × Weight (kg) × % TBSA (Ringer's Lactate)
+        </div>
+
+        <div class="park-box">
+          <small style="color:var(--text-3);font-size:11px;font-weight:700;text-transform:uppercase;">Computed Total Burn Area (% TBSA)</small>
+          <span class="park-num" id="outTBSA">0%</span>
+        </div>
+
+        <div class="park-box">
+          <small style="color:var(--text-3);font-size:11px;font-weight:700;text-transform:uppercase;">Total 24-Hour IV Fluid Requirement</small>
+          <span class="park-num" id="outTotalFluid">0 mL</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="park-box">
+            <small style="color:#22d3ee;font-size:10.5px;font-weight:700;text-transform:uppercase;">First 8 Hours (50%)</small>
+            <strong id="outFirst8" style="font-family:'JetBrains Mono';font-size:18px;display:block;margin-top:4px;">0 mL</strong>
+            <small id="outRateFirst8" style="color:var(--text-3);font-size:11px;">0 mL / hr</small>
+          </div>
+          <div class="park-box">
+            <small style="color:#f59e0b;font-size:10.5px;font-weight:700;text-transform:uppercase;">Remaining 16 Hours (50%)</small>
+            <strong id="outNext16" style="font-family:'JetBrains Mono';font-size:18px;display:block;margin-top:4px;">0 mL</strong>
+            <small id="outRateNext16" style="color:var(--text-3);font-size:11px;">0 mL / hr</small>
+          </div>
+        </div>
+
+        <div style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.3);border-radius:10px;padding:12px;margin-top:14px;font-size:12px;color:var(--text-2);">
+          <i class="fas fa-stethoscope" style="color:#22d3ee;"></i> <b>Target Urine Output:</b> Adult resuscitation is titrating against maintaining 0.5–1.0 mL/kg/hour urine output (30–50 mL/hr).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Cardiopulmonary Rehab -->
+  <div class="tab-pane" id="paneCardio">
+    <div>
+      <div class="nt-card">
+        <h2><i class="fas fa-heart-pulse"></i> Karvonen Target Heart Rate Calculator</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+          <div>
+            <label style="font-size:12px;color:var(--text-3);font-weight:600;">Patient Age</label>
+            <input type="number" id="cardioAge" value="52" style="width:100%;padding:8px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;" oninput="calcCardio()">
+          </div>
+          <div>
+            <label style="font-size:12px;color:var(--text-3);font-weight:600;">Resting Heart Rate (BPM)</label>
+            <input type="number" id="cardioRestHR" value="74" style="width:100%;padding:8px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;" oninput="calcCardio()">
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:12px;color:var(--text-3);font-weight:600;display:block;margin-bottom:6px;">Training Intensity (Phase II: 60% – 75%)</label>
+          <input type="range" id="cardioIntensity" min="40" max="85" value="65" style="width:100%;accent-color:#06b6d4;" oninput="calcCardio()">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);font-family:'JetBrains Mono';margin-top:4px;">
+            <span>40% (Phase I Inpatient)</span>
+            <span id="lblIntensity" style="color:#22d3ee;font-weight:700;">65% Intensity</span>
+            <span>85% (Phase III)</span>
+          </div>
+        </div>
+
+        <div class="park-box" style="margin-top:16px;">
+          <small style="color:var(--text-3);font-size:11px;font-weight:700;text-transform:uppercase;">Prescribed Target Heart Rate</small>
+          <span class="park-num" id="outTargetHR">135 BPM</span>
+          <small style="color:var(--text-3);font-size:11px;">Formula: ((220 - Age - RestHR) × Intensity) + RestHR</small>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="nt-card">
+        <h2><i class="fas fa-gauge-high"></i> Borg RPE & MET Scale Progression</h2>
+        <div style="font-size:12px;color:var(--text-2);line-height:1.6;">
+          <div style="padding:8px;background:var(--bg-2);border-radius:6px;margin-bottom:6px;">
+            <b style="color:#10b981;">Phase I (Inpatient Acute, Days 1–5):</b><br>
+            RPE 11–13 (Light to somewhat hard). MET: 1.5–3.0 (Bed mobility, seated ankle pumps, 50m corridor ambulation).
+          </div>
+          <div style="padding:8px;background:var(--bg-2);border-radius:6px;margin-bottom:6px;">
+            <b style="color:#06b6d4;">Phase II (Subacute Monitored, Weeks 2–12):</b><br>
+            RPE 12–15. MET: 3.5–6.0 (Treadmill walking, cycle ergometer, low resistance bands with telemetry monitoring).
+          </div>
+          <div style="padding:8px;background:var(--bg-2);border-radius:6px;">
+            <b style="color:#a855f7;">Phase III (Community Maintenance):</b><br>
+            RPE 13–16. MET: >6.0 (Brisk walking, lap swimming, lifelong independent aerobic exercise).
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 3: Peripheral Nerve Splinting -->
+  <div class="tab-pane" id="paneNerves">
+    <div>
+      <div class="nt-card">
+        <h2><i class="fas fa-hand-dots"></i> Peripheral Nerve Lesion Splinting Guide</h2>
+        
+        <div class="splint-card">
+          <h3>1. Radial Nerve (High / Spiral Groove Injury)</h3>
+          <p><b>Clinical Presentation:</b> Wrist Drop + Finger drop due to extensor paralysis.<br>
+          <b>Prescribed Orthosis:</b> Dynamic Extensor Assist Cock-Up Splint with outrigger (holds wrist in 30° extension while allowing active finger flexion).</p>
+        </div>
+
+        <div class="splint-card">
+          <h3>2. Ulnar Nerve (Low / Wrist Level Injury)</h3>
+          <p><b>Clinical Presentation:</b> True Claw Hand (hyperextension of 4th/5th MCP and flexion of IP joints due to lumbrical paralysis).<br>
+          <b>Prescribed Orthosis:</b> Knuckle Bender (Lumbrical Block) Splint preventing MCP hyperextension, directing EDC pull to extend IP joints.</p>
+        </div>
+
+        <div class="splint-card">
+          <h3>3. Median Nerve (Low / Carpal Tunnel Injury)</h3>
+          <p><b>Clinical Presentation:</b> Ape Thumb Deformity (thenar wasting, loss of opposition).<br>
+          <b>Prescribed Orthosis:</b> Short Opponens (C-Bar) Splint maintaining first web space and holding thumb in functional opposition.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="nt-card">
+        <h2><i class="fas fa-ribbon"></i> Post-Mastectomy Lymphedema Recovery</h2>
+        <div style="font-size:12px;color:var(--text-2);line-height:1.6;">
+          <p><b>Manual Lymphatic Drainage (MLD) Protocol:</b> Clear proximal nodal basins first (deep abdominal breathing $\rightarrow$ contralateral axilla $\rightarrow$ ipsilateral groin $\rightarrow$ affected arm from proximal to distal strokes).</p>
+          <div style="padding:10px;background:var(--bg-2);border-radius:8px;margin-top:10px;">
+            <b>Progressive Shoulder Ladder:</b><br>
+            • Days 1–3: Squeeze rubber ball, wrist active ROM, elbow flexion/extension.<br>
+            • Days 4–7: Pendulum (Codman's) exercises, wall climbing within pain-free limit.<br>
+            • Post-Drain Removal: Pulley exercises, bilateral wand raises past 90° shoulder abduction.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 4: Pelvic & Diastasis Recti -->
+  <div class="tab-pane" id="panePelvic">
+    <div>
+      <div class="nt-card">
+        <h2><i class="fas fa-stopwatch"></i> Guided Kegel Contraction Timer</h2>
+        <p style="font-size:12px;color:var(--text-2);text-align:center;">Pelvic Floor Muscle Training (PFMT): 5 seconds contraction followed by 5 seconds relaxation.</p>
+        
+        <div class="kegel-ring" id="kegelRing">
+          <span style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-3);" id="kegelState">READY</span>
+          <span style="font-family:'JetBrains Mono';font-size:32px;font-weight:900;" id="kegelTimer">5s</span>
+          <small style="font-size:10px;color:#22d3ee;" id="kegelReps">Rep 1/10</small>
+        </div>
+
+        <div style="text-align:center;">
+          <button class="nt-btn pri" id="btnKegel" onclick="toggleKegel()"><i class="fas fa-play"></i> Start Guided Session</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="nt-card">
+        <h2><i class="fas fa-notes-medical"></i> Postnatal Diastasis Recti Protocol</h2>
+        <div style="font-size:12px;color:var(--text-2);line-height:1.6;">
+          <p><b>Self-Assessment Finger Test:</b> Lie hook-lying. Place 2 fingers horizontally above the umbilicus and gently lift head. If gap is $>2$ finger-widths ($>2\text{ cm}$), diastasis recti is positive.</p>
+          <div style="padding:10px;background:var(--bg-2);border-radius:8px;border-left:3px solid #f59e0b;margin-bottom:10px;">
+            <b style="color:#fbbf24;">Contraindications:</b> Avoid standard sit-ups, crunches, and full planks which create intra-abdominal outward bulge.
+          </div>
+          <p><b>Correct Progression:</b> Focus on isolated Transversus Abdominis (TrA) drawing-in maneuver with coordinated diaphragmatic exhalation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function setTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+  event.currentTarget.classList.add('active');
+  const paneId = 'pane' + name.charAt(0).toUpperCase() + name.slice(1);
+  const pane = document.getElementById(paneId);
+  if(pane) pane.classList.add('active');
+}
+
+function calcBurns() {
+  const items = document.querySelectorAll('.nine-item input:checked');
+  let tbsa = 0;
+  items.forEach(inp => tbsa += parseInt(inp.value));
+  tbsa = Math.min(100, tbsa);
+
+  const weight = parseFloat(document.getElementById('burnWeight').value) || 70;
+  const totalFluid = 4 * weight * tbsa;
+  const first8 = totalFluid / 2;
+  const next16 = totalFluid / 2;
+
+  document.getElementById('outTBSA').innerText = tbsa + '%';
+  document.getElementById('outTotalFluid').innerText = totalFluid.toLocaleString('en-IN') + ' mL';
+  document.getElementById('outFirst8').innerText = Math.round(first8).toLocaleString('en-IN') + ' mL';
+  document.getElementById('outRateFirst8').innerText = Math.round(first8 / 8) + ' mL / hr';
+  document.getElementById('outNext16').innerText = Math.round(next16).toLocaleString('en-IN') + ' mL';
+  document.getElementById('outRateNext16').innerText = Math.round(next16 / 16) + ' mL / hr';
+}
+
+function calcCardio() {
+  const age = parseFloat(document.getElementById('cardioAge').value) || 50;
+  const rest = parseFloat(document.getElementById('cardioRestHR').value) || 70;
+  const intensity = parseFloat(document.getElementById('cardioIntensity').value) || 60;
+
+  document.getElementById('lblIntensity').innerText = intensity + '% Intensity';
+  const maxHR = 220 - age;
+  const target = Math.round(((maxHR - rest) * (intensity / 100)) + rest);
+  document.getElementById('outTargetHR').innerText = target + ' BPM';
+}
+
+let kegelActive = false;
+let kegelInterval = null;
+let kegelSeconds = 5;
+let isContracting = true;
+let repCount = 1;
+
+function toggleKegel() {
+  kegelActive = !kegelActive;
+  const btn = document.getElementById('btnKegel');
+  if(kegelActive) {
+    btn.innerHTML = '<i class="fas fa-pause"></i> Pause Session';
+    btn.style.background = '#ef4444';
+    kegelInterval = setInterval(kegelTick, 1000);
+  } else {
+    btn.innerHTML = '<i class="fas fa-play"></i> Resume Session';
+    btn.style.background = '#06b6d4';
+    clearInterval(kegelInterval);
+  }
+}
+
+function kegelTick() {
+  kegelSeconds--;
+  document.getElementById('kegelTimer').innerText = kegelSeconds + 's';
+  const ring = document.getElementById('kegelRing');
+  const state = document.getElementById('kegelState');
+
+  if(kegelSeconds <= 0) {
+    kegelSeconds = 5;
+    isContracting = !isContracting;
+    if(isContracting) {
+      repCount++;
+      if(repCount > 10) repCount = 1;
+      document.getElementById('kegelReps').innerText = `Rep ${repCount}/10`;
+      state.innerText = 'CONTRACT';
+      state.style.color = '#22d3ee';
+      ring.classList.remove('relax');
+    } else {
+      state.innerText = 'RELAX';
+      state.style.color = '#94a3b8';
+      ring.classList.add('relax');
+    }
+  }
+}
+
+// Initial calculations
+calcBurns();
+calcCardio();
+</script>
+
+</body>
+</html>
