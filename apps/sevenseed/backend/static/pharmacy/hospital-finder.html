@@ -218,15 +218,27 @@
 var allHospitals = [];
 var selectedCity = 'all';
 
-// Load Hospitals Data
-fetch('data/hospitals.json')
+// Load Hospitals Data from API or local fallback
+fetch('/api/health/emergency-directory?city=Ahmedabad')
   .then(function(res) { return res.json(); })
   .then(function(data) {
-    allHospitals = data.hospitals || [];
-    renderHospitals(allHospitals);
+    if (data.hospitals && data.hospitals.length > 0) {
+      allHospitals = data.hospitals;
+      renderHospitals(allHospitals);
+    } else {
+      throw new Error('Fallback to local json');
+    }
   })
-  .catch(function(err) {
-    console.error('Failed loading hospitals.json:', err);
+  .catch(function() {
+    fetch('data/hospitals.json')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        allHospitals = data.hospitals || [];
+        renderHospitals(allHospitals);
+      })
+      .catch(function(err) {
+        console.error('Failed loading hospitals.json:', err);
+      });
   });
 
 // Load Camps Data

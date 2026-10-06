@@ -422,7 +422,19 @@ async function searchGeneric() {
     return;
   }
 
-  // Not in local cache: Call Live Gemini Engine
+  // Check backend Jan Aushadhi registry endpoint
+  try {
+    var apiRes = await fetch('/api/health/generics?q=' + encodeURIComponent(q));
+    if (apiRes.ok) {
+      var apiData = await apiRes.json();
+      if (apiData.results && apiData.results.length > 0) {
+        displayMatch(apiData.results[0]);
+        return;
+      }
+    }
+  } catch(e) {}
+
+  // Not in local cache or API: Call Live Gemini Engine
   var btn = document.getElementById('searchBtn');
   var origHtml = btn.innerHTML;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI Searching...';

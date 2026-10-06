@@ -707,8 +707,8 @@
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme"><i
           class="fas fa-moon"></i></button>
       <a class="btn btn-ghost" href="/avp-emart/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
-      <a class="btn btn-primary" href="https://price-com-7.streamlit.app/" target="_blank" rel="noopener"><i
-          class="fas fa-rocket"></i> Live Prices</a>
+      <a class="btn btn-primary" href="#searchInput" onclick="document.getElementById('searchInput').focus();"><i
+          class="fas fa-magnifying-glass"></i> Compare Deals</a>
       <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
     </div>
   </nav>
@@ -928,25 +928,70 @@
     let currentStores = [];
     let currentProduct = '';
 
-    function runSearch() {
+    async function runSearch() {
       const q = document.getElementById('searchInput').value.trim();
       if (!q) return;
       currentProduct = q;
       const btn = document.getElementById('searchBtn');
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Comparing…';
-      setTimeout(() => {
-        currentStores = generateProductData(q);
-        renderResults(q, currentStores);
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Compare Prices';
-      }, 1200);
+
+      try {
+        const res = await fetch('/api/emart/compare', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: q })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.all_results && data.all_results.length > 0) {
+            currentStores = data.all_results.map(item => {
+              let logo = 'amazon', cls = 'amazon', icon = 'fab fa-amazon';
+              const sLow = item.site.toLowerCase();
+              if (sLow.includes('flipkart')) { logo = 'flipkart'; cls = 'flipkart'; icon = 'fas fa-bolt'; }
+              else if (sLow.includes('reliance')) { logo = 'reliance'; cls = 'reliance'; icon = 'fas fa-store'; }
+              else if (sLow.includes('snapdeal')) { logo = 'snapdeal'; cls = 'snapdeal'; icon = 'fas fa-tag'; }
+              else if (sLow.includes('blinkit')) { logo = 'reliance'; cls = 'reliance'; icon = 'fas fa-bolt-lightning'; }
+              else if (sLow.includes('zepto')) { logo = 'snapdeal'; cls = 'snapdeal'; icon = 'fas fa-rocket'; }
+
+              return {
+                name: item.site,
+                sub: item.name,
+                price: item.price,
+                orig: item.mrp || Math.round(item.price * 1.2),
+                discount: item.discount_pct || 15,
+                mlScore: Math.round(item.final_score),
+                rating: item.rating || 4.5,
+                reviews: item.reviews ? item.reviews.toLocaleString('en-IN') : '1,200',
+                delivery: item.delivery || 'Free · 2-3 days',
+                deliveryCls: item.is_qcommerce ? 'del-fast' : 'del-std',
+                return: item.deal_integrity === 'HIGH' ? '15 days return' : 'Special promo deal',
+                link: item.link,
+                logo, cls, icon
+              };
+            });
+            renderResults(q, currentStores);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Compare Prices';
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('API connection failed, falling back to instant client engine:', err);
+      }
+
+      // Instant local model fallback
+      currentStores = generateProductData(q);
+      renderResults(q, currentStores);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Compare Prices';
     }
 
     function quickSearch(q) {
       document.getElementById('searchInput').value = q;
       runSearch();
     }
+
 
     function renderResults(q, stores) {
       document.getElementById('productNameDisplay').textContent = q;

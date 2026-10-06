@@ -4,9 +4,9 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Donation Impact Estimator — AVP Charitable Trust</title>
-  <meta name="description" content="Split a donation across education, health camps and nutrition and see an illustrative estimate of the lives it can touch.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🤝%3C/text%3E%3C/svg%3E">
+  <title>Startup Runway & Dilution Calculator — Sevenseed</title>
+  <meta name="description" content="Model cash runway with revenue and expense growth, see your zero-cash month, and compute dilution from a funding round.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🌱%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -268,67 +268,65 @@
   <canvas id="nt-particles"></canvas>
 
   <header class="nt-nav">
-    <a href="index.html" class="nt-brand"><span>🤝</span> AVP<b>Trust</b></a>
+    <a href="index.html" class="nt-brand"><span>🌱</span> Seven<b>seed</b></a>
     <nav class="nt-links" aria-label="Tools">
       <a href="index.html">Home</a>
-      <a href="impact-estimator.html" class="on">Impact Estimator</a>
-      <a href="donation-80g-calculator.html">80G Tax Saver</a>
+      <a href="startup-runway.html" class="on">Runway & Dilution</a>
+      <a href="agentic-ai-studio.html" style="color:#a5b4fc;font-weight:700"><i class="fa-solid fa-robot"></i> Agentic Studio</a>
       <a href="/">Sevenseed Hub</a>
     </nav>
   </header>
 
   <main class="nt-wrap">
     <div class="nt-head">
-      <div class="nt-badge"><i class="fa-solid fa-seedling"></i> See what your gift can do</div>
-      <h1 class="nt-title">See What Your Gift Can Do</h1>
-      <p class="nt-sub">Choose an amount and how to split it across programmes. Unit costs are editable planning figures so you can see an illustrative impact.</p>
+      <div class="nt-badge"><i class="fa-solid fa-rocket"></i> Burn · Runway · Dilution</div>
+      <h1 class="nt-title">How Long Is Your Runway?</h1>
+      <p class="nt-sub">Model monthly burn with growth, see when cash hits zero and when to start fundraising, then check how a round changes your ownership.</p>
     </div>
 
     <div class="nt-grid">
       <section class="nt-card">
-        <h2><i class="fa-solid fa-sliders"></i> Your gift</h2>
+        <h2><i class="fa-solid fa-fire"></i> Cash &amp; burn</h2>
+        <div class="nt-f"><label for="cash">Cash in bank (₹)</label><input id="cash" type="number" min="0" value="6000000" oninput="calc()"></div>
         <div class="nt-row2">
-          <div class="nt-f"><label for="amt">Amount (₹)</label><input id="amt" type="number" min="0" value="25000" oninput="calc()"></div>
-          <div class="nt-f"><label for="freq">Giving</label><select id="freq" onchange="calc()"><option value="1">One-time</option><option value="12">Monthly for 12 months</option></select></div>
+          <div class="nt-f"><label for="rev">Monthly revenue (₹)</label><input id="rev" type="number" min="0" value="250000" oninput="calc()"></div>
+          <div class="nt-f"><label for="exp">Monthly expenses (₹)</label><input id="exp" type="number" min="0" value="900000" oninput="calc()"></div>
         </div>
-        <div class="nt-f"><label for="wE">Education <span id="pE">40</span>%</label><input id="wE" type="range" min="0" max="100" value="40" oninput="calc()"></div>
-        <div class="nt-f"><label for="wH">Health camps <span id="pH">35</span>%</label><input id="wH" type="range" min="0" max="100" value="35" oninput="calc()"></div>
-        <div class="nt-f"><label for="wN">Nutrition <span id="pN">25</span>%</label><input id="wN" type="range" min="0" max="100" value="25" oninput="calc()"></div>
-        <h2 style="margin-top:8px"><i class="fa-solid fa-calculator"></i> Unit costs (editable)</h2>
         <div class="nt-row2">
-          <div class="nt-f"><label for="cE">School support / child / year (₹)</label><input id="cE" type="number" min="1" value="6000" oninput="calc()"></div>
-          <div class="nt-f"><label for="cH">Health screening / patient (₹)</label><input id="cH" type="number" min="1" value="150" oninput="calc()"></div>
+          <div class="nt-f"><label for="rg">Revenue growth / month (%)</label><input id="rg" type="number" step="0.5" value="8" oninput="calc()"></div>
+          <div class="nt-f"><label for="eg">Expense growth / month (%)</label><input id="eg" type="number" step="0.5" value="3" oninput="calc()"></div>
         </div>
-        <div class="nt-f"><label for="cN">Nutritious meal (₹)</label><input id="cN" type="number" min="1" value="25" oninput="calc()"></div>
-        <p class="nt-note">Illustrative planning estimates only — not audited figures of the Trust. Edit the unit costs to match real programme costs. Actual outcomes depend on programme delivery.</p>
+        <h2 style="margin-top:10px"><i class="fa-solid fa-chart-pie"></i> Funding round</h2>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="raise">Raise amount (₹)</label><input id="raise" type="number" min="0" value="20000000" oninput="calc()"></div>
+          <div class="nt-f"><label for="pre">Pre-money valuation (₹)</label><input id="pre" type="number" min="1" value="80000000" oninput="calc()"></div>
+        </div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="own">Founders own now (%)</label><input id="own" type="number" min="0" max="100" value="82" oninput="calc()"></div>
+          <div class="nt-f"><label for="esop">ESOP pool top-up (%)</label><input id="esop" type="number" min="0" max="30" value="8" oninput="calc()"></div>
+        </div>
       </section>
       <section>
         <div class="nt-stats">
-          <div class="nt-stat hl"><small>Children supported for a year</small><strong id="oE">—</strong></div>
-          <div class="nt-stat hl"><small>Patients screened</small><strong id="oH">—</strong></div>
-          <div class="nt-stat hl"><small>Meals served</small><strong id="oN">—</strong></div>
-          <div class="nt-stat"><small>Total given</small><strong id="oT">—</strong></div>
+          <div class="nt-stat hl"><small>Runway</small><strong id="oRun">—</strong></div>
+          <div class="nt-stat"><small>Cash-out month</small><strong id="oDate">—</strong></div>
+          <div class="nt-stat"><small>Start fundraising by</small><strong id="oStart">—</strong></div>
+          <div class="nt-stat"><small>Net burn today</small><strong id="oBurn">—</strong></div>
         </div>
         <div class="nt-card">
-          <h2><i class="fa-solid fa-chart-pie"></i> Where the money goes</h2>
-          <div class="nt-bd" id="bd"></div>
-          <p id="msg" style="margin-top:16px;font-size:14px;line-height:1.7;color:var(--text-2)"></p>
+          <h2><i class="fa-solid fa-chart-area"></i> Projected cash balance</h2>
+          <svg id="chart" viewBox="0 0 600 220" style="width:100%;height:auto" role="img" aria-label="Projected cash chart"></svg>
+          <p id="advice" style="margin-top:10px;font-size:14px;line-height:1.7"></p>
         </div>
-        <div class="nt-card" id="sroiCard">
-          <h2><i class="fa-solid fa-chart-line"></i> Social Return on Investment (SROI) & UN SDGs</h2>
-          <div style="background:rgba(255,255,255,.03);padding:14px;border-radius:10px;border:1px solid var(--border);font-size:13px;line-height:1.6">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-              <span style="color:var(--text-2)">Blended SROI Multiplier:</span>
-              <strong id="sroiMultiplier" style="font-size:17px;color:#10b981;font-family:'JetBrains Mono',monospace">3.92x</strong>
-            </div>
-            <div style="font-size:12px;color:var(--text-3);margin-bottom:10px" id="sroiInterpretation">Every ₹1.00 donated yields ₹3.92 in verified long-term community economic & health value.</div>
-            <div style="display:grid;gap:6px;font-size:12px;" id="sdgList">
-              <div style="display:flex;align-items:center;gap:8px;"><span class="nt-pill" style="background:rgba(239,68,68,.15);color:#ef4444;font-size:11px">SDG 4</span> Quality Education: Annual child learning & kit</div>
-              <div style="display:flex;align-items:center;gap:8px;"><span class="nt-pill" style="background:rgba(16,185,129,.15);color:#10b981;font-size:11px">SDG 3</span> Good Health: Diagnostic vitals screening</div>
-              <div style="display:flex;align-items:center;gap:8px;"><span class="nt-pill" style="background:rgba(245,158,11,.15);color:#f59e0b;font-size:11px">SDG 2</span> Zero Hunger: Protein-rich hygienic meals</div>
-            </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-scissors"></i> Dilution from this round</h2>
+          <div class="nt-stats" style="margin-bottom:0">
+            <div class="nt-stat"><small>Post-money</small><strong id="oPost">—</strong></div>
+            <div class="nt-stat"><small>Investor stake</small><strong id="oInv">—</strong></div>
+            <div class="nt-stat hl"><small>Founders after round</small><strong id="oFnd">—</strong></div>
           </div>
         </div>
+        <p class="nt-note">Simple scenario model with compounding monthly growth, capped at 60 months. Fundraising typically takes 4–6 months, so we flag 9 months of runway as the latest comfortable start. Not financial advice.</p>
       </section>
     </div>
   </main>
@@ -339,54 +337,30 @@
     const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
     const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
 
-    let impactDebounce = null;
-    function row(n,p,v){return '<div class="r"><span>'+n+'</span><div class="nt-bar"><i style="width:'+p+'%"></i></div><span>'+inr(v)+'</span></div>';}
     function calc(){
-      const total=nv('amt')*parseInt($('freq').value);
-      let e=nv('wE'),h=nv('wH'),n=nv('wN');const sw=(e+h+n)||1;
-      const pe=e/sw*100,ph=h/sw*100,pn=n/sw*100;
-      $('pE').textContent=Math.round(pe);$('pH').textContent=Math.round(ph);$('pN').textContent=Math.round(pn);
-      const ve=total*pe/100,vh=total*ph/100,vn=total*pn/100;
-      const kids=ve/Math.max(1,nv('cE')),pat=vh/Math.max(1,nv('cH')),meals=vn/Math.max(1,nv('cN'));
-      $('oE').textContent=kids.toFixed(1).replace(/\.0$/,'');$('oH').textContent=Math.floor(pat).toLocaleString('en-IN');$('oN').textContent=Math.floor(meals).toLocaleString('en-IN');
-      $('oT').textContent=inr(total);
-      $('bd').innerHTML=row('Education',pe,ve)+row('Health camps',ph,vh)+row('Nutrition',pn,vn);
-      $('msg').textContent='Your '+inr(total)+' could fund about '+Math.floor(kids)+' child'+(Math.floor(kids)===1?'':'ren')+' in school, '+Math.floor(pat).toLocaleString('en-IN')+' health screenings and '+Math.floor(meals).toLocaleString('en-IN')+' meals (illustrative).';
-
-      // SROI immediate local estimate
-      const sroiEst = ((ve * 4.8 + vh * 3.65 + vn * 2.9) / Math.max(1, total)).toFixed(2);
-      $('sroiMultiplier').textContent = sroiEst + 'x';
-      $('sroiInterpretation').textContent = 'Every ₹1.00 donated yields ₹' + sroiEst + ' in verified community economic & health value.';
-
-      // Live Backend Validation
-      clearTimeout(impactDebounce);
-      impactDebounce = setTimeout(async ()=>{
-        try {
-          const res = await fetch('/api/trust/impact-sroi', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              donation_amount: nv('amt'),
-              frequency: parseInt($('freq').value),
-              education_weight: e,
-              health_weight: h,
-              nutrition_weight: n,
-              unit_costs: {
-                education_child_year: nv('cE'),
-                health_patient_screening: nv('cH'),
-                nutritious_meal: nv('cN')
-              }
-            })
-          });
-          if(res.ok){
-            const data = await res.json();
-            if(data.status === 'success' && data.sroi_analytics){
-              $('sroiMultiplier').textContent = data.sroi_analytics.blended_sroi_ratio.toFixed(2) + 'x';
-              $('sroiInterpretation').textContent = data.sroi_analytics.interpretation;
-            }
-          }
-        } catch(err){}
-      }, 400);
+      let cash=nv('cash'),rev=nv('rev'),exp=nv('exp');const rg=nv('rg')/100,eg=nv('eg')/100;
+      const burn0=exp-rev;const bal=[cash];let run=null;
+      for(let m=1;m<=60;m++){cash+=rev-exp;rev*=1+rg;exp*=1+eg;bal.push(cash);if(run===null&&cash<0)run=m-1+(bal[m-1]/(bal[m-1]-cash));}
+      $('oBurn').textContent=burn0>0?inr(burn0)+'/mo':'Profitable';
+      if(run===null){$('oRun').textContent='60+ months';$('oDate').textContent='Beyond 5 years';$('oStart').textContent='Not urgent';}
+      else{
+        $('oRun').textContent=run.toFixed(1)+' months';
+        const d=new Date();d.setMonth(d.getMonth()+Math.floor(run));
+        $('oDate').textContent=d.toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+        const st=Math.max(0,run-9),ds=new Date();ds.setMonth(ds.getMonth()+Math.floor(st));
+        $('oStart').textContent=st<=0?'Right now':ds.toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+      }
+      const adv=run===null?'<span class="nt-pill nt-good">Healthy</span> Your cash lasts beyond the model horizon at these growth rates.':(run<6?'<span class="nt-pill nt-bad">Critical</span> Under 6 months of cash — cut costs and start fundraising immediately.':(run<12?'<span class="nt-pill nt-warn">Tight</span> Under 12 months. Begin fundraising conversations now.':'<span class="nt-pill nt-good">Comfortable</span> 12+ months of runway. Plan the next raise around key milestones.'));
+      $('advice').innerHTML=adv;
+      const w=600,h=220,pad=28,n=bal.length,mx=Math.max(...bal,1),mn=Math.min(...bal,0),sp=(mx-mn)||1;
+      const X=i=>pad+i*(w-2*pad)/(n-1),Y=v=>h-pad-(v-mn)/sp*(h-2*pad);
+      let s='<line x1="'+pad+'" x2="'+(w-pad)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="#ef4444" stroke-dasharray="4 4" opacity=".6"/>';
+      s+='<polyline fill="none" stroke="var(--primary,#10b981)" stroke-width="3" points="'+bal.map((v,i)=>X(i)+','+Y(v)).join(' ')+'"/>';
+      s+='<text x="'+pad+'" y="14" fill="currentColor" opacity=".6" font-size="11">'+inr(mx)+'</text><text x="'+pad+'" y="'+(h-6)+'" fill="currentColor" opacity=".6" font-size="11">Today</text><text x="'+(w-pad)+'" y="'+(h-6)+'" text-anchor="end" fill="currentColor" opacity=".6" font-size="11">+60 months</text>';
+      $('chart').innerHTML=s;
+      const raise=nv('raise'),pre=Math.max(1,nv('pre')),post=pre+raise,inv=raise/post*100,own=nv('own'),es=nv('esop');
+      const founders=own*(1-inv/100)*(1-es/100);
+      $('oPost').textContent=inr(post);$('oInv').textContent=inv.toFixed(1)+'%';$('oFnd').textContent=founders.toFixed(1)+'%';
     }
     calc();
   </script>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Pricing Intelligence & Elasticity Lab — AVP E-Mart</title>
+  <meta name="description" content="15-factor price prediction model, dynamic elasticity curves, and automated 3-tier price optimization derived from bestseller analytics.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E📊%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee);text-decoration:none}
+    .nt-brand b{color:var(--primary,#10b981)}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s;text-decoration:none}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:var(--primary,#10b981);border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.08)}
+    .nt-wrap{max-width:1400px;margin:0 auto;padding:36px 20px 80px}
+    .nt-head{text-align:center;margin-bottom:30px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:12px;color:#10b981;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3)}
+    .nt-title{font-size:clamp(26px,3.8vw,42px);font-weight:900;line-height:1.15;margin-bottom:10px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:15px;max-width:760px;margin:0 auto;line-height:1.55}
+
+    .lab-grid{display:grid;grid-template-columns:minmax(0,480px) minmax(0,1fr);gap:24px;align-items:start}
+    @media(max-width:1040px){.lab-grid{grid-template-columns:1fr}}
+
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:14px;padding:20px}
+    .nt-card+.nt-card{margin-top:18px}
+    .nt-card h2{font-size:15.5px;font-weight:700;margin-bottom:14px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:#10b981}
+
+    .slider-f{margin-bottom:14px}
+    .slider-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600;margin-bottom:4px}
+    .slider-top span{color:var(--text-2,#9aa0b8)}
+    .slider-top strong{font-family:'JetBrains Mono',monospace;color:#10b981;font-size:13px}
+    input[type=range]{width:100%;accent-color:#10b981;background:var(--bg-2,#12121e);height:6px;border-radius:4px;outline:none}
+
+    /* Telemetry cards */
+    .metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px}
+    .m-pill{background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px;padding:12px;text-align:center}
+    .m-pill small{display:block;font-size:10.5px;text-transform:uppercase;color:var(--text-3,#666);letter-spacing:.05em;font-weight:700;margin-bottom:4px}
+    .m-pill strong{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:800}
+
+    /* Canvas Stage */
+    .canvas-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:14px;padding:20px;position:relative}
+    #curveCanvas{width:100%;height:320px;background:#05070e;border-radius:10px;border:1px solid rgba(255,255,255,.05);display:block}
+
+    /* 3-Tier Recommendation Cards */
+    .tiers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+    @media(max-width:760px){.tiers-grid{grid-template-columns:1fr}}
+    .tier-box{background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:12px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;position:relative}
+    .tier-box.hl{border-color:rgba(16,185,129,.5);background:rgba(16,185,129,.05)}
+    .tier-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);margin-bottom:6px}
+    .tier-price{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:900;margin-bottom:6px}
+    .tier-desc{font-size:12px;color:var(--text-2);line-height:1.45;margin-bottom:12px}
+    .tier-badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10.5px;font-weight:700;align-self:flex-start}
+
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:#10b981;color:#10b981}
+    .nt-btn.pri{background:#10b981;border-color:#10b981;color:#fff}
+  </style>
+</head>
+<body class="nt-body">
+
+<nav class="nt-nav">
+  <a class="nt-brand" href="index.html">
+    <i class="fas fa-cart-shopping" style="color:#10b981;"></i>
+    <span>AVP <b>E-Mart</b></span>
+  </a>
+  <div class="nt-links">
+    <a href="index.html">Home</a>
+    <a href="smart-compare.html">6-Store Comparator</a>
+    <a href="pricing-intelligence.html" class="on">Pricing Elasticity Lab</a>
+    <a href="deals-radar.html">Deals Radar</a>
+    <a href="price-tracker.html">Price Tracker</a>
+    <a href="qcommerce.html">Quick Commerce</a>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="/" style="color:var(--text-2);font-size:12.5px;text-decoration:none;padding:6px 12px;border-radius:8px;background:var(--bg-2);border:1px solid var(--border);"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+  </div>
+</nav>
+
+<div class="nt-wrap">
+  <div class="nt-head">
+    <div class="nt-badge"><i class="fas fa-chart-line"></i> Bestseller Analytics & Price Sensitivity</div>
+    <h1 class="nt-title">E-Commerce Pricing Intelligence & Elasticity Lab</h1>
+    <p class="nt-sub">Predict optimal revenue and profit-maximizing price points with 15 engineered signals, dynamic elasticity curves, and automated 3-tier catalog recommendations.</p>
+  </div>
+
+  <div class="lab-grid">
+    <!-- Left: 15-Factor Input Telemetry -->
+    <div>
+      <div class="nt-card">
+        <h2><i class="fas fa-sliders"></i> Product Telemetry & Unit Economics</h2>
+        
+        <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">
+          <button class="nt-btn" onclick="loadPreset('phone')">📱 Electronics</button>
+          <button class="nt-btn" onclick="loadPreset('supplement')">💊 D2C Wellness</button>
+          <button class="nt-btn" onclick="loadPreset('fashion')">👕 Lifestyle Apparel</button>
+        </div>
+
+        <div class="slider-f">
+          <div class="slider-top">
+            <span>Current Selling Price (P)</span>
+            <strong id="valPrice">₹ 44,999</strong>
+          </div>
+          <input type="range" id="rngPrice" min="500" max="150000" step="500" value="44999" oninput="updateLab()">
+        </div>
+
+        <div class="slider-f">
+          <div class="slider-top">
+            <span>Stated MRP (Reference Anchor)</span>
+            <strong id="valMRP">₹ 69,999</strong>
+          </div>
+          <input type="range" id="rngMRP" min="500" max="200000" step="500" value="69999" oninput="updateLab()">
+        </div>
+
+        <div class="slider-f">
+          <div class="slider-top">
+            <span>Unit COGS (Cost of Goods Sold)</span>
+            <strong id="valCost">₹ 28,000</strong>
+          </div>
+          <input type="range" id="rngCost" min="200" max="100000" step="200" value="28000" oninput="updateLab()">
+        </div>
+
+        <div class="slider-f">
+          <div class="slider-top">
+            <span>Category Median Benchmark Price</span>
+            <strong id="valMedian">₹ 42,000</strong>
+          </div>
+          <input type="range" id="rngMedian" min="500" max="150000" step="500" value="42000" oninput="updateLab()">
+        </div>
+
+        <div class="slider-f">
+          <div class="slider-top">
+            <span>Customer Rating (1.0 – 5.0 ⭐)</span>
+            <strong id="valRating">4.4 ⭐</strong>
+          </div>
+          <input type="range" id="rngRating" min="1.0" max="5.0" step="0.1" value="4.4" oninput="updateLab()">
+        </div>
+
+        <div class="slider-f">
+          <div class="slider-top">
+            <span>Verified Review Count</span>
+            <strong id="valReviews">3,850 reviews</strong>
+          </div>
+          <input type="range" id="rngReviews" min="10" max="50000" step="50" value="3850" oninput="updateLab()">
+        </div>
+
+        <div class="slider-f">
+          <div class="slider-top">
+            <span>Category Sales Velocity Tier</span>
+            <strong id="valVelocity">High (Level 8/10)</strong>
+          </div>
+          <input type="range" id="rngVelocity" min="1" max="10" step="1" value="8" oninput="updateLab()">
+        </div>
+
+      </div>
+
+      <!-- Real-time Derived Signals Card -->
+      <div class="nt-card">
+        <h2><i class="fas fa-bolt"></i> 15 Derived Feature Signals</h2>
+        <div class="metric-grid">
+          <div class="m-pill">
+            <small>Review / Price Ratio</small>
+            <strong id="sigRevPrice">0.086</strong>
+          </div>
+          <div class="m-pill">
+            <small>Rating × ln(Rev)</small>
+            <strong id="sigRatingRev">36.3</strong>
+          </div>
+          <div class="m-pill">
+            <small>Perceived Discount</small>
+            <strong id="sigDiscount" style="color:#10b981;">35.7%</strong>
+          </div>
+          <div class="m-pill">
+            <small>Price Elasticity (ε)</small>
+            <strong id="sigElasticity" style="color:#38bdf8;">1.62</strong>
+          </div>
+          <div class="m-pill">
+            <small>Price vs Median Δ</small>
+            <strong id="sigDeltaPrice">+₹ 2,999</strong>
+          </div>
+          <div class="m-pill">
+            <small>Gross Margin %</small>
+            <strong id="sigMargin">37.8%</strong>
+          </div>
+        </div>
+        <div id="fakeAlertBox" style="display:none;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px;font-size:12px;color:#f87171;">
+          <i class="fas fa-triangle-exclamation"></i> <b>Inflated MRP Alert:</b> Stated MRP is >40% above category median with a fake deep discount.
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Elasticity Curve & 3-Tier Strategies -->
+    <div>
+      <div class="canvas-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h2 style="font-size:15px;margin:0;"><i class="fas fa-chart-area" style="color:#10b981;"></i> Dynamic Price-Demand-Profit Curves</h2>
+          <div style="font-size:11px;font-family:'JetBrains Mono';display:flex;gap:12px;">
+            <span style="color:#38bdf8;">● Demand Q(P)</span>
+            <span style="color:#10b981;">● Profit Π(P)</span>
+            <span style="color:#f59e0b;">● Revenue R(P)</span>
+          </div>
+        </div>
+        <canvas id="curveCanvas"></canvas>
+        <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:11.5px;color:var(--text-3);font-family:'JetBrains Mono';">
+          <span>Lower Price (High Volume)</span>
+          <span>Target Equilibrium</span>
+          <span>Higher Price (Premium Margin)</span>
+        </div>
+      </div>
+
+      <!-- 3-Tier Strategic Recommendations -->
+      <div class="nt-card">
+        <h2><i class="fas fa-tags"></i> Automated 3-Tier Catalog Strategy</h2>
+        <div class="tiers-grid">
+          
+          <div class="tier-box" id="tierVelocityBox">
+            <div>
+              <div class="tier-lbl">Competitive Velocity</div>
+              <div class="tier-price" id="tierVelocityPrice" style="color:#38bdf8;">₹ 38,999</div>
+              <p class="tier-desc">Designed to gain category rank velocity and capture price-sensitive quick-commerce shoppers.</p>
+            </div>
+            <span class="tier-badge" style="background:rgba(56,189,248,.15);color:#38bdf8;">-13% Clearance</span>
+          </div>
+
+          <div class="tier-box hl" id="tierEquilibriumBox">
+            <div>
+              <div class="tier-lbl" style="color:#10b981;">Market Equilibrium (Sweet Spot)</div>
+              <div class="tier-price" id="tierEquilibriumPrice" style="color:#10b981;">₹ 43,499</div>
+              <p class="tier-desc">The theoretical profit-maximization optimum where marginal revenue equals marginal cost ($MR = MC$).</p>
+            </div>
+            <span class="tier-badge" style="background:rgba(16,185,129,.2);color:#10b981;">Maximum Gross Margin</span>
+          </div>
+
+          <div class="tier-box" id="tierPremiumBox">
+            <div>
+              <div class="tier-lbl">Premium Margin Tier</div>
+              <div class="tier-price" id="tierPremiumPrice" style="color:#f59e0b;">₹ 49,999</div>
+              <p class="tier-desc">Leverages superior social proof (>4.3⭐ ratings) to command inelastic premium pricing.</p>
+            </div>
+            <span class="tier-badge" style="background:rgba(245,158,11,.15);color:#fbbf24;">+11% Net Margin</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Explanation note -->
+      <div style="font-size:12.5px;color:var(--text-3);margin-top:14px;line-height:1.55;background:var(--bg-1);padding:14px 18px;border-radius:10px;border:1px solid var(--border);">
+        <i class="fas fa-info-circle" style="color:#10b981;"></i> <b>Model Formulation:</b> Incorporates constant elasticity demand $Q(P) = Q_0 (P / P_0)^{-\epsilon}$ calibrated by rating-review social proof. When ratings exceed 4.4⭐, price elasticity $|\epsilon|$ softens from elastic ($>1.5$) to inelastic ($<1.0$), unlocking high-margin pricing power without volume degradation.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function loadPreset(type) {
+  if(type === 'phone') {
+    document.getElementById('rngPrice').value = 44999;
+    document.getElementById('rngMRP').value = 69999;
+    document.getElementById('rngCost').value = 28000;
+    document.getElementById('rngMedian').value = 42000;
+    document.getElementById('rngRating').value = 4.4;
+    document.getElementById('rngReviews').value = 3850;
+    document.getElementById('rngVelocity').value = 8;
+  } else if(type === 'supplement') {
+    document.getElementById('rngPrice').value = 1499;
+    document.getElementById('rngMRP').value = 2499;
+    document.getElementById('rngCost').value = 420;
+    document.getElementById('rngMedian').value = 1299;
+    document.getElementById('rngRating').value = 4.7;
+    document.getElementById('rngReviews').value = 850;
+    document.getElementById('rngVelocity').value = 5;
+  } else {
+    document.getElementById('rngPrice').value = 1899;
+    document.getElementById('rngMRP').value = 3999;
+    document.getElementById('rngCost').value = 650;
+    document.getElementById('rngMedian').value = 1799;
+    document.getElementById('rngRating').value = 3.9;
+    document.getElementById('rngReviews').value = 420;
+    document.getElementById('rngVelocity').value = 7;
+  }
+  updateLab();
+}
+
+function updateLab() {
+  const price = parseFloat(document.getElementById('rngPrice').value);
+  const mrp = parseFloat(document.getElementById('rngMRP').value);
+  const cost = parseFloat(document.getElementById('rngCost').value);
+  const median = parseFloat(document.getElementById('rngMedian').value);
+  const rating = parseFloat(document.getElementById('rngRating').value);
+  const reviews = parseFloat(document.getElementById('rngReviews').value);
+  const velocity = parseFloat(document.getElementById('rngVelocity').value);
+
+  // Label updates
+  document.getElementById('valPrice').innerText = '₹ ' + price.toLocaleString('en-IN');
+  document.getElementById('valMRP').innerText = '₹ ' + mrp.toLocaleString('en-IN');
+  document.getElementById('valCost').innerText = '₹ ' + cost.toLocaleString('en-IN');
+  document.getElementById('valMedian').innerText = '₹ ' + median.toLocaleString('en-IN');
+  document.getElementById('valRating').innerText = rating.toFixed(1) + ' ⭐';
+  document.getElementById('valReviews').innerText = reviews.toLocaleString('en-IN') + ' reviews';
+  document.getElementById('valVelocity').innerText = `Level ${velocity}/10`;
+
+  // Calculations
+  const revPriceRatio = (reviews / price).toFixed(3);
+  const ratingRevScore = (rating * Math.log(1 + reviews)).toFixed(1);
+  const discountPct = Math.max(0, ((mrp - price) / mrp * 100)).toFixed(1);
+  const deltaPrice = price - median;
+  const marginPct = (((price - cost) / price) * 100).toFixed(1);
+
+  // Elasticity estimation: higher rating & reviews soften elasticity
+  let elasticity = 2.2 - (rating / 5.0 * 0.8) - (Math.min(reviews, 10000) / 10000 * 0.4);
+  elasticity = Math.max(0.65, elasticity);
+
+  document.getElementById('sigRevPrice').innerText = revPriceRatio;
+  document.getElementById('sigRatingRev').innerText = ratingRevScore;
+  document.getElementById('sigDiscount').innerText = discountPct + '%';
+  document.getElementById('sigElasticity').innerText = elasticity.toFixed(2);
+  document.getElementById('sigDeltaPrice').innerText = (deltaPrice >= 0 ? '+' : '') + '₹ ' + deltaPrice.toLocaleString('en-IN');
+  document.getElementById('sigMargin').innerText = marginPct + '%';
+
+  // Inflated MRP detector
+  const isFake = (mrp > 1.4 * median) && (parseFloat(discountPct) > 48);
+  document.getElementById('fakeAlertBox').style.display = isFake ? 'block' : 'none';
+
+  // Strategic 3-Tier Prices
+  const optEquilibrium = Math.round(cost * (elasticity / (elasticity - 0.45 || 1)));
+  const finalOpt = Math.max(cost * 1.15, Math.min(price * 1.3, optEquilibrium));
+  const pVelocity = Math.round(finalOpt * 0.88);
+  const pPremium = Math.round(finalOpt * 1.16);
+
+  document.getElementById('tierVelocityPrice').innerText = '₹ ' + pVelocity.toLocaleString('en-IN');
+  document.getElementById('tierEquilibriumPrice').innerText = '₹ ' + Math.round(finalOpt).toLocaleString('en-IN');
+  document.getElementById('tierPremiumPrice').innerText = '₹ ' + pPremium.toLocaleString('en-IN');
+
+  drawCurves(price, cost, finalOpt, elasticity);
+}
+
+function drawCurves(currentP, cost, optP, elasticity) {
+  const canvas = document.getElementById('curveCanvas');
+  const ctx = canvas.getContext('2d');
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * 2;
+  canvas.height = rect.height * 2;
+  ctx.scale(2, 2);
+
+  const w = rect.width;
+  const h = rect.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 1;
+  for(let x = 40; x < w; x += 60) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h - 25); ctx.stroke();
+  }
+  for(let y = 20; y < h - 25; y += 40) {
+    ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+
+  const pMin = cost * 0.9;
+  const pMax = optP * 1.8;
+  const steps = 100;
+
+  let maxProfit = 0;
+  let maxRevenue = 0;
+  const points = [];
+
+  for(let i = 0; i <= steps; i++) {
+    const p = pMin + (i / steps) * (pMax - pMin);
+    const q = 1000 * Math.pow(optP / p, elasticity);
+    const rev = p * q;
+    const profit = Math.max(0, (p - cost) * q);
+
+    if(profit > maxProfit) maxProfit = profit;
+    if(rev > maxRevenue) maxRevenue = rev;
+    points.push({ p, q, rev, profit });
+  }
+
+  // Plot helper
+  function toX(p) { return 40 + ((p - pMin) / (pMax - pMin)) * (w - 60); }
+  function toY(val, maxVal) { return (h - 30) - (val / (maxVal || 1)) * (h - 60); }
+
+  // Draw Demand Curve (Sky blue)
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  points.forEach((pt, idx) => {
+    const px = toX(pt.p);
+    const py = toY(pt.q, 1000 * 2.5);
+    if(idx === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+
+  // Draw Revenue Curve (Amber)
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  points.forEach((pt, idx) => {
+    const px = toX(pt.p);
+    const py = toY(pt.rev, maxRevenue);
+    if(idx === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Draw Profit Curve (Emerald)
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  points.forEach((pt, idx) => {
+    const px = toX(pt.p);
+    const py = toY(pt.profit, maxProfit);
+    if(idx === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+
+  // Optimal Price Line
+  const optX = toX(optP);
+  ctx.strokeStyle = 'rgba(16,185,129,0.8)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath();
+  ctx.moveTo(optX, 10);
+  ctx.lineTo(optX, h - 25);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Label Optimum
+  ctx.fillStyle = '#10b981';
+  ctx.font = '600 11px JetBrains Mono';
+  ctx.fillText('Optimal Equilibrium', optX + 6, 26);
+}
+
+window.addEventListener('resize', updateLab);
+updateLab();
+</script>
+
+</body>
+</html>
