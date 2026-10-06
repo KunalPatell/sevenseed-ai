@@ -789,7 +789,7 @@ COMPANIES = [
         "cta_title": "Start shopping smarter with AI.",
         "cta_text": "Try the live AI price comparator — search any product and instantly see the best value across Amazon, Flipkart, Reliance Digital, and Snapdeal.",
         "cta_primary": "Try the AI Price Comparator",
-        "live_url": "https://price-com-7.streamlit.app/",
+        "live_url": "smart-compare.html",
         "contact": ("shop@avpemart.com", "+91 84908 61586", "Ahmedabad, Gujarat, India"),
     },
 ]
