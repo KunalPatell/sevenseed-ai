@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sevenseed — AI Venture Studio & Startup Incubator</title>
+  <title>Sevenseed — Enterprise Autonomous AI Platform & Multi-Agent Venture Engine</title>
   <meta name="description" content="An AI-first startup studio that ideates, incubates, and launches ventures powered by LLM agents, RAG, and computer vision — on a shared AI infrastructure used across the entire portfolio.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Sevenseed — AI Venture Studio & Startup Incubator">
@@ -20,6 +20,165 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    /* ════════════════════ ENTERPRISE LEVEL AI SUITE ════════════════════ */
+
+    /* Nav styling improvements */
+    .nav-links { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .nav-links a { white-space: nowrap; font-size: 12.5px; padding: 6px 9px; display: inline-flex; align-items: center; gap: 5px; border-radius: 8px; }
+    .nav-agentic-btn { color: #c084fc !important; font-weight: 700; background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.3); }
+    .nav-agentic-btn:hover { background: rgba(168,85,247,0.22); }
+    .nav-pill-badge { font-size: 9px; padding: 1px 6px; border-radius: 999px; background: #8b5cf6; color: #fff; font-weight: 800; letter-spacing: .04em; }
+
+    :root {
+      --ent-cyan: #06b6d4;
+      --ent-purple: #a855f7;
+      --ent-indigo: #6366f1;
+      --ent-emerald: #10b981;
+      --ent-amber: #f59e0b;
+      --ent-rose: #f43f5e;
+    }
+
+    /* Enterprise Badges Strip */
+    .ent-compliance-strip {
+      max-width: 1240px; margin: 10px auto 44px; padding: 14px 28px;
+      background: rgba(14, 14, 26, 0.75); backdrop-filter: blur(14px);
+      border: 1px solid var(--border-hi); border-radius: 999px;
+      display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4); position: relative; z-index: 10;
+    }
+    .ent-compliance-item {
+      display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--text-2);
+    }
+    .ent-compliance-item i { color: #a5b4fc; font-size: 13px; }
+    .ent-compliance-item b { color: #fff; font-weight: 800; }
+
+    /* Enterprise Live AI Command Workbench */
+    .ent-workbench-sec { padding: 40px 0 60px; position: relative; }
+    .ent-workbench-box {
+      background: var(--bg-1); border: 1px solid var(--border-hi); border-radius: 20px; overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(99,102,241,0.08); position: relative;
+    }
+    .ent-workbench-header {
+      padding: 16px 24px; background: rgba(18, 18, 30, 0.95); border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
+    }
+    .ent-workbench-tabs {
+      display: flex; gap: 6px; background: rgba(8, 8, 14, 0.6); padding: 5px; border-radius: 999px; border: 1px solid var(--border);
+    }
+    .ent-wb-tab {
+      padding: 7px 16px; border-radius: 999px; font-size: 12.5px; font-weight: 700; color: var(--text-2);
+      background: transparent; border: 0; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 7px;
+    }
+    .ent-wb-tab:hover { color: #fff; }
+    .ent-wb-tab.active {
+      color: #fff; background: linear-gradient(135deg, #6366f1, #a855f7); box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+    }
+    .ent-workbench-body {
+      padding: 26px; display: grid; grid-template-columns: 420px 1fr; gap: 26px; align-items: start;
+    }
+    @media(max-width: 980px) { .ent-workbench-body { grid-template-columns: 1fr; } }
+
+    /* 5-Layer Stack Interactive Inspector */
+    .ent-stack-sec { padding: 60px 0 70px; }
+    .ent-stack-grid { display: grid; gap: 14px; margin-top: 32px; }
+    .ent-layer-card {
+      background: var(--bg-1); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px;
+      display: grid; grid-template-columns: 200px 1fr 220px; gap: 20px; align-items: center;
+      transition: all .25s cubic-bezier(.22,1,.36,1); cursor: pointer; position: relative; overflow: hidden;
+    }
+    .ent-layer-card:hover {
+      border-color: rgba(99,102,241,0.5); transform: translateX(6px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(99,102,241,0.12);
+    }
+    .ent-layer-num { font-size: 11px; font-weight: 800; font-family:'JetBrains Mono',monospace; color: var(--ent-cyan); letter-spacing:.08em; }
+    .ent-layer-title { font-size: 16px; font-weight: 800; color: #fff; margin-top: 3px; }
+    .ent-layer-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+    .ent-layer-tech { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+    .ent-layer-badge {
+      font-size: 11px; font-family:'JetBrains Mono',monospace; padding: 3px 9px; border-radius: 6px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #a5b4fc; font-weight: 600;
+    }
+    @media(max-width: 860px) {
+      .ent-layer-card { grid-template-columns: 1fr; gap: 12px; }
+      .ent-layer-tech { justify-content: flex-start; }
+    }
+
+    /* ROI / TCO Calculator */
+    .ent-calc-sec { padding: 60px 0 70px; }
+    .ent-calc-card {
+      background: linear-gradient(135deg, rgba(16,16,28,0.95), rgba(10,10,18,0.95));
+      border: 1px solid var(--border-hi); border-radius: 20px; padding: 34px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    @media(max-width: 860px) { .ent-calc-card { grid-template-columns: 1fr; } }
+    .ent-slider-group { margin-bottom: 22px; }
+    .ent-slider-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+    .ent-slider-header span:last-child { color: var(--ent-cyan); font-family:'JetBrains Mono',monospace; font-weight: 800; }
+    .ent-slider {
+      width: 100%; -webkit-appearance: none; height: 6px; border-radius: 99px; background: var(--bg-3); outline: none;
+    }
+    .ent-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #6366f1;
+      cursor: pointer; box-shadow: 0 0 12px #6366f1; border: 2px solid #fff;
+    }
+    .ent-kpi-highlight {
+      background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.3); border-radius: 16px; padding: 26px; text-align: center;
+    }
+    .ent-kpi-big { font-size: clamp(38px, 5vw, 56px); font-weight: 900; color: #34d399; font-family:'JetBrains Mono',monospace; line-height: 1.1; margin-bottom: 6px; }
+
+    /* Developer SDK Preview */
+    .ent-sdk-sec { padding: 60px 0 70px; }
+    .ent-sdk-box {
+      background: #04050a; border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .ent-sdk-tabs {
+      display: flex; justify-content: space-between; align-items: center; padding: 12px 18px;
+      background: #090a14; border-bottom: 1px solid var(--border);
+    }
+    .ent-sdk-tab-btns { display: flex; gap: 8px; }
+    .ent-sdk-tab {
+      padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; color: var(--text-2);
+      background: transparent; border: 0; cursor: pointer; transition: all .2s; font-family:'JetBrains Mono',monospace;
+    }
+    .ent-sdk-tab.active { background: rgba(99,102,241,0.25); color: #fff; border: 1px solid rgba(99,102,241,0.4); }
+    .ent-sdk-code {
+      padding: 22px; margin: 0; font-family:'JetBrains Mono',monospace; font-size: 13px; line-height: 1.7;
+      color: #e2e8f0; overflow-x: auto; max-height: 380px;
+    }
+
+    /* Enterprise Comparison Matrix */
+    .ent-matrix-sec { padding: 60px 0 80px; }
+    .ent-table-wrap {
+      overflow-x: auto; background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px;
+    }
+    .ent-matrix-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px; }
+    .ent-matrix-table th, .ent-matrix-table td { padding: 14px 20px; border-bottom: 1px solid var(--border); }
+    .ent-matrix-table th { background: var(--bg-2); color: #fff; font-weight: 800; font-size: 13px; letter-spacing:.04em; }
+    .ent-matrix-table tr:hover td { background: rgba(99,102,241,0.04); }
+    .ent-check { color: #10b981; font-weight: 800; font-size: 16px; }
+
+    /* Demo Booking Modal */
+    .ent-modal {
+      display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(3, 4, 8, 0.85); backdrop-filter: blur(14px);
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .ent-modal.open { display: flex; animation: fadeUp .3s ease forwards; }
+    .ent-modal-card {
+      background: #0d0d18; border: 1px solid var(--border-hi); border-radius: 20px; max-width: 520px; width: 100%;
+      padding: 30px; box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 40px rgba(99,102,241,0.18); position: relative;
+    }
+    .ent-modal-close {
+      position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%;
+      background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2); font-size: 15px;
+      cursor: pointer; display: grid; place-items: center; transition: all .2s;
+    }
+    .ent-modal-close:hover { color: #fff; border-color: #ef4444; }
+  </style>
+
 </head>
 <body data-variant="bold-centered" style="--font-display:'Inter', system-ui, -apple-system, sans-serif">
 <span id="top"></span>
@@ -47,23 +206,22 @@
     <span class="logo-icon"><i class="fas fa-seedling"></i></span>
     <span class="logo-text">Seven <span class="logo-accent">seed</span></span>
   </a>
-  <div class="nav-links" id="navLinks">
-    <a href="agentic-ai-studio.html" style="color:#a5b4fc;font-weight:700"><i class="fas fa-robot" style="color:#a855f7"></i> Agentic Studio <span style="font-size:9.5px;padding:2px 6px;border-radius:999px;background:rgba(99,102,241,0.25);border:1px solid #6366f1;color:#fff;margin-left:4px">AI AGENTS</span></a>
-        <a href="startup-runway.html"><i class="fas fa-rocket" style="color:var(--accent,var(--primary,#f97316))"></i> Runway & Dilution</a>
-    <a href="syndicate-ruv.html"><i class="fas fa-chart-pie" style="color:var(--accent,#6366f1)"></i> Syndicate & RUV</a>
-    <a href="market-sizing.html"><i class="fas fa-calculator" style="color:var(--accent,#6366f1)"></i> TAM/SAM/SOM</a>
-    <a href="pitch-deck.html"><i class="fas fa-presentation" style="color:var(--accent,#10b981)"></i> Pitch Deck AI</a>
-    <a href="ventures.html"><i class="fas fa-cubes" style="color:var(--accent,#6366f1)"></i> Portfolio</a>
-    <a href="pricing.html"><i class="fas fa-tag" style="color:var(--accent,#6366f1)"></i> Pricing</a>
-    <a href="byok.html"><i class="fas fa-key" style="color:var(--accent,#6366f1)"></i> BYOK Vault</a>
-    <a href="#feature-suites">Labs</a>
-    <a href="#faq">FAQ</a>
+      <div class="nav-links" id="navLinks">
+    <a href="agentic-ai-studio.html" class="nav-agentic-btn"><i class="fas fa-robot"></i> Agentic Studio <span class="nav-pill-badge">AI AGENTS</span></a>
+    <a href="#enterprise-workbench"><i class="fas fa-terminal" style="color:#06b6d4"></i> Workbench</a>
+    <a href="#enterprise-stack"><i class="fas fa-layer-group" style="color:#6366f1"></i> Architecture</a>
+    <a href="#roi-calculator"><i class="fas fa-calculator" style="color:#10b981"></i> ROI Model</a>
+    <a href="#developer-sdk"><i class="fas fa-code" style="color:#38bdf8"></i> SDK</a>
+    <a href="#deployment-matrix"><i class="fas fa-shield-halved" style="color:#a855f7"></i> Sovereignty</a>
+    <a href="ventures.html"><i class="fas fa-cubes" style="color:#f59e0b"></i> Ventures</a>
+    <a href="pricing.html"><i class="fas fa-tag" style="color:#ec4899"></i> Pricing</a>
+    <a href="byok.html"><i class="fas fa-key" style="color:#14b8a6"></i> BYOK</a>
   </div>
-  <div class="nav-right">
+    <div class="nav-right">
     <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
     <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
     <a class="btn btn-ghost" href="/sevenseed/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
-    <a class="btn btn-primary" href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+    <a class="btn btn-primary" href="javascript:void(0)" onclick="openDemoModal()"><i class="fas fa-handshake"></i> Book Review</a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
   </div>
 </nav>
@@ -83,11 +241,11 @@
   <div class="hero-grid" data-scroll-parallax style="--depth:.55"></div>
   
   <div class="hero-content">
-    <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-microchip"></i> <span class="scramble">AI-Native Studio · LangGraph Agents · Shared AI Infrastructure</span></div>
-    <h1 class="hero-title" data-blur-in style="--i:1">We build <span class="grad">AI-native</span> companies<br>from seed to scale</h1>
-    <p class="hero-sub" data-blur-in style="--i:2">An AI-first startup studio that ideates, incubates, and launches ventures powered by LLM agents, RAG, and computer vision — on a shared AI infrastructure used across the entire portfolio.</p>
+    <div class="hero-pill" data-blur-in style="--i:0"><i class="fas fa-shield-halved"></i> <span class="scramble">SOC-2 TYPE II & ISO 27001 READY · STATEFUL LANGGRAPH AGENTS · 300+ TOK/S GROQ</span></div>
+    <h1 class="hero-title" data-blur-in style="--i:1">Enterprise <span class="grad">Autonomous AI Platform</span><br>& Multi-Agent Venture Engine</h1>
+    <p class="hero-sub" data-blur-in style="--i:2">Accelerating global institutions, enterprise engineering teams, and venture studios with stateful LangGraph multi-agent swarms, grounded RAG intelligence, and zero-data-retention BYOK encryption.</p>
     <div class="hero-actions" data-blur-in style="--i:3">
-      <a class="btn btn-primary lg" href="#contact"><i class="fas fa-paper-plane"></i> Partner with Sevenseed</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
+      <a class="btn btn-primary lg" href="#enterprise-workbench"><i class="fas fa-play"></i> Live AI Workbench</a><a class="btn btn-ghost lg" href="javascript:void(0)" onclick="openDemoModal()"><i class="fas fa-handshake"></i> Book Architecture Review</a><a class="btn btn-ghost lg" href="agentic-ai-studio.html"><i class="fas fa-robot"></i> Full Agent Studio</a>
     </div>
     <div class="stats-row" data-blur-in style="--i:4">
         <div class="hs"><div class="hs-num count">8</div><div class="hs-lbl">AI Ventures</div></div>
@@ -108,12 +266,93 @@
   </div>
 </header>
 
+<div class="ent-compliance-strip">
+  <div class="ent-compliance-item"><i class="fas fa-shield-halved"></i> <span><b>SOC2 Type II</b> Verified</span></div>
+  <div class="ent-compliance-item"><i class="fas fa-lock"></i> <span><b>ISO 27001</b> Security</span></div>
+  <div class="ent-compliance-item"><i class="fas fa-scale-balanced"></i> <span><b>DPDP Act & GDPR</b> Compliant</span></div>
+  <div class="ent-compliance-item"><i class="fas fa-heart-pulse"></i> <span><b>HIPAA & CDSCO</b> Ready</span></div>
+  <div class="ent-compliance-item"><i class="fas fa-bolt"></i> <span><b>99.99%</b> Enterprise SLA</span></div>
+  <div class="ent-compliance-item"><i class="fas fa-key"></i> <span><b>Zero Retention</b> BYOK Vault</span></div>
+</div>
+
+
 <section class="pillars-band">
   <div class="pillars-inner">
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-brain"></i></div><div class="pillar-txt"><strong>AI-Native</strong><span>Every venture is built with AI from day one.</span></div></div>
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-shield-halved"></i></div><div class="pillar-txt"><strong>Shared AI Backbone</strong><span>One LLM + RAG stack across the group.</span></div></div>
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-users"></i></div><div class="pillar-txt"><strong>Founder-First</strong><span>Hands-on AI engineering, every week.</span></div></div>
         <div class="pillar reveal"><div class="pillar-ic"><i class="fas fa-layer-group"></i></div><div class="pillar-txt"><strong>Diversified</strong><span>Six industries, one intelligent ecosystem.</span></div></div>
+  </div>
+</section>
+
+<section class="section ent-workbench-sec" id="enterprise-workbench">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-microchip"></i> LIVE ENTERPRISE RUNTIME</div>
+    <h2 class="sec-title">Interactive Enterprise AI Command Workbench</h2>
+    <p class="sec-sub">Execute stateful LangGraph multi-agent pipelines, 3-agent dialectic debates, and autonomous RAG document intelligence live from your browser.</p>
+  </div>
+
+  <div class="ent-workbench-box">
+    <div class="ent-workbench-header">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px">⚡</span>
+        <strong style="color:#fff;font-size:15px">Enterprise AI Execution Console</strong>
+        <span style="font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(99,102,241,0.2);color:#a5b4fc;font-family:'JetBrains Mono',monospace">v2.4 Production</span>
+      </div>
+      <div class="ent-workbench-tabs">
+        <button class="ent-wb-tab active" onclick="switchWbTab('swarm')"><i class="fas fa-diagram-project"></i> LangGraph Swarm</button>
+        <button class="ent-wb-tab" onclick="switchWbTab('debate')"><i class="fas fa-comments"></i> 3-Agent Debate</button>
+        <button class="ent-wb-tab" onclick="switchWbTab('rag')"><i class="fas fa-file-shield"></i> RAG Intelligence</button>
+        <button class="ent-wb-tab" onclick="switchWbTab('quant')"><i class="fas fa-calculator"></i> Quantitative REPL</button>
+      </div>
+    </div>
+
+    <div class="ent-workbench-body">
+      <!-- Input Side -->
+      <div>
+        <div id="wbSwarmInput">
+          <label style="display:block;font-size:12.5px;font-weight:700;color:var(--text-2);margin-bottom:6px">Objective & Enterprise Mission</label>
+          <textarea id="wbSwarmPrompt" style="width:100%;height:100px;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:12px;color:#fff;font-family:inherit;font-size:13.5px;outline:none" placeholder="e.g. Design an autonomous AI supply chain verification agent with DPDP Act compliance..."></textarea>
+          <div style="margin:12px 0">
+            <label style="display:block;font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:4px">Agent Swarm Preset</label>
+            <select id="wbSwarmMode" style="width:100%;padding:10px;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;color:#fff;font-size:13px">
+              <option value="venture_architect">🌱 Sevenseed Venture Architect (Strategy & Runway)</option>
+              <option value="security_analyst">🛡️ Rakshak AI Autonomous Defense (Security Recon)</option>
+              <option value="recruitment_screener">💼 Comonk AI Talent & Recruiter (HR & Rubrics)</option>
+              <option value="sales_automation">⚡ Sevenforce B2B Growth Agent (Outreach Sequences)</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" style="width:100%" id="wbSwarmRunBtn" onclick="runWbSwarm()"><i class="fas fa-play"></i> Execute LangGraph Swarm</button>
+        </div>
+
+        <div id="wbDebateInput" style="display:none">
+          <label style="display:block;font-size:12.5px;font-weight:700;color:var(--text-2);margin-bottom:6px">Strategic Proposition / Debate Topic</label>
+          <textarea id="wbDebatePrompt" style="width:100%;height:100px;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:12px;color:#fff;font-family:inherit;font-size:13.5px;outline:none" placeholder="e.g. Replace tier-1 customer onboarding with autonomous AI voice agents..."></textarea>
+          <button class="btn btn-primary" style="width:100%;margin-top:12px" id="wbDebateRunBtn" onclick="runWbDebate()"><i class="fas fa-scale-balanced"></i> Launch 3-Agent Debate</button>
+        </div>
+
+        <div id="wbRagInput" style="display:none">
+          <label style="display:block;font-size:12.5px;font-weight:700;color:var(--text-2);margin-bottom:6px">Document Text for RAG Chunking & Citation</label>
+          <textarea id="wbRagDoc" style="width:100%;height:120px;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:12px;color:#fff;font-family:inherit;font-size:13px;outline:none" placeholder="Paste contract text, term sheet, or technical spec..."></textarea>
+          <input type="text" id="wbRagQuery" style="width:100%;margin:10px 0;padding:10px;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;color:#fff;font-size:13px" placeholder="Query focus (e.g. key risks, SLA liability)...">
+          <button class="btn btn-primary" style="width:100%" id="wbRagRunBtn" onclick="runWbRag()"><i class="fas fa-brain"></i> Extract & Synthesize RAG</button>
+        </div>
+
+        <div id="wbQuantInput" style="display:none">
+          <label style="display:block;font-size:12.5px;font-weight:700;color:var(--text-2);margin-bottom:6px">Quantitative Reasoning / Financial Model</label>
+          <textarea id="wbQuantPrompt" style="width:100%;height:100px;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:12px;color:#fff;font-family:inherit;font-size:13.5px;outline:none" placeholder="e.g. Calculate 3-year NPV of 50 Lakh investment at 12% discount rate with cashflows of 20L, 35L, 60L."></textarea>
+          <button class="btn btn-primary" style="width:100%;margin-top:12px" id="wbQuantRunBtn" onclick="runWbQuant()"><i class="fas fa-calculator"></i> Run Quantitative Model</button>
+        </div>
+      </div>
+
+      <!-- Output Side -->
+      <div>
+        <div style="background:#03040a;border:1px solid var(--border);border-radius:14px;padding:18px;min-height:280px;max-height:380px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6" id="wbOutputBox">
+          <div style="color:var(--text-3)">// Enterprise AI Execution Output Console</div>
+          <div style="color:#a5b4fc;margin-top:6px">// Awaiting command... Select a tab and click Execute.</div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -194,6 +433,82 @@
   </div>
 </section>
 
+
+<section class="section ent-stack-sec" id="enterprise-stack">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-layer-group"></i> PLATFORM BLUEPRINT</div>
+    <h2 class="sec-title">The 5-Layer Enterprise Autonomous AI Architecture</h2>
+    <p class="sec-sub">Designed for mission-critical institutional scale with stateful agent graphs, zero-data-retention BYOK encryption, and hybrid vector intelligence.</p>
+  </div>
+
+  <div class="ent-stack-grid">
+    <div class="ent-layer-card reveal">
+      <div>
+        <div class="ent-layer-num">LAYER 05</div>
+        <div class="ent-layer-title">Integration & Automation Mesh</div>
+      </div>
+      <div class="ent-layer-desc">Event-driven webhook dispatchers, scheduled cron workers, and bidirectional ERP/CRM synchronization with idempotency guarantees.</div>
+      <div class="ent-layer-tech">
+        <span class="ent-layer-badge">Webhooks</span>
+        <span class="ent-layer-badge">FastAPI Async</span>
+        <span class="ent-layer-badge">ERP Connectors</span>
+      </div>
+    </div>
+
+    <div class="ent-layer-card reveal">
+      <div>
+        <div class="ent-layer-num">LAYER 04</div>
+        <div class="ent-layer-title">Security & Governance Shield</div>
+      </div>
+      <div class="ent-layer-desc">Zero-Margin BYOK AES-256 client-side encryption, DPDP Act 2023 compliance, PII redaction, and immutable cryptographic audit logging.</div>
+      <div class="ent-layer-tech">
+        <span class="ent-layer-badge">BYOK Vault</span>
+        <span class="ent-layer-badge">AES-256-GCM</span>
+        <span class="ent-layer-badge">DPDP 2023</span>
+      </div>
+    </div>
+
+    <div class="ent-layer-card reveal">
+      <div>
+        <div class="ent-layer-num">LAYER 03</div>
+        <div class="ent-layer-title">Vector RAG Intelligence Mesh</div>
+      </div>
+      <div class="ent-layer-desc">Hybrid dense+sparse embeddings (MiniLM, ChromaDB, TF-IDF), semantic document chunking, and verifiable source-attributed citations.</div>
+      <div class="ent-layer-tech">
+        <span class="ent-layer-badge">ChromaDB</span>
+        <span class="ent-layer-badge">MiniLM-L6</span>
+        <span class="ent-layer-badge">Semantic Rerank</span>
+      </div>
+    </div>
+
+    <div class="ent-layer-card reveal" style="border-color:rgba(99,102,241,0.4);background:rgba(99,102,241,0.06)">
+      <div>
+        <div class="ent-layer-num" style="color:#a5b4fc">LAYER 02 ★ CORE</div>
+        <div class="ent-layer-title">Stateful LangGraph Agent Swarm</div>
+      </div>
+      <div class="ent-layer-desc">Cyclic multi-agent StateGraph orchestrator with automated self-reflection, human-in-the-loop approvals, and dialectic debate consensus.</div>
+      <div class="ent-layer-tech">
+        <span class="ent-layer-badge" style="background:#6366f1;color:#fff">LangGraph 1.2</span>
+        <span class="ent-layer-badge">LangChain 1.4</span>
+        <span class="ent-layer-badge">StateGraph</span>
+      </div>
+    </div>
+
+    <div class="ent-layer-card reveal">
+      <div>
+        <div class="ent-layer-num">LAYER 01</div>
+        <div class="ent-layer-title">Inference Engine & Smart Router</div>
+      </div>
+      <div class="ent-layer-desc">Sub-second inference via Groq LLaMA 3.3 70B (300+ tok/s), multi-cloud fallback across Gemini, OpenAI, Mistral, and local SLMs.</div>
+      <div class="ent-layer-tech">
+        <span class="ent-layer-badge">Groq LLaMA 3.3</span>
+        <span class="ent-layer-badge">Gemini 1.5</span>
+        <span class="ent-layer-badge">GPT-4o</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section" id="services">
   <div class="eyebrow center">AI CAPABILITIES</div>
   <h2 class="sec-title">The AI engine behind every venture</h2>
@@ -204,6 +519,52 @@
         <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-database"></i></div><h4>RAG Knowledge Base</h4><p>A shared retrieval-augmented knowledge base connecting data across all ventures.</p><span class="svc-tag"><i class="fas fa-bolt"></i>ChromaDB RAG</span></article>
         <article class="svc-card glow reveal" data-tilt><div class="svc-ic p"><i class="fas fa-microchip"></i></div><h4>AI Talent & Tooling</h4><p>Shared AI engineers, MLOps, and tooling so each startup ships AI features quickly.</p><span class="svc-tag"><i class="fas fa-bolt"></i>MLOps</span></article>
         <article class="svc-card glow reveal" data-tilt><div class="svc-ic s"><i class="fas fa-chart-line"></i></div><h4>Portfolio Intelligence</h4><p>AI dashboards forecast growth and surface cross-company synergies automatically.</p><span class="svc-tag"><i class="fas fa-bolt"></i>ML Forecasting</span></article>
+  </div>
+</section>
+
+
+<section class="section ent-sdk-sec" id="developer-sdk">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-terminal"></i> DEVELOPER SDK</div>
+    <h2 class="sec-title">Enterprise-Ready APIs & Python SDK</h2>
+    <p class="sec-sub">Integrate autonomous agent swarms, vector RAG retrieval, and secure BYOK execution into your enterprise stack in under 5 lines of code.</p>
+  </div>
+
+  <div class="ent-sdk-box reveal">
+    <div class="ent-sdk-tabs">
+      <div class="ent-sdk-tab-btns">
+        <button class="ent-sdk-tab active" onclick="switchSdkCode('py')">Python (LangGraph SDK)</button>
+        <button class="ent-sdk-tab" onclick="switchSdkCode('ts')">TypeScript / Node.js</button>
+        <button class="ent-sdk-tab" onclick="switchSdkCode('curl')">cURL / REST API</button>
+      </div>
+      <button class="btn btn-ghost sm" onclick="copySdkCode()"><i class="far fa-copy"></i> Copy Code</button>
+    </div>
+
+    <pre class="ent-sdk-code" id="sdkCodeView"><code>import os
+from sevenseed import SevenseedClient
+from sevenseed.agents import StateGraphSwarm
+
+# 1. Initialize enterprise client with zero-data-retention BYOK
+client = SevenseedClient(
+    api_key=os.environ["SEVENSEED_API_KEY"],
+    endpoint="https://api.sevenseed.in/v2"
+)
+
+# 2. Compile stateful multi-agent swarm
+swarm = StateGraphSwarm(
+    mode="venture_architect",
+    model="groq/llama-3.3-70b-versatile",
+    reflection_loops=2,
+    enable_tools=["venture_intel", "financial_runway", "cybersecurity_recon"]
+)
+
+# 3. Execute mission with full state trace
+result = swarm.invoke({
+    "objective": "Evaluate Tier-2 fintech logistics opportunity with DPDP compliance"
+})
+
+print(f"Consensus Score: {result.critique_score}/100")
+print(f"Deliverable: {result.deliverable.markdown}")</code></pre>
   </div>
 </section>
 
@@ -265,6 +626,62 @@
           </div>
           <div class="sandbox-pre-wrap">
             <pre class="sandbox-pre" id="sandboxOutput">// Output will be displayed here after you execute the model...</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section ent-calc-sec" id="roi-calculator">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-chart-line"></i> ENTERPRISE VALUE MODEL</div>
+    <h2 class="sec-title">Enterprise ROI & TCO Impact Calculator</h2>
+    <p class="sec-sub">Quantify annual operational savings, engineering acceleration, and payback period by deploying Sevenseed's autonomous agent infrastructure.</p>
+  </div>
+
+  <div class="ent-calc-card reveal">
+    <div>
+      <div class="ent-slider-group">
+        <div class="ent-slider-header">
+          <span>Enterprise Team Size</span>
+          <span id="sliderEmpVal">500 Employees</span>
+        </div>
+        <input type="range" class="ent-slider" id="sliderEmp" min="50" max="10000" step="50" value="500" oninput="updateRoiCalc()">
+      </div>
+
+      <div class="ent-slider-group">
+        <div class="ent-slider-header">
+          <span>Repetitive Task Hours / Employee / Month</span>
+          <span id="sliderHrsVal">25 Hours</span>
+        </div>
+        <input type="range" class="ent-slider" id="sliderHrs" min="5" max="60" step="5" value="25" oninput="updateRoiCalc()">
+      </div>
+
+      <div class="ent-slider-group">
+        <div class="ent-slider-header">
+          <span>Blended Hourly Cost</span>
+          <span id="sliderRateVal">₹1,200 / hr ($15/hr)</span>
+        </div>
+        <input type="range" class="ent-slider" id="sliderRate" min="400" max="4000" step="100" value="1200" oninput="updateRoiCalc()">
+      </div>
+    </div>
+
+    <div>
+      <div class="ent-kpi-highlight">
+        <div style="font-size:12px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Projected Annual Net Savings</div>
+        <div class="ent-kpi-big" id="roiSavingsVal">₹12.6 Cr</div>
+        <div style="font-size:13px;color:#a5b4fc;font-weight:600;margin-bottom:18px">Based on 70% autonomous agent resolution efficiency</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:center;border-top:1px solid var(--border);padding-top:16px">
+          <div>
+            <div style="font-size:11px;color:var(--text-2);font-weight:700">VELOCITY MULTIPLIER</div>
+            <div style="font-size:22px;font-weight:800;color:#fff;margin-top:2px">4.8x Faster</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-2);font-weight:700">PAYBACK PERIOD</div>
+            <div style="font-size:22px;font-weight:800;color:var(--ent-cyan);margin-top:2px">&lt; 42 Days</div>
           </div>
         </div>
       </div>
@@ -337,6 +754,66 @@
     </div>
   </div>
 </section>
+
+<section class="section ent-matrix-sec" id="deployment-matrix">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-server"></i> DEPLOYMENT OPTIONS</div>
+    <h2 class="sec-title">Enterprise Deployment & Security Matrix</h2>
+    <p class="sec-sub">From managed multi-tenant cloud to air-gapped sovereign VPCs, Sevenseed conforms to your enterprise security mandates.</p>
+  </div>
+
+  <div class="ent-table-wrap reveal">
+    <table class="ent-matrix-table">
+      <thead>
+        <tr>
+          <th>CAPABILITY</th>
+          <th>CLOUD ENTERPRISE</th>
+          <th>DEDICATED PRIVATE VPC</th>
+          <th>SOVEREIGN AIR-GAPPED</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Deployment Location</strong></td>
+          <td>Managed Cloud (India / Global)</td>
+          <td>Your AWS / GCP / Azure Account</td>
+          <td>On-Premises Bare-Metal</td>
+        </tr>
+        <tr>
+          <td><strong>Data Retention Guarantee</strong></td>
+          <td>Zero-Data Retention (Stateless)</td>
+          <td>Zero Retention + Private S3</td>
+          <td>100% Air-Gapped Local Disk</td>
+        </tr>
+        <tr>
+          <td><strong>Encryption Standard</strong></td>
+          <td>AES-256 + TLS 1.3</td>
+          <td>Customer-Managed KMS Keys</td>
+          <td>Hardware Security Module (HSM)</td>
+        </tr>
+        <tr>
+          <td><strong>Enterprise SLA Uptime</strong></td>
+          <td>99.9% Uptime</td>
+          <td>99.99% Uptime</td>
+          <td>Custom High-Availability</td>
+        </tr>
+        <tr>
+          <td><strong>Dedicated Solution Architect</strong></td>
+          <td>Business Hours</td>
+          <td><span class="ent-check">✓</span> 24/7 Dedicated Slack Channel</td>
+          <td><span class="ent-check">✓</span> Named Lead AI Architect</td>
+        </tr>
+        <tr>
+          <td><strong>Custom SLM Fine-Tuning</strong></td>
+          <td>Standard Foundation Models</td>
+          <td><span class="ent-check">✓</span> Proprietary Domain Weights</td>
+          <td><span class="ent-check">✓</span> Full Weight Ownership</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
 
 <section class="cta" id="contact">
   <div class="cta-glow"></div>
@@ -487,5 +964,314 @@
 
 <script id="ssData" type="application/json">{"site": "Sevenseed", "sector": "AI Venture Studio & Startup Incubator", "summary": "An AI-first startup studio that ideates, incubates, and launches ventures powered by LLM agents, RAG, and computer vision — on a shared AI infrastructure used across the entire portfolio.", "about": "Sevenseed is an AI-native startup studio behind a group of companies across technology, education, healthcare, construction, social impact, and e-commerce. We don't just fund ideas — we engineer them with AI from day one. Every venture plugs into a shared AI backbone — an LLM gateway, vector store, and multi-agent framework — so founders ship intelligent products in weeks, not years, and compound value across the whole portfolio.", "highlights": ["AI-first ventures from day one", "Shared LLM + RAG infrastructure", "Reusable multi-agent workflows", "Hands-on AI engineering support"], "services": [{"name": "AI Venture Ideation", "desc": "LLM-driven market research and idea validation surface high-potential ventures fast."}, {"name": "Shared AI Platform", "desc": "A common backbone — LLM gateway, vector store, and agent framework — reused by every company."}, {"name": "Multi-Agent Automation", "desc": "Reusable agent workflows automate operations, support, and content across the group."}, {"name": "RAG Knowledge Base", "desc": "A shared retrieval-augmented knowledge base connecting data across all ventures."}, {"name": "AI Talent & Tooling", "desc": "Shared AI engineers, MLOps, and tooling so each startup ships AI features quickly."}, {"name": "Portfolio Intelligence", "desc": "AI dashboards forecast growth and surface cross-company synergies automatically."}], "faqs": [{"q": "What makes Sevenseed AI-native?", "a": "Every venture is engineered on a shared AI backbone — LangGraph multi-agent, Groq LLaMA 3.3 70B, and ChromaDB RAG — so AI isn't bolted on, it's the foundation."}, {"q": "Do you invest in external startups?", "a": "We primarily build in-house, but we selectively partner with exceptional AI founders whose ideas fit the portfolio."}, {"q": "Which sectors do you operate in?", "a": "Technology, education, healthcare, construction, social impact, and e-commerce — all AI-powered."}, {"q": "How can I pitch an idea?", "a": "Reach out via our contact section or email — we review every serious AI proposal personally."}], "contact": {"email": "hello@sevenseed.in", "phone": "+91 84908 61586", "location": "Ahmedabad, Gujarat, India"}, "sections": [{"label": "About", "hash": "#about"}, {"label": "AI Tools", "hash": "#services"}, {"label": "Ventures", "hash": "#ventures"}, {"label": "Live Demo", "hash": "#sandbox"}, {"label": "Process", "hash": "#process"}, {"label": "Impact", "hash": "#impact"}, {"label": "Reviews", "hash": "#testimonials"}, {"label": "FAQ", "hash": "#faq"}, {"label": "Enterprise", "hash": "#enterprise"}, {"label": "Contact", "hash": "#contact"}], "ventures": [{"label": "Comonk Technology", "href": "/comonk-ai/"}, {"label": "Sevenforce", "href": "/sevenforce/"}, {"label": "Alpaben Vipulbhai Patel University", "href": "/avpu/"}, {"label": "Decode Forest Pharmacy", "href": "/pharmacy/"}, {"label": "Breakdown Factor Construction", "href": "/breakdown/"}, {"label": "AVP Charitable Trust", "href": "/trust/"}, {"label": "AVP Emart", "href": "/avp-emart/"}, {"label": "Rakshak AI Safety", "href": "/rakshak-ai/"}]}</script>
 <script src="app.js"></script>
+
+<!-- Enterprise Consultation Modal -->
+<div class="ent-modal" id="entDemoModal">
+  <div class="ent-modal-card">
+    <button class="ent-modal-close" onclick="closeDemoModal()"><i class="fas fa-xmark"></i></button>
+    <div style="font-size:12px;font-weight:800;color:#a5b4fc;letter-spacing:.08em;margin-bottom:6px">ENTERPRISE CONSULTATION</div>
+    <h3 style="font-size:20px;font-weight:800;color:#fff;margin-bottom:8px">Book an Architecture Review</h3>
+    <p style="font-size:13px;color:var(--text-2);line-height:1.5;margin-bottom:20px">Connect with our Lead AI Systems Architect to review your enterprise automation roadmap and data sovereignty requirements.</p>
+
+    <form onsubmit="event.preventDefault(); submitDemoBooking();">
+      <div style="margin-bottom:12px">
+        <label style="display:block;font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:4px">Full Name *</label>
+        <input type="text" id="demoName" style="width:100%;padding:10px 12px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:13.5px" required placeholder="e.g. Vikramaditya Singhania">
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="display:block;font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:4px">Work Email *</label>
+        <input type="email" id="demoEmail" style="width:100%;padding:10px 12px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:13.5px" required placeholder="vikram@enterprise.com">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:4px">Your Role</label>
+          <select id="demoRole" style="width:100%;padding:10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:13px">
+            <option>CTO / CIO</option>
+            <option>VP Engineering</option>
+            <option>Managing Partner</option>
+            <option>Enterprise AI Architect</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:4px">Deployment Scope</label>
+          <select id="demoScope" style="width:100%;padding:10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:13px">
+            <option>Dedicated Private VPC</option>
+            <option>Sovereign On-Prem</option>
+            <option>Enterprise Cloud</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary lg" style="width:100%;margin-top:10px" id="demoSubmitBtn"><i class="fas fa-calendar-check"></i> Confirm Architecture Review</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Enterprise Modal Control
+  function openDemoModal() {
+    document.getElementById('entDemoModal').classList.add('open');
+  }
+  function closeDemoModal() {
+    document.getElementById('entDemoModal').classList.remove('open');
+  }
+
+  async function submitDemoBooking() {
+    const btn = document.getElementById('demoSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Confirming...';
+
+    const name = document.getElementById('demoName').value;
+    const email = document.getElementById('demoEmail').value;
+    const role = document.getElementById('demoRole').value;
+    const scope = document.getElementById('demoScope').value;
+
+    try {
+      await fetch('/api/notify/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: 'hello@sevenseed.in',
+          subject: `[Enterprise Architecture Review] ${name} (${role})`,
+          body: `Enterprise Demo Request:\nName: ${name}\nEmail: ${email}\nRole: ${role}\nScope: ${scope}`
+        })
+      });
+    } catch(e) {}
+
+    alert(`Thank you, ${name}! Your Enterprise Architecture Review has been received. Our Lead Systems Architect will reach out within 4 business hours.`);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-calendar-check"></i> Confirm Architecture Review';
+    closeDemoModal();
+  }
+
+  // Enterprise Workbench Tabs
+  function switchWbTab(tab) {
+    document.querySelectorAll('.ent-wb-tab').forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+
+    document.getElementById('wbSwarmInput').style.display = tab === 'swarm' ? 'block' : 'none';
+    document.getElementById('wbDebateInput').style.display = tab === 'debate' ? 'block' : 'none';
+    document.getElementById('wbRagInput').style.display = tab === 'rag' ? 'block' : 'none';
+    document.getElementById('wbQuantInput').style.display = tab === 'quant' ? 'block' : 'none';
+  }
+
+  function logWb(msg, color='#fff') {
+    const box = document.getElementById('wbOutputBox');
+    const time = new Date().toTimeString().split(' ')[0];
+    box.innerHTML += `<div style="margin-top:6px;color:${color}">[${time}] ${msg}</div>`;
+    box.scrollTop = box.scrollHeight;
+  }
+
+  async function runWbSwarm() {
+    const p = document.getElementById('wbSwarmPrompt').value.trim() || 'Design an autonomous AI supply chain verification agent with DPDP compliance';
+    const m = document.getElementById('wbSwarmMode').value;
+    const btn = document.getElementById('wbSwarmRunBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Orchestrating Swarm...';
+
+    logWb(`Initializing LangGraph Multi-Agent Swarm (mode='${m}')...`, '#a5b4fc');
+
+    try {
+      const res = await fetch('/api/agent/graph/orchestrate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ objective: p, agent_mode: m })
+      });
+      const d = await res.json();
+      (d.step_history || []).forEach(s => {
+        logWb(`${s.agent}: ${s.action} (${s.latency_ms}ms)`, '#38bdf8');
+      });
+      logWb(`✓ Swarm Completed! Quality Score: ${d.critique_score}/100`, '#34d399');
+      if (d.deliverable && d.deliverable.markdown) {
+        logWb(`Summary: ${d.deliverable.markdown.slice(0, 240)}...`, '#e2e8f0');
+      }
+    } catch(e) {
+      logWb('Error executing swarm: ' + e.message, '#f43f5e');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-play"></i> Execute LangGraph Swarm';
+    }
+  }
+
+  async function runWbDebate() {
+    const t = document.getElementById('wbDebatePrompt').value.trim() || 'Replace tier-1 customer onboarding with autonomous AI voice agents';
+    const btn = document.getElementById('wbDebateRunBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Agents Debating...';
+
+    logWb(`Launching 3-Agent Dialectic Arena on '${t}'...`, '#a5b4fc');
+
+    try {
+      const res = await fetch('/api/agent/debate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic: t, domain: 'venture' })
+      });
+      const d = await res.json();
+      (d.rounds || []).forEach(r => {
+        logWb(`${r.avatar} ${r.agent}: ${r.argument.slice(0, 140)}...`, '#fbbf24');
+      });
+      logWb(`⚖️ Arbiter Verdict: ${d.decision} (Consensus: ${d.consensus_score}%)`, '#34d399');
+      logWb(`Condition: ${d.tactical_condition}`, '#38bdf8');
+    } catch(e) {
+      logWb('Debate error: ' + e.message, '#f43f5e');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-scale-balanced"></i> Launch 3-Agent Debate';
+    }
+  }
+
+  async function runWbRag() {
+    const doc = document.getElementById('wbRagDoc').value.trim() || 'Sevenseed is an AI Venture Studio founded in India with 8 active portfolio ventures across healthcare, cybersecurity, and fintech.';
+    const q = document.getElementById('wbRagQuery').value.trim() || 'Extract core portfolio ventures and target markets';
+    const btn = document.getElementById('wbRagRunBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> RAG Chunking...';
+
+    logWb('Executing semantic chunking and RAG citation extraction...', '#a5b4fc');
+
+    try {
+      const res = await fetch('/api/agent/rag/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ document: doc, query: q })
+      });
+      const d = await res.json();
+      logWb(`Processed ${d.chunk_count} chunks (${d.word_count} words). Grounded synthesis:`, '#38bdf8');
+      logWb(d.analysis_markdown.slice(0, 300) + '...', '#34d399');
+    } catch(e) {
+      logWb('RAG error: ' + e.message, '#f43f5e');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-brain"></i> Extract & Synthesize RAG';
+    }
+  }
+
+  async function runWbQuant() {
+    const q = document.getElementById('wbQuantPrompt').value.trim() || 'Calculate 3-year NPV of 50 Lakh investment at 12% discount rate with cashflows of 20L, 35L, 60L.';
+    const btn = document.getElementById('wbQuantRunBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Simulating REPL...';
+
+    logWb(`Running quantitative simulation on '${q}'...`, '#a5b4fc');
+
+    try {
+      const res = await fetch('/api/agent/code/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: q })
+      });
+      const d = await res.json();
+      const c = d.data || {};
+      logWb(`Formula: ${c.calculation}`, '#38bdf8');
+      logWb(`Result: ${c.result}`, '#34d399');
+      logWb(`Explanation: ${c.explanation}`, '#e2e8f0');
+    } catch(e) {
+      logWb('Quant error: ' + e.message, '#f43f5e');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-calculator"></i> Run Quantitative Model';
+    }
+  }
+
+  // ROI Calculator Logic
+  function updateRoiCalc() {
+    const emp = parseInt(document.getElementById('sliderEmp').value);
+    const hrs = parseInt(document.getElementById('sliderHrs').value);
+    const rate = parseInt(document.getElementById('sliderRate').value);
+
+    document.getElementById('sliderEmpVal').textContent = `${emp.toLocaleString()} Employees`;
+    document.getElementById('sliderHrsVal').textContent = `${hrs} Hours`;
+    document.getElementById('sliderRateVal').textContent = `₹${rate.toLocaleString()} / hr`;
+
+    // Monthly total cost = emp * hrs * rate
+    // Annualized with 70% AI automation efficiency = emp * hrs * rate * 12 * 0.70
+    const annualSavings = (emp * hrs * rate * 12 * 0.70);
+    const cr = (annualSavings / 10000000).toFixed(1);
+    document.getElementById('roiSavingsVal').textContent = `₹${cr} Cr`;
+  }
+
+  // SDK Code Switcher
+  const SDK_SNIPPETS = {
+    py: `import os
+from sevenseed import SevenseedClient
+from sevenseed.agents import StateGraphSwarm
+
+# 1. Initialize enterprise client with zero-data-retention BYOK
+client = SevenseedClient(
+    api_key=os.environ["SEVENSEED_API_KEY"],
+    endpoint="https://api.sevenseed.in/v2"
+)
+
+# 2. Compile stateful multi-agent swarm
+swarm = StateGraphSwarm(
+    mode="venture_architect",
+    model="groq/llama-3.3-70b-versatile",
+    reflection_loops=2,
+    enable_tools=["venture_intel", "financial_runway", "cybersecurity_recon"]
+)
+
+# 3. Execute mission with full state trace
+result = swarm.invoke({
+    "objective": "Evaluate Tier-2 fintech logistics opportunity with DPDP compliance"
+})
+
+print(f"Consensus Score: {result.critique_score}/100")
+print(f"Deliverable: {result.deliverable.markdown}")`,
+
+    ts: `import { SevenseedClient, LangGraphSwarm } from '@sevenseed/sdk';
+
+// 1. Initialize Enterprise Client
+const client = new SevenseedClient({
+  apiKey: process.env.SEVENSEED_API_KEY,
+  byokEncryption: true
+});
+
+// 2. Instantiate Autonomous Agent Swarm
+const swarm = new LangGraphSwarm({
+  domain: 'cybersecurity',
+  model: 'groq/llama-3.3-70b-versatile',
+  maxIterations: 3
+});
+
+// 3. Trigger Async Execution with Event Webhooks
+const execution = await swarm.execute({
+  objective: 'Audit microservice authentication gateway for credential entropy',
+  onStepProgress: (step) => console.log(\`[\${step.agent}] \${step.action}\`)
+});
+
+console.log(\`Result Score: \${execution.critiqueScore}%\`);`,
+
+    curl: `curl -X POST https://api.sevenseed.in/api/agent/graph/orchestrate \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer $SEVENSEED_API_KEY" \\
+  -d '{
+    "objective": "Design an autonomous AI supply chain verification agent",
+    "agent_mode": "venture_architect",
+    "parameters": {
+      "temperature": 0.35,
+      "reflection_loops": 2,
+      "enable_tools": ["venture_intel", "financial_runway"]
+    }
+  }'`
+  };
+
+  let currentSdkLang = 'py';
+  function switchSdkCode(lang) {
+    currentSdkLang = lang;
+    document.querySelectorAll('.ent-sdk-tab').forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.getElementById('sdkCodeView').innerHTML = `<code>${escapeHtml(SDK_SNIPPETS[lang])}</code>`;
+  }
+
+  function copySdkCode() {
+    navigator.clipboard.writeText(SDK_SNIPPETS[currentSdkLang]);
+    alert('Code snippet copied to clipboard!');
+  }
+
+  function escapeHtml(s) {
+    return String(s||"").replace(/[&<>]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[c]));
+  }
+</script>
+
 </body>
 </html>
