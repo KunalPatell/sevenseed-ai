@@ -20,9 +20,12 @@
 ╚══════════════════════════════════════════════════════════════════════════════════╝
 """
 from __future__ import annotations
-import os, sys, json, time, uuid, datetime, re, hashlib
+import os, sys, json, time, uuid, datetime, re, hashlib, sqlite3
 from typing import TypedDict, List, Dict, Any, Optional, Literal, Annotated
 import operator
+
+import agent_infra as infra
+from agent_swarms import SWARM_REGISTRY, get_swarm, hitl_modes, DEFAULT_SWARM
 
 # ── LangGraph core ─────────────────────────────────────────────────────────────
 try:
@@ -39,6 +42,12 @@ except ImportError:
         _LANGGRAPH_AVAILABLE = False
         _LANGGRAPH_VER = "unavailable"
         print(f"[agentic_engine] LangGraph import warning: {e}")
+
+try:
+    from langgraph.types import interrupt, Command
+    _INTERRUPT_AVAILABLE = True
+except Exception:
+    _INTERRUPT_AVAILABLE = False
 
 try:
     _CHECKPOINTER_AVAILABLE = True
@@ -258,30 +267,29 @@ def call_llm(system_prompt: str, user_prompt: str, temperature: float = 0.4, tie
 
 # ══════════════════════════════════════════════════════════════════════════════
 # ENTERPRISE LANGCHAIN TOOLS (10 Tools)
+# Tools are real wherever a real backend can exist (web search, read-only SQL,
+# signed webhooks, passive TLS/header recon). Where a tool is a heuristic it says so.
 # ══════════════════════════════════════════════════════════════════════════════
 
 def tool_venture_intel(query: str) -> Dict[str, Any]:
-    """Tool 1: Retrieves startup venture intel, business models & market positioning."""
+    """Tool 1: Curated sector briefs (static presets — not a live data feed)."""
     presets = {
-        "fintech": "Fintech in India: High growth in digital credit, UPI 2.0 autopay, NBFC micro-lending, SME invoice factoring. Market: ₹47L Cr.",
-        "edtech": "Edtech: Outcome-based learning, vernacular AI tutoring, automated grading, placement-linked bootcamps. TAM: $4.7B.",
+        "fintech": "Fintech in India: digital credit, UPI autopay, NBFC micro-lending, SME invoice factoring.",
+        "edtech": "Edtech: outcome-based learning, vernacular AI tutoring, automated grading, placement-linked bootcamps.",
         "cybersecurity": "Cybersecurity: DPDP Act 2023 compliance, automated SOC triage, zero-trust endpoint, phishing detection.",
-        "healthcare": "Healthtech: ABHA health IDs, prescription OCR, drug-drug interaction alerts, chronic care AI. Market: $10.6B.",
-        "proptech": "Proptech: Computer vision safety monitoring, RCC structural takeoff, dynamic BOQ estimation, BIM automation.",
-        "ecommerce": "Ecommerce: AI-powered personalization, dynamic pricing, automated catalog enrichment, inventory prediction.",
-        "hrtech": "HRtech: ATS automation, competency mapping, AI mock interviews, skill gap analysis, salary benchmarking.",
-        "legaltech": "Legaltech: Contract clause extraction, compliance audit automation, IT Act & DPDP readiness scoring.",
+        "healthcare": "Healthtech: ABHA health IDs, prescription OCR, drug-drug interaction alerts, chronic care AI.",
+        "proptech": "Proptech: computer-vision safety monitoring, RCC structural takeoff, dynamic BOQ estimation, BIM automation.",
+        "ecommerce": "Ecommerce: personalisation, dynamic pricing, automated catalog enrichment, inventory prediction.",
+        "hrtech": "HRtech: ATS automation, competency mapping, AI mock interviews, skill-gap analysis, salary benchmarking.",
+        "legaltech": "Legaltech: contract clause extraction, compliance audit automation, IT Act and DPDP readiness scoring.",
     }
     q_low = query.lower()
     matched = [v for k, v in presets.items() if k in q_low]
-    intel = matched[0] if matched else "Cross-sector AI automation: LLM-driven pipelines, RAG context injection, autonomous agents with human-in-the-loop controls."
+    intel = matched[0] if matched else "Cross-sector AI automation: LLM pipelines, RAG context injection, autonomous agents with human-in-the-loop controls."
     return {
-        "status": "success",
-        "query": query,
-        "intel": intel,
-        "data_freshness": "Q4-2026",
-        "sources": ["NASSCOM 2026", "Inc42 India Startup Report", "World Economic Forum AI Readiness"],
-        "recommendation": "Integrate modular LangGraph state checkpoints with structured Pydantic schema validation."
+        "status": "success", "query": query, "intel": intel,
+        "data_freshness": "static-curated", "sources": ["Sevenseed curated sector briefs (static, not live)"],
+        "recommendation": "Integrate modular LangGraph state checkpoints with structured Pydantic schema validation.",
     }
 
 
@@ -304,93 +312,28 @@ def tool_financial_runway(monthly_burn: float, cash_balance: float, target_runwa
         "estimated_dilution_pct": dilution_estimate,
         "implied_pre_money_inr": round(pre_money_valuation, 0),
         "health_status": "CRITICAL" if current_runway < 6 else "CAUTION" if current_runway < 12 else "HEALTHY",
-        "recommendation": "Raise bridge round within 90 days" if current_runway < 6 else "Optimize CAC and extend runway organically"
+        "recommendation": "Raise bridge round within 90 days" if current_runway < 6 else "Optimize CAC and extend runway organically",
+        "method": "rule-of-thumb model; dilution and valuation are heuristics, not advice",
     }
 
 
-def tool_cybersecurity_recon(target: str) -> Dict[str, Any]:
-    """Tool 3: Evaluates security posture, entropy, and threat vectors (Rakshak AI)."""
-    target_clean = (target or "").strip()
-    score = 85
-    findings = []
-    risk_matrix = []
-
-    if len(target_clean) < 12:
-        score -= 25
-        findings.append("Insufficient entropy (<12 chars): brute-force susceptible")
-        risk_matrix.append({"risk": "Credential Brute Force", "severity": "HIGH", "mitigation": "Enforce 16+ char passwords with MFA"})
-    if not any(c.isupper() for c in target_clean):
-        score -= 10
-        findings.append("Missing uppercase character diversity")
-        risk_matrix.append({"risk": "Weak Credential", "severity": "MEDIUM", "mitigation": "Enforce mixed-case policy"})
-    if not any(c in "!@#$%^&*()_+-=[]{}|;:,.<>?" for c in target_clean):
-        score -= 15
-        findings.append("Missing special symbol complexity")
-        risk_matrix.append({"risk": "Dictionary Attack", "severity": "MEDIUM", "mitigation": "Require special characters"})
-    if "http://" in target_clean.lower():
-        score -= 35
-        findings.append("Insecure plain HTTP transport — man-in-the-middle attack surface")
-        risk_matrix.append({"risk": "MITM Attack", "severity": "CRITICAL", "mitigation": "Enforce HTTPS with HSTS headers"})
-    if any(kw in target_clean.lower() for kw in ["admin", "root", "password", "12345"]):
-        score -= 30
-        findings.append("Default/predictable credential pattern detected")
-        risk_matrix.append({"risk": "Default Credentials", "severity": "CRITICAL", "mitigation": "Rotate credentials immediately, audit all admin accounts"})
-
-    return {
-        "target": target[:10] + "..." if len(target) > 10 else target,
-        "security_score": max(10, score),
-        "posture": "SECURE" if score >= 80 else "MODERATE" if score >= 60 else "VULNERABLE",
-        "dpdp_compliance": "COMPLIANT" if score >= 75 else "NON_COMPLIANT",
-        "findings": findings or ["No immediate structural vulnerabilities identified"],
-        "risk_matrix": risk_matrix,
-        "it_act_sections": ["Section 43A - Data Protection", "Section 72A - Privacy Violation"],
-        "remediation_priority": "IMMEDIATE" if score < 50 else "PLANNED"
-    }
+def tool_cybersecurity_recon(target: str, scan_type: str = "surface") -> Dict[str, Any]:
+    """Tool 3: Passive TLS + security-header recon of an allow-listed host (RECON_ALLOWED_DOMAINS)."""
+    return infra.passive_recon(target or "")
 
 
-def tool_web_search_mock(query: str) -> Dict[str, Any]:
-    """Tool 4: Enterprise web intelligence aggregator (market research & competitive analysis)."""
-    categories = {
-        "competitor": {
-            "results": ["Andreessen Horowitz portfolio analysis", "Y Combinator W24 cohort report", "Sequoia India deep-tech investments"],
-            "summary": f"Competitive landscape for '{query}': 3 well-funded incumbents, 2 emerging disruptors. Market consolidation expected within 18 months.",
-            "source_confidence": 0.87
-        },
-        "regulation": {
-            "results": ["SEBI Fintech Sandbox guidelines", "DPDP Act 2023 compliance checklist", "RBI Digital Lending Framework 2024"],
-            "summary": f"Regulatory context for '{query}': Recent amendments increase compliance burden by ~22%. DPDP enforcement Q2-2025.",
-            "source_confidence": 0.92
-        },
-        "technology": {
-            "results": ["LangGraph 1.2 enterprise release notes", "Google Vertex AI Gemini 3.8 API update", "Anthropic Claude 4 enterprise features"],
-            "summary": f"Tech landscape for '{query}': Frontier models achieving GPT-4-level quality at 4x lower latency. Agentic frameworks maturing rapidly.",
-            "source_confidence": 0.89
-        }
-    }
-    q_low = query.lower()
-    category = next((k for k in categories if any(t in q_low for t in k.split("_"))), "technology")
-    return {"query": query, "category": category, **categories[category], "retrieved_at": datetime.datetime.utcnow().isoformat() + "Z"}
+def tool_web_search(query: str) -> Dict[str, Any]:
+    """Tool 4: Live web search. Returns real results or an explicit unavailable status — never invented text."""
+    return infra.web_search(query)
 
 
 def tool_automation_dispatcher(action_name: str, payload: Dict[str, Any]) -> Dict[str, Any]:
-    """Tool 5: Enterprise webhook dispatch and async job queue scheduling."""
-    event_id = f"evt_{uuid.uuid4().hex[:10]}"
-    checksum = hashlib.md5(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:8]
-    return {
-        "event_id": event_id,
-        "action": action_name,
-        "dispatched_at": datetime.datetime.utcnow().isoformat() + "Z",
-        "status": "QUEUED_FOR_EXECUTION",
-        "retry_policy": {"strategy": "exponential_backoff", "max_retries": 3, "backoff_factor": 2},
-        "payload_checksum": checksum,
-        "estimated_execution_ms": 850,
-        "audit_trail": f"audit_log_{datetime.date.today().isoformat()}",
-        "compliance": "DPDP_LOGGED"
-    }
+    """Tool 5: HMAC-signed webhook with outbox + retry. Reports honestly when no endpoint is configured."""
+    return infra.dispatch_webhook(action_name, payload)
 
 
 def tool_code_executor(code: str, language: str = "python") -> Dict[str, Any]:
-    """Tool 6: Sandboxed quantitative code analysis (no actual exec, structural analysis)."""
+    """Tool 6: Static structural analysis of code (does NOT execute it)."""
     lines = [l.strip() for l in code.strip().splitlines() if l.strip() and not l.strip().startswith('#')]
     complexity_score = min(100, len(lines) * 3 + code.count("for") * 10 + code.count("if") * 5)
     imports = [l for l in lines if l.startswith("import") or l.startswith("from")]
@@ -400,45 +343,21 @@ def tool_code_executor(code: str, language: str = "python") -> Dict[str, Any]:
         "lines_of_code": len(lines),
         "imports_detected": imports[:5],
         "functions_detected": functions[:5],
-        "cyclomatic_complexity": complexity_score,
+        "complexity_heuristic": complexity_score,
         "security_scan": "CLEAN" if not any(kw in code for kw in ["eval(", "exec(", "__import__", "os.system"]) else "FLAGGED",
         "optimization_hints": ["Use list comprehensions for loops", "Consider numpy for numeric ops"] if complexity_score > 30 else [],
-        "status": "ANALYZED"
+        "status": "ANALYZED",
+        "method": "static text analysis; code is never executed",
     }
 
 
-def tool_sql_query_simulator(query: str, table: str = "ventures") -> Dict[str, Any]:
-    """Tool 7: Enterprise data warehouse query simulation with structured results."""
-    mock_db = {
-        "ventures": [
-            {"id": 1, "name": "Rakshak AI", "sector": "Cybersecurity", "stage": "Series A", "mrr_inr": 850000, "customers": 23},
-            {"id": 2, "name": "Decode Forest", "sector": "Healthtech", "stage": "Seed", "mrr_inr": 420000, "customers": 67},
-            {"id": 3, "name": "Comonk AI", "sector": "HRtech", "stage": "Pre-Seed", "mrr_inr": 180000, "customers": 12},
-            {"id": 4, "name": "AVPU", "sector": "Edtech", "stage": "Seed", "mrr_inr": 310000, "customers": 145},
-            {"id": 5, "name": "Sevenforce", "sector": "Sales Automation", "stage": "Seed", "mrr_inr": 620000, "customers": 34},
-            {"id": 6, "name": "AVP Emart", "sector": "Ecommerce", "stage": "Pre-Seed", "mrr_inr": 95000, "customers": 8},
-            {"id": 7, "name": "Breakdown Factor", "sector": "Proptech/EPC", "stage": "Pre-Seed", "mrr_inr": 270000, "customers": 5},
-        ],
-        "kpis": [
-            {"metric": "Total ARR", "value": "₹28.5L", "trend": "+34% QoQ"},
-            {"metric": "Portfolio NPS", "value": "72", "trend": "+8 pts"},
-            {"metric": "Avg CAC Payback", "value": "4.2 months", "trend": "-0.8mo QoQ"},
-            {"metric": "Gross Margin", "value": "71%", "trend": "+3pp QoQ"},
-        ]
-    }
-    data = mock_db.get(table, mock_db["ventures"])
-    q_up = query.upper()
-    if "SUM" in q_up or "TOTAL" in q_up:
-        total_mrr = sum(r.get("mrr_inr", 0) for r in data if isinstance(r, dict) and "mrr_inr" in r)
-        return {"query": query, "result_type": "aggregate", "value": f"₹{total_mrr:,}", "row_count": len(data)}
-    if "WHERE" in q_up or "FILTER" in q_up:
-        filtered = data[:3]
-        return {"query": query, "result_type": "filtered", "rows": filtered, "row_count": len(filtered)}
-    return {"query": query, "result_type": "select_all", "rows": data[:5], "row_count": len(data)}
+def tool_portfolio_sql(query: str, table: str = "") -> Dict[str, Any]:
+    """Tool 7: Read-only SQL (SELECT only, table allow-list) against the portfolio database."""
+    return infra.portfolio_query(query)
 
 
 def tool_vector_rag(document_chunk: str, query: str) -> Dict[str, Any]:
-    """Tool 8: Semantic RAG retrieval with cosine similarity simulation."""
+    """Tool 8: Lexical-overlap retrieval scoring (no embeddings are used)."""
     chunk_words = set(document_chunk.lower().split())
     query_words = set(query.lower().split())
     overlap = len(chunk_words & query_words)
@@ -448,121 +367,115 @@ def tool_vector_rag(document_chunk: str, query: str) -> Dict[str, Any]:
         "chunk_preview": document_chunk[:120] + "..." if len(document_chunk) > 120 else document_chunk,
         "cosine_similarity": round(similarity, 3),
         "relevance_grade": "A" if similarity > 0.75 else "B" if similarity > 0.5 else "C",
-        "embedding_model": "text-embedding-004",
+        "method": "lexical-overlap (no embedding model)",
+        "embedding_model": "none",
         "context_window_tokens": len(document_chunk.split()),
-        "citation_id": f"[Chunk-{hashlib.md5(document_chunk[:40].encode()).hexdigest()[:4].upper()}]"
+        "citation_id": f"[Chunk-{hashlib.md5(document_chunk[:40].encode()).hexdigest()[:4].upper()}]",
     }
 
 
 def tool_notification_sender(channel: str, message: str, recipients: List[str] = None) -> Dict[str, Any]:
-    """Tool 9: Enterprise multi-channel notification dispatch (Slack/Email/WhatsApp)."""
-    msg_id = f"msg_{uuid.uuid4().hex[:8]}"
-    return {
-        "message_id": msg_id,
-        "channel": channel,
-        "recipients": recipients or ["team@sevenseed.ai"],
-        "status": "SENT",
-        "sent_at": datetime.datetime.utcnow().isoformat() + "Z",
-        "delivery_estimate_ms": 230,
-        "message_preview": message[:80] + "..." if len(message) > 80 else message,
-        "compliance": "DPDP_CONSENTED"
-    }
+    """Tool 9: Real Slack delivery when SLACK_WEBHOOK_URL is set; otherwise logged to the outbox, not sent."""
+    return infra.send_notification(channel, message, recipients)
+
+
+_COMPLIANCE_FRAMEWORKS = {
+    "DPDP": {
+        "full_name": "Digital Personal Data Protection Act 2023",
+        "checks": {
+            "Data Fiduciary registration": ["data fiduciary", "registration", "registered"],
+            "Consent management": ["consent"],
+            "Data Principal rights": ["data principal", "right to access", "erasure", "correction", "grievance"],
+            "Cross-border transfer controls": ["cross-border", "cross border", "transfer", "localisation", "localization"],
+        },
+        "penalty_range": "up to INR 250 Cr per instance (statutory ceiling)",
+    },
+    "ISO27001": {
+        "full_name": "ISO/IEC 27001:2022 Information Security",
+        "checks": {
+            "Asset inventory": ["asset"],
+            "Risk assessment": ["risk assessment", "risk register", "threat model"],
+            "Access controls": ["access control", "authentication", "mfa", "least privilege"],
+            "Incident management": ["incident"],
+            "Business continuity": ["continuity", "disaster recovery", "backup"],
+        },
+        "penalty_range": "certification suspension or revocation",
+    },
+    "RBI": {
+        "full_name": "RBI Digital Lending Guidelines 2022",
+        "checks": {
+            "KYC norms": ["kyc"],
+            "Fair Practices Code": ["fair practices"],
+            "Data localization": ["localization", "localisation", "stored in india"],
+            "Interest rate disclosure": ["interest rate", "apr", "key fact"],
+        },
+        "penalty_range": "monetary penalty up to licence action",
+    },
+}
 
 
 def tool_compliance_checker(document: str, framework: str = "DPDP") -> Dict[str, Any]:
-    """Tool 10: Enterprise regulatory compliance scanner (DPDP, ISO 27001, SEBI, RBI)."""
-    frameworks = {
-        "DPDP": {
-            "full_name": "Digital Personal Data Protection Act 2023",
-            "checks": ["Data Fiduciary registration", "Consent management", "Data Principal rights", "Cross-border transfer controls"],
-            "penalty_range": "₹50 Cr – ₹250 Cr"
-        },
-        "ISO27001": {
-            "full_name": "ISO/IEC 27001:2022 Information Security",
-            "checks": ["Asset inventory", "Risk assessment", "Access controls", "Incident management", "Business continuity"],
-            "penalty_range": "Certification revocation"
-        },
-        "RBI": {
-            "full_name": "RBI Digital Lending Guidelines 2022",
-            "checks": ["KYC norms", "Fair Practices Code", "Data localization", "Interest rate disclosure"],
-            "penalty_range": "₹1 Cr – License revocation"
-        },
-    }
-    fw = frameworks.get(framework, frameworks["DPDP"])
-    words = document.lower().split()
-    doc_score = min(100, len(set(words)) // 2 + 40)
-    passed = [c for i, c in enumerate(fw["checks"]) if i % 2 == 0 or doc_score > 60]
-    failed = [c for c in fw["checks"] if c not in passed]
+    """Tool 10: Evidence scan — does the supplied text mention each control? Not a legal determination."""
+    fw = _COMPLIANCE_FRAMEWORKS.get(framework, _COMPLIANCE_FRAMEWORKS["DPDP"])
+    text = (document or "").lower()
+    passed = [name for name, kws in fw["checks"].items() if any(k in text for k in kws)]
+    failed = [name for name in fw["checks"] if name not in passed]
+    total = len(fw["checks"])
     return {
-        "framework": framework,
+        "framework": framework if framework in _COMPLIANCE_FRAMEWORKS else "DPDP",
         "full_name": fw["full_name"],
-        "compliance_score": doc_score,
-        "status": "COMPLIANT" if not failed else "PARTIAL",
+        "compliance_score": round(100 * len(passed) / total),
+        "status": "EVIDENCE_FOUND_FOR_ALL_CONTROLS" if not failed else "GAPS_IN_SUPPLIED_TEXT",
         "passed_checks": passed,
         "failed_checks": failed,
-        "penalty_exposure": fw["penalty_range"] if failed else "None",
-        "remediation_steps": [f"Address: {f}" for f in failed],
-        "next_audit_date": (datetime.date.today() + datetime.timedelta(days=90)).isoformat()
+        "penalty_exposure": fw["penalty_range"] if failed else "None identified in supplied text",
+        "remediation_steps": [f"Document and evidence: {f}" for f in failed],
+        "method": "keyword evidence scan of the supplied text; not a legal determination",
     }
 
 
 def run_single_tool(tool_id: str, params: dict = None) -> Dict[str, Any]:
-    """Executes an individual LangChain tool with input parameters and performance tracing."""
+    """Executes an individual tool with input parameters and latency tracing."""
     params = params or {}
     t0 = time.time()
-    result = {}
-
     tid = tool_id.lower().replace("tool", "").replace("_", "")
-    if "ventureintel" in tid or "venture" in tid:
-        result = tool_venture_intel(params.get("query", "B2B AI logistics"))
-    elif "runway" in tid or "financial" in tid:
-        result = tool_financial_runway(
-            params.get("monthly_burn", 300000),
-            params.get("cash_balance", 2500000),
-            params.get("target_runway_mo", 18)
-        )
-    elif "cyber" in tid or "recon" in tid:
-        result = tool_cybersecurity_recon(
-            params.get("target_domain", "portal.sevenseed.in"),
-            params.get("scan_type", "surface")
-        )
-    elif "web" in tid or "intel" in tid:
-        result = tool_web_intel(params.get("topic", "Agentic AI LangGraph 2026"))
-    elif "automation" in tid or "dispatch" in tid:
-        result = tool_automation_dispatcher(
-            params.get("workflow_name", "lead_enrichment"),
-            params.get("payload", {"venture": "sevenseed"})
-        )
-    elif "code" in tid or "executor" in tid:
-        result = tool_code_executor(params.get("code", "def fib(n): return n if n < 2 else fib(n-1) + fib(n-2)"))
-    elif "sql" in tid or "query" in tid:
-        result = tool_sql_query_simulator(params.get("query", "SELECT * FROM ventures"), params.get("table", "ventures"))
-    elif "vector" in tid or "rag" in tid:
-        result = tool_vector_rag(
-            params.get("document_chunk", "Sevenseed is an enterprise venture studio powering 9 AI ventures on a shared LangGraph backbone."),
-            params.get("query", "LangGraph backbone")
-        )
-    elif "notif" in tid or "sender" in tid:
-        result = tool_notification_sender(
-            params.get("channel", "slack"),
-            params.get("recipient", "#enterprise-alerts"),
-            params.get("message", "Autonomous agent task completed successfully.")
-        )
-    elif "compliance" in tid or "audit" in tid:
-        result = tool_compliance_audit(
-            params.get("domain", "cybersecurity"),
-            params.get("framework", "DPDP Act 2023")
-        )
-    else:
-        result = {"error": f"Unknown tool ID: {tool_id}", "status": "failed"}
+    try:
+        if "ventureintel" in tid or tid == "venture":
+            result = tool_venture_intel(params.get("query", "B2B AI logistics"))
+        elif "runway" in tid or "financial" in tid:
+            result = tool_financial_runway(params.get("monthly_burn", 300000), params.get("cash_balance", 2500000),
+                                           params.get("target_runway_mo", 18))
+        elif "cyber" in tid or "recon" in tid:
+            result = tool_cybersecurity_recon(params.get("target_domain") or params.get("target", ""))
+        elif "web" in tid:
+            result = tool_web_search(params.get("topic") or params.get("query", "Agentic AI LangGraph"))
+        elif "automation" in tid or "dispatch" in tid:
+            result = tool_automation_dispatcher(params.get("workflow_name", "manual_trigger"),
+                                                params.get("payload", {"venture": "sevenseed"}))
+        elif "code" in tid or "executor" in tid:
+            result = tool_code_executor(params.get("code", "def fib(n): return n if n < 2 else fib(n-1) + fib(n-2)"))
+        elif "sql" in tid or "query" in tid:
+            result = tool_portfolio_sql(params.get("query", "SELECT * FROM ventures"))
+        elif "vector" in tid or "rag" in tid:
+            result = tool_vector_rag(params.get("document_chunk", "Sevenseed is a venture studio powering AI ventures on a shared LangGraph backbone."),
+                                     params.get("query", "LangGraph backbone"))
+        elif "notif" in tid or "sender" in tid:
+            rec = params.get("recipients") or ([params["recipient"]] if params.get("recipient") else [])
+            result = tool_notification_sender(params.get("channel", "slack"), params.get("message", "Agent task completed."), rec)
+        elif "compliance" in tid or "audit" in tid:
+            result = tool_compliance_checker(params.get("document", ""), params.get("framework", "DPDP"))
+        else:
+            result = {"error": f"Unknown tool ID: {tool_id}", "status": "failed"}
+    except Exception as e:  # a tool must never take the API down
+        result = {"error": f"{type(e).__name__}: {e}", "status": "failed"}
 
-    latency_ms = round((time.time() - t0) * 1000, 1)
+    failed = "error" in result or result.get("status") in ("failed", "rejected", "error")
     return {
         "tool_id": tool_id,
-        "latency_ms": latency_ms,
+        "latency_ms": round((time.time() - t0) * 1000, 1),
         "output": result,
-        "status": "success" if "error" not in result else "failed",
-        "timestamp": datetime.datetime.utcnow().isoformat() + "Z"
+        "status": "failed" if failed else "success",
+        "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
     }
 
 
@@ -593,12 +506,15 @@ class AgentState(TypedDict):
     draft_output: str
     critique_score: int
     critique_notes: str
+    critique_method: str
     revision_count: int
 
     # HITL Gate
     hitl_required: bool
     hitl_approved: bool
     hitl_reason: str
+    hitl_reviewer: str
+    hitl_notes: str
 
     # Guardrail logs
     guardrail_warnings: List[str]
@@ -612,29 +528,32 @@ class AgentState(TypedDict):
 # LANGGRAPH MULTI-AGENT NODES
 # ══════════════════════════════════════════════════════════════════════════════
 
+def _tool_record(name: str, tool_input: Dict[str, Any], output: Dict[str, Any]) -> Dict[str, Any]:
+    return {"tool": name, "input": tool_input, "output": output, "timestamp": datetime.datetime.utcnow().isoformat()}
+
+
 def node_supervisor(state: AgentState) -> Dict[str, Any]:
     """
-    SUPERVISOR AGENT — Intent Parsing, Risk Assessment & DAG Plan Generation.
-    Checks token budget, applies guardrails, and formulates structured execution plan.
+    SUPERVISOR AGENT — Intent parsing, guardrails, HITL policy (from the swarm registry) and plan.
     """
     start_time = time.time()
     obj = state["objective"]
     mode = state.get("agent_mode", "venture_architect")
-    
-    # Guardrail check
+    swarm = get_swarm(mode) or {}
+
     clean_obj, warnings = guardrail_input(obj)
-    
-    # HITL check: high-stakes modes require approval
-    hitl_modes = ["security_analyst", "clinical_auditor", "legal_compliance"]
-    hitl_required = mode in hitl_modes
-    hitl_reason = f"Mode '{mode}' involves high-stakes domain analysis. Human review required before dispatch." if hitl_required else ""
-    
-    # Token budget enforcement
+
+    hitl_required = bool(swarm.get("hitl"))
+    hitl_reason = swarm.get("hitl_reason", "") if hitl_required else ""
+
     tokens_remaining = state.get("token_budget", _TOKEN_BUDGET_DEFAULT) - state.get("tokens_consumed", 0)
     if tokens_remaining < 500:
         return {
             "status": "budget_exceeded",
-            "step_history": state.get("step_history", []) + [{"agent": "Supervisor", "action": "Budget Exceeded", "latency_ms": 0, "details": "Token budget exhausted — halting pipeline."}]
+            "active_agent": "Halted",
+            "guardrail_warnings": warnings,
+            "step_history": state.get("step_history", []) + [{"agent": "Supervisor", "action": "Budget Exceeded", "latency_ms": 0,
+                                                              "details": "Token budget exhausted — halting pipeline.", "status": "halted"}],
         }
 
     sys_p = (
@@ -648,40 +567,41 @@ def node_supervisor(state: AgentState) -> Dict[str, Any]:
         '"Step 3: Domain specialist synthesis with 90-day roadmap", '
         '"Step 4: Automated compliance check & stakeholder notification"]'
     )
-    user_p = f"Objective: {clean_obj}\nDomain Mode: {mode}\nSector Context: {parameters_context(state.get('parameters', {}))}"
-    
+    user_p = (f"Objective: {clean_obj}\nDomain Mode: {mode}\nDomain persona: {swarm.get('persona', '')}\n"
+              f"Sector Context: {parameters_context(state.get('parameters', {}))}")
+
     llm_resp = call_llm(sys_p, user_p, temperature=0.2, tier="fast")
-    plan = []
+    plan: list = []
     est_tokens = 0
     if llm_resp:
         est_tokens = len(llm_resp.split()) * 4 // 3
         try:
             s = llm_resp.find('['); e = llm_resp.rfind(']')
             if s != -1 and e != -1:
-                plan = json.loads(llm_resp[s:e+1])
+                plan = json.loads(llm_resp[s:e + 1])
         except Exception:
             pass
 
     if not plan or not isinstance(plan, list):
         plan = [
             f"Phase 1: Ingest and classify parameters for '{clean_obj[:45]}'",
-            "Phase 2: Execute domain LangChain tools — market intel, financials, security",
-            "Phase 3: Specialist agent synthesis with quantitative evidence & risk matrix",
-            "Phase 4: Self-critique reflection loop + automation dispatch & stakeholder alerts"
+            "Phase 2: Execute domain tools for this swarm",
+            "Phase 3: Specialist synthesis with evidence and a risk matrix",
+            "Phase 4: Self-critique, then automation dispatch",
         ]
 
     step_record = {
         "agent": "🎯 Supervisor Agent",
         "action": "Task Decomposition, Guardrails & Policy Assignment",
         "latency_ms": round((time.time() - start_time) * 1000, 1),
-        "details": f"Generated {len(plan)} execution phases in mode '{mode}'. Guardrail warnings: {len(warnings)}.",
+        "details": f"Generated {len(plan)} execution phases in mode '{mode}'. Guardrail warnings: {len(warnings)}. HITL required: {hitl_required}.",
         "tokens_used": est_tokens,
-        "status": "completed"
+        "status": "completed",
     }
 
     return {
         "objective": clean_obj,
-        "active_agent": "Researcher Agent",
+        "active_agent": "HITL Gate" if hitl_required else "Researcher Agent",
         "plan": plan,
         "current_step_idx": 0,
         "step_history": state.get("step_history", []) + [step_record],
@@ -690,85 +610,118 @@ def node_supervisor(state: AgentState) -> Dict[str, Any]:
         "hitl_reason": hitl_reason,
         "hitl_approved": not hitl_required,
         "guardrail_warnings": warnings,
-        "status": "planning_completed"
+        "status": "planning_completed",
     }
 
 
 def node_hitl_gate(state: AgentState) -> Dict[str, Any]:
     """
-    HUMAN-IN-THE-LOOP GATE — Pauses pipeline for high-stakes approval.
-    In production, this would block and wait for webhook/API confirmation.
-    For demo: auto-approve after logging the gate event.
+    HUMAN-IN-THE-LOOP GATE — genuinely pauses the graph via LangGraph interrupt().
+    State is checkpointed; the run resumes only when resume_agentic_workflow() supplies a decision.
     """
-    start_time = time.time()
+    decision = interrupt({
+        "session_id": state.get("session_id", ""),
+        "mode": state.get("agent_mode", ""),
+        "reason": state.get("hitl_reason", ""),
+        "objective": state.get("objective", "")[:300],
+        "plan": state.get("plan", []),
+    })
+    if not isinstance(decision, dict):
+        decision = {"approved": bool(decision)}
+    approved = bool(decision.get("approved"))
+    reviewer = str(decision.get("reviewer", ""))[:120]
+    notes = str(decision.get("notes", ""))[:1000]
+
     step_record = {
         "agent": "🔐 HITL Gate",
-        "action": "Human Approval Gate",
-        "latency_ms": round((time.time() - start_time) * 1000, 1),
-        "details": f"Approval gate triggered: {state.get('hitl_reason', 'High-stakes operation')}. Auto-approved for authorized session.",
-        "status": "approved"
+        "action": "Human Approval Decision",
+        "latency_ms": 0,
+        "details": f"{'Approved' if approved else 'Rejected'} by {reviewer or 'unknown reviewer'}. {notes[:120]}",
+        "status": "approved" if approved else "rejected",
     }
-    return {
-        "hitl_approved": True,
-        "active_agent": "Researcher Agent",
+    update: Dict[str, Any] = {
+        "hitl_approved": approved,
+        "hitl_reviewer": reviewer,
+        "hitl_notes": notes,
+        "active_agent": "Researcher Agent" if approved else "Halted",
         "step_history": state.get("step_history", []) + [step_record],
-        "status": "hitl_cleared"
+        "status": "hitl_cleared" if approved else "rejected",
     }
+    if not approved:
+        update["final_deliverable"] = {
+            "title": f"Rejected by human reviewer: {state.get('objective', '')[:55]}",
+            "status": "rejected_by_human", "reviewer": reviewer, "notes": notes,
+            "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
+            "markdown": "", "dispatched": False,
+        }
+    return update
 
 
 def node_researcher(state: AgentState) -> Dict[str, Any]:
     """
-    RESEARCH AGENT — Executes 3-4 LangChain tools to gather evidence, metrics & security context.
+    RESEARCH AGENT — runs the swarm's domain tools plus live web search to assemble evidence.
     """
     start_time = time.time()
     obj = state["objective"]
     mode = state.get("agent_mode", "venture_architect")
+    swarm = get_swarm(mode) or {}
+    params = state.get("parameters", {}) or {}
     tool_calls = list(state.get("tool_calls", []))
     intel = dict(state.get("collected_intel", {}))
     est_tokens = 0
 
-    # Tool 1: Venture & Market Intel (always)
-    t1_res = tool_venture_intel(f"{mode} {obj}")
-    tool_calls.append({"tool": "VentureIntelTool", "input": {"query": f"{mode} {obj}"}, "output": t1_res, "timestamp": datetime.datetime.utcnow().isoformat()})
-    intel["market_context"] = t1_res["intel"]
-    intel["market_sources"] = t1_res.get("sources", [])
+    t1 = tool_venture_intel(f"{mode} {obj}")
+    tool_calls.append(_tool_record("VentureIntelTool", {"query": f"{mode} {obj}"[:120]}, t1))
+    intel["market_context"] = t1["intel"]
+    intel["market_sources"] = t1.get("sources", [])
     est_tokens += 120
 
-    # Tool 2: Domain-specific tool routing
-    if "security" in mode or "rakshak" in mode or "risk" in obj.lower():
-        t2_res = tool_cybersecurity_recon(obj)
-        tool_calls.append({"tool": "CybersecurityReconTool", "input": {"target": obj[:30]}, "output": t2_res, "timestamp": datetime.datetime.utcnow().isoformat()})
-        intel["security_posture"] = t2_res
-    elif "clinical" in mode or "pharmacy" in mode or "health" in obj.lower():
-        t2_res = tool_compliance_checker(obj, "DPDP")
-        tool_calls.append({"tool": "ComplianceCheckerTool", "input": {"framework": "DPDP"}, "output": t2_res, "timestamp": datetime.datetime.utcnow().isoformat()})
-        intel["compliance_audit"] = t2_res
-    else:
-        t2_res = tool_financial_runway(monthly_burn=450000.0, cash_balance=3500000.0, target_runway_mo=18)
-        tool_calls.append({"tool": "FinancialRunwayTool", "input": {"monthly_burn": 450000.0, "cash_balance": 3500000.0}, "output": t2_res, "timestamp": datetime.datetime.utcnow().isoformat()})
-        intel["financial_projections"] = t2_res
+    domain = swarm.get("domain_tool", "none")
+    if domain == "recon":
+        target = str(params.get("target") or obj)
+        t2 = tool_cybersecurity_recon(target)
+        tool_calls.append(_tool_record("CybersecurityReconTool", {"target": target[:80]}, t2))
+        intel["security_posture"] = t2
+    elif domain == "compliance":
+        doc = obj + " " + " ".join(str(v) for v in params.values())
+        t2 = tool_compliance_checker(doc, swarm.get("framework", "DPDP"))
+        tool_calls.append(_tool_record("ComplianceTool", {"framework": swarm.get("framework", "DPDP")}, t2))
+        intel["compliance_audit"] = t2
+    elif domain == "financial":
+        burn, cash = params.get("monthly_burn"), params.get("cash_balance")
+        if burn and cash:
+            t2 = tool_financial_runway(float(burn), float(cash), int(params.get("target_runway_mo", 18)))
+            tool_calls.append(_tool_record("FinancialRunwayTool", {"monthly_burn": burn, "cash_balance": cash}, t2))
+            intel["financial_projections"] = t2
+        else:
+            intel["financial_projections"] = {"status": "skipped", "reason": "monthly_burn and cash_balance not supplied in parameters"}
     est_tokens += 200
 
-    # Tool 3: Web Intelligence (always)
-    t3_res = tool_web_search_mock(obj)
-    tool_calls.append({"tool": "WebIntelTool", "input": {"query": obj[:60]}, "output": t3_res, "timestamp": datetime.datetime.utcnow().isoformat()})
-    intel["web_intelligence"] = t3_res["summary"]
+    t3 = tool_web_search(obj[:200])
+    tool_calls.append(_tool_record("WebIntelTool", {"query": obj[:60]}, t3))
+    intel["web_results"] = t3.get("results", [])
+    if t3.get("status") == "live":
+        intel["web_intelligence"] = "; ".join(f"{r['title']} ({r['url']})" for r in t3["results"][:3])
+    else:
+        intel["web_intelligence"] = f"Live web search not available ({t3.get('status')}: {t3.get('error', 'no results')})"
     est_tokens += 80
 
-    # Tool 4: SQL/Database for portfolio modes
-    if "venture" in mode or "portfolio" in mode.lower():
-        t4_res = tool_sql_query_simulator("SELECT * FROM ventures", "ventures")
-        tool_calls.append({"tool": "PortfolioDBTool", "input": {"query": "Portfolio Overview"}, "output": t4_res, "timestamp": datetime.datetime.utcnow().isoformat()})
-        intel["portfolio_data"] = t4_res.get("rows", [])
+    if domain == "portfolio":
+        t4 = tool_portfolio_sql("SELECT * FROM ventures")
+        tool_calls.append(_tool_record("SQLQueryTool", {"query": "SELECT * FROM ventures"}, t4))
+        intel["portfolio_data"] = t4.get("rows", [])
+        t5 = tool_portfolio_sql("SELECT * FROM kpis")
+        tool_calls.append(_tool_record("SQLQueryTool", {"query": "SELECT * FROM kpis"}, t5))
+        intel["portfolio_kpis"] = t5.get("rows", [])
         est_tokens += 150
 
     step_record = {
         "agent": "🔬 Research & Tool Agent",
-        "action": f"LangChain Tool Execution ({len(tool_calls)} tools)",
+        "action": f"Tool Execution ({len(tool_calls)} tools)",
         "latency_ms": round((time.time() - start_time) * 1000, 1),
-        "details": f"Invoked {len(tool_calls)} enterprise tools. Evidence corpus assembled with {len(intel)} knowledge domains.",
+        "details": f"Invoked {len(tool_calls)} tools. Web search: {t3.get('status')}. Evidence domains: {len(intel)}.",
         "tokens_used": est_tokens,
-        "status": "completed"
+        "status": "completed",
     }
 
     return {
@@ -777,38 +730,39 @@ def node_researcher(state: AgentState) -> Dict[str, Any]:
         "collected_intel": intel,
         "step_history": state.get("step_history", []) + [step_record],
         "tokens_consumed": state.get("tokens_consumed", 0) + est_tokens,
-        "status": "research_completed"
+        "status": "research_completed",
     }
 
 
 def node_specialist(state: AgentState) -> Dict[str, Any]:
     """
-    SPECIALIST AGENT — Generates the primary domain deliverable with actionable recommendations.
-    Accepts critique feedback from Critic for self-correction.
+    SPECIALIST AGENT — generates the domain deliverable; accepts critic feedback for self-correction.
     """
     start_time = time.time()
     obj = state["objective"]
     mode = state.get("agent_mode", "venture_architect")
+    swarm = get_swarm(mode) or {}
     intel = state.get("collected_intel", {})
     critique_notes = state.get("critique_notes", "")
     rev_count = state.get("revision_count", 0)
-    
+
     feedback_prompt = f"\n\n## Critic Feedback (Revision #{rev_count}):\n{critique_notes}" if critique_notes else ""
 
     sys_p = (
-        f"You are the Sevenseed {mode.replace('_', ' ').title()} Senior Specialist Agent — world-class in your domain.\n"
-        "Produce a premium, enterprise-grade strategic deliverable with:\n"
-        "1. Executive Summary (2-3 key insights, numbers-driven)\n"
+        f"You are the Sevenseed {swarm.get('name', mode.replace('_', ' ').title())} Senior Specialist Agent: "
+        f"{swarm.get('persona', 'enterprise domain expert')}.\n"
+        "Produce an enterprise-grade deliverable with:\n"
+        "1. Executive Summary (2-3 key insights)\n"
         "2. Strategic Value Proposition & Competitive Moat\n"
         "3. Implementation Roadmap (specific steps, owners, dependencies)\n"
-        "4. Quantitative Risk Matrix (probability × impact)\n"
+        "4. Risk Matrix (probability x impact)\n"
         "5. 30-60-90 Day Milestone Plan with KPIs\n"
         "6. AI/LangChain/LangGraph integration opportunities\n"
-        "Be rigorous, specific, and actionable. Use data from context."
+        "Use ONLY the evidence supplied. If evidence is missing, say so instead of inventing numbers."
     )
     user_p = (
         f"Objective: {obj}\n"
-        f"Evidence Base: {json.dumps(intel, indent=2)[:3000]}\n"
+        f"Evidence Base: {json.dumps(intel, indent=2, default=str)[:3000]}\n"
         f"Execution Plan: {json.dumps(state.get('plan', []))}"
         f"{feedback_prompt}"
     )
@@ -817,48 +771,49 @@ def node_specialist(state: AgentState) -> Dict[str, Any]:
     est_tokens = len(draft.split()) * 4 // 3 if draft else 0
 
     if not draft:
-        fin = intel.get("financial_projections", {})
-        mkt = intel.get("market_context", "High-growth sector with significant AI adoption tailwinds")
-        draft = (
-            f"### 🚀 Enterprise Strategic Plan: {obj}\n\n"
-            f"**Domain:** {mode.replace('_', ' ').title()} | **Quality Gate:** Self-Critic Approved\n\n"
-            f"#### 1. Executive Summary\n"
-            f"Analysis across market intelligence, financial modeling, and operational risk for '{obj}' reveals a "
-            f"compelling, high-conviction opportunity. Deploying stateful LangGraph agent swarms with autonomous "
-            f"reflection loops is the primary technical differentiator.\n\n"
-            f"**Key Metrics:**\n"
-            f"- Market Context: {mkt[:200]}\n"
-            f"- Financial Health: {fin.get('health_status', 'HEALTHY')} | Runway: {fin.get('runway_months', 7.8)} months\n"
-            f"- Capital Efficiency Score: {fin.get('estimated_dilution_pct', 10.0)}% dilution at target raise\n\n"
-            f"#### 2. Strategic Value Proposition\n"
-            f"Sevenseed's competitive moat is a proprietary multi-agent LangGraph orchestration layer with:\n"
-            f"- **Stateful Checkpointing**: Pause/resume workflows mid-execution\n"
-            f"- **Self-Healing Loops**: Critic node auto-corrects below-threshold outputs (score < 80)\n"
-            f"- **Cross-Venture Knowledge Graph**: Shared RAG context across all 9 portfolio ventures\n\n"
-            f"#### 3. AI Integration Roadmap (LangChain + LangGraph)\n"
-            f"- **Node Architecture**: Supervisor → Researcher (tool-calls) → Specialist → Critic → Automation\n"
-            f"- **Tools Deployed**: 10 enterprise tools (market intel, financial modeling, security recon, compliance)\n"
-            f"- **Memory Strategy**: MemorySaver checkpointing for session state + Redis for cross-session persistence\n\n"
-            f"#### 4. Risk Matrix\n"
-            f"| Risk | Probability | Impact | Mitigation |\n"
-            f"|------|------------|--------|------------|\n"
-            f"| Model Hallucination | Medium | High | Critic reflection node + output guardrails |\n"
-            f"| Regulatory Change | Low | High | Compliance tool auto-monitoring |\n"
-            f"| CAC Creep | Medium | Medium | Autonomous performance attribution agent |\n\n"
-            f"#### 5. 30-60-90 Day Milestones\n"
-            f"- **Day 1-30**: Deploy MVP agent pipeline, connect enterprise tools, establish baseline KPIs\n"
-            f"- **Day 31-60**: Activate LangGraph self-correction loops, reduce hallucination rate to < 5%\n"
-            f"- **Day 61-90**: Scale agent swarms to all 9 ventures, integrate webhook automation, publish ROI report"
-        )
+        web = intel.get("web_intelligence", "n/a")
+        sec = intel.get("security_posture")
+        comp = intel.get("compliance_audit")
+        fin = intel.get("financial_projections")
+        lines = [
+            f"### Strategic Brief — TEMPLATE OUTPUT (no LLM configured)",
+            "",
+            f"**Objective:** {obj}",
+            f"**Swarm:** {swarm.get('name', mode)} — {swarm.get('persona', '')}",
+            "",
+            "#### Evidence collected",
+            f"- Market brief (static preset): {intel.get('market_context', 'n/a')}",
+            f"- Web: {web}",
+        ]
+        if sec:
+            lines.append(f"- Recon: {sec.get('status')} — {sec.get('reason') or sec.get('findings') or ''}")
+        if comp:
+            lines.append(f"- Compliance evidence scan: {comp.get('compliance_score')}% of controls evidenced; gaps: {', '.join(comp.get('failed_checks', [])) or 'none'}")
+        if fin and fin.get("runway_months") is not None:
+            lines.append(f"- Runway: {fin['runway_months']} months ({fin.get('health_status')})")
+        lines += [
+            "",
+            "#### Risk matrix",
+            "| Risk | Mitigation |",
+            "|------|------------|",
+            "| Unverified model output | Configure an LLM provider key and keep the critic loop enabled |",
+            "| Missing evidence | Supply parameters (targets, financials) and re-run |",
+            "",
+            "#### 30-60-90 Day milestones (to be confirmed by an owner)",
+            "- Day 1-30: connect an LLM provider and real data sources",
+            "- Day 31-60: review critic scores and HITL decisions in the audit log",
+            "- Day 61-90: expand to remaining ventures",
+        ]
+        draft = "\n".join(lines)
         est_tokens = len(draft.split()) * 4 // 3
 
     step_record = {
         "agent": "🧠 Specialist Agent",
-        "action": f"Strategic Deliverable Synthesis (Revision #{rev_count})",
+        "action": f"Deliverable Synthesis (Revision #{rev_count})",
         "latency_ms": round((time.time() - start_time) * 1000, 1),
-        "details": f"Generated {len(draft.split())}-word enterprise deliverable with {len(intel)} evidence domains.",
+        "details": f"Generated {len(draft.split())}-word deliverable from {len(intel)} evidence domains.",
         "tokens_used": est_tokens,
-        "status": "completed"
+        "status": "completed",
     }
 
     return {
@@ -866,156 +821,153 @@ def node_specialist(state: AgentState) -> Dict[str, Any]:
         "draft_output": draft,
         "step_history": state.get("step_history", []) + [step_record],
         "tokens_consumed": state.get("tokens_consumed", 0) + est_tokens,
-        "status": "draft_synthesized"
+        "status": "draft_synthesized",
     }
 
 
 def node_critic(state: AgentState) -> Dict[str, Any]:
     """
-    CRITIC & REFLECTION AGENT — Enterprise Quality Scorer with LLM-powered evaluation.
-    Implements Reflexion-style self-correction: if score < 80, re-routes to specialist.
+    CRITIC & REFLECTION AGENT — LLM scoring when available, otherwise a structural heuristic
+    that is capped at 85 (structure alone cannot prove quality). Score < 80 triggers one revision.
     """
     start_time = time.time()
     draft = state.get("draft_output", "")
     rev_count = state.get("revision_count", 0)
     est_tokens = 0
 
-    # Structural quality heuristics
-    score = 88
+    score = 60
     notes_parts = []
-    
-    if len(draft) < 500:
-        score -= 22; notes_parts.append("Deliverable too brief — expand executive summary and risk matrix")
-    if "milestone" not in draft.lower() and "day" not in draft.lower():
-        score -= 15; notes_parts.append("Missing concrete 30-60-90 day timeline milestones")
-    if not any(kw in draft.lower() for kw in ["risk", "mitigation", "compliance"]):
-        score -= 12; notes_parts.append("No risk matrix or compliance section detected")
-    if len(draft.split('\n')) < 10:
-        score -= 8; notes_parts.append("Insufficient structure — add headers, sub-sections and tables")
-    
-    # LLM-based quality scoring (if budget allows)
+    if len(draft) >= 500: score += 12
+    else: notes_parts.append("Deliverable too brief — expand executive summary and risk matrix")
+    if "milestone" in draft.lower() or "day" in draft.lower(): score += 10
+    else: notes_parts.append("Missing concrete 30-60-90 day timeline milestones")
+    if any(kw in draft.lower() for kw in ["risk", "mitigation", "compliance"]): score += 10
+    else: notes_parts.append("No risk matrix or compliance section detected")
+    if len(draft.split('\n')) >= 10: score += 8
+    else: notes_parts.append("Insufficient structure — add headers, sub-sections and tables")
+    score = min(85, score)
+    method = "heuristic"
+
     tokens_remaining = state.get("token_budget", _TOKEN_BUDGET_DEFAULT) - state.get("tokens_consumed", 0)
     if tokens_remaining > 800 and len(draft) > 200:
         critic_sys = (
             "You are a Senior Quality Assurance Agent for an enterprise AI system. "
             "Evaluate the draft on: Rigor (0-25), Actionability (0-25), Quantitative Evidence (0-25), Structure (0-25). "
-            "Return STRICT JSON: {\"total_score\": 85, \"rigor\": 22, \"actionability\": 21, \"evidence\": 20, \"structure\": 22, \"feedback\": \"specific improvement notes\"}"
+            "Penalise invented statistics. Return STRICT JSON: {\"total_score\": 85, \"rigor\": 22, \"actionability\": 21, "
+            "\"evidence\": 20, \"structure\": 22, \"feedback\": \"specific improvement notes\"}"
         )
         critic_res = call_llm(critic_sys, f"Draft to evaluate:\n{draft[:1800]}", temperature=0.1, tier="fast")
-        est_tokens = 280
         if critic_res:
+            est_tokens = 280
             try:
                 s = critic_res.find('{'); e = critic_res.rfind('}')
                 if s != -1 and e != -1:
-                    cdata = json.loads(critic_res[s:e+1])
-                    score = int(cdata.get("total_score", score))
+                    cdata = json.loads(critic_res[s:e + 1])
+                    score = max(0, min(100, int(cdata.get("total_score", score))))
+                    method = "llm"
                     if cdata.get("feedback"):
                         notes_parts.insert(0, cdata["feedback"])
             except Exception:
                 pass
 
-    # Boost score on second revision to ensure progression
-    if rev_count >= 1:
-        score = max(85, score + 8)
-    
-    notes = " | ".join(notes_parts) if notes_parts else "Enterprise deliverable meets quality standards. Strong quantitative grounding and structured roadmap."
+    notes = " | ".join(notes_parts) if notes_parts else "Meets structural and quality criteria."
     approved = score >= 80 or rev_count >= 1
 
     step_record = {
         "agent": "⚖️ Critic & Reflection Agent",
-        "action": f"Quality Evaluation (Pass #{rev_count + 1})",
+        "action": f"Quality Evaluation (Pass #{rev_count + 1}, {method})",
         "latency_ms": round((time.time() - start_time) * 1000, 1),
-        "details": f"Quality Score: {score}/100 — {'✅ APPROVED' if approved else '🔄 REVISION REQUESTED'}. {notes[:100]}",
+        "details": f"Quality Score: {score}/100 ({method}) — {'✅ APPROVED' if approved else '🔄 REVISION REQUESTED'}. {notes[:100]}",
         "tokens_used": est_tokens,
-        "status": "approved" if approved else "revision_needed"
+        "status": "approved" if approved else "revision_needed",
     }
 
     return {
         "active_agent": "Automation Agent" if approved else "Specialist Agent",
         "critique_score": score,
         "critique_notes": notes,
+        "critique_method": method,
         "revision_count": rev_count + 1 if not approved else rev_count,
         "step_history": state.get("step_history", []) + [step_record],
         "tokens_consumed": state.get("tokens_consumed", 0) + est_tokens,
-        "status": "critique_evaluated"
+        "status": "critique_evaluated",
     }
 
 
 def node_automation(state: AgentState) -> Dict[str, Any]:
     """
-    AUTOMATION DISPATCHER — Webhook triggers, output serialization, notification dispatch & audit logging.
+    AUTOMATION DISPATCHER — signed webhook + notification (real when configured, otherwise logged) and telemetry.
     """
     start_time = time.time()
     obj = state["objective"]
     draft = state.get("draft_output", "")
-    score = state.get("critique_score", 90)
+    score = state.get("critique_score", 0)
     session_id = state.get("session_id", "unknown")
 
-    # Dispatch enterprise webhooks
     webhook_res = tool_automation_dispatcher("deliverable_ready", {
-        "objective": obj, "quality_score": score, "session_id": session_id
+        "objective": obj, "quality_score": score, "session_id": session_id,
+        "mode": state.get("agent_mode", ""),
     })
     notification_res = tool_notification_sender(
         channel="slack",
-        message=f"[Sevenseed AI] Agentic deliverable ready for '{obj[:50]}' — Score: {score}/100",
-        recipients=["team@sevenseed.ai", "founders@sevenseed.ai"]
+        message=f"[Sevenseed AI] Deliverable ready for '{obj[:50]}' — score {score}/100 ({state.get('critique_method', 'n/a')})",
+        recipients=[],
     )
 
-    # Compute session telemetry
     step_history = state.get("step_history", [])
     tool_calls = state.get("tool_calls", [])
     total_latency = sum(s.get("latency_ms", 0) for s in step_history)
     total_tokens = state.get("tokens_consumed", 0)
-    
+    budget = state.get("token_budget", _TOKEN_BUDGET_DEFAULT) or _TOKEN_BUDGET_DEFAULT
+
     deliverable = {
-        "title": f"Enterprise Agent Plan: {obj[:55]}",
+        "title": f"Agent Deliverable: {obj[:55]}",
         "generated_at": datetime.datetime.utcnow().isoformat() + "Z",
         "session_id": session_id,
         "quality_score": score,
+        "quality_method": state.get("critique_method", ""),
         "agent_team": [
             "🎯 Supervisor Agent — Intent Parsing & Policy",
-            "🔬 Research Agent — LangChain Tool Execution",
+            "🔬 Research Agent — Tool Execution",
             "🧠 Specialist Agent — Domain Synthesis",
             "⚖️ Critic & Reflection Agent — Quality Gate",
-            "⚡ Automation Dispatcher — Webhooks & Alerts"
+            "⚡ Automation Dispatcher — Webhooks & Alerts",
         ],
         "markdown": draft,
         "telemetry": {
             "total_agent_steps": len(step_history),
             "tool_calls_count": len(tool_calls),
-            "tokens_consumed": total_tokens,
-            "token_budget_used_pct": round(total_tokens / _TOKEN_BUDGET_DEFAULT * 100, 1),
+            "tokens_estimated": total_tokens,
+            "token_budget_used_pct": round(total_tokens / budget * 100, 1),
             "total_latency_ms": round(total_latency, 1),
             "revision_cycles": state.get("revision_count", 0),
             "guardrail_warnings": state.get("guardrail_warnings", []),
             "webhook_event": webhook_res,
             "notification": notification_res,
         },
-        "next_automated_actions": [
-            "📋 Sync deliverable to Sevenseed Enterprise Vault",
-            "📩 Notify all venture leads via Slack + Email webhook",
-            "📅 Schedule 30-day review checkpoint in LangGraph scheduler",
-            "📊 Log session to DPDP-compliant audit trail",
-            "🔁 Trigger follow-up RAG enrichment pipeline in 48h"
+        "recommended_next_actions": [
+            "Review the deliverable and its cited evidence before acting on it",
+            "Configure AGENT_WEBHOOK_URL / SLACK_WEBHOOK_URL so dispatch events are delivered",
+            "Re-run with concrete parameters (targets, financials) to replace skipped tools",
         ],
-        "compliance_status": "DPDP_COMPLIANT",
         "hitl_was_required": state.get("hitl_required", False),
+        "hitl_reviewer": state.get("hitl_reviewer", ""),
     }
 
     step_record = {
         "agent": "⚡ Automation Dispatcher",
         "action": "Webhook Dispatch, Notification & Audit Logging",
         "latency_ms": round((time.time() - start_time) * 1000, 1),
-        "details": f"Event {webhook_res['event_id']} queued. Notifications sent to {len(notification_res['recipients'])} recipients. Total session: {total_tokens} tokens.",
+        "details": f"Webhook {webhook_res.get('event_id')}: {webhook_res.get('status')}. Notification: {notification_res.get('status')}. Session: {total_tokens} est. tokens.",
         "tokens_used": 0,
-        "status": "completed"
+        "status": "completed",
     }
 
     return {
         "active_agent": "✅ Completed",
         "final_deliverable": deliverable,
         "step_history": step_history + [step_record],
-        "status": "completed"
+        "status": "completed",
     }
 
 
@@ -1024,8 +976,15 @@ def node_automation(state: AgentState) -> Dict[str, Any]:
 # ══════════════════════════════════════════════════════════════════════════════
 
 def route_hitl(state: AgentState) -> str:
-    """Routes to HITL gate if required, else directly to researcher."""
+    """Budget exhausted -> stop. High-stakes swarm -> HITL gate. Otherwise researcher."""
+    if state.get("status") == "budget_exceeded":
+        return "end"
     return "hitl_gate" if state.get("hitl_required", False) else "researcher"
+
+
+def route_after_hitl(state: AgentState) -> str:
+    """Only an explicit human approval lets the pipeline continue."""
+    return "researcher" if state.get("hitl_approved") else "end"
 
 
 def route_after_critic(state: AgentState) -> str:
@@ -1036,15 +995,49 @@ def route_after_critic(state: AgentState) -> str:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# LANGGRAPH GRAPH BUILDER (with Checkpointing)
+# LANGGRAPH GRAPH BUILDER (durable checkpointing)
 # ══════════════════════════════════════════════════════════════════════════════
 
 _COMPILED_GRAPH = None
 _CHECKPOINTER = None
+_CHECKPOINTER_KIND = "none"
+
+
+def _make_checkpointer():
+    """SqliteSaver by default (survives restarts). AGENT_CHECKPOINT=memory forces in-memory."""
+    global _CHECKPOINTER_KIND
+    if not _CHECKPOINTER_AVAILABLE:
+        return None
+    if os.environ.get("AGENT_CHECKPOINT", "sqlite").strip().lower() != "memory":
+        try:
+            from langgraph.checkpoint.sqlite import SqliteSaver
+            conn = sqlite3.connect(infra.checkpoint_db_path(), check_same_thread=False)
+            conn.execute("PRAGMA journal_mode=WAL")
+            saver = SqliteSaver(conn)
+            _CHECKPOINTER_KIND = "sqlite"
+            return saver
+        except Exception as e:
+            print(f"[agentic_engine] SqliteSaver unavailable ({e}); falling back to in-memory checkpoints")
+    _CHECKPOINTER_KIND = "memory"
+    return MemorySaver()
+
+
+def reset_graph_cache() -> None:
+    """Drops the compiled graph + checkpointer (used by tests to simulate a process restart)."""
+    global _COMPILED_GRAPH, _CHECKPOINTER, _CHECKPOINTER_KIND
+    saver = _CHECKPOINTER
+    _COMPILED_GRAPH = None
+    _CHECKPOINTER = None
+    _CHECKPOINTER_KIND = "none"
+    try:
+        if saver is not None and hasattr(saver, "conn"):
+            saver.conn.close()
+    except Exception:
+        pass
 
 
 def get_agent_graph():
-    """Builds and compiles the LangGraph StateGraph with MemorySaver checkpointing."""
+    """Builds and compiles the LangGraph StateGraph with durable checkpointing."""
     global _COMPILED_GRAPH, _CHECKPOINTER
     if _COMPILED_GRAPH is not None:
         return _COMPILED_GRAPH, _CHECKPOINTER
@@ -1055,7 +1048,6 @@ def get_agent_graph():
     try:
         builder = StateGraph(AgentState)
 
-        # Register all agent nodes
         builder.add_node("supervisor", node_supervisor)
         builder.add_node("hitl_gate", node_hitl_gate)
         builder.add_node("researcher", node_researcher)
@@ -1063,30 +1055,27 @@ def get_agent_graph():
         builder.add_node("critic", node_critic)
         builder.add_node("automation", node_automation)
 
-        # Wire the directed graph edges
         builder.add_edge(START, "supervisor")
         builder.add_conditional_edges("supervisor", route_hitl, {
             "hitl_gate": "hitl_gate",
-            "researcher": "researcher"
+            "researcher": "researcher",
+            "end": END,
         })
-        builder.add_edge("hitl_gate", "researcher")
+        builder.add_conditional_edges("hitl_gate", route_after_hitl, {
+            "researcher": "researcher",
+            "end": END,
+        })
         builder.add_edge("researcher", "specialist")
         builder.add_edge("specialist", "critic")
         builder.add_conditional_edges("critic", route_after_critic, {
             "specialist": "specialist",
-            "automation": "automation"
+            "automation": "automation",
         })
         builder.add_edge("automation", END)
 
-        # Compile with memory checkpointing
-        if _CHECKPOINTER_AVAILABLE:
-            _CHECKPOINTER = MemorySaver()
-            _COMPILED_GRAPH = builder.compile(checkpointer=_CHECKPOINTER)
-        else:
-            _COMPILED_GRAPH = builder.compile()
-            _CHECKPOINTER = None
-
-        print("[agentic_engine] [OK] Enterprise LangGraph StateGraph compiled with checkpointing!")
+        _CHECKPOINTER = _make_checkpointer()
+        _COMPILED_GRAPH = builder.compile(checkpointer=_CHECKPOINTER) if _CHECKPOINTER else builder.compile()
+        print(f"[agentic_engine] LangGraph StateGraph compiled ({_CHECKPOINTER_KIND} checkpointer)")
         return _COMPILED_GRAPH, _CHECKPOINTER
     except Exception as e:
         print(f"[agentic_engine] Failed to compile LangGraph: {e}")
@@ -1103,28 +1092,15 @@ def parameters_context(params: dict) -> str:
     return ", ".join(f"{k}={v}" for k, v in list(params.items())[:4])
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-# PRIMARY RUNNER FUNCTION
-# ══════════════════════════════════════════════════════════════════════════════
+def _tracing_enabled() -> bool:
+    return any(os.environ.get(k, "").strip().lower() in ("true", "1") for k in ("LANGSMITH_TRACING", "LANGCHAIN_TRACING_V2"))
 
-def run_agentic_workflow(
-    objective: str,
-    agent_mode: str = "venture_architect",
-    parameters: Optional[Dict[str, Any]] = None,
-    token_budget: int = _TOKEN_BUDGET_DEFAULT,
-) -> Dict[str, Any]:
-    """
-    Runs the full Enterprise Agentic LangGraph pipeline end-to-end.
-    Returns complete state, telemetry, step history, and final deliverable.
-    """
-    session_id = f"sess_{uuid.uuid4().hex[:12]}"
-    start_total = time.time()
 
-    # Build initial state
-    initial_state: AgentState = {
+def _initial_state(session_id: str, objective: str, mode: str, parameters: dict, token_budget: int) -> AgentState:
+    return {
         "session_id": session_id,
         "objective": objective.strip(),
-        "agent_mode": agent_mode,
+        "agent_mode": mode,
         "parameters": parameters or {},
         "token_budget": token_budget,
         "tokens_consumed": 0,
@@ -1137,61 +1113,206 @@ def run_agentic_workflow(
         "draft_output": "",
         "critique_score": 0,
         "critique_notes": "",
+        "critique_method": "",
         "revision_count": 0,
         "hitl_required": False,
         "hitl_approved": True,
         "hitl_reason": "",
+        "hitl_reviewer": "",
+        "hitl_notes": "",
         "guardrail_warnings": [],
         "final_deliverable": {},
-        "status": "initiated"
+        "status": "initiated",
     }
 
-    graph, checkpointer = get_agent_graph()
-    final_state = initial_state
 
-    if graph:
-        try:
-            config = {"configurable": {"thread_id": session_id}} if checkpointer else {}
-            final_state = graph.invoke(initial_state, config=config) if config else graph.invoke(initial_state)
-        except Exception as ge:
-            print(f"[agentic_engine] Graph execution failed ({ge}), using sequential fallback...")
-            final_state = dict(initial_state)
-            for node_fn in [node_supervisor, node_researcher, node_specialist, node_critic, node_automation]:
-                try:
-                    updates = node_fn(final_state)
-                    final_state.update(updates)
-                except Exception as nfe:
-                    print(f"[agentic_engine] Node fallback error: {nfe}")
+def _build_result(session_id: str, objective: str, mode: str, state: Dict[str, Any],
+                  token_budget: int, elapsed_ms: float, models: List[str], paused: bool) -> Dict[str, Any]:
+    status = "awaiting_approval" if paused else state.get("status", "completed")
+    required = bool(state.get("hitl_required"))
+    if paused:
+        hitl_status = "pending"
+    elif status == "rejected":
+        hitl_status = "rejected"
     else:
-        # Pure sequential fallback (no LangGraph)
-        final_state = dict(initial_state)
-        for node_fn in [node_supervisor, node_researcher, node_specialist, node_critic, node_automation]:
-            try:
-                updates = node_fn(final_state)
-                final_state.update(updates)
-            except Exception as nfe:
-                print(f"[agentic_engine] Sequential node error: {nfe}")
-
-    total_elapsed = round((time.time() - start_total) * 1000, 1)
-
+        hitl_status = "approved" if required else "not_required"
     return {
-        "success": True,
-        "engine": f"LangGraph StateGraph {'+ MemorySaver' if _CHECKPOINTER_AVAILABLE else ''}",
+        "success": status != "failed",
+        "engine": f"LangGraph StateGraph + {_CHECKPOINTER_KIND} checkpointer",
         "session_id": session_id,
         "objective": objective,
-        "mode": agent_mode,
-        "plan": final_state.get("plan", []),
-        "step_history": final_state.get("step_history", []),
-        "tool_calls": final_state.get("tool_calls", []),
-        "critique_score": final_state.get("critique_score", 90),
-        "tokens_consumed": final_state.get("tokens_consumed", 0),
+        "mode": mode,
+        "plan": state.get("plan", []),
+        "step_history": state.get("step_history", []),
+        "tool_calls": state.get("tool_calls", []),
+        "critique_score": state.get("critique_score", 0),
+        "critique_method": state.get("critique_method", ""),
+        "tokens_consumed": state.get("tokens_consumed", 0),
+        "tokens_estimated": True,
         "token_budget": token_budget,
-        "total_elapsed_ms": total_elapsed,
-        "guardrail_warnings": final_state.get("guardrail_warnings", []),
-        "hitl_was_triggered": final_state.get("hitl_required", False),
-        "deliverable": final_state.get("final_deliverable", {}),
-        "status": final_state.get("status", "completed")
+        "total_elapsed_ms": elapsed_ms,
+        "guardrail_warnings": state.get("guardrail_warnings", []),
+        "hitl_was_triggered": required,
+        "hitl": {
+            "required": required, "status": hitl_status,
+            "reason": state.get("hitl_reason", ""),
+            "reviewer": state.get("hitl_reviewer", ""), "notes": state.get("hitl_notes", ""),
+        },
+        "llm": {"models_used": models, "live": bool(models), "mode": "live" if models else "template-fallback"},
+        "deliverable": state.get("final_deliverable", {}),
+        "status": status,
     }
+
+
+def _persist(result: Dict[str, Any], actor_id: str, prior_latency: float = 0.0) -> None:
+    infra.upsert_session(
+        result["session_id"], mode=result["mode"], objective=result["objective"][:2000],
+        status=result["status"], hitl_required=int(result["hitl"]["required"]),
+        hitl_status=result["hitl"]["status"], hitl_reason=result["hitl"]["reason"],
+        tokens=int(result["tokens_consumed"] or 0),
+        latency_ms=round(prior_latency + float(result["total_elapsed_ms"] or 0), 1),
+        score=int(result["critique_score"] or 0),
+        model=",".join(result["llm"]["models_used"]) or "none",
+        steps=len(result["step_history"]), tool_calls=len(result["tool_calls"]),
+        guardrail_warnings=len(result["guardrail_warnings"]), actor_id=actor_id,
+        result_json=json.dumps(result, default=str),
+    )
+
+
+def _fail(session_id: str, objective: str, mode: str, reason: str, token_budget: int, models=None) -> Dict[str, Any]:
+    state = {"status": "failed", "step_history": [{"agent": "Engine", "action": "Pipeline refused", "latency_ms": 0,
+                                                    "details": reason, "status": "failed"}]}
+    res = _build_result(session_id, objective, mode, state, token_budget, 0.0, models or [], False)
+    res["error"] = reason
+    return res
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PRIMARY RUNNER FUNCTIONS
+# ══════════════════════════════════════════════════════════════════════════════
+
+def run_agentic_workflow(
+    objective: str,
+    agent_mode: str = "venture_architect",
+    parameters: Optional[Dict[str, Any]] = None,
+    token_budget: int = _TOKEN_BUDGET_DEFAULT,
+    actor: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """
+    Runs the Enterprise Agentic LangGraph pipeline.
+
+    High-stakes swarms stop at the HITL gate and return status "awaiting_approval";
+    call resume_agentic_workflow() to continue them. The paused state is checkpointed
+    to disk, so approval still works after a process restart.
+    """
+    actor = actor or {"id": "internal", "tier": "dev", "can_external": True}
+    session_id = f"sess_{uuid.uuid4().hex[:12]}"
+    swarm = get_swarm(agent_mode)
+    if swarm is None:
+        res = _fail(session_id, objective, agent_mode, f"Unknown agent_mode '{agent_mode}'", token_budget)
+        res["valid_modes"] = sorted(SWARM_REGISTRY)
+        return res
+
+    start_total = time.time()
+    ctx, token = infra.start_run(actor)
+    infra.audit("run_started", session_id, actor.get("id", ""), agent_mode, {"objective": objective[:300], "hitl": swarm["hitl"]})
+    try:
+        initial = _initial_state(session_id, objective, agent_mode, parameters or {}, token_budget)
+        graph, checkpointer = get_agent_graph()
+        state: Dict[str, Any] = dict(initial)
+        paused = False
+
+        if swarm["hitl"] and (graph is None or checkpointer is None or not _INTERRUPT_AVAILABLE):
+            res = _fail(session_id, objective, agent_mode,
+                        "High-stakes swarm needs LangGraph with a checkpointer for human approval; refusing to run without it.", token_budget)
+            _persist(res, actor.get("id", ""))
+            infra.audit("run_failed", session_id, actor.get("id", ""), agent_mode, {"error": res["error"]})
+            return res
+
+        if graph:
+            config = {"configurable": {"thread_id": session_id}}
+            try:
+                graph.invoke(initial, config=config)
+                if checkpointer is not None:
+                    snap = graph.get_state(config)
+                    state, paused = dict(snap.values), bool(snap.next)
+            except Exception as ge:
+                print(f"[agentic_engine] Graph execution failed ({ge})")
+                if swarm["hitl"]:
+                    res = _fail(session_id, objective, agent_mode, f"Graph execution failed: {ge}", token_budget, ctx["models"])
+                    _persist(res, actor.get("id", ""))
+                    infra.audit("run_failed", session_id, actor.get("id", ""), agent_mode, {"error": str(ge)[:300]})
+                    return res
+                state, paused = _sequential_fallback(initial), False
+        else:
+            state, paused = _sequential_fallback(initial), False
+
+        elapsed = round((time.time() - start_total) * 1000, 1)
+        result = _build_result(session_id, objective, agent_mode, state, token_budget, elapsed, list(ctx["models"]), paused)
+        _persist(result, actor.get("id", ""))
+        if paused:
+            infra.audit("hitl_pending", session_id, actor.get("id", ""), agent_mode, {"reason": result["hitl"]["reason"]})
+        else:
+            infra.audit("run_" + result["status"], session_id, actor.get("id", ""), agent_mode,
+                        {"score": result["critique_score"], "models": result["llm"]["models_used"], "elapsed_ms": elapsed})
+        return result
+    finally:
+        infra.end_run(token)
+
+
+def _sequential_fallback(initial: Dict[str, Any]) -> Dict[str, Any]:
+    """Only used for non-HITL swarms when LangGraph itself is unavailable."""
+    state = dict(initial)
+    for node_fn in [node_supervisor, node_researcher, node_specialist, node_critic, node_automation]:
+        try:
+            state.update(node_fn(state))
+            if state.get("status") == "budget_exceeded":
+                break
+        except Exception as nfe:
+            print(f"[agentic_engine] Sequential node error: {nfe}")
+    return state
+
+
+def resume_agentic_workflow(session_id: str, approved: bool, reviewer: str = "", notes: str = "",
+                            actor: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Applies a human decision to a session paused at the HITL gate and runs it to completion."""
+    actor = actor or {"id": "internal", "tier": "dev", "can_external": True}
+    sess = infra.get_session(session_id)
+    if not sess:
+        return {"success": False, "error": "session_not_found", "http_status": 404}
+    if sess["hitl_status"] != "pending" or not infra.claim_hitl(session_id):
+        return {"success": False, "error": "not_awaiting_approval", "http_status": 409,
+                "status": sess["status"], "hitl_status": sess["hitl_status"]}
+
+    graph, checkpointer = get_agent_graph()
+    if not graph or checkpointer is None:
+        infra.upsert_session(session_id, hitl_status="pending")
+        return {"success": False, "error": "engine_unavailable", "http_status": 503}
+
+    mode, objective = sess["mode"], sess["objective"]
+    prior = float(sess.get("latency_ms") or 0)
+    token_budget = int(sess["result"].get("token_budget", _TOKEN_BUDGET_DEFAULT))
+    config = {"configurable": {"thread_id": session_id}}
+    ctx, token = infra.start_run(actor)
+    t0 = time.time()
+    try:
+        infra.audit("hitl_decision", session_id, actor.get("id", ""), mode,
+                    {"approved": bool(approved), "reviewer": reviewer, "notes": notes[:500]})
+        graph.invoke(Command(resume={"approved": bool(approved), "reviewer": reviewer or actor.get("id", ""), "notes": notes}), config=config)
+        snap = graph.get_state(config)
+        state, paused = dict(snap.values), bool(snap.next)
+        models = sorted(set(sess["result"].get("llm", {}).get("models_used", [])) | set(ctx["models"]))
+        result = _build_result(session_id, objective, mode, state, token_budget, round((time.time() - t0) * 1000, 1), models, paused)
+        _persist(result, sess.get("actor_id", ""), prior_latency=prior)
+        infra.audit("run_" + result["status"], session_id, actor.get("id", ""), mode,
+                    {"score": result["critique_score"], "after_hitl": True})
+        return result
+    except Exception as e:
+        infra.upsert_session(session_id, hitl_status="pending")
+        infra.audit("resume_failed", session_id, actor.get("id", ""), mode, {"error": str(e)[:300]})
+        return {"success": False, "error": f"resume_failed: {e}", "http_status": 500}
+    finally:
+        infra.end_run(token)
 
 
 def get_graph_topology() -> Dict[str, Any]:
@@ -1236,24 +1357,33 @@ def get_graph_topology() -> Dict[str, Any]:
 
 
 def get_engine_status() -> Dict[str, Any]:
-    """Returns live status of all agentic engine components."""
+    """Returns live status of all agentic engine components (reports what is actually configured)."""
     model, model_id = get_chat_model(temperature=0.1)
+    get_agent_graph()
     return {
-        "engine_version": "3.0.0-enterprise",
+        "engine_version": "3.1.0-enterprise",
         "langgraph_available": _LANGGRAPH_AVAILABLE,
         "langgraph_version": _LANGGRAPH_VER,
         "langchain_available": _LANGCHAIN_AVAILABLE,
         "checkpointing_available": _CHECKPOINTER_AVAILABLE,
+        "checkpointer": _CHECKPOINTER_KIND,
+        "durable_state": _CHECKPOINTER_KIND == "sqlite",
+        "hitl_interrupt_available": _INTERRUPT_AVAILABLE,
         "active_model": model_id,
+        "llm_live": model is not None,
         "token_budget_default": _TOKEN_BUDGET_DEFAULT,
         "guardrails_active": True,
-        "hitl_gate_active": True,
+        "hitl_gate_active": _INTERRUPT_AVAILABLE and _CHECKPOINTER_KIND != "none",
+        "hitl_modes": hitl_modes(),
+        "auth_mode": infra.auth_mode(),
+        "tracing": _tracing_enabled(),
         "tools_registered": 10,
         "agent_nodes": ["supervisor", "hitl_gate", "researcher", "specialist", "critic", "automation"],
-        "domain_swarms": ["venture_architect", "security_analyst", "recruitment_screener", "academic_tutor", "clinical_auditor", "sales_automation"],
+        "domain_swarms": sorted(SWARM_REGISTRY),
         "status": "operational" if (_LANGGRAPH_AVAILABLE or _LANGCHAIN_AVAILABLE) else "degraded_mode",
         "last_checked": datetime.datetime.utcnow().isoformat() + "Z"
     }
+
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1404,30 +1534,8 @@ def run_code_interpreter(code_query: str) -> Dict[str, Any]:
 
 
 def run_pipeline_monitor() -> Dict[str, Any]:
-    """Returns live telemetry of all running and completed agent pipelines."""
-    return {
-        "active_sessions": 0,
-        "completed_today": 12,
-        "avg_quality_score": 87.4,
-        "avg_latency_ms": 4820,
-        "tool_call_volume_today": 48,
-        "token_budget_consumed_today": 38400,
-        "guardrail_blocks_today": 2,
-        "hitl_triggers_today": 3,
-        "model_routing": {
-            "groq_calls": 28,
-            "vertex_calls": 12,
-            "gemini_calls": 8,
-            "mistral_fallback_calls": 0
-        },
-        "venture_swarm_breakdown": {
-            "venture_architect": 5,
-            "security_analyst": 3,
-            "recruitment_screener": 2,
-            "academic_tutor": 1,
-            "clinical_auditor": 1,
-            "sales_automation": 0
-        },
-        "status": "healthy",
-        "last_refreshed": datetime.datetime.utcnow().isoformat() + "Z"
-    }
+    """Telemetry computed from the persistent session store (measured, not synthetic)."""
+    stats = infra.monitor_stats()
+    stats["status"] = "healthy" if _LANGGRAPH_AVAILABLE else "degraded"
+    stats["tracing"] = _tracing_enabled()
+    return stats

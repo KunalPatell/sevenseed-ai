@@ -1216,14 +1216,16 @@ def owl_dashboard():
 # ══════════════════════════════════════════════════════════════════════════════
 try:
     from agentic_engine import (
-        run_agentic_workflow, get_graph_topology, get_engine_status,
+        run_agentic_workflow, resume_agentic_workflow, get_graph_topology, get_engine_status,
         run_agent_debate, run_document_intelligence, run_code_interpreter,
         run_pipeline_monitor, run_single_tool
     )
+    import agent_infra as infra
+    from agent_swarms import SWARM_REGISTRY, get_swarm, hitl_modes
     _AGENTIC_OK = True
 except Exception as _e:
     print(f"[features] Warning importing agentic_engine: {_e}")
-    run_agentic_workflow = run_agent_debate = run_document_intelligence = None
+    run_agentic_workflow = resume_agentic_workflow = run_agent_debate = run_document_intelligence = None
     run_code_interpreter = get_graph_topology = get_engine_status = run_pipeline_monitor = run_single_tool = None
     _AGENTIC_OK = False
 
@@ -1272,8 +1274,19 @@ class AgenticToolExecuteReq(BaseModel):
 
 # ── Core Orchestration Endpoints ────────────────────────────────────────────────
 
+def _authenticate_actor(request: Request, x_api_key: Optional[str] = None):
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    actor = infra.authenticate(x_api_key, client_ip)
+    retry_after = infra.rate_limit(actor)
+    if retry_after is not None:
+        raise HTTPException(status_code=429, detail=f"Rate limit exceeded. Retry after {retry_after}s", headers={"Retry-After": str(retry_after)})
+    if actor["tier"] == "invalid":
+        raise HTTPException(status_code=401, detail="Invalid API key")
+    return actor
+
+
 @router.post("/api/agent/graph/orchestrate")
-def orchestrate_agent_graph(req: AgenticOrchestrateReq):
+def orchestrate_agent_graph(req: AgenticOrchestrateReq, request: Request, x_api_key: Optional[str] = Header(None, alias="X-API-Key")):
     """
     Executes the full Enterprise LangGraph multi-agent pipeline.
     Pipeline: Supervisor → [HITL Gate?] → Researcher (10 tools) → Specialist → Critic (reflection) → Automation Dispatcher
@@ -1282,12 +1295,14 @@ def orchestrate_agent_graph(req: AgenticOrchestrateReq):
         raise HTTPException(status_code=503, detail="Agentic AI engine not available")
     if not req.objective.strip():
         raise HTTPException(status_code=400, detail="Objective cannot be empty")
+    actor = _authenticate_actor(request, x_api_key)
     try:
         return run_agentic_workflow(
             objective=req.objective,
             agent_mode=req.agent_mode,
             parameters=req.parameters,
-            token_budget=req.token_budget
+            token_budget=req.token_budget,
+            actor=actor
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -1463,18 +1478,55 @@ def trigger_agent_automation(req: AgenticAutomationReq):
 
 
 @router.post("/api/agent/hitl/approve")
-def agent_hitl_approve(req: AgenticHitlApprovalReq):
+@router.post("/api/agent/graph/approve")
+def agent_hitl_approve(req: AgenticHitlApprovalReq, request: Request, x_api_key: Optional[str] = Header(None, alias="X-API-Key")):
     """Human-in-the-Loop approval endpoint — unblocks a paused high-stakes agent pipeline."""
-    return {
-        "session_id": req.session_id,
-        "approved": req.approved,
-        "reviewer": req.reviewer,
-        "notes": req.notes,
-        "action": "PIPELINE_RESUMED" if req.approved else "PIPELINE_ABORTED",
-        "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
-        "audit_logged": True,
-        "compliance": "DPDP_HUMAN_REVIEW_LOGGED"
-    }
+    if not resume_agentic_workflow:
+        raise HTTPException(status_code=503, detail="Agentic engine not available")
+    actor = _authenticate_actor(request, x_api_key)
+    if not actor.get("can_approve", True):
+        raise HTTPException(status_code=403, detail="Your caller tier is not authorized to approve HITL operations")
+    res = resume_agentic_workflow(
+        session_id=req.session_id,
+        approved=req.approved,
+        reviewer=req.reviewer or actor.get("id", ""),
+        notes=req.notes,
+        actor=actor
+    )
+    if not res.get("success", False) and res.get("http_status"):
+        raise HTTPException(status_code=res["http_status"], detail=res.get("error", "Resume failed"))
+    return res
+
+
+@router.get("/api/agent/sessions")
+def list_agent_sessions(limit: int = 50, request: Request = None, x_api_key: Optional[str] = Header(None, alias="X-API-Key")):
+    """Lists persistent agent execution sessions from the SQLite state store."""
+    if request:
+        _authenticate_actor(request, x_api_key)
+    return {"sessions": infra.list_sessions(limit=limit)}
+
+
+@router.get("/api/agent/sessions/{session_id}")
+def get_agent_session_detail(session_id: str, request: Request = None, x_api_key: Optional[str] = Header(None, alias="X-API-Key")):
+    """Returns full details and final deliverable for a specific session."""
+    if request:
+        _authenticate_actor(request, x_api_key)
+    sess = infra.get_session(session_id)
+    if not sess:
+        raise HTTPException(status_code=404, detail="Session not found")
+    return sess
+
+
+@router.get("/api/agent/audit")
+def get_agent_audit_log(limit: int = 100, session_id: str = "", request: Request = None, x_api_key: Optional[str] = Header(None, alias="X-API-Key")):
+    """Returns hash-chained audit log entries and verification status."""
+    if request:
+        actor = _authenticate_actor(request, x_api_key)
+        if not actor.get("is_admin", False) and actor.get("tier") not in ("dev", "admin"):
+            raise HTTPException(status_code=403, detail="Audit log inspection requires admin privileges")
+    entries = infra.read_audit(limit=limit, session_id=session_id)
+    chain = infra.verify_audit_chain()
+    return {"audit_log": entries, "chain_verification": chain}
 
 
 # ── Advanced Agentic Features ───────────────────────────────────────────────────

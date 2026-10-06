@@ -61,7 +61,7 @@
   <div class="nav-right">
     <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
     <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
-    <a class="btn btn-ghost" href="/comonk/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
+    <a class="btn btn-ghost" href="/comonk-ai/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
     <a class="btn btn-primary" href="https://comonk-ai.onrender.com" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch</a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
   </div>
@@ -353,11 +353,19 @@ async function runComonkSwarm() {
       body: JSON.stringify({ objective: p, agent_mode: 'recruitment_screener', token_budget: 8000 })
     });
     const d = await res.json();
+    if (d.status === 'paused' || d.hitl_pending_decision) {
+      box.innerHTML += `<div style="color:#f43f5e;font-weight:700;margin-top:6px;">⏸ LangGraph Checkpoint Interrupt at [hitl_gate]</div>`;
+      box.innerHTML += `<div style="color:#f59e0b;font-size:11px;margin-top:2px;">Proposed Action: ${d.proposed_action || 'Review and authorize tool dispatch'}</div>`;
+      box.innerHTML += `<div style="margin-top:8px;" id="vh_${d.session_id}"><button style="background:#10b981;color:#fff;border:none;padding:5px 12px;font-size:11.5px;border-radius:6px;cursor:pointer;font-weight:700;margin-right:8px;" onclick="resumeVentureSwarm('${d.session_id}', this, '${box.id}')"><i class="fas fa-check"></i> Authorize & Resume</button><a style="font-size:11.5px;color:#a5b4fc;text-decoration:none;" href="/agentic-ai-studio.html" target="_blank">Full Command Center →</a></div>`;
+      box.scrollTop = box.scrollHeight;
+      return;
+    }
     (d.step_history || []).forEach(s => {
       box.innerHTML += `<div style="color:#38bdf8;margin-top:4px;">→ [${s.agent}] ${s.action} (${s.latency_ms}ms)</div>`;
     });
     box.innerHTML += `<div style="color:#10b981;font-weight:700;margin-top:6px;">✓ Screen Complete! Candidate Fit Score: ${d.critique_score}/100</div>`;
   } catch(e) {
+    box.innerHTML += `<div style="color:#f59e0b;font-size:11px;font-weight:700;margin-top:6px;">[Offline Simulation Mode — Backend Offline]</div>`;
     box.innerHTML += `<div style="color:#10b981;margin-top:4px;">→ [Vector RAG] Matched 92% cosine similarity on PyTorch & LangGraph.</div>`;
     box.innerHTML += `<div style="color:#10b981;margin-top:4px;">→ [Critic Rubric] Architecture depth approved (Grade: Strong Hire).</div>`;
     box.innerHTML += `<div style="color:#10b981;font-weight:700;margin-top:6px;">✓ Simulation complete: Recommended for Technical Interview Arena.</div>`;
@@ -367,6 +375,29 @@ async function runComonkSwarm() {
     box.scrollTop = box.scrollHeight;
   }
 }
+
+async function resumeVentureSwarm(sessionId, btn, boxId) {
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Resuming...';
+  const box = document.getElementById(boxId);
+  try {
+    const res = await fetch('/api/agent/hitl/approve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId, approved: true, reviewer: 'VentureOperator', notes: 'Authorized via domain workbench' })
+    });
+    const d = await res.json();
+    (d.step_history || []).forEach(s => {
+      box.innerHTML += `<div style="color:#38bdf8;margin-top:4px;">→ [${s.agent}] ${s.action} (${s.latency_ms}ms)</div>`;
+    });
+    box.innerHTML += `<div style="color:#10b981;font-weight:700;margin-top:6px;">✓ LangGraph Resumed & Completed! Quality Score: ${d.critique_score}/100</div>`;
+  } catch(e) {
+    box.innerHTML += `<div style="color:#f59e0b;font-size:11px;margin-top:4px;">[Offline Simulation Mode] HITL checkpoint cleared in simulation preview.</div>`;
+  } finally {
+    box.scrollTop = box.scrollHeight;
+  }
+}
+
 </script>
 
 <footer class="foot">

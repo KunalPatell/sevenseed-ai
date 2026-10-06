@@ -12,8 +12,11 @@
 __pycache__/
 *.pyc
 *.sqlite3
+*.db
 db.sqlite3
 db.sqlite3.bak
+apps/sevenseed/backend/data/
+scratch/
 *.pt
 *.onnx
 

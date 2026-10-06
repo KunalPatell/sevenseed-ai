@@ -241,11 +241,19 @@ async function runTrustSwarm() {
       body: JSON.stringify({ objective: p, agent_mode: 'csr_allocator', token_budget: 8000 })
     });
     const d = await res.json();
+    if (d.status === 'paused' || d.hitl_pending_decision) {
+      box.innerHTML += `<div style="color:#f43f5e;font-weight:700;margin-top:6px;">⏸ LangGraph Checkpoint Interrupt at [hitl_gate]</div>`;
+      box.innerHTML += `<div style="color:#f59e0b;font-size:11px;margin-top:2px;">Proposed Action: ${d.proposed_action || 'Review and authorize tool dispatch'}</div>`;
+      box.innerHTML += `<div style="margin-top:8px;" id="vh_${d.session_id}"><button style="background:#10b981;color:#fff;border:none;padding:5px 12px;font-size:11.5px;border-radius:6px;cursor:pointer;font-weight:700;margin-right:8px;" onclick="resumeVentureSwarm('${d.session_id}', this, '${box.id}')"><i class="fas fa-check"></i> Authorize & Resume</button><a style="font-size:11.5px;color:#a5b4fc;text-decoration:none;" href="/agentic-ai-studio.html" target="_blank">Full Command Center →</a></div>`;
+      box.scrollTop = box.scrollHeight;
+      return;
+    }
     (d.step_history || []).forEach(s => {
       box.innerHTML += `<div style="color:#38bdf8;margin-top:4px;">→ [${s.agent}] ${s.action} (${s.latency_ms}ms)</div>`;
     });
     box.innerHTML += `<div style="color:#10b981;font-weight:700;margin-top:6px;">✓ Allocation Approved! Compliance Score: ${d.critique_score}/100</div>`;
   } catch(e) {
+    box.innerHTML += `<div style="color:#f59e0b;font-size:11px;font-weight:700;margin-top:6px;">[Offline Simulation Mode — Backend Offline]</div>`;
     box.innerHTML += `<div style="color:#10b981;margin-top:4px;">→ [Compliance Node] MCA Schedule VII Category (i) 'Eradicating hunger & healthcare' verified.</div>`;
     box.innerHTML += `<div style="color:#10b981;margin-top:4px;">→ [Allocation Node] Dispatched 5 mobile clinics across tribal districts (est. 14,200 beneficiaries).</div>`;
     box.innerHTML += `<div style="color:#10b981;font-weight:700;margin-top:6px;">✓ Simulation complete: 80G Form 10BE certificate generated with cryptographic hash.</div>`;
@@ -255,6 +263,29 @@ async function runTrustSwarm() {
     box.scrollTop = box.scrollHeight;
   }
 }
+
+async function resumeVentureSwarm(sessionId, btn, boxId) {
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Resuming...';
+  const box = document.getElementById(boxId);
+  try {
+    const res = await fetch('/api/agent/hitl/approve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId, approved: true, reviewer: 'VentureOperator', notes: 'Authorized via domain workbench' })
+    });
+    const d = await res.json();
+    (d.step_history || []).forEach(s => {
+      box.innerHTML += `<div style="color:#38bdf8;margin-top:4px;">→ [${s.agent}] ${s.action} (${s.latency_ms}ms)</div>`;
+    });
+    box.innerHTML += `<div style="color:#10b981;font-weight:700;margin-top:6px;">✓ LangGraph Resumed & Completed! Quality Score: ${d.critique_score}/100</div>`;
+  } catch(e) {
+    box.innerHTML += `<div style="color:#f59e0b;font-size:11px;margin-top:4px;">[Offline Simulation Mode] HITL checkpoint cleared in simulation preview.</div>`;
+  } finally {
+    box.scrollTop = box.scrollHeight;
+  }
+}
+
 </script>
 
 <section class="section sandbox-sec" id="sandbox">
