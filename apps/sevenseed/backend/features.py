@@ -1645,6 +1645,11 @@ try:
 except ImportError:
     _trust_engine = None
 
+try:
+    import dpdp_engine as _dpdp_engine
+except ImportError:
+    _dpdp_engine = None
+
 
 class BreakdownDetectReq(BaseModel):
     image_base64: Optional[str] = None
@@ -1867,6 +1872,49 @@ def trust_ledger_block(req: LedgerBlockReq):
             prev_block_hash=req.prev_block_hash
         )
     return {"status": "unavailable", "message": "Trust engine offline"}
+
+
+# ── Rakshak AI: DPDP Act 2023 Statutory Compliance & PII Prompt Shield ─────────────
+
+class DpdpAuditReq(BaseModel):
+    notice_clear: bool = True
+    consent_granular: bool = True
+    consent_withdrawal: bool = True
+    dpo_appointed: bool = False
+    dsr_portal: bool = False
+    security_safeguards: bool = True
+    breach_runbook: bool = False
+    children_safeguards: bool = False
+    data_retention_policy: bool = False
+    cross_border_compliance: bool = True
+    user_volume: str = "growth"
+
+
+@router.post("/api/rakshak/dpdp-audit")
+def rakshak_dpdp_audit(req: DpdpAuditReq):
+    """
+    Evaluates enterprise compliance against India's Digital Personal Data Protection Act 2023
+    and DPDP Rules 2025. Returns statutory pillar score, critical compliance gaps,
+    penalty exposure risk (up to ₹250 Crores), and an auditable certificate ID.
+    """
+    if _dpdp_engine:
+        return _dpdp_engine.audit_dpdp_compliance(req.dict())
+    return {"status": "unavailable", "message": "DPDP engine offline"}
+
+
+class PiiRedactReq(BaseModel):
+    raw_prompt: str = ""
+
+
+@router.post("/api/rakshak/pii-redact")
+def rakshak_pii_redact(req: PiiRedactReq):
+    """
+    Redacts sensitive Indian identifiers (Aadhaar, PAN, phone numbers, email addresses)
+    before sending prompts to external LLMs, ensuring zero raw PII leakage.
+    """
+    if _dpdp_engine:
+        return _dpdp_engine.sanitize_pii_for_llm_prompt(req.raw_prompt)
+    return {"status": "unavailable", "message": "DPDP engine offline"}
 
 
 
