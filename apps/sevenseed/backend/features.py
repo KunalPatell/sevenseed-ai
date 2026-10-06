@@ -1218,13 +1218,13 @@ try:
     from agentic_engine import (
         run_agentic_workflow, get_graph_topology, get_engine_status,
         run_agent_debate, run_document_intelligence, run_code_interpreter,
-        run_pipeline_monitor
+        run_pipeline_monitor, run_single_tool
     )
     _AGENTIC_OK = True
 except Exception as _e:
     print(f"[features] Warning importing agentic_engine: {_e}")
     run_agentic_workflow = run_agent_debate = run_document_intelligence = None
-    run_code_interpreter = get_graph_topology = get_engine_status = run_pipeline_monitor = None
+    run_code_interpreter = get_graph_topology = get_engine_status = run_pipeline_monitor = run_single_tool = None
     _AGENTIC_OK = False
 
 
@@ -1263,6 +1263,11 @@ class AgenticHitlApprovalReq(BaseModel):
     approved: bool
     reviewer: str = "system"
     notes: str = ""
+
+
+class AgenticToolExecuteReq(BaseModel):
+    tool_id: str
+    parameters: dict = {}
 
 
 # ── Core Orchestration Endpoints ────────────────────────────────────────────────
@@ -1533,4 +1538,18 @@ def agent_guardrails_status():
         "compliance_frameworks": ["DPDP Act 2023", "ISO 27001", "RBI Digital Lending Guidelines"],
         "last_policy_update": "2026-10-01T00:00:00Z"
     }
+
+
+@router.post("/api/agent/tool/execute")
+def agent_tool_execute(req: AgenticToolExecuteReq):
+    """
+    Executes a specific enterprise LangChain tool with arguments and returns latency telemetry.
+    """
+    if not run_single_tool:
+        raise HTTPException(status_code=503, detail="Agentic engine not available")
+    try:
+        return run_single_tool(tool_id=req.tool_id, params=req.parameters)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 

@@ -506,6 +506,66 @@ def tool_compliance_checker(document: str, framework: str = "DPDP") -> Dict[str,
     }
 
 
+def run_single_tool(tool_id: str, params: dict = None) -> Dict[str, Any]:
+    """Executes an individual LangChain tool with input parameters and performance tracing."""
+    params = params or {}
+    t0 = time.time()
+    result = {}
+
+    tid = tool_id.lower().replace("tool", "").replace("_", "")
+    if "ventureintel" in tid or "venture" in tid:
+        result = tool_venture_intel(params.get("query", "B2B AI logistics"))
+    elif "runway" in tid or "financial" in tid:
+        result = tool_financial_runway(
+            params.get("monthly_burn", 300000),
+            params.get("cash_balance", 2500000),
+            params.get("target_runway_mo", 18)
+        )
+    elif "cyber" in tid or "recon" in tid:
+        result = tool_cybersecurity_recon(
+            params.get("target_domain", "portal.sevenseed.in"),
+            params.get("scan_type", "surface")
+        )
+    elif "web" in tid or "intel" in tid:
+        result = tool_web_intel(params.get("topic", "Agentic AI LangGraph 2026"))
+    elif "automation" in tid or "dispatch" in tid:
+        result = tool_automation_dispatcher(
+            params.get("workflow_name", "lead_enrichment"),
+            params.get("payload", {"venture": "sevenseed"})
+        )
+    elif "code" in tid or "executor" in tid:
+        result = tool_code_executor(params.get("code", "def fib(n): return n if n < 2 else fib(n-1) + fib(n-2)"))
+    elif "sql" in tid or "query" in tid:
+        result = tool_sql_query_simulator(params.get("query", "SELECT * FROM ventures"), params.get("table", "ventures"))
+    elif "vector" in tid or "rag" in tid:
+        result = tool_vector_rag(
+            params.get("document_chunk", "Sevenseed is an enterprise venture studio powering 9 AI ventures on a shared LangGraph backbone."),
+            params.get("query", "LangGraph backbone")
+        )
+    elif "notif" in tid or "sender" in tid:
+        result = tool_notification_sender(
+            params.get("channel", "slack"),
+            params.get("recipient", "#enterprise-alerts"),
+            params.get("message", "Autonomous agent task completed successfully.")
+        )
+    elif "compliance" in tid or "audit" in tid:
+        result = tool_compliance_audit(
+            params.get("domain", "cybersecurity"),
+            params.get("framework", "DPDP Act 2023")
+        )
+    else:
+        result = {"error": f"Unknown tool ID: {tool_id}", "status": "failed"}
+
+    latency_ms = round((time.time() - t0) * 1000, 1)
+    return {
+        "tool_id": tool_id,
+        "latency_ms": latency_ms,
+        "output": result,
+        "status": "success" if "error" not in result else "failed",
+        "timestamp": datetime.datetime.utcnow().isoformat() + "Z"
+    }
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # LANGGRAPH STATE SCHEMA
 # ══════════════════════════════════════════════════════════════════════════════
