@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Online Doctor Consultation & Triage Radar — Decode Pharmacy</title>
+  <meta name="description" content="Instant tele-consultation booking with top doctors, specialist symptom triage, and zero-markup clinical guidance. 100% Free Public Health Radar.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .doc-container { max-width: 1200px; margin: 0 auto; padding: 90px 24px 70px; }
+    .doc-header { text-align: center; margin-bottom: 32px; }
+    .doc-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.14); border: 1px solid rgba(16,185,129,0.35); color: #34d399; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+    .doc-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.15; margin-bottom: 12px; color: var(--text, #fff); }
+    .doc-sub { font-size: 16px; color: var(--text-2, #94a3b8); max-width: 700px; margin: 0 auto 24px; line-height: 1.6; }
+
+    /* Filter Bar */
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 32px; }
+    .spec-pill { padding: 8px 16px; border-radius: 24px; background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.1)); color: var(--text-2, #94a3b8); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .spec-pill:hover, .spec-pill.active { background: rgba(16,185,129,0.15); border-color: #10b981; color: #34d399; }
+
+    /* Doctor Grid */
+    .doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .doc-card { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s; }
+    .doc-card:hover { transform: translateY(-3px); border-color: rgba(16,185,129,0.4); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+    .doc-top { display: flex; gap: 16px; margin-bottom: 16px; }
+    .doc-avatar { width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg, #065f46, #047857); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #a7f3d0; font-weight: 800; flex-shrink: 0; }
+    .doc-name { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .doc-spec { font-size: 13px; color: #34d399; font-weight: 600; }
+    .doc-meta { font-size: 12px; color: var(--text-2, #94a3b8); margin-top: 4px; }
+    .doc-stats { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: var(--bg-2, #141c30); border-radius: 10px; margin-bottom: 16px; font-size: 13px; }
+    .doc-slots { display: flex; flex-wrap: gap; gap: 6px; margin-bottom: 16px; }
+    .slot-btn { padding: 6px 12px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; font-size: 12px; font-family: 'JetBrains Mono', monospace; cursor: pointer; transition: all 0.15s; }
+    .slot-btn:hover { background: rgba(16,185,129,0.2); border-color: #10b981; color: #34d399; }
+    .slot-btn.selected { background: #10b981; color: #022c22; font-weight: 700; border-color: #10b981; }
+
+    /* Interactive Triage Section */
+    .triage-card { background: linear-gradient(135deg, rgba(6,95,70,0.2), rgba(15,23,42,0.6)); border: 1px solid rgba(16,185,129,0.3); border-radius: 18px; padding: 28px; margin-bottom: 40px; }
+    .triage-title { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+    .triage-input-box { display: flex; gap: 12px; margin-top: 16px; }
+    .triage-input { flex: 1; padding: 12px 16px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 14px; outline: none; }
+    .triage-input:focus { border-color: #10b981; }
+    .triage-res { margin-top: 16px; padding: 14px 18px; border-radius: 10px; background: rgba(0,0,0,0.5); border-left: 4px solid #10b981; font-size: 13.5px; color: #e2e8f0; display: none; }
+
+    /* Booking Confirmation Modal */
+    .modal-box { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 99999; padding: 20px; }
+    .modal-box.open { display: flex; }
+    .modal-inner { background: #0c1222; border: 1px solid rgba(16,185,129,0.4); border-radius: 20px; max-width: 480px; width: 100%; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+
+    /* My Appointments Strip */
+    .appt-list { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 16px; padding: 24px; margin-bottom: 40px; }
+    .appt-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .appt-item:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo" style="text-decoration:none; color:#fff; font-weight:800; display:flex; align-items:center; gap:8px;">
+        <span style="color:#10b981;">🌿</span> Decode Pharmacy
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="generic-finder.html" class="nav-link">Generic Radar</a>
+        <a href="doctor-booking.html" class="nav-link active" style="color:#34d399; font-weight:700;">Doctor Booking</a>
+        <a href="prescription-ocr.html" class="nav-link">Prescription OCR</a>
+        <a href="interaction-checker.html" class="nav-link">Interaction Matrix</a>
+        <a href="hospital-finder.html" class="nav-link">Hospital Beds</a>
+        <a href="health-wiki.html" class="nav-link">Health Wiki</a>
+        <a href="/byok.html" class="nav-link" style="color:#38bdf8;">BYOK Vault</a>
+        <a href="/" class="nav-link">Hub</a>
+      </div>
+      <div class="nav-right">
+        <button id="themeToggle" class="theme-btn" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="doc-container">
+    <div class="doc-header">
+      <div class="doc-badge"><i class="fas fa-user-doctor"></i> Practo & 1mg Verified Benchmark</div>
+      <h1 class="doc-title">Online Doctor Tele-Consultation & Specialist Triage</h1>
+      <p class="doc-sub">Zero-markup tele-consultation platform connecting patients directly with certified clinical specialists. Instant video call scheduling with zero booking commissions.</p>
+    </div>
+
+    <!-- Interactive AI Symptom Triage -->
+    <div class="triage-card">
+      <div class="triage-title"><i class="fas fa-brain" style="color:#34d399;"></i> AI Specialist Recommender & Symptom Triage</div>
+      <p style="font-size:13.5px; color:#cbd5e1; margin:0;">Describe your symptoms (e.g. "persistent dry cough with fever for 3 days", "sharp lower back pain when bending") to determine the exact clinical specialist to consult.</p>
+      <div class="triage-input-box">
+        <input type="text" id="triageInput" class="triage-input" placeholder="Type your symptoms here...">
+        <button class="btn btn-primary" onclick="runTriage()"><i class="fas fa-stethoscope"></i> Triage Symptoms</button>
+      </div>
+      <div id="triageRes" class="triage-res"></div>
+    </div>
+
+    <!-- Specialty Filter Bar -->
+    <div class="filter-bar">
+      <button class="spec-pill active" onclick="filterDocs('All', this)">All Specialists</button>
+      <button class="spec-pill" onclick="filterDocs('General Physician', this)">General Physician</button>
+      <button class="spec-pill" onclick="filterDocs('Cardiologist', this)">Cardiologist</button>
+      <button class="spec-pill" onclick="filterDocs('Dermatologist', this)">Dermatologist</button>
+      <button class="spec-pill" onclick="filterDocs('Pediatrician', this)">Pediatrician</button>
+      <button class="spec-pill" onclick="filterDocs('Orthopedic', this)">Orthopedic</button>
+      <button class="spec-pill" onclick="filterDocs('Neurologist', this)">Neurologist</button>
+    </div>
+
+    <!-- Doctor Grid -->
+    <div class="doc-grid" id="docGrid">
+      <!-- Injected by JavaScript -->
+    </div>
+
+    <!-- My Appointments Section -->
+    <div class="appt-list">
+      <h3 style="font-size:18px; font-weight:800; color:#fff; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-calendar-check" style="color:#10b981;"></i> My Confirmed Consultations
+      </h3>
+      <div id="apptItems">
+        <p style="font-size:13px; color:#94a3b8; font-style:italic;">No active video appointments booked. Select a doctor above to schedule your slot.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Video Call Simulation Modal -->
+  <div id="callModal" class="modal-box">
+    <div class="modal-inner">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h4 style="margin:0; font-size:18px; font-weight:800; color:#fff;" id="modalDocTitle">Confirm Consultation</h4>
+        <button onclick="closeModal()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;">&times;</button>
+      </div>
+      <div id="modalBody" style="font-size:13.5px; color:#cbd5e1; line-height:1.6; margin-bottom:20px;">
+        <!-- Injected -->
+      </div>
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button class="btn btn-secondary sm" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary sm" id="modalConfirmBtn"><i class="fas fa-video"></i> Confirm & Launch Room</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer" style="padding:40px 24px; text-align:center; border-top:1px solid rgba(255,255,255,0.08); font-size:13px; color:#94a3b8;">
+    <p>Decode Pharmacy · 100% Free Public Health Initiative · Zero Commission Telemedicine</p>
+  </footer>
+
+  <script>
+    var DOCTORS = [
+      { id: "d1", name: "Dr. Anjali Mehta", specialty: "General Physician", rating: 4.9, exp: "14 yrs", fee: 299, degree: "MBBS, MD (Internal Med)", slots: ["10:30 AM", "01:15 PM", "04:30 PM", "06:00 PM"] },
+      { id: "d2", name: "Dr. Vikram Sethi", specialty: "Cardiologist", rating: 4.8, exp: "18 yrs", fee: 599, degree: "MBBS, DM (Cardiology), AIIMS", slots: ["11:00 AM", "02:30 PM", "05:15 PM"] },
+      { id: "d3", name: "Dr. Rohan Kapadia", specialty: "Dermatologist", rating: 4.7, exp: "9 yrs", fee: 399, degree: "MBBS, DDVL", slots: ["11:30 AM", "03:45 PM", "07:00 PM"] },
+      { id: "d4", name: "Dr. Sneha Iyer", specialty: "Pediatrician", rating: 4.9, exp: "16 yrs", fee: 349, degree: "MBBS, DCH, DNB (Pediatrics)", slots: ["09:00 AM", "12:30 PM", "05:00 PM"] },
+      { id: "d5", name: "Dr. Rajeshwar Rao", specialty: "Orthopedic", rating: 4.8, exp: "21 yrs", fee: 499, degree: "MS (Ortho), MCh", slots: ["10:00 AM", "02:00 PM", "04:45 PM"] },
+      { id: "d6", name: "Dr. Priya Nair", specialty: "Neurologist", rating: 4.9, exp: "15 yrs", fee: 699, degree: "MBBS, DM (Neurology)", slots: ["12:00 PM", "04:00 PM", "06:30 PM"] }
+    ];
+
+    var state = {
+      activeFilter: 'All',
+      selectedDoc: null,
+      selectedSlot: null,
+      appts: []
+    };
+
+    try {
+      var saved = localStorage.getItem('ph_doctor_appointments');
+      if (saved) state.appts = JSON.parse(saved);
+    } catch(e){}
+
+    function renderDocs() {
+      var grid = document.getElementById('docGrid');
+      grid.innerHTML = '';
+      var list = DOCTORS.filter(function(d){
+        return state.activeFilter === 'All' || d.specialty === state.activeFilter;
+      });
+
+      list.forEach(function(d){
+        var card = document.createElement('div');
+        card.className = 'doc-card';
+        var slotsHtml = d.slots.map(function(s){
+          return '<button class="slot-btn" onclick="openBooking(\'' + d.id + '\', \'' + s + '\')"><i class="fas fa-clock"></i> ' + s + '</button>';
+        }).join('');
+
+        card.innerHTML = 
+          '<div>' +
+            '<div class="doc-top">' +
+              '<div class="doc-avatar">' + d.name.split(' ')[1][0] + '</div>' +
+              '<div>' +
+                '<div class="doc-name">' + d.name + '</div>' +
+                '<div class="doc-spec">' + d.specialty + ' · ' + d.degree + '</div>' +
+                '<div class="doc-meta"><i class="fas fa-award" style="color:#10b981;"></i> ' + d.exp + ' Experience</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="doc-stats">' +
+              '<span><i class="fas fa-star" style="color:#fbbf24;"></i> <strong>' + d.rating + '</strong> / 5.0</span>' +
+              '<span style="font-family:\'JetBrains Mono\'; color:#34d399; font-weight:700;">₹' + d.fee + ' <span style="font-size:11px; color:#94a3b8; font-weight:normal;">/ consult</span></span>' +
+            '</div>' +
+            '<div style="font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:8px;"><i class="fas fa-video" style="color:#38bdf8;"></i> Next Available Video Slots:</div>' +
+            '<div class="doc-slots">' + slotsHtml + '</div>' +
+          '</div>' +
+          '<button class="btn btn-secondary sm" style="width:100%; margin-top:12px;" onclick="openBooking(\'' + d.id + '\', \'' + d.slots[0] + '\')"><i class="fas fa-calendar-plus"></i> Instant Book Video Call</button>';
+        grid.appendChild(card);
+      });
+    }
+
+    function filterDocs(spec, btn) {
+      state.activeFilter = spec;
+      document.querySelectorAll('.spec-pill').forEach(function(b){ b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+      renderDocs();
+    }
+
+    function openBooking(docId, slot) {
+      var d = DOCTORS.find(function(it){ return it.id === docId; });
+      if (!d) return;
+      state.selectedDoc = d;
+      state.selectedSlot = slot;
+
+      document.getElementById('modalDocTitle').innerText = 'Book Consultation with ' + d.name;
+      document.getElementById('modalBody').innerHTML = 
+        '<div style="background:#141c30; padding:14px; border-radius:10px; margin-bottom:14px;">' +
+          '<div><strong>Specialty:</strong> ' + d.specialty + ' (' + d.degree + ')</div>' +
+          '<div><strong>Slot Time:</strong> Today at ' + slot + ' (15 min video session)</div>' +
+          '<div><strong>Consultation Fee:</strong> <span style="color:#34d399; font-weight:bold;">₹' + d.fee + ' (100% Free under Health Mission)</span></div>' +
+        '</div>' +
+        '<p style="font-size:12.5px; color:#94a3b8;">You will receive an end-to-end encrypted WebRTC tele-health video link with digital prescription generation.</p>';
+
+      document.getElementById('modalConfirmBtn').onclick = confirmBooking;
+      document.getElementById('callModal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('callModal').classList.remove('open');
+    }
+
+    function confirmBooking() {
+      if (!state.selectedDoc || !state.selectedSlot) return;
+      var newAppt = {
+        id: 'APT-' + Math.floor(100000 + Math.random() * 900000),
+        docName: state.selectedDoc.name,
+        specialty: state.selectedDoc.specialty,
+        slot: state.selectedSlot,
+        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+        link: 'https://meet.jit.si/sevenseed-health-' + Math.floor(1000 + Math.random() * 9000)
+      };
+      state.appts.unshift(newAppt);
+      try {
+        localStorage.setItem('ph_doctor_appointments', JSON.stringify(state.appts));
+      } catch(e){}
+      closeModal();
+      renderAppts();
+      alert('Consultation Confirmed! Appointment ID: ' + newAppt.id + ' at ' + newAppt.slot + '. Room link ready.');
+    }
+
+    function renderAppts() {
+      var wrap = document.getElementById('apptItems');
+      if (!state.appts.length) {
+        wrap.innerHTML = '<p style="font-size:13px; color:#94a3b8; font-style:italic;">No active video appointments booked. Select a doctor above to schedule your slot.</p>';
+        return;
+      }
+      wrap.innerHTML = '';
+      state.appts.forEach(function(a, idx){
+        var row = document.createElement('div');
+        row.className = 'appt-item';
+        row.innerHTML = 
+          '<div>' +
+            '<div style="font-size:15px; font-weight:700; color:#fff;">' + a.docName + ' · <span style="color:#34d399; font-size:13px;">' + a.specialty + '</span></div>' +
+            '<div style="font-size:12px; color:#94a3b8; margin-top:2px;"><i class="fas fa-clock"></i> ' + a.date + ' at ' + a.slot + ' · ID: <span style="font-family:\'JetBrains Mono\'; color:#38bdf8;">' + a.id + '</span></div>' +
+          '</div>' +
+          '<div style="display:flex; gap:8px;">' +
+            '<a href="' + a.link + '" target="_blank" class="btn btn-primary sm" style="text-decoration:none;"><i class="fas fa-video"></i> Join Call</a>' +
+            '<button class="btn btn-secondary sm" onclick="cancelAppt(' + idx + ')"><i class="fas fa-trash"></i></button>' +
+          '</div>';
+        wrap.appendChild(row);
+      });
+    }
+
+    function cancelAppt(idx) {
+      if (!confirm('Cancel this consultation?')) return;
+      state.appts.splice(idx, 1);
+      try {
+        localStorage.setItem('ph_doctor_appointments', JSON.stringify(state.appts));
+      } catch(e){}
+      renderAppts();
+    }
+
+    function runTriage() {
+      var txt = document.getElementById('triageInput').value.toLowerCase().trim();
+      var res = document.getElementById('triageRes');
+      if (!txt) return;
+
+      var rec = "General Physician";
+      var urgency = "Routine (within 24 hours)";
+      var reason = "General symptoms require primary triage before specialist referral.";
+
+      if (txt.includes('chest') || txt.includes('heart') || txt.includes('palpitation') || txt.includes('breath')) {
+        rec = "Cardiologist";
+        urgency = "URGENT — If severe chest pain or left arm numbness, visit Emergency immediately";
+        reason = "Cardiovascular indicators flagged. Clinical ECG and lipid consultation recommended.";
+      } else if (txt.includes('skin') || txt.includes('rash') || txt.includes('itching') || txt.includes('acne') || txt.includes('allergy')) {
+        rec = "Dermatologist";
+        urgency = "Standard (within 48 hours)";
+        reason = "Cutaneous symptoms require dermatoscope visual examination.";
+      } else if (txt.includes('child') || txt.includes('baby') || txt.includes('infant') || txt.includes('pediatric')) {
+        rec = "Pediatrician";
+        urgency = "Priority (within 12 hours)";
+        reason = "Pediatric physiology requires tailored drug dosing and weight-adjusted protocols.";
+      } else if (txt.includes('bone') || txt.includes('joint') || txt.includes('fracture') || txt.includes('back') || txt.includes('knee')) {
+        rec = "Orthopedic";
+        urgency = "Standard (within 24 hours)";
+        reason = "Musculoskeletal stress or ligament damage requires orthopedic physical evaluation.";
+      } else if (txt.includes('headache') || txt.includes('dizzy') || txt.includes('seizure') || txt.includes('nerve') || txt.includes('migraine')) {
+        rec = "Neurologist";
+        urgency = "Priority (within 24 hours)";
+        reason = "Neurological distress or recurrent migraines require specialized neurological triage.";
+      }
+
+      res.style.display = 'block';
+      res.innerHTML = 
+        '<div style="font-weight:800; color:#34d399; font-size:15px; margin-bottom:4px;"><i class="fas fa-check-circle"></i> Recommended Specialist: ' + rec + '</div>' +
+        '<div style="font-size:13px; color:#cbd5e1; margin-bottom:4px;"><strong>Clinical Urgency:</strong> <span style="color:#fbbf24;">' + urgency + '</span></div>' +
+        '<div style="font-size:12.5px; color:#94a3b8;">' + reason + '</div>' +
+        '<div style="margin-top:10px;"><button class="btn btn-primary sm" onclick="filterDocs(\'' + rec + '\')">Show ' + rec + ' Doctors</button></div>';
+    }
+
+    renderDocs();
+    renderAppts();
+  </script>
+</body>
+</html>

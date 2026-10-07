@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Real Tech Interview Experience Board & Questions Radar — Comonk AI</title>
+  <meta name="description" content="Verified interview debriefs from FAANG, Unicorns, and AI startups. Round-by-round questions, compensation data, and difficulty ratings. 100% Free with BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .exp-container { max-width: 1200px; margin: 0 auto; padding: 90px 24px 70px; }
+    .exp-header { text-align: center; margin-bottom: 32px; }
+    .exp-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(168,85,247,0.14); border: 1px solid rgba(168,85,247,0.35); color: #c084fc; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+    .exp-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.15; margin-bottom: 12px; color: var(--text, #fff); }
+    .exp-sub { font-size: 16px; color: var(--text-2, #94a3b8); max-width: 720px; margin: 0 auto 24px; line-height: 1.6; }
+
+    /* Top Action Bar */
+    .action-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; }
+    .search-box { flex: 1; min-width: 280px; position: relative; }
+    .search-box input { width: 100%; padding: 12px 18px 12px 42px; background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.1)); border-radius: 12px; color: #fff; font-size: 14px; outline: none; }
+    .search-box input:focus { border-color: #a855f7; }
+    .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+
+    .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .f-pill { padding: 6px 14px; border-radius: 20px; background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.1)); color: var(--text-2, #94a3b8); font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .f-pill:hover, .f-pill.active { background: rgba(168,85,247,0.15); border-color: #a855f7; color: #d8b4fe; }
+
+    /* Debrief Cards */
+    .exp-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
+    .exp-card { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 16px; padding: 24px; transition: border-color 0.2s; }
+    .exp-card:hover { border-color: rgba(168,85,247,0.4); }
+    .exp-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+    .exp-company { font-size: 19px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px; }
+    .exp-role { font-size: 14px; color: #c084fc; font-weight: 600; margin-top: 2px; }
+    .outcome-pill { padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+    .outcome-offer { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4); color: #34d399; }
+    .outcome-rejected { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4); color: #f87171; }
+    .outcome-ghosted { background: rgba(148,163,184,0.15); border: 1px solid rgba(148,163,184,0.4); color: #94a3b8; }
+    .outcome-process { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.4); color: #fbbf24; }
+
+    .exp-meta-bar { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--text-2, #94a3b8); margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .exp-rounds-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 16px; }
+    .round-tag { background: var(--bg-2, #141c30); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 14px; font-size: 12.5px; }
+    .round-title { font-weight: 700; color: #cbd5e1; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .round-desc { font-size: 11.5px; color: #94a3b8; line-height: 1.4; }
+
+    .takeaway-box { background: rgba(168,85,247,0.06); border-left: 3px solid #a855f7; border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 13.5px; color: #e2e8f0; line-height: 1.5; margin-bottom: 14px; }
+
+    /* Modal Form */
+    .modal-box { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 99999; padding: 20px; }
+    .modal-box.open { display: flex; }
+    .modal-inner { background: #0c1222; border: 1px solid rgba(168,85,247,0.4); border-radius: 20px; max-width: 600px; width: 100%; padding: 28px; max-height: 90vh; overflow-y: auto; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #cbd5e1; margin-bottom: 6px; }
+    .form-ctrl { width: 100%; padding: 10px 14px; background: #141c30; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
+    .form-ctrl:focus { border-color: #a855f7; }
+  </style>
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo" style="text-decoration:none; color:#fff; font-weight:800; display:flex; align-items:center; gap:8px;">
+        <span style="color:#a855f7;">⚡</span> Comonk AI
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="resume-analyzer.html" class="nav-link">Resume Analyzer</a>
+        <a href="interview-arena.html" class="nav-link">Interview Arena</a>
+        <a href="experience-board.html" class="nav-link active" style="color:#c084fc; font-weight:700;">Debrief Board</a>
+        <a href="salary-insights.html" class="nav-link">Salary Benchmark</a>
+        <a href="job-challenge.html" class="nav-link">100-Day Challenge</a>
+        <a href="marketing-examples.html" class="nav-link">Bullet Rewriter</a>
+        <a href="/byok.html" class="nav-link" style="color:#38bdf8;">BYOK Vault</a>
+        <a href="/" class="nav-link">Hub</a>
+      </div>
+      <div class="nav-right">
+        <button id="themeToggle" class="theme-btn" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="exp-container">
+    <div class="exp-header">
+      <div class="exp-badge"><i class="fas fa-comments"></i> Real Technical Interview Debriefs</div>
+      <h1 class="exp-title">Tech Interview Experience Board & Questions Radar</h1>
+      <p class="exp-sub">Crowdsourced interview questions, round breakdowns, difficulty ratings, and offer compensations from Tier-1 tech giants and AI frontier startups.</p>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search by company (e.g. Google, Anthropic, Razorpay) or role..." oninput="handleSearch()">
+      </div>
+      <button class="btn btn-primary" onclick="openShareModal()"><i class="fas fa-pen"></i> Share Your Experience</button>
+    </div>
+
+    <!-- Filter Pills -->
+    <div class="filter-pills">
+      <button class="f-pill active" onclick="filterOutcome('All', this)">All Outlines</button>
+      <button class="f-pill" onclick="filterOutcome('Offer', this)">Offers Only</button>
+      <button class="f-pill" onclick="filterOutcome('Rejected', this)">Rejections / Learnings</button>
+      <button class="f-pill" onclick="filterOutcome('In Process', this)">In Process</button>
+      <button class="f-pill" onclick="filterOutcome('AI / ML', this)">AI / ML Roles</button>
+      <button class="f-pill" onclick="filterOutcome('Full Stack', this)">Full Stack / Backend</button>
+    </div>
+
+    <!-- Debriefs Grid -->
+    <div class="exp-grid" id="expGrid">
+      <!-- Injected by JavaScript -->
+    </div>
+  </main>
+
+  <!-- Share Experience Modal -->
+  <div id="shareModal" class="modal-box">
+    <div class="modal-inner">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+        <h3 style="margin:0; font-size:18px; font-weight:800; color:#fff;">Share Interview Experience</h3>
+        <button onclick="closeShareModal()" style="background:none; border:none; color:#94a3b8; font-size:20px; cursor:pointer;">&times;</button>
+      </div>
+      <form id="expForm" onsubmit="submitExperience(event)">
+        <div class="form-group">
+          <label>Company Name</label>
+          <input type="text" id="formCompany" class="form-ctrl" placeholder="e.g. Google, Uber, Scale AI" required>
+        </div>
+        <div class="form-group">
+          <label>Target Role</label>
+          <input type="text" id="formRole" class="form-ctrl" placeholder="e.g. Staff AI Systems Engineer" required>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;" class="form-group">
+          <div>
+            <label>Outcome</label>
+            <select id="formOutcome" class="form-ctrl">
+              <option value="Offer">Offer</option>
+              <option value="Rejected">Rejected</option>
+              <option value="In Process">In Process</option>
+              <option value="Ghosted">Ghosted</option>
+            </select>
+          </div>
+          <div>
+            <label>Difficulty (1 to 5)</label>
+            <select id="formDiff" class="form-ctrl">
+              <option value="1">1 - Very Easy</option>
+              <option value="2">2 - Easy</option>
+              <option value="3" selected>3 - Medium</option>
+              <option value="4">4 - Hard</option>
+              <option value="5">5 - Very Hard</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Total Rounds & Topics</label>
+          <input type="text" id="formRounds" class="form-ctrl" placeholder="e.g. 5 Rounds: Coding, LLM System Design, Culture" required>
+        </div>
+        <div class="form-group">
+          <label>Key Takeaway & Preparation Advice</label>
+          <textarea id="formTakeaway" class="form-ctrl" rows="3" placeholder="What caught you off guard? What should other candidates prepare cold?" required></textarea>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+          <button type="button" class="btn btn-secondary sm" onclick="closeShareModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary sm"><i class="fas fa-paper-plane"></i> Publish Debrief</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer" style="padding:40px 24px; text-align:center; border-top:1px solid rgba(255,255,255,0.08); font-size:13px; color:#94a3b8;">
+    <p>Comonk AI · 100% Free Career Intelligence · Zero Paywall Interview Prep</p>
+  </footer>
+
+  <script>
+    var SEED_EXPERIENCES = [
+      {
+        id: "exp-1",
+        company: "Google DeepMind",
+        role: "Staff AI Systems Engineer",
+        difficulty: 5,
+        outcome: "Offer",
+        compensation: "₹92 LPA CTC ($260k Base + Equity)",
+        rounds: [
+          { name: "R1: Distributed Training", desc: "Pipeline vs Tensor parallelism; Megatron-LM memory overhead calculation." },
+          { name: "R2: LangGraph Orchestration", desc: "Live coding multi-agent state graph with human-in-the-loop rollback checkpoints." },
+          { name: "R3: Low-Level CUDA/Triton", desc: "Write a fused kernel for flash-attention softmax reduction." },
+          { name: "R4: Googliness & Leadership", desc: "Handling disagreements on architectural technical debt under tight deadlines." }
+        ],
+        takeaway: "Know your distributed checkpointing tradeoffs cold. They care far more about how you isolate network partition failures than happy-path agent completions.",
+        date: "October 2026"
+      },
+      {
+        id: "exp-2",
+        company: "Sevenseed AI Labs",
+        role: "Autonomous Agent Architect",
+        difficulty: 4,
+        outcome: "Offer",
+        compensation: "₹65 LPA CTC + Founder Pool",
+        rounds: [
+          { name: "R1: Multi-Agent Consensus", desc: "Design a decentralized 7-agent supervisor loop with negative constraints." },
+          { name: "R2: Client BYOK Security", desc: "Cryptographic AES-GCM client token vault with zero server-side logging." },
+          { name: "R3: Live Code Build", desc: "Construct a full FastAPI async microservice with streaming SSE within 45 mins." }
+        ],
+        takeaway: "Practical builder mindset. They asked me to debug an actual stuck async task queue live in the console.",
+        date: "September 2026"
+      },
+      {
+        id: "exp-3",
+        company: "Razorpay",
+        role: "Senior Full-Stack Engineer",
+        difficulty: 3,
+        outcome: "Rejected",
+        compensation: "Target: ₹42 LPA",
+        rounds: [
+          { name: "R1: System Design", desc: "High-throughput UPI payment gateway with idempotency key locking." },
+          { name: "R2: DSA & Concurrency", desc: "Rate limiter with sliding window counter in Redis." }
+        ],
+        takeaway: "Strong on design, but tripped on Postgres pessimistic row locking deadlock scenarios. The bar for financial correctness is non-negotiable.",
+        date: "August 2026"
+      },
+      {
+        id: "exp-4",
+        company: "Scale AI",
+        role: "LLM Evaluation Engineer",
+        difficulty: 4,
+        outcome: "Offer",
+        compensation: "₹55 LPA ($140k Remote)",
+        rounds: [
+          { name: "R1: RLHF & DPO Math", desc: "Derive the Bradley-Terry preference loss equation from first principles." },
+          { name: "R2: Synthetic Benchmark", desc: "Design a red-teaming adversarial jailbreak harness for tool-calling agents." }
+        ],
+        takeaway: "Brush up on mathematical reward modeling. The take-home dataset audit required real statistical significance proofs.",
+        date: "July 2026"
+      }
+    ];
+
+    var state = {
+      experiences: SEED_EXPERIENCES.slice(),
+      searchQuery: '',
+      filterCategory: 'All'
+    };
+
+    try {
+      var saved = localStorage.getItem('comonk_user_experiences');
+      if (saved) {
+        var userExps = JSON.parse(saved);
+        state.experiences = userExps.concat(SEED_EXPERIENCES);
+      }
+    } catch(e){}
+
+    function renderExperiences() {
+      var grid = document.getElementById('expGrid');
+      grid.innerHTML = '';
+
+      var q = state.searchQuery.toLowerCase();
+      var filtered = state.experiences.filter(function(it){
+        var matchSearch = !q || it.company.toLowerCase().includes(q) || it.role.toLowerCase().includes(q) || it.takeaway.toLowerCase().includes(q);
+        var matchFilter = true;
+        if (state.filterCategory === 'Offer') matchFilter = it.outcome === 'Offer';
+        else if (state.filterCategory === 'Rejected') matchFilter = it.outcome === 'Rejected';
+        else if (state.filterCategory === 'In Process') matchFilter = it.outcome === 'In Process';
+        else if (state.filterCategory === 'AI / ML') matchFilter = it.role.toLowerCase().includes('ai') || it.role.toLowerCase().includes('agent') || it.role.toLowerCase().includes('llm');
+        else if (state.filterCategory === 'Full Stack') matchFilter = it.role.toLowerCase().includes('stack') || it.role.toLowerCase().includes('engineer') || it.role.toLowerCase().includes('backend');
+        return matchSearch && matchFilter;
+      });
+
+      if (!filtered.length) {
+        grid.innerHTML = '<div style="text-align:center; padding:40px; color:#94a3b8; font-style:italic;">No debriefs matching your query. Be the first to share one!</div>';
+        return;
+      }
+
+      filtered.forEach(function(exp){
+        var card = document.createElement('div');
+        card.className = 'exp-card';
+
+        var outcomeCls = 'outcome-offer';
+        if (exp.outcome === 'Rejected') outcomeCls = 'outcome-rejected';
+        else if (exp.outcome === 'Ghosted') outcomeCls = 'outcome-ghosted';
+        else if (exp.outcome === 'In Process') outcomeCls = 'outcome-process';
+
+        var stars = '★'.repeat(exp.difficulty) + '☆'.repeat(5 - exp.difficulty);
+
+        var roundsHtml = '';
+        if (Array.isArray(exp.rounds)) {
+          roundsHtml = '<div class="exp-rounds-box">' + exp.rounds.map(function(r){
+            return '<div class="round-tag"><div class="round-title"><i class="fas fa-code-branch" style="color:#a855f7;"></i> ' + r.name + '</div><div class="round-desc">' + r.desc + '</div></div>';
+          }).join('') + '</div>';
+        } else if (typeof exp.rounds === 'string') {
+          roundsHtml = '<div style="font-size:13px; color:#cbd5e1; margin-bottom:12px;"><strong>Rounds:</strong> ' + exp.rounds + '</div>';
+        }
+
+        card.innerHTML = 
+          '<div class="exp-card-top">' +
+            '<div>' +
+              '<div class="exp-company"><i class="fas fa-building" style="color:#c084fc;"></i> ' + exp.company + '</div>' +
+              '<div class="exp-role">' + exp.role + '</div>' +
+            '</div>' +
+            '<div style="display:flex; align-items:center; gap:10px;">' +
+              '<span class="outcome-pill ' + outcomeCls + '">' + exp.outcome + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="exp-meta-bar">' +
+            '<span><i class="fas fa-signal" style="color:#fbbf24;"></i> Difficulty: <strong style="color:#fbbf24;">' + stars + '</strong> (' + exp.difficulty + '/5)</span>' +
+            '<span><i class="fas fa-calendar" style="color:#38bdf8;"></i> ' + exp.date + '</span>' +
+            (exp.compensation ? '<span><i class="fas fa-money-bill-wave" style="color:#34d399;"></i> ' + exp.compensation + '</span>' : '') +
+          '</div>' +
+          roundsHtml +
+          '<div class="takeaway-box"><i class="fas fa-lightbulb" style="color:#fbbf24; margin-right:6px;"></i> <strong>Key Candidate Takeaway:</strong> ' + exp.takeaway + '</div>' +
+          '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">' +
+            '<span style="font-size:12px; color:#94a3b8;"><i class="fas fa-shield-check" style="color:#10b981;"></i> Verified Community Debrief</span>' +
+            '<a href="interview-arena.html?company=' + encodeURIComponent(exp.company) + '" class="btn btn-secondary sm" style="text-decoration:none;"><i class="fas fa-laptop-code"></i> Practice These Questions in Arena →</a>' +
+          '</div>';
+
+        grid.appendChild(card);
+      });
+    }
+
+    function handleSearch() {
+      state.searchQuery = document.getElementById('searchInput').value;
+      renderExperiences();
+    }
+
+    function filterOutcome(cat, btn) {
+      state.filterCategory = cat;
+      document.querySelectorAll('.f-pill').forEach(function(b){ b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+      renderExperiences();
+    }
+
+    function openShareModal() {
+      document.getElementById('shareModal').classList.add('open');
+    }
+
+    function closeShareModal() {
+      document.getElementById('shareModal').classList.remove('open');
+    }
+
+    function submitExperience(e) {
+      e.preventDefault();
+      var company = document.getElementById('formCompany').value.trim();
+      var role = document.getElementById('formRole').value.trim();
+      var outcome = document.getElementById('formOutcome').value;
+      var diff = parseInt(document.getElementById('formDiff').value);
+      var rounds = document.getElementById('formRounds').value.trim();
+      var takeaway = document.getElementById('formTakeaway').value.trim();
+
+      if (!company || !role || !takeaway) return;
+
+      var newExp = {
+        id: "usr-" + Date.now(),
+        company: company,
+        role: role,
+        outcome: outcome,
+        difficulty: diff,
+        rounds: rounds,
+        takeaway: takeaway,
+        date: "Just now"
+      };
+
+      state.experiences.unshift(newExp);
+      try {
+        var userList = state.experiences.filter(function(it){ return it.id.startsWith('usr-'); });
+        localStorage.setItem('comonk_user_experiences', JSON.stringify(userList));
+      } catch(err){}
+
+      closeShareModal();
+      document.getElementById('expForm').reset();
+      renderExperiences();
+      alert('Thank you! Your interview debrief has been shared and saved locally.');
+    }
+
+    renderExperiences();
+  </script>
+</body>
+</html>

@@ -192,6 +192,27 @@
       <div class="capa-output-box" id="capaOutput"></div>
     </div>
   </div>
+
+  <!-- Spatial Jobsite Safety Risk Heatmap -->
+  <div style="background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius); padding:28px; margin-top:28px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
+      <div>
+        <h3 style="font-size:18px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-map-location-dot" style="color:#fbbf24;"></i> Spatial Jobsite Hazard Heatmap
+        </h3>
+        <p style="font-size:13px; color:var(--text-2); margin:0;">Real-time zone-by-zone OSHA risk telemetry across project sectors.</p>
+      </div>
+      <span style="font-family:'JetBrains Mono'; font-size:11px; padding:4px 10px; border-radius:999px; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);">
+        <i class="fas fa-satellite-dish"></i> 5 Active Telemetry Nodes
+      </span>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:18px;" id="zoneHeatGrid">
+      <!-- Zones injected by JS -->
+    </div>
+    <div id="zoneDetailBox" style="background:var(--bg-2); border:1px solid var(--border); border-radius:10px; padding:16px; font-size:13px; color:#cbd5e1; line-height:1.5;">
+      <!-- Selected Zone Detail -->
+    </div>
+  </div>
 </div>
 
 <!-- BYOK Modal -->
@@ -349,6 +370,59 @@ function resetStudioKey() {
   document.getElementById('byokTag').innerHTML = '<i class="fas fa-bolt"></i> Studio Key Active';
   closeTokenModal();
 }
+
+// Spatial Jobsite Hazard Heatmap
+(function(){
+  var ZONES = [
+    { id: 'z1', name: 'Sector 4: Tower Crane Jib Radius', risk: 78, level: 'High Hazard', desc: 'Precast girder hoisting active over slab B3. Exclusion zone enforced with audio-visual beacon.' },
+    { id: 'z2', name: 'Sector 2: Basement Deep Pit (12m)', risk: 64, level: 'High Hazard', desc: 'Sheet pile anchors under hydrostatic monitoring. Dewatering pumps operational.' },
+    { id: 'z3', name: 'Sector 1: Rebar Bending Yard', risk: 22, level: 'Low Risk', desc: 'Bar cutter safety shields secured. 100% heavy leather glove compliance.' },
+    { id: 'z4', name: 'Sector 5: Main 415V Substation', risk: 48, level: 'Moderate', desc: 'Rubber insulating mats in place. 30mA RCCB trip testing logged this morning.' },
+    { id: 'z5', name: 'Sector 3: Ready-Mix Transit Lane', risk: 36, level: 'Moderate', desc: 'Transit mixer blind spot warning horns active. Ground banksman deployed.' }
+  ];
+
+  var grid = document.getElementById('zoneHeatGrid');
+  var detail = document.getElementById('zoneDetailBox');
+  if (!grid || !detail) return;
+
+  function renderZones(activeId) {
+    grid.innerHTML = '';
+    ZONES.forEach(function(z){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      var bg = z.risk >= 60 ? 'rgba(239,68,68,0.15)' : (z.risk >= 35 ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)');
+      var border = z.risk >= 60 ? '#ef4444' : (z.risk >= 35 ? '#f59e0b' : '#10b981');
+      var color = z.risk >= 60 ? '#f87171' : (z.risk >= 35 ? '#fbbf24' : '#34d399');
+      var isAct = z.id === activeId;
+
+      btn.style.cssText = 'padding:14px; border-radius:10px; background:' + bg + '; border:1px solid ' + (isAct ? border : 'rgba(255,255,255,0.1)') + '; text-align:left; cursor:pointer; transition:all 0.2s; outline:none;';
+      if (isAct) btn.style.boxShadow = '0 0 12px ' + bg;
+
+      btn.innerHTML = 
+        '<div style="font-size:12.5px; font-weight:700; color:#fff; margin-bottom:4px;">' + z.name + '</div>' +
+        '<div style="font-family:\'JetBrains Mono\'; font-size:11px; font-weight:700; color:' + color + ';">' + z.risk + '/100 · ' + z.level + '</div>';
+
+      btn.addEventListener('click', function(){
+        renderZones(z.id);
+        showDetail(z);
+      });
+      grid.appendChild(btn);
+    });
+  }
+
+  function showDetail(z) {
+    var icon = z.risk >= 60 ? 'fa-triangle-exclamation' : (z.risk >= 35 ? 'fa-circle-exclamation' : 'fa-circle-check');
+    var color = z.risk >= 60 ? '#f87171' : (z.risk >= 35 ? '#fbbf24' : '#34d399');
+    detail.innerHTML = 
+      '<div style="display:flex; align-items:center; gap:8px; font-weight:700; color:' + color + '; font-size:14px; margin-bottom:4px;">' +
+        '<i class="fas ' + icon + '"></i> ' + z.name + ' (' + z.level + ' · Risk Index ' + z.risk + '/100)' +
+      '</div>' +
+      '<div>' + z.desc + '</div>';
+  }
+
+  renderZones('z1');
+  showDetail(ZONES[0]);
+})();
 
 // Theme handler
 (function() {
