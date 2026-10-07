@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Marketing & Conversion Copy Doctor — MarketingExamples & GrowthInReverse Benchmarks</title>
+  <meta name="description" content="Visual copywriting teardowns, Before/After comparison sliders, live Fluff Ratio calculator, and founder viral growth flywheel simulator. 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg: #070913;
+      --bg-card: rgba(15, 23, 42, 0.8);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background-color: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; min-height: 100vh; }
+    .doc-container { max-width: 1360px; margin: 0 auto; padding: 90px 24px 70px; }
+    .doc-header { text-align: center; margin-bottom: 32px; }
+    .doc-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 999px; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.4); color: #fbbf24; font-size: 13px; font-weight: 700; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; }
+    .doc-title { font-size: clamp(28px, 4vw, 46px); font-weight: 900; line-height: 1.15; margin-bottom: 10px; }
+    .doc-title span { background: linear-gradient(135deg, #fbbf24, #f43f5e 50%, #c084fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .doc-sub { font-size: 16px; color: var(--text-muted); max-width: 760px; margin: 0 auto; line-height: 1.6; }
+
+    /* Layout Grid */
+    .doc-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; margin-bottom: 40px; }
+    @media(max-width: 1050px) { .doc-grid { grid-template-columns: 1fr; } }
+
+    .doc-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(12px); display: flex; flex-direction: column; }
+    .card-title { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+
+    /* Before / After Slider Box */
+    .slider-stage { position: relative; width: 100%; height: 260px; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 18px; user-select: none; }
+    .slide-pane { position: absolute; inset: 0; padding: 24px; display: flex; flex-direction: column; justify-content: center; }
+    .pane-before { background: #160b12; color: #fca5a5; }
+    .pane-after { background: #071714; color: #86efac; clip-path: polygon(0 0, var(--split, 50%) 0, var(--split, 50%) 100%, 0 100%); }
+    .pane-label { font-size: 11px; font-weight: 800; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; display: inline-flex; align-items: center; gap: 6px; }
+    .pane-h1 { font-size: 20px; font-weight: 800; line-height: 1.3; margin-bottom: 8px; }
+    .pane-p { font-size: 13px; line-height: 1.5; opacity: 0.85; }
+
+    .slider-handle {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: var(--split, 50%);
+      width: 4px;
+      background: #fff;
+      transform: translateX(-50%);
+      cursor: ew-resize;
+      box-shadow: 0 0 12px rgba(255,255,255,0.8);
+    }
+    .slider-knob {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: #fbbf24;
+      border: 3px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-size: 12px;
+      box-shadow: 0 0 14px rgba(245,158,11,0.6);
+    }
+
+    /* Teardown Formula Callouts */
+    .formula-pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .f-pill { padding: 6px 12px; border-radius: 6px; font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 700; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #cbd5e1; }
+    .f-pill.hook { color: #f43f5e; border-color: rgba(244,63,94,0.3); background: rgba(244,63,94,0.1); }
+    .f-pill.value { color: #38bdf8; border-color: rgba(56,189,248,0.3); background: rgba(56,189,248,0.1); }
+    .f-pill.cta { color: #10b981; border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.1); }
+
+    /* Live Fluff Scanner */
+    .input-textarea { width: 100%; min-height: 120px; padding: 14px; background: #030712; border: 1px solid var(--border); border-radius: 12px; color: #fff; font-size: 13.5px; line-height: 1.6; outline: none; font-family: inherit; margin-bottom: 16px; }
+    .input-textarea:focus { border-color: #fbbf24; }
+
+    .scanner-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+    .metric-pill { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; }
+    .m-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+    .m-val { font-size: 20px; font-weight: 900; font-family: 'JetBrains Mono', monospace; }
+
+    /* Flywheel Simulator */
+    .flywheel-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .flywheel-grid { display: grid; grid-template-columns: 360px 1fr; gap: 32px; }
+    @media(max-width: 950px) { .flywheel-grid { grid-template-columns: 1fr; } }
+
+    .slider-control { margin-bottom: 16px; }
+    .slider-head { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; font-weight: 600; }
+    .range-input { width: 100%; accent-color: #fbbf24; }
+
+    .chart-container { background: #020617; border: 1px solid var(--border); border-radius: 14px; padding: 20px; height: 300px; position: relative; }
+    #flywheelCanvas { width: 100%; height: 100%; display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Nav -->
+  <nav class="nav">
+    <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 24px;">
+      <a href="index.html" class="logo" style="text-decoration:none; color:#fff; font-weight:800; display:flex; align-items:center; gap:8px;">
+        <span style="color:#fbbf24;">⚡</span> Sevenforce AI · <span style="color:#c084fc;">Growth Engineering</span>
+      </a>
+      <div class="nav-links" style="display:flex; gap:20px; font-size:14px;">
+        <a href="index.html" style="color:var(--text-muted); text-decoration:none;">Home</a>
+        <a href="swarm-choreographer.html" style="color:var(--text-muted); text-decoration:none;">Swarm Orchestrator</a>
+        <a href="copy-doctor.html" style="color:#fbbf24; font-weight:700; text-decoration:none;">Copy Doctor</a>
+        <a href="/ecosystem/galaxy-explorer.html" style="color:#38bdf8; text-decoration:none;"><i class="fas fa-planet-ringed"></i> 3D Galaxy</a>
+        <a href="/ecosystem/design-system.html" style="color:#ec4899; text-decoration:none;"><i class="fas fa-palette"></i> UI Studio</a>
+        <a href="/byok.html" style="color:#10b981; text-decoration:none;"><i class="fas fa-key"></i> BYOK Vault</a>
+      </div>
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:999px; border:1px solid rgba(16,185,129,0.3); color:#10b981; text-decoration:none; font-size:12px; font-weight:700;"><i class="fas fa-seedling"></i> Sevenseed Hub</a>
+    </div>
+  </nav>
+
+  <main class="doc-container">
+    <div class="doc-header">
+      <div class="doc-badge"><i class="fas fa-bullseye"></i> MarketingExamples.com & GrowthInReverse Benchmarks</div>
+      <h1 class="doc-title">Marketing & Conversion <span>Copy Doctor</span></h1>
+      <p class="doc-sub">Interactive Before vs After comparison sliders, real-time fluff ratio and verb density analysis, and compounding founder growth flywheel unit-economics simulation.</p>
+    </div>
+
+    <div class="doc-grid">
+      <!-- Left: Interactive Split Before/After Slider -->
+      <div class="doc-card">
+        <div class="card-title">
+          <span><i class="fas fa-arrows-left-right" style="color:#fbbf24; margin-right:8px;"></i> Before vs After Copy Teardown</span>
+          <span style="font-size:12px; color:var(--text-muted); font-weight:500;">Drag slider to compare</span>
+        </div>
+
+        <div class="slider-stage" id="sliderStage">
+          <!-- Before Pane (Underneath) -->
+          <div class="slide-pane pane-before">
+            <span class="pane-label" style="color:#fca5a5;"><i class="fas fa-times-circle"></i> Fluffy & Vague (Before)</span>
+            <div class="pane-h1" id="beforeH1">"We provide cutting-edge AI solutions to revolutionize modern enterprises."</div>
+            <p class="pane-p" id="beforeP">"Our seamless end-to-end synergy helps organizations maximize efficiency and innovate faster than ever before."</p>
+          </div>
+
+          <!-- After Pane (Clipped on top) -->
+          <div class="slide-pane pane-after" id="afterPane">
+            <span class="pane-label" style="color:#86efac;"><i class="fas fa-check-circle"></i> High-Converting (After)</span>
+            <div class="pane-h1" id="afterH1">"Automate 84% of manual customer KYC verification in 18ms."</div>
+            <p class="pane-p" id="afterP">"Eliminate compliance drop-offs with zero-persistence self-sovereign token validation. Free public access."</p>
+          </div>
+
+          <!-- Draggable Divider -->
+          <div class="slider-handle" id="sliderHandle">
+            <div class="slider-knob"><i class="fas fa-code-compare"></i></div>
+          </div>
+        </div>
+
+        <div class="formula-pill-row">
+          <div class="f-pill hook">Hook: Concrete Pain Point</div>
+          <div class="f-pill value">Value: Quantified Metric (84% / 18ms)</div>
+          <div class="f-pill cta">CTA: Zero Friction ($0 Free)</div>
+        </div>
+
+        <div style="font-size:12px; font-weight:700; color:#cbd5e1; margin-bottom:8px;">Switch Teardown Example:</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="r-chip active" onclick="loadExample('saas')">SaaS Landing Hero</button>
+          <button class="r-chip" onclick="loadExample('email')">Cold SDR Outreach</button>
+          <button class="r-chip" onclick="loadExample('ats')">FAANG Resume Bullet</button>
+          <button class="r-chip" onclick="loadExample('pricing')">Risk Reversal Guarantee</button>
+        </div>
+      </div>
+
+      <!-- Right: Real-Time Fluff Ratio Scanner -->
+      <div class="doc-card">
+        <div class="card-title">
+          <span><i class="fas fa-microscope" style="color:#38bdf8; margin-right:8px;"></i> Live Fluff Ratio & Verb Density Scanner</span>
+          <span style="font-size:12px; font-family:'JetBrains Mono'; color:#34d399;" id="verdictPill">Strong Copy</span>
+        </div>
+
+        <textarea class="input-textarea" id="copyInput" oninput="analyzeCopy()" placeholder="Paste your headline, hero copy, or pitch here...">We build an autonomous AI computer vision defect detection system that inspects bowling balls at 120 FPS with 99.8% precision, cutting manufacturing scrap rates by 42%.</textarea>
+
+        <div class="scanner-metrics">
+          <div class="metric-pill">
+            <div class="m-lbl">Fluff Ratio</div>
+            <div class="m-val" id="fluffVal" style="color:#10b981;">8%</div>
+          </div>
+          <div class="metric-pill">
+            <div class="m-lbl">Action Verbs</div>
+            <div class="m-val" id="verbVal" style="color:#38bdf8;">5</div>
+          </div>
+          <div class="metric-pill">
+            <div class="m-lbl">Numbers / Metrics</div>
+            <div class="m-val" id="numVal" style="color:#fbbf24;">4</div>
+          </div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:12px; padding:14px; font-size:12.5px; color:#cbd5e1; line-height:1.6;" id="diagnosisBox">
+          <strong style="color:#34d399;"><i class="fas fa-circle-check"></i> Great Concrete Framing:</strong> High presence of quantified outcomes ("120 FPS", "99.8%", "42%") with zero empty buzzwords.
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom: Growth In Reverse Founder Flywheel Simulator -->
+    <div class="flywheel-section">
+      <div class="card-title" style="margin-bottom:20px;">
+        <span><i class="fas fa-rotate" style="color:#ec4899; margin-right:8px;"></i> Growth In Reverse — Founder Flywheel Unit Economics Simulator</span>
+        <span style="font-size:12px; font-family:'JetBrains Mono'; color:#cbd5e1;">Compounding Loop: U(t+1) = U(t)·(1 - Churn) + U(t)·K_viral + Paid(R_t)</span>
+      </div>
+
+      <div class="flywheel-grid">
+        <!-- Controls -->
+        <div>
+          <div class="slider-control">
+            <div class="slider-head">
+              <span>Viral Co-efficient (K = Invites × Conv)</span>
+              <span id="kVal" style="color:#ec4899; font-family:'JetBrains Mono'; font-weight:800;">1.15</span>
+            </div>
+            <input type="range" class="range-input" id="kInput" min="0.2" max="2.5" step="0.05" value="1.15" oninput="updateFlywheel()">
+          </div>
+
+          <div class="slider-control">
+            <div class="slider-head">
+              <span>Monthly Churn Rate (%)</span>
+              <span id="churnVal" style="color:#f43f5e; font-family:'JetBrains Mono'; font-weight:800;">3.5%</span>
+            </div>
+            <input type="range" class="range-input" id="churnInput" min="0.5" max="15" step="0.5" value="3.5" oninput="updateFlywheel()">
+          </div>
+
+          <div class="slider-control">
+            <div class="slider-head">
+              <span>Customer LTV ($)</span>
+              <span id="ltvVal" style="color:#10b981; font-family:'JetBrains Mono'; font-weight:800;">$2,400</span>
+            </div>
+            <input type="range" class="range-input" id="ltvInput" min="200" max="10000" step="100" value="2400" oninput="updateFlywheel()">
+          </div>
+
+          <div class="slider-control">
+            <div class="slider-head">
+              <span>Payback Period (Months)</span>
+              <span id="paybackVal" style="color:#38bdf8; font-family:'JetBrains Mono'; font-weight:800;">2.4 mo</span>
+            </div>
+            <input type="range" class="range-input" id="paybackInput" min="1" max="18" step="0.2" value="2.4" oninput="updateFlywheel()">
+          </div>
+
+          <div style="background:rgba(255,255,255,0.04); border-radius:10px; padding:12px; font-size:12px; color:#cbd5e1; margin-top:14px;">
+            <i class="fas fa-lightbulb" style="color:#fbbf24;"></i> <strong>Flywheel Rule:</strong> When Viral K &gt; 1.0, user acquisition becomes self-sustaining and CAC approaches $0 asymptotically.
+          </div>
+        </div>
+
+        <!-- Canvas Graph -->
+        <div class="chart-container">
+          <canvas id="flywheelCanvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    /* 1. BEFORE / AFTER COMPARISON SLIDER */
+    const stage = document.getElementById('sliderStage');
+    const handle = document.getElementById('sliderHandle');
+    const afterPane = document.getElementById('afterPane');
+    let isSliding = false;
+
+    function setSplit(pct) {
+      pct = Math.max(10, Math.min(90, pct));
+      stage.style.setProperty('--split', pct + '%');
+    }
+
+    stage.addEventListener('mousedown', () => isSliding = true);
+    window.addEventListener('mouseup', () => isSliding = false);
+    window.addEventListener('mousemove', (e) => {
+      if (!isSliding) return;
+      const rect = stage.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const pct = (x / rect.width) * 100;
+      setSplit(pct);
+    });
+
+    // Touch support
+    stage.addEventListener('touchmove', (e) => {
+      const rect = stage.getBoundingClientRect();
+      const x = e.touches[0].clientX - rect.left;
+      const pct = (x / rect.width) * 100;
+      setSplit(pct);
+    });
+
+    const TEARDOWNS = {
+      saas: {
+        bH1: '"We provide cutting-edge AI solutions to revolutionize modern enterprises."',
+        bP: '"Our seamless end-to-end synergy helps organizations maximize efficiency and innovate faster than ever before."',
+        aH1: '"Automate 84% of customer KYC verification in 18ms."',
+        aP: '"Eliminate compliance drop-offs with zero-persistence self-sovereign token validation. Free public access."'
+      },
+      email: {
+        bH1: '"Hope you are having a wonderful week! Would love to chat about synergies."',
+        bP: '"We are a leading provider of digital transformation services and want to explore if our software fits your team."',
+        aH1: '"Quick question regarding your 30%+ drop-off at Aadhaar KYC."',
+        aP: '"We built an 18ms client-side verification engine that cut CAC by 42% for 3 neo-banks. Open to 4-sentence case study?"'
+      },
+      ats: {
+        bH1: '"Responsible for developing backend features and collaborating with team."',
+        bP: '"Helped maintain microservices and assisted in continuous delivery deployment pipeline."',
+        aH1: '"Engineered async FastAPI microservice handling 450k tasks/day with 18ms p99 latency."',
+        aP: '"Refactored SQL joins reducing RDS CPU utilization by 64% and saving ₹8.4L in annual cloud infrastructure spend."'
+      },
+      pricing: {
+        bH1: '"30-day money-back guarantee, subject to terms and approval."',
+        bP: '"Please contact our support desk with valid reason for consideration within billing cycle."',
+        aH1: '"100% Free Forever with Zero Platform Margin & Client-Side BYOK."',
+        aP: '"Keep your existing Groq, Gemini, or OpenAI API keys. Zero markups, zero locked tokens, zero credit card required."'
+      }
+    };
+
+    function loadExample(key) {
+      document.querySelectorAll('.r-chip').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      const td = TEARDOWNS[key];
+      if (!td) return;
+      document.getElementById('beforeH1').innerText = td.bH1;
+      document.getElementById('beforeP').innerText = td.bP;
+      document.getElementById('afterH1').innerText = td.aH1;
+      document.getElementById('afterP').innerText = td.aP;
+      setSplit(50);
+    }
+
+    /* 2. REAL-TIME FLUFF SCANNER */
+    const BUZZWORDS = ['cutting-edge', 'seamless', 'synergy', 'revolutionary', 'game-changing', 'next-generation', 'best-in-class', 'holistic', 'innovate', 'world-class'];
+    const VERBS = ['build', 'automate', 'cuts', 'reduces', 'inspects', 'dispatches', 'eliminates', 'engineers', 'saves', 'accelerates', 'deploys'];
+
+    function analyzeCopy() {
+      const text = document.getElementById('copyInput').value;
+      const words = text.toLowerCase().match(/\b[a-z0-9%-]+\b/g) || [];
+      const numbers = text.match(/\b\d+(?:\.\d+)?%?|\b₹?\d+[kKlLmMbB]?/g) || [];
+
+      let fluffCount = 0;
+      let verbCount = 0;
+
+      words.forEach(w => {
+        if (BUZZWORDS.some(bw => w.includes(bw))) fluffCount++;
+        if (VERBS.includes(w)) verbCount++;
+      });
+
+      const total = Math.max(1, words.length);
+      const fluffPct = Math.round((fluffCount / total) * 100);
+
+      document.getElementById('fluffVal').innerText = `${fluffPct}%`;
+      document.getElementById('fluffVal').style.color = fluffPct > 15 ? '#f43f5e' : '#10b981';
+
+      document.getElementById('verbVal').innerText = verbCount;
+      document.getElementById('numVal').innerText = numbers.length;
+
+      const vPill = document.getElementById('verdictPill');
+      const dBox = document.getElementById('diagnosisBox');
+
+      if (fluffPct > 15) {
+        vPill.innerText = "Heavy Fluff Detected";
+        vPill.style.color = "#f43f5e";
+        dBox.innerHTML = `<strong style="color:#f43f5e;"><i class="fas fa-triangle-exclamation"></i> Vague Adjectives Found:</strong> Replace words like "${BUZZWORDS.filter(bw => text.toLowerCase().includes(bw)).join(', ')}" with quantifiable customer outcomes and exact numbers.`;
+      } else if (numbers.length === 0) {
+        vPill.innerText = "Needs Metrics";
+        vPill.style.color = "#fbbf24";
+        dBox.innerHTML = `<strong style="color:#fbbf24;"><i class="fas fa-circle-exclamation"></i> Missing Numbers:</strong> Good active verbs, but add concrete metrics (e.g. "84%", "18ms", "₹12L") to anchor the claim.`;
+      } else {
+        vPill.innerText = "High-Converting";
+        vPill.style.color = "#34d399";
+        dBox.innerHTML = `<strong style="color:#34d399;"><i class="fas fa-circle-check"></i> High-Converting Copy:</strong> Crisp action verbs + quantified proof points. Passes the MarketingExamples.com 3-Point conversion test!`;
+      }
+    }
+    analyzeCopy();
+
+    /* 3. GROWTH IN REVERSE FLYWHEEL SIMULATOR */
+    const fCanvas = document.getElementById('flywheelCanvas');
+    const fCtx = fCanvas.getContext('2d');
+
+    function updateFlywheel() {
+      const K = parseFloat(document.getElementById('kInput').value);
+      const churn = parseFloat(document.getElementById('churnInput').value) / 100;
+      const ltv = parseFloat(document.getElementById('ltvInput').value);
+      const payback = parseFloat(document.getElementById('paybackInput').value);
+
+      document.getElementById('kVal').innerText = K.toFixed(2);
+      document.getElementById('churnVal').innerText = (churn * 100).toFixed(1) + '%';
+      document.getElementById('ltvVal').innerText = '$' + ltv.toLocaleString();
+      document.getElementById('paybackVal').innerText = payback.toFixed(1) + ' mo';
+
+      // Simulate 12 months
+      let users = [1000];
+      for (let m = 1; m <= 12; m++) {
+        const prev = users[m-1];
+        const retained = prev * (1 - churn);
+        const viral = prev * (K * 0.12);
+        const organic = 50;
+        users.push(Math.round(retained + viral + organic));
+      }
+
+      drawFlywheelGraph(users);
+    }
+
+    function drawFlywheelGraph(data) {
+      const rect = fCanvas.getBoundingClientRect();
+      fCanvas.width = rect.width;
+      fCanvas.height = rect.height;
+      const w = fCanvas.width;
+      const h = fCanvas.height;
+
+      fCtx.clearRect(0, 0, w, h);
+
+      const maxVal = Math.max(...data) * 1.15;
+      const minVal = 0;
+
+      // Draw Grid
+      fCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      fCtx.lineWidth = 1;
+      for (let y = 40; y < h; y += 50) {
+        fCtx.beginPath();
+        fCtx.moveTo(40, y);
+        fCtx.lineTo(w - 20, y);
+        fCtx.stroke();
+      }
+
+      // Draw Curve
+      fCtx.beginPath();
+      const stepX = (w - 60) / (data.length - 1);
+      data.forEach((val, i) => {
+        const x = 40 + i * stepX;
+        const y = h - 30 - (val / maxVal) * (h - 70);
+        if (i === 0) fCtx.moveTo(x, y);
+        else fCtx.lineTo(x, y);
+      });
+
+      fCtx.strokeStyle = '#ec4899';
+      fCtx.lineWidth = 3;
+      fCtx.stroke();
+
+      // Fill Gradient
+      fCtx.lineTo(40 + (data.length - 1) * stepX, h - 30);
+      fCtx.lineTo(40, h - 30);
+      const grad = fCtx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, 'rgba(236, 72, 153, 0.25)');
+      grad.addColorStop(1, 'transparent');
+      fCtx.fillStyle = grad;
+      fCtx.fill();
+
+      // Month Points
+      data.forEach((val, i) => {
+        const x = 40 + i * stepX;
+        const y = h - 30 - (val / maxVal) * (h - 70);
+        fCtx.beginPath();
+        fCtx.arc(x, y, 4, 0, Math.PI * 2);
+        fCtx.fillStyle = '#fff';
+        fCtx.fill();
+
+        // X-axis label
+        fCtx.fillStyle = '#94a3b8';
+        fCtx.font = '10px JetBrains Mono';
+        fCtx.fillText(`M${i}`, x - 8, h - 12);
+      });
+
+      // Terminal Value badge
+      const lastX = 40 + (data.length - 1) * stepX;
+      const lastY = h - 30 - (data[data.length - 1] / maxVal) * (h - 70);
+      fCtx.fillStyle = '#fbbf24';
+      fCtx.font = 'bold 12px JetBrains Mono';
+      fCtx.fillText(`${data[data.length - 1].toLocaleString()} Users`, lastX - 70, lastY - 12);
+    }
+
+    window.addEventListener('resize', updateFlywheel);
+    updateFlywheel();
+  </script>
+</body>
+</html>

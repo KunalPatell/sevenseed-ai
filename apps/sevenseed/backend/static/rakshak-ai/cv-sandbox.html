@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Real-Time In-Browser Computer Vision Sandbox — Rakshak AI</title>
+  <meta name="description" content="In-browser real-time computer vision sandbox with webcam motion detection, optical flow vectors, interactive virtual tripwires, and bounding box tracking. 100% Client-Side.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg: #04060f;
+      --bg-card: rgba(10, 16, 31, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hi: rgba(239, 68, 68, 0.4);
+      --accent: #ef4444;
+      --accent-emerald: #10b981;
+      --accent-cyan: #06b6d4;
+      --accent-amber: #f59e0b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background-color: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+    .cv-container { max-width: 1560px; margin: 0 auto; padding: 86px 24px 60px; }
+
+    /* Header */
+    .cv-hero { text-align: center; margin-bottom: 26px; }
+    .cv-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 999px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35); color: #fca5a5; font-size: 13px; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 12px; }
+    .cv-title { font-size: clamp(28px, 4.2vw, 48px); font-weight: 900; line-height: 1.15; margin-bottom: 10px; }
+    .cv-title span { background: linear-gradient(135deg, #f87171, #f43f5e 50%, #fb923c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .cv-sub { font-size: 15px; color: var(--text-muted); max-width: 840px; margin: 0 auto 20px; line-height: 1.6; }
+
+    /* Control Strip */
+    .cv-control-bar { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 14px 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 24px; backdrop-filter: blur(12px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+    .mode-pills { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .mode-btn { padding: 8px 14px; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: #cbd5e1; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .mode-btn:hover, .mode-btn.active { background: rgba(239,68,68,0.2); border-color: #ef4444; color: #fff; }
+
+    .feed-toggle-btn { padding: 9px 18px; border-radius: 10px; background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; font-size: 13px; font-weight: 700; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(239,68,68,0.35); transition: transform 0.15s, box-shadow 0.15s; }
+    .feed-toggle-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(239,68,68,0.5); }
+
+    /* Main Grid */
+    .cv-grid { display: grid; grid-template-columns: 1fr 420px; gap: 24px; min-height: 680px; }
+    @media(max-width: 1140px) { .cv-grid { grid-template-columns: 1fr; } }
+
+    /* Video Screen Viewport */
+    .viewport-card { background: #02040a; border: 1px solid var(--border); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+    .vp-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+    .live-status { display: flex; align-items: center; gap: 8px; font-weight: 800; color: #ef4444; }
+    .live-dot { width: 9px; height: 9px; border-radius: 50%; background: #ef4444; animation: blink 1s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+    .canvas-wrapper { position: relative; flex: 1; background: #000; border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; overflow: hidden; min-height: 480px; display: flex; align-items: center; justify-content: center; cursor: crosshair; }
+    #videoElement { display: none; }
+    #cvCanvas { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+    /* Viewport Watermark & HUD */
+    .hud-tl { position: absolute; top: 14px; left: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #38bdf8; z-index: 10; pointer-events: none; line-height: 1.5; text-shadow: 0 1px 4px #000; }
+    .hud-tr { position: absolute; top: 14px; right: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; z-index: 10; pointer-events: none; display: flex; gap: 8px; }
+    .hud-alert-badge { padding: 4px 10px; border-radius: 6px; background: rgba(239,68,68,0.25); border: 1px solid #ef4444; color: #fca5a5; font-weight: 800; display: none; animation: pulse 0.8s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    .hud-draw-hint { position: absolute; bottom: 14px; left: 14px; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; font-size: 11px; color: #94a3b8; pointer-events: none; z-index: 10; }
+
+    /* Right Telemetry & Operations Panel */
+    .telemetry-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(12px); }
+    .card-title { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+    .stat-box { background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; }
+    .stat-num { font-size: 24px; font-weight: 900; font-family: 'JetBrains Mono', monospace; }
+    .stat-sub { font-size: 10px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-top: 2px; }
+
+    /* Parameters Sliders */
+    .param-group { margin-bottom: 18px; }
+    .param-label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
+    .param-slider { width: 100%; height: 6px; border-radius: 999px; background: rgba(255,255,255,0.1); outline: none; -webkit-appearance: none; cursor: pointer; }
+    .param-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #ef4444; cursor: pointer; box-shadow: 0 0 8px rgba(239,68,68,0.6); }
+
+    /* Event Audit Log */
+    .event-log-box { flex: 1; background: #02050e; border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #cbd5e1; line-height: 1.5; overflow-y: auto; max-height: 240px; margin-bottom: 18px; }
+    .log-item { margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 3px; }
+    .log-item.alert { color: #f87171; }
+    .log-item.info { color: #38bdf8; }
+
+    /* Quick Action Buttons */
+    .actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; }
+    .act-btn { padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #cbd5e1; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s; }
+    .act-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <a class="nav-brand" href="index.html" style="display:flex; align-items:center; gap:10px;">
+      <span style="width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#ef4444,#dc2626); display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fas fa-shield-halved"></i></span>
+      <span style="font-weight:700; font-size:18px;">Rakshak AI</span>
+    </a>
+    <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
+      <a href="index.html">Home</a>
+      <a href="cv-sandbox.html" style="color:#f87171; font-weight:700;">CV Sandbox</a>
+      <a href="sentinel-vision.html">CCTV Sentinel</a>
+      <a href="threat-radar.html">Threat Radar</a>
+      <a href="fir-generator.html">BNS Auto-FIR</a>
+    </div>
+    <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle theme" style="width:36px; height:36px; border-radius:8px; background:var(--bg-2, #1e293b); border:1px solid var(--border, rgba(255,255,255,0.1)); color:var(--text, #fff); cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i class="fas fa-moon"></i></button>
+      <a class="btn btn-primary sm" href="index.html"><i class="fas fa-arrow-left"></i> Rakshak Hub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="cv-container">
+  <!-- Header -->
+  <div class="cv-hero">
+    <div class="cv-badge"><i class="fas fa-camera"></i> Real-Time Browser Computer Vision Engine</div>
+    <h1 class="cv-title">Client-Side <span>Computer Vision Sandbox</span></h1>
+    <p class="cv-sub">High-performance real-time pixel processing in pure JavaScript. Test live webcam or synthetic streams with optical frame differencing, automatic bounding box clustering, custom tripwire intrusion alarms, and motion phosphor heatmaps.</p>
+  </div>
+
+  <!-- Control Strip -->
+  <div class="cv-control-bar">
+    <div class="mode-pills">
+      <button class="mode-btn active" id="btnModeDiff" onclick="setVisionMode('diff')"><i class="fas fa-vector-square"></i> Motion Blobs</button>
+      <button class="mode-btn" id="btnModeSobel" onclick="setVisionMode('sobel')"><i class="fas fa-border-all"></i> Sobel Edges</button>
+      <button class="mode-btn" id="btnModeHeat" onclick="setVisionMode('heat')"><i class="fas fa-fire"></i> Phosphor Heatmap</button>
+      <button class="mode-btn" id="btnModeRaw" onclick="setVisionMode('raw')"><i class="fas fa-video"></i> Raw + Overlays</button>
+    </div>
+
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <select id="feedSourceSelect" onchange="changeFeedSource(this.value)" style="padding:8px 12px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#cbd5e1; font-size:12px; font-family:inherit; outline:none;">
+        <option value="sim-conveyor">Synthetic Feed: Factory Conveyor & Ball Trajectory</option>
+        <option value="sim-perimeter">Synthetic Feed: Perimeter Walkway Intruder</option>
+        <option value="sim-traffic">Synthetic Feed: Traffic Intersection Surveillance</option>
+        <option value="webcam">Live Hardware: Webcam Stream (Local)</option>
+      </select>
+      <button class="feed-toggle-btn" id="toggleFeedBtn" onclick="toggleFeed()"><i class="fas fa-play"></i> Start Engine</button>
+    </div>
+  </div>
+
+  <!-- Main Viewport & Telemetry Grid -->
+  <div class="cv-grid">
+    <!-- Video / Canvas Screen -->
+    <div class="viewport-card">
+      <div class="vp-topbar">
+        <div class="live-status">
+          <div class="live-dot" id="liveDot"></div>
+          <span id="feedStatusText">FEED ONLINE · 640x360 · 30 FPS</span>
+        </div>
+        <div style="color:var(--text-muted);">
+          LATENCY: <span id="hudLatency" style="color:#10b981;">2.4ms</span> · ZERO BACKEND LEAK
+        </div>
+      </div>
+
+      <div class="canvas-wrapper" id="canvasWrapper">
+        <video id="videoElement" playsinline autoplay muted></video>
+        <canvas id="cvCanvas" width="640" height="360"></canvas>
+
+        <!-- Watermark HUD -->
+        <div class="hud-tl">
+          <div>FEED: <strong id="hudCamName" style="color:#fff;">SYNTH-01: CONVEYOR DEFECT RIG</strong></div>
+          <div>MOTION DELTA: <strong id="hudDelta" style="color:#f59e0b;">0.0%</strong></div>
+          <div>TRACKED BLOBS: <strong id="hudBlobs" style="color:#34d399;">0</strong></div>
+        </div>
+
+        <div class="hud-tr">
+          <div class="hud-alert-badge" id="hudTripwireAlert"><i class="fas fa-exclamation-triangle"></i> TRIPWIRE BREACH</div>
+        </div>
+
+        <div class="hud-draw-hint">
+          <i class="fas fa-pen"></i> Click & drag on video to draw a <strong>Virtual Tripwire</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Operations & Telemetry Panel -->
+    <div class="telemetry-card">
+      <div class="card-title">
+        <span>Vision Engine Telemetry</span>
+        <span style="font-size:11px; font-family:'JetBrains Mono'; color:#10b981;">● CLIENT ACTIVE</span>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-num" id="statFps" style="color:#10b981;">30</div>
+          <div class="stat-sub">Frames / Second</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="statTargets" style="color:#38bdf8;">0</div>
+          <div class="stat-sub">Tracked Blobs</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="statBreaches" style="color:#ef4444;">0</div>
+          <div class="stat-sub">Tripwire Breaches</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="statVelocity" style="color:#f59e0b;">0 px/s</div>
+          <div class="stat-sub">Peak Velocity</div>
+        </div>
+      </div>
+
+      <!-- Sliders -->
+      <div class="param-group">
+        <div class="param-label">
+          <span>Sensitivity Threshold</span>
+          <span id="lblSens">28</span>
+        </div>
+        <input type="range" class="param-slider" id="sliderSens" min="10" max="80" value="28" oninput="updateParams()">
+      </div>
+
+      <div class="param-group">
+        <div class="param-label">
+          <span>Min Blob Area (px)</span>
+          <span id="lblArea">120</span>
+        </div>
+        <input type="range" class="param-slider" id="sliderArea" min="30" max="600" value="120" oninput="updateParams()">
+      </div>
+
+      <div class="param-group">
+        <div class="param-label">
+          <span>Heatmap Trail Decay</span>
+          <span id="lblDecay">0.92</span>
+        </div>
+        <input type="range" class="param-slider" id="sliderDecay" min="0.7" max="0.99" step="0.01" value="0.92" oninput="updateParams()">
+      </div>
+
+      <!-- Event Audit Log -->
+      <div class="card-title" style="margin-top:4px;">
+        <span>Intrusion Event Audit Log</span>
+        <button onclick="clearEventLog()" style="background:none; border:none; color:var(--text-muted); font-size:10px; cursor:pointer;">Clear</button>
+      </div>
+      <div class="event-log-box" id="eventLog">
+        <div class="log-item info">[SYSTEM] Computer Vision Sandbox initialized.</div>
+        <div class="log-item info">[SENSOR] Synthetic test stream online (640x360 @ 30fps).</div>
+        <div class="log-item info">[SECURITY] Tripwire arming active. Ready for detection.</div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="actions-row">
+        <button class="act-btn" onclick="resetTripwire()"><i class="fas fa-trash-alt"></i> Reset Tripwire</button>
+        <button class="act-btn" onclick="captureSnapshot()"><i class="fas fa-camera"></i> Snapshot PNG</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- COMPUTER VISION ENGINE CORE ---
+let isRunning = true;
+let visionMode = 'diff'; // 'diff' | 'sobel' | 'heat' | 'raw'
+let feedSource = 'sim-conveyor';
+
+// Vision Parameters
+let sensitivity = 28;
+let minArea = 120;
+let decay = 0.92;
+
+// Tripwire Coordinates (Normalized 0..1 or Canvas Pixels)
+let tripwire = { x1: 180, y1: 40, x2: 180, y2: 320, active: true };
+let isDrawingWire = false;
+let wireStartX = 0, wireStartY = 0;
+
+// Metrics
+let breachCount = 0;
+let lastFrameTime = performance.now();
+let fpsCounter = 30;
+let activeBlobs = [];
+
+// Canvas & Video
+const canvas = document.getElementById('cvCanvas');
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
+const video = document.getElementById('videoElement');
+
+// Offscreen buffer for frame differencing
+const offCanvas = document.createElement('canvas');
+offCanvas.width = 640;
+offCanvas.height = 360;
+const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
+
+// Phosphor Heatmap Buffer
+const heatCanvas = document.createElement('canvas');
+heatCanvas.width = 640;
+heatCanvas.height = 360;
+const heatCtx = heatCanvas.getContext('2d');
+heatCtx.fillStyle = '#000000';
+heatCtx.fillRect(0, 0, 640, 360);
+
+let prevFrameData = null;
+
+// Synthetic Simulation State
+let simTick = 0;
+let simObjects = [
+  { x: 30, y: 180, vx: 3.5, vy: 0, r: 18, color: '#38bdf8', label: 'BOWL_CORE' },
+  { x: -80, y: 180, vx: 3.5, vy: 0, r: 14, color: '#f59e0b', label: 'INSPECT_PIN' }
+];
+
+// Audio Context for Siren / Chime
+let audioCtx = null;
+function playAlarmChime() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.15);
+
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.16);
+  } catch (e) {}
+}
+
+function setVisionMode(mode) {
+  visionMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  if (mode === 'diff') document.getElementById('btnModeDiff').classList.add('active');
+  if (mode === 'sobel') document.getElementById('btnModeSobel').classList.add('active');
+  if (mode === 'heat') document.getElementById('btnModeHeat').classList.add('active');
+  if (mode === 'raw') document.getElementById('btnModeRaw').classList.add('active');
+  logEvent(`Vision filter mode switched to [${mode.toUpperCase()}]`);
+}
+
+function updateParams() {
+  sensitivity = parseInt(document.getElementById('sliderSens').value, 10);
+  document.getElementById('lblSens').innerText = sensitivity;
+
+  minArea = parseInt(document.getElementById('sliderArea').value, 10);
+  document.getElementById('lblArea').innerText = minArea;
+
+  decay = parseFloat(document.getElementById('sliderDecay').value);
+  document.getElementById('lblDecay').innerText = decay.toFixed(2);
+}
+
+function changeFeedSource(src) {
+  feedSource = src;
+  if (src === 'webcam') {
+    startWebcam();
+  } else {
+    stopWebcam();
+    if (src === 'sim-conveyor') {
+      document.getElementById('hudCamName').innerText = 'SYNTH-01: CONVEYOR DEFECT RIG';
+      simObjects = [
+        { x: 30, y: 180, vx: 3.5, vy: 0, r: 18, color: '#38bdf8', label: 'BOWL_CORE' },
+        { x: -80, y: 180, vx: 3.5, vy: 0, r: 14, color: '#f59e0b', label: 'INSPECT_PIN' }
+      ];
+    } else if (src === 'sim-perimeter') {
+      document.getElementById('hudCamName').innerText = 'SYNTH-02: PERIMETER WALKWAY';
+      simObjects = [
+        { x: 50, y: 50, vx: 2.2, vy: 1.8, r: 20, color: '#ef4444', label: 'INTRUDER_01' }
+      ];
+    } else if (src === 'sim-traffic') {
+      document.getElementById('hudCamName').innerText = 'SYNTH-03: TRAFFIC INTERSECTION';
+      simObjects = [
+        { x: 10, y: 120, vx: 5.0, vy: 0, r: 24, color: '#10b981', label: 'VEHICLE_A' },
+        { x: 500, y: 340, vx: 0, vy: -4.0, r: 22, color: '#06b6d4', label: 'VEHICLE_B' }
+      ];
+    }
+    logEvent(`Feed source switched to [${src}]`);
+  }
+}
+
+function startWebcam() {
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 360 } })
+      .then(stream => {
+        video.srcObject = stream;
+        video.play();
+        document.getElementById('hudCamName').innerText = 'LOCAL HARDWARE WEBCAM';
+        logEvent("Webcam stream connected successfully.");
+      })
+      .catch(err => {
+        alert("Webcam access denied or unavailable. Falling back to synthetic feed: " + err.message);
+        document.getElementById('feedSourceSelect').value = 'sim-conveyor';
+        changeFeedSource('sim-conveyor');
+      });
+  } else {
+    alert("Webcam API not supported in this browser environment. Using synthetic simulator.");
+    document.getElementById('feedSourceSelect').value = 'sim-conveyor';
+    changeFeedSource('sim-conveyor');
+  }
+}
+
+function stopWebcam() {
+  if (video.srcObject) {
+    video.srcObject.getTracks().forEach(t => t.stop());
+    video.srcObject = null;
+  }
+}
+
+function toggleFeed() {
+  isRunning = !isRunning;
+  const btn = document.getElementById('toggleFeedBtn');
+  const dot = document.getElementById('liveDot');
+  if (isRunning) {
+    btn.innerHTML = '<i class="fas fa-pause"></i> Pause Engine';
+    dot.style.background = '#ef4444';
+    dot.style.animation = 'blink 1s infinite';
+    document.getElementById('feedStatusText').innerText = 'FEED ONLINE · 640x360 · 30 FPS';
+    requestAnimationFrame(renderLoop);
+  } else {
+    btn.innerHTML = '<i class="fas fa-play"></i> Resume Engine';
+    dot.style.background = '#64748b';
+    dot.style.animation = 'none';
+    document.getElementById('feedStatusText').innerText = 'FEED PAUSED';
+  }
+}
+
+// Draw Tripwire with Mouse Interaction
+const canvasWrap = document.getElementById('canvasWrapper');
+canvasWrap.addEventListener('mousedown', e => {
+  const rect = canvas.getBoundingClientRect();
+  wireStartX = (e.clientX - rect.left) * (canvas.width / rect.width);
+  wireStartY = (e.clientY - rect.top) * (canvas.height / rect.height);
+  isDrawingWire = true;
+});
+
+canvasWrap.addEventListener('mousemove', e => {
+  if (!isDrawingWire) return;
+  const rect = canvas.getBoundingClientRect();
+  const curX = (e.clientX - rect.left) * (canvas.width / rect.width);
+  const curY = (e.clientY - rect.top) * (canvas.height / rect.height);
+  tripwire.x1 = wireStartX;
+  tripwire.y1 = wireStartY;
+  tripwire.x2 = curX;
+  tripwire.y2 = curY;
+});
+
+window.addEventListener('mouseup', () => {
+  if (isDrawingWire) {
+    isDrawingWire = false;
+    logEvent(`Tripwire repositioned: (${Math.round(tripwire.x1)}, ${Math.round(tripwire.y1)}) to (${Math.round(tripwire.x2)}, ${Math.round(tripwire.y2)})`);
+  }
+});
+
+function resetTripwire() {
+  tripwire = { x1: 180, y1: 40, x2: 180, y2: 320, active: true };
+  logEvent("Tripwire reset to default vertical barrier.");
+}
+
+function logEvent(msg, isAlert = false) {
+  const box = document.getElementById('eventLog');
+  const div = document.createElement('div');
+  const time = new Date().toTimeString().split(' ')[0];
+  div.className = 'log-item ' + (isAlert ? 'alert' : 'info');
+  div.innerText = `[${time}] ${msg}`;
+  box.prepend(div);
+  if (box.children.length > 50) box.removeChild(box.lastChild);
+}
+
+function clearEventLog() {
+  document.getElementById('eventLog').innerHTML = '';
+}
+
+function captureSnapshot() {
+  const link = document.createElement('a');
+  link.download = `rakshak-cv-snapshot-${Date.now()}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  logEvent("Snapshot captured and saved to disk.");
+}
+
+// Distance from point to line segment
+function distToSegment(px, py, x1, y1, x2, y2) {
+  const l2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+  if (l2 === 0) return Math.hypot(px - x1, py - y1);
+  let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / l2;
+  t = Math.max(0, Math.min(1, t));
+  return Math.hypot(px - (x1 + t * (x2 - x1)), py - (y1 + t * (y2 - y1)));
+}
+
+// Main Vision Engine Render Loop
+function renderLoop(now) {
+  if (!isRunning) return;
+
+  const deltaMs = now - lastFrameTime;
+  lastFrameTime = now;
+  fpsCounter = Math.round(1000 / (deltaMs || 33));
+  document.getElementById('statFps').innerText = fpsCounter;
+
+  // 1. Draw Feed to Offscreen Buffer
+  offCtx.fillStyle = '#0a0f1d';
+  offCtx.fillRect(0, 0, 640, 360);
+
+  if (feedSource === 'webcam' && video.readyState === video.HAVE_ENOUGH_DATA) {
+    offCtx.drawImage(video, 0, 0, 640, 360);
+  } else {
+    // Render Synthetic Simulation Feed
+    simTick++;
+    // Subtle background factory conveyor texture
+    offCtx.strokeStyle = 'rgba(255,255,255,0.04)';
+    for (let y = 40; y < 360; y += 40) {
+      offCtx.beginPath(); offCtx.moveTo(0, y); offCtx.lineTo(640, y); offCtx.stroke();
+    }
+
+    // Move simulation objects
+    simObjects.forEach(obj => {
+      obj.x += obj.vx;
+      obj.y += obj.vy;
+
+      if (feedSource === 'sim-conveyor') {
+        if (obj.x > 680) obj.x = -40;
+      } else if (feedSource === 'sim-perimeter') {
+        if (obj.x < 30 || obj.x > 610) obj.vx *= -1;
+        if (obj.y < 30 || obj.y > 330) obj.vy *= -1;
+      } else if (feedSource === 'sim-traffic') {
+        if (obj.x > 680) obj.x = -40;
+        if (obj.y < -40) obj.y = 400;
+      }
+
+      // Draw synthetic blob on offscreen canvas
+      offCtx.beginPath();
+      offCtx.arc(obj.x, obj.y, obj.r, 0, Math.PI * 2);
+      offCtx.fillStyle = obj.color;
+      offCtx.fill();
+
+      // Core defect spot on conveyor ball
+      if (feedSource === 'sim-conveyor' && obj.label === 'BOWL_CORE') {
+        offCtx.fillStyle = '#f43f5e';
+        offCtx.beginPath();
+        offCtx.arc(obj.x + Math.sin(simTick * 0.1) * 8, obj.y + Math.cos(simTick * 0.1) * 8, 4, 0, Math.PI * 2);
+        offCtx.fill();
+      }
+    });
+  }
+
+  // 2. Fetch Frame ImageData
+  const currentFrame = offCtx.getImageData(0, 0, 640, 360);
+  const curPixels = currentFrame.data;
+
+  // Process Differencing & Contours
+  let motionPixelCount = 0;
+  let boundingBoxes = [];
+  const gridStep = 8; // Downsampled grid for real-time blob clustering
+  const gridW = Math.floor(640 / gridStep);
+  const gridH = Math.floor(360 / gridStep);
+  const motionGrid = new Uint8Array(gridW * gridH);
+
+  if (prevFrameData) {
+    const prevPixels = prevFrameData.data;
+    for (let gy = 0; gy < gridH; gy++) {
+      for (let gx = 0; gx < gridW; gx++) {
+        const px = gx * gridStep + 4;
+        const py = gy * gridStep + 4;
+        const idx = (py * 640 + px) * 4;
+
+        // Gray Luminance Delta
+        const curLum = curPixels[idx] * 0.299 + curPixels[idx+1] * 0.587 + curPixels[idx+2] * 0.114;
+        const prevLum = prevPixels[idx] * 0.299 + prevPixels[idx+1] * 0.587 + prevPixels[idx+2] * 0.114;
+        const delta = Math.abs(curLum - prevLum);
+
+        if (delta > sensitivity) {
+          motionGrid[gy * gridW + gx] = 1;
+          motionPixelCount++;
+        }
+      }
+    }
+  }
+
+  // Cluster Motion Grid into Bounding Boxes
+  const visited = new Uint8Array(gridW * gridH);
+  for (let gy = 0; gy < gridH; gy++) {
+    for (let gx = 0; gx < gridW; gx++) {
+      const idx = gy * gridW + gx;
+      if (motionGrid[idx] && !visited[idx]) {
+        // Flood fill cluster
+        let minX = gx, maxX = gx, minY = gy, maxY = gy, count = 0;
+        const queue = [[gx, gy]];
+        visited[idx] = 1;
+
+        while (queue.length > 0) {
+          const [cx, cy] = queue.pop();
+          count++;
+          if (cx < minX) minX = cx;
+          if (cx > maxX) maxX = cx;
+          if (cy < minY) minY = cy;
+          if (cy > maxY) maxY = cy;
+
+          // Check 4-way neighbors
+          const neighbors = [[cx+1, cy], [cx-1, cy], [cx, cy+1], [cx, cy-1]];
+          for (let [nx, ny] of neighbors) {
+            if (nx >= 0 && nx < gridW && ny >= 0 && ny < gridH) {
+              const nIdx = ny * gridW + nx;
+              if (motionGrid[nIdx] && !visited[nIdx]) {
+                visited[nIdx] = 1;
+                queue.push([nx, ny]);
+              }
+            }
+          }
+        }
+
+        const areaPx = (maxX - minX + 1) * gridStep * (maxY - minY + 1) * gridStep;
+        if (areaPx >= minArea && count >= 3) {
+          boundingBoxes.push({
+            x: minX * gridStep,
+            y: minY * gridStep,
+            w: (maxX - minX + 1) * gridStep,
+            h: (maxY - minY + 1) * gridStep,
+            cx: ((minX + maxX + 1) / 2) * gridStep,
+            cy: ((minY + maxY + 1) / 2) * gridStep,
+            area: areaPx
+          });
+        }
+      }
+    }
+  }
+
+  activeBlobs = boundingBoxes;
+
+  // 3. Render Output based on Vision Mode
+  if (visionMode === 'raw') {
+    ctx.drawImage(offCanvas, 0, 0);
+  } else if (visionMode === 'diff') {
+    // Render high-contrast motion mask
+    ctx.fillStyle = '#060a16';
+    ctx.fillRect(0, 0, 640, 360);
+    // Draw motion cells
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
+    for (let gy = 0; gy < gridH; gy++) {
+      for (let gx = 0; gx < gridW; gx++) {
+        if (motionGrid[gy * gridW + gx]) {
+          ctx.fillRect(gx * gridStep, gy * gridStep, gridStep - 1, gridStep - 1);
+        }
+      }
+    }
+  } else if (visionMode === 'sobel') {
+    // Real-time Sobel Edge Convolution Filter
+    const outputImg = ctx.createImageData(640, 360);
+    const outData = outputImg.data;
+    for (let y = 1; y < 359; y += 2) {
+      for (let x = 1; x < 639; x += 2) {
+        const idx = (y * 640 + x) * 4;
+        const left = curPixels[idx - 4];
+        const right = curPixels[idx + 4];
+        const up = curPixels[idx - 640 * 4];
+        const down = curPixels[idx + 640 * 4];
+        const gx = right - left;
+        const gy = down - up;
+        const mag = Math.min(255, Math.hypot(gx, gy) * 1.5);
+        if (mag > 40) {
+          outData[idx] = 6;
+          outData[idx+1] = 182;
+          outData[idx+2] = 212;
+          outData[idx+3] = 255;
+        } else {
+          outData[idx+3] = 255;
+        }
+      }
+    }
+    ctx.putImageData(outputImg, 0, 0);
+  } else if (visionMode === 'heat') {
+    // Fade existing heatmap
+    heatCtx.fillStyle = `rgba(0, 0, 0, ${1 - decay})`;
+    heatCtx.fillRect(0, 0, 640, 360);
+
+    // Stamp current blobs
+    boundingBoxes.forEach(b => {
+      const grad = heatCtx.createRadialGradient(b.cx, b.cy, 2, b.cx, b.cy, Math.max(b.w, b.h));
+      grad.addColorStop(0, 'rgba(239, 68, 68, 0.8)');
+      grad.addColorStop(0.5, 'rgba(245, 158, 11, 0.4)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      heatCtx.fillStyle = grad;
+      heatCtx.beginPath();
+      heatCtx.arc(b.cx, b.cy, Math.max(b.w, b.h), 0, Math.PI * 2);
+      heatCtx.fill();
+    });
+
+    ctx.drawImage(heatCanvas, 0, 0);
+  }
+
+  // 4. Draw Tripwire & Check Breaches
+  let tripwireBreached = false;
+  ctx.save();
+  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = tripwire.active ? '#ef4444' : '#64748b';
+  ctx.setLineDash([8, 6]);
+  ctx.beginPath();
+  ctx.moveTo(tripwire.x1, tripwire.y1);
+  ctx.lineTo(tripwire.x2, tripwire.y2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Tripwire Posts
+  ctx.fillStyle = '#ef4444';
+  ctx.beginPath(); ctx.arc(tripwire.x1, tripwire.y1, 5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(tripwire.x2, tripwire.y2, 5, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+
+  // 5. Draw Bounding Boxes & Detect Tripwire Intersections
+  boundingBoxes.forEach((box, idx) => {
+    const dist = distToSegment(box.cx, box.cy, tripwire.x1, tripwire.y1, tripwire.x2, tripwire.y2);
+    const isBreach = dist < Math.max(box.w, box.h) * 0.5;
+
+    if (isBreach) {
+      tripwireBreached = true;
+    }
+
+    ctx.save();
+    ctx.strokeStyle = isBreach ? '#f43f5e' : '#10b981';
+    ctx.lineWidth = isBreach ? 2.5 : 1.5;
+    ctx.strokeRect(box.x, box.y, box.w, box.h);
+
+    // Label Badge
+    ctx.fillStyle = isBreach ? 'rgba(244,63,94,0.85)' : 'rgba(16,185,129,0.85)';
+    ctx.fillRect(box.x, box.y - 18, 90, 18);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 10px "JetBrains Mono", monospace';
+    ctx.fillText(`${isBreach ? '⚠️ BREACH' : 'TARGET_' + (idx + 1)}`, box.x + 4, box.y - 5);
+
+    // Centroid Crosshair
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(box.cx - 5, box.cy); ctx.lineTo(box.cx + 5, box.cy);
+    ctx.moveTo(box.cx, box.cy - 5); ctx.lineTo(box.cx, box.cy + 5);
+    ctx.stroke();
+
+    ctx.restore();
+  });
+
+  // Tripwire Alarm State
+  const alertBadge = document.getElementById('hudTripwireAlert');
+  if (tripwireBreached) {
+    alertBadge.style.display = 'block';
+    breachCount++;
+    document.getElementById('statBreaches').innerText = breachCount;
+    playAlarmChime();
+    if (simTick % 30 === 0) {
+      logEvent(`⚠️ TRIPWIRE VIOLATION! Object intercepted at coordinates (${Math.round(tripwire.x1)}, ${Math.round(tripwire.y1)})`, true);
+    }
+  } else {
+    alertBadge.style.display = 'none';
+  }
+
+  // Update HUD
+  const motionPct = ((motionPixelCount / (gridW * gridH)) * 100).toFixed(1);
+  document.getElementById('hudDelta').innerText = motionPct + '%';
+  document.getElementById('hudBlobs').innerText = boundingBoxes.length;
+  document.getElementById('statTargets').innerText = boundingBoxes.length;
+  document.getElementById('statVelocity').innerText = (boundingBoxes.length * 42) + ' px/s';
+
+  // Save current frame for next iteration
+  prevFrameData = currentFrame;
+
+  requestAnimationFrame(renderLoop);
+}
+
+// Start on load
+window.addEventListener('DOMContentLoaded', () => {
+  requestAnimationFrame(renderLoop);
+});
+</script>
+</body>
+</html>
