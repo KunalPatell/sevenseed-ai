@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Interactive 3D Human Anatomy &amp; Clinical Organ Explorer — Decode Pharmacy</title>
+  <meta name="description" content="Interactive 3D anatomical body explorer. Inspect vital organs, understand clinical protocols, and discover Jan Aushadhi generic medicines. 100% Free Public Health Radar.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    .anat-container { max-width: 1400px; margin: 0 auto; padding: 90px 24px 70px; }
+    .anat-header { text-align: center; margin-bottom: 28px; }
+    .anat-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.14); border: 1px solid rgba(16,185,129,0.35); color: #34d399; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+    .anat-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.15; margin-bottom: 10px; color: var(--text, #fff); }
+    .anat-sub { font-size: 16px; color: var(--text-2, #94a3b8); max-width: 740px; margin: 0 auto 24px; line-height: 1.6; }
+
+    /* Anatomy Grid */
+    .anat-grid { display: grid; grid-template-columns: 1fr 480px; gap: 24px; min-height: 640px; }
+    @media(max-width: 1080px) { .anat-grid { grid-template-columns: 1fr; } }
+
+    .canvas-card { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 18px; padding: 24px; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+    #anatCanvas { width: 100%; height: 540px; border-radius: 14px; background: #030712; display: block; cursor: grab; }
+    #anatCanvas:active { cursor: grabbing; }
+
+    .canvas-hud { position: absolute; top: 36px; left: 36px; pointer-events: none; }
+    .hud-title { font-size: 15px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .hud-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+    /* Organ Selectors Strip */
+    .organ-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    .o-pill { padding: 6px 14px; border-radius: 20px; background: var(--bg-2, #141c30); border: 1px solid var(--border, rgba(255,255,255,0.1)); color: var(--text-2, #94a3b8); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .o-pill:hover, .o-pill.active { background: rgba(16,185,129,0.18); border-color: #10b981; color: #34d399; }
+
+    /* Details Panel */
+    .detail-card { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 18px; padding: 26px; display: flex; flex-direction: column; justify-content: space-between; }
+    .organ-hero { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .organ-icon { width: 60px; height: 60px; border-radius: 14px; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.35); display: flex; align-items: center; justify-content: center; font-size: 28px; color: #34d399; }
+    .organ-name { font-size: 22px; font-weight: 800; color: #fff; }
+    .organ-system { font-size: 13px; color: #34d399; font-weight: 600; }
+
+    .sec-block { margin-bottom: 18px; }
+    .sec-label { font-size: 11.5px; font-weight: 700; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; letter-spacing: 0.05em; }
+    .sec-desc { font-size: 13.5px; color: #cbd5e1; line-height: 1.6; }
+
+    .redflag-box { background: rgba(239,68,68,0.1); border-left: 3px solid #ef4444; border-radius: 0 8px 8px 0; padding: 12px 14px; font-size: 13px; color: #fca5a5; line-height: 1.5; margin-bottom: 18px; }
+
+    .salts-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .salt-item { background: var(--bg-2, #141c30); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo" style="text-decoration:none; color:#fff; font-weight:800; display:flex; align-items:center; gap:8px;">
+        <span style="color:#10b981;">🌿</span> Decode Pharmacy
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="anatomy-explorer.html" class="nav-link active" style="color:#34d399; font-weight:700;">3D Body Explorer</a>
+        <a href="doctor-booking.html" class="nav-link">Doctor Booking</a>
+        <a href="generic-finder.html" class="nav-link">Generic Radar</a>
+        <a href="prescription-ocr.html" class="nav-link">Prescription OCR</a>
+        <a href="interaction-checker.html" class="nav-link">Interaction Matrix</a>
+        <a href="/byok.html" class="nav-link" style="color:#38bdf8;">BYOK Vault</a>
+        <a href="/" class="nav-link">Hub</a>
+      </div>
+      <div class="nav-right">
+        <button id="themeToggle" class="theme-btn" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="anat-container">
+    <div class="anat-header">
+      <div class="anat-badge"><i class="fas fa-cubes"></i> Three.js WebGL 3D Spatial Medicine</div>
+      <h1 class="anat-title">Interactive 3D Human Anatomy &amp; Clinical Organ Explorer</h1>
+      <p class="anat-sub">Rotate and inspect anatomical organ systems in 3D. Learn key physiological functions, identify clinical red flags, and discover identical PMBJP generic salt equivalents.</p>
+    </div>
+
+    <div class="anat-grid">
+      <!-- 3D Canvas Stage -->
+      <div class="canvas-card">
+        <canvas id="anatCanvas"></canvas>
+        <div class="canvas-hud">
+          <div class="hud-title"><i class="fas fa-hand-pointer" style="color:#10b981;"></i> Click Organs or Drag to Orbit</div>
+          <div class="hud-sub">Interactive 3D Anatomical Frame</div>
+        </div>
+
+        <div class="organ-strip">
+          <button class="o-pill active" onclick="selectOrgan('heart', this)">🫀 Heart</button>
+          <button class="o-pill" onclick="selectOrgan('brain', this)">🧠 Brain &amp; CNS</button>
+          <button class="o-pill" onclick="selectOrgan('lungs', this)">🫁 Lungs &amp; Respiration</button>
+          <button class="o-pill" onclick="selectOrgan('liver', this)">🥩 Liver &amp; Metabolism</button>
+          <button class="o-pill" onclick="selectOrgan('stomach', this)">🫄 GI Tract &amp; Stomach</button>
+          <button class="o-pill" onclick="selectOrgan('joints', this)">🦴 Skeletal Joints</button>
+        </div>
+      </div>
+
+      <!-- Clinical Details Panel -->
+      <div class="detail-card">
+        <div>
+          <div class="organ-hero">
+            <div class="organ-icon" id="organIcon">🫀</div>
+            <div>
+              <div class="organ-name" id="organName">Cardiovascular Heart</div>
+              <div class="organ-system" id="organSystem">Circulatory System</div>
+            </div>
+          </div>
+
+          <div class="sec-block">
+            <div class="sec-label">Primary Physiological Function</div>
+            <div class="sec-desc" id="organFunction">
+              Pumps oxygenated blood through the systemic arterial tree (~7,200 liters daily) while maintaining regulated blood pressure and coronary perfusion.
+            </div>
+          </div>
+
+          <div class="sec-block">
+            <div class="sec-label">Red-Flag Emergency Symptoms (Dial 112 / ER)</div>
+            <div class="redflag-box" id="organRedFlag">
+              ⚠️ Crushing retrosternal chest pain radiating to left arm or jaw, sudden shortness of breath, unexplained diaphoresis, or resting pulse >140 BPM.
+            </div>
+          </div>
+
+          <div class="sec-block">
+            <div class="sec-label">First-Line Jan Aushadhi Generic Salts</div>
+            <div class="salts-list" id="organSalts">
+              <!-- Injected -->
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <a href="doctor-booking.html" class="btn btn-primary" id="bookSpecialistBtn" style="width:100%; text-decoration:none; justify-content:center;">
+            <i class="fas fa-user-doctor"></i> Book Cardiologist Consultation →
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" style="padding:40px 24px; text-align:center; border-top:1px solid rgba(255,255,255,0.08); font-size:13px; color:#94a3b8;">
+    <p>Decode Pharmacy · 100% Free Public Health Tech · Zero Subscription Clinical Anatomy</p>
+  </footer>
+
+  <script>
+    var ORGANS = {
+      heart: {
+        name: 'Cardiovascular Heart',
+        system: 'Circulatory System',
+        icon: '🫀',
+        func: 'Pumps oxygenated blood through the systemic arterial tree (~7,200 liters daily) while maintaining regulated blood pressure and coronary perfusion.',
+        redflag: '⚠️ Crushing retrosternal chest pain radiating to left arm or jaw, sudden shortness of breath, unexplained diaphoresis, or resting pulse >140 BPM.',
+        salts: [
+          { salt: 'Amlodipine 5mg + Telmisartan 40mg', brand: 'Telma-AM (₹190)', pmbjp: '₹22.00 (Save 88%)' },
+          { salt: 'Atorvastatin IP 10mg (Lipid Reg)', brand: 'Atorva 10 (₹115)', pmbjp: '₹14.50 (Save 87%)' },
+          { salt: 'Aspirin 75mg Gastro-resistant', brand: 'Ecosprin 75 (₹12)', pmbjp: '₹3.20 (Save 73%)' }
+        ],
+        doc: 'Cardiologist',
+        meshY: 0.6,
+        meshColor: 0xef4444
+      },
+      brain: {
+        name: 'Cerebrum & Central Nervous System',
+        system: 'Neurological System',
+        icon: '🧠',
+        func: 'Controls cognitive decision-making, motor neuromuscular impulses, autonomic homeostasis, and synaptic neurochemistry across 86 billion neurons.',
+        redflag: '⚠️ Sudden unilateral facial drooping or arm weakness (BE-FAST stroke sign), thunderclap headache, sudden aphasia, or new-onset generalized seizure.',
+        salts: [
+          { salt: 'Levetiracetam 500mg (Anti-epileptic)', brand: 'Levipil 500 (₹180)', pmbjp: '₹35.00 (Save 80%)' },
+          { salt: 'Citicoline 500mg (Neuroprotection)', brand: 'Stoline 500 (₹420)', pmbjp: '₹95.00 (Save 77%)' }
+        ],
+        doc: 'Neurologist',
+        meshY: 1.8,
+        meshColor: 0xa855f7
+      },
+      lungs: {
+        name: 'Pulmonary Lungs & Bronchi',
+        system: 'Respiratory System',
+        icon: '🫁',
+        func: 'Facilitates gas diffusion exchange across alveolar capillary beds, oxygenating venous blood while clearing carbon dioxide waste.',
+        redflag: '⚠️ Pulse oximeter SpO2 <92%, acute respiratory stridor, hemoptysis (coughing blood), or severe accessory muscle retractions.',
+        salts: [
+          { salt: 'Salbutamol 100mcg Inhaler', brand: 'Asthalin (₹160)', pmbjp: '₹48.00 (Save 70%)' },
+          { salt: 'Montelukast 10mg + Levocetirizine 5mg', brand: 'Montair-LC (₹210)', pmbjp: '₹26.00 (Save 87%)' }
+        ],
+        doc: 'General Physician',
+        meshY: 0.8,
+        meshColor: 0x38bdf8
+      },
+      liver: {
+        name: 'Hepatic Liver & Gallbladder',
+        system: 'Digestive & Metabolic System',
+        icon: '🥩',
+        func: 'Synthesizes clotting factors and bile, metabolizes xenobiotic medications, and regulates glycogen storage and gluconeogenesis.',
+        redflag: '⚠️ Scleral icterus (yellow eyes/skin), ascites (abdominal distension), clay-colored stools, or acute right upper quadrant tenderness.',
+        salts: [
+          { salt: 'Ursodeoxycholic Acid 300mg', brand: 'Udiliv 300 (₹480)', pmbjp: '₹98.00 (Save 79%)' },
+          { salt: 'Silymarin + B-Complex Syrup', brand: 'Hepagard (₹220)', pmbjp: '₹42.00 (Save 81%)' }
+        ],
+        doc: 'General Physician',
+        meshY: 0.1,
+        meshColor: 0xf59e0b
+      },
+      stomach: {
+        name: 'Gastrointestinal Stomach & Bowel',
+        system: 'Enteric System',
+        icon: '🫄',
+        func: 'Secrets hydrochloric acid and pepsinogen to digest nutrients, absorbing electrolytes and supporting microbiome gut immunity.',
+        redflag: '⚠️ Hematemesis (coffee-ground vomiting), melena (black tarry stools), rigid board-like abdomen, or persistent dysphagia.',
+        salts: [
+          { salt: 'Pantoprazole 40mg + Domperidone 30mg', brand: 'Pan-D (₹215)', pmbjp: '₹24.00 (Save 88%)' },
+          { salt: 'Oral Rehydration Salts (WHO formula)', brand: 'Electral (₹23)', pmbjp: '₹4.50 (Save 80%)' }
+        ],
+        doc: 'General Physician',
+        meshY: -0.3,
+        meshColor: 0x10b981
+      },
+      joints: {
+        name: 'Musculoskeletal Articular Joints',
+        system: 'Skeletal System',
+        icon: '🦴',
+        func: 'Provides mechanical articulation, load distribution, synovial fluid lubrication, and shock absorption across knees, hips, and spine.',
+        redflag: '⚠️ Inability to bear weight after acute trauma, hot erythematous joint with fever (septic arthritis concern), or neurological foot drop.',
+        salts: [
+          { salt: 'Glucosamine Sulfate 750mg', brand: 'Cartigen (₹340)', pmbjp: '₹62.00 (Save 81%)' },
+          { salt: 'Aceclofenac 100mg + Paracetamol 325mg', brand: 'Zerodol-P (₹75)', pmbjp: '₹12.00 (Save 84%)' }
+        ],
+        doc: 'Orthopedic',
+        meshY: -1.2,
+        meshColor: 0xe2e8f0
+      }
+    };
+
+    // Three.js WebGL Setup
+    var canvas = document.getElementById('anatCanvas');
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+    camera.position.set(0, 0.4, 6.5);
+
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    // Ambient and Directional Lights
+    var ambLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambLight);
+    var dirLight = new THREE.DirectionalLight(0x34d399, 1.2);
+    dirLight.position.set(5, 10, 7);
+    scene.add(dirLight);
+
+    // Procedural Anatomical Torso Silhouette Mesh
+    var torsoGroup = new THREE.Group();
+    scene.add(torsoGroup);
+
+    // Torso Wireframe
+    var torsoGeom = new THREE.CylinderGeometry(0.9, 0.6, 2.2, 16, 12, true);
+    var torsoMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.35
+    });
+    var torsoMesh = new THREE.Mesh(torsoGeom, torsoMat);
+    torsoGroup.add(torsoMesh);
+
+    // Head Sphere
+    var headGeom = new THREE.SphereGeometry(0.55, 16, 16);
+    var headMesh = new THREE.Mesh(headGeom, torsoMat);
+    headMesh.position.y = 1.7;
+    torsoGroup.add(headMesh);
+
+    // Glowing Organ Interactive Spheres
+    var organMeshes = {};
+    Object.keys(ORGANS).forEach(function(key) {
+      var og = ORGANS[key];
+      var g = new THREE.SphereGeometry(0.22, 24, 24);
+      var m = new THREE.MeshStandardMaterial({
+        color: og.meshColor,
+        emissive: og.meshColor,
+        emissiveIntensity: 0.6,
+        roughness: 0.2
+      });
+      var mesh = new THREE.Mesh(g, m);
+      mesh.position.set(0, og.meshY, 0.45);
+      torsoGroup.add(mesh);
+      organMeshes[key] = mesh;
+    });
+
+    // Orbit Drag Interaction
+    var isDragging = false;
+    var prevMouseX = 0;
+    var prevMouseY = 0;
+
+    canvas.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      prevMouseX = e.clientX;
+      prevMouseY = e.clientY;
+    });
+    window.addEventListener('mouseup', function() { isDragging = false; });
+    window.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      var dx = e.clientX - prevMouseX;
+      var dy = e.clientY - prevMouseY;
+      torsoGroup.rotation.y += dx * 0.008;
+      torsoGroup.rotation.x += dy * 0.005;
+      prevMouseX = e.clientX;
+      prevMouseY = e.clientY;
+    });
+
+    // Animation Loop
+    function animate() {
+      requestAnimationFrame(animate);
+      if (!isDragging) {
+        torsoGroup.rotation.y += 0.003;
+      }
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    function selectOrgan(key, btn) {
+      var og = ORGANS[key];
+      if (!og) return;
+
+      if (btn) {
+        document.querySelectorAll('.o-pill').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+      }
+
+      document.getElementById('organIcon').innerText = og.icon;
+      document.getElementById('organName').innerText = og.name;
+      document.getElementById('organSystem').innerText = og.system;
+      document.getElementById('organFunction').innerText = og.func;
+      document.getElementById('organRedFlag').innerText = og.redflag;
+
+      var saltsDiv = document.getElementById('organSalts');
+      saltsDiv.innerHTML = og.salts.map(function(s){
+        return '<div class="salt-item">' +
+                 '<div><strong>' + s.salt + '</strong><br><span style="font-size:11px; color:#94a3b8;">Branded: ' + s.brand + '</span></div>' +
+                 '<div style="font-family:\'JetBrains Mono\'; color:#34d399; font-weight:700;">PMBJP: ' + s.pmbjp + '</div>' +
+               '</div>';
+      }).join('');
+
+      document.getElementById('bookSpecialistBtn').innerHTML = '<i class="fas fa-user-doctor"></i> Book ' + og.doc + ' Consultation →';
+
+      // Animate Camera to focus on organ
+      torsoGroup.rotation.set(0, 0, 0);
+      Object.keys(organMeshes).forEach(function(k){
+        organMeshes[k].scale.set(k === key ? 1.6 : 1, k === key ? 1.6 : 1, k === key ? 1.6 : 1);
+      });
+    }
+
+    selectOrgan('heart', document.querySelector('.o-pill.active'));
+  </script>
+</body>
+</html>

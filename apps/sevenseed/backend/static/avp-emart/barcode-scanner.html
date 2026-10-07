@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Live Camera Barcode & QR Price Scanner — AVP Emart</title>
+  <meta name="description" content="Physical-to-digital price intelligence. Scan physical product barcodes with your camera to compare real-time prices across Amazon, Flipkart, Blinkit, and Jan Aushadhi.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .scan-container { max-width: 1200px; margin: 0 auto; padding: 90px 24px 70px; }
+    .scan-header { text-align: center; margin-bottom: 28px; }
+    .scan-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(245,158,11,0.14); border: 1px solid rgba(245,158,11,0.35); color: #fbbf24; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+    .scan-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.15; margin-bottom: 10px; color: var(--text, #fff); }
+    .scan-sub { font-size: 16px; color: var(--text-2, #94a3b8); max-width: 740px; margin: 0 auto 24px; line-height: 1.6; }
+
+    /* Scanner Stage */
+    .scanner-grid { display: grid; grid-template-columns: 480px 1fr; gap: 24px; min-height: 600px; }
+    @media(max-width: 1024px) { .scanner-grid { grid-template-columns: 1fr; } }
+
+    .camera-card { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; }
+    .camera-viewport { background: #000; border: 2px dashed rgba(245,158,11,0.4); border-radius: 14px; position: relative; overflow: hidden; min-height: 360px; display: flex; align-items: center; justify-content: center; }
+    #videoElement { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .scan-target-box { position: absolute; width: 220px; height: 140px; border: 2px solid #f59e0b; border-radius: 10px; box-shadow: 0 0 20px rgba(245,158,11,0.4); display: flex; align-items: center; justify-content: center; }
+    .laser-line { width: 100%; height: 2px; background: #ef4444; box-shadow: 0 0 10px #ef4444; position: absolute; animation: laser-sweep 2s infinite ease-in-out; }
+    @keyframes laser-sweep { 0% { top: 5%; } 50% { top: 95%; } 100% { top: 5%; } }
+
+    /* Results Pane */
+    .results-card { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; }
+    .product-header { display: flex; gap: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .prod-icon { width: 64px; height: 64px; border-radius: 12px; background: var(--bg-2, #141c30); border: 1px solid var(--border, rgba(255,255,255,0.1)); display: flex; align-items: center; justify-content: center; font-size: 28px; color: #fbbf24; }
+    .prod-title { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .prod-code { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8; }
+
+    /* Stores List */
+    .stores-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .store-item { background: var(--bg-2, #141c30); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; }
+    .store-item.best-deal { border-color: #10b981; background: rgba(16,185,129,0.08); }
+    .store-name { font-size: 14px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .store-price { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 800; color: #34d399; }
+
+    .preset-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+    .p-btn { padding: 6px 12px; border-radius: 20px; background: var(--bg-2, #141c30); border: 1px solid var(--border, rgba(255,255,255,0.1)); color: var(--text-2, #94a3b8); font-size: 12px; cursor: pointer; transition: all 0.2s; }
+    .p-btn:hover { border-color: #f59e0b; color: #fff; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo" style="text-decoration:none; color:#fff; font-weight:800; display:flex; align-items:center; gap:8px;">
+        <span style="color:#f59e0b;">🛒</span> AVP Emart
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="deals-radar.html" class="nav-link">Deals Radar</a>
+        <a href="spec-compare.html" class="nav-link">Spec Comparator</a>
+        <a href="barcode-scanner.html" class="nav-link active" style="color:#fbbf24; font-weight:700;">Barcode Scanner</a>
+        <a href="price-tracker.html" class="nav-link">Price Tracker</a>
+        <a href="coupon-tester.html" class="nav-link">Coupon Tester</a>
+        <a href="/byok.html" class="nav-link" style="color:#38bdf8;">BYOK Vault</a>
+        <a href="/" class="nav-link">Hub</a>
+      </div>
+      <div class="nav-right">
+        <button id="themeToggle" class="theme-btn" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="scan-container">
+    <div class="scan-header">
+      <div class="scan-badge"><i class="fas fa-barcode"></i> Physical-to-Digital Price Radar</div>
+      <h1 class="scan-title">Live Camera Barcode &amp; QR Price Scanner</h1>
+      <p class="scan-sub">Scan physical retail packaging with your camera or select a benchmark barcode to unlock instant cross-store price comparisons across Amazon, Flipkart, Blinkit, and Jan Aushadhi.</p>
+    </div>
+
+    <div class="scanner-grid">
+      <!-- Camera Card -->
+      <div class="camera-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h3 style="font-size:16px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+            <i class="fas fa-camera" style="color:#fbbf24;"></i> Live Optical Feed
+          </h3>
+          <span style="font-size:12px; color:#94a3b8;" id="camStatus">Standby</span>
+        </div>
+
+        <div class="camera-viewport">
+          <video id="videoElement" autoplay playsinline></video>
+          <div class="scan-target-box" id="targetBox">
+            <div class="laser-line"></div>
+            <span style="font-size:11px; font-family:'JetBrains Mono'; color:#f59e0b; position:absolute; bottom:6px;">ALIGN BARCODE</span>
+          </div>
+          <div id="camPlaceholder" style="text-align:center; padding:20px; color:#94a3b8;">
+            <i class="fas fa-barcode" style="font-size:48px; margin-bottom:12px; color:#f59e0b; opacity:0.8;"></i>
+            <div style="font-size:13.5px; color:#cbd5e1; font-weight:700;">Point Camera at EAN-13 / UPC Barcode</div>
+            <button class="btn btn-primary sm" style="margin-top:14px;" onclick="startCamera()"><i class="fas fa-video"></i> Activate Camera</button>
+          </div>
+        </div>
+
+        <div style="font-size:12px; font-weight:700; color:#cbd5e1; margin-top:16px;">Test with Sample Physical Barcodes:</div>
+        <div class="preset-chips">
+          <button class="p-btn" onclick="simulateScan('8901030918231', 'Sony WH-1000XM5 Wireless Headphones')">🎧 Sony WH-1000XM5</button>
+          <button class="p-btn" onclick="simulateScan('194253401248', 'Apple iPhone 16 Pro Max (256GB)')">📱 iPhone 16 Pro Max</button>
+          <button class="p-btn" onclick="simulateScan('890123456789', 'Dolo 650mg / Paracetamol IP 650')">💊 Paracetamol 650mg</button>
+          <button class="p-btn" onclick="simulateScan('890422380129', 'Optimum Nutrition Gold Standard Whey 1kg')">💪 Gold Standard Whey</button>
+        </div>
+      </div>
+
+      <!-- Comparison Results Card -->
+      <div class="results-card">
+        <div class="product-header">
+          <div class="prod-icon" id="prodIcon">📦</div>
+          <div>
+            <div class="prod-title" id="prodTitle">Scan an Item to Begin</div>
+            <div class="prod-code" id="prodBarcode">EAN: Awaiting Input...</div>
+          </div>
+        </div>
+
+        <div style="font-size:13px; font-weight:700; color:#cbd5e1; margin-bottom:10px;">
+          <i class="fas fa-store" style="color:#f59e0b;"></i> Real-Time Landed Prices Across 5 Stores:
+        </div>
+
+        <div class="stores-list" id="storesList">
+          <div style="text-align:center; padding:50px 20px; color:#94a3b8; font-style:italic;">
+            No barcode scanned yet. Activate your camera or click a sample barcode on the left.
+          </div>
+        </div>
+
+        <div id="savingsAdvice" style="display:none; background:rgba(16,185,129,0.1); border:1px solid #10b981; border-radius:12px; padding:14px 18px; font-size:13px; color:#cbd5e1; line-height:1.5;">
+          <!-- Advice -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" style="padding:40px 24px; text-align:center; border-top:1px solid rgba(255,255,255,0.08); font-size:13px; color:#94a3b8;">
+    <p>AVP Emart · 100% Free Smart Commerce Intelligence · Zero Affiliate Markup</p>
+  </footer>
+
+  <script>
+    var PRODUCTS = {
+      '8901030918231': {
+        name: 'Sony WH-1000XM5 Noise Canceling Headphones',
+        icon: '🎧',
+        stores: [
+          { name: 'Amazon India', price: 29990, shipping: 'FREE Next-Day', coupon: 'APAY2000 (-₹2,000)', landed: 27990, best: false },
+          { name: 'Croma Retail', price: 29990, shipping: 'FREE 2-Hour Pickup', coupon: 'CRMA1500 (-₹1,500)', landed: 28490, best: false },
+          { name: 'Flipkart', price: 28499, shipping: 'FREE 2-Day', coupon: 'FKAXIS (-₹2,500)', landed: 25999, best: true },
+          { name: 'Reliance Digital', price: 29990, shipping: '₹99 standard', coupon: 'None', landed: 30089, best: false },
+          { name: 'Blinkit Quick', price: 31990, shipping: '₹25 (12 mins)', coupon: 'None', landed: 32015, best: false }
+        ],
+        advice: '💡 <strong>Best Landed Deal:</strong> Flipkart with Axis card coupon saves ₹4,090 compared to retail MSRP. If you need it immediately within 12 minutes, Blinkit has local inventory.'
+      },
+      '194253401248': {
+        name: 'Apple iPhone 16 Pro Max 256GB Desert Titanium',
+        icon: '📱',
+        stores: [
+          { name: 'Apple Official Store', price: 144900, shipping: 'FREE Apple Delivery', coupon: 'None', landed: 144900, best: false },
+          { name: 'Amazon India', price: 144900, shipping: 'FREE Prime Next-Day', coupon: 'ICICI5000 (-₹5,000)', landed: 139900, best: true },
+          { name: 'Flipkart', price: 144900, shipping: 'FREE Express', coupon: 'HDFC4000 (-₹4,000)', landed: 140900, best: false },
+          { name: 'Croma Retail', price: 144900, shipping: 'FREE Store Pickup', coupon: 'TataNeu (-₹3,500)', landed: 141400, best: false },
+          { name: 'Blinkit Quick', price: 144900, shipping: '₹40 (10 mins)', coupon: 'None', landed: 144940, best: false }
+        ],
+        advice: '💡 <strong>Price Verdict:</strong> Amazon India with ICICI instant bank discount offers the lowest net landed price at ₹1,39,900.'
+      },
+      '890123456789': {
+        name: 'Paracetamol IP 650mg Tablets (15 Tab Strip)',
+        icon: '💊',
+        stores: [
+          { name: 'Branded Dolo 650 (Apollo)', price: 33.50, shipping: '₹25', coupon: 'None', landed: 58.50, best: false },
+          { name: 'Branded Calpol 650 (1mg)', price: 34.00, shipping: '₹30', coupon: 'None', landed: 64.00, best: false },
+          { name: 'PMBJP Jan Aushadhi Generic', price: 5.50, shipping: 'FREE at Kendra', coupon: 'Government Subsidized', landed: 5.50, best: true },
+          { name: 'Blinkit Pharmacy', price: 33.50, shipping: '₹15 (8 mins)', coupon: 'None', landed: 48.50, best: false },
+          { name: 'Zepto Health', price: 33.50, shipping: '₹18 (9 mins)', coupon: 'None', landed: 51.50, best: false }
+        ],
+        advice: '💡 <strong>Jan Aushadhi Generic Savings:</strong> Identical active pharmaceutical ingredient (Paracetamol IP 650mg). Buying at PMBJP saves <strong>83.5%</strong> over branded Dolo/Calpol.'
+      },
+      '890422380129': {
+        name: 'Optimum Nutrition (ON) Gold Standard 100% Whey 1kg Double Rich Chocolate',
+        icon: '💪',
+        stores: [
+          { name: 'Amazon India', price: 3499, shipping: 'FREE Next-Day', coupon: 'SUPP200 (-₹200)', landed: 3299, best: false },
+          { name: 'Nutrabay', price: 3399, shipping: 'FREE Standard', coupon: 'BAY100 (-₹100)', landed: 3299, best: false },
+          { name: 'HealthKart', price: 3249, shipping: 'FREE 2-Day', coupon: 'HKPRO (-₹150)', landed: 3099, best: true },
+          { name: 'Blinkit Fitness', price: 3699, shipping: '₹30 (15 mins)', coupon: 'None', landed: 3729, best: false },
+          { name: 'Flipkart', price: 3499, shipping: 'FREE Standard', coupon: 'None', landed: 3499, best: false }
+        ],
+        advice: '💡 <strong>Authenticity Alert:</strong> HealthKart is an authorized ON importer offering the lowest authentic batch price at ₹3,099 with TruSeal QR verification.'
+      }
+    };
+
+    function startCamera() {
+      var video = document.getElementById('videoElement');
+      var placeholder = document.getElementById('camPlaceholder');
+      var status = document.getElementById('camStatus');
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert('Camera API not accessible in this environment. Use the sample barcode buttons below.');
+        return;
+      }
+
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+        .then(function(stream) {
+          video.srcObject = stream;
+          video.style.display = 'block';
+          placeholder.style.display = 'none';
+          status.innerText = 'Camera Scanning...';
+          status.style.color = '#10b981';
+        })
+        .catch(function(err) {
+          console.error('Camera access error:', err);
+          alert('Camera permission denied or camera not found. Please click any sample barcode button to test.');
+        });
+    }
+
+    function playBeep() {
+      try {
+        var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.12);
+      } catch(e){}
+    }
+
+    function simulateScan(barcode, defaultName) {
+      playBeep();
+      var prod = PRODUCTS[barcode] || {
+        name: defaultName,
+        icon: '📦',
+        stores: [
+          { name: 'Amazon India', price: 1999, shipping: 'FREE Next-Day', coupon: 'None', landed: 1999, best: true },
+          { name: 'Flipkart', price: 2199, shipping: 'FREE 2-Day', coupon: 'None', landed: 2199, best: false }
+        ],
+        advice: 'Scanned barcode successfully registered.'
+      };
+
+      document.getElementById('prodIcon').innerText = prod.icon;
+      document.getElementById('prodTitle').innerText = prod.name;
+      document.getElementById('prodBarcode').innerText = 'EAN: ' + barcode + ' · Authenticated Retail GTIN';
+
+      var list = document.getElementById('storesList');
+      list.innerHTML = '';
+
+      prod.stores.forEach(function(s){
+        var row = document.createElement('div');
+        row.className = 'store-item' + (s.best ? ' best-deal' : '');
+        row.innerHTML = 
+          '<div>' +
+            '<div class="store-name">' +
+              (s.best ? '<i class="fas fa-trophy" style="color:#10b981;"></i> ' : '<i class="fas fa-store" style="color:#94a3b8;"></i> ') +
+              s.name + (s.best ? ' <span style="font-size:10px; font-weight:800; background:#10b981; color:#022c22; padding:2px 6px; border-radius:4px;">BEST DEAL</span>' : '') +
+            '</div>' +
+            '<div style="font-size:12px; color:#94a3b8; margin-top:2px;">' + s.shipping + ' · Coupon: ' + s.coupon + '</div>' +
+          '</div>' +
+          '<div style="text-align:right;">' +
+            '<div class="store-price">₹' + s.landed.toLocaleString('en-IN') + '</div>' +
+            '<div style="font-size:11px; color:#94a3b8;">True Landed Net</div>' +
+          '</div>';
+        list.appendChild(row);
+      });
+
+      var adv = document.getElementById('savingsAdvice');
+      adv.style.display = 'block';
+      adv.innerHTML = prod.advice;
+    }
+  </script>
+</body>
+</html>

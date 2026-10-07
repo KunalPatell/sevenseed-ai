@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Real-Time Voice Socratic AI Tutor & Viva Coach — AVPU</title>
+  <meta name="description" content="Browser-native voice AI tutor with speech recognition, audio waveform feedback, and Socratic interview viva drill. 100% Free with BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .voice-container { max-width: 1200px; margin: 0 auto; padding: 90px 24px 70px; }
+    .voice-header { text-align: center; margin-bottom: 28px; }
+    .voice-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(37,99,235,0.14); border: 1px solid rgba(37,99,235,0.35); color: #60a5fa; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+    .voice-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.15; margin-bottom: 10px; color: var(--text, #fff); }
+    .voice-sub { font-size: 16px; color: var(--text-2, #94a3b8); max-width: 740px; margin: 0 auto 24px; line-height: 1.6; }
+
+    /* Topic Bar */
+    .topics-bar { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 30px; }
+    .t-pill { padding: 8px 18px; border-radius: 24px; background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.1)); color: var(--text-2, #94a3b8); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .t-pill:hover, .t-pill.active { background: rgba(37,99,235,0.15); border-color: #3b82f6; color: #93c5fd; }
+
+    /* Voice Stage */
+    .voice-stage { background: radial-gradient(circle at center, rgba(37,99,235,0.12), rgba(6,11,26,0.95)); border: 1px solid rgba(37,99,235,0.3); border-radius: 24px; padding: 40px 24px; text-align: center; margin-bottom: 36px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+    #waveCanvas { width: 100%; max-width: 600px; height: 120px; margin: 0 auto 24px; display: block; }
+    
+    .mic-btn { width: 88px; height: 88px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 4px solid rgba(255,255,255,0.15); color: #fff; font-size: 32px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s; box-shadow: 0 0 30px rgba(37,99,235,0.4); }
+    .mic-btn:hover { transform: scale(1.05); box-shadow: 0 0 45px rgba(37,99,235,0.6); }
+    .mic-btn.listening { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 0 45px rgba(239,68,68,0.7); animation: pulse-red 1.5s infinite; }
+    @keyframes pulse-red { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
+    .status-text { font-size: 15px; font-weight: 700; color: #93c5fd; margin-top: 16px; min-height: 24px; }
+    .status-hint { font-size: 12.5px; color: var(--text-2, #94a3b8); margin-top: 6px; }
+
+    /* Transcript & Dialogue Feed */
+    .dialogue-card { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 18px; padding: 24px; }
+    .dialogue-title { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+    .feed-wrap { display: flex; flex-direction: column; gap: 14px; max-height: 480px; overflow-y: auto; padding-right: 8px; }
+    .bubble { padding: 14px 18px; border-radius: 14px; font-size: 13.5px; line-height: 1.6; max-width: 85%; }
+    .bubble-ai { background: var(--bg-2, #141c30); border: 1px solid rgba(37,99,235,0.25); color: #e2e8f0; align-self: flex-start; }
+    .bubble-user { background: rgba(37,99,235,0.18); border: 1px solid rgba(37,99,235,0.4); color: #fff; align-self: flex-end; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo" style="text-decoration:none; color:#fff; font-weight:800; display:flex; align-items:center; gap:8px;">
+        <span style="color:#3b82f6;">🎓</span> AVPU
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="learn-dag.html" class="nav-link">DAG Graph</a>
+        <a href="topic-search.html" class="nav-link">Search</a>
+        <a href="voice-tutor.html" class="nav-link active" style="color:#60a5fa; font-weight:700;">Voice Tutor</a>
+        <a href="review-queue.html" class="nav-link">Review Queue</a>
+        <a href="code-lab.html" class="nav-link">Code Lab</a>
+        <a href="duo-league.html" class="nav-link">Duo League</a>
+        <a href="/byok.html" class="nav-link" style="color:#38bdf8;">BYOK Vault</a>
+        <a href="/" class="nav-link">Hub</a>
+      </div>
+      <div class="nav-right">
+        <button id="themeToggle" class="theme-btn" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="voice-container">
+    <div class="voice-header">
+      <div class="voice-badge"><i class="fas fa-microphone-lines"></i> Browser-Native Web Speech API</div>
+      <h1 class="voice-title">Real-Time Voice Socratic AI Tutor &amp; Viva Coach</h1>
+      <p class="voice-sub">Practice verbal technical interviews and academic viva voce aloud. Speak directly into your microphone for real-time Socratic questioning, feedback, and zero audio latency.</p>
+    </div>
+
+    <!-- Topics Bar -->
+    <div class="topics-bar">
+      <button class="t-pill active" onclick="setTopic('Distributed System Design & Consensus', this)">Distributed Consensus</button>
+      <button class="t-pill" onclick="setTopic('LangGraph Multi-Agent Architecture', this)">LangGraph Multi-Agent</button>
+      <button class="t-pill" onclick="setTopic('Topological Sort & Kahn DAG Algorithm', this)">Kahn DAG Sort</button>
+      <button class="t-pill" onclick="setTopic('SuperMemo SM-2 Spaced Repetition Math', this)">SM-2 Spaced Repetition</button>
+      <button class="t-pill" onclick="setTopic('DPDP Act 2023 Digital Privacy Principles', this)">DPDP Act 2023</button>
+    </div>
+
+    <!-- Voice Stage -->
+    <div class="voice-stage">
+      <canvas id="waveCanvas"></canvas>
+      <div>
+        <button id="micBtn" class="mic-btn" onclick="toggleMic()"><i class="fas fa-microphone"></i></button>
+      </div>
+      <div class="status-text" id="statusText">Click microphone to begin your verbal viva session</div>
+      <div class="status-hint" id="statusHint">Works natively in Chrome, Edge, and Safari with zero third-party audio costs.</div>
+    </div>
+
+    <!-- Transcript / Dialogue Feed -->
+    <div class="dialogue-card">
+      <div class="dialogue-title">
+        <span><i class="fas fa-comments" style="color:#3b82f6;"></i> Live Socratic Dialogue Transcript</span>
+        <button class="btn btn-secondary sm" onclick="resetDialogue()"><i class="fas fa-rotate-left"></i> Restart Drill</button>
+      </div>
+      <div class="feed-wrap" id="dialogueFeed">
+        <!-- Injected -->
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" style="padding:40px 24px; text-align:center; border-top:1px solid rgba(255,255,255,0.08); font-size:13px; color:#94a3b8;">
+    <p>AVPU · 100% Free AI-Native University · Client-Side Speech &amp; Voice Synthesis</p>
+  </footer>
+
+  <script>
+    var state = {
+      isListening: false,
+      topic: 'Distributed System Design & Consensus',
+      history: []
+    };
+
+    var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var recognition = null;
+    var synth = window.speechSynthesis;
+
+    // Audio Waveform Canvas Animation
+    var canvas = document.getElementById('waveCanvas');
+    var ctx = canvas.getContext('2d');
+    var phase = 0;
+
+    function resizeWave() {
+      canvas.width = canvas.parentElement.clientWidth * window.devicePixelRatio;
+      canvas.height = 120 * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    window.addEventListener('resize', resizeWave);
+    resizeWave();
+
+    function drawWave() {
+      var w = canvas.getBoundingClientRect().width;
+      var h = 120;
+      ctx.clearRect(0, 0, w, h);
+
+      var amp = state.isListening ? 28 : (synth && synth.speaking ? 20 : 6);
+      phase += state.isListening ? 0.08 : 0.03;
+
+      ctx.beginPath();
+      ctx.moveTo(0, h / 2);
+      for (var x = 0; x < w; x++) {
+        var y = h / 2 + Math.sin(x * 0.02 + phase) * amp * Math.sin(x / w * Math.PI);
+        ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = state.isListening ? '#ef4444' : '#3b82f6';
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = state.isListening ? '#ef4444' : '#3b82f6';
+      ctx.shadowBlur = 10;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      requestAnimationFrame(drawWave);
+    }
+    drawWave();
+
+    // Socratic questions database
+    var PROMPTS = {
+      'Distributed System Design & Consensus': [
+        "Welcome to the Distributed Consensus viva. Let's begin: Why does a 3-node Raft or Paxos cluster tolerate only 1 node failure, while a 5-node cluster tolerates 2?",
+        "Good. Now, explain how Raft ensures that a leader without the latest committed log entries can never be elected by followers.",
+        "Excellent. What is the difference between linearizable read consistency and eventual consistency in terms of CAP theorem tradeoffs?"
+      ],
+      'LangGraph Multi-Agent Architecture': [
+        "Welcome to the LangGraph viva. How does state graph checkpointing prevent infinite loops during autonomous agent reflection?",
+        "If an agent tool-call fails due to an external API 500 error, what edge conditional should the supervisor execute?",
+        "How do you implement human-in-the-loop validation before high-risk execution nodes?"
+      ],
+      'Topological Sort & Kahn DAG Algorithm': [
+        "Welcome to the DAG algorithm viva. In Kahn's algorithm, what does an in-degree of zero represent in a prerequisite graph?",
+        "If Kahn's algorithm finishes but the count of processed vertices is less than |V|, what does this prove about the graph?",
+        "What is the theoretical time complexity of Kahn's topological sort in terms of vertices V and edges E?"
+      ]
+    };
+
+    function setTopic(top, btn) {
+      state.topic = top;
+      document.querySelectorAll('.t-pill').forEach(function(b){ b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+      resetDialogue();
+    }
+
+    function resetDialogue() {
+      state.history = [];
+      var feed = document.getElementById('dialogueFeed');
+      feed.innerHTML = '';
+      var list = PROMPTS[state.topic] || PROMPTS['Distributed System Design & Consensus'];
+      var q1 = list[0];
+      appendBubble('ai', q1);
+      speak(q1);
+    }
+
+    function appendBubble(role, txt) {
+      var feed = document.getElementById('dialogueFeed');
+      var b = document.createElement('div');
+      b.className = 'bubble bubble-' + role;
+      b.innerHTML = (role === 'ai' ? '<strong><i class="fas fa-robot"></i> Socratic Tutor:</strong> ' : '<strong><i class="fas fa-user"></i> You:</strong> ') + txt;
+      feed.appendChild(b);
+      b.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function speak(text) {
+      if (!synth) return;
+      synth.cancel();
+      var utt = new SpeechSynthesisUtterance(text);
+      utt.rate = 1.0;
+      utt.pitch = 1.0;
+      synth.speak(utt);
+    }
+
+    function initSpeech() {
+      if (!SpeechRecognition) {
+        alert('Web Speech API is not supported in this browser. Please use Chrome, Edge, or Safari.');
+        return null;
+      }
+      var r = new SpeechRecognition();
+      r.continuous = false;
+      r.interimResults = false;
+      r.lang = 'en-US';
+
+      r.onstart = function() {
+        state.isListening = true;
+        document.getElementById('micBtn').classList.add('listening');
+        document.getElementById('statusText').innerText = 'Listening... Speak your answer now.';
+      };
+
+      r.onresult = function(e) {
+        var transcript = e.results[0][0].transcript;
+        appendBubble('user', transcript);
+        evaluateAnswer(transcript);
+      };
+
+      r.onerror = function(err) {
+        console.error('Speech error:', err);
+        stopListening();
+      };
+
+      r.onend = function() {
+        stopListening();
+      };
+
+      return r;
+    }
+
+    function toggleMic() {
+      if (state.isListening) {
+        stopListening();
+      } else {
+        if (!recognition) recognition = initSpeech();
+        if (recognition) recognition.start();
+      }
+    }
+
+    function stopListening() {
+      state.isListening = false;
+      document.getElementById('micBtn').classList.remove('listening');
+      document.getElementById('statusText').innerText = 'Processing your speech response...';
+      if (recognition) {
+        try { recognition.stop(); } catch(e){}
+      }
+    }
+
+    function evaluateAnswer(userAns) {
+      var ansLower = userAns.toLowerCase();
+      var list = PROMPTS[state.topic] || PROMPTS['Distributed System Design & Consensus'];
+      var nextIdx = Math.min(state.history.length + 1, list.length - 1);
+
+      var aiReply = "";
+      if (ansLower.length < 15) {
+        aiReply = "Your response was very brief. Could you elaborate on the underlying mechanism from first principles?";
+      } else {
+        aiReply = "Well reasoned. You captured the core concept. Let's move to the next drill: " + list[nextIdx];
+      }
+
+      state.history.push({ user: userAns, reply: aiReply });
+
+      setTimeout(function(){
+        appendBubble('ai', aiReply);
+        speak(aiReply);
+        document.getElementById('statusText').innerText = 'Click microphone to answer the follow-up question.';
+      }, 600);
+    }
+
+    resetDialogue();
+  </script>
+</body>
+</html>

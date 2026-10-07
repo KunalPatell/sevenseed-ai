@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Interactive 3D BIM Structural Digital Twin &amp; BOQ Takeoff — Breakdown Factor</title>
+  <meta name="description" content="Three.js 3D Building Information Modeling (BIM) structural digital twin. Inspect concrete columns, beams, and slabs with live CPWD DSR 2023 takeoff calculations.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    .bim-container { max-width: 1400px; margin: 0 auto; padding: 90px 24px 70px; }
+    .bim-header { text-align: center; margin-bottom: 28px; }
+    .bim-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(245,158,11,0.14); border: 1px solid rgba(245,158,11,0.35); color: #fbbf24; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+    .bim-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.15; margin-bottom: 10px; color: var(--text, #fff); }
+    .bim-sub { font-size: 16px; color: var(--text-2, #94a3b8); max-width: 740px; margin: 0 auto 24px; line-height: 1.6; }
+
+    /* BIM Grid */
+    .bim-grid { display: grid; grid-template-columns: 1fr 460px; gap: 24px; min-height: 640px; }
+    @media(max-width: 1080px) { .bim-grid { grid-template-columns: 1fr; } }
+
+    .canvas-card { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 18px; padding: 24px; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+    #bimCanvas { width: 100%; height: 540px; border-radius: 14px; background: #030712; display: block; cursor: grab; }
+    #bimCanvas:active { cursor: grabbing; }
+
+    .bim-hud { position: absolute; top: 36px; left: 36px; pointer-events: none; }
+    .hud-title { font-size: 15px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .hud-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+    /* Floor Level Controls */
+    .level-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    .lvl-btn { padding: 6px 14px; border-radius: 20px; background: var(--bg-2, #141c30); border: 1px solid var(--border, rgba(255,255,255,0.1)); color: var(--text-2, #94a3b8); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .lvl-btn:hover, .lvl-btn.active { background: rgba(245,158,11,0.18); border-color: #f59e0b; color: #fbbf24; }
+
+    /* Takeoff Details Panel */
+    .takeoff-card { background: var(--bg-1, #0c1222); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 18px; padding: 26px; display: flex; flex-direction: column; justify-content: space-between; }
+    .elem-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .elem-icon { width: 56px; height: 56px; border-radius: 12px; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.35); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fbbf24; }
+    .elem-name { font-size: 20px; font-weight: 800; color: #fff; }
+    .elem-type { font-size: 13px; color: #fbbf24; font-weight: 600; }
+
+    .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .m-cell { background: var(--bg-2, #141c30); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px; }
+    .mc-lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px; }
+    .mc-val { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 800; color: #fff; }
+
+    .spec-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }
+    .spec-table td { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .spec-table td:last-child { text-align: right; font-family: 'JetBrains Mono', monospace; color: #cbd5e1; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="logo" style="text-decoration:none; color:#fff; font-weight:800; display:flex; align-items:center; gap:8px;">
+        <span style="color:#f59e0b;">🏗️</span> Breakdown Factor
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="boq-estimator.html" class="nav-link">CPWD Estimator</a>
+        <a href="bim-viewer.html" class="nav-link active" style="color:#fbbf24; font-weight:700;">3D BIM Viewer</a>
+        <a href="safety-audit.html" class="nav-link">Safety Heatmap</a>
+        <a href="cv-scanner.html" class="nav-link">CV Site Sentinel</a>
+        <a href="/byok.html" class="nav-link" style="color:#38bdf8;">BYOK Vault</a>
+        <a href="/" class="nav-link">Hub</a>
+      </div>
+      <div class="nav-right">
+        <button id="themeToggle" class="theme-btn" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="bim-container">
+    <div class="bim-header">
+      <div class="bim-badge"><i class="fas fa-cube"></i> Three.js WebGL BIM Digital Twin</div>
+      <h1 class="bim-title">Interactive 3D BIM Structural Digital Twin &amp; BOQ Takeoff</h1>
+      <p class="bim-sub">Inspect reinforced concrete building frames in 3D. Click on columns, beams, and slabs to trigger live CPWD DSR 2023 volume takeoffs, rebar steel ratios, and formwork calculations.</p>
+    </div>
+
+    <div class="bim-grid">
+      <!-- 3D Stage -->
+      <div class="canvas-card">
+        <canvas id="bimCanvas"></canvas>
+        <div class="bim-hud">
+          <div class="hud-title"><i class="fas fa-compass" style="color:#f59e0b;"></i> Drag to Rotate · Scroll to Zoom</div>
+          <div class="hud-sub">Structural Multi-Story RC Frame</div>
+        </div>
+
+        <div class="level-controls">
+          <button class="lvl-btn active" onclick="selectComponent('col1', this)">🏛️ Column C1 (Ground)</button>
+          <button class="lvl-btn" onclick="selectComponent('beam1', this)">📏 Plinth Beam B1</button>
+          <button class="lvl-btn" onclick="selectComponent('slab1', this)">📐 Floor Slab S1</button>
+          <button class="lvl-btn" onclick="selectComponent('col2', this)">🏛️ Column C2 (First Floor)</button>
+          <button class="lvl-btn" onclick="selectComponent('footing', this)">🪨 Isolated Footing F1</button>
+        </div>
+      </div>
+
+      <!-- Takeoff Panel -->
+      <div class="takeoff-card">
+        <div>
+          <div class="elem-header">
+            <div class="elem-icon" id="elemIcon">🏛️</div>
+            <div>
+              <div class="elem-name" id="elemName">Column C1 (Ground Story)</div>
+              <div class="elem-type" id="elemType">Reinforced Concrete Structural Column (IS 456:2000)</div>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="m-cell">
+              <div class="mc-lbl">Concrete Volume</div>
+              <div class="mc-val" id="volVal" style="color:#34d399;">0.648 m³</div>
+            </div>
+            <div class="m-cell">
+              <div class="mc-lbl">Fe500D Rebar Steel</div>
+              <div class="mc-val" id="rebarVal" style="color:#38bdf8;">76.4 kg</div>
+            </div>
+          </div>
+
+          <table class="spec-table">
+            <tr>
+              <td>Member Dimensions</td>
+              <td id="elemDims">450mm × 450mm × 3200mm</td>
+            </tr>
+            <tr>
+              <td>Design Concrete Grade</td>
+              <td id="elemGrade">M30 (1:1.2:2.4 Design Mix)</td>
+            </tr>
+            <tr>
+              <td>Reinforcement Ratio</td>
+              <td id="elemRatio">1.50% Gross Cross-Section</td>
+            </tr>
+            <tr>
+              <td>Shuttering Formwork Area</td>
+              <td id="elemFormwork">5.76 m² (Ply-Board)</td>
+            </tr>
+            <tr>
+              <td>CPWD DSR 2023 Item Code</td>
+              <td id="elemDsr">Item 5.2.2 (₹7,840/m³)</td>
+            </tr>
+            <tr>
+              <td>Estimated Unit Cost</td>
+              <td id="elemCost" style="color:#f59e0b; font-weight:800;">₹5,080.32</td>
+            </tr>
+          </table>
+        </div>
+
+        <div>
+          <a href="boq-estimator.html" class="btn btn-primary" style="width:100%; text-decoration:none; justify-content:center;">
+            <i class="fas fa-calculator"></i> Open Full CPWD BOQ Bill of Quantities →
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" style="padding:40px 24px; text-align:center; border-top:1px solid rgba(255,255,255,0.08); font-size:13px; color:#94a3b8;">
+    <p>Breakdown Factor · 100% Free ConTech &amp; Structural AI · Zero Paywall Takeoffs</p>
+  </footer>
+
+  <script>
+    var COMPONENTS = {
+      col1: {
+        name: 'Column C1 (Ground Story)',
+        type: 'Axial Compression Column (IS 456)',
+        icon: '🏛️',
+        vol: '0.648 m³',
+        rebar: '76.4 kg',
+        dims: '450mm × 450mm × 3200mm',
+        grade: 'M30 (Design Mix)',
+        ratio: '1.50% Gross Area',
+        formwork: '5.76 m²',
+        dsr: 'Item 5.2.2 (₹7,840/m³)',
+        cost: '₹5,080.32'
+      },
+      beam1: {
+        name: 'Plinth Beam B1 (Continuous)',
+        type: 'Flexural Reinforced Concrete Beam',
+        icon: '📏',
+        vol: '0.900 m³',
+        rebar: '84.8 kg',
+        dims: '300mm × 600mm × 5000mm',
+        grade: 'M25 (Nominal Mix)',
+        ratio: '1.20% Tension Rebar',
+        formwork: '7.50 m²',
+        dsr: 'Item 5.2.1 (₹7,210/m³)',
+        cost: '₹6,489.00'
+      },
+      slab1: {
+        name: 'Floor Slab S1 (Two-Way)',
+        type: 'Suspended RC Floor Diaphragm',
+        icon: '📐',
+        vol: '3.750 m³',
+        rebar: '235.5 kg',
+        dims: '5000mm × 5000mm × 150mm',
+        grade: 'M25 (Ready-Mix)',
+        ratio: '0.80% Mesh Mat',
+        formwork: '25.00 m²',
+        dsr: 'Item 5.3.1 (₹7,450/m³)',
+        cost: '₹27,937.50'
+      },
+      col2: {
+        name: 'Column C2 (First Floor)',
+        type: 'Slender Reinforced Column',
+        icon: '🏛️',
+        vol: '0.512 m³',
+        rebar: '60.3 kg',
+        dims: '400mm × 400mm × 3200mm',
+        grade: 'M25 (Structural)',
+        ratio: '1.50% Gross Area',
+        formwork: '5.12 m²',
+        dsr: 'Item 5.2.2 (₹7,840/m³)',
+        cost: '₹4,014.08'
+      },
+      footing: {
+        name: 'Isolated Trapezoidal Footing F1',
+        type: 'Sub-structure Raft Foundation',
+        icon: '🪨',
+        vol: '2.880 m³',
+        rebar: '180.8 kg',
+        dims: '2400mm × 2400mm × 500mm',
+        grade: 'M25 (Foundation Cast)',
+        ratio: '0.80% Bi-axial Mesh',
+        formwork: '4.80 m²',
+        dsr: 'Item 5.1.2 (₹6,980/m³)',
+        cost: '₹20,102.40'
+      }
+    };
+
+    // Three.js WebGL Setup
+    var canvas = document.getElementById('bimCanvas');
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+    camera.position.set(6, 4.5, 7.5);
+    camera.lookAt(0, 1, 0);
+
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    // Lights
+    var amb = new THREE.AmbientLight(0xffffff, 0.7);
+    scene.add(amb);
+    var dLight = new THREE.DirectionalLight(0xf59e0b, 1.2);
+    dLight.position.set(10, 15, 10);
+    scene.add(dLight);
+
+    // Grid Floor
+    var gridHelper = new THREE.GridHelper(12, 12, 0xf59e0b, 0x334155);
+    scene.add(gridHelper);
+
+    // Structural Group
+    var frameGroup = new THREE.Group();
+    scene.add(frameGroup);
+
+    var concreteMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.7, metalness: 0.1 });
+    var highlightMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xf59e0b, emissiveIntensity: 0.5 });
+
+    // Build 4 Columns
+    var colGeom = new THREE.BoxGeometry(0.4, 2.4, 0.4);
+    var cols = [];
+    var colPositions = [[-1.8, 1.2, -1.8], [1.8, 1.2, -1.8], [-1.8, 1.2, 1.8], [1.8, 1.2, 1.8]];
+    colPositions.forEach(function(pos, i) {
+      var col = new THREE.Mesh(colGeom, concreteMat.clone());
+      col.position.set(pos[0], pos[1], pos[2]);
+      frameGroup.add(col);
+      cols.push(col);
+    });
+
+    // 4 Beams
+    var beamXGeom = new THREE.BoxGeometry(4.0, 0.35, 0.35);
+    var beamZGeom = new THREE.BoxGeometry(0.35, 0.35, 4.0);
+
+    var b1 = new THREE.Mesh(beamXGeom, concreteMat.clone());
+    b1.position.set(0, 2.4, -1.8);
+    frameGroup.add(b1);
+
+    var b2 = new THREE.Mesh(beamXGeom, concreteMat.clone());
+    b2.position.set(0, 2.4, 1.8);
+    frameGroup.add(b2);
+
+    var b3 = new THREE.Mesh(beamZGeom, concreteMat.clone());
+    b3.position.set(-1.8, 2.4, 0);
+    frameGroup.add(b3);
+
+    var b4 = new THREE.Mesh(beamZGeom, concreteMat.clone());
+    b4.position.set(1.8, 2.4, 0);
+    frameGroup.add(b4);
+
+    // Slab
+    var slabGeom = new THREE.BoxGeometry(4.2, 0.15, 4.2);
+    var slabMesh = new THREE.Mesh(slabGeom, new THREE.MeshStandardMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.65 }));
+    slabMesh.position.set(0, 2.5, 0);
+    frameGroup.add(slabMesh);
+
+    // Footings
+    var footGeom = new THREE.BoxGeometry(1.2, 0.35, 1.2);
+    colPositions.forEach(function(pos) {
+      var foot = new THREE.Mesh(footGeom, concreteMat.clone());
+      foot.position.set(pos[0], 0.175, pos[2]);
+      frameGroup.add(foot);
+    });
+
+    // Orbit Drag Interaction
+    var isDragging = false;
+    var prevMouseX = 0;
+    var prevMouseY = 0;
+
+    canvas.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      prevMouseX = e.clientX;
+      prevMouseY = e.clientY;
+    });
+    window.addEventListener('mouseup', function() { isDragging = false; });
+    window.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      var dx = e.clientX - prevMouseX;
+      var dy = e.clientY - prevMouseY;
+      frameGroup.rotation.y += dx * 0.008;
+      frameGroup.rotation.x += dy * 0.004;
+      prevMouseX = e.clientX;
+      prevMouseY = e.clientY;
+    });
+
+    // Animation Loop
+    function animate() {
+      requestAnimationFrame(animate);
+      if (!isDragging) {
+        frameGroup.rotation.y += 0.002;
+      }
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    function selectComponent(key, btn) {
+      var comp = COMPONENTS[key];
+      if (!comp) return;
+
+      if (btn) {
+        document.querySelectorAll('.lvl-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+      }
+
+      document.getElementById('elemIcon').innerText = comp.icon;
+      document.getElementById('elemName').innerText = comp.name;
+      document.getElementById('elemType').innerText = comp.type;
+      document.getElementById('volVal').innerText = comp.vol;
+      document.getElementById('rebarVal').innerText = comp.rebar;
+      document.getElementById('elemDims').innerText = comp.dims;
+      document.getElementById('elemGrade').innerText = comp.grade;
+      document.getElementById('elemRatio').innerText = comp.ratio;
+      document.getElementById('elemFormwork').innerText = comp.formwork;
+      document.getElementById('elemDsr').innerText = comp.dsr;
+      document.getElementById('elemCost').innerText = comp.cost;
+
+      // Animate frame rotation to highlight
+      frameGroup.rotation.y += 0.4;
+    }
+
+    selectComponent('col1', document.querySelector('.lvl-btn.active'));
+  </script>
+</body>
+</html>
