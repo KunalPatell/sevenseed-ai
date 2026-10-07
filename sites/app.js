@@ -1666,7 +1666,16 @@ document.addEventListener('mousemove', function(e) {
     { title: "Socratic Venture Copilot (Dual-Mode RAG)", cat: "Studio Hub", url: "/ask-ai.html", icon: "fa-comments", badge: "Studio AI" },
     { title: "Zero-Margin Client-Side BYOK Key Vault", cat: "Studio Hub", url: "/byok.html", icon: "fa-key", badge: "BYOK Vault" },
     { title: "AngelList Syndicate & RUV Waterfall Modeler", cat: "Studio Hub", url: "/syndicate-ruv.html", icon: "fa-chart-pie", badge: "SPV Returns" },
-    { title: "YC TAM / SAM / SOM Market Sizing Calculator", cat: "Studio Hub", url: "/market-sizing.html", icon: "fa-calculator", badge: "YC Sizing" }
+    { title: "YC TAM / SAM / SOM Market Sizing Calculator", cat: "Studio Hub", url: "/market-sizing.html", icon: "fa-calculator", badge: "YC Sizing" },
+    { title: "Brain AI & Task Recipes (Sintra.ai & Automusk)", cat: "Sevenforce", url: "/sevenforce/brain-ai.html", icon: "fa-brain", badge: "Sintra Engine" },
+    { title: "Smartprix 3-Way Tech Spec Comparator", cat: "AVP E-Mart", url: "/avp-emart/spec-compare.html", icon: "fa-scale-balanced", badge: "Smartprix" },
+    { title: "Buyhatke 90-Day Price Trend & Verdict", cat: "AVP E-Mart", url: "/avp-emart/price-tracker.html", icon: "fa-chart-line", badge: "Buyhatke" },
+    { title: "FreeCodeCamp In-Browser Code Lab", cat: "AVPU", url: "/avpu/code-lab.html", icon: "fa-code", badge: "FreeCodeCamp" },
+    { title: "Duolingo Gamified Diamond Arena", cat: "AVPU", url: "/avpu/duo-league.html", icon: "fa-trophy", badge: "Duolingo" },
+    { title: "Cognitive Laws of UX Test Benches", cat: "AVPU", url: "/avpu/laws-of-ux.html", icon: "fa-brain", badge: "Laws of UX" },
+    { title: "Marketing Examples Before-vs-After Teardowns", cat: "Comonk AI", url: "/comonk/marketing-examples.html", icon: "fa-sliders", badge: "MarketingExamples" },
+    { title: "100-Day AI Engineering Challenge", cat: "AVPU", url: "/avpu/100-day-challenge.html", icon: "fa-calendar-check", badge: "100 Days AI" },
+    { title: "GrowthInReverse Founder Flywheel Simulator", cat: "Sevenforce", url: "/sevenforce/growth-teardown.html", icon: "fa-chart-simple", badge: "GrowthInReverse" }
   ];
 
   var activeIndex = 0;
@@ -1792,3 +1801,19 @@ document.addEventListener('mousemove', function(e) {
   });
 })();
 
+// Benchmark Filter Pill Engine (24 Master Reference Benchmarks)
+window.filterBM = function(category, btn) {
+  var grid = document.getElementById('bmGrid');
+  if (!grid) return;
+  var cards = grid.querySelectorAll('.bm-card');
+  cards.forEach(function(card) {
+    if (category === 'all' || card.getAttribute('data-bm') === category) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  var buttons = document.querySelectorAll('.bm-filter-pill');
+  buttons.forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+};
