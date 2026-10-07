@@ -1632,3 +1632,163 @@ document.addEventListener('mousemove', function(e) {
   });
 })();
 
+// ═══════════════════════════════════════════════════════════════════════════
+// GLOBAL COMMAND PALETTE (CTRL+K) & WORKSTATION OMNIBOX ENGINE
+// ═══════════════════════════════════════════════════════════════════════════
+(function initGlobalCommandPalette() {
+  var overlay = document.getElementById('cmdkOverlay');
+  var input = document.getElementById('cmdkInput');
+  var list = document.getElementById('cmdkList');
+  var searchBtn = document.getElementById('searchBtn');
+
+  if (!overlay || !input || !list) return;
+
+  var WORKSTATIONS = [
+    { title: "Voice & Behavioral Mock Interview Studio", cat: "Comonk AI", url: "/comonk/mock-interview.html", icon: "fa-headset", badge: "Speech AI" },
+    { title: "Executive ATS Resume Builder", cat: "Comonk AI", url: "/comonk/resume-builder.html", icon: "fa-file-invoice", badge: "ATS Studio" },
+    { title: "Technical Coding Arena & Interview Coach", cat: "Comonk AI", url: "/comonk/interview-arena.html", icon: "fa-code", badge: "FAANG Arena" },
+    { title: "Indian Tech CTC Benchmark & Salary Intel", cat: "Comonk AI", url: "/comonk/salary-insights.html", icon: "fa-money-bill-trend-up", badge: "CTC Model" },
+    { title: "Sentinel CCTV Threat Radar & BNS 2023 FIR", cat: "Rakshak AI", url: "/rakshak-ai/threat-radar.html", icon: "fa-radar", badge: "Vision Radar" },
+    { title: "SFace Biometric Forensics & Sec 63 BSA Dossier", cat: "Rakshak AI", url: "/rakshak-ai/face-matcher.html", icon: "fa-id-badge", badge: "Forensics" },
+    { title: "DPDP Act Digital Privacy Compliance Auditor", cat: "Rakshak AI", url: "/rakshak-ai/dpdp-auditor.html", icon: "fa-file-shield", badge: "DPDP Law" },
+    { title: "5-Store Price Arbitrage & Coupon Auto-Tester", cat: "AVP E-Mart", url: "/avp-emart/deal-radar.html", icon: "fa-tags", badge: "Arbitrage" },
+    { title: "15-Factor Elasticity & Dynamic Price Engine", cat: "AVP E-Mart", url: "/avp-emart/pricing-intelligence.html", icon: "fa-chart-line", badge: "Elasticity" },
+    { title: "Devin Autonomous Virtual Terminal & ROI Modeler", cat: "Sevenforce", url: "/sevenforce/devin-terminal.html", icon: "fa-terminal", badge: "Agent Swarm" },
+    { title: "Candidate Outreach Sequence Generator", cat: "Sevenforce", url: "/sevenforce/recruiter-reachout.html", icon: "fa-paper-plane", badge: "Outbound" },
+    { title: "Knowledge DAG Prerequisite Resolver", cat: "AVPU", url: "/avpu/learn-dag.html", icon: "fa-network-wired", badge: "Kahn DAG" },
+    { title: "SuperMemo SM-2 Spaced Repetition Review Queue", cat: "AVPU", url: "/avpu/review-queue.html", icon: "fa-layer-group", badge: "SM-2 Engine" },
+    { title: "Clinical Drug-Drug Interaction Safety Radar", cat: "Pharmacy", url: "/decode-forest-pharmacy/drug-interaction.html", icon: "fa-triangle-exclamation", badge: "Pharmacology" },
+    { title: "Clinical Emergency Care & Wallace Body Map", cat: "Pharmacy", url: "/decode-forest-pharmacy/clinical-protocols.html", icon: "fa-notes-medical", badge: "Emergency Care" },
+    { title: "CPWD DSR 2023 Civil BOQ Takeoff Estimator", cat: "Breakdown", url: "/breakdown-factor/boq-estimator.html", icon: "fa-calculator", badge: "CPWD DSR" },
+    { title: "Concrete Crack Forensics & Schmidt Hammer NDT", cat: "Breakdown", url: "/breakdown-factor/crack-forensics.html", icon: "fa-magnifying-glass-chart", badge: "Forensics" },
+    { title: "Section 80G Form 10BE Tax Exemption & Ledger", cat: "Trust", url: "/avp-charitable-trust/tax-exemption.html", icon: "fa-certificate", badge: "Form 10BE" },
+    { title: "Section 135 Mandatory 2% CSR Spend Auditor", cat: "Trust", url: "/avp-charitable-trust/csr-grant-auditor.html", icon: "fa-file-invoice-dollar", badge: "CSR Law" },
+    { title: "Socratic Venture Copilot (Dual-Mode RAG)", cat: "Studio Hub", url: "/ask-ai.html", icon: "fa-comments", badge: "Studio AI" },
+    { title: "Zero-Margin Client-Side BYOK Key Vault", cat: "Studio Hub", url: "/byok.html", icon: "fa-key", badge: "BYOK Vault" },
+    { title: "AngelList Syndicate & RUV Waterfall Modeler", cat: "Studio Hub", url: "/syndicate-ruv.html", icon: "fa-chart-pie", badge: "SPV Returns" },
+    { title: "YC TAM / SAM / SOM Market Sizing Calculator", cat: "Studio Hub", url: "/market-sizing.html", icon: "fa-calculator", badge: "YC Sizing" }
+  ];
+
+  var activeIndex = 0;
+  var filteredItems = [];
+
+  function playChirp() {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.08);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.08);
+    } catch(e){}
+  }
+
+  function openPalette() {
+    overlay.setAttribute('aria-hidden', 'false');
+    overlay.style.display = 'flex';
+    input.value = '';
+    renderItems(WORKSTATIONS);
+    input.focus();
+    playChirp();
+  }
+
+  function closePalette() {
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.style.display = 'none';
+  }
+
+  function renderItems(items) {
+    filteredItems = items;
+    activeIndex = 0;
+    list.innerHTML = '';
+    if (!items.length) {
+      list.innerHTML = '<div style="padding:20px; text-align:center; color:#64748b; font-size:13px;">No matching workstations found. Try "interview", "radar", "boq", or "deal".</div>';
+      return;
+    }
+
+    items.forEach(function(it, idx) {
+      var row = document.createElement('a');
+      row.href = it.url;
+      row.className = 'cmd-item' + (idx === 0 ? ' selected' : '');
+      row.innerHTML = 
+        '<div class="cmd-item-left">' +
+          '<div class="cmd-item-icon"><i class="fas ' + it.icon + '"></i></div>' +
+          '<div>' +
+            '<div style="font-weight:700; color:#fff; font-size:13px;">' + it.title + '</div>' +
+            '<div style="font-size:11px; color:#64748b;">' + it.cat + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<span class="cmd-item-badge">' + it.badge + '</span>';
+      
+      row.addEventListener('click', playChirp);
+      list.appendChild(row);
+    });
+  }
+
+  // Key event listeners
+  window.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (overlay.style.display === 'flex') closePalette();
+      else openPalette();
+    }
+    if (e.key === 'Escape' && overlay.style.display === 'flex') {
+      closePalette();
+    }
+    if (overlay.style.display === 'flex') {
+      var rows = list.querySelectorAll('.cmd-item');
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (rows.length) {
+          rows[activeIndex].classList.remove('selected');
+          activeIndex = (activeIndex + 1) % rows.length;
+          rows[activeIndex].classList.add('selected');
+          rows[activeIndex].scrollIntoView({ block: 'nearest' });
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (rows.length) {
+          rows[activeIndex].classList.remove('selected');
+          activeIndex = (activeIndex - 1 + rows.length) % rows.length;
+          rows[activeIndex].classList.add('selected');
+          rows[activeIndex].scrollIntoView({ block: 'nearest' });
+        }
+      } else if (e.key === 'Enter') {
+        if (filteredItems[activeIndex]) {
+          e.preventDefault();
+          playChirp();
+          window.location.href = filteredItems[activeIndex].url;
+        }
+      }
+    }
+  });
+
+  if (searchBtn) {
+    searchBtn.addEventListener('click', openPalette);
+  }
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closePalette();
+  });
+
+  input.addEventListener('input', function() {
+    var q = input.value.toLowerCase().trim();
+    if (!q) {
+      renderItems(WORKSTATIONS);
+      return;
+    }
+    var matches = WORKSTATIONS.filter(function(it) {
+      return it.title.toLowerCase().indexOf(q) !== -1 ||
+             it.cat.toLowerCase().indexOf(q) !== -1 ||
+             it.badge.toLowerCase().indexOf(q) !== -1;
+    });
+    renderItems(matches);
+  });
+})();
+
