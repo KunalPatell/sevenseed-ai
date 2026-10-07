@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Sevenseed Cybernetic UI Studio — 21st.dev, Aceternity, Spline & Aura Primitives</title>
+  <meta name="description" content="Production-grade modern UI component laboratory inspired by 21st.dev, Aceternity UI, Unicorn Studio, Uiverse, Spline 3D, and Aura Build. 100% Vanilla HTML, CSS & WebGL with 1-click copy.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-panel: rgba(15, 23, 42, 0.7);
+      --bg-card: rgba(17, 24, 39, 0.75);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(99, 102, 241, 0.35);
+      --accent: #6366f1;
+      --accent-cyan: #38bdf8;
+      --accent-emerald: #10b981;
+      --accent-pink: #ec4899;
+      --accent-amber: #f59e0b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      selection-background-color: #6366f1;
+      selection-color: #fff;
+    }
+
+    /* Top Nav */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      z-index: 100;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 800;
+      font-size: 18px;
+    }
+    .brand-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6366f1, #38bdf8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.4);
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: #fff; }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .btn-hub {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-hub:hover {
+      background: rgba(16, 185, 129, 0.22);
+      transform: translateY(-1px);
+    }
+
+    /* Aura Telemetry HUD */
+    .telemetry-bar {
+      position: fixed;
+      bottom: 20px;
+      right: 24px;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      border-radius: 12px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      z-index: 99;
+      pointer-events: none;
+    }
+    .hud-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      padding: 130px 24px 70px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero-glow-cone {
+      position: absolute;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 350px;
+      background: radial-gradient(ellipse at top, rgba(99, 102, 241, 0.3), rgba(56, 189, 248, 0.15) 45%, transparent 70%);
+      filter: blur(40px);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 18px;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #a5b4fc;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .hero-title {
+      font-size: clamp(34px, 5.5vw, 64px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, #a5b4fc, #38bdf8 50%, #f472b6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      color: var(--text-muted);
+      font-size: 17px;
+      max-width: 700px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+    .ref-chips {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+    .ref-chip {
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      color: #cbd5e1;
+      font-family: 'JetBrains Mono', monospace;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ref-chip i { color: #818cf8; }
+
+    /* Filter Tabs */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .filter-btn {
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: rgba(17, 24, 39, 0.6);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(56, 189, 248, 0.25));
+      border-color: #6366f1;
+      color: #fff;
+    }
+
+    /* Main Showcase Container */
+    .showcase-grid {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 24px 100px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 32px;
+    }
+
+    /* Component Card */
+    .comp-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.25s, transform 0.25s;
+      position: relative;
+    }
+    .comp-card:hover {
+      border-color: rgba(99, 102, 241, 0.45);
+      transform: translateY(-4px);
+    }
+    .comp-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.5);
+    }
+    .comp-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .comp-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+    .comp-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .comp-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .icon-action-btn {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .icon-action-btn:hover {
+      color: #fff;
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #6366f1;
+    }
+    .comp-stage {
+      padding: 44px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 250px;
+      background: radial-gradient(circle at center, rgba(30, 41, 59, 0.4), rgba(3, 7, 18, 0.8));
+      position: relative;
+      overflow: hidden;
+    }
+    .comp-desc {
+      padding: 16px 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      border-top: 1px solid var(--border);
+      background: rgba(10, 15, 30, 0.4);
+    }
+
+    /* 1. SPOTLIGHT CARD (Aceternity UI) */
+    .spotlight-box {
+      width: 100%;
+      max-width: 320px;
+      padding: 24px;
+      border-radius: 16px;
+      background: #0b0f19;
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .spotlight-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(300px circle at var(--mouse-x, 150px) var(--mouse-y, 100px), rgba(99, 102, 241, 0.25), transparent 80%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .spotlight-box:hover::before { opacity: 1; }
+    .spot-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: rgba(99,102,241,0.2);
+      border: 1px solid rgba(99,102,241,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #818cf8;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+    .spot-title { font-weight: 700; font-size: 16px; margin-bottom: 6px; color: #fff; }
+    .spot-p { font-size: 12px; color: #94a3b8; line-height: 1.5; }
+
+    /* 2. EVERVAULT MATRIX CIPHER (Aceternity UI) */
+    .evervault-card {
+      width: 100%;
+      max-width: 320px;
+      height: 180px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: #020617;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: crosshair;
+    }
+    .matrix-bg {
+      position: absolute;
+      inset: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(16, 185, 129, 0.25);
+      line-height: 1.1;
+      word-break: break-all;
+      user-select: none;
+      padding: 8px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .evervault-card:hover .matrix-bg {
+      color: rgba(56, 189, 248, 0.6);
+      opacity: 1;
+    }
+    .evervault-core {
+      position: relative;
+      z-index: 2;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      backdrop-filter: blur(8px);
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 700;
+      color: #38bdf8;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+    }
+
+    /* 3. BORDER BEAM (21st.dev) */
+    .beam-card {
+      width: 100%;
+      max-width: 320px;
+      padding: 24px;
+      background: #090d16;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .beam-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .beam-rect {
+      fill: none;
+      stroke: url(#beamGrad);
+      stroke-width: 2.5;
+      stroke-dasharray: 80 400;
+      stroke-dashoffset: 0;
+      animation: beamOrbit 4s linear infinite;
+    }
+    @keyframes beamOrbit {
+      to { stroke-dashoffset: -480; }
+    }
+
+    /* 4. UNICORN STUDIO FLUID SHADER */
+    .fluid-stage {
+      width: 100%;
+      height: 190px;
+      border-radius: 14px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    #fluidCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: pointer;
+    }
+    .fluid-overlay-pill {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #a5b4fc;
+      pointer-events: none;
+    }
+
+    /* 5. UIVERSE CYBERPUNK SWITCH & 3D BUTTON */
+    .uiverse-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .cyber-switch {
+      position: relative;
+      display: inline-block;
+      width: 70px;
+      height: 36px;
+    }
+    .cyber-switch input { opacity: 0; width: 0; height: 0; }
+    .cyber-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #0f172a;
+      border: 2px solid #334155;
+      border-radius: 8px;
+      transition: .3s;
+    }
+    .cyber-slider:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background: #64748b;
+      border-radius: 4px;
+      transition: .3s;
+    }
+    .cyber-switch input:checked + .cyber-slider {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10b981;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+    }
+    .cyber-switch input:checked + .cyber-slider:before {
+      transform: translateX(32px);
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+    }
+
+    .shimmer-btn {
+      position: relative;
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      background: #0b0f19;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .shimmer-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 24px rgba(99, 102, 241, 0.4);
+      border-color: #6366f1;
+    }
+    .shimmer-btn::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        60deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.15) 50%,
+        transparent 70%
+      );
+      transform: rotate(25deg);
+      animation: shimmerLoop 3s infinite;
+    }
+    @keyframes shimmerLoop {
+      0% { transform: translateX(-100%) rotate(25deg); }
+      100% { transform: translateX(100%) rotate(25deg); }
+    }
+
+    /* 6. 3D TILT CARD */
+    .tilt-card {
+      width: 280px;
+      height: 160px;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out;
+      cursor: pointer;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    .tilt-text {
+      transform: translateZ(30px);
+      font-weight: 800;
+      font-size: 17px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tilt-sub {
+      transform: translateZ(20px);
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 6px;
+    }
+
+    /* 7. KINETIC TICKER (MotionSites.ai) */
+    .ticker-box { text-align: center; }
+    .ticker-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 48px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #10b981, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+    .ticker-lbl {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* 8. AUDIO SOUNDWAVE BARS */
+    .waveform-visualizer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 60px;
+    }
+    .wave-bar {
+      width: 6px;
+      height: 14px;
+      background: #ec4899;
+      border-radius: 3px;
+      transition: height 0.1s ease;
+    }
+
+    /* Code Modal Drawer */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .code-modal {
+      width: 100%;
+      max-width: 720px;
+      background: #090d16;
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      max-height: 85vh;
+    }
+    .modal-top {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0f172a;
+    }
+    .modal-title { font-size: 15px; font-weight: 700; color: #fff; }
+    .close-modal-btn {
+      background: none; border: none; color: var(--text-muted);
+      font-size: 18px; cursor: pointer;
+    }
+    .close-modal-btn:hover { color: #fff; }
+    .code-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: #0b0f19;
+    }
+    .code-tab-btn {
+      padding: 10px 20px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .code-tab-btn.active {
+      color: #6366f1;
+      border-bottom-color: #6366f1;
+    }
+    .code-area {
+      padding: 20px;
+      background: #030712;
+      color: #e2e8f0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      overflow-y: auto;
+      flex: 1;
+      white-space: pre;
+    }
+    .modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      background: #0f172a;
+    }
+    .btn-copy {
+      padding: 8px 18px;
+      border-radius: 8px;
+      background: #6366f1;
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn-copy:hover { background: #4f46e5; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #10b981;
+      color: #000;
+      padding: 10px 24px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 2000;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <a class="nav-brand" href="/">
+      <div class="brand-icon"><i class="fas fa-palette"></i></div>
+      <span>Sevenseed <span style="color:#6366f1">UI Studio</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/ecosystem/">3000 Platform</a>
+      <a href="design-system.html" class="active">Component Lab</a>
+      <a href="/sevenforce/swarm-choreographer.html">Swarm DAG</a>
+      <a href="/avpu/voice-tutor.html">Voice Tutor</a>
+      <a href="/avp-emart/barcode-scanner.html">Barcode Radar</a>
+      <a href="/decode-forest-pharmacy/anatomy-explorer.html">3D Anatomy</a>
+      <a href="/breakdown-factor/bim-viewer.html">3D BIM</a>
+    </div>
+    <div class="nav-actions">
+      <a class="btn-hub" href="/"><i class="fas fa-seedling"></i> Sevenseed Hub</a>
+    </div>
+  </nav>
+
+  <!-- Aura Telemetry HUD -->
+  <div class="telemetry-bar">
+    <span class="hud-dot"></span>
+    <span>FPS: <strong id="hudFps" style="color:#38bdf8">60</strong></span>
+    <span>DOM: <strong id="hudDom" style="color:#a5b4fc">248</strong></span>
+    <span>WEBGL: <strong style="color:#10b981">ONLINE</strong></span>
+    <span>BYOK: <strong style="color:#f59e0b">AES-GCM</strong></span>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-glow-cone"></div>
+    <div class="hero-badge"><i class="fas fa-sparkles"></i> 21ST.DEV · ACETERNITY · UNICORN · UIVERSE · AURA BUILD</div>
+    <h1 class="hero-title">Cybernetic <span>UI Laboratory</span></h1>
+    <p class="hero-sub">Production-grade interactive design engineering primitives. Pure Vanilla HTML, CSS & WebGL with zero bloated node dependencies and instant 1-click code export.</p>
+    
+    <div class="ref-chips">
+      <div class="ref-chip"><i class="fas fa-lightbulb"></i> Aceternity Spotlight</div>
+      <div class="ref-chip"><i class="fas fa-terminal"></i> Evervault Cipher</div>
+      <div class="ref-chip"><i class="fas fa-wave-square"></i> Unicorn Shaders</div>
+      <div class="ref-chip"><i class="fas fa-border-all"></i> 21st.dev Laser Beams</div>
+      <div class="ref-chip"><i class="fas fa-microchip"></i> Aura Telemetry HUD</div>
+      <div class="ref-chip"><i class="fas fa-cube"></i> Three.js 3D Tilt</div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterCategory('all')">All Primitives (8)</button>
+      <button class="filter-btn" onclick="filterCategory('cards')">Cards & Spotlight</button>
+      <button class="filter-btn" onclick="filterCategory('shaders')">WebGL Shaders</button>
+      <button class="filter-btn" onclick="filterCategory('buttons')">Buttons & Switches</button>
+      <button class="filter-btn" onclick="filterCategory('motion')">Kinetic Motion</button>
+    </div>
+  </section>
+
+  <!-- Component Showcase -->
+  <main class="showcase-grid">
+
+    <!-- 1. ACETERNITY SPOTLIGHT CARD -->
+    <div class="comp-card" data-cat="cards">
+      <div class="comp-head">
+        <div class="comp-meta">
+          <span class="comp-badge">Aceternity</span>
+          <span class="comp-title">Radial Spotlight Glare</span>
+        </div>
+        <div class="comp-actions">
+          <button class="icon-action-btn" title="View Code" onclick="openCode('spotlight')"><i class="fas fa-code"></i></button>
+        </div>
+      </div>
+      <div class="comp-stage">
+        <div class="spotlight-box" id="spotlightBox">
+          <div class="spot-icon"><i class="fas fa-bolt"></i></div>
+          <div class="spot-title">Autonomous Agent Node</div>
+          <p class="spot-p">Hover anywhere on this card. The spotlight calculates mouse coordinates in real-time with CSS custom properties.</p>
+        </div>
+      </div>
+      <div class="comp-desc">Tracks pointer coordinates dynamically via <code>--mouse-x</code> and <code>--mouse-y</code> properties to cast an optical radial reflection.</div>
+    </div>
+
+    <!-- 2. EVERVAULT MATRIX CIPHER -->
+    <div class="comp-card" data-cat="cards">
+      <div class="comp-head">
+        <div class="comp-meta">
+          <span class="comp-badge">Aceternity</span>
+          <span class="comp-title">Evervault Matrix Cipher</span>
+        </div>
+        <div class="comp-actions">
+          <button class="icon-action-btn" title="View Code" onclick="openCode('evervault')"><i class="fas fa-code"></i></button>
+        </div>
+      </div>
+      <div class="comp-stage">
+        <div class="evervault-card" id="evervaultCard">
+          <div class="matrix-bg" id="matrixBg"></div>
+          <div class="evervault-core" id="cipherWord">DECRYPTING...</div>
+        </div>
+      </div>
+      <div class="comp-desc">Generates a streaming matrix cipher grid with dynamic glyph generation and decrypts to target text on mouseenter.</div>
+    </div>
+
+    <!-- 3. 21ST.DEV LASER BORDER BEAM -->
+    <div class="comp-card" data-cat="cards">
+      <div class="comp-head">
+        <div class="comp-meta">
+          <span class="comp-badge">21st.dev</span>
+          <span class="comp-title">Laser Border Beam</span>
+        </div>
+        <div class="comp-actions">
+          <button class="icon-action-btn" title="View Code" onclick="openCode('borderbeam')"><i class="fas fa-code"></i></button>
+        </div>
+      </div>
+      <div class="comp-stage">
+        <div class="beam-card">
+          <svg class="beam-svg">
+            <defs>
+              <linearGradient id="beamGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#6366f1" stop-opacity="0" />
+                <stop offset="50%" stop-color="#38bdf8" stop-opacity="1" />
+                <stop offset="100%" stop-color="#ec4899" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <rect class="beam-rect" x="1.5" y="1.5" width="calc(100% - 3px)" height="calc(100% - 3px)" rx="15" />
+          </svg>
+          <div style="font-weight:700; font-size:16px; margin-bottom:8px; color:#fff;">Perimeter Laser Track</div>
+          <p style="font-size:12px; color:#94a3b8; line-height:1.5;">Continuous non-blocking SVG stroke dash animation traveling along the exact perimeter curvature.</p>
+        </div>
+      </div>
+      <div class="comp-desc">High-performance GPU-composited SVG perimeter runner using <code>stroke-dasharray</code> and CSS keyframes.</div>
+    </div>
+
+    <!-- 4. UNICORN STUDIO FLUID SHADER -->
+    <div class="comp-card" data-cat="shaders">
+      <div class="comp-head">
+        <div class="comp-meta">
+          <span class="comp-badge">Unicorn Studio</span>
+          <span class="comp-title">Interactive Fluid Mesh</span>
+        </div>
+        <div class="comp-actions">
+          <button class="icon-action-btn" title="View Code" onclick="openCode('fluid')"><i class="fas fa-code"></i></button>
+        </div>
+      </div>
+      <div class="comp-stage" style="padding:16px;">
+        <div class="fluid-stage">
+          <canvas id="fluidCanvas"></canvas>
+          <div class="fluid-overlay-pill">Click & Drag to Stir</div>
+        </div>
+      </div>
+      <div class="comp-desc">Hardware-accelerated WebGL / Canvas2D plasma mesh simulating viscosity, chromatic dispersion, and cursor waves.</div>
+    </div>
+
+    <!-- 5. UIVERSE CYBERPUNK SWITCH & SHIMMER -->
+    <div class="comp-card" data-cat="buttons">
+      <div class="comp-head">
+        <div class="comp-meta">
+          <span class="comp-badge">Uiverse.io</span>
+          <span class="comp-title">Cyber Switch & Shimmer</span>
+        </div>
+        <div class="comp-actions">
+          <button class="icon-action-btn" title="View Code" onclick="openCode('uiverse')"><i class="fas fa-code"></i></button>
+        </div>
+      </div>
+      <div class="comp-stage">
+        <div class="uiverse-row">
+          <label class="cyber-switch">
+            <input type="checkbox" id="cyberToggle" checked onchange="playClickSound()">
+            <span class="cyber-slider"></span>
+          </label>
+          <button class="shimmer-btn" onclick="triggerShimmer()">
+            <i class="fas fa-wand-magic-sparkles" style="color:#a5b4fc; margin-right:6px;"></i> Launch Neural Engine
+          </button>
+        </div>
+      </div>
+      <div class="comp-desc">Tactile cybernetic controls with Web Audio synthesizer clicks and high-speed diagonal light refraction.</div>
+    </div>
+
+    <!-- 6. THREE.JS 3D TILT CARD -->
+    <div class="comp-card" data-cat="cards">
+      <div class="comp-head">
+        <div class="comp-meta">
+          <span class="comp-badge">Spline 3D</span>
+          <span class="comp-title">Perspective 3D Gyro Tilt</span>
+        </div>
+        <div class="comp-actions">
+          <button class="icon-action-btn" title="View Code" onclick="openCode('tilt')"><i class="fas fa-code"></i></button>
+        </div>
+      </div>
+      <div class="comp-stage" style="perspective: 1000px;">
+        <div class="tilt-card" id="tiltCard">
+          <div class="tilt-text"><i class="fas fa-vr-cardboard" style="color:#38bdf8;"></i> Spatial Depth</div>
+          <div class="tilt-sub">Perspective Z-Axis Elevation</div>
+        </div>
+      </div>
+      <div class="comp-desc">Calculates center offset matrix to rotate on X and Y axes with multi-plane Z-index parallax typography.</div>
+    </div>
+
+    <!-- 7. MOTIONSITES KINETIC TICKER -->
+    <div class="comp-card" data-cat="motion">
+      <div class="comp-head">
+        <div class="comp-meta">
+          <span class="comp-badge">MotionSites.ai</span>
+          <span class="comp-title">Kinetic Spring Ticker</span>
+        </div>
+        <div class="comp-actions">
+          <button class="icon-action-btn" title="View Code" onclick="openCode('ticker')"><i class="fas fa-code"></i></button>
+        </div>
+      </div>
+      <div class="comp-stage">
+        <div class="ticker-box">
+          <div class="ticker-number" id="tickerNum">0</div>
+          <div class="ticker-lbl">Active Portfolio Invocations</div>
+          <button class="shimmer-btn" style="margin-top:16px; padding:6px 16px; font-size:12px;" onclick="reanimateTicker()">
+            <i class="fas fa-rotate"></i> Re-animate
+          </button>
+        </div>
+      </div>
+      <div class="comp-desc">Spring-physics numerical interpolation with logarithmic acceleration easing curve.</div>
+    </div>
+
+    <!-- 8. WEBAUDIO FREQUENCY VISUALIZER -->
+    <div class="comp-card" data-cat="motion">
+      <div class="comp-head">
+        <div class="comp-meta">
+          <span class="comp-badge">Aura Build</span>
+          <span class="comp-title">Live Harmonic Audio Bars</span>
+        </div>
+        <div class="comp-actions">
+          <button class="icon-action-btn" title="View Code" onclick="openCode('waveform')"><i class="fas fa-code"></i></button>
+        </div>
+      </div>
+      <div class="comp-stage">
+        <div class="waveform-visualizer" id="waveVisualizer">
+          <!-- 12 bars dynamically created -->
+        </div>
+      </div>
+      <div class="comp-desc">Dynamic reactive soundwave bars driven by requestAnimationFrame simulating real-time audio FFT bins.</div>
+    </div>
+
+  </main>
+
+  <!-- Code Drawer Modal -->
+  <div class="modal-backdrop" id="codeModal">
+    <div class="code-modal">
+      <div class="modal-top">
+        <span class="modal-title" id="modalCompTitle">Component Code Snippet</span>
+        <button class="close-modal-btn" onclick="closeCodeModal()">&times;</button>
+      </div>
+      <div class="code-tabs">
+        <button class="code-tab-btn active" id="tabHtml" onclick="switchCodeTab('html')">HTML</button>
+        <button class="code-tab-btn" id="tabCss" onclick="switchCodeTab('css')">CSS</button>
+      </div>
+      <pre class="code-area" id="codeDisplay"></pre>
+      <div class="modal-footer">
+        <button class="btn-copy" onclick="copyCurrentCode()"><i class="fas fa-copy"></i> Copy Code</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"><i class="fas fa-check-circle"></i> Snippet copied to clipboard!</div>
+
+  <script>
+    /* 1. SPOTLIGHT CARD INTERACTION */
+    const spotCard = document.getElementById('spotlightBox');
+    if (spotCard) {
+      spotCard.addEventListener('mousemove', (e) => {
+        const rect = spotCard.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        spotCard.style.setProperty('--mouse-x', `${x}px`);
+        spotCard.style.setProperty('--mouse-y', `${y}px`);
+      });
+    }
+
+    /* 2. EVERVAULT MATRIX CIPHER */
+    const cipherChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=<>?/~";
+    const matrixBg = document.getElementById('matrixBg');
+    const cipherWord = document.getElementById('cipherWord');
+    const everCard = document.getElementById('evervaultCard');
+    const targets = ["QUANTUM", "SYNAPSE", "SEVENSEED", "NEURAL", "AGENTIC"];
+    let targetIdx = 0;
+
+    function generateMatrix() {
+      let str = "";
+      for (let i = 0; i < 280; i++) {
+        str += cipherChars[Math.floor(Math.random() * cipherChars.length)];
+      }
+      if (matrixBg) matrixBg.innerText = str;
+    }
+    setInterval(generateMatrix, 120);
+
+    if (everCard) {
+      everCard.addEventListener('mouseenter', () => {
+        targetIdx = (targetIdx + 1) % targets.length;
+        const goal = targets[targetIdx];
+        let step = 0;
+        const iv = setInterval(() => {
+          cipherWord.innerText = goal.split('').map((char, idx) => {
+            if (idx < step) return char;
+            return cipherChars[Math.floor(Math.random() * cipherChars.length)];
+          }).join('');
+          step += 1/3;
+          if (step > goal.length) {
+            clearInterval(iv);
+            cipherWord.innerText = goal;
+          }
+        }, 35);
+      });
+    }
+
+    /* 3. FLUID SHADER SIMULATOR (Canvas2D / WebGL) */
+    const fCanvas = document.getElementById('fluidCanvas');
+    if (fCanvas) {
+      const ctx = fCanvas.getContext('2d');
+      let w, h;
+      function resizeFluid() {
+        w = fCanvas.width = fCanvas.parentElement.clientWidth;
+        h = fCanvas.height = fCanvas.parentElement.clientHeight;
+      }
+      resizeFluid();
+      window.addEventListener('resize', resizeFluid);
+
+      let mouse = { x: w/2, y: h/2, down: false };
+      fCanvas.addEventListener('mousemove', (e) => {
+        const r = fCanvas.getBoundingClientRect();
+        mouse.x = e.clientX - r.left;
+        mouse.y = e.clientY - r.top;
+      });
+
+      let time = 0;
+      function drawFluid() {
+        time += 0.02;
+        ctx.fillStyle = '#020617';
+        ctx.fillRect(0, 0, w, h);
+
+        for (let i = 0; i < 4; i++) {
+          const cx = w/2 + Math.sin(time + i * 1.5) * (w/3.5) + (mouse.x - w/2) * 0.15;
+          const cy = h/2 + Math.cos(time * 0.8 + i) * (h/3.5) + (mouse.y - h/2) * 0.15;
+          const rad = 60 + Math.sin(time + i) * 20;
+
+          const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad);
+          const colors = [
+            'rgba(99, 102, 241, 0.45)',
+            'rgba(56, 189, 248, 0.35)',
+            'rgba(236, 72, 153, 0.35)',
+            'rgba(16, 185, 129, 0.35)'
+          ];
+          grad.addColorStop(0, colors[i % colors.length]);
+          grad.addColorStop(1, 'transparent');
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        requestAnimationFrame(drawFluid);
+      }
+      drawFluid();
+    }
+
+    /* 4. 3D TILT CARD */
+    const tilt = document.getElementById('tiltCard');
+    if (tilt) {
+      tilt.addEventListener('mousemove', (e) => {
+        const r = tilt.getBoundingClientRect();
+        const x = e.clientX - r.left - r.width / 2;
+        const y = e.clientY - r.top - r.height / 2;
+        const rotX = -(y / (r.height / 2)) * 16;
+        const rotY = (x / (r.width / 2)) * 16;
+        tilt.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.04, 1.04, 1.04)`;
+      });
+      tilt.addEventListener('mouseleave', () => {
+        tilt.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      });
+    }
+
+    /* 5. KINETIC TICKER (MotionSites.ai) */
+    const tickerNum = document.getElementById('tickerNum');
+    function reanimateTicker() {
+      const target = 485290;
+      let start = 0;
+      const duration = 1600;
+      const startTime = performance.now();
+
+      function update(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        const curr = Math.floor(ease * target);
+        tickerNum.innerText = curr.toLocaleString();
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+    reanimateTicker();
+
+    /* 6. AUDIO HARMONIC BARS */
+    const waveVis = document.getElementById('waveVisualizer');
+    if (waveVis) {
+      for (let i = 0; i < 14; i++) {
+        const b = document.createElement('div');
+        b.className = 'wave-bar';
+        waveVis.appendChild(b);
+      }
+      function animateWave() {
+        const bars = waveVis.querySelectorAll('.wave-bar');
+        bars.forEach((bar, i) => {
+          const h = 8 + Math.abs(Math.sin(Date.now() * 0.005 + i * 0.6)) * 48;
+          bar.style.height = `${h}px`;
+          bar.style.background = `hsl(${260 + i * 6}, 85%, 65%)`;
+        });
+        requestAnimationFrame(animateWave);
+      }
+      animateWave();
+    }
+
+    /* 7. WEB AUDIO SOUND FX */
+    function playClickSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.08);
+      } catch(e) {}
+    }
+
+    function triggerShimmer() {
+      playClickSound();
+      showToast("Neural Engine Task Dispatched!");
+    }
+
+    /* 8. FPS & DOM TELEMETRY MONITOR (Aura Build) */
+    let frameCount = 0;
+    let lastFpsCheck = performance.now();
+    const hudFps = document.getElementById('hudFps');
+    const hudDom = document.getElementById('hudDom');
+
+    function telemetryLoop(now) {
+      frameCount++;
+      if (now - lastFpsCheck >= 1000) {
+        if (hudFps) hudFps.innerText = frameCount;
+        frameCount = 0;
+        lastFpsCheck = now;
+        if (hudDom) hudDom.innerText = document.getElementsByTagName('*').length;
+      }
+      requestAnimationFrame(telemetryLoop);
+    }
+    requestAnimationFrame(telemetryLoop);
+
+    /* 9. CODE PREVIEW MODAL DATA */
+    const CODE_SNIPPETS = {
+      spotlight: {
+        title: "Aceternity Radial Spotlight Card",
+        html: `<div class="spotlight-card" id="spotlightCard">
+  <div class="icon"><i class="fas fa-bolt"></i></div>
+  <h3>Autonomous Agent Node</h3>
+  <p>Real-time cursor-tracking radial glow.</p>
+</div>`,
+        css: `.spotlight-card {
+  padding: 24px;
+  background: #0b0f19;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    300px circle at var(--mouse-x, 150px) var(--mouse-y, 100px),
+    rgba(99, 102, 241, 0.25),
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.spotlight-card:hover::before { opacity: 1; }`
+      },
+      evervault: {
+        title: "Aceternity Evervault Matrix Cipher",
+        html: `<div class="evervault-box">
+  <div class="matrix-text" id="matrixText"></div>
+  <div class="cipher-core">QUANTUM</div>
+</div>`,
+        css: `.evervault-box {
+  position: relative;
+  width: 300px; height: 180px;
+  background: #020617;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cipher-core {
+  position: relative;
+  z-index: 2;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  font-family: 'JetBrains Mono', monospace;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+}`
+      },
+      borderbeam: {
+        title: "21st.dev Laser Border Beam",
+        html: `<div class="beam-card">
+  <svg class="beam-svg">
+    <rect class="beam-rect" x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="16" />
+  </svg>
+  <p>Laser Beam Card Content</p>
+</div>`,
+        css: `.beam-card { position: relative; overflow: hidden; padding: 24px; border-radius: 16px; }
+.beam-rect {
+  fill: none;
+  stroke: #38bdf8;
+  stroke-width: 2.5;
+  stroke-dasharray: 80 400;
+  animation: beamOrbit 4s linear infinite;
+}
+@keyframes beamOrbit {
+  to { stroke-dashoffset: -480; }
+}`
+      },
+      fluid: {
+        title: "Unicorn Studio Fluid Shader",
+        html: `<canvas id="fluidCanvas"></canvas>`,
+        css: `#fluidCanvas {
+  width: 100%;
+  height: 200px;
+  display: block;
+  border-radius: 12px;
+}`
+      },
+      uiverse: {
+        title: "Uiverse Shimmer Button",
+        html: `<button class="shimmer-btn">Neural Launch</button>`,
+        css: `.shimmer-btn {
+  position: relative;
+  padding: 12px 28px;
+  background: #0b0f19;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  color: #fff;
+  overflow: hidden;
+}
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: linear-gradient(60deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+  animation: shimmerLoop 3s infinite;
+}
+@keyframes shimmerLoop {
+  0% { transform: translateX(-100%) rotate(25deg); }
+  100% { transform: translateX(100%) rotate(25deg); }
+}`
+      },
+      tilt: {
+        title: "3D Perspective Gyro Tilt Card",
+        html: `<div class="tilt-card" id="tiltCard">
+  <div class="tilt-inner">Spatial Card</div>
+</div>`,
+        css: `.tilt-card {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+}
+.tilt-inner { transform: translateZ(30px); }`
+      },
+      ticker: {
+        title: "MotionSites.ai Kinetic Number Ticker",
+        html: `<div class="ticker-number" id="tickerNum">0</div>`,
+        css: `.ticker-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 48px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #10b981, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}`
+      },
+      waveform: {
+        title: "Aura Harmonic Audio Visualizer",
+        html: `<div class="waveform-box">
+  <div class="wave-bar"></div>
+  <div class="wave-bar"></div>
+  <div class="wave-bar"></div>
+</div>`,
+        css: `.wave-bar {
+  width: 6px; height: 20px;
+  background: #ec4899;
+  border-radius: 3px;
+  transition: height 0.1s ease;
+}`
+      }
+    };
+
+    let activeModalKey = 'spotlight';
+    let activeTab = 'html';
+
+    function openCode(key) {
+      activeModalKey = key;
+      const snippet = CODE_SNIPPETS[key];
+      if (!snippet) return;
+      document.getElementById('modalCompTitle').innerText = snippet.title;
+      switchCodeTab('html');
+      document.getElementById('codeModal').classList.add('open');
+    }
+
+    function closeCodeModal() {
+      document.getElementById('codeModal').classList.remove('open');
+    }
+
+    function switchCodeTab(tab) {
+      activeTab = tab;
+      document.getElementById('tabHtml').classList.toggle('active', tab === 'html');
+      document.getElementById('tabCss').classList.toggle('active', tab === 'css');
+      const snippet = CODE_SNIPPETS[activeModalKey];
+      if (snippet) {
+        document.getElementById('codeDisplay').textContent = snippet[tab];
+      }
+    }
+
+    function copyCurrentCode() {
+      const snippet = CODE_SNIPPETS[activeModalKey];
+      if (snippet) {
+        navigator.clipboard.writeText(snippet[activeTab]);
+        showToast("Code copied to clipboard!");
+      }
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function filterCategory(cat) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      const cards = document.querySelectorAll('.comp-card');
+      cards.forEach(card => {
+        if (cat === 'all' || card.getAttribute('data-cat') === cat) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
