@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Alex Mercer Lead Deliverability & Outreach Engine — Sevenforce</title>
+  <meta name="description" content="Deep 4-tier email validation (MX DNS lookup, disposable burner filters) and automated high-converting cold B2B outreach. 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; }
+    .hub-container { max-width: 1400px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+
+    .nav-tabs-bar { display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; }
+    .tab-pill { padding: 10px 20px; border-radius: 12px; font-size: 13.5px; font-weight: 700; cursor: pointer; background: transparent; border: 1px solid transparent; color: #94a3b8; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+    .tab-pill.active { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+    .grid-layout { display: grid; grid-template-columns: 460px 1fr; gap: 24px; }
+    @media(max-width: 1080px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px; }
+    .styled-input { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; }
+    .styled-input:focus { border-color: #10b981; }
+
+    .btn-green { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; background: linear-gradient(135deg, #059669, #0284c7); color: #fff; box-shadow: 0 4px 20px rgba(5,150,105,0.4); transition: all 0.2s; }
+    .btn-green:hover { transform: translateY(-1px); }
+
+    /* Telemetry cards */
+    .tele-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .tele-card { background: #070d1e; border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; padding: 14px; text-align: center; }
+    .tele-num { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 800; color: #10b981; }
+    .tele-lbl { font-size: 10.5px; text-transform: uppercase; color: #94a3b8; margin-top: 4px; font-weight: 600; }
+
+    /* Results layout */
+    .result-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #020617; border: 1px solid #1e293b; border-radius: 10px; margin-bottom: 10px; font-size: 13px; }
+    .result-label { color: #94a3b8; display: flex; align-items: center; gap: 8px; }
+    .result-value { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #f8fafc; }
+
+    .email-preview { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 22px; font-size: 14px; line-height: 1.7; color: #e2e8f0; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-shield-halved"></i></span>
+    <span class="logo-text">Sevenforce <span class="logo-accent">AI</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="agent-dispatch.html"><i class="fas fa-satellite-dish"></i> Agent Cockpit</a>
+    <a href="meeting-intelligence.html"><i class="fas fa-comments"></i> Echo MeetBot</a>
+    <a href="social-syndicator.html"><i class="fas fa-share-nodes"></i> Maya SocialHub</a>
+    <a href="lead-validator.html" style="color:#10b981;font-weight:700;"><i class="fas fa-envelope-circle-check"></i> Alex Lead Validator</a>
+    <a href="whatsapp-studio.html"><i class="fab fa-whatsapp"></i> WhatsWay Studio</a>
+    <a href="/byok.html"><i class="fas fa-key"></i> BYOK Vault</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost sm" href="index.html">← Back to Sevenforce</a>
+  </div>
+</nav>
+
+<main class="hub-container">
+  <!-- HUD Header -->
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-shield-check"></i> Email-Validator & EmailAutomation Stack</span>
+      <h1>Alex Mercer Lead Hygiene & Cold Outreach Engine</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:700px;">
+        Perform deep 4-tier email deliverability verification (DNS MX checks, disposable inboxes) and generate personalized, non-spammy cold B2B outreach.
+      </p>
+    </div>
+  </div>
+
+  <!-- Mode Switcher -->
+  <div class="nav-tabs-bar">
+    <button class="tab-pill active" id="pillVal" onclick="switchMode('val')">
+      <i class="fas fa-envelope-circle-check"></i> 4-Tier Email Deliverability Verifier
+    </button>
+    <button class="tab-pill" id="pillOut" onclick="switchMode('out')">
+      <i class="fas fa-paper-plane"></i> Personalized B2B Cold Outreach Generator
+    </button>
+  </div>
+
+  <!-- Mode 1: Email Verifier -->
+  <div id="sectionValidator" class="grid-layout">
+    <div class="card-panel">
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-at"></i> Lead Email Address</label>
+        <input type="email" id="inputEmail" class="styled-input" value="contact@sevenseed.in" placeholder="prospect@company.com">
+      </div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;">
+        <span class="chip" onclick="setEmail('satya@microsoft.com')">Microsoft (B2B)</span>
+        <span class="chip" onclick="setEmail('fake@tempmail.com')">Burner (TempMail)</span>
+        <span class="chip" onclick="setEmail('user@gmail.com')">Gmail (Consumer)</span>
+        <span class="chip" onclick="setEmail('broken-syntax@@domain..com')">Syntax Error</span>
+      </div>
+
+      <button class="btn-green" id="btnVerifyEmail" onclick="verifyEmail()">
+        <i class="fas fa-shield-check"></i> Run 4-Tier Verification
+      </button>
+
+      <div style="margin-top:16px; padding:12px; background:#070d1e; border:1px solid #1e293b; border-radius:10px; font-size:11.5px; color:#94a3b8;">
+        <i class="fas fa-server" style="color:#38bdf8;"></i> <b>Verification Pipeline:</b> RFC 5322 regex → Disposable domain blacklist → Live DNS MX query → Bounce hazard assessment.
+      </div>
+    </div>
+
+    <div class="card-panel">
+      <div class="tele-grid">
+        <div class="tele-card">
+          <div class="tele-num" id="valScore">98</div>
+          <div class="tele-lbl">Deliverability Index</div>
+        </div>
+        <div class="tele-card">
+          <div class="tele-num" id="valMxCount" style="color:#38bdf8;">1</div>
+          <div class="tele-lbl">Active MX Servers</div>
+        </div>
+        <div class="tele-card">
+          <div class="tele-num" id="valRisk" style="color:#10b981; font-size:16px; margin-top:6px;">&lt; 1.5%</div>
+          <div class="tele-lbl">Bounce Risk</div>
+        </div>
+      </div>
+
+      <div class="result-row">
+        <div class="result-label"><i class="fas fa-check-circle" style="color:#10b981;"></i> RFC 5322 Syntax Compliance</div>
+        <div class="result-value" id="resSyntax" style="color:#10b981;">VALID</div>
+      </div>
+      <div class="result-row">
+        <div class="result-label"><i class="fas fa-ban" style="color:#f59e0b;"></i> Disposable Burner Blacklist</div>
+        <div class="result-value" id="resDisposable" style="color:#10b981;">CLEAN (Not Disposable)</div>
+      </div>
+      <div class="result-row">
+        <div class="result-label"><i class="fas fa-network-wired" style="color:#38bdf8;"></i> Primary MX DNS Exchange</div>
+        <div class="result-value" id="resMxHost" style="font-size:11px;">mail.sevenseed.in</div>
+      </div>
+      <div class="result-row">
+        <div class="result-label"><i class="fas fa-building" style="color:#ec4899;"></i> Mailbox Classification</div>
+        <div class="result-value" id="resType">B2B Corporate Domain</div>
+      </div>
+      <div class="result-row" style="background:#070d1e; border-color:rgba(16,185,129,0.3);">
+        <div class="result-label"><i class="fas fa-gavel" style="color:#10b981;"></i> Sending Verdict</div>
+        <div class="result-value" id="resVerdict" style="color:#10b981; font-size:14px;">SAFE_TO_SEND</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mode 2: Cold Outreach Generator -->
+  <div id="sectionOutreach" class="grid-layout" style="display:none;">
+    <div class="card-panel">
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-user"></i> Prospect Name</label>
+        <input type="text" id="prospectName" class="styled-input" value="Dr. Arvind Mehta" placeholder="First Name">
+      </div>
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-building"></i> Prospect Company</label>
+        <input type="text" id="prospectCompany" class="styled-input" value="MediCare Hospital Group" placeholder="Company Name">
+      </div>
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-industry"></i> Industry Sector</label>
+        <input type="text" id="prospectIndustry" class="styled-input" value="Healthcare & Clinical Care" placeholder="e.g. HealthTech, Construction">
+      </div>
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-fire"></i> Core Pain Point / Bottleneck</label>
+        <input type="text" id="prospectPain" class="styled-input" value="manual prescription errors and slow generic medicine matching" placeholder="What keeps them up at night?">
+      </div>
+
+      <button class="btn-green" id="btnGenOutreach" onclick="generateOutreach()">
+        <i class="fas fa-wand-magic-sparkles"></i> Synthesize Cold Email
+      </button>
+    </div>
+
+    <div class="card-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <span style="font-size:12px; font-weight:700; color:#10b981;"><i class="fas fa-envelope-open-text"></i> Personalized Cold Draft (Under 120 Words)</span>
+        <button class="btn btn-ghost sm" onclick="copyEmail()"><i class="fas fa-copy"></i> Copy Draft</button>
+      </div>
+
+      <div class="email-preview" id="emailDraftBox">Subject: quick idea regarding MediCare Hospital Group's manual prescription errors
+
+Hi Dr. Arvind Mehta,
+
+Noticed MediCare Hospital Group is actively expanding clinical operations in Healthcare & Clinical Care. Most medical leaders we speak with find that manual prescription errors and slow generic medicine matching consumes hours of doctor time and increases patient costs.
+
+We deployed a zero-margin autonomous AI stack that automates prescription OCR and matches Jan Aushadhi generic alternatives in real time, cutting turnaround by 75% with zero subscription markups.
+
+Open to a 3-minute video walkthrough showing how we solved this for a similar hospital?
+
+Best,
+Alex Mercer
+Sevenforce AI Workforce</div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px;">
+        <div style="background:#020617; border:1px solid #1e293b; border-radius:10px; padding:12px; font-size:12px;">
+          <div style="color:#64748b; font-weight:700; text-transform:uppercase; font-size:10px;">Spam Hazard Score</div>
+          <div style="color:#10b981; font-weight:800; font-family:'JetBrains Mono',monospace; margin-top:4px;" id="spamScore">0.1 (Extremely Low Risk)</div>
+        </div>
+        <div style="background:#020617; border:1px solid #1e293b; border-radius:10px; padding:12px; font-size:12px;">
+          <div style="color:#64748b; font-weight:700; text-transform:uppercase; font-size:10px;">Send Window Recommendation</div>
+          <div style="color:#38bdf8; font-weight:600; margin-top:4px;" id="sendWindow">Tuesday or Thursday 9:15 AM recipient local time</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  function switchMode(mode) {
+    if (mode === 'val') {
+      document.getElementById('pillVal').classList.add('active');
+      document.getElementById('pillOut').classList.remove('active');
+      document.getElementById('sectionValidator').style.display = 'grid';
+      document.getElementById('sectionOutreach').style.display = 'none';
+    } else {
+      document.getElementById('pillVal').classList.remove('active');
+      document.getElementById('pillOut').classList.add('active');
+      document.getElementById('sectionValidator').style.display = 'none';
+      document.getElementById('sectionOutreach').style.display = 'grid';
+    }
+  }
+
+  function setEmail(e) {
+    document.getElementById('inputEmail').value = e;
+  }
+
+  async function verifyEmail() {
+    const email = document.getElementById('inputEmail').value.trim();
+    if (!email) {
+      alert('Please enter an email address.');
+      return;
+    }
+
+    const btn = document.getElementById('btnVerifyEmail');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking DNS & MX...';
+
+    try {
+      const resp = await fetch('/api/sales/validate-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      });
+      const data = await resp.json();
+
+      document.getElementById('valScore').innerText = data.deliverability_score ?? 0;
+      document.getElementById('valMxCount').innerText = data.mx_count ?? 0;
+      document.getElementById('valRisk').innerText = data.bounce_risk || (data.deliverable ? '< 2%' : '> 90%');
+
+      document.getElementById('resSyntax').innerText = data.status === 'INVALID' ? 'FAILED' : 'VALID';
+      document.getElementById('resSyntax').style.color = data.status === 'INVALID' ? '#f43f5e' : '#10b981';
+
+      document.getElementById('resDisposable').innerText = data.status === 'DISPOSABLE' ? 'DISPOSABLE BURNER' : 'CLEAN';
+      document.getElementById('resDisposable').style.color = data.status === 'DISPOSABLE' ? '#f43f5e' : '#10b981';
+
+      document.getElementById('resMxHost').innerText = data.primary_mx_server || data.reason || 'None';
+      document.getElementById('resType').innerText = data.mailbox_type || 'Unknown';
+      document.getElementById('resVerdict').innerText = data.verdict || data.status;
+      document.getElementById('resVerdict').style.color = data.deliverable ? '#10b981' : '#f43f5e';
+
+    } catch (err) {
+      console.error('Validation error:', err);
+      alert('Error during email verification.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-shield-check"></i> Run 4-Tier Verification';
+    }
+  }
+
+  async function generateOutreach() {
+    const name = document.getElementById('prospectName').value.trim();
+    const company = document.getElementById('prospectCompany').value.trim();
+    const ind = document.getElementById('prospectIndustry').value.trim();
+    const pain = document.getElementById('prospectPain').value.trim();
+
+    const btn = document.getElementById('btnGenOutreach');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Synthesizing Outreach...';
+
+    try {
+      const resp = await fetch('/api/sales/generate-outreach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prospect_name: name,
+          company_name: company,
+          industry: ind,
+          pain_point: pain
+        })
+      });
+      const data = await resp.json();
+      if (data && data.email_draft) {
+        document.getElementById('emailDraftBox').innerText = data.email_draft;
+        if (data.spam_score) document.getElementById('spamScore').innerText = data.spam_score;
+        if (data.recommended_send_window) document.getElementById('sendWindow').innerText = data.recommended_send_window;
+      }
+    } catch (err) {
+      console.error('Outreach generation error:', err);
+      alert('Error communicating with outreach engine.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Synthesize Cold Email';
+    }
+  }
+
+  function copyEmail() {
+    const text = document.getElementById('emailDraftBox').innerText;
+    navigator.clipboard.writeText(text);
+    alert('Cold email draft copied to clipboard!');
+  }
+</script>
+</body>
+</html>

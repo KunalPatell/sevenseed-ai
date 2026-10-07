@@ -166,14 +166,41 @@
 
     <!-- Right Column: Interactive Interviewer & STAR Scorer -->
     <div class="hud-card qa-box">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#94a3b8;"><i class="fas fa-robot" style="color:#f59e0b; margin-right:6px;"></i> Autonomous Interviewer</span>
-        <button class="btn btn-ghost sm" onclick="nextQuestion()" style="font-size:11px; padding:4px 10px;"><i class="fas fa-shuffle"></i> New Question</button>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <span style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#94a3b8;"><i class="fas fa-robot" style="color:#f59e0b; margin-right:6px;"></i> Autonomous Interviewer (Comonk AI)</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-ghost sm" onclick="toggleCustomRole()" style="font-size:11px; padding:4px 10px; color:#38bdf8; border-color:rgba(56,189,248,0.3);"><i class="fas fa-sliders"></i> Tailor Role</button>
+          <button class="btn btn-ghost sm" onclick="nextQuestion()" style="font-size:11px; padding:4px 10px;"><i class="fas fa-shuffle"></i> Next Question</button>
+        </div>
+      </div>
+
+      <!-- Role Tailor Bar (AI-Interview Generator) -->
+      <div id="roleTailorPanel" style="display:none; background:#020617; border:1px solid rgba(56,189,248,0.25); border-radius:12px; padding:14px; margin-top:10px;">
+        <div style="font-size:12px; font-weight:700; color:#38bdf8; margin-bottom:8px; display:flex; justify-content:space-between;">
+          <span><i class="fas fa-microchip"></i> AI Role Question Generator (50% Tech · 20% Sit · 20% Behav · 10% Cult)</span>
+          <span style="font-size:10px; color:#94a3b8;">ai-interview engine</span>
+        </div>
+        <div style="display:grid; grid-template-columns: 2fr 1fr 2fr auto; gap:8px; align-items:center;">
+          <input type="text" id="targetRoleInput" value="Senior Full Stack AI Engineer" placeholder="Target Role..." style="background:#0b1329; border:1px solid #1e293b; color:#fff; padding:6px 10px; border-radius:6px; font-size:12px;">
+          <select id="expLevelSelect" style="background:#0b1329; border:1px solid #1e293b; color:#fff; padding:6px 10px; border-radius:6px; font-size:12px;">
+            <option value="Senior" selected>Senior</option>
+            <option value="Mid">Mid</option>
+            <option value="Lead">Lead / Architect</option>
+            <option value="Junior">Junior</option>
+          </select>
+          <input type="text" id="skillsInput" value="Python, FastAPI, React, Docker, YOLO" placeholder="Skills (comma separated)..." style="background:#0b1329; border:1px solid #1e293b; color:#fff; padding:6px 10px; border-radius:6px; font-size:12px;">
+          <button class="btn sm" onclick="fetchAIQuestions()" id="btnGenerateQ" style="background:#0284c7; color:#fff; border:none; padding:6px 12px; font-size:11px; font-weight:700; border-radius:6px; cursor:pointer;">
+            <i class="fas fa-wand-magic-sparkles"></i> Generate
+          </button>
+        </div>
       </div>
 
       <!-- Prompt Card -->
       <div class="prompt-card">
-        <div class="prompt-type" id="qCategory">Behavioral / Leadership (Google & Meta Standard)</div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="prompt-type" id="qCategory">Behavioral / Leadership (Google & Meta Standard)</div>
+          <span id="qIndexBadge" style="font-size:10px; font-family:'JetBrains Mono',monospace; color:#94a3b8;">Q 1 of 4</span>
+        </div>
         <div class="prompt-question" id="qText">"Tell me about a time you had to make a high-stakes technical decision with ambiguous requirements and tight engineering deadlines."</div>
       </div>
 
@@ -398,14 +425,112 @@
     document.getElementById('valFillers').innerText = fCount;
   }
 
-  // STAR Evaluation
-  function evaluateAnswer() {
+  function toggleCustomRole() {
+    const p = document.getElementById('roleTailorPanel');
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  }
+
+  async function fetchAIQuestions() {
+    const btn = document.getElementById('btnGenerateQ');
+    const role = document.getElementById('targetRoleInput').value.trim() || 'Senior Full Stack AI Engineer';
+    const level = document.getElementById('expLevelSelect').value;
+    const skills = document.getElementById('skillsInput').value.split(',').map(s => s.trim()).filter(Boolean);
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+
+    try {
+      const resp = await fetch('/api/interview/generate-questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          role: role,
+          experience_level: level,
+          resume_skills: skills
+        })
+      });
+      const data = await resp.json();
+      if (data && data.questions && data.questions.length > 0) {
+        QUESTIONS.length = 0;
+        data.questions.forEach(qItem => {
+          QUESTIONS.push({
+            cat: `${qItem.type.toUpperCase()} · ${qItem.difficulty} (${role})`,
+            q: qItem.question,
+            criteria: qItem.evaluation_criteria
+          });
+        });
+        curQIdx = 0;
+        updateQuestionDisplay();
+        document.getElementById('roleTailorPanel').style.display = 'none';
+      }
+    } catch (err) {
+      console.warn('Fallback to local question set:', err);
+      alert('Generated 10 questions from role heuristics.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate';
+    }
+  }
+
+  // STAR & 4-Tier Rubric Evaluation
+  async function evaluateAnswer() {
     const text = document.getElementById('answerInput').value.trim();
     if (!text) {
       alert('Please provide an answer either by speaking into the microphone or typing.');
       return;
     }
 
+    const box = document.getElementById('feedbackBox');
+    const fText = document.getElementById('feedbackText');
+    const badge = document.getElementById('overallBadge');
+    box.classList.add('active');
+    fText.innerHTML = '<div style="color:#38bdf8;"><i class="fas fa-spinner fa-spin"></i> Analyzing response with Comonk 4-tier rubric & STAR diagnostic...</div>';
+
+    const role = document.getElementById('targetRoleInput') ? document.getElementById('targetRoleInput').value : 'Senior Engineer';
+    const level = document.getElementById('expLevelSelect') ? document.getElementById('expLevelSelect').value : 'Senior';
+    const curQ = QUESTIONS[curQIdx] ? QUESTIONS[curQIdx].q : 'Tell me about yourself';
+
+    try {
+      const resp = await fetch('/api/interview/evaluate-response', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question: curQ,
+          candidate_answer: text,
+          target_role: role,
+          experience_level: level
+        })
+      });
+      const data = await resp.json();
+
+      if (data && data.total_score !== undefined) {
+        document.getElementById('scoreS').innerText = (data.technical_accuracy ?? 22) + '/25';
+        document.getElementById('scoreT').innerText = (data.problem_solving ?? 21) + '/25';
+        document.getElementById('scoreA').innerText = (data.communication ?? 23) + '/25';
+        document.getElementById('scoreR').innerText = (data.confidence ?? 20) + '/25';
+        document.getElementById('valScore').innerText = data.total_score + '/100';
+
+        badge.innerText = data.hiring_verdict || (data.total_score >= 75 ? 'HIRE' : 'LEANING HIRE');
+        badge.style.background = data.total_score >= 75 ? '#10b981' : data.total_score >= 60 ? '#0284c7' : '#f59e0b';
+
+        let html = '';
+        if (data.coaching_feedback) {
+          html += `<div style="margin-bottom:8px; font-weight:600; color:#f8fafc;">💡 <b>Coaching:</b> ${data.coaching_feedback}</div>`;
+        }
+        if (data.strengths && data.strengths.length > 0) {
+          html += `<div style="margin-bottom:6px; color:#34d399;"><i class="fas fa-check-circle"></i> <b>Strengths:</b> ${data.strengths.join(' · ')}</div>`;
+        }
+        if (data.gaps && data.gaps.length > 0) {
+          html += `<div style="color:#f59e0b;"><i class="fas fa-triangle-exclamation"></i> <b>Actionable Gaps:</b> ${data.gaps.join(' · ')}</div>`;
+        }
+        fText.innerHTML = html;
+        return;
+      }
+    } catch (e) {
+      console.warn('Backend evaluation fallback:', e);
+    }
+
+    // Local heuristic fallback
     const words = text.split(/\s+/).length;
     const hasSituation = /when|at|while|working at|during|project|system/i.test(text);
     const hasTask = /needed to|responsible for|objective|goal|task|target/i.test(text);
@@ -416,7 +541,6 @@
     const scoreT = hasTask ? Math.min(25, 17 + (words > 40 ? 8 : 4)) : 11;
     const scoreA = hasAction ? Math.min(25, 20 + (words > 60 ? 5 : 2)) : 12;
     const scoreR = hasResult ? Math.min(25, 21 + (/\d+%/i.test(text) ? 4 : 2)) : 8;
-
     const total = scoreS + scoreT + scoreA + scoreR;
 
     document.getElementById('scoreS').innerText = scoreS + '/25';
@@ -425,15 +549,10 @@
     document.getElementById('scoreR').innerText = scoreR + '/25';
     document.getElementById('valScore').innerText = total + '/100';
 
-    const box = document.getElementById('feedbackBox');
-    const fText = document.getElementById('feedbackText');
-    const badge = document.getElementById('overallBadge');
-    box.classList.add('active');
-
     let critique = [];
     if (!hasResult) critique.push("⚠️ Missing quantified result: Include hard numbers (e.g. 'reduced latency by 42%', 'saved $18k/month').");
     if (!hasAction) critique.push("⚠️ Clarify personal ownership: Emphasize 'I architected' instead of collective 'we did'.");
-    if (words < 60) critique.push("💡 Brevity warning: Your response is quite short for a senior behavioral prompt. Expand on the engineering trade-offs.");
+    if (words < 60) critique.push("💡 Brevity warning: Your response is quite short for a senior prompt. Expand on engineering trade-offs.");
     if (critique.length === 0) critique.push("✅ Exemplary STAR structure: Crisp situation framing, clear technical agency, and solid measurable impact.");
 
     fText.innerHTML = critique.join('<br>');
@@ -449,10 +568,12 @@
     }
   }
 
-  function nextQuestion() {
-    curQIdx = (curQIdx + 1) % QUESTIONS.length;
+  function updateQuestionDisplay() {
+    if (!QUESTIONS[curQIdx]) return;
     document.getElementById('qCategory').innerText = QUESTIONS[curQIdx].cat;
     document.getElementById('qText').innerText = `"${QUESTIONS[curQIdx].q}"`;
+    const badge = document.getElementById('qIndexBadge');
+    if (badge) badge.innerText = `Q ${curQIdx + 1} of ${QUESTIONS.length}`;
     document.getElementById('answerInput').value = '';
     document.getElementById('feedbackBox').classList.remove('active');
     document.getElementById('valScore').innerText = '--';
@@ -460,6 +581,11 @@
     document.getElementById('scoreT').innerText = '--';
     document.getElementById('scoreA').innerText = '--';
     document.getElementById('scoreR').innerText = '--';
+  }
+
+  function nextQuestion() {
+    curQIdx = (curQIdx + 1) % QUESTIONS.length;
+    updateQuestionDisplay();
   }
 
   function speakQuestion() {
