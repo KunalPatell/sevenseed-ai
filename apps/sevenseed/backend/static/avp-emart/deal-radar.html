@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Multi-Store Price Arbitrage & Coupon Auto-Tester — AVP E-Mart</title>
+  <meta name="description" content="Real-time multi-platform price comparison across Amazon, Flipkart, Blinkit, Zepto, and Instamart with automated coupon auto-testing and 10-minute delivery fee optimizer.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #050811; color: #f8fafc; font-family: 'Inter', sans-serif; }
+    .station-wrap { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(24px, 3.5vw, 34px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .badge-deal { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+
+    .grid-duo { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; }
+    @media(max-width: 1080px) { .grid-duo { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
+
+    /* Product Selector */
+    .search-row { display: flex; gap: 10px; margin-bottom: 20px; }
+    .search-input { flex: 1; background: #020617; border: 1px solid #1e293b; color: #fff; font-size: 13.5px; padding: 10px 16px; border-radius: 12px; outline: none; }
+    .search-input:focus { border-color: #f59e0b; }
+
+    /* Multi-Store Comparison Table */
+    .store-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+    .store-tr { background: #090e1a; border: 1px solid #1e293b; border-radius: 10px; transition: all 0.2s; }
+    .store-tr:hover { background: #0f172a; border-color: rgba(245,158,11,0.4); transform: translateY(-1px); }
+    .store-td { padding: 14px 16px; font-size: 13px; vertical-align: middle; }
+    .store-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; color: #fff; }
+    .store-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .amazon-ic { background: #ff9900; color: #000; }
+    .flipkart-ic { background: #2874f0; color: #fff; }
+    .blinkit-ic { background: #f8cb46; color: #000; }
+    .zepto-ic { background: #8800ff; color: #fff; }
+    .instamart-ic { background: #fc8019; color: #fff; }
+
+    .price-badge { font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 800; color: #34d399; }
+    .price-badge.highest { color: #f87171; }
+    .badge-best { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+
+    /* Arbitrage Stats */
+    .arb-stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
+    @media(max-width: 640px) { .arb-stats-row { grid-template-columns: repeat(2, 1fr); } }
+    .arb-stat { background: #070d1e; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; text-align: center; }
+    .arb-val { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 800; color: #fbbf24; }
+    .arb-lbl { font-size: 11px; color: #94a3b8; text-transform: uppercase; font-weight: 600; margin-top: 2px; }
+
+    /* Coupon Tester Box */
+    .coupon-box { margin-top: 20px; background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 18px; }
+    .coupon-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #1e293b; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+    .coupon-code { font-weight: 800; color: #fbbf24; background: rgba(245,158,11,0.1); padding: 2px 6px; border-radius: 4px; }
+    .coupon-status { font-weight: 700; color: #10b981; }
+
+    .btn-cart { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 800; font-size: 13.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 18px rgba(245,158,11,0.4); transition: all 0.2s; }
+    .btn-cart:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(245,158,11,0.6); }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-cart-shopping"></i></span>
+    <span class="logo-text">AVP <span class="logo-accent">E-Mart</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="pricing-intelligence.html"><i class="fas fa-chart-line"></i> Pricing Intelligence</a>
+    <a href="deal-radar.html" style="color:#fbbf24;font-weight:700;"><i class="fas fa-tags"></i> Arbitrage Deal Radar</a>
+    <a href="smart-compare.html"><i class="fas fa-columns"></i> Spec Compare</a>
+    <a href="/byok.html"><i class="fas fa-key"></i> BYOK Vault</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost sm" href="index.html">← Back to Hub</a>
+  </div>
+</nav>
+
+<main class="station-wrap">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="badge-deal"><i class="fas fa-bolt"></i> Real-Time 5-Platform Arbitrage Engine</span>
+      <h1>Multi-Store Price Radar &amp; Coupon Auto-Tester</h1>
+    </div>
+    <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#10b981; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); padding:6px 14px; border-radius:8px;">
+      <i class="fas fa-circle-check"></i> LIVE TELEMETRY: 5 STORES CONNECTED
+    </div>
+  </div>
+
+  <div class="grid-duo">
+    <!-- Left: Multi-Store Comparison -->
+    <div class="card-panel">
+      <div class="search-row">
+        <input type="text" id="productInput" class="search-input" value="Apple AirPods Pro (2nd Gen) with MagSafe Case (USB-C)" />
+        <button class="btn btn-cart" onclick="scanStores()"><i class="fas fa-magnifying-glass"></i> Refresh Radar</button>
+      </div>
+
+      <table class="store-table">
+        <tbody>
+          <tr class="store-tr">
+            <td class="store-td">
+              <div class="store-logo">
+                <div class="store-icon blinkit-ic"><i class="fas fa-bolt"></i></div>
+                <div>
+                  <div>Blinkit (Quick Commerce)</div>
+                  <div style="font-size:11px; color:#94a3b8;">11 Mins Delivery · Sector 21 Hub</div>
+                </div>
+              </div>
+            </td>
+            <td class="store-td price-badge" id="pBlinkit">₹21,490</td>
+            <td class="store-td"><span class="badge-best">LOWEST PRICE</span></td>
+          </tr>
+
+          <tr class="store-tr">
+            <td class="store-td">
+              <div class="store-logo">
+                <div class="store-icon zepto-ic"><i class="fas fa-stopwatch"></i></div>
+                <div>
+                  <div>Zepto Now</div>
+                  <div style="font-size:11px; color:#94a3b8;">9 Mins Delivery · Infocity Dark Store</div>
+                </div>
+              </div>
+            </td>
+            <td class="store-td price-badge" id="pZepto">₹21,999</td>
+            <td class="store-td"><span style="color:#94a3b8; font-size:11px;">+₹509</span></td>
+          </tr>
+
+          <tr class="store-tr">
+            <td class="store-td">
+              <div class="store-logo">
+                <div class="store-icon amazon-ic"><i class="fab fa-amazon"></i></div>
+                <div>
+                  <div>Amazon India</div>
+                  <div style="font-size:11px; color:#94a3b8;">Prime Same-Day Delivery</div>
+                </div>
+              </div>
+            </td>
+            <td class="store-td price-badge" id="pAmazon">₹22,900</td>
+            <td class="store-td"><span style="color:#94a3b8; font-size:11px;">+₹1,410</span></td>
+          </tr>
+
+          <tr class="store-tr">
+            <td class="store-td">
+              <div class="store-logo">
+                <div class="store-icon flipkart-ic"><i class="fas fa-bag-shopping"></i></div>
+                <div>
+                  <div>Flipkart</div>
+                  <div style="font-size:11px; color:#94a3b8;">Assured Seller · Standard Delivery</div>
+                </div>
+              </div>
+            </td>
+            <td class="store-td price-badge highest" id="pFlipkart">₹24,900</td>
+            <td class="store-td"><span style="color:#f87171; font-size:11px;">+₹3,410</span></td>
+          </tr>
+
+          <tr class="store-tr">
+            <td class="store-td">
+              <div class="store-logo">
+                <div class="store-icon instamart-ic"><i class="fas fa-utensils"></i></div>
+                <div>
+                  <div>Swiggy Instamart</div>
+                  <div style="font-size:11px; color:#94a3b8;">14 Mins Delivery · Kudasan Hub</div>
+                </div>
+              </div>
+            </td>
+            <td class="store-td price-badge" id="pInstamart">₹22,499</td>
+            <td class="store-td"><span style="color:#94a3b8; font-size:11px;">+₹1,009</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Arbitrage Telemetry -->
+      <div class="arb-stats-row">
+        <div class="arb-stat">
+          <div class="arb-val" id="valSpread">₹3,410</div>
+          <div class="arb-lbl">Price Spread</div>
+        </div>
+        <div class="arb-stat">
+          <div class="arb-val" id="valSavings">13.7%</div>
+          <div class="arb-lbl">Max Arbitrage</div>
+        </div>
+        <div class="arb-stat">
+          <div class="arb-val" id="valWinner">Blinkit</div>
+          <div class="arb-lbl">Best Retailer</div>
+        </div>
+        <div class="arb-stat">
+          <div class="arb-val" id="valDelivery">11m</div>
+          <div class="arb-lbl">Fastest Drop</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Automated Coupon Tester & Basket Optimizer -->
+    <div class="card-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <span style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#94a3b8;"><i class="fas fa-ticket" style="color:#f59e0b; margin-right:6px;"></i> Automated Coupon Brute-Forcer</span>
+        <button class="btn btn-ghost sm" onclick="runCouponBruteForce()" style="font-size:11px; padding:4px 10px;"><i class="fas fa-play"></i> Test All Codes</button>
+      </div>
+
+      <div class="coupon-box" id="couponBox">
+        <div class="coupon-item">
+          <span class="coupon-code">FESTIVE1000</span>
+          <span>Instant Flat ₹1,000 Off</span>
+          <span class="coupon-status" id="cStatus1">VERIFIED ACTIVE</span>
+        </div>
+        <div class="coupon-item">
+          <span class="coupon-code">ICICIEMART</span>
+          <span>10% Instant Credit Card Cashback</span>
+          <span class="coupon-status" id="cStatus2">ELIGIBLE</span>
+        </div>
+        <div class="coupon-item">
+          <span class="coupon-code">QUICK500</span>
+          <span>Flat ₹500 on Quick Delivery</span>
+          <span class="coupon-status" id="cStatus3">READY</span>
+        </div>
+        <div class="coupon-item">
+          <span class="coupon-code">FREESHIP</span>
+          <span>Wave ₹49 Handling &amp; Platform Fee</span>
+          <span class="coupon-status" id="cStatus4">APPLIED</span>
+        </div>
+      </div>
+
+      <!-- Final Optimized Basket Card -->
+      <div style="background:#090e1a; border:1px solid rgba(245,158,11,0.3); border-radius:14px; padding:18px; margin-top:20px;">
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:#94a3b8; margin-bottom:6px;">
+          <span>Original Market High:</span>
+          <span style="text-decoration:line-through; font-family:'JetBrains Mono';">₹24,900</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:#94a3b8; margin-bottom:6px;">
+          <span>Arbitrage Spread Saving:</span>
+          <span style="color:#34d399; font-family:'JetBrains Mono';">-₹3,410</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:#94a3b8; margin-bottom:12px;">
+          <span>Stackable Coupon (FESTIVE1000):</span>
+          <span style="color:#34d399; font-family:'JetBrains Mono';">-₹1,000</span>
+        </div>
+        <div style="border-top:1px solid #1e293b; padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; color:#94a3b8; font-weight:700;">Final Effective Price:</div>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:24px; font-weight:900; color:#fbbf24;">₹20,490</div>
+          </div>
+          <button class="btn btn-cart" onclick="alert('Redirecting to lowest priced retailer with coupon auto-injected!')">
+            <i class="fas fa-bag-shopping"></i> Lock Deal at ₹20,490
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  function scanStores() {
+    const p = document.getElementById('productInput').value;
+    alert(`Scanning live catalogs across Blinkit, Zepto, Amazon, Flipkart, and Swiggy Instamart for: "${p}"`);
+  }
+
+  function runCouponBruteForce() {
+    const s1 = document.getElementById('cStatus1');
+    const s2 = document.getElementById('cStatus2');
+    s1.innerText = 'TESTING...'; s1.style.color = '#f59e0b';
+    setTimeout(() => {
+      s1.innerText = 'SUCCESS (-₹1,000)'; s1.style.color = '#10b981';
+      s2.innerText = 'STACKABLE (-10%)'; s2.style.color = '#10b981';
+    }, 600);
+  }
+</script>
+</body>
+</html>

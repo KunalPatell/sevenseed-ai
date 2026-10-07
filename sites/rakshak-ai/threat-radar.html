@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cyber Threat Radar & Real-Time Incident Command — Rakshak AI</title>
+  <meta name="description" content="60 FPS Cyber Defense Radar Sweep with live geospatial incident telemetry and Gemini 3.8 Flash instant containment playbooks.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E📡%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .radar-page { max-width: 1400px; margin: 0 auto; padding: 90px 24px 60px; }
+    .radar-header { text-align: center; margin-bottom: 24px; }
+    .radar-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #f87171; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .radar-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.2; margin-bottom: 8px; }
+    .radar-sub { color: var(--text-2); font-size: 15px; max-width: 650px; margin: 0 auto; }
+
+    /* Layout */
+    .radar-grid { display: grid; grid-template-columns: 1fr 420px; gap: 24px; min-height: 640px; }
+    @media(max-width: 1100px) { .radar-grid { grid-template-columns: 1fr; } }
+
+    /* Radar Stage */
+    .radar-stage { background: #04070d; border: 1px solid rgba(239,68,68,0.3); border-radius: 16px; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 580px; box-shadow: 0 0 50px rgba(239,68,68,0.1) inset; }
+    #radarCanvas { width: 100%; height: 100%; max-width: 600px; max-height: 600px; cursor: crosshair; }
+
+    /* Top HUD Overlay */
+    .hud-overlay { position: absolute; top: 16px; left: 20px; right: 20px; display: flex; justify-content: space-between; pointer-events: none; }
+    .hud-stat { background: rgba(7, 11, 20, 0.85); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #f87171; }
+    .hud-stat strong { color: #fff; }
+
+    /* Bottom Telemetry Bars */
+    .telemetry-bar { position: absolute; bottom: 16px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(7, 11, 20, 0.85); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+    /* Right Incident Command Panel */
+    .command-panel { background: var(--bg-1); border: 1px solid var(--border); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+    .command-title { font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
+    
+    .threat-list { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; max-height: 250px; }
+    .threat-item { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; cursor: pointer; transition: all .2s; }
+    .threat-item:hover, .threat-item.active { border-color: #ef4444; background: rgba(239,68,68,0.08); }
+    .threat-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .threat-name { font-size: 13.5px; font-weight: 700; color: #fff; }
+    .threat-pill { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+    .pill-crit { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4); }
+    .pill-high { background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); }
+
+    /* AI Containment Box */
+    .ai-playbook { background: #070a12; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; flex: 1; min-height: 220px; max-height: 300px; overflow-y: auto; font-size: 13px; line-height: 1.6; color: #e2e8f0; white-space: pre-wrap; }
+    
+    .btn-lockdown { padding: 12px; background: linear-gradient(135deg, #ef4444, #b91c1c); color: #fff; border: none; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 0 20px rgba(239,68,68,0.4); }
+    .btn-lockdown:hover { opacity: .9; }
+  </style>
+</head>
+<body class="site-body">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <span class="nav-brand-icon">🛡️</span>
+        <span class="nav-brand-text">Rakshak<span class="brand-accent">AI</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Overview</a>
+        <a href="threat-radar.html" class="nav-link active">Threat Radar</a>
+        <a href="cyber-complaint.html" class="nav-link">Cyber Complaint</a>
+        <a href="legal-rights.html" class="nav-link">Legal Rights</a>
+        <a href="crime-analytics.html" class="nav-link">Analytics</a>
+      </div>
+      <div class="nav-actions">
+        <div id="aiStatus" style="font-size:12px;"></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="radar-page">
+    <div class="radar-header">
+      <div class="radar-badge"><i class="fa-solid fa-radar fa-spin"></i> Active Geospatial Perimeter Scanner</div>
+      <h1 class="radar-title">Real-Time Cyber Threat Radar HUD</h1>
+      <p class="radar-sub">Interactive 60 FPS radar sweep with live attack vector detection and Vertex AI (Gemini 3.8 Flash) automated incident containment playbooks.</p>
+    </div>
+
+    <div class="radar-grid">
+      <!-- Radar Screen -->
+      <div class="radar-stage" id="radarStage">
+        <div class="hud-overlay">
+          <div class="hud-stat">SECTOR: <strong>IN-DEL-04</strong> • LAT 28.6139° N</div>
+          <div class="hud-stat" id="fpsStat">RADAR: <strong>60 FPS</strong> • RANGE 30KM</div>
+        </div>
+
+        <canvas id="radarCanvas" width="600" height="600"></canvas>
+
+        <div class="telemetry-bar">
+          <span><i class="fa-solid fa-signal" style="color:#10b981;"></i> SIGINT: <strong id="pingCount">4 Threats Tracked</strong></span>
+          <span style="color:var(--text-3);">CLICK ANY RADAR BLIP TO ANALYZE</span>
+          <span><i class="fa-solid fa-shield-virus" style="color:#ef4444;"></i> DEFCON 2</span>
+        </div>
+      </div>
+
+      <!-- Incident Command -->
+      <div class="command-panel">
+        <div class="command-title">
+          <i class="fa-solid fa-terminal" style="color:#ef4444;"></i> Active Intercept Targets
+        </div>
+
+        <div class="threat-list" id="threatList">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;display:flex;justify-content:space-between;align-items:center;">
+          <span><i class="fa-solid fa-brain" style="color:#818cf8;"></i> Gemini 3.8 Flash Containment</span>
+          <span id="analyzingTag" style="display:none;color:#f87171;"><i class="fa-solid fa-spinner fa-spin"></i> Formulating...</span>
+        </div>
+
+        <div class="ai-playbook" id="playbookBox">Select or click any threat blip on the radar screen to generate an instant containment playbook with statutory IT Act sections and firewall remediation steps.</div>
+
+        <button type="button" class="btn-lockdown" onclick="toggleLockdown()">
+          <i class="fa-solid fa-triangle-exclamation"></i> Emergency Perimeter Lockdown
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script src="../vertex_client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Vertex.showStatus('aiStatus');
+      initRadar();
+      renderThreatList();
+    });
+
+    const threats = [
+      { id: 1, name: 'UPI Gateway Credential Stuffing', severity: 'CRITICAL', dist: 8.4, angle: 0.8, ip: '185.220.101.5', story: 'Automated brute-force attack testing 4,200 credential pairs per minute against merchant payment APIs.' },
+      { id: 2, name: 'Deepfake Audio Impersonation', severity: 'HIGH', dist: 18.2, angle: 2.4, ip: '103.251.167.22', story: 'AI synthetic voice calling branch manager requesting emergency fund override of ₹18.5 Lakhs.' },
+      { id: 3, name: 'SIM Swap & SMS Intercept Relay', severity: 'HIGH', dist: 24.1, angle: 4.1, ip: '45.154.255.89', story: 'Unauthorized e-SIM porting request registered via spoofed telecom provider SMS gateway.' },
+      { id: 4, name: 'Encrypted Tor C2 Beaconing', severity: 'MEDIUM', dist: 12.0, angle: 5.3, ip: '198.51.100.44', story: 'Periodic heartbeat packet beaconing from internal finance workstation to known ransomware staging IP.' }
+    ];
+
+    let activeThreat = threats[0];
+    let angle = 0;
+    let isLockdown = false;
+
+    function initRadar() {
+      const canvas = document.getElementById('radarCanvas');
+      const ctx = canvas.getContext('2d');
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const radius = 270;
+
+      function draw() {
+        ctx.fillStyle = isLockdown ? 'rgba(30, 5, 5, 0.2)' : 'rgba(4, 7, 13, 0.2)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Concentric rings
+        ctx.strokeStyle = isLockdown ? 'rgba(239, 68, 68, 0.4)' : 'rgba(6, 182, 212, 0.25)';
+        ctx.lineWidth = 1;
+        [0.25, 0.5, 0.75, 1.0].forEach(factor => {
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius * factor, 0, Math.PI * 2);
+          ctx.stroke();
+        });
+
+        // Crosshairs
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - radius);
+        ctx.lineTo(cx, cy + radius);
+        ctx.moveTo(cx - radius, cy);
+        ctx.lineTo(cx + radius, cy);
+        ctx.stroke();
+
+        // Sweep line with gradient trail
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(angle);
+
+        const sweepGradient = ctx.createLinearGradient(0, 0, radius, 0);
+        sweepGradient.addColorStop(0, 'rgba(6, 182, 212, 0.8)');
+        sweepGradient.addColorStop(1, 'rgba(6, 182, 212, 0.1)');
+
+        ctx.fillStyle = sweepGradient;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, radius, 0, -0.4, true);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(radius, 0);
+        ctx.stroke();
+        ctx.restore();
+
+        // Draw Threat Blips
+        threats.forEach(t => {
+          const r = (t.dist / 30) * radius;
+          const bx = cx + Math.cos(t.angle) * r;
+          const by = cy + Math.sin(t.angle) * r;
+
+          // Pulse effect
+          ctx.beginPath();
+          ctx.arc(bx, by, 7, 0, Math.PI * 2);
+          ctx.fillStyle = t.severity === 'CRITICAL' ? '#ef4444' : '#f59e0b';
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = ctx.fillStyle;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+
+          // Target reticle if active
+          if (activeThreat && activeThreat.id === t.id) {
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(bx - 12, by - 12, 24, 24);
+          }
+        });
+
+        angle += 0.03;
+        requestAnimationFrame(draw);
+      }
+
+      requestAnimationFrame(draw);
+
+      // Canvas click detection for blips
+      canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const mx = (e.clientX - rect.left) * scaleX;
+        const my = (e.clientY - rect.top) * scaleY;
+
+        threats.forEach(t => {
+          const r = (t.dist / 30) * radius;
+          const bx = cx + Math.cos(t.angle) * r;
+          const by = cy + Math.sin(t.angle) * r;
+          const dist = Math.hypot(mx - bx, my - by);
+          if (dist < 20) {
+            selectThreat(t);
+          }
+        });
+      });
+    }
+
+    function renderThreatList() {
+      const el = document.getElementById('threatList');
+      el.innerHTML = threats.map(t => `
+        <div class="threat-item ${activeThreat && activeThreat.id === t.id ? 'active' : ''}" onclick="selectThreatById(${t.id})">
+          <div class="threat-top">
+            <span class="threat-name">${t.name}</span>
+            <span class="threat-pill ${t.severity === 'CRITICAL' ? 'pill-crit' : 'pill-high'}">${t.severity}</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-3);font-family:'JetBrains Mono',monospace;">
+            ${t.ip} • ${t.dist} km • Azimuth: ${Math.round(t.angle * 57.3)}°
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectThreatById(id) {
+      const t = threats.find(x => x.id === id);
+      if (t) selectThreat(t);
+    }
+
+    async function selectThreat(t) {
+      activeThreat = t;
+      renderThreatList();
+
+      const box = document.getElementById('playbookBox');
+      const tag = document.getElementById('analyzingTag');
+      tag.style.display = 'inline-flex';
+      box.textContent = `Analyzing ${t.name} (${t.ip}) with Gemini 3.8 Flash...`;
+
+      const prompt = `You are a Principal SOC Incident Commander at Rakshak AI Defense.
+Generate an immediate tactical incident containment playbook for this cyber threat:
+Threat: "${t.name}"
+Severity: ${t.severity}
+Source IP / Vector: ${t.ip}
+Context: ${t.story}
+
+Include:
+1. IMMEDIATE CONTAINMENT ACTIONS (Firewall iptables drop rules, session invalidation, credential lock).
+2. APPLICABLE STATUTORY SECTIONS (IT Act 2000, e.g. 66/66C/66D & Bharatiya Nyaya Sanhita BNS 2023).
+3. EVIDENCE PRESERVATION PROTOCOL (PCAP capture, SHA256 log hash, CERT-In reporting requirement within 6 hours).`;
+
+      try {
+        const reply = await Vertex.ask(prompt, { temperature: 0.2 });
+        await Vertex.typeInto(box, reply, 1);
+      } catch (err) {
+        box.innerHTML = `<span style="color:#f87171;">⚠️ Error: ${err.message}</span>`;
+      } finally {
+        tag.style.display = 'none';
+      }
+    }
+
+    function toggleLockdown() {
+      isLockdown = !isLockdown;
+      const stage = document.getElementById('radarStage');
+      if (isLockdown) {
+        stage.style.boxShadow = '0 0 80px rgba(239,68,68,0.4) inset';
+        alert('🚨 EMERGENCY DEFCON 1 LOCKDOWN INITIATED: All external API ingress blocked.');
+      } else {
+        stage.style.boxShadow = '0 0 50px rgba(239,68,68,0.1) inset';
+      }
+    }
+  </script>
+</body>
+</html>

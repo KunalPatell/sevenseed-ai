@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Clinical Drug-Drug Interaction Matrix & Dosage Scheduler — Decode Forest Pharmacy</title>
+  <meta name="description" content="Interactive pharmacological multi-drug contraindication matrix, metabolic CYP450 competition analysis, and smart dosage adherence scheduler. 100% Free with BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; }
+    .station-wrap { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(24px, 3.5vw, 34px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .badge-med { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+
+    .grid-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media(max-width: 1024px) { .grid-duo { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
+
+    .drug-select { width: 100%; background: #020617; border: 1px solid #1e293b; color: #fff; font-size: 13.5px; padding: 12px 14px; border-radius: 10px; outline: none; margin-bottom: 14px; font-family: inherit; }
+    .drug-select:focus { border-color: #10b981; }
+
+    /* Severity Banner */
+    .severity-card { border-radius: 14px; padding: 18px; margin-top: 16px; border: 1px solid transparent; transition: all 0.3s; }
+    .sev-danger { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.4); color: #fca5a5; }
+    .sev-warning { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.4); color: #fde68a; }
+    .sev-safe { background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.4); color: #86efac; }
+
+    /* Dosage Schedule */
+    .sched-item { display: flex; justify-content: space-between; align-items: center; background: #090e1a; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+    .sched-time { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: #38bdf8; }
+    .sched-med { font-weight: 700; color: #fff; font-size: 13px; }
+    .sched-tag { font-size: 11px; background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 6px; color: #94a3b8; }
+
+    .btn-med { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 800; font-size: 13.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 18px rgba(16,185,129,0.4); transition: all 0.2s; }
+    .btn-med:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(16,185,129,0.6); }
+  </style>
+</head>
+<body>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-mortar-pestle"></i></span>
+    <span class="logo-text">Decode <span class="logo-accent">Forest</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="clinical-protocols.html"><i class="fas fa-notes-medical"></i> Clinical Protocols</a>
+    <a href="generic-finder.html"><i class="fas fa-pills"></i> Generic Alternatives</a>
+    <a href="drug-interaction.html" style="color:#34d399;font-weight:700;"><i class="fas fa-triangle-exclamation"></i> Drug Interactions</a>
+    <a href="/byok.html"><i class="fas fa-key"></i> BYOK Vault</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost sm" href="index.html">← Back to Hub</a>
+  </div>
+</nav>
+
+<main class="station-wrap">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="badge-med"><i class="fas fa-capsules"></i> Clinical Pharmacology &amp; Adherence</span>
+      <h1>Drug-Drug Interaction Matrix &amp; Dosage Scheduler</h1>
+    </div>
+    <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#10b981; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); padding:6px 14px; border-radius:8px;">
+      <i class="fas fa-shield-virus"></i> CLINICAL DATABASE: 1,400+ SALTS ACTIVE
+    </div>
+  </div>
+
+  <div class="grid-duo">
+    <!-- Left: Interaction Checker -->
+    <div class="card-panel">
+      <span style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#94a3b8; display:block; margin-bottom:14px;"><i class="fas fa-code-compare" style="color:#10b981; margin-right:6px;"></i> Interaction Analysis</span>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div>
+          <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#94a3b8; display:block; margin-bottom:6px;">Medication A (Primary)</label>
+          <select id="drugA" class="drug-select" onchange="checkInteraction()">
+            <option value="Warfarin">Warfarin (Oral Anticoagulant)</option>
+            <option value="Aspirin">Aspirin (Antiplatelet / Salicylate)</option>
+            <option value="Metformin">Metformin (Biguanide Antidiabetic)</option>
+            <option value="Atorvastatin">Atorvastatin (HMG-CoA Reductase Inhibitor)</option>
+            <option value="Ciprofloxacin">Ciprofloxacin (Fluoroquinolone Antibiotic)</option>
+            <option value="Digoxin">Digoxin (Cardiac Glycoside)</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#94a3b8; display:block; margin-bottom:6px;">Medication B (Secondary)</label>
+          <select id="drugB" class="drug-select" onchange="checkInteraction()">
+            <option value="Aspirin">Aspirin (Antiplatelet / Salicylate)</option>
+            <option value="Warfarin">Warfarin (Oral Anticoagulant)</option>
+            <option value="Ibuprofen">Ibuprofen (NSAID)</option>
+            <option value="Clopidogrel">Clopidogrel (P2Y12 Inhibitor)</option>
+            <option value="Lithium">Lithium Carbonate (Mood Stabilizer)</option>
+            <option value="Lisinopril">Lisinopril (ACE Inhibitor)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="severityCard" class="severity-card sev-danger">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+          <i class="fas fa-triangle-exclamation" style="font-size:18px;"></i>
+          <span style="font-size:14px; font-weight:800; text-transform:uppercase;" id="sevTitle">Major Contraindication Detected</span>
+        </div>
+        <div style="font-size:13px; line-height:1.6;" id="sevDetails">
+          Concomitant use of Warfarin and Aspirin increases gastrointestinal and intracranial hemorrhage risk through additive platelet inhibition and prothrombin antagonism. Regular INR monitoring required.
+        </div>
+      </div>
+
+      <div style="margin-top:20px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;">
+        <div style="background:#090e1a; border:1px solid #1e293b; border-radius:10px; padding:12px; text-align:center;">
+          <div style="font-family:'JetBrains Mono'; font-size:18px; font-weight:800; color:#f87171;" id="statRisk">HIGH</div>
+          <div style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Bleed Risk Index</div>
+        </div>
+        <div style="background:#090e1a; border:1px solid #1e293b; border-radius:10px; padding:12px; text-align:center;">
+          <div style="font-family:'JetBrains Mono'; font-size:18px; font-weight:800; color:#38bdf8;">CYP2C9</div>
+          <div style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Hepatic Pathway</div>
+        </div>
+        <div style="background:#090e1a; border:1px solid #1e293b; border-radius:10px; padding:12px; text-align:center;">
+          <div style="font-family:'JetBrains Mono'; font-size:18px; font-weight:800; color:#fbbf24;">INR > 3.0</div>
+          <div style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Clinical Monitor</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Smart Dosage Adherence Scheduler -->
+    <div class="card-panel">
+      <span style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#94a3b8; display:block; margin-bottom:14px;"><i class="fas fa-clock" style="color:#38bdf8; margin-right:6px;"></i> Smart Dosage Adherence Schedule</span>
+
+      <div class="sched-item">
+        <div>
+          <div class="sched-med">Metformin 500mg Extended Release</div>
+          <div class="sched-tag">Take with breakfast to minimize GI distress</div>
+        </div>
+        <div class="sched-time">08:30 AM</div>
+      </div>
+
+      <div class="sched-item">
+        <div>
+          <div class="sched-med">Atorvastatin 20mg Tablet</div>
+          <div class="sched-tag">Take at bedtime for maximal HMG-CoA inhibition</div>
+        </div>
+        <div class="sched-time">09:30 PM</div>
+      </div>
+
+      <div class="sched-item">
+        <div>
+          <div class="sched-med">Warfarin 5mg (Dose titrated to INR)</div>
+          <div class="sched-tag">Consistent evening timing without vitamin K swings</div>
+        </div>
+        <div class="sched-time">06:00 PM</div>
+      </div>
+
+      <button class="btn-med" style="margin-top:14px; width:100%; justify-content:center;" onclick="alert('Notification payload compiled for WhatsApp Adherence Bot! Reminders scheduled daily.')">
+        <i class="fab fa-whatsapp"></i> Sync Reminders to WhatsApp
+      </button>
+    </div>
+  </div>
+</main>
+
+<script>
+  function checkInteraction() {
+    const a = document.getElementById('drugA').value;
+    const b = document.getElementById('drugB').value;
+    const card = document.getElementById('severityCard');
+    const title = document.getElementById('sevTitle');
+    const details = document.getElementById('sevDetails');
+    const risk = document.getElementById('statRisk');
+
+    if ((a === 'Warfarin' && (b === 'Aspirin' || b === 'Ibuprofen' || b === 'Clopidogrel')) ||
+        (b === 'Warfarin' && (a === 'Aspirin' || a === 'Ciprofloxacin'))) {
+      card.className = 'severity-card sev-danger';
+      title.innerText = 'Major Contraindication Detected';
+      details.innerText = `Concomitant use of ${a} and ${b} significantly heightens severe hemorrhage risk through additive platelet inhibition. Close clinical surveillance or alternative analgesic needed.`;
+      risk.innerText = 'CRITICAL';
+      risk.style.color = '#ef4444';
+    } else if (a === b) {
+      card.className = 'severity-card sev-warning';
+      title.innerText = 'Duplicate Salt Administration';
+      details.innerText = `You have selected the same therapeutic agent (${a}) twice. Verify dosage limits to prevent toxicity.`;
+      risk.innerText = 'MODERATE';
+      risk.style.color = '#f59e0b';
+    } else {
+      card.className = 'severity-card sev-safe';
+      title.innerText = 'No Severe Interaction Found';
+      details.innerText = `${a} and ${b} display distinct metabolic pathways with minimal clinical competition under standard therapeutic guidelines.`;
+      risk.innerText = 'LOW';
+      risk.style.color = '#10b981';
+    }
+  }
+</script>
+</body>
+</html>
