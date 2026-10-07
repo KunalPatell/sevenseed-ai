@@ -449,6 +449,10 @@ def get_contacts(limit: int = 50, x_admin_key: str = Header(default="")):
 from features import router as _feat_router
 app.include_router(_feat_router)
 
+# Frontier multi-venture features: Pharmacy camps & SOS, Breakdown Factor YOLO vision, AVP Emart compare, Sevenforce agents, BYOK vault
+from frontier_ventures import router as _frontier_router
+app.include_router(_frontier_router)
+
 # ── Child apps: each is its own isolated process (see child_processes.py for
 # why), reached here through a thin reverse proxy.
 @app.api_route("/{prefix}/api/{tail:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])

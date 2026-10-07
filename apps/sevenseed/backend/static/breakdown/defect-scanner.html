@@ -1153,20 +1153,32 @@
           const apiData = await apiRes.json();
           if (apiData.detections && apiData.detections.length > 0) {
             DETECTIONS = apiData.detections.map((d) => {
-              const bbox = d.bbox || [140, 85, 340, 260];
-              const wImg = apiData.image_dimensions ? apiData.image_dimensions.width : 640;
-              const hImg = apiData.image_dimensions ? apiData.image_dimensions.height : 480;
-              const leftPct = Math.round((bbox[0] / wImg) * 100);
-              const topPct = Math.round((bbox[1] / hImg) * 100);
-              const widthPct = Math.round((bbox[2] / wImg) * 100);
-              const heightPct = Math.round((bbox[3] / hImg) * 100);
+              const bbox = d.bbox || [0.2, 0.2, 0.6, 0.6];
+              let topPct, leftPct, widthPct, heightPct;
+              if (bbox[0] <= 1.0 && bbox[2] <= 1.0) {
+                // Normalized format [ymin, xmin, ymax, xmax]
+                topPct = Math.round(bbox[0] * 100);
+                leftPct = Math.round(bbox[1] * 100);
+                heightPct = Math.round((bbox[2] - bbox[0]) * 100);
+                widthPct = Math.round((bbox[3] - bbox[1]) * 100);
+              } else {
+                // Pixel format [x, y, w, h]
+                const wImg = 640, hImg = 480;
+                leftPct = Math.round((bbox[0] / wImg) * 100);
+                topPct = Math.round((bbox[1] / hImg) * 100);
+                widthPct = Math.round((bbox[2] / wImg) * 100);
+                heightPct = Math.round((bbox[3] / hImg) * 100);
+              }
+              const isCrit = d.class_name === 'switch_damage' || d.class_name === 'pipe_damage';
+              const nameFormatted = (d.class_name || 'Structural Defect').replace('_', ' ').toUpperCase();
+              const confPct = Math.round((d.confidence <= 1 ? d.confidence * 100 : d.confidence) || 92);
               return {
                 type: d.class_name || 'crack',
-                label: d.display_name,
-                conf: d.confidence_pct || 94,
-                dotColor: d.severity === 'CRITICAL' ? '#ef4444' : '#f59e0b',
-                desc: d.treatment || ('Structural remediation under ' + d.is_code),
-                bbox: { top: topPct + '%', left: leftPct + '%', width: widthPct + '%', height: heightPct + '%' }
+                label: nameFormatted,
+                conf: confPct,
+                dotColor: isCrit ? '#ef4444' : '#f59e0b',
+                desc: (apiData.action_plan && apiData.action_plan[0] ? apiData.action_plan[0].remedy : 'Remediation under IS 456 Structural Standard'),
+                bbox: { top: topPct + '%', left: leftPct + '%', width: Math.max(8, widthPct) + '%', height: Math.max(8, heightPct) + '%' }
               };
             });
           }

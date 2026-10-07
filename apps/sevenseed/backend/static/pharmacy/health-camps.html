@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Free Health Camps, Blood Donation Drives & Emergency SOS Directory — Decode Forest Pharmacy</title>
+  <meta name="description" content="100% Free Health Camps, Voluntary Blood Donation Drives, 24x7 Apex Emergency Hospitals, and Drug Interaction Checker across India.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #060b13;
+      --bg-surface: #0c1421;
+      --bg-card: #111d2e;
+      --border: rgba(16, 185, 129, 0.2);
+      --border-hover: rgba(16, 185, 129, 0.5);
+      --emerald-glow: #10b981;
+      --emerald-light: #34d399;
+      --emerald-dim: rgba(16, 185, 129, 0.12);
+      --danger: #ef4444;
+      --danger-dim: rgba(239, 68, 68, 0.15);
+      --warning: #f59e0b;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* Top Navigation */
+    .nav-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(6, 11, 19, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+    .brand-title { font-weight: 800; font-size: 16px; letter-spacing: -0.02em; }
+    .brand-sub { font-size: 11px; color: var(--emerald-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .nav-links { display: flex; align-items: center; gap: 14px; }
+    .nav-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-ghost { color: var(--text-muted); border: 1px solid rgba(255, 255, 255, 0.1); }
+    .btn-ghost:hover { color: #fff; border-color: var(--emerald-glow); }
+    .btn-primary { background: var(--emerald-glow); color: #022c22; font-weight: 700; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+    .btn-primary:hover { background: var(--emerald-light); transform: translateY(-1px); }
+
+    /* Hero Section */
+    .hero-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 50px 24px 30px;
+      text-align: center;
+      position: relative;
+    }
+    .hero-glow {
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(16, 185, 129, 0.15), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: var(--emerald-dim);
+      border: 1px solid var(--border);
+      color: var(--emerald-light);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .hero-title {
+      font-size: clamp(32px, 5vw, 54px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, #34d399, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-desc {
+      max-width: 760px;
+      margin: 0 auto 36px;
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Quick National Helplines Bar */
+    .helpline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      max-width: 1240px;
+      margin: 0 auto 40px;
+      padding: 0 24px;
+    }
+    .hl-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.2s;
+    }
+    .hl-card:hover { border-color: var(--emerald-glow); transform: translateY(-2px); }
+    .hl-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .hl-red { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .hl-green { background: var(--emerald-dim); color: var(--emerald-light); border: 1px solid var(--border); }
+    .hl-amber { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .hl-text-label { font-size: 11px; text-transform: uppercase; color: var(--text-dim); font-weight: 700; }
+    .hl-number { font-size: 20px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #fff; }
+
+    /* Portal Navigation Tabs */
+    .tabs-wrapper {
+      max-width: 1240px;
+      margin: 0 auto 30px;
+      padding: 0 24px;
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tab-btn {
+      padding: 12px 20px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active {
+      color: var(--emerald-light);
+      border-bottom-color: var(--emerald-glow);
+    }
+
+    /* Section Panels */
+    .tab-panel { display: none; max-width: 1240px; margin: 0 auto; padding: 0 24px 60px; }
+    .tab-panel.active { display: block; }
+
+    /* Card Grid */
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 24px;
+    }
+    .service-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.25s;
+    }
+    .service-card:hover {
+      border-color: var(--emerald-light);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--emerald-dim);
+      color: var(--emerald-light);
+      border: 1px solid var(--border);
+      align-self: flex-start;
+      margin-bottom: 12px;
+    }
+    .card-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 8px; line-height: 1.3; }
+    .card-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+    .card-meta i { width: 16px; color: var(--emerald-glow); }
+
+    .service-list {
+      list-style: none;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .service-list li {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .service-list li i { color: var(--emerald-light); font-size: 10px; }
+
+    .card-footer { margin-top: auto; display: flex; gap: 10px; }
+
+    /* Clinical Interaction Checker UI */
+    .checker-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      max-width: 800px;
+      margin: 0 auto 30px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    }
+    .checker-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .input-control {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .input-control:focus { border-color: var(--emerald-glow); }
+    .plus-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--emerald-light);
+      font-size: 14px;
+      margin-top: 22px;
+    }
+
+    .result-banner {
+      display: none;
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      animation: fadeIn 0.3s ease;
+    }
+    .severity-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .sev-critical { background: var(--danger-dim); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .sev-high { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .sev-safe { background: var(--emerald-dim); color: #34d399; border: 1px solid var(--border); }
+
+    /* Modal for Registration */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      max-width: 480px;
+      width: 100%;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    }
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .modal-close:hover { color: #fff; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .checker-grid { grid-template-columns: 1fr; }
+      .plus-badge { margin: 0 auto; }
+      .grid-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="nav-bar">
+    <a href="/pharmacy/" class="nav-brand" id="navBrand">
+      <div class="brand-logo"><i class="fas fa-prescription"></i></div>
+      <div>
+        <div class="brand-title">Decode Forest Pharmacy</div>
+        <div class="brand-sub">Healthcare & Emergency Portal</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-btn btn-ghost" id="linkHub"><i class="fas fa-layer-group"></i> Sevenseed Hub</a>
+      <a href="/pharmacy/hospital-finder.html" class="nav-btn btn-ghost" id="linkHospitalFinder"><i class="fas fa-hospital"></i> Apex Hospitals</a>
+      <a href="/byok" class="nav-btn btn-primary" id="linkByok"><i class="fas fa-key"></i> 100% Free BYOK</a>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero-container">
+    <div class="hero-glow"></div>
+    <div class="hero-badge">
+      <i class="fas fa-heart-pulse"></i> 100% Free Healthcare Initiative · Zero Charges
+    </div>
+    <h1 class="hero-title">
+      Free Health Camps, <span>Blood Drives</span> & Emergency Care
+    </h1>
+    <p class="hero-desc">
+      A transparent public health safety net connecting citizens to free diagnostic camps, verified 24x7 apex trauma hospitals, voluntary blood drives, and real-time drug interaction safety.
+    </p>
+  </section>
+
+  <!-- National Helplines Bar -->
+  <section class="helpline-grid" id="helplineGrid">
+    <div class="hl-card">
+      <div class="hl-icon hl-red"><i class="fas fa-truck-medical"></i></div>
+      <div>
+        <div class="hl-text-label">All Emergencies (National)</div>
+        <div class="hl-number"><a href="tel:112" style="color:inherit; text-decoration:none;">112</a></div>
+      </div>
+    </div>
+    <div class="hl-card">
+      <div class="hl-icon hl-red"><i class="fas fa-ambulance"></i></div>
+      <div>
+        <div class="hl-text-label">Govt Free Ambulance</div>
+        <div class="hl-number"><a href="tel:108" style="color:inherit; text-decoration:none;">108 / 102</a></div>
+      </div>
+    </div>
+    <div class="hl-card">
+      <div class="hl-icon hl-green"><i class="fas fa-droplet"></i></div>
+      <div>
+        <div class="hl-text-label">24x7 National Blood Bank</div>
+        <div class="hl-number"><a href="tel:104" style="color:inherit; text-decoration:none;">104</a></div>
+      </div>
+    </div>
+    <div class="hl-card">
+      <div class="hl-icon hl-amber"><i class="fas fa-pills"></i></div>
+      <div>
+        <div class="hl-text-label">Jan Aushadhi Helpline</div>
+        <div class="hl-number"><a href="tel:18001808080" style="color:inherit; text-decoration:none;">1800-180-8080</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Navigation Tabs -->
+  <nav class="tabs-wrapper" id="portalTabs">
+    <button class="tab-btn active" onclick="switchTab('camps', this)" id="tabCamps">
+      <i class="fas fa-calendar-check"></i> Free Health & Blood Camps
+    </button>
+    <button class="tab-btn" onclick="switchTab('hospitals', this)" id="tabHospitals">
+      <i class="fas fa-hospital-user"></i> 24x7 Apex Hospitals & Trauma
+    </button>
+    <button class="tab-btn" onclick="switchTab('interactions', this)" id="tabInteractions">
+      <i class="fas fa-dna"></i> Drug Interaction Safety Checker
+    </button>
+    <button class="tab-btn" onclick="switchTab('schemes', this)" id="tabSchemes">
+      <i class="fas fa-hand-holding-medical"></i> Free Medicine & Govt Schemes
+    </button>
+  </nav>
+
+  <!-- PANEL 1: FREE HEALTH CAMPS -->
+  <section class="tab-panel active" id="panel-camps">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h2 style="font-size:22px; font-weight:800; color:#fff;">Scheduled Free Medical Camps</h2>
+        <p style="font-size:13px; color:var(--text-muted);">Organized by AVP Charitable Trust, Red Cross & Decode Forest Pharmacy</p>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="campCityFilter" class="input-control" placeholder="Filter by City (e.g. Ahmedabad, Mumbai)" style="width:260px;" oninput="filterCamps()">
+      </div>
+    </div>
+    <div class="grid-cards" id="campsContainer">
+      <div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-dim);">
+        <i class="fas fa-spinner fa-spin" style="font-size:24px;"></i> Loading live medical camps...
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL 2: APEX HOSPITALS -->
+  <section class="tab-panel" id="panel-hospitals">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h2 style="font-size:22px; font-weight:800; color:#fff;">24x7 Apex Emergency Hospitals</h2>
+        <p style="font-size:13px; color:var(--text-muted);">Verified apex facilities with 24x7 ICU, Trauma, Blood Bank & Ayushman Bharat cashless care</p>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <input type="text" id="hospSearchInput" class="input-control" placeholder="Search hospital or city..." style="width:240px;" oninput="filterHospitals()">
+        <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-muted); cursor:pointer;">
+          <input type="checkbox" id="checkAyushman" onchange="filterHospitals()"> Ayushman Bharat Only
+        </label>
+      </div>
+    </div>
+    <div class="grid-cards" id="hospitalsContainer">
+      <div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-dim);">
+        <i class="fas fa-spinner fa-spin" style="font-size:24px;"></i> Loading hospital database...
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL 3: DRUG INTERACTION CHECKER -->
+  <section class="tab-panel" id="panel-interactions">
+    <div class="checker-box">
+      <div style="text-align:center; margin-bottom:24px;">
+        <span class="card-badge"><i class="fas fa-microscope"></i> Clinical Pharmacovigilance</span>
+        <h2 style="font-size:24px; font-weight:800; color:#fff; margin-top:8px;">Drug & Substance Interaction Checker</h2>
+        <p style="font-size:13px; color:var(--text-muted); max-width:540px; margin:6px auto 0;">
+          Verify pharmacological contraindications between medications, generic salts, or food before consumption.
+        </p>
+      </div>
+
+      <div class="checker-grid">
+        <div class="input-group">
+          <label for="drugA">Medication / Salt 1</label>
+          <input type="text" id="drugA" class="input-control" placeholder="e.g. Paracetamol, Aspirin, Metformin" value="Aspirin">
+        </div>
+        <div class="plus-badge"><i class="fas fa-plus"></i></div>
+        <div class="input-group">
+          <label for="drugB">Medication / Food 2</label>
+          <input type="text" id="drugB" class="input-control" placeholder="e.g. Warfarin, Alcohol, Ibuprofen" value="Warfarin">
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button class="nav-btn btn-primary" onclick="runInteractionCheck()" id="btnCheckInteraction" style="padding:12px 28px; font-size:14px;">
+          <i class="fas fa-shield-virus"></i> Check Interaction Safety
+        </button>
+      </div>
+
+      <div class="result-banner" id="interactionResult">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL 4: FREE MEDICINES & SCHEMES -->
+  <section class="tab-panel" id="panel-schemes">
+    <div class="grid-cards">
+      <div class="service-card">
+        <span class="card-badge"><i class="fas fa-capsules"></i> Central Govt Scheme</span>
+        <h3 class="card-title">Pradhan Mantri Jan Aushadhi (PMBJP)</h3>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+          Government certified generic medical stores providing over 1,800 essential medicines at 50% to 90% savings compared to branded equivalents.
+        </p>
+        <ul class="service-list">
+          <li><i class="fas fa-check-circle"></i> Paracetamol 650mg at ₹6.80 vs ₹34.50 branded</li>
+          <li><i class="fas fa-check-circle"></i> Metformin 500mg SR at ₹9.20 vs ₹48.00 branded</li>
+          <li><i class="fas fa-check-circle"></i> Atorvastatin 10mg at ₹14.50 vs ₹95.00 branded</li>
+        </ul>
+        <div class="card-footer">
+          <a href="https://janaushadhi.gov.in" target="_blank" rel="noopener" class="nav-btn btn-primary" style="width:100%; text-align:center;">
+            <i class="fas fa-external-link-alt"></i> Locate Nearest Jan Aushadhi Kendra
+          </a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <span class="card-badge"><i class="fas fa-hospital"></i> Cashless Healthcare</span>
+        <h3 class="card-title">Ayushman Bharat (PM-JAY) Coverage</h3>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+          World's largest government-funded health assurance scheme providing up to ₹5,00,000 per family per year for secondary and tertiary hospitalization.
+        </p>
+        <ul class="service-list">
+          <li><i class="fas fa-check-circle"></i> 100% Cashless treatment at empaneled hospitals</li>
+          <li><i class="fas fa-check-circle"></i> Pre-existing illnesses covered from Day 1</li>
+          <li><i class="fas fa-check-circle"></i> 27,000+ public and private hospitals across India</li>
+        </ul>
+        <div class="card-footer">
+          <a href="https://pmjay.gov.in" target="_blank" rel="noopener" class="nav-btn btn-primary" style="width:100%; text-align:center;">
+            <i class="fas fa-id-card"></i> Check Eligibility Online
+          </a>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <span class="card-badge"><i class="fas fa-hand-holding-heart"></i> Direct Impact</span>
+        <h3 class="card-title">AVP Charitable Trust Medical Grant</h3>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+          Direct financial sponsorship for life-saving surgeries, pediatric oncology, and dialysis treatments for families lacking insurance coverage.
+        </p>
+        <ul class="service-list">
+          <li><i class="fas fa-check-circle"></i> 100% Zero-interest philanthropic assistance</li>
+          <li><i class="fas fa-check-circle"></i> Hospital-to-hospital direct settlement</li>
+          <li><i class="fas fa-check-circle"></i> Transparent impact audits powered by AI</li>
+        </ul>
+        <div class="card-footer">
+          <a href="/trust/" class="nav-btn btn-ghost" style="width:100%; text-align:center;">
+            <i class="fas fa-hands-helping"></i> Apply for Medical Aid at Trust
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Citizen Camp Registration Modal -->
+  <div class="modal-overlay" id="regModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+      <div style="text-align:center; margin-bottom:20px;">
+        <div class="brand-logo" style="margin:0 auto 12px;"><i class="fas fa-clipboard-check"></i></div>
+        <h3 style="font-size:20px; font-weight:800; color:#fff;" id="modalCampTitle">Register for Health Camp</h3>
+        <p style="font-size:12px; color:var(--text-muted);">100% Free Service · No Identity Card Required</p>
+      </div>
+      <form id="campRegForm" onsubmit="submitCampRegistration(event)">
+        <div class="input-group" style="margin-bottom:14px;">
+          <label for="regName">Full Name</label>
+          <input type="text" id="regName" class="input-control" placeholder="Your Full Name" required>
+        </div>
+        <div class="input-group" style="margin-bottom:14px;">
+          <label for="regPhone">Mobile Phone (for SMS Token)</label>
+          <input type="tel" id="regPhone" class="input-control" placeholder="10-digit Mobile Number" required>
+        </div>
+        <div class="input-group" style="margin-bottom:20px;">
+          <label for="regCity">City</label>
+          <input type="text" id="regCity" class="input-control" placeholder="Your City" required>
+        </div>
+        <button type="submit" class="nav-btn btn-primary" style="width:100%; padding:12px; font-size:14px;" id="btnSubmitReg">
+          <i class="fas fa-check-circle"></i> Confirm Free Registration
+        </button>
+      </form>
+      <div id="modalSuccess" style="display:none; text-align:center; padding:20px 0;">
+        <i class="fas fa-circle-check" style="color:var(--emerald-light); font-size:48px; margin-bottom:12px;"></i>
+        <h4 style="font-size:18px; color:#fff; font-weight:800;" id="successMsg">Registration Confirmed!</h4>
+        <div style="background:var(--bg-card); padding:12px; border-radius:8px; margin:14px 0; font-family:'JetBrains Mono', monospace; font-size:16px; color:var(--emerald-light);" id="successToken">
+          TOKEN: CAMP-892104
+        </div>
+        <p style="font-size:12px; color:var(--text-muted);">Please save or screenshot this token and show it upon arrival at the camp registration desk.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var allCamps = [];
+    var allHospitals = [];
+    var currentCampForModal = "";
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('panel-' + tabId).classList.add('active');
+    }
+
+    // Load Camps
+    function loadCamps() {
+      fetch('/api/pharmacy/health-camps')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          allCamps = d.camps || [];
+          renderCamps(allCamps);
+        })
+        .catch(function(e) {
+          document.getElementById('campsContainer').innerHTML = '<div style="grid-column:1/-1; color:var(--danger); text-align:center;">Failed to load camps. Please refresh.</div>';
+        });
+    }
+
+    function renderCamps(list) {
+      var cont = document.getElementById('campsContainer');
+      if (!list.length) {
+        cont.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px;">No scheduled camps found for this filter.</div>';
+        return;
+      }
+      cont.innerHTML = list.map(function(c) {
+        var sHtml = (c.services || []).map(function(s) {
+          return '<li><i class="fas fa-check"></i> ' + s + '</li>';
+        }).join('');
+
+        return '<div class="service-card">' +
+          '<span class="card-badge"><i class="fas fa-calendar-alt"></i> ' + c.dates + '</span>' +
+          '<h3 class="card-title">' + c.title + '</h3>' +
+          '<div class="card-meta">' +
+            '<div><i class="fas fa-map-marker-alt"></i> <strong>' + c.city + ':</strong> ' + c.venue + '</div>' +
+            '<div><i class="fas fa-handshake-angle"></i> Organized by ' + c.organizer + '</div>' +
+            '<div><i class="fas fa-users"></i> <strong>' + c.registered_count + ' Citizens Registered</strong></div>' +
+          '</div>' +
+          '<ul class="service-list">' + sHtml + '</ul>' +
+          '<div class="card-footer">' +
+            '<button class="nav-btn btn-primary" onclick="openRegisterModal(\'' + c.title.replace(/'/g, "\\'") + '\', \'' + c.city + '\')" style="flex:1;">' +
+              '<i class="fas fa-user-plus"></i> Register Free' +
+            '</button>' +
+            '<a href="tel:' + c.helpline + '" class="nav-btn btn-ghost" style="padding:8px 12px;" title="Call Helpline">' +
+              '<i class="fas fa-phone"></i>' +
+            '</a>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function filterCamps() {
+      var q = (document.getElementById('campCityFilter').value || '').toLowerCase().trim();
+      var filtered = allCamps.filter(function(c) {
+        return !q || c.city.toLowerCase().includes(q) || c.title.toLowerCase().includes(q);
+      });
+      renderCamps(filtered);
+    }
+
+    // Load Hospitals
+    function loadHospitals() {
+      fetch('/api/pharmacy/emergency-hospitals')
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          allHospitals = d.hospitals || [];
+          renderHospitals(allHospitals);
+        })
+        .catch(function(e) {
+          document.getElementById('hospitalsContainer').innerHTML = '<div style="grid-column:1/-1; color:var(--danger); text-align:center;">Failed to load hospitals.</div>';
+        });
+    }
+
+    function renderHospitals(list) {
+      var cont = document.getElementById('hospitalsContainer');
+      if (!list.length) {
+        cont.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px;">No hospitals match your search.</div>';
+        return;
+      }
+      cont.innerHTML = list.map(function(h) {
+        var specHtml = (h.specialties || []).slice(0, 4).map(function(s) {
+          return '<span style="font-size:11px; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.06); color:var(--text-muted);">' + s + '</span>';
+        }).join(' ');
+
+        return '<div class="service-card">' +
+          '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">' +
+            '<span class="card-badge" style="margin-bottom:0;"><i class="fas fa-hospital"></i> ' + h.city + '</span>' +
+            (h.ayushman_bharat ? '<span style="font-size:10px; font-weight:700; color:#34d399; background:var(--emerald-dim); border:1px solid var(--border); padding:3px 6px; border-radius:4px;"><i class="fas fa-shield-halved"></i> PM-JAY</span>' : '') +
+          '</div>' +
+          '<h3 class="card-title" style="margin-top:6px;">' + h.name + '</h3>' +
+          '<div class="card-meta">' +
+            '<div><i class="fas fa-location-dot"></i> ' + h.address + '</div>' +
+            '<div><i class="fas fa-bed"></i> <strong>' + h.beds + ' Beds</strong> (' + h.icu_beds + ' ICU Beds) · 24x7 Blood Bank: ' + (h.blood_bank_24x7 ? 'Yes' : 'No') + '</div>' +
+          '</div>' +
+          '<div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px;">' + specHtml + '</div>' +
+          '<div class="card-footer">' +
+            '<a href="tel:' + h.emergency_phone.replace(/[^0-9+]/g, '') + '" class="nav-btn btn-primary" style="flex:1; text-align:center; background:#ef4444; color:#fff;">' +
+              '<i class="fas fa-phone-volume"></i> 24x7 SOS: ' + h.emergency_phone.split('/')[0] +
+            '</a>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function filterHospitals() {
+      var q = (document.getElementById('hospSearchInput').value || '').toLowerCase().trim();
+      var ayu = document.getElementById('checkAyushman').checked;
+      var filtered = allHospitals.filter(function(h) {
+        var matchQ = !q || h.name.toLowerCase().includes(q) || h.city.toLowerCase().includes(q) || (h.specialties && h.specialties.some(function(s){ return s.toLowerCase().includes(q); }));
+        var matchA = !ayu || h.ayushman_bharat;
+        return matchQ && matchA;
+      });
+      renderHospitals(filtered);
+    }
+
+    // Drug Interaction Check
+    function runInteractionCheck() {
+      var a = document.getElementById('drugA').value.trim();
+      var b = document.getElementById('drugB').value.trim();
+      if (!a || !b) return alert('Please enter both substances.');
+
+      var btn = document.getElementById('btnCheckInteraction');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing Clinical Pathways...';
+      btn.disabled = true;
+
+      fetch('/api/pharmacy/check-interaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ drug_a: a, drug_b: b })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        btn.innerHTML = '<i class="fas fa-shield-virus"></i> Check Interaction Safety';
+        btn.disabled = false;
+
+        var box = document.getElementById('interactionResult');
+        box.style.display = 'block';
+
+        var badgeClass = res.severity === 'CRITICAL' ? 'sev-critical' : res.severity === 'HIGH' ? 'sev-high' : 'sev-safe';
+
+        box.innerHTML = '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">' +
+          '<span class="severity-badge ' + badgeClass + '">' + res.severity + ' RISK LEVEL</span>' +
+          '<span style="font-size:11px; color:var(--text-dim);">' + res.source + '</span>' +
+        '</div>' +
+        '<h4 style="font-size:16px; font-weight:800; color:#fff; margin-bottom:8px;">' + res.drug_a + ' + ' + res.drug_b + '</h4>' +
+        '<p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;"><strong>Mechanism:</strong> ' + res.mechanism + '</p>' +
+        '<p style="font-size:13px; color:#f87171; margin-bottom:12px;"><strong>Clinical Precautions:</strong> ' + res.precautions + '</p>' +
+        '<div style="background:rgba(16,185,129,0.08); border:1px solid var(--border); padding:10px 14px; border-radius:8px; font-size:12px; color:var(--emerald-light);">' +
+          '<i class="fas fa-pills" style="margin-right:6px;"></i> <strong>Affordable Generic Recommendation:</strong> ' + res.generic_alternative +
+        '</div>';
+      })
+      .catch(function(e) {
+        btn.innerHTML = '<i class="fas fa-shield-virus"></i> Check Interaction Safety';
+        btn.disabled = false;
+        alert('Check failed. Please verify network.');
+      });
+    }
+
+    // Modal Handlers
+    function openRegisterModal(campTitle, city) {
+      currentCampForModal = campTitle;
+      document.getElementById('modalCampTitle').innerText = campTitle;
+      document.getElementById('regCity').value = city;
+      document.getElementById('campRegForm').style.display = 'block';
+      document.getElementById('modalSuccess').style.display = 'none';
+      document.getElementById('regModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('regModal').classList.remove('active');
+    }
+
+    function submitCampRegistration(e) {
+      e.preventDefault();
+      var name = document.getElementById('regName').value.trim();
+      var phone = document.getElementById('regPhone').value.trim();
+      var city = document.getElementById('regCity').value.trim();
+
+      var btn = document.getElementById('btnSubmitReg');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Confirming...';
+      btn.disabled = true;
+
+      fetch('/api/pharmacy/health-camps/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          camp_title: currentCampForModal,
+          citizen_name: name,
+          phone: phone,
+          city: city
+        })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Free Registration';
+        btn.disabled = false;
+        document.getElementById('campRegForm').style.display = 'none';
+        document.getElementById('modalSuccess').style.display = 'block';
+        document.getElementById('successMsg').innerText = 'Registration Confirmed for ' + res.citizen_name;
+        document.getElementById('successToken').innerText = 'TOKEN: ' + res.token;
+      })
+      .catch(function(err) {
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Free Registration';
+        btn.disabled = false;
+        alert('Registration submission failed.');
+      });
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCamps();
+      loadHospitals();
+    });
+  </script>
+</body>
+</html>
