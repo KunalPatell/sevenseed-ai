@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Enterprise PRD & BA Document Architect — Sevenseed Studio</title>
+  <meta name="description" content="Generate McKinsey & IEEE 830 compliant Product Requirements Documents (PRD), Functional Specs (FRS), and BDD Acceptance Criteria. 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; }
+    .hub-container { max-width: 1400px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(168,85,247,0.12); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
+
+    .grid-layout { display: grid; grid-template-columns: 460px 1fr; gap: 24px; }
+    @media(max-width: 1080px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px; }
+    .styled-input { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; }
+    .styled-input:focus { border-color: #c084fc; }
+    .styled-textarea { width: 100%; min-height: 100px; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.6; outline: none; resize: vertical; }
+    .styled-textarea:focus { border-color: #c084fc; }
+
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #c084fc; color: #c084fc; }
+
+    .btn-purple { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; background: linear-gradient(135deg, #a855f7, #6366f1); color: #fff; box-shadow: 0 4px 20px rgba(168,85,247,0.4); transition: all 0.2s; }
+    .btn-purple:hover { transform: translateY(-1px); }
+
+    /* PRD Document Viewport */
+    .doc-viewport { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 28px; font-size: 14px; line-height: 1.8; color: #cbd5e1; max-height: 750px; overflow-y: auto; font-family: 'Inter', sans-serif; }
+    .doc-viewport h1, .doc-viewport h2, .doc-viewport h3 { font-family: 'Space Grotesk', sans-serif; color: #f8fafc; margin-top: 24px; margin-bottom: 12px; font-weight: 800; }
+    .doc-viewport h1 { font-size: 22px; border-bottom: 1px solid #1e293b; padding-bottom: 10px; }
+    .doc-viewport h2 { font-size: 18px; color: #c084fc; }
+    .doc-viewport h3 { font-size: 15px; color: #38bdf8; }
+    .doc-viewport table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+    .doc-viewport th { background: #070d1e; padding: 10px; text-align: left; border: 1px solid #1e293b; color: #94a3b8; }
+    .doc-viewport td { padding: 10px; border: 1px solid #1e293b; color: #e2e8f0; }
+    .doc-viewport pre { background: #070d1e; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8; margin: 14px 0; }
+    .doc-viewport code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: rgba(56,189,248,0.1); padding: 2px 6px; border-radius: 4px; color: #38bdf8; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-seedling"></i></span>
+    <span class="logo-text">Sevenseed <span class="logo-accent">Hub</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html"><i class="fas fa-compass"></i> Venture OS</a>
+    <a href="sevenforce/agent-dispatch.html"><i class="fas fa-satellite-dish"></i> Sevenforce</a>
+    <a href="comonk-ai/mock-interview.html"><i class="fas fa-headset"></i> Comonk Interview</a>
+    <a href="prd-architect.html" style="color:#c084fc;font-weight:700;"><i class="fas fa-file-invoice"></i> PRD Architect</a>
+    <a href="byok.html"><i class="fas fa-key"></i> BYOK Vault</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost sm" href="index.html">← Back to Hub</a>
+  </div>
+</nav>
+
+<main class="hub-container">
+  <!-- HUD Header -->
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-scroll"></i> BA-Document & Testable-AI Engine</span>
+      <h1>Enterprise PRD & BA Document Architect</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:700px;">
+        Generate authoritative, McKinsey & IEEE 830 compliant Product Requirements Documents (PRDs), Atomic Functional Specs (FRS), and BDD Acceptance Criteria.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Column: Input Controller -->
+    <div class="card-panel">
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-folder-tree"></i> Project Name</label>
+        <input type="text" id="prdProjectName" class="styled-input" value="Sevenforce Autonomous AI Workforce" placeholder="Project name">
+      </div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;">
+        <span class="chip" onclick="setPreset('Sevenforce Autonomous AI Workforce', 'A multi-agent autonomous corporate workforce executing sales, marketing, engineering, and meetings', 'Enterprise Founders & Tech Leads', 'Autonomous Agents, BYOK Vault, Telemetry Cockpit')">Sevenforce AI</span>
+        <span class="chip" onclick="setPreset('Decode Forest Generic Health AI', 'Prescription OCR and Jan Aushadhi generic drug replacement with statewide emergency camp tokens', 'Families & Rural Patients', 'Prescription OCR, Drug Interaction Engine, SMS Token Dispatch')">Decode Pharmacy</span>
+        <span class="chip" onclick="setPreset('Breakdown Factor Defect Vision', 'Real-time computer vision crack and pipe defect analyzer with IS 456 repair cost estimation', 'Civil Engineers & Property Owners', 'YOLOv8 ONNX Vision, IS 456 Cost Estimator, Safety PDF Exporter')">Breakdown Factor</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-lightbulb"></i> Elevator Pitch & Problem Statement</label>
+        <textarea id="prdPitch" class="styled-textarea" placeholder="What core problem does this solve?">A multi-agent autonomous corporate workforce that eliminates 1000x SaaS subscription markups by connecting 7 specialized agents directly to Bring-Your-Own-Key model APIs.</textarea>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-user-group"></i> Target Users / Personas</label>
+        <input type="text" id="prdUsers" class="styled-input" value="Founders, CTOs, and Operations Leaders" placeholder="User personas">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-list-check"></i> Key Features (Comma Separated)</label>
+        <input type="text" id="prdFeatures" class="styled-input" value="Autonomous Agent Cockpit, Zero-Margin BYOK Vault, Real-Time Telemetry HUD, BDD Test Generation" placeholder="Feature list">
+      </div>
+
+      <button class="btn-purple" id="btnGenPrd" onclick="generatePRD()">
+        <i class="fas fa-wand-magic-sparkles"></i> Synthesize Enterprise PRD (IEEE 830)
+      </button>
+
+      <div style="margin-top:16px; padding:12px; background:#070d1e; border:1px solid #1e293b; border-radius:10px; font-size:11.5px; color:#94a3b8;">
+        <i class="fas fa-certificate" style="color:#c084fc;"></i> <b>Enterprise Rigor:</b> Generates FRS with atomic traceability (FR-1, FR-2), Gherkin Given/When/Then scenarios, and P95 latency SLAs.
+      </div>
+    </div>
+
+    <!-- Right Column: Document Viewer -->
+    <div class="card-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <span style="font-size:13px; font-weight:700; color:#c084fc;"><i class="fas fa-file-contract"></i> Specification Document (IEEE 830 & McKinsey Standard)</span>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-ghost sm" onclick="copyMarkdown()"><i class="fas fa-copy"></i> Copy Markdown</button>
+          <button class="btn btn-ghost sm" onclick="downloadMarkdown()"><i class="fas fa-download"></i> Download .md</button>
+        </div>
+      </div>
+
+      <div class="doc-viewport" id="docRenderArea">
+        <h1>Product Requirements Document (PRD) — Sevenforce Autonomous AI Workforce</h1>
+        
+        <h3>1. Version History</h3>
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Version</th><th>Author</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>2026-10-07</td><td>1.0.0</td><td>Sevenseed BA Architect</td><td>Baseline Production Specification</td></tr>
+          </tbody>
+        </table>
+
+        <h3>2. Executive Summary & Problem Statement</h3>
+        <p><strong>Sevenforce</strong> addresses core friction points in modern enterprise operations: A multi-agent autonomous corporate workforce that eliminates 1000x SaaS subscription markups by connecting 7 specialized agents directly to Bring-Your-Own-Key model APIs. Designed for <strong>Founders, CTOs, and Operations Leaders</strong>, the system eliminates operational overhead through unified AI micro-services.</p>
+
+        <h3>3. Functional Requirements Specification (FRS)</h3>
+        <ul>
+          <li><strong>FR-1 [Core Intelligence]:</strong> The platform must ingest user inputs and orchestrate multi-model reasoning with under 800ms latency.</li>
+          <li><strong>FR-2 [Zero-Margin BYOK Vault]:</strong> Users can supply personal API tokens with AES-GCM client-side encryption.</li>
+          <li><strong>FR-3 [Real-Time Telemetry]:</strong> Interactive dashboard displaying task status, tokens consumed, and SLA verification.</li>
+        </ul>
+
+        <h3>4. BDD Acceptance Criteria (Testable AI Standard)</h3>
+        <pre><code>Feature: Autonomous Employee Task Dispatch
+Scenario: User dispatches Maya for social campaign generation
+  Given an authenticated user on Sevenforce Cockpit
+  When the user submits topic "Zero-Margin AI" with target audience "Founders"
+  Then the system returns LinkedIn, Twitter thread, and Instagram carousel payloads within 2.5 seconds
+  And zero customer data is persisted to platform disk</code></pre>
+
+        <h3>5. Non-Functional Requirements</h3>
+        <ul>
+          <li><strong>P95 Latency:</strong> &lt; 1.2 seconds for synchronous inference endpoints.</li>
+          <li><strong>Availability:</strong> 99.9% uptime SLA.</li>
+          <li><strong>Security:</strong> Zero plaintext token persistence; strict CORS origins.</li>
+        </ul>
+
+        <h3>6. Milestone Roadmap</h3>
+        <ol>
+          <li><strong>Phase 1 (Alpha):</strong> Core API contract verification and SQLite schema migration.</li>
+          <li><strong>Phase 2 (Beta):</strong> Frontend component laboratory mounting and user testing.</li>
+          <li><strong>Phase 3 (Production):</strong> Global CDN deployment and continuous monitoring.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  let lastMarkdown = '';
+
+  function setPreset(pName, pPitch, pUsers, pFeatures) {
+    document.getElementById('prdProjectName').value = pName;
+    document.getElementById('prdPitch').value = pPitch;
+    document.getElementById('prdUsers').value = pUsers;
+    document.getElementById('prdFeatures').value = pFeatures;
+  }
+
+  async function generatePRD() {
+    const name = document.getElementById('prdProjectName').value.trim();
+    const pitch = document.getElementById('prdPitch').value.trim();
+    const users = document.getElementById('prdUsers').value.trim();
+    const featStr = document.getElementById('prdFeatures').value.trim();
+    const features = featStr.split(',').map(f => f.trim()).filter(Boolean);
+
+    const btn = document.getElementById('btnGenPrd');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Architecting Specification...';
+
+    try {
+      const resp = await fetch('/api/studio/generate-prd', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          project_name: name,
+          elevator_pitch: pitch,
+          target_users: users,
+          key_features: features
+        })
+      });
+      const data = await resp.json();
+      if (data && data.prd_markdown) {
+        lastMarkdown = data.prd_markdown;
+        renderMarkdown(data.prd_markdown);
+      }
+    } catch (err) {
+      console.error('PRD generation error:', err);
+      alert('Error communicating with PRD Architect API.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Synthesize Enterprise PRD (IEEE 830)';
+    }
+  }
+
+  function renderMarkdown(md) {
+    // Simple robust markdown to HTML converter for PRD layout
+    let html = md
+      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+      .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
+      .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+      .replace(/```gherkin([\s\S]*?)```/gim, '<pre><code>$1</code></pre>')
+      .replace(/```([\s\S]*?)```/gim, '<pre><code>$1</code></pre>')
+      .replace(/\| (.*) \|/gim, (match) => {
+        const cells = match.split('|').filter(c => c.trim().length > 0 && !c.includes('---'));
+        if (cells.length === 0) return '';
+        return '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
+      })
+      .replace(/\n\n/gim, '<br><br>');
+
+    document.getElementById('docRenderArea').innerHTML = html;
+  }
+
+  function copyMarkdown() {
+    const text = lastMarkdown || document.getElementById('docRenderArea').innerText;
+    navigator.clipboard.writeText(text);
+    alert('PRD Markdown copied to clipboard!');
+  }
+
+  function downloadMarkdown() {
+    const text = lastMarkdown || document.getElementById('docRenderArea').innerText;
+    const blob = new Blob([text], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${document.getElementById('prdProjectName').value.replace(/\\s+/g, '_')}_PRD.md`;
+    a.click();
+  }
+</script>
+</body>
+</html>

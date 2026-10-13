@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Autonomous 6-Step SEO Blog & Content Creator — Sevenseed</title>
+  <meta name="description" content="Discover high-intent keyword topics, generate authoritative technical long-form articles, and export clean Markdown. 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(236,72,153,0.12); color: #ec4899; border: 1px solid rgba(236,72,153,0.3); }
+
+    .grid-layout { display: grid; grid-template-columns: 440px 1fr; gap: 24px; }
+    @media(max-width: 1100px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px; }
+    .styled-input, .styled-select { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; }
+    .styled-input:focus, .styled-select:focus { border-color: #ec4899; }
+
+    .preset-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #ec4899; color: #ec4899; }
+
+    .btn-pink { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; box-shadow: 0 4px 20px rgba(236,72,153,0.4); transition: all 0.2s; }
+    .btn-pink:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(236,72,153,0.5); }
+    .btn-pink:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Topic Cards */
+    .topic-card { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 14px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+    .topic-card:hover { border-color: #ec4899; background: rgba(236,72,153,0.04); }
+    .topic-card.selected { border-color: #ec4899; background: rgba(236,72,153,0.1); }
+    .topic-title { font-size: 14px; font-weight: 700; color: #f8fafc; margin-bottom: 6px; }
+    .topic-meta { display: flex; gap: 10px; font-size: 11px; color: #94a3b8; }
+
+    .article-viewport { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 28px; font-size: 14px; line-height: 1.8; color: #cbd5e1; max-height: 650px; overflow-y: auto; }
+    .article-viewport h1 { font-family: 'Space Grotesk', sans-serif; font-size: 24px; color: #fff; margin-bottom: 12px; font-weight: 800; border-bottom: 1px solid #1e293b; padding-bottom: 12px; }
+    .article-viewport h2 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; color: #ec4899; margin-top: 24px; margin-bottom: 10px; font-weight: 700; }
+    .article-viewport pre { background: #0b1329; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; color: #38bdf8; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  </style>
+  <link rel="stylesheet" href="ws-shell.css">
+</head>
+<body>
+
+<div id="ws-shell" data-ws="blog"></div>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-pen-nib"></i> Extracted from blogpost.ai (BlogPilot) Engine</span>
+      <h1>Autonomous 6-Step SEO Blog & Content Creator</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:800px;">
+        Generate high-ranking organic content pipelines. Discover trending search topics with volume and difficulty metrics, craft technical narratives, and publish production-ready Markdown with meta tags.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Configuration & Topic Discovery -->
+    <div class="card-panel">
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-building"></i> Company or Product Name</label>
+        <input type="text" id="blogCompany" class="styled-input" value="Sevenseed Venture Studio">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-bullseye"></i> Target Industry / Niche</label>
+        <input type="text" id="blogNiche" class="styled-input" value="Autonomous AI Workforce & Zero SaaS Margin Startups">
+      </div>
+
+      <div class="preset-chips">
+        <span class="chip" onclick="setBlogNiche('Sevenforce AI', 'Autonomous Multi-Agent AI Workforce')">Sevenforce AI</span>
+        <span class="chip" onclick="setBlogNiche('Decode Forest', 'Affordable Healthcare & Jan Aushadhi Generic Drugs')">Decode Pharmacy</span>
+        <span class="chip" onclick="setBlogNiche('Breakdown Factor', 'Civil Defect AI & IS 456 Structural Inspection')">Breakdown Factor</span>
+      </div>
+
+      <button id="btnDiscoverTopics" class="btn-pink" onclick="discoverTopics()">
+        <i class="fas fa-compass"></i> Discover SEO Topics & Search Volume
+      </button>
+
+      <div style="margin-top:24px;">
+        <label class="input-label"><i class="fas fa-list-ol"></i> Step 2: Select Target Topic</label>
+        <div id="topicsContainer" style="max-height:280px; overflow-y:auto;">
+          <div class="topic-card selected" onclick="selectTopic(this, 'Why Bring-Your-Own-Key (BYOK) Architecture Will Replace SaaS Subscriptions')">
+            <div class="topic-title">Why Bring-Your-Own-Key (BYOK) Architecture Will Replace SaaS Subscriptions</div>
+            <div class="topic-meta">
+              <span><i class="fas fa-search"></i> 4,800/mo</span>
+              <span style="color:#10b981;"><i class="fas fa-gauge"></i> KD: 28 (Low)</span>
+              <span>Commercial</span>
+            </div>
+          </div>
+          <div class="topic-card" onclick="selectTopic(this, 'How 7 Autonomous AI Agents Can Run a Modern Tech Startup Without Employees')">
+            <div class="topic-title">How 7 Autonomous AI Agents Can Run a Modern Tech Startup Without Employees</div>
+            <div class="topic-meta">
+              <span><i class="fas fa-search"></i> 3,200/mo</span>
+              <span style="color:#f59e0b;"><i class="fas fa-gauge"></i> KD: 42 (Med)</span>
+              <span>Informational</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <label class="input-label"><i class="fas fa-sliders"></i> Tone & Voice</label>
+        <select id="blogTone" class="styled-select">
+          <option value="Authoritative Technical Founder" selected>Authoritative Technical Founder</option>
+          <option value="McKinsey Management Consultant">McKinsey Management Consultant</option>
+          <option value="Practical Hands-On Tutorial">Practical Hands-On Tutorial</option>
+        </select>
+      </div>
+
+      <button id="btnGenerateArticle" class="btn-pink" style="margin-top:16px; background:linear-gradient(135deg, #10b981, #059669);" onclick="generateFullArticle()">
+        <i class="fas fa-wand-magic-sparkles"></i> Generate Full Long-form Article
+      </button>
+    </div>
+
+    <!-- Right Live Article Preview Cockpit -->
+    <div class="card-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <span class="chip" id="readTimeChip"><i class="fas fa-clock"></i> 6 min read</span>
+          <span class="chip" id="wordCountChip"><i class="fas fa-file-word"></i> 1,420 words</span>
+          <span class="chip" style="color:#10b981;"><i class="fas fa-check"></i> SEO Optimized</span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="chip" onclick="copyArticleMarkdown()"><i class="fas fa-copy"></i> Copy MD</button>
+          <button class="chip" onclick="downloadArticle()"><i class="fas fa-download"></i> Download</button>
+        </div>
+      </div>
+
+      <div class="article-viewport" id="articleViewport">
+        <h1>Why Bring-Your-Own-Key (BYOK) Architecture Will Replace SaaS Subscriptions</h1>
+        <p style="color:#94a3b8; font-style:italic;">Meta Description: Explore why SaaS 1000x subscription markups are doomed as enterprises adopt client-side BYOK key architectures with zero margins.</p>
+        
+        <h2>The 1000x Markup Fallacy of Legacy SaaS</h2>
+        <p>For the past decade, cloud SaaS business models operated on gross margins exceeding 80%. When generative AI models arrived, legacy vendors packaged thin wrappers around foundational APIs and charged $30 to $50 per user per month for tokens that cost fractions of a cent.</p>
+        
+        <h2>Enter Zero-Margin BYOK (Bring-Your-Own-Key)</h2>
+        <p>In a true zero-margin ecosystem, software is provided completely free of charge. Users store their private Gemini, Groq, or OpenAI API keys directly in client-side encrypted localStorage (AES-256-GCM). The software vendor never touches the key, never marks up the tokens, and incurs zero variable cloud inference debt.</p>
+
+        <pre><code>// Client-side BYOK Zero-Knowledge Pattern
+const directInference = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+  headers: { "Authorization": `Bearer ${userDecryptedKey}` },
+  body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: prompt })
+});</code></pre>
+
+        <h2>Conclusion & Strategic Takeaway</h2>
+        <p>By empowering users with direct API ownership, startups build irreversible trust while simultaneously driving cloud operating costs to near zero.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+let selectedTopicText = "Why Bring-Your-Own-Key (BYOK) Architecture Will Replace SaaS Subscriptions";
+let currentArticleMarkdown = "";
+
+function setBlogNiche(comp, niche) {
+  document.getElementById('blogCompany').value = comp;
+  document.getElementById('blogNiche').value = niche;
+}
+
+function selectTopic(card, topic) {
+  document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedTopicText = topic;
+}
+
+async function discoverTopics() {
+  const btn = document.getElementById('btnDiscoverTopics');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Discovering Trending Topics...';
+
+  try {
+    const res = await fetch('/api/power/blog-creator/discover-topics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        company_name: document.getElementById('blogCompany').value.trim(),
+        niche: document.getElementById('blogNiche').value.trim()
+      })
+    });
+
+    if (!res.ok) throw new Error('Topic discovery failed');
+    const data = await res.json();
+
+    const container = document.getElementById('topicsContainer');
+    container.innerHTML = '';
+    (data.topics || []).forEach((t, i) => {
+      const isFirst = i === 0;
+      if (isFirst) selectedTopicText = t.topic;
+      const kdColor = t.difficulty < 35 ? '#10b981' : (t.difficulty < 60 ? '#f59e0b' : '#ef4444');
+      container.innerHTML += `
+        <div class="topic-card ${isFirst ? 'selected' : ''}" onclick="selectTopic(this, '${t.topic.replace(/'/g, "\\'")}')">
+          <div class="topic-title">${t.topic}</div>
+          <div class="topic-meta">
+            <span><i class="fas fa-search"></i> ${t.search_volume || '2.4k'}/mo</span>
+            <span style="color:${kdColor};"><i class="fas fa-gauge"></i> KD: ${t.difficulty || 30}</span>
+            <span>${t.intent || 'Informational'}</span>
+          </div>
+        </div>
+      `;
+    });
+
+  } catch (err) {
+    alert('Discovery error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-compass"></i> Discover SEO Topics & Search Volume';
+  }
+}
+
+async function generateFullArticle() {
+  const btn = document.getElementById('btnGenerateArticle');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating 1,500-word Article...';
+
+  try {
+    const res = await fetch('/api/power/blog-creator/generate-article', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topic: selectedTopicText,
+        target_keywords: ["BYOK architecture", "SaaS markup", "zero-margin AI", "client-side encryption"],
+        tone: document.getElementById('blogTone').value
+      })
+    });
+
+    if (!res.ok) throw new Error('Article generation failed');
+    const data = await res.json();
+    currentArticleMarkdown = data.content_markdown || '';
+
+    document.getElementById('readTimeChip').innerHTML = `<i class="fas fa-clock"></i> ${data.read_time_minutes || 6} min read`;
+    const words = currentArticleMarkdown.split(/\s+/).length;
+    document.getElementById('wordCountChip').innerHTML = `<i class="fas fa-file-word"></i> ${words} words`;
+
+    document.getElementById('articleViewport').innerHTML = renderSimpleMarkdown(currentArticleMarkdown);
+
+  } catch (err) {
+    alert('Article error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Full Long-form Article';
+  }
+}
+
+function renderSimpleMarkdown(md) {
+  if (!md) return '';
+  return md
+    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+    .replace(/\*\*(.*)\*\*/gim, '<b>$1</b>')
+    .replace(/```([\s\S]*?)```/gim, '<pre><code>$1</code></pre>')
+    .replace(/\n/gim, '<br>');
+}
+
+function copyArticleMarkdown() {
+  if (!currentArticleMarkdown) return;
+  navigator.clipboard.writeText(currentArticleMarkdown);
+  alert('Article Markdown copied to clipboard!');
+}
+
+function downloadArticle() {
+  if (!currentArticleMarkdown) return;
+  const blob = new Blob([currentArticleMarkdown], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sevenseed_article.md';
+  a.click();
+}
+</script>
+<script src="ws-shell.js"></script>
+</body>
+</html>

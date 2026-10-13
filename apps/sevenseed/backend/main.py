@@ -453,6 +453,10 @@ app.include_router(_feat_router)
 from frontier_ventures import router as _frontier_router
 app.include_router(_frontier_router)
 
+# GitHub Power Features: Architecture Studio, Email Verifier, NL Operations, Blog Studio, Edge IMU Telemetry, Interview Radar, Spine 2D
+from github_power_features import router as _power_router
+app.include_router(_power_router)
+
 # ── Child apps: each is its own isolated process (see child_processes.py for
 # why), reached here through a thin reverse proxy.
 @app.api_route("/{prefix}/api/{tail:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
@@ -506,3 +510,4 @@ if __name__=="__main__":
     port=int(os.environ.get("PORT",8000))
     print(f"[Sevenseed] provider={active_provider()} | db={config.DB_PATH}")
     uvicorn.run(app,host="0.0.0.0",port=port)
+

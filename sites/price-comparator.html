@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Multi-Store Price Comparator & Bestseller Analytics — AVP Emart</title>
+  <meta name="description" content="Compare live product prices across Amazon, Flipkart, Reliance Digital, Blinkit, and Zepto. ML Deal Value scoring, 30-day historical price trends, and bestseller sales velocity. 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+
+    .search-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); margin-bottom: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .search-row { display: flex; gap: 14px; margin-bottom: 16px; }
+    .search-input { flex: 1; background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 14px 18px; color: #f8fafc; font-size: 15px; outline: none; }
+    .search-input:focus { border-color: #10b981; }
+    .btn-emerald { display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 14px 28px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; background: linear-gradient(135deg, #10b981, #059669); color: #fff; box-shadow: 0 4px 20px rgba(16,185,129,0.4); transition: all 0.2s; white-space: nowrap; }
+    .btn-emerald:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(16,185,129,0.5); }
+
+    .preset-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 99px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #10b981; color: #10b981; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 20px; }
+    .kpi-card h5 { font-size: 11px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.8px; margin-bottom: 6px; }
+    .kpi-card .val { font-size: 26px; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: #fff; }
+
+    .stores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; margin-bottom: 28px; }
+    .store-card { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; position: relative; transition: all 0.2s; }
+    .store-card:hover { border-color: rgba(16,185,129,0.4); transform: translateY(-3px); }
+    .store-card.best-deal { border-color: #10b981; background: rgba(16,185,129,0.06); box-shadow: 0 0 30px rgba(16,185,129,0.15); }
+    .badge-best { position: absolute; top: -10px; right: 20px; background: #10b981; color: #020617; font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; padding: 3px 10px; border-radius: 99px; box-shadow: 0 4px 12px rgba(16,185,129,0.4); }
+
+    .store-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .store-name { font-size: 16px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .price-wrap { margin: 12px 0; }
+    .price-curr { font-size: 28px; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: #fff; }
+    .price-mrp { font-size: 14px; color: #64748b; text-decoration: line-through; margin-left: 8px; }
+    .discount-pill { display: inline-block; font-size: 11px; font-weight: 700; color: #10b981; background: rgba(16,185,129,0.12); padding: 2px 8px; border-radius: 6px; margin-left: 8px; }
+
+    .store-details { font-size: 12.5px; color: #94a3b8; display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+    .store-details i { width: 16px; text-align: center; }
+
+    .btn-buy { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none; background: #1e293b; color: #fff; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; }
+    .btn-buy:hover { background: #10b981; color: #020617; border-color: #10b981; }
+
+    .analytics-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; margin-bottom: 24px; }
+    .chart-box { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 18px; margin-top: 14px; height: 260px; position: relative; }
+    canvas { width: 100% !important; height: 100% !important; }
+  </style>
+  <link rel="stylesheet" href="ws-shell.css">
+</head>
+<body>
+
+<div id="ws-shell" data-ws="price-comparator"></div>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-cart-shopping"></i> Ported from price-com & bestseller-analytics</span>
+      <h1>Multi-Store Smart Price Comparator & Arbitrage Radar</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:850px;">
+        Compare live product pricing across Amazon India, Flipkart, Reliance Digital, Snapdeal, Blinkit, and Zepto. ML best-value scoring, real-time arbitrage calculations, 30-day historical price trends, and bestseller sales velocity insights.
+      </p>
+    </div>
+  </div>
+
+  <!-- Search Panel -->
+  <div class="search-panel">
+    <div class="search-row">
+      <input type="text" id="productQuery" class="search-input" placeholder="Search any product (e.g. Sony WH-1000XM5, MacBook Air M2, OnePlus 12)..." value="Sony WH-1000XM5 Wireless Headphones">
+      <button class="btn-emerald" id="btnSearch" onclick="runPriceComparison()"><i class="fas fa-magnifying-glass"></i> Compare Prices</button>
+    </div>
+    <div class="preset-chips">
+      <span style="font-size:12px; color:#64748b; font-weight:600; padding:6px 0;">Popular Presets:</span>
+      <span class="chip" onclick="setQuery('Sony WH-1000XM5 Wireless Headphones')">Sony WH-1000XM5</span>
+      <span class="chip" onclick="setQuery('Apple MacBook Air M2 16GB')">MacBook Air M2</span>
+      <span class="chip" onclick="setQuery('OnePlus 12 5G 512GB')">OnePlus 12 5G</span>
+      <span class="chip" onclick="setQuery('Samsung Galaxy S24 Ultra 5G')">Galaxy S24 Ultra</span>
+      <span class="chip" onclick="setQuery('PlayStation 5 Slim Disc Edition')">PS5 Slim Console</span>
+    </div>
+  </div>
+
+  <!-- KPI Overview Grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <h5>Lowest Price Available</h5>
+      <div class="val" id="kpiLowestPrice" style="color:#10b981;">₹26,990</div>
+      <small id="kpiLowestStore" style="color:#94a3b8; font-size:12px;">Flipkart Assured</small>
+    </div>
+    <div class="kpi-card">
+      <h5>Maximum Arbitrage Savings</h5>
+      <div class="val" id="kpiSavings" style="color:#38bdf8;">₹4,510</div>
+      <small style="color:#94a3b8; font-size:12px;">vs Reliance Digital</small>
+    </div>
+    <div class="kpi-card">
+      <h5>Deal Value Score</h5>
+      <div class="val" id="kpiDealScore" style="color:#f59e0b;">94 / 100</div>
+      <small id="kpiDealVerdict" style="color:#10b981; font-size:12px; font-weight:700;">🔥 EXCEPTIONAL DEAL</small>
+    </div>
+    <div class="kpi-card">
+      <h5>Quick Commerce Velocity</h5>
+      <div class="val" style="color:#a855f7;">9 - 12 Mins</div>
+      <small style="color:#94a3b8; font-size:12px;">Blinkit & Zepto 10m Delivery</small>
+    </div>
+  </div>
+
+  <!-- Live Multi-Store Cards -->
+  <div style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
+    <h3 style="font-size:18px; font-weight:800; color:#fff;"><i class="fas fa-store"></i> Live Store Comparison Grid</h3>
+    <span style="font-size:12px; color:#10b981; font-weight:600;"><i class="fas fa-circle-check"></i> Scraped & Verified Real-Time</span>
+  </div>
+  <div class="stores-grid" id="storesContainer">
+    <!-- Populated by JS -->
+  </div>
+
+  <!-- Historical 30-Day Trend & Bestseller Analytics -->
+  <div class="analytics-panel">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h3 style="font-size:18px; font-weight:800; color:#fff;"><i class="fas fa-chart-line" style="color:#38bdf8;"></i> 30-Day Price Trend & Bestseller Analytics</h3>
+        <p style="font-size:13px; color:#94a3b8; margin-top:4px;">Historical price tracking from E:\Project\bestseller-analytics across major online retailers.</p>
+      </div>
+      <div style="display:flex; gap:16px;">
+        <span style="font-size:12px; color:#94a3b8;">Lowest: <b id="trendLowest" style="color:#10b981;">₹25,900</b></span>
+        <span style="font-size:12px; color:#94a3b8;">Highest: <b id="trendHighest" style="color:#ef4444;">₹31,500</b></span>
+      </div>
+    </div>
+    <div class="chart-box">
+      <canvas id="priceChart"></canvas>
+    </div>
+
+    <!-- Bestseller Analytics Metrics Box -->
+    <div style="margin-top:20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px;" id="bestsellerStats">
+      <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:16px;">
+        <h6 style="color:#94a3b8; font-size:11px; text-transform:uppercase; margin-bottom:6px;">Bestseller Category Rank</h6>
+        <div style="font-size:18px; font-weight:800; color:#fff;" id="bsrRank">#1 in Over-Ear Headphones</div>
+        <p style="font-size:12px; color:#38bdf8; margin-top:4px;">Category Leader across India e-commerce</p>
+      </div>
+      <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:16px;">
+        <h6 style="color:#94a3b8; font-size:11px; text-transform:uppercase; margin-bottom:6px;">Monthly Sales Velocity</h6>
+        <div style="font-size:18px; font-weight:800; color:#10b981;" id="monthlyVelocity">3,420 units / month</div>
+        <p style="font-size:12px; color:#94a3b8; margin-top:4px;">Est. GMV: ₹9.2 Cr / month</p>
+      </div>
+      <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:16px;">
+        <h6 style="color:#94a3b8; font-size:11px; text-transform:uppercase; margin-bottom:6px;">Review Sentiment Polarity</h6>
+        <div style="font-size:18px; font-weight:800; color:#38bdf8;" id="sentimentPolarity">86% Positive (14.2k Reviews)</div>
+        <p style="font-size:12px; color:#94a3b8; margin-top:4px;">Top praise: Active Noise Cancellation, comfort</p>
+      </div>
+      <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:16px;">
+        <h6 style="color:#94a3b8; font-size:11px; text-transform:uppercase; margin-bottom:6px;">Timing Recommendation</h6>
+        <div style="font-size:18px; font-weight:800; color:#fbbf24;" id="buyRecommendation">BUY NOW — Within 3% of All-Time Low</div>
+        <p style="font-size:12px; color:#94a3b8; margin-top:4px;">Next price drop unlikely before Diwali</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+let chartInstance = null;
+
+function setQuery(q) {
+  document.getElementById('productQuery').value = q;
+  runPriceComparison();
+}
+
+async function runPriceComparison() {
+  const q = document.getElementById('productQuery').value.trim();
+  if (!q) return;
+
+  const btn = document.getElementById('btnSearch');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Comparing Stores...';
+
+  try {
+    const res = await fetch('/api/emart/compare-multistore', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: q })
+    });
+
+    if (!res.ok) throw new Error('Failed to fetch store pricing');
+    const data = await res.json();
+
+    // Update KPIs
+    document.getElementById('kpiLowestPrice').textContent = `₹${data.best_store.price.toLocaleString()}`;
+    document.getElementById('kpiLowestStore').textContent = data.best_store.name;
+    document.getElementById('kpiSavings').textContent = data.arbitrage_savings_inr;
+    document.getElementById('kpiDealScore').textContent = `${data.deal_score} / 100`;
+    document.getElementById('kpiDealVerdict').textContent = data.deal_verdict;
+
+    // Render Store Cards
+    const container = document.getElementById('storesContainer');
+    container.innerHTML = '';
+
+    data.stores.forEach(s => {
+      const isBest = (s.store_id === data.best_store.store_id);
+      container.innerHTML += `
+        <div class="store-card ${isBest ? 'best-deal' : ''}">
+          ${isBest ? '<div class="badge-best"><i class="fas fa-award"></i> Best Value Deal</div>' : ''}
+          <div>
+            <div class="store-header">
+              <div class="store-name">
+                <i class="fas ${s.store_id === 'amazon' ? 'fa-brands fa-amazon' : (s.store_id === 'flipkart' ? 'fa-bolt' : 'fa-bag-shopping')}" style="color:${s.badge_color};"></i>
+                ${s.name}
+              </div>
+              <span style="font-size:11px; font-weight:700; color:${s.badge_color}; background:rgba(255,255,255,0.06); padding:3px 8px; border-radius:6px;">
+                ${s.badge}
+              </span>
+            </div>
+
+            <div class="price-wrap">
+              <span class="price-curr">₹${s.price.toLocaleString()}</span>
+              <span class="price-mrp">₹${s.mrp.toLocaleString()}</span>
+              <span class="discount-pill">${s.discount_pct}% OFF</span>
+            </div>
+
+            <div class="store-details">
+              <div><i class="fas fa-truck-fast"></i> Delivery: <b style="color:#fff;">${s.delivery_time}</b></div>
+              <div><i class="fas fa-star" style="color:#f59e0b;"></i> Rating: <b style="color:#fff;">${s.rating} ★</b> (${s.reviews_count.toLocaleString()} reviews)</div>
+              <div><i class="fas fa-shield-halved" style="color:#10b981;"></i> 1 Year Brand Warranty & Free Returns</div>
+            </div>
+          </div>
+
+          <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="btn-buy">
+            Visit ${s.name} <i class="fas fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+      `;
+    });
+
+    // Update Price History & Chart
+    if (data.historical_30d) {
+      document.getElementById('trendLowest').textContent = `₹${data.historical_30d.lowest.toLocaleString()}`;
+      document.getElementById('trendHighest').textContent = `₹${data.historical_30d.highest.toLocaleString()}`;
+      renderChart(data.historical_30d.points);
+    }
+
+    // Also fetch bestseller analytics
+    fetchBestsellerStats(q);
+
+  } catch (err) {
+    alert('Search error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Compare Prices';
+  }
+}
+
+async function fetchBestsellerStats(q) {
+  try {
+    const res = await fetch('/api/emart/bestseller-analytics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ asin_or_query: q })
+    });
+    if (!res.ok) return;
+    const d = await res.json();
+    document.getElementById('bsrRank').textContent = d.bsr_rank;
+    document.getElementById('monthlyVelocity').textContent = d.monthly_velocity_units;
+    document.getElementById('buyRecommendation').textContent = d.buy_recommendation;
+  } catch (e) {}
+}
+
+function renderChart(points) {
+  const canvas = document.getElementById('priceChart');
+  const ctx = canvas.getContext('2d');
+
+  const width = canvas.parentElement.clientWidth;
+  const height = canvas.parentElement.clientHeight;
+  canvas.width = width;
+  canvas.height = height;
+
+  ctx.clearRect(0, 0, width, height);
+
+  const prices = points.map(p => p.price);
+  const minP = Math.min(...prices) * 0.98;
+  const maxP = Math.max(...prices) * 1.02;
+
+  // Grid lines
+  ctx.strokeStyle = '#1e293b';
+  ctx.lineWidth = 1;
+  for (let i = 1; i <= 3; i++) {
+    const y = (height / 4) * i;
+    ctx.beginPath();
+    ctx.moveTo(40, y);
+    ctx.lineTo(width - 20, y);
+    ctx.stroke();
+  }
+
+  // Draw Price Line
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+
+  const stepX = (width - 60) / (points.length - 1);
+
+  points.forEach((pt, i) => {
+    const x = 40 + i * stepX;
+    const y = height - 30 - ((pt.price - minP) / (maxP - minP)) * (height - 60);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Draw Area Gradient
+  const grad = ctx.createLinearGradient(0, 0, 0, height);
+  grad.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+  grad.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+  ctx.fillStyle = grad;
+  ctx.lineTo(40 + (points.length - 1) * stepX, height - 20);
+  ctx.lineTo(40, height - 20);
+  ctx.closePath();
+  ctx.fill();
+
+  // Dots on min and max
+  points.forEach((pt, i) => {
+    if (i === points.length - 1) {
+      const x = 40 + i * stepX;
+      const y = height - 30 - ((pt.price - minP) / (maxP - minP)) * (height - 60);
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.arc(x, y, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+}
+
+// Initial Run
+window.addEventListener('load', () => {
+  runPriceComparison();
+});
+</script>
+<script src="ws-shell.js"></script>
+</body>
+</html>

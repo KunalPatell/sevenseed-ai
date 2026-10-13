@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Workstations — Sevenseed</title>
+  <meta name="description" content="Fourteen Sevenseed workstations built from our own GitHub projects, grouped into Build, Growth, Operations and Telemetry.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="ws-shell.css">
+  <style>
+    body { margin: 0; background: #030712; color: #e2e8f0; font-family: 'Inter', sans-serif; min-height: 100vh;
+      background-image: radial-gradient(900px 420px at 15% -10%, rgba(16,185,129,0.12), transparent 60%),
+                        radial-gradient(800px 400px at 95% 0%, rgba(56,189,248,0.10), transparent 60%); }
+    .hub-container { max-width: 1280px; margin: 0 auto; padding: 88px 24px 80px; }
+    .dir-hero { padding: 24px 0 36px; }
+    .dir-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #34d399; }
+    .dir-hero h1 { font: 800 clamp(30px, 4vw, 44px)/1.1 'Space Grotesk', sans-serif; color: #fff; margin: 10px 0 12px; letter-spacing: -0.5px; }
+    .dir-hero p { max-width: 720px; font-size: 15.5px; line-height: 1.65; color: #94a3b8; margin: 0; }
+    .dir-stats { display: flex; gap: 28px; flex-wrap: wrap; margin-top: 24px; }
+    .dir-stat strong { display: block; font: 800 24px 'Space Grotesk', sans-serif; color: #fff; }
+    .dir-stat span { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: .6px; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div id="ws-shell"></div>
+
+  <main class="hub-container">
+    <section class="dir-hero">
+      <div class="dir-eyebrow">Built from our GitHub projects</div>
+      <h1>Workstations</h1>
+      <p>Each workstation packages one feature set from a project in our GitHub collection into a focused tool.
+         They are grouped by the job they do, not by the repo they came from.</p>
+      <div class="dir-stats" id="dirStats"></div>
+    </section>
+
+    <div id="ws-directory"></div>
+  </main>
+
+  <script src="ws-shell.js"></script>
+  <script>
+    (function () {
+      var ws = window.SevenseedWorkstations;
+      var repos = {};
+      ws.list.forEach(function (w) { w.source.split('·').forEach(function (r) { repos[r.trim()] = 1; }); });
+      document.getElementById('dirStats').innerHTML =
+        '<div class="dir-stat"><strong>' + ws.list.length + '</strong><span>Workstations</span></div>' +
+        '<div class="dir-stat"><strong>' + ws.categories.length + '</strong><span>Categories</span></div>' +
+        '<div class="dir-stat"><strong>' + Object.keys(repos).length + '</strong><span>Source repos</span></div>';
+    })();
+  </script>
+</body>
+</html>

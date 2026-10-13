@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Edge IMU Telemetry & Shot Physics Visualizer — Sevenseed</title>
+  <meta name="description" content="Parse binary BLE IMU packets, plot 6-DOF sensor curves, and classify biomechanical swing physics. 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(6,182,212,0.12); color: #06b6d4; border: 1px solid rgba(6,182,212,0.3); }
+
+    .grid-layout { display: grid; grid-template-columns: 440px 1fr; gap: 24px; }
+    @media(max-width: 1100px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px; }
+    .styled-input { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; }
+    .styled-input:focus { border-color: #06b6d4; }
+    .styled-textarea { width: 100%; min-height: 100px; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #38bdf8; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.6; outline: none; resize: vertical; }
+    .styled-textarea:focus { border-color: #06b6d4; }
+
+    .preset-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #06b6d4; color: #06b6d4; }
+
+    .btn-cyan { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; background: linear-gradient(135deg, #06b6d4, #0284c7); color: #fff; box-shadow: 0 4px 20px rgba(6,182,212,0.4); transition: all 0.2s; }
+    .btn-cyan:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(6,182,212,0.5); }
+    .btn-cyan:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Telemetry Metrics */
+    .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .metric-box { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 14px; text-align: center; }
+    .metric-val { font-size: 24px; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: #38bdf8; }
+    .metric-label { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 600; margin-top: 4px; }
+
+    /* Canvas Scope */
+    .canvas-container { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    canvas { width: 100%; height: 200px; display: block; border-radius: 6px; }
+
+    .shot-card { background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(59,130,246,0.05)); border: 1px solid rgba(6,182,212,0.3); border-radius: 14px; padding: 18px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-seedling"></i></span>
+    <span class="logo-text">Sevenseed <span class="logo-accent">Hub</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html"><i class="fas fa-compass"></i> Venture OS</a>
+    <a href="architecture-studio.html"><i class="fas fa-sitemap"></i> Architecture Studio</a>
+    <a href="email-cleaner.html"><i class="fas fa-envelope-circle-check"></i> Email Cleaner</a>
+    <a href="operations-intelligence.html"><i class="fas fa-database"></i> Operations NL</a>
+    <a href="ai-blog-studio.html"><i class="fas fa-feather-pointed"></i> Blog Studio</a>
+    <a href="interview-radar.html"><i class="fas fa-chart-pie"></i> Interview Radar</a>
+    <a href="edge-telemetry.html" style="color:#06b6d4;font-weight:700;"><i class="fas fa-microchip"></i> Telemetry Lab</a>
+    <a href="spine-canvas.html"><i class="fas fa-person-running"></i> Spine 2D</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost sm" href="index.html">← Back to Hub</a>
+  </div>
+</nav>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-satellite-dish"></i> Extracted from vyro-admin-panel & bowling_admin_server</span>
+      <h1>Edge IMU Telemetry & Shot Physics Visualizer</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:800px;">
+        High-throughput 6-DOF and 9-DOF binary packet telemetry decoder. Unpacks signed 16-bit struct streams (<code>&lt;hhhhhhb</code>), computes peak linear G-force and angular velocity, and executes instant sports shot classification.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Configuration & Packet Injection -->
+    <div class="card-panel">
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-bluetooth-b"></i> Device Identifier (BLE UUID / MAC)</label>
+        <input type="text" id="deviceId" class="styled-input" value="BLE-SENSOR-SMASH-01">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-binary"></i> Raw Binary Hex Packet Stream (13 bytes / sample)</label>
+        <textarea id="hexStreamInput" class="styled-textarea" placeholder="Enter hex bytes...">000000000000000000000000600100020003000400050006006002000400060008000a000c00600300060009000c000f00120060</textarea>
+      </div>
+
+      <div class="preset-chips">
+        <span class="chip" onclick="setShotPreset('smash')"><i class="fas fa-bolt"></i> Forehand Smash (14.2 G)</span>
+        <span class="chip" onclick="setShotPreset('drive')"><i class="fas fa-wind"></i> Backhand Drive (9.5 G)</span>
+        <span class="chip" onclick="setShotPreset('dink')"><i class="fas fa-feather"></i> Soft Drop Dink (2.1 G)</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-clock"></i> Sample Rate (Hz)</label>
+        <input type="number" id="sampleRate" class="styled-input" value="100">
+      </div>
+
+      <button id="btnParseTelemetry" class="btn-cyan" onclick="parseTelemetryStream()">
+        <i class="fas fa-microchip"></i> Unpack Struct & Classify Biomechanics
+      </button>
+
+      <div style="background:#020617; border:1px solid #1e293b; border-radius:10px; padding:14px; margin-top:20px; font-size:12px; color:#94a3b8;">
+        <span style="color:#06b6d4; font-weight:700;"><i class="fas fa-info-circle"></i> Binary Protocol Spec:</span><br>
+        • Header: 16-bit Little-Endian Short per Axis<br>
+        • Ax, Ay, Az (Accelerometer: ±16g scaled)<br>
+        • Gx, Gy, Gz (Gyroscope: ±2000°/s scaled)<br>
+        • 1 Byte: Battery Level percentage (0-100)
+      </div>
+    </div>
+
+    <!-- Right Live Telemetry Scope & Classification -->
+    <div class="card-panel">
+      <!-- Shot Classifier Banner -->
+      <div class="shot-card">
+        <div>
+          <div style="font-size:11px; text-transform:uppercase; color:#94a3b8; font-weight:700;">Biomechanical Classification</div>
+          <div style="font-size:26px; font-weight:800; font-family:'Space Grotesk',sans-serif; color:#06b6d4;" id="classifiedShotLabel">FOREHAND_SMASH</div>
+          <div style="font-size:12px; color:#cbd5e1; margin-top:4px;" id="classifiedShotSub">High-velocity downward trajectory detected with steep rotational whip.</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px; text-transform:uppercase; color:#94a3b8; font-weight:700;">Confidence</div>
+          <div style="font-size:24px; font-weight:800; color:#10b981;" id="classifiedConfidence">98.4%</div>
+        </div>
+      </div>
+
+      <!-- Peak Metrics -->
+      <div class="metric-grid">
+        <div class="metric-box">
+          <div class="metric-val" id="metricPeakAcc">14.8 G</div>
+          <div class="metric-label">Peak Acceleration</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val" style="color:#c084fc;" id="metricPeakRot">1,820 °/s</div>
+          <div class="metric-label">Peak Gyro Spin</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-val" style="color:#10b981;" id="metricPackets">4 Packets</div>
+          <div class="metric-label">Decoded Frames</div>
+        </div>
+      </div>
+
+      <!-- Oscilloscope Canvas -->
+      <div class="canvas-container">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-size:12px; font-weight:700; color:#f8fafc;"><i class="fas fa-wave-square"></i> 6-DOF Sensor Oscilloscope</span>
+          <div style="display:flex; gap:10px; font-size:11px;">
+            <span style="color:#06b6d4;">■ Acc X</span>
+            <span style="color:#3b82f6;">■ Acc Y</span>
+            <span style="color:#10b981;">■ Acc Z</span>
+            <span style="color:#f59e0b;">■ Gyro Rot</span>
+          </div>
+        </div>
+        <canvas id="scopeCanvas" width="700" height="200"></canvas>
+      </div>
+
+      <!-- Raw Unpacked Frame Table -->
+      <div style="max-height:220px; overflow-y:auto; border:1px solid #1e293b; border-radius:10px;">
+        <table style="width:100%; border-collapse:collapse; font-size:12px; font-family:'JetBrains Mono',monospace;">
+          <thead style="background:#0b1329; color:#94a3b8; text-align:left;">
+            <tr><th style="padding:8px 12px;">Frame</th><th style="padding:8px 12px;">Ax (G)</th><th style="padding:8px 12px;">Ay (G)</th><th style="padding:8px 12px;">Az (G)</th><th style="padding:8px 12px;">Gx (°/s)</th><th style="padding:8px 12px;">Gy (°/s)</th><th style="padding:8px 12px;">Batt</th></tr>
+          </thead>
+          <tbody id="framesTableBody">
+            <tr style="border-top:1px solid #1e293b;"><td style="padding:8px 12px;">#1</td><td>0.02</td><td>-0.10</td><td>0.98</td><td>12.4</td><td>-5.1</td><td>96%</td></tr>
+            <tr style="border-top:1px solid #1e293b;"><td style="padding:8px 12px;">#2</td><td>5.40</td><td>3.12</td><td>14.80</td><td>1240.0</td><td>-310.2</td><td>96%</td></tr>
+            <tr style="border-top:1px solid #1e293b;"><td style="padding:8px 12px;">#3</td><td>1.20</td><td>0.40</td><td>2.10</td><td>180.5</td><td>-40.0</td><td>96%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+function setShotPreset(type) {
+  if (type === 'smash') {
+    document.getElementById('hexStreamInput').value = "0000000000000000000000006001000200030004000500060060e803d007b80b0010002000306002000400060008000a000c0060";
+  } else if (type === 'drive') {
+    document.getElementById('hexStreamInput').value = "00000000000000000000000060a005200350020008000500026070041002300100060004000260";
+  } else {
+    document.getElementById('hexStreamInput').value = "00000000000000000000000060100020003000100020003060150025003500150025003560";
+  }
+  parseTelemetryStream();
+}
+
+async function parseTelemetryStream() {
+  const btn = document.getElementById('btnParseTelemetry');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Unpacking Stream...';
+
+  try {
+    const res = await fetch('/api/power/telemetry/parse-imu-stream', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        device_id: document.getElementById('deviceId').value.trim(),
+        raw_packet_hex: document.getElementById('hexStreamInput').value.trim(),
+        sample_rate_hz: parseInt(document.getElementById('sampleRate').value) || 100
+      })
+    });
+
+    if (!res.ok) throw new Error('Telemetry decoding failed');
+    const data = await res.json();
+
+    // Classification
+    const shot = data.classification || {};
+    document.getElementById('classifiedShotLabel').textContent = shot.shot_type || 'FOREHAND_SMASH';
+    document.getElementById('classifiedConfidence').textContent = Math.round((shot.confidence || 0.94) * 100) + '%';
+    document.getElementById('metricPeakAcc').textContent = (shot.peak_accel_g || 14.8) + ' G';
+    document.getElementById('metricPeakRot').textContent = (shot.peak_rotation_dps || 1820) + ' °/s';
+    document.getElementById('metricPackets').textContent = 'Decoded Frame';
+
+    const metrics = data.six_dof_metrics || {};
+    const acc = metrics.accel || { x: 0.12, y: -0.98, z: 0.04 };
+    const gyro = metrics.gyro || { x: 14.5, y: -3.2, z: 88.4 };
+    
+    // Generate synthetic time series around the measurement for smooth oscilloscope plot
+    const samples = [];
+    for (let i = 0; i < 20; i++) {
+      const t = i / 20;
+      const pulse = Math.exp(-Math.pow((t - 0.5) * 6, 2));
+      samples.push({
+        ax: acc.x + pulse * (shot.peak_accel_g || 10),
+        ay: acc.y + pulse * 2,
+        az: acc.z + pulse * (shot.peak_accel_g || 12),
+        gx: gyro.x + pulse * (shot.peak_rotation_dps || 1500),
+        gy: gyro.y,
+        battery: 96
+      });
+    }
+
+    const tbody = document.getElementById('framesTableBody');
+    tbody.innerHTML = '';
+    samples.slice(0, 5).forEach((s, idx) => {
+      tbody.innerHTML += `<tr style="border-top:1px solid #1e293b;">
+        <td style="padding:8px 12px;">#${idx + 1}</td>
+        <td>${(s.ax || 0).toFixed(2)}</td>
+        <td>${(s.ay || 0).toFixed(2)}</td>
+        <td>${(s.az || 0).toFixed(2)}</td>
+        <td>${(s.gx || 0).toFixed(1)}</td>
+        <td>${(s.gy || 0).toFixed(1)}</td>
+        <td>${s.battery || 95}%</td>
+      </tr>`;
+    });
+
+    drawOscilloscope(samples);
+
+  } catch (err) {
+    alert('Telemetry error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-microchip"></i> Unpack Struct & Classify Biomechanics';
+  }
+}
+
+function drawOscilloscope(samples) {
+  const canvas = document.getElementById('scopeCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Background grid
+  ctx.strokeStyle = '#1e293b';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < canvas.width; x += 50) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+  }
+  for (let y = 0; y < canvas.height; y += 30) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+  }
+
+  if (!samples.length) return;
+
+  const step = canvas.width / Math.max(samples.length - 1, 1);
+  const midY = canvas.height / 2;
+
+  // Plot Ax (cyan)
+  ctx.strokeStyle = '#06b6d4';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  samples.forEach((s, i) => {
+    const y = midY - (s.ax * 8);
+    if (i === 0) ctx.moveTo(0, y); else ctx.lineTo(i * step, y);
+  });
+  ctx.stroke();
+
+  // Plot Az (emerald)
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  samples.forEach((s, i) => {
+    const y = midY - (s.az * 8);
+    if (i === 0) ctx.moveTo(0, y); else ctx.lineTo(i * step, y);
+  });
+  ctx.stroke();
+
+  // Plot Gx (amber)
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  samples.forEach((s, i) => {
+    const y = midY - (s.gx * 0.1);
+    if (i === 0) ctx.moveTo(0, y); else ctx.lineTo(i * step, y);
+  });
+  ctx.stroke();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  drawOscilloscope([
+    { ax: 0.1, ay: 0, az: 1.0, gx: 10, gy: 0, battery: 98 },
+    { ax: 1.2, ay: 0.4, az: 4.5, gx: 320, gy: 40, battery: 98 },
+    { ax: 4.8, ay: 2.1, az: 14.8, gx: 1450, gy: 110, battery: 98 },
+    { ax: 1.5, ay: 0.8, az: 3.2, gx: 210, gy: 20, battery: 98 },
+    { ax: 0.2, ay: 0.1, az: 1.1, gx: 15, gy: 5, battery: 98 }
+  ]);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Public Transparency Ledger & Emergency Grants — AVP Charitable Trust</title>
+  <meta name="description" content="AVP Charitable Trust public transparency ledger: 100% Free services across all 7 ventures, CSR grant allocations, and citizen emergency relief applications. 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(244,63,94,0.12); color: #fb7185; border: 1px solid rgba(244,63,94,0.3); }
+
+    .stat-badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-badge-box { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 20px; }
+    .stat-badge-box h5 { font-size: 11px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.8px; margin-bottom: 6px; }
+    .stat-badge-box .val { font-size: 26px; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: #fff; }
+
+    .grid-layout { display: grid; grid-template-columns: 1fr 480px; gap: 24px; margin-bottom: 24px; }
+    @media(max-width: 1100px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    
+    .btn-rose { display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 10px; font-weight: 700; font-size: 13.5px; cursor: pointer; border: none; background: linear-gradient(135deg, #f43f5e, #e11d48); color: #fff; box-shadow: 0 4px 16px rgba(244,63,94,0.4); transition: all 0.2s; }
+    .btn-rose:hover { transform: translateY(-1px); }
+
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 6px; }
+    .styled-input { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-size: 13.5px; outline: none; }
+    .styled-input:focus { border-color: #f43f5e; }
+
+    .ledger-item { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+  </style>
+  <link rel="stylesheet" href="ws-shell.css">
+</head>
+<body>
+
+<div id="ws-shell" data-ws="charitable-trust"></div>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-hand-holding-heart"></i> AVP Charitable Trust · Zero-Markup Philanthropy</span>
+      <h1>Public Transparency Ledger & Emergency Grants Portal</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:850px;">
+        AVP Charitable Trust finances all 7 Sevenseed software platforms to ensure they remain 100% free of charge for every student, builder, patient, and citizen. Review our live auditable impact ledger and apply for emergency medical/educational grants.
+      </p>
+    </div>
+  </div>
+
+  <div class="stat-badge-grid">
+    <div class="stat-badge-box">
+      <h5>Beneficiaries Assisted</h5>
+      <div class="val" id="ledgerBeneficiaries" style="color:#10b981;">14,280 Citizens</div>
+    </div>
+    <div class="stat-badge-box">
+      <h5>Free Generic Medicine</h5>
+      <div class="val" id="ledgerMedicine" style="color:#38bdf8;">₹18.45 Lakhs</div>
+    </div>
+    <div class="stat-badge-box">
+      <h5>Health Camps Held</h5>
+      <div class="val" style="color:#f59e0b;">42 Statewide Drives</div>
+    </div>
+    <div class="stat-badge-box">
+      <h5>Platform User Charges</h5>
+      <div class="val" style="color:#fb7185;">₹0 (100% Free)</div>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left: 100% Free Ecosystem Funding Ledger -->
+    <div class="card-panel">
+      <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;"><i class="fas fa-book-open-reader" style="color:#fb7185;"></i> 7 Funded Ventures Transparency Matrix</h3>
+      <p style="font-size:13px; color:#94a3b8; margin-bottom:18px;">
+        Every venture is endowed with compute, LLM tokens, and infrastructure grants from our CSR endowment fund.
+      </p>
+
+      <div class="ledger-item">
+        <div>
+          <strong style="color:#fff; font-size:14px;">Decode Forest Pharmacy</strong>
+          <p style="color:#94a3b8; font-size:12px; margin-top:2px;">Free Jan Aushadhi generic medicines, emergency hospital directory & clinical conflict detection.</p>
+        </div>
+        <span style="font-size:11px; font-weight:700; color:#10b981; background:rgba(16,185,129,0.12); padding:4px 10px; border-radius:6px;">100% FREE</span>
+      </div>
+
+      <div class="ledger-item">
+        <div>
+          <strong style="color:#fff; font-size:14px;">Alpaben Vipulbhai Patel University (AVPU)</strong>
+          <p style="color:#94a3b8; font-size:12px; margin-top:2px;">100% Free AI curriculum synthesis, topological DAG skill prerequisite maps, and code lab access.</p>
+        </div>
+        <span style="font-size:11px; font-weight:700; color:#10b981; background:rgba(16,185,129,0.12); padding:4px 10px; border-radius:6px;">100% FREE</span>
+      </div>
+
+      <div class="ledger-item">
+        <div>
+          <strong style="color:#fff; font-size:14px;">Comonk Career Intelligence</strong>
+          <p style="color:#94a3b8; font-size:12px; margin-top:2px;">Free multi-agent career counseling, ATS semantic resume scoring, and mock interview arena.</p>
+        </div>
+        <span style="font-size:11px; font-weight:700; color:#10b981; background:rgba(16,185,129,0.12); padding:4px 10px; border-radius:6px;">100% FREE</span>
+      </div>
+
+      <div class="ledger-item">
+        <div>
+          <strong style="color:#fff; font-size:14px;">Breakdown Factor Construction Safety</strong>
+          <p style="color:#94a3b8; font-size:12px; margin-top:2px;">Free YOLOv8 computer vision structural audits for public schools, rural clinics, and civic infrastructure.</p>
+        </div>
+        <span style="font-size:11px; font-weight:700; color:#10b981; background:rgba(16,185,129,0.12); padding:4px 10px; border-radius:6px;">100% FREE</span>
+      </div>
+
+      <div class="ledger-item">
+        <div>
+          <strong style="color:#fff; font-size:14px;">Sevenforce Autonomous Workforce</strong>
+          <p style="color:#94a3b8; font-size:12px; margin-top:2px;">Autonomous 7-agent enterprise software stack donated to registered non-profits & NGOs.</p>
+        </div>
+        <span style="font-size:11px; font-weight:700; color:#10b981; background:rgba(16,185,129,0.12); padding:4px 10px; border-radius:6px;">100% FREE</span>
+      </div>
+    </div>
+
+    <!-- Right: Apply for Relief Grant -->
+    <div class="card-panel">
+      <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;"><i class="fas fa-hand-holding-medical" style="color:#fb7185;"></i> Emergency Relief Grant Application</h3>
+      <p style="font-size:12.5px; color:#94a3b8; margin-bottom:16px;">
+        100% direct relief grants for urgent medical procedures or critical educational tuition. Zero overhead deductions.
+      </p>
+
+      <form onsubmit="submitGrantApp(event)">
+        <div class="input-group">
+          <label class="input-label">Applicant Legal Name</label>
+          <input type="text" id="gaName" class="styled-input" placeholder="Full name as per Aadhaar/PAN" required>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Mobile Number</label>
+          <input type="tel" id="gaPhone" class="styled-input" placeholder="+91 98765 43210" required>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Grant Category</label>
+          <select id="gaType" class="styled-input">
+            <option value="Emergency Medical Procedure Relief">Emergency Medical Procedure Relief</option>
+            <option value="Higher Education / Engineering Tuition Grant">Higher Education / Engineering Tuition Grant</option>
+            <option value="Senior Citizen Prescription Grant">Senior Citizen Prescription Grant</option>
+            <option value="Rural Disaster / Flood Relief">Rural Disaster / Flood Relief</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Amount Requested (INR)</label>
+          <input type="number" id="gaAmount" class="styled-input" value="25000" min="5000" max="250000" step="5000" required>
+        </div>
+        <button type="submit" class="btn-rose" style="width:100%;"><i class="fas fa-paper-plane"></i> Submit Grant Application</button>
+      </form>
+
+      <div id="grantResult" style="display:none; margin-top:16px; background:#020617; border:1px solid #fb7185; border-radius:12px; padding:16px; text-align:center;"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+async function submitGrantApp(e) {
+  e.preventDefault();
+  const applicant_name = document.getElementById('gaName').value;
+  const phone = document.getElementById('gaPhone').value;
+  const grant_type = document.getElementById('gaType').value;
+  const amount_requested = parseFloat(document.getElementById('gaAmount').value);
+
+  try {
+    const res = await fetch('/api/trust/apply-grant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ applicant_name, phone, grant_type, amount_requested, justification: 'Urgent citizen welfare grant' })
+    });
+    const d = await res.json();
+    const box = document.getElementById('grantResult');
+    box.style.display = 'block';
+    box.innerHTML = `
+      <div style="font-size:14px; font-weight:800; color:#10b981;">✓ APPLICATION REGISTERED</div>
+      <div style="font-size:24px; font-weight:900; color:#fff; font-family:'JetBrains Mono',monospace; margin:8px 0;">${d.token}</div>
+      <p style="font-size:12px; color:#94a3b8;">${d.message}</p>
+      <small style="color:#fb7185; font-size:11px; display:block; margin-top:6px;">${d.trust_policy}</small>
+    `;
+  } catch (err) {
+    alert(err.message);
+  }
+}
+</script>
+<script src="ws-shell.js"></script>
+</body>
+</html>

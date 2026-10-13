@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Outreach Sequence & Drip Engine — Sevenseed Workstation</title>
+  <meta name="description" content="Multi-step cold outreach sequences, 1x1 transparent tracking pixel engine, automated reply sentiment classification, and conversion analytics extracted from EmailAutomation.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-pink: #ec4899;
+    }
+    body { background: var(--bg-dark); color: #f8fafc; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+
+    /* Top Navigation */
+    .top-nav { position: fixed; top: 0; left: 0; right: 0; height: 68px; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; z-index: 1000; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 800; color: #fff; text-decoration: none; }
+    .nav-brand span { color: #38bdf8; }
+    .nav-links { display: flex; gap: 18px; align-items: center; font-size: 13px; font-weight: 600; }
+    .nav-links a { color: #94a3b8; text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .nav-links a:hover, .nav-links a.active { color: #38bdf8; }
+
+    /* HUD Header */
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(24px, 3.2vw, 34px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    /* Funnel Metrics Ribbon */
+    .metrics-ribbon { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .metric-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 18px 20px; backdrop-filter: blur(12px); }
+    .metric-title { font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .metric-val { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 800; color: #fff; }
+    .metric-sub { font-size: 11px; color: #64748b; margin-top: 4px; }
+
+    /* Main Grid */
+    .grid-layout { display: grid; grid-template-columns: 480px 1fr; gap: 24px; }
+    @media (max-width: 1100px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+    .panel-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+
+    /* Step Sequence Flow */
+    .step-item { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; margin-bottom: 14px; transition: border-color 0.2s; position: relative; }
+    .step-item.active { border-color: #38bdf8; box-shadow: 0 0 20px rgba(56, 189, 248, 0.1); }
+    .step-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .step-badge { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .step-delay { font-size: 11px; font-weight: 600; color: #94a3b8; }
+    .step-subj { font-weight: 700; font-size: 13.5px; color: #f1f5f9; margin-bottom: 6px; }
+    .step-body-preview { font-size: 12px; color: #94a3b8; line-height: 1.5; white-space: pre-wrap; font-family: 'JetBrains Mono', monospace; background: rgba(15,23,42,0.6); padding: 10px; border-radius: 8px; max-height: 110px; overflow-y: auto; }
+
+    /* Action Buttons */
+    .btn-gradient { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 18px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; border: none; background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; box-shadow: 0 4px 16px rgba(2, 132, 199, 0.4); transition: transform 0.15s; width: 100%; margin-top: 10px; }
+    .btn-gradient:hover { transform: translateY(-1px); }
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #38bdf8; color: #38bdf8; }
+
+    /* Leads Table */
+    .leads-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .leads-table th { text-align: left; padding: 10px 12px; font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; border-bottom: 1px solid #1e293b; }
+    .leads-table td { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); color: #cbd5e1; }
+    .badge-open { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 700; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-replied { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 700; background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .badge-queued { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 700; background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+
+    /* Sentiment & Reply Analyzer Drawer */
+    .analyzer-box { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 18px; margin-top: 20px; }
+    .styled-textarea { width: 100%; background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 12.5px; outline: none; resize: vertical; min-height: 70px; margin-top: 8px; }
+    .styled-textarea:focus { border-color: #38bdf8; }
+
+    .result-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; margin-top: 8px; }
+  </style>
+  <link rel="stylesheet" href="ws-shell.css">
+</head>
+<body>
+
+<div id="ws-shell" data-ws="outreach"></div>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-envelope-open-text"></i> Extracted from EmailAutomation (FastAPI & SQLite Engine)</span>
+      <h1>Outreach Sequence & 1x1 Pixel Drip Engine</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:850px;">
+        Multi-step cold email sequences, real-time 1x1 GIF open tracking with bot filtering, automated prospect reply sentiment classification, and conversion analytics.
+      </p>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="chip" onclick="refreshAll()" style="color:#38bdf8; border-color:rgba(56,189,248,0.3);"><i class="fas fa-rotate"></i> Refresh Telemetry</button>
+    </div>
+  </div>
+
+  <!-- Funnel Metrics Ribbon -->
+  <div class="metrics-ribbon">
+    <div class="metric-card">
+      <div class="metric-title"><span>Total Prospects</span> <i class="fas fa-users" style="color:#38bdf8;"></i></div>
+      <div class="metric-val" id="metricLeads">4</div>
+      <div class="metric-sub">Imported via CSV parser</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-title"><span>Open Rate</span> <i class="fas fa-envelope-open" style="color:#10b981;"></i></div>
+      <div class="metric-val" style="color:#10b981;" id="metricOpenRate">75.0%</div>
+      <div class="metric-sub" id="metricOpensCount">3 of 4 unique opens</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-title"><span>Reply Rate</span> <i class="fas fa-reply" style="color:#c084fc;"></i></div>
+      <div class="metric-val" style="color:#c084fc;" id="metricReplyRate">25.0%</div>
+      <div class="metric-sub">1 positive response recorded</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-title"><span>Pipeline Value</span> <i class="fas fa-sack-dollar" style="color:#fbbf24;"></i></div>
+      <div class="metric-val" style="color:#fbbf24;" id="metricPipeline">$12,500</div>
+      <div class="metric-sub">Weighted BYOK enterprise interest</div>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Column: Multi-Step Drip Sequence -->
+    <div class="card-panel">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-timeline" style="color:#38bdf8;"></i> Active 3-Step Sequence</div>
+        <span class="chip" id="seqPersona" style="color:#38bdf8;">CTOs & VP Eng</span>
+      </div>
+
+      <div id="stepsContainer">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
+        <button id="btnDispatchStep1" class="btn-gradient" onclick="dispatchStep(1)">
+          <i class="fas fa-paper-plane"></i> Dispatch Step 1
+        </button>
+        <button id="btnDispatchStep2" class="btn-gradient" style="background:linear-gradient(135deg, #6366f1, #4f46e5);" onclick="dispatchStep(2)">
+          <i class="fas fa-paper-plane"></i> Dispatch Step 2
+        </button>
+      </div>
+
+      <!-- Add Lead Inline -->
+      <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:14px; margin-top:16px;">
+        <span style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase;"><i class="fas fa-user-plus"></i> Quick Enqueue Prospect</span>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
+          <input type="text" id="leadName" class="chip" style="width:100%; text-align:left;" placeholder="First Name (e.g. Liam)">
+          <input type="text" id="leadCompany" class="chip" style="width:100%; text-align:left;" placeholder="Company (e.g. Veloce AI)">
+        </div>
+        <input type="email" id="leadEmail" class="chip" style="width:100%; text-align:left; margin-top:8px;" placeholder="Email (e.g. liam@veloce.io)">
+        <button class="chip" style="width:100%; margin-top:8px; background:#10b981; color:#fff; border:none; padding:8px;" onclick="addLead()">+ Add to Sequence Queue</button>
+      </div>
+    </div>
+
+    <!-- Right Column: Prospects Queue & Reply NLP Classifier -->
+    <div class="card-panel">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-list-check" style="color:#10b981;"></i> Sequence Prospects Queue</div>
+        <span style="font-size:12px; color:#64748b;">Live SQLite State</span>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="leads-table">
+          <thead>
+            <tr>
+              <th>Prospect</th>
+              <th>Company & Role</th>
+              <th>Step</th>
+              <th>Status</th>
+              <th>Opens (1x1 GIF)</th>
+              <th>Simulate Open</th>
+            </tr>
+          </thead>
+          <tbody id="leadsTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Reply NLP Sentiment Classifier from EmailAutomation -->
+      <div class="analyzer-box">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:12px; font-weight:800; color:#fff; text-transform:uppercase;"><i class="fas fa-brain" style="color:#c084fc;"></i> Automated Reply Sentiment & Intent Classifier</span>
+          <span class="chip" style="color:#c084fc;">EmailAutomation NLP</span>
+        </div>
+        <p style="font-size:12px; color:#94a3b8; margin-top:4px;">
+          Simulate an incoming email reply to classify intent (High Intent, Objections, Unsubscribe) and trigger automated workflow branches.
+        </p>
+
+        <textarea id="replyText" class="styled-textarea" placeholder="Paste incoming prospect reply here... e.g. 'Hey, we are currently reviewing our AI wrappers. Can you share technical specs and schedule a 15-min call Thursday?'"></textarea>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+          <div style="display:flex; gap:6px;">
+            <button class="chip" onclick="setPresetReply('Hey! This is super relevant. Can we jump on a call this Thursday at 2pm?')">Meeting Request</button>
+            <button class="chip" onclick="setPresetReply('Please remove me from your mailing list and do not contact again.')">Opt-Out</button>
+            <button class="chip" onclick="setPresetReply('Looks promising, but our roadmap is fully locked until next quarter.')">Timing Objection</button>
+          </div>
+          <button id="btnClassify" class="chip" style="background:#8b5cf6; color:#fff; border:none; padding:8px 16px; font-weight:700;" onclick="classifyReply()">
+            <i class="fas fa-wand-magic-sparkles"></i> Classify Reply
+          </button>
+        </div>
+
+        <div id="classificationResult" style="display:none; margin-top:14px; padding:12px; background:#0f172a; border-radius:10px; border:1px solid #334155;">
+          <!-- Result rendered here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  let activeSequence = null;
+
+  async function loadSequences() {
+    try {
+      const res = await fetch('/api/power/outreach/sequences');
+      const data = await res.json();
+      if (data.status === 'success' && data.sequences.length > 0) {
+        activeSequence = data.sequences[0];
+        document.getElementById('seqPersona').textContent = activeSequence.target_persona;
+        renderSteps(activeSequence.steps);
+      }
+    } catch(err) {
+      console.error("Failed to load sequences:", err);
+    }
+  }
+
+  function renderSteps(steps) {
+    const container = document.getElementById('stepsContainer');
+    container.innerHTML = steps.map(s => `
+      <div class="step-item ${s.step_num === 1 ? 'active' : ''}">
+        <div class="step-top">
+          <span class="step-badge">STEP ${s.step_num}</span>
+          <span class="step-delay">${s.delay_days === 0 ? 'Immediately (Day 0)' : 'Day +' + s.delay_days}</span>
+        </div>
+        <div class="step-subj">${escapeHtml(s.subject)}</div>
+        <div class="step-body-preview">${escapeHtml(s.body)}</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11px; color:#64748b;">
+          <span><i class="fas fa-bullseye"></i> Goal: ${escapeHtml(s.goal)}</span>
+          <span style="font-family:'JetBrains Mono',monospace; color:#38bdf8;"><i class="fas fa-fingerprint"></i> /api/power/outreach/t/{id}/${s.step_num}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function loadLeads() {
+    try {
+      const res = await fetch('/api/power/outreach/leads');
+      const data = await res.json();
+      if (data.status === 'success') {
+        renderLeads(data.leads);
+      }
+    } catch(err) {
+      console.error("Failed to load leads:", err);
+    }
+  }
+
+  function renderLeads(leads) {
+    const tbody = document.getElementById('leadsTableBody');
+    tbody.innerHTML = leads.map(l => {
+      let statusBadge = `<span class="badge-queued"><i class="fas fa-clock"></i> Queued</span>`;
+      if (l.status === 'opened') {
+        statusBadge = `<span class="badge-open"><i class="fas fa-eye"></i> Opened</span>`;
+      } else if (l.status === 'replied') {
+        statusBadge = `<span class="badge-replied"><i class="fas fa-reply"></i> ${escapeHtml(l.reply_sentiment || 'Replied')}</span>`;
+      } else if (l.status === 'sent') {
+        statusBadge = `<span class="badge-queued" style="color:#38bdf8; border-color:rgba(56,189,248,0.3);"><i class="fas fa-paper-plane"></i> Sent</span>`;
+      } else if (l.status === 'unsubscribed') {
+        statusBadge = `<span class="badge-queued" style="color:#ef4444; border-color:rgba(239,68,68,0.3);"><i class="fas fa-ban"></i> Opt-Out</span>`;
+      }
+
+      return `
+        <tr>
+          <td>
+            <div style="font-weight:700; color:#fff;">${escapeHtml(l.first_name)}</div>
+            <div style="font-size:11px; color:#64748b; font-family:'JetBrains Mono',monospace;">${escapeHtml(l.email)}</div>
+          </td>
+          <td>
+            <div>${escapeHtml(l.company)}</div>
+            <div style="font-size:11px; color:#64748b;">${escapeHtml(l.role)}</div>
+          </td>
+          <td>
+            <span class="step-badge">Step ${l.current_step}</span>
+          </td>
+          <td>${statusBadge}</td>
+          <td>
+            <span style="font-family:'JetBrains Mono',monospace; font-weight:700; color:${l.opens_count > 0 ? '#10b981' : '#64748b'}">
+              <i class="fas fa-bullseye"></i> ${l.opens_count} opens
+            </span>
+          </td>
+          <td>
+            <button class="chip" style="color:#38bdf8; border-color:rgba(56,189,248,0.3);" onclick="triggerTrackingPixel('${l.id}', ${l.current_step})">
+              <i class="fas fa-image"></i> Load Pixel
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  async function loadStats() {
+    try {
+      const res = await fetch('/api/power/outreach/stats');
+      const data = await res.json();
+      if (data.status === 'success') {
+        document.getElementById('metricLeads').textContent = data.total_leads;
+        document.getElementById('metricOpenRate').textContent = `${data.open_rate_pct}%`;
+        document.getElementById('metricOpensCount').textContent = `${data.total_opens} of ${data.total_leads} unique opens`;
+        document.getElementById('metricReplyRate').textContent = `${data.reply_rate_pct}%`;
+        document.getElementById('metricPipeline').textContent = `$${data.pipeline_value_usd.toLocaleString()}`;
+      }
+    } catch(err) {
+      console.error("Failed to load stats:", err);
+    }
+  }
+
+  async function triggerTrackingPixel(leadId, stepNum) {
+    try {
+      // Load the 1x1 GIF tracking pixel like an email client
+      const img = new Image();
+      img.src = `/api/power/outreach/t/${leadId}/${stepNum}?_cb=${Date.now()}`;
+      img.onload = () => {
+        setTimeout(refreshAll, 400);
+      };
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  async function dispatchStep(stepNum) {
+    const btn = document.getElementById(`btnDispatchStep${stepNum}`);
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Dispatching Step ${stepNum}...`;
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/power/outreach/dispatch-step', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sequence_id: activeSequence.id, step_num: stepNum })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        alert(`Successfully dispatched Step ${stepNum} to ${data.dispatched_count} prospect(s)!`);
+        refreshAll();
+      }
+    } catch(err) {
+      alert("Dispatch error: " + err);
+    } finally {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
+  }
+
+  async function addLead() {
+    const name = document.getElementById('leadName').value.trim();
+    const company = document.getElementById('leadCompany').value.trim();
+    const email = document.getElementById('leadEmail').value.trim();
+
+    if (!name || !company || !email) {
+      alert("Please fill name, company, and email!");
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/power/outreach/add-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sequence_id: activeSequence.id,
+          first_name: name,
+          company: company,
+          email: email,
+          role: "Engineering Lead"
+        })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        document.getElementById('leadName').value = '';
+        document.getElementById('leadCompany').value = '';
+        document.getElementById('leadEmail').value = '';
+        refreshAll();
+      }
+    } catch(err) {
+      alert("Error adding lead: " + err);
+    }
+  }
+
+  function setPresetReply(text) {
+    document.getElementById('replyText').value = text;
+  }
+
+  async function classifyReply() {
+    const text = document.getElementById('replyText').value.trim();
+    if (!text) {
+      alert("Please enter reply text to classify!");
+      return;
+    }
+
+    const btn = document.getElementById('btnClassify');
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Analyzing...`;
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/power/outreach/classify-reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lead_id: 'lead_02',
+          reply_text: text
+        })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        const box = document.getElementById('classificationResult');
+        box.style.display = 'block';
+        box.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:13px; font-weight:800; color:#fff;">NLP Classification Outcome:</span>
+            <span class="chip" style="background:#10b981; color:#fff; border:none;">${escapeHtml(data.sentiment)}</span>
+          </div>
+          <div style="margin-top:8px; font-size:12px; color:#cbd5e1; line-height:1.6;">
+            <div><strong>Detected Intent:</strong> ${escapeHtml(data.detected_intent)}</div>
+            <div><strong>Workflow Action:</strong> <span style="color:#38bdf8;">${escapeHtml(data.suggested_action)}</span></div>
+            <div><strong>Updated Lead Status:</strong> <code style="color:#a855f7;">${escapeHtml(data.updated_lead_status)}</code></div>
+          </div>
+        `;
+        refreshAll();
+      }
+    } catch(err) {
+      alert("Classification error: " + err);
+    } finally {
+      btn.innerHTML = `<i class="fas fa-wand-magic-sparkles"></i> Classify Reply`;
+      btn.disabled = false;
+    }
+  }
+
+  function refreshAll() {
+    loadSequences();
+    loadLeads();
+    loadStats();
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  window.addEventListener('DOMContentLoaded', refreshAll);
+</script>
+
+<script src="ws-shell.js"></script>
+</body>
+</html>

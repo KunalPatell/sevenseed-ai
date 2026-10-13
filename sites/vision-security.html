@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Computer Vision Safety, Face Attendance & PPE Cockpit — Rakshak AI</title>
+  <meta name="description" content="Dual computer vision cockpit: Face recognition biometric gate and real-time OSHA PPE compliance detector (mask, hard-hat, high-vis vest). 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(225,29,72,0.12); color: #f43f5e; border: 1px solid rgba(225,29,72,0.3); }
+
+    .dual-cockpit { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+    @media(max-width: 1050px) { .dual-cockpit { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    
+    .cam-viewport { position: relative; width: 100%; height: 360px; background: #020617; border: 1px solid #1e293b; border-radius: 14px; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+    canvas { width: 100%; height: 100%; }
+
+    .btn-crimson { display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; border: none; background: linear-gradient(135deg, #e11d48, #be123c); color: #fff; box-shadow: 0 4px 16px rgba(225,29,72,0.4); transition: all 0.2s; }
+    .btn-crimson:hover { transform: translateY(-1px); }
+
+    .kpi-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .kpi-mini { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px; }
+    .kpi-mini small { font-size: 11px; text-transform: uppercase; color: #94a3b8; display: block; }
+    .kpi-mini b { font-size: 20px; font-family: 'Space Grotesk', sans-serif; color: #fff; }
+
+    .staff-select { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px; color: #fff; font-size: 13.5px; outline: none; margin-bottom: 14px; }
+    .staff-select:focus { border-color: #38bdf8; }
+
+    .table-custom { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+    .table-custom th { background: #0b1329; padding: 10px 14px; text-align: left; color: #94a3b8; border: 1px solid #1e293b; font-weight: 600; }
+    .table-custom td { padding: 10px 14px; border: 1px solid #1e293b; color: #e2e8f0; }
+  </style>
+  <link rel="stylesheet" href="ws-shell.css">
+</head>
+<body>
+
+<div id="ws-shell" data-ws="vision-security"></div>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-shield-halved"></i> Rakshak AI · Computer Vision Safety Suite</span>
+      <h1>Computer Vision Safety, Face Attendance & PPE Cockpit</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:850px;">
+        Extracted from local computer vision repositories (lcb-face-matcher & face mask). Automated 1:N facial biometric verification gate coupled with real-time OSHA Personal Protective Equipment compliance tracking.
+      </p>
+    </div>
+  </div>
+
+  <div class="dual-cockpit">
+    <!-- Left: PPE & Safety Compliance Cockpit -->
+    <div class="card-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="font-size:16px; font-weight:700; color:#fff;"><i class="fas fa-head-side-mask" style="color:#10b981;"></i> OSHA Safety PPE Scanner</h3>
+        <div style="display:flex; gap:8px;">
+          <button class="chip" onclick="setScenario('compliant')">Compliant Feed</button>
+          <button class="chip" onclick="setScenario('violation')">Simulate Violation</button>
+        </div>
+      </div>
+
+      <div class="cam-viewport">
+        <canvas id="ppeCanvas" width="600" height="360"></canvas>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-mini">
+          <small>Compliance Rate</small>
+          <b id="ppeCompliance" style="color:#10b981;">100% (PASSED)</b>
+        </div>
+        <div class="kpi-mini">
+          <small>Hazard Level</small>
+          <b id="ppeHazard" style="color:#10b981;">ZERO VIOLATION</b>
+        </div>
+      </div>
+
+      <div style="margin-top:14px; font-size:12px; color:#94a3b8; display:flex; gap:16px;">
+        <span><i class="fas fa-mask" style="color:#10b981;"></i> Mask: <b id="maskStatus" style="color:#fff;">VERIFIED</b></span>
+        <span><i class="fas fa-helmet-safety" style="color:#10b981;"></i> Helmet: <b id="helmetStatus" style="color:#fff;">VERIFIED</b></span>
+        <span><i class="fas fa-vest" style="color:#10b981;"></i> High-Vis: <b id="vestStatus" style="color:#fff;">VERIFIED</b></span>
+      </div>
+    </div>
+
+    <!-- Right: Facial Recognition Biometric Gate -->
+    <div class="card-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="font-size:16px; font-weight:700; color:#fff;"><i class="fas fa-user-shield" style="color:#38bdf8;"></i> 1:N Facial Recognition Biometric Gate</h3>
+        <span style="font-size:11px; font-weight:700; color:#38bdf8; background:rgba(56,189,248,0.12); padding:3px 8px; border-radius:6px;">L3 Gate Controller</span>
+      </div>
+
+      <label style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:6px; display:block;">Select Candidate Identity</label>
+      <select id="staffSelect" class="staff-select" onchange="runFaceVerification()">
+        <option value="EMP-001">EMP-001: Kunal Patel (Venture Studio Founder)</option>
+        <option value="EMP-002">EMP-002: Rohan Sharma (Principal AI Architect)</option>
+        <option value="EMP-003">EMP-003: Priya Nair (Head of Design & UX)</option>
+        <option value="EMP-004">EMP-004: Samir Verma (Full-Stack Tech Lead)</option>
+        <option value="EMP-005">EMP-005: Ananya Roy (Director of Operations)</option>
+        <option value="EMP-006">EMP-006: Aarav Patel (Senior ML Engineer)</option>
+      </select>
+
+      <div class="cam-viewport">
+        <canvas id="faceCanvas" width="600" height="360"></canvas>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-mini">
+          <small>Biometric Match Confidence</small>
+          <b id="faceConfidence" style="color:#38bdf8;">97.8% Match</b>
+        </div>
+        <div class="kpi-mini">
+          <small>Gate Permission</small>
+          <b id="faceAccess" style="color:#10b981;">ACCESS GRANTED</b>
+        </div>
+      </div>
+
+      <div style="margin-top:14px; font-size:12px; color:#94a3b8;">
+        <i class="fas fa-fingerprint" style="color:#10b981;"></i> Verified Attendance logged to SQLite database automatically.
+      </div>
+    </div>
+  </div>
+
+  <!-- Attendance Log Table -->
+  <div class="card-panel">
+    <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:14px;"><i class="fas fa-clipboard-check"></i> Rakshak Live Verified Access Ledger</h3>
+    <table class="table-custom">
+      <thead>
+        <tr><th>Timestamp</th><th>Employee ID</th><th>Full Name</th><th>Department</th><th>Confidence</th><th>PPE Check</th><th>Gate Status</th></tr>
+      </thead>
+      <tbody id="accessLogTbody">
+        <tr>
+          <td style="color:#94a3b8;">Just now</td>
+          <td style="color:#38bdf8; font-weight:700;">EMP-001</td>
+          <td style="font-weight:700; color:#fff;">Kunal Patel</td>
+          <td>Executive</td>
+          <td style="color:#10b981; font-weight:700;">97.8%</td>
+          <td><span style="color:#10b981; font-weight:700;">COMPLIANT</span></td>
+          <td><span style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:700; padding:2px 8px; border-radius:6px;">GRANTED</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<script>
+function setScenario(scen) {
+  fetch('/api/rakshak/detect-safety-ppe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ scenario_preset: scen === 'violation' ? 'non_compliant' : 'compliant_worker' })
+  })
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById('ppeCompliance').textContent = `${data.compliance_rate_percent}%`;
+    document.getElementById('ppeCompliance').style.color = data.compliance_rate_percent > 50 ? '#10b981' : '#ef4444';
+    document.getElementById('ppeHazard').textContent = data.hazard_level;
+    document.getElementById('ppeHazard').style.color = data.compliance_rate_percent > 50 ? '#10b981' : '#ef4444';
+    
+    document.getElementById('maskStatus').textContent = data.safety_audit.mask;
+    document.getElementById('helmetStatus').textContent = data.safety_audit.helmet;
+    document.getElementById('vestStatus').textContent = data.safety_audit.vest;
+
+    drawPpeCanvas(data.detections || []);
+  });
+}
+
+function drawPpeCanvas(dets) {
+  const canvas = document.getElementById('ppeCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 600, 360);
+
+  // Background mock camera feed
+  ctx.fillStyle = '#090d16';
+  ctx.fillRect(0, 0, 600, 360);
+
+  // Mock worker outline
+  ctx.fillStyle = '#1e293b';
+  ctx.beginPath();
+  ctx.arc(300, 110, 45, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillRect(230, 160, 140, 180);
+
+  dets.forEach(d => {
+    const [ymin, xmin, ymax, xmax] = d.bbox;
+    const x = xmin * 600;
+    const y = ymin * 360;
+    const w = (xmax - xmin) * 600;
+    const h = (ymax - ymin) * 360;
+
+    const isViolation = d.status === 'VIOLATION';
+    ctx.strokeStyle = isViolation ? '#ef4444' : '#10b981';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(x, y, w, h);
+
+    ctx.fillStyle = isViolation ? '#ef4444' : '#10b981';
+    const label = `${d.class_name.toUpperCase()} ${(d.confidence * 100).toFixed(0)}%`;
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillRect(x, Math.max(0, y - 20), ctx.measureText(label).width + 12, 20);
+
+    ctx.fillStyle = '#fff';
+    ctx.fillText(label, x + 6, Math.max(14, y - 5));
+  });
+}
+
+function runFaceVerification() {
+  const empId = document.getElementById('staffSelect').value;
+  fetch('/api/rakshak/match-face', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ candidate_id: empId })
+  })
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById('faceConfidence').textContent = `${data.match_confidence}% Match`;
+    document.getElementById('faceAccess').textContent = 'ACCESS GRANTED';
+
+    drawFaceCanvas(data.name);
+
+    // Append to table
+    const tbody = document.getElementById('accessLogTbody');
+    tbody.innerHTML = `<tr>
+      <td style="color:#94a3b8;">${data.attendance_timestamp}</td>
+      <td style="color:#38bdf8; font-weight:700;">${data.employee_id}</td>
+      <td style="font-weight:700; color:#fff;">${data.name}</td>
+      <td>${data.department}</td>
+      <td style="color:#10b981; font-weight:700;">${data.match_confidence}%</td>
+      <td><span style="color:#10b981; font-weight:700;">COMPLIANT</span></td>
+      <td><span style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:700; padding:2px 8px; border-radius:6px;">GRANTED</span></td>
+    </tr>` + tbody.innerHTML;
+  });
+}
+
+function drawFaceCanvas(name) {
+  const canvas = document.getElementById('faceCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 600, 360);
+
+  ctx.fillStyle = '#090d16';
+  ctx.fillRect(0, 0, 600, 360);
+
+  // Draw face biometric landmarks
+  ctx.fillStyle = '#1e293b';
+  ctx.beginPath();
+  ctx.arc(300, 150, 75, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Face bounding box
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(210, 65, 180, 200);
+
+  // Mesh dots
+  ctx.fillStyle = '#38bdf8';
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
+      ctx.beginPath();
+      ctx.arc(240 + c * 30, 95 + r * 30, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Label
+  ctx.fillStyle = '#38bdf8';
+  ctx.fillRect(210, 45, 180, 20);
+  ctx.fillStyle = '#020617';
+  ctx.font = 'bold 11px Inter, sans-serif';
+  ctx.fillText(`BIOMETRIC: ${name.toUpperCase()}`, 216, 59);
+}
+
+// Initial Run
+window.addEventListener('load', () => {
+  setScenario('compliant');
+  runFaceVerification();
+});
+</script>
+<script src="ws-shell.js"></script>
+</body>
+</html>

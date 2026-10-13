@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>SocialHub Multi-Channel Campaign & Scheduling Studio — Sevenseed</title>
+  <meta name="description" content="Multi-platform social media publishing, runtime profile-scoped credentials, contextual image synthesis, and automated post queue. 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(236,72,153,0.12); color: #ec4899; border: 1px solid rgba(236,72,153,0.3); }
+
+    /* Profile Bar */
+    .profile-hud { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; background: #0b1329; border: 1px solid #1e293b; border-radius: 14px; padding: 12px 18px; margin-bottom: 24px; }
+    .channel-badges { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .ch-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; }
+    .ch-active { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #10b981; }
+
+    .grid-layout { display: grid; grid-template-columns: 460px 1fr; gap: 24px; }
+    @media(max-width: 1100px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px; }
+    .styled-input, .styled-select { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; }
+    .styled-input:focus, .styled-select:focus { border-color: #ec4899; }
+    .styled-textarea { width: 100%; min-height: 90px; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.6; outline: none; resize: vertical; }
+    .styled-textarea:focus { border-color: #ec4899; }
+
+    .preset-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #ec4899; color: #ec4899; }
+
+    .platform-checkboxes { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .platform-check { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #cbd5e1; background: #020617; padding: 6px 12px; border-radius: 8px; border: 1px solid #1e293b; cursor: pointer; }
+    .platform-check input { cursor: pointer; }
+
+    .btn-pink { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; box-shadow: 0 4px 20px rgba(236,72,153,0.4); transition: all 0.2s; margin-bottom: 10px; }
+    .btn-pink:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(236,72,153,0.5); }
+    .btn-secondary { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 11px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; background: #0b1329; border: 1px solid #1e293b; color: #38bdf8; transition: all 0.2s; margin-bottom: 10px; }
+    .btn-secondary:hover { border-color: #38bdf8; }
+
+    /* Tabs Bar */
+    .tab-bar { display: flex; gap: 8px; border-bottom: 1px solid #1e293b; padding-bottom: 12px; margin-bottom: 20px; }
+    .tab-btn { background: transparent; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .tab-btn.active { background: rgba(236,72,153,0.15); color: #ec4899; border: 1px solid rgba(236,72,153,0.3); }
+
+    .sub-tabs { display: flex; gap: 6px; margin-bottom: 14px; border-bottom: 1px solid #1e293b; padding-bottom: 8px; }
+    .sub-btn { background: transparent; border: none; font-size: 12px; font-weight: 600; color: #64748b; padding: 4px 10px; border-radius: 6px; cursor: pointer; }
+    .sub-btn.active { background: #1e293b; color: #f8fafc; }
+
+    .view-content { display: none; }
+    .view-content.active { display: block; }
+
+    /* Preview Viewports */
+    .preview-card { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 20px; font-size: 13.5px; line-height: 1.7; color: #cbd5e1; white-space: pre-wrap; }
+    .thread-tweet { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 14px; margin-bottom: 10px; font-size: 13px; line-height: 1.6; }
+    
+    /* Image Cards */
+    .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+    .image-card { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; }
+    .image-card-title { font-size: 13px; font-weight: 700; color: #f8fafc; display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .image-prompt { font-size: 11.5px; color: #38bdf8; font-family: 'JetBrains Mono', monospace; background: #070d1e; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #1e293b; }
+
+    /* Modal / Drawer */
+    .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 999; justify-content: center; align-items: center; }
+    .modal-content { background: #0b1329; border: 1px solid #1e293b; border-radius: 18px; width: 90%; max-width: 640px; padding: 28px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+
+    .table-custom { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+    .table-custom th { background: #0b1329; padding: 10px 14px; text-align: left; color: #94a3b8; border: 1px solid #1e293b; font-weight: 600; }
+    .table-custom td { padding: 10px 14px; border: 1px solid #1e293b; color: #e2e8f0; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-seedling"></i></span>
+    <span class="logo-text">Sevenseed <span class="logo-accent">Hub</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html"><i class="fas fa-compass"></i> Venture OS</a>
+    <a href="socialhub-studio.html" style="color:#ec4899;font-weight:700;"><i class="fas fa-bullhorn"></i> SocialHub Studio</a>
+    <a href="architecture-studio.html"><i class="fas fa-sitemap"></i> Architecture</a>
+    <a href="email-cleaner.html"><i class="fas fa-envelope-circle-check"></i> Email Cleaner</a>
+    <a href="operations-intelligence.html"><i class="fas fa-database"></i> Operations NL</a>
+    <a href="ai-blog-studio.html"><i class="fas fa-feather-pointed"></i> Blog Studio</a>
+    <a href="interview-radar.html"><i class="fas fa-chart-pie"></i> Radar Scorecard</a>
+    <a href="edge-telemetry.html"><i class="fas fa-microchip"></i> Telemetry Lab</a>
+    <a href="spine-canvas.html"><i class="fas fa-person-running"></i> Spine 2D</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost sm" href="index.html">← Back to Hub</a>
+  </div>
+</nav>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-share-nodes"></i> Extracted from socialhub (Runtime Settings & Contextual Image Plan)</span>
+      <h1>SocialHub Multi-Channel Campaign & Scheduling Studio</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:850px;">
+        Profile-scoped credential isolation, automated multi-platform campaign synthesis, contextual AI image planning (Hero Banner + 3 Inline Graphics at ~12.16 INR), and scheduled multi-graph dispatch.
+      </p>
+    </div>
+  </div>
+
+  <!-- Profile HUD Bar -->
+  <div class="profile-hud">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-size:12px; font-weight:700; color:#94a3b8; text-transform:uppercase;"><i class="fas fa-user-gear"></i> Active Profile:</span>
+      <select id="profileSelect" class="styled-select" style="width:260px; padding:6px 12px; font-size:13px;" onchange="changeProfile(this.value)">
+        <option value="sevenseed_studio" selected>Sevenseed Venture Studio</option>
+        <option value="founder_brand">Founder Personal Brand</option>
+      </select>
+    </div>
+
+    <div class="channel-badges">
+      <span class="ch-badge ch-active" id="badgeLinkedIn"><i class="fab fa-linkedin"></i> LinkedIn</span>
+      <span class="ch-badge ch-active" id="badgeTwitter"><i class="fab fa-x-twitter"></i> X / Twitter</span>
+      <span class="ch-badge ch-active" id="badgeThreads"><i class="fas fa-at"></i> Threads</span>
+      <span class="ch-badge ch-active" id="badgeFacebook"><i class="fab fa-facebook"></i> Facebook</span>
+      <span class="ch-badge ch-active" id="badgeInstagram"><i class="fab fa-instagram"></i> Instagram</span>
+      <button class="chip" onclick="openCredentialsModal()" style="color:#ec4899; border-color:rgba(236,72,153,0.3);"><i class="fas fa-key"></i> Edit Profile Vault</button>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Configuration & Controller -->
+    <div class="card-panel">
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-lightbulb"></i> Campaign Seed Topic / Angle</label>
+        <input type="text" id="campaignTopic" class="styled-input" value="Why Founders Overpay for SaaS AI Wrappers">
+      </div>
+
+      <div class="preset-chips">
+        <span class="chip" onclick="setCampaignTopic('Why Founders Overpay for SaaS AI Wrappers')">SaaS 1000x Markup</span>
+        <span class="chip" onclick="setCampaignTopic('Zero-Margin BYOK: The Definitive Architecture Guide')">Zero-Margin BYOK</span>
+        <span class="chip" onclick="setCampaignTopic('7 Autonomous AI Workers Replacing 15 Employee Functions')">7 AI Workers</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-users"></i> Target Audience</label>
+        <input type="text" id="targetAudience" class="styled-input" value="Founders, CTOs, and Engineering Leaders">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-bullseye"></i> Primary Goal</label>
+        <select id="primaryGoal" class="styled-select">
+          <option value="Thought Leadership & Organic Distribution" selected>Thought Leadership & Organic Distribution</option>
+          <option value="Product Launch & Early Access Conversion">Product Launch & Early Access Conversion</option>
+          <option value="Technical Educational Teardown">Technical Educational Teardown</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-share-nodes"></i> Target Platforms</label>
+        <div class="platform-checkboxes">
+          <label class="platform-check"><input type="checkbox" id="chkLinkedIn" checked> LinkedIn</label>
+          <label class="platform-check"><input type="checkbox" id="chkTwitter" checked> X (Twitter)</label>
+          <label class="platform-check"><input type="checkbox" id="chkThreads" checked> Threads</label>
+          <label class="platform-check"><input type="checkbox" id="chkInstagram" checked> Instagram</label>
+          <label class="platform-check"><input type="checkbox" id="chkFacebook" checked> Facebook</label>
+        </div>
+      </div>
+
+      <button id="btnSynthesize" class="btn-pink" onclick="synthesizeCampaign()">
+        <i class="fas fa-wand-magic-sparkles"></i> Synthesize Multi-Platform Copy
+      </button>
+
+      <button id="btnPlanImages" class="btn-secondary" onclick="generateImagePlan()">
+        <i class="fas fa-image"></i> Plan Contextual Images (1 Hero + 3 Inline ~ 12.16 INR)
+      </button>
+
+      <!-- Scheduling Drawer -->
+      <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:16px; margin-top:16px;">
+        <label class="input-label"><i class="fas fa-clock"></i> Schedule Automated Dispatch</label>
+        <div style="display:flex; gap:8px; margin-bottom:12px;">
+          <input type="datetime-local" id="scheduleDateTime" class="styled-input" style="flex:1;">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <button class="chip" style="background:#0284c7; color:#fff; border:none; padding:10px;" onclick="schedulePost()"><i class="fas fa-calendar-plus"></i> Queue Post</button>
+          <button class="chip" style="background:#10b981; color:#fff; border:none; padding:10px;" onclick="publishNow()"><i class="fas fa-paper-plane"></i> Publish Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Multi-Tab Cockpit -->
+    <div class="card-panel">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchMainTab('tab-copy', this)"><i class="fas fa-pen-nib"></i> Multi-Channel Copy</button>
+        <button class="tab-btn" onclick="switchMainTab('tab-images', this)"><i class="fas fa-images"></i> Contextual Images (SocialHub)</button>
+        <button class="tab-btn" onclick="switchMainTab('tab-queue', this)"><i class="fas fa-calendar-days"></i> Dispatch Queue</button>
+      </div>
+
+      <!-- Tab 1: Copy Previews -->
+      <div id="tab-copy" class="view-content active">
+        <div class="sub-tabs">
+          <button class="sub-btn active" onclick="switchPlatformTab('p-linkedin', this)"><i class="fab fa-linkedin"></i> LinkedIn</button>
+          <button class="sub-btn" onclick="switchPlatformTab('p-twitter', this)"><i class="fab fa-x-twitter"></i> X Thread (5 Tweets)</button>
+          <button class="sub-btn" onclick="switchPlatformTab('p-instagram', this)"><i class="fab fa-instagram"></i> Instagram Carousel</button>
+          <button class="sub-btn" onclick="switchPlatformTab('p-threads', this)"><i class="fas fa-at"></i> Threads</button>
+          <button class="sub-btn" onclick="switchPlatformTab('p-facebook', this)"><i class="fab fa-facebook"></i> Facebook</button>
+        </div>
+
+        <div id="p-linkedin" class="platform-view">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px; color:#94a3b8;">
+            <span><i class="fab fa-linkedin" style="color:#0a66c2;"></i> LinkedIn Thought Leadership</span>
+            <button class="chip" onclick="copyText('previewLinkedin')"><i class="fas fa-copy"></i> Copy</button>
+          </div>
+          <div class="preview-card" id="previewLinkedin">Most founders are burning 80%+ gross margin on SaaS markups.
+
+Here is what we discovered after analyzing enterprise software:
+
+When you dissect legacy enterprise software, 90% of the price tag is vanity margin.
+
+By decoupling foundational model APIs from proprietary wrappers and providing a zero-margin Bring-Your-Own-Key (BYOK) architecture, you achieve 3 irreversible advantages:
+
+1. Zero data hostage risk — users own their keys and models
+2. True cost transparency — zero token markups
+3. Uncapped compounding speed with autonomous multi-agent workers
+
+Would you adopt a zero-margin BYOK software stack for your team? Share your thoughts below.
+
+#Startups #OpenSource #AIWorkforce #BYOK #SoftwareEngineering</div>
+        </div>
+
+        <div id="p-twitter" class="platform-view" style="display:none;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px; color:#94a3b8;">
+            <span><i class="fab fa-x-twitter"></i> 5-Tweet Viral Thread</span>
+            <button class="chip" onclick="copyTweets()"><i class="fas fa-copy"></i> Copy All</button>
+          </div>
+          <div id="threadDeck">
+            <div class="thread-tweet"><b>1/5 🧵</b> Why SaaS AI Wrappers are completely reshaping the software economy:<br><br>A short breakdown for founders, CTOs, and builders.</div>
+            <div class="thread-tweet"><b>2/5</b> Legacy SaaS vendors package basic OpenAI/Gemini endpoints and mark them up 1000x.<br><br>You pay $40/seat/mo for what costs $0.03 in actual foundational inference.</div>
+            <div class="thread-tweet"><b>3/5</b> The counter-model is Zero-Margin BYOK:<br>• Client-side AES-256 encryption<br>• LocalStorage key vault<br>• Direct model gateway</div>
+            <div class="thread-tweet"><b>4/5</b> When combined with specialized 7-agent workflows (engineering, lead cleaning, analytics), your operating velocity accelerates 10x with zero headcount bloat.</div>
+            <div class="thread-tweet"><b>5/5</b> Try our 100% free studio tools without credit card or lock-in:<br>👉 https://sevenseed.in<br><br>RT if this resonated with your team!</div>
+          </div>
+        </div>
+
+        <div id="p-instagram" class="platform-view" style="display:none;">
+          <div style="margin-bottom:8px; font-size:12px; color:#94a3b8;"><i class="fab fa-instagram" style="color:#ec4899;"></i> Instagram 5-Slide Carousel Spec:</div>
+          <div id="carouselDeck" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px;"></div>
+        </div>
+
+        <div id="p-threads" class="platform-view" style="display:none;">
+          <div style="margin-bottom:8px; font-size:12px; color:#94a3b8;"><i class="fas fa-at"></i> Meta Threads Discussion:</div>
+          <div class="preview-card" id="previewThreads">Quick take on Zero-Margin BYOK: In 24 months, paying per-seat subscriptions for wrapper software will feel like paying long-distance phone charges. The future is zero-margin BYOK agents running on client-owned keys. Agree or disagree?</div>
+        </div>
+
+        <div id="p-facebook" class="platform-view" style="display:none;">
+          <div style="margin-bottom:8px; font-size:12px; color:#94a3b8;"><i class="fab fa-facebook" style="color:#1877f2;"></i> Facebook Long-form Post:</div>
+          <div class="preview-card" id="previewFacebook">📢 Deep Dive: Why Founders Overpay for SaaS AI Wrappers...</div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Contextual Image Planning (SocialHub) -->
+      <div id="tab-images" class="view-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <div>
+            <h3 style="font-size:15px; font-weight:700; color:#38bdf8;"><i class="fas fa-palette"></i> Contextual Visual Assets Blueprint</h3>
+            <span style="font-size:12px; color:#94a3b8;">1 Hero Feature Banner + 3 Inline Contextual Images</span>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:16px; font-weight:800; color:#10b981;" id="costLabel">~12.16 INR</div>
+            <div style="font-size:11px; color:#64748b;">$0.129 USD total est.</div>
+          </div>
+        </div>
+
+        <!-- Hero Card -->
+        <div class="image-card" style="border-color:rgba(56,189,248,0.3); background:rgba(56,189,248,0.03); margin-bottom:16px;">
+          <div class="image-card-title">
+            <span style="color:#38bdf8;"><i class="fas fa-star"></i> PRIMARY HERO BANNER (16:9)</span>
+            <span class="chip" style="color:#10b981;">Header Placement</span>
+          </div>
+          <div class="image-prompt" id="heroPrompt">Modern 3D isometric vector art illustrating Why Founders Overpay for SaaS AI Wrappers, glowing neon teal and royal purple color scheme, clean studio lighting, dark glassmorphism background, 8k hyper-detailed render</div>
+          <div style="font-size:11px; color:#94a3b8;">Est. Synthesis Cost: $0.030 USD (~2.82 INR) via Vertex AI / Gemini Flash</div>
+        </div>
+
+        <!-- 3 Inline Images -->
+        <div class="image-grid" id="inlineImagesGrid">
+          <div class="image-card">
+            <div class="image-card-title"><span>#1 Contextual Diagram</span><span style="font-size:11px; color:#94a3b8;">4:3</span></div>
+            <div class="image-prompt">Detailed architectural flow chart illustrating client-side key encryption and multi-agent queue, clean line art</div>
+            <div style="font-size:11px; color:#64748b;">Anchor: Architecture & Mechanics</div>
+          </div>
+          <div class="image-card">
+            <div class="image-card-title"><span>#2 Cost Matrix</span><span style="font-size:11px; color:#94a3b8;">4:3</span></div>
+            <div class="image-prompt">Infographic comparing 1000x markup SaaS pricing vs raw inference token economics, glowing holographic data display</div>
+            <div style="font-size:11px; color:#64748b;">Anchor: Comparative Economics</div>
+          </div>
+          <div class="image-card">
+            <div class="image-card-title"><span>#3 Takeaway Visual</span><span style="font-size:11px; color:#94a3b8;">4:3</span></div>
+            <div class="image-prompt">Futuristic digital workstation with 7 AI agent avatars collaborating seamlessly, ultra-sleek minimalist UI</div>
+            <div style="font-size:11px; color:#64748b;">Anchor: Summary & Vision</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Dispatch Queue -->
+      <div id="tab-queue" class="view-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h3 style="font-size:15px; font-weight:700; color:#f8fafc;"><i class="fas fa-list-check"></i> Automated Publishing Queue</h3>
+          <button class="chip" onclick="refreshQueue()"><i class="fas fa-rotate"></i> Refresh</button>
+        </div>
+
+        <div style="max-height:450px; overflow-y:auto; border:1px solid #1e293b; border-radius:10px;">
+          <table class="table-custom">
+            <thead>
+              <tr><th>Post ID</th><th>Topic</th><th>Target Channels</th><th>Scheduled Time</th><th>Status</th></tr>
+            </thead>
+            <tbody id="queueTableBody">
+              <tr><td>POST-88A1F4BC</td><td>Why Founders Overpay for SaaS AI Wrappers</td><td>LinkedIn, X, Threads</td><td>Today, 18:30 IST</td><td><span style="color:#10b981; font-weight:700;">QUEUED</span></td></tr>
+              <tr><td>POST-77B2C3DE</td><td>Zero-Margin BYOK: The Definitive Architecture Guide</td><td>LinkedIn, X (Twitter)</td><td>Tomorrow, 10:00 IST</td><td><span style="color:#38bdf8; font-weight:700;">SCHEDULED</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Profile Credentials Modal (from runtime_settings.py) -->
+<div class="modal-backdrop" id="credModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 style="font-size:18px; font-weight:800; font-family:'Space Grotesk',sans-serif; color:#f8fafc;"><i class="fas fa-key" style="color:#ec4899;"></i> Profile-Scoped Credentials Vault</h3>
+      <button class="chip" onclick="closeCredentialsModal()"><i class="fas fa-xmark"></i></button>
+    </div>
+    <p style="font-size:12px; color:#94a3b8; margin-bottom:16px;">
+      Direct integration with <code>socialhub/utils/runtime_settings.py</code>. Credentials remain isolated to the active profile so concurrent scheduled jobs do not collide.
+    </p>
+
+    <div class="input-group">
+      <label class="input-label"><i class="fab fa-linkedin"></i> LinkedIn Client ID & Page URN</label>
+      <input type="text" id="credLinkedInId" class="styled-input" placeholder="Client ID (e.g. 86v9...***)">
+    </div>
+    <div class="input-group">
+      <label class="input-label"><i class="fab fa-x-twitter"></i> X (Twitter) API Key & Username</label>
+      <input type="text" id="credXUsername" class="styled-input" placeholder="Username (e.g. @sevenseed_ai)">
+    </div>
+    <div class="input-group">
+      <label class="input-label"><i class="fas fa-at"></i> Meta Threads Username</label>
+      <input type="text" id="credThreads" class="styled-input" placeholder="Threads Handle (e.g. sevenseed.official)">
+    </div>
+    <div class="input-group">
+      <label class="input-label"><i class="fab fa-facebook"></i> Facebook Page Name / ID</label>
+      <input type="text" id="credFacebook" class="styled-input" placeholder="Page Name (e.g. Sevenseed Studio)">
+    </div>
+    <div class="input-group">
+      <label class="input-label"><i class="fab fa-instagram"></i> Instagram Business Account ID</label>
+      <input type="text" id="credInstagram" class="styled-input" placeholder="Instagram Account ID">
+    </div>
+
+    <button class="btn-pink" onclick="saveCredentials()"><i class="fas fa-save"></i> Save Profile Credentials Vault</button>
+  </div>
+</div>
+
+<script>
+let activeProfileId = "sevenseed_studio";
+let currentCampaignData = null;
+let currentImagePlanData = null;
+
+function switchMainTab(tabId, el) {
+  document.querySelectorAll('.tab-bar .tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.card-panel .view-content').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+function switchPlatformTab(pid, el) {
+  document.querySelectorAll('.sub-tabs .sub-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.platform-view').forEach(p => p.style.display = 'none');
+  el.classList.add('active');
+  document.getElementById(pid).style.display = 'block';
+}
+
+function setCampaignTopic(t) {
+  document.getElementById('campaignTopic').value = t;
+  synthesizeCampaign();
+}
+
+function changeProfile(pid) {
+  activeProfileId = pid;
+  const isStudio = pid === 'sevenseed_studio';
+  document.getElementById('badgeFacebook').className = 'ch-badge ' + (isStudio ? 'ch-active' : '');
+  document.getElementById('badgeInstagram').className = 'ch-badge ' + (isStudio ? 'ch-active' : '');
+}
+
+async function synthesizeCampaign() {
+  const btn = document.getElementById('btnSynthesize');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Synthesizing Copy...';
+
+  try {
+    const res = await fetch('/api/power/socialhub/generate-campaign', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topic: document.getElementById('campaignTopic').value.trim(),
+        target_audience: document.getElementById('targetAudience').value.trim(),
+        profile_id: activeProfileId,
+        primary_goal: document.getElementById('primaryGoal').value
+      })
+    });
+
+    if (!res.ok) throw new Error('Campaign synthesis failed');
+    const data = await res.json();
+    currentCampaignData = data.campaign;
+
+    // LinkedIn
+    if (data.campaign.linkedin_post) {
+      const lp = data.campaign.linkedin_post;
+      document.getElementById('previewLinkedin').textContent = `${lp.hook}\n\n${lp.body}\n\n${lp.cta}\n\n${(lp.hashtags || []).join(' ')}`;
+    }
+
+    // Twitter
+    if (data.campaign.twitter_thread) {
+      const deck = document.getElementById('threadDeck');
+      deck.innerHTML = '';
+      data.campaign.twitter_thread.forEach((t, i) => {
+        deck.innerHTML += `<div class="thread-tweet"><b>${i + 1}/5</b> ${t.replace(/\n/g, '<br>')}</div>`;
+      });
+    }
+
+    // Instagram
+    if (data.campaign.instagram_carousel) {
+      const cdeck = document.getElementById('carouselDeck');
+      cdeck.innerHTML = '';
+      data.campaign.instagram_carousel.forEach(s => {
+        cdeck.innerHTML += `<div style="background:#070d1e; border:1px solid #1e293b; border-radius:10px; padding:12px;">
+          <div style="font-size:11px; font-weight:800; color:#ec4899;">SLIDE ${s.slide}</div>
+          <div style="font-size:13px; font-weight:700; color:#fff; margin:4px 0;">${s.headline}</div>
+          <div style="font-size:11px; color:#94a3b8;">${s.subtext}</div>
+          <div style="font-size:10.5px; color:#38bdf8; margin-top:8px; font-family:'JetBrains Mono';">Prompt: ${s.visual_prompt}</div>
+        </div>`;
+      });
+    }
+
+    // Threads
+    if (data.campaign.threads_post) {
+      document.getElementById('previewThreads').textContent = data.campaign.threads_post;
+    }
+
+    // Facebook
+    if (data.campaign.facebook_post) {
+      document.getElementById('previewFacebook').textContent = data.campaign.facebook_post;
+    }
+
+  } catch (err) {
+    alert('Synthesis error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Synthesize Multi-Platform Copy';
+  }
+}
+
+async function generateImagePlan() {
+  const btn = document.getElementById('btnPlanImages');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Planning Visual Assets...';
+
+  try {
+    const res = await fetch('/api/power/socialhub/contextual-image-plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topic: document.getElementById('campaignTopic').value.trim()
+      })
+    });
+
+    if (!res.ok) throw new Error('Image plan failed');
+    const data = await res.json();
+    currentImagePlanData = data;
+
+    // Switch to tab
+    const tabImagesBtn = document.querySelectorAll('.tab-bar .tab-btn')[1];
+    switchMainTab('tab-images', tabImagesBtn);
+
+    // Hero
+    if (data.hero_image) {
+      document.getElementById('heroPrompt').textContent = data.hero_image.prompt;
+    }
+
+    // Inline images
+    if (data.internal_images) {
+      const grid = document.getElementById('inlineImagesGrid');
+      grid.innerHTML = '';
+      data.internal_images.forEach(img => {
+        grid.innerHTML += `<div class="image-card">
+          <div class="image-card-title"><span>${img.id}: ${img.type}</span><span style="font-size:11px; color:#94a3b8;">${img.aspect_ratio}</span></div>
+          <div class="image-prompt">${img.prompt}</div>
+          <div style="font-size:11px; color:#64748b;">Anchor: ${img.anchor_section}</div>
+        </div>`;
+      });
+    }
+
+    // Cost
+    if (data.economics) {
+      document.getElementById('costLabel').textContent = `~${data.economics.total_estimated_inr} INR`;
+    }
+
+  } catch (err) {
+    alert('Image plan error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-image"></i> Plan Contextual Images (1 Hero + 3 Inline ~ 12.16 INR)';
+  }
+}
+
+async function schedulePost() {
+  const dt = document.getElementById('scheduleDateTime').value || 'Today 19:00 IST';
+  const platforms = getSelectedPlatforms();
+  if (!platforms.length) return alert('Please select at least one platform.');
+
+  try {
+    const res = await fetch('/api/power/socialhub/schedule-post', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        profile_id: activeProfileId,
+        topic: document.getElementById('campaignTopic').value.trim(),
+        scheduled_for: dt,
+        platforms: platforms,
+        content: currentCampaignData || { text: 'Campaign' },
+        image_plan: currentImagePlanData || {}
+      })
+    });
+
+    if (!res.ok) throw new Error('Failed to schedule post');
+    const data = await res.json();
+    alert(`Post queued successfully! ID: ${data.post_id}`);
+    refreshQueue();
+    // Switch to queue tab
+    const queueTabBtn = document.querySelectorAll('.tab-bar .tab-btn')[2];
+    switchMainTab('tab-queue', queueTabBtn);
+  } catch (err) {
+    alert('Scheduling error: ' + err.message);
+  }
+}
+
+async function publishNow() {
+  const platforms = getSelectedPlatforms();
+  if (!platforms.length) return alert('Please select at least one platform.');
+
+  try {
+    const res = await fetch('/api/power/socialhub/publish-now', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        profile_id: activeProfileId,
+        topic: document.getElementById('campaignTopic').value.trim(),
+        scheduled_for: 'Now',
+        platforms: platforms,
+        content: currentCampaignData || { text: 'Campaign' }
+      })
+    });
+
+    if (!res.ok) throw new Error('Failed to publish');
+    const data = await res.json();
+    alert(`Successfully published to ${data.platforms_dispatched.join(', ')}! Check queue for dispatch logs.`);
+    refreshQueue();
+  } catch (err) {
+    alert('Publish error: ' + err.message);
+  }
+}
+
+async function refreshQueue() {
+  try {
+    const res = await fetch('/api/power/socialhub/queue');
+    if (!res.ok) return;
+    const data = await res.json();
+    const tbody = document.getElementById('queueTableBody');
+    tbody.innerHTML = '';
+    (data.queue || []).forEach(q => {
+      tbody.innerHTML += `<tr>
+        <td><b>${q.id}</b></td>
+        <td>${q.topic}</td>
+        <td>${(q.platforms || []).join(', ')}</td>
+        <td>${q.scheduled_for}</td>
+        <td><span style="color:#10b981; font-weight:700;">${q.status}</span></td>
+      </tr>`;
+    });
+  } catch (err) {
+    console.error('Queue refresh error:', err);
+  }
+}
+
+function getSelectedPlatforms() {
+  const p = [];
+  if (document.getElementById('chkLinkedIn').checked) p.push('LinkedIn');
+  if (document.getElementById('chkTwitter').checked) p.push('X (Twitter)');
+  if (document.getElementById('chkThreads').checked) p.push('Threads');
+  if (document.getElementById('chkInstagram').checked) p.push('Instagram');
+  if (document.getElementById('chkFacebook').checked) p.push('Facebook');
+  return p;
+}
+
+function openCredentialsModal() {
+  document.getElementById('credModal').style.display = 'flex';
+}
+
+function closeCredentialsModal() {
+  document.getElementById('credModal').style.display = 'none';
+}
+
+async function saveCredentials() {
+  const payload = {
+    id: activeProfileId,
+    name: activeProfileId === 'sevenseed_studio' ? 'Sevenseed Venture Studio' : 'Founder Personal Brand',
+    settings: {
+      LINKEDIN_CLIENT_ID: document.getElementById('credLinkedInId').value || '86v9...***',
+      X_USERNAME: document.getElementById('credXUsername').value || '@sevenseed_ai',
+      THREADS_USERNAME: document.getElementById('credThreads').value || 'sevenseed.official',
+      FACEBOOK_PAGE_NAME: document.getElementById('credFacebook').value || 'Sevenseed Studio',
+      INSTAGRAM_USERNAME: document.getElementById('credInstagram').value || 'sevenseed_ventures'
+    }
+  };
+
+  try {
+    const res = await fetch('/api/power/socialhub/save-profile-credentials', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Save credentials failed');
+    alert('Profile credentials saved to SQLite vault successfully!');
+    closeCredentialsModal();
+  } catch (err) {
+    alert('Credential error: ' + err.message);
+  }
+}
+
+function copyText(id) {
+  navigator.clipboard.writeText(document.getElementById(id).innerText);
+  alert('Copied to clipboard!');
+}
+
+function copyTweets() {
+  const tweets = Array.from(document.querySelectorAll('#threadDeck .thread-tweet')).map(t => t.innerText).join('\n\n');
+  navigator.clipboard.writeText(tweets);
+  alert('All 5 tweets copied to clipboard!');
+}
+
+// Initial default date
+window.addEventListener('DOMContentLoaded', () => {
+  const now = new Date();
+  now.setHours(now.getHours() + 4);
+  document.getElementById('scheduleDateTime').value = now.toISOString().slice(0, 16);
+});
+</script>
+</body>
+</html>

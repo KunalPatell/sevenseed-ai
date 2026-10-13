@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Meeting Intelligence & Diarization Lab — Sevenseed Workstation</title>
+  <meta name="description" content="Automated Playwright meeting bot, Chromium virtual audio capture, real-time speaker diarization, map-reduce executive summary, and RAG Q&A extracted from MeetBot_2.0.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --accent-purple: #c084fc;
+      --accent-cyan: #38bdf8;
+      --accent-emerald: #10b981;
+    }
+    body { background: var(--bg-dark); color: #f8fafc; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+
+    /* Top Nav */
+    .top-nav { position: fixed; top: 0; left: 0; right: 0; height: 68px; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; z-index: 1000; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 800; color: #fff; text-decoration: none; }
+    .nav-brand span { color: #c084fc; }
+    .nav-links { display: flex; gap: 18px; align-items: center; font-size: 13px; font-weight: 600; }
+    .nav-links a { color: #94a3b8; text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .nav-links a:hover, .nav-links a.active { color: #c084fc; }
+
+    /* HUD Header */
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(24px, 3.2vw, 34px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(192, 132, 252, 0.12); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3); }
+
+    /* Session Control HUD */
+    .session-hud { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 14px 20px; margin-bottom: 24px; }
+    .channel-badges { display: flex; gap: 10px; align-items: center; }
+    .ch-badge { font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; display: inline-flex; align-items: center; gap: 6px; }
+    .ch-active { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #10b981; }
+
+    /* Main Grid */
+    .grid-layout { display: grid; grid-template-columns: 460px 1fr; gap: 24px; }
+    @media (max-width: 1100px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px; }
+    .styled-input { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; }
+    .styled-input:focus { border-color: #c084fc; }
+
+    /* Buttons */
+    .btn-purple { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; background: linear-gradient(135deg, #a855f7, #7e22ce); color: #fff; box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4); transition: all 0.2s; }
+    .btn-purple:hover { transform: translateY(-1px); }
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #c084fc; color: #c084fc; }
+
+    /* Tabs */
+    .tab-bar { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; margin-bottom: 18px; }
+    .tab-btn { background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; font-size: 12.5px; font-weight: 700; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .tab-btn.active { background: #c084fc; color: #020617; border-color: #c084fc; }
+
+    /* Diarized Turns Stream */
+    .transcript-feed { max-height: 520px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 6px; }
+    .turn-card { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 14px 16px; transition: border-color 0.2s; }
+    .turn-card:hover { border-color: #38bdf8; }
+    .turn-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 11px; }
+    .speaker-name { font-weight: 800; color: #c084fc; display: flex; align-items: center; gap: 6px; }
+    .turn-time { font-family: 'JetBrains Mono', monospace; color: #64748b; }
+    .turn-text { font-size: 13.5px; color: #e2e8f0; line-height: 1.6; }
+
+    /* Summary Quadrants */
+    .quad-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+    @media (max-width: 900px) { .quad-grid { grid-template-columns: 1fr; } }
+    .quad-card { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; }
+    .quad-title { font-size: 12px; font-weight: 800; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+
+    /* Q&A RAG Box */
+    .qa-box { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 18px; }
+    .source-pill { font-size: 11px; font-family: 'JetBrains Mono', monospace; padding: 6px 10px; border-radius: 6px; background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); margin-top: 6px; }
+  </style>
+  <link rel="stylesheet" href="ws-shell.css">
+</head>
+<body>
+
+<div id="ws-shell" data-ws="meetbot"></div>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-robot"></i> Extracted from MeetBot_2.0 (PulseAudio + Diarizer Engine)</span>
+      <h1>Meeting Intelligence & Audio Diarization Lab</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:850px;">
+        Automated Playwright meeting bot joiner, Chromium PulseAudio 48kHz audio capture, speaker diarization pipeline, map-reduce long-form synthesis, and conversational RAG transcript search.
+      </p>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="chip" onclick="refreshSession()" style="color:#c084fc; border-color:rgba(192,132,252,0.3);"><i class="fas fa-rotate"></i> Refresh Feed</button>
+    </div>
+  </div>
+
+  <!-- Session HUD Bar -->
+  <div class="session-hud">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-size:12px; font-weight:700; color:#94a3b8; text-transform:uppercase;"><i class="fas fa-video"></i> Session:</span>
+      <select id="sessionSelect" class="chip" style="padding:6px 12px; font-size:13px; color:#fff;" onchange="changeSession(this.value)">
+        <option value="meet_q4_review" selected>Sevenseed Q4 Architecture & Systems Review</option>
+      </select>
+    </div>
+
+    <div class="channel-badges">
+      <span class="ch-badge ch-active" id="badgePlatform"><i class="fab fa-google"></i> Google Meet</span>
+      <span class="ch-badge ch-active"><i class="fas fa-wave-square"></i> PulseAudio 48kHz PCM</span>
+      <span class="ch-badge ch-active"><i class="fas fa-microphone-lines"></i> Diarizer Active</span>
+      <span class="ch-badge" id="badgeTurnsCount" style="color:#38bdf8; border-color:rgba(56,189,248,0.3);"><i class="fas fa-comment-dots"></i> 8 Turns</span>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Column: Bot Joiner & Summary Generator -->
+    <div class="card-panel">
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-link"></i> Meeting Bridge URL</label>
+        <input type="text" id="meetUrl" class="styled-input" value="https://meet.google.com/xyz-qwer-vbn">
+      </div>
+
+      <div style="display:flex; gap:6px; margin-bottom:16px;">
+        <span class="chip" onclick="setMeetingUrl('https://meet.google.com/xyz-qwer-vbn', 'Google Meet')">Google Meet</span>
+        <span class="chip" onclick="setMeetingUrl('https://zoom.us/j/9876543210', 'Zoom')">Zoom Bridge</span>
+        <span class="chip" onclick="setMeetingUrl('https://teams.microsoft.com/l/meetup-join/123', 'Microsoft Teams')">MS Teams</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-heading"></i> Session Label</label>
+        <input type="text" id="meetTitle" class="styled-input" value="Ad-hoc BYOK Token Economics Review">
+      </div>
+
+      <button id="btnJoinMeet" class="btn-purple" onclick="joinMeeting()">
+        <i class="fas fa-play"></i> Simulate Bot Join & Diarize
+      </button>
+
+      <!-- Participants Panel -->
+      <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:16px; margin-top:20px;">
+        <span style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase;"><i class="fas fa-users"></i> Detected Meeting Attendees</span>
+        <div id="participantsList" style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Generate Summary Action -->
+      <div style="margin-top:20px;">
+        <button id="btnGenSummary" class="chip" style="width:100%; padding:12px; background:#0284c7; color:#fff; border:none; font-weight:700;" onclick="generateSummary()">
+          <i class="fas fa-wand-magic-sparkles"></i> Synthesize 4-Quadrant Map-Reduce Summary
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Column: Tabs (Transcript, Summary, RAG Q&A) -->
+    <div class="card-panel">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('tab-transcript', this)"><i class="fas fa-bars-staggered"></i> Live Diarized Transcript</button>
+        <button class="tab-btn" onclick="switchTab('tab-summary', this)"><i class="fas fa-file-invoice"></i> Executive Summary & Action Items</button>
+        <button class="tab-btn" onclick="switchTab('tab-qa', this)"><i class="fas fa-magnifying-glass"></i> Post-Meeting RAG Q&A</button>
+      </div>
+
+      <!-- Tab 1: Transcript Feed -->
+      <div id="tab-transcript" class="tab-view">
+        <div class="transcript-feed" id="transcriptFeed">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Tab 2: Map-Reduce Summary -->
+      <div id="tab-summary" class="tab-view" style="display:none;">
+        <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:16px;">
+          <span style="font-size:11px; font-weight:800; color:#38bdf8; text-transform:uppercase;"><i class="fas fa-quote-left"></i> Executive Summary</span>
+          <p id="sumExec" style="font-size:13.5px; color:#cbd5e1; line-height:1.6; margin-top:6px;">
+            Loading synthesized summary...
+          </p>
+        </div>
+
+        <div class="quad-grid">
+          <div class="quad-card">
+            <div class="quad-title"><i class="fas fa-check-circle" style="color:#10b981;"></i> Key Decisions</div>
+            <ul id="sumDecisions" style="font-size:12.5px; color:#cbd5e1; padding-left:18px; line-height:1.6; margin-top:4px;">
+            </ul>
+          </div>
+          <div class="quad-card">
+            <div class="quad-title"><i class="fas fa-triangle-exclamation" style="color:#f59e0b;"></i> Risk Register</div>
+            <div id="sumRisks" style="font-size:12px; color:#cbd5e1; line-height:1.5;">
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:16px; margin-top:14px;">
+          <div class="quad-title"><i class="fas fa-list-check" style="color:#c084fc;"></i> Action Items & Assigned Owners</div>
+          <div id="sumActions" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: RAG Q&A -->
+      <div id="tab-qa" class="tab-view" style="display:none;">
+        <div class="qa-box">
+          <label class="input-label"><i class="fas fa-circle-question"></i> Query Any Fact, Decision, or Speaker Statement</label>
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="qaQuestion" class="styled-input" value="What did Vikram say about BYOK key encryption?">
+            <button id="btnAsk" class="chip" style="background:#8b5cf6; color:#fff; border:none; padding:0 20px; font-weight:700;" onclick="askMeeting()">
+              Ask Bot
+            </button>
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;">
+            <span class="chip" onclick="setPresetQuestion('What did Vikram say about BYOK key encryption?')">BYOK Security</span>
+            <span class="chip" onclick="setPresetQuestion('Who is responsible for the SQLite locks?')">Assigned Tasks</span>
+            <span class="chip" onclick="setPresetQuestion('What was the concern regarding Vertex AI rate limits?')">Rate Limits</span>
+          </div>
+
+          <div id="qaResultBox" style="margin-top:16px; padding:16px; background:#0f172a; border:1px solid #1e293b; border-radius:10px; display:none;">
+            <div style="font-weight:700; color:#fff; font-size:13.5px;" id="qaAnswer"></div>
+            <div style="margin-top:10px; font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase;">Transcript Citations:</div>
+            <div id="qaSources"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+  let activeSessionId = "meet_q4_review";
+
+  async function loadSessions() {
+    try {
+      const res = await fetch('/api/power/meetbot/sessions');
+      const data = await res.json();
+      if (data.status === 'success' && data.sessions.length > 0) {
+        const sel = document.getElementById('sessionSelect');
+        sel.innerHTML = data.sessions.map(s => `
+          <option value="${s.id}" ${s.id === activeSessionId ? 'selected' : ''}>${escapeHtml(s.title)} (${s.meeting_type})</option>
+        `).join('');
+        loadSessionDetails(activeSessionId);
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  async function loadSessionDetails(sid) {
+    activeSessionId = sid;
+    try {
+      const res = await fetch(`/api/power/meetbot/session/${sid}/transcript`);
+      const data = await res.json();
+      if (data.status === 'success') {
+        document.getElementById('badgeTurnsCount').innerHTML = `<i class="fas fa-comment-dots"></i> ${data.count} Turns`;
+        renderTranscript(data.transcripts);
+      }
+      // Also load summary automatically
+      generateSummary();
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  function renderTranscript(turns) {
+    const feed = document.getElementById('transcriptFeed');
+    feed.innerHTML = turns.map(t => `
+      <div class="turn-card">
+        <div class="turn-meta">
+          <span class="speaker-name"><i class="fas fa-user-circle"></i> ${escapeHtml(t.speaker)}</span>
+          <span class="turn-time"><i class="fas fa-clock"></i> ${escapeHtml(t.timestamp_str)}</span>
+        </div>
+        <div class="turn-text">${escapeHtml(t.text)}</div>
+        <div style="margin-top:6px; display:flex; justify-content:flex-end;">
+          <span class="chip" style="font-size:10px; padding:2px 6px;">Sentiment: ${escapeHtml(t.sentiment || 'Neutral')}</span>
+        </div>
+      </div>
+    `).join('');
+
+    // Extract unique speakers
+    const speakers = [...new Set(turns.map(t => t.speaker))];
+    const pList = document.getElementById('participantsList');
+    pList.innerHTML = speakers.map(s => `
+      <div style="display:flex; align-items:center; justify-content:space-between; font-size:12.5px; color:#cbd5e1;">
+        <span style="display:flex; align-items:center; gap:8px;"><i class="fas fa-circle-check" style="color:#10b981; font-size:10px;"></i> ${escapeHtml(s)}</span>
+        <span class="chip" style="font-size:10px; padding:2px 6px;">Active</span>
+      </div>
+    `).join('');
+  }
+
+  async function generateSummary() {
+    try {
+      const res = await fetch(`/api/power/meetbot/session/${activeSessionId}/generate-summary`, { method: 'POST' });
+      const data = await res.json();
+      if (data.status === 'success') {
+        const s = data.summary;
+        document.getElementById('sumExec').textContent = s.executive_summary;
+        document.getElementById('sumDecisions').innerHTML = s.decisions.map(d => `<li>${escapeHtml(d)}</li>`).join('');
+        document.getElementById('sumRisks').innerHTML = s.risk_register.map(r => `
+          <div style="padding:6px; background:#0f172a; border-radius:6px; margin-bottom:6px;">
+            <span style="color:#f59e0b; font-weight:700;">[${escapeHtml(r.severity)}]</span> ${escapeHtml(r.risk)}
+            <div style="font-size:11px; color:#64748b; margin-top:2px;">Mitigation: ${escapeHtml(r.mitigation)}</div>
+          </div>
+        `).join('');
+        document.getElementById('sumActions').innerHTML = s.action_items.map(a => `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:#0f172a; border-radius:8px; font-size:12px;">
+            <div>
+              <strong style="color:#c084fc;">${escapeHtml(a.owner)}:</strong> ${escapeHtml(a.task)}
+            </div>
+            <span class="chip" style="color:#38bdf8;">Due: ${escapeHtml(a.deadline)}</span>
+          </div>
+        `).join('');
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  function setPresetQuestion(q) {
+    document.getElementById('qaQuestion').value = q;
+    askMeeting();
+  }
+
+  async function askMeeting() {
+    const q = document.getElementById('qaQuestion').value.trim();
+    if (!q) return;
+
+    const btn = document.getElementById('btnAsk');
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(`/api/power/meetbot/session/${activeSessionId}/ask`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: activeSessionId, question: q })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        const box = document.getElementById('qaResultBox');
+        box.style.display = 'block';
+        document.getElementById('qaAnswer').textContent = data.answer;
+        document.getElementById('qaSources').innerHTML = data.sources.map(s => `
+          <div class="source-pill">${escapeHtml(s)}</div>
+        `).join('');
+      }
+    } catch(err) {
+      alert("Q&A Error: " + err);
+    } finally {
+      btn.innerHTML = `Ask Bot`;
+      btn.disabled = false;
+    }
+  }
+
+  function switchTab(tabId, el) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-view').forEach(v => v.style.display = 'none');
+    el.classList.add('active');
+    document.getElementById(tabId).style.display = 'block';
+  }
+
+  function setMeetingUrl(url, type) {
+    document.getElementById('meetUrl').value = url;
+    document.getElementById('badgePlatform').innerHTML = `<i class="fas fa-video"></i> ${type}`;
+  }
+
+  async function joinMeeting() {
+    const url = document.getElementById('meetUrl').value.trim();
+    const title = document.getElementById('meetTitle').value.trim();
+    const btn = document.getElementById('btnJoinMeet');
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Joining Bridge...`;
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/power/meetbot/join-meeting', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ meeting_url: url, title: title })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        activeSessionId = data.session_id;
+        loadSessions();
+        alert(`MeetBot joined bridge with session ID ${data.session_id}!`);
+      }
+    } catch(err) {
+      alert("Error joining meeting: " + err);
+    } finally {
+      btn.innerHTML = `<i class="fas fa-play"></i> Simulate Bot Join & Diarize`;
+      btn.disabled = false;
+    }
+  }
+
+  function changeSession(sid) {
+    loadSessionDetails(sid);
+  }
+
+  function refreshSession() {
+    loadSessionDetails(activeSessionId);
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  window.addEventListener('DOMContentLoaded', loadSessions);
+</script>
+
+<script src="ws-shell.js"></script>
+</body>
+</html>

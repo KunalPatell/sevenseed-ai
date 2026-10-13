@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Enterprise System Architecture & Wireframe Studio — Sevenseed</title>
+  <meta name="description" content="Generate multi-tier system architectures, database schemas, Redis event topologies, and live Stitch UI wireframes. 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); }
+
+    .grid-layout { display: grid; grid-template-columns: 460px 1fr; gap: 24px; }
+    @media(max-width: 1100px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px; }
+    .styled-input, .styled-select { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; transition: border-color 0.2s; }
+    .styled-input:focus, .styled-select:focus { border-color: #38bdf8; }
+    .styled-textarea { width: 100%; min-height: 90px; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.6; outline: none; resize: vertical; }
+    .styled-textarea:focus { border-color: #38bdf8; }
+
+    .preset-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #38bdf8; color: #38bdf8; }
+
+    .btn-cyan { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; background: linear-gradient(135deg, #0ea5e9, #3b82f6); color: #fff; box-shadow: 0 4px 20px rgba(14,165,233,0.4); transition: all 0.2s; }
+    .btn-cyan:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(14,165,233,0.5); }
+    .btn-cyan:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Results Tabs */
+    .tab-bar { display: flex; gap: 8px; border-bottom: 1px solid #1e293b; padding-bottom: 12px; margin-bottom: 20px; }
+    .tab-btn { background: transparent; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .tab-btn.active { background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); }
+
+    .view-content { display: none; }
+    .view-content.active { display: block; }
+
+    .code-tree { font-family: 'JetBrains Mono', monospace; font-size: 13px; background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; color: #38bdf8; max-height: 480px; overflow-y: auto; white-space: pre-wrap; line-height: 1.6; }
+    
+    .table-custom { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+    .table-custom th { background: #0b1329; padding: 10px 14px; text-align: left; color: #94a3b8; border: 1px solid #1e293b; font-weight: 600; }
+    .table-custom td { padding: 10px 14px; border: 1px solid #1e293b; color: #e2e8f0; }
+
+    .badge-method { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+    .badge-get { background: rgba(16,185,129,0.15); color: #10b981; }
+    .badge-post { background: rgba(56,189,248,0.15); color: #38bdf8; }
+    .badge-delete { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+    .wireframe-box { background: #020617; border: 2px dashed #1e293b; border-radius: 14px; padding: 24px; min-height: 460px; }
+    .wireframe-nav { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: #0f172a; border-radius: 10px; margin-bottom: 20px; border: 1px solid #1e293b; }
+    .wireframe-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
+    .wireframe-card { background: #0b1329; border: 1px solid #1e293b; border-radius: 10px; padding: 16px; }
+
+    .markdown-rendered { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 24px; font-size: 13.5px; line-height: 1.8; color: #cbd5e1; max-height: 600px; overflow-y: auto; }
+    .markdown-rendered h1, .markdown-rendered h2, .markdown-rendered h3 { color: #f8fafc; margin-top: 18px; margin-bottom: 8px; }
+    .markdown-rendered h2 { color: #38bdf8; font-size: 17px; }
+    .markdown-rendered pre { background: #0b1329; border: 1px solid #1e293b; padding: 12px; border-radius: 8px; color: #38bdf8; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  </style>
+  <link rel="stylesheet" href="ws-shell.css">
+</head>
+<body>
+
+<div id="ws-shell" data-ws="architecture"></div>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-cubes"></i> Extracted from ba-document-with-ui / Archon Engine</span>
+      <h1>Enterprise System Architecture & Wireframe Studio</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:800px;">
+        Transform high-level feature requirements into production-ready software architectures, folder hierarchies, API schemas, Redis event buses, and live interactive Stitch UI wireframes.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Configuration Panel -->
+    <div class="card-panel">
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-diagram-project"></i> Project Name</label>
+        <input type="text" id="archProjectName" class="styled-input" value="Sevenforce Multi-Agent Orchestrator">
+      </div>
+
+      <div class="preset-chips">
+        <span class="chip" onclick="setArchPreset('Sevenforce Autonomous Agents', 'Enterprises & Dev Teams', ['Agent Task Queue', 'BYOK Vault', 'WebSocket Cockpit', 'Telemetry Stream'], 'Event-Driven Microservices', 'PostgreSQL + Prisma', 'Redis + BullMQ')">Sevenforce Agents</span>
+        <span class="chip" onclick="setArchPreset('Decode Forest Generic Rx', 'Patients, Pharmacies & Hospitals', ['Prescription OCR', 'Jan Aushadhi Lookup', 'SOS Bed Tokens', 'Encrypted Health Ledger'], 'Layered-MVC-Service-Repository', 'SQLite WAL + SQLAlchemy', 'Redis')">Decode Pharmacy</span>
+        <span class="chip" onclick="setArchPreset('Breakdown Factor Defect AI', 'Civil Engineers & Surveyors', ['YOLOv8 Defect Vision', 'IS 456 Structural Cost Engine', 'Drone Video Ingestion', 'Audit Trail Export'], 'Clean Architecture (Hexagonal)', 'PostgreSQL + Prisma', 'Kafka Streams')">Breakdown Factor</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-users"></i> Target Audience</label>
+        <input type="text" id="archAudience" class="styled-input" value="Enterprises, Founders, & Engineering Teams">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-list-check"></i> Core Features (comma-separated)</label>
+        <textarea id="archFeatures" class="styled-textarea">Agent Execution Queue, Real-time WebSocket Cockpit, BYOK Key Encryption, Multi-tenant Telemetry, Automated Milestone Invoicing</textarea>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-layer-group"></i> Architecture Style</label>
+        <select id="archStyle" class="styled-select">
+          <option value="Event-Driven Microservices">Event-Driven Microservices</option>
+          <option value="Layered-MVC-Service-Repository" selected>Layered-MVC-Service-Repository</option>
+          <option value="Clean Architecture (Hexagonal)">Clean Architecture (Hexagonal)</option>
+          <option value="Modular Monolith (FastAPI + Vite)">Modular Monolith (FastAPI + Vite)</option>
+        </select>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+        <div>
+          <label class="input-label"><i class="fas fa-database"></i> Database Engine</label>
+          <select id="archDb" class="styled-select">
+            <option value="PostgreSQL + Prisma" selected>PostgreSQL + Prisma</option>
+            <option value="SQLite WAL + SQLAlchemy">SQLite WAL</option>
+            <option value="MongoDB + Mongoose">MongoDB</option>
+          </select>
+        </div>
+        <div>
+          <label class="input-label"><i class="fas fa-bolt"></i> Queue / Broker</label>
+          <select id="archQueue" class="styled-select">
+            <option value="Redis + BullMQ" selected>Redis + BullMQ</option>
+            <option value="Kafka Streams">Kafka Streams</option>
+            <option value="RabbitMQ">RabbitMQ</option>
+          </select>
+        </div>
+      </div>
+
+      <button id="btnGenerateArch" class="btn-cyan" onclick="generateArchitecture()">
+        <i class="fas fa-wand-magic-sparkles"></i> Synthesize Architecture Blueprint
+      </button>
+    </div>
+
+    <!-- Output Cockpit -->
+    <div class="card-panel">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('tab-blueprint', this)"><i class="fas fa-folder-tree"></i> Codebase Hierarchy</button>
+        <button class="tab-btn" onclick="switchTab('tab-routes', this)"><i class="fas fa-network-wired"></i> API & Event Topology</button>
+        <button class="tab-btn" onclick="switchTab('tab-wireframe', this)"><i class="fas fa-desktop"></i> Stitch Wireframe Preview</button>
+        <button class="tab-btn" onclick="switchTab('tab-brd', this)"><i class="fas fa-file-lines"></i> Full BRD Document</button>
+      </div>
+
+      <!-- Tab 1: Hierarchy -->
+      <div id="tab-blueprint" class="view-content active">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h3 style="font-size:15px; font-weight:700; color:#38bdf8;"><i class="fas fa-code-branch"></i> Recommended Directory Scaffold</h3>
+          <span id="archStatusTag" style="font-size:11px; color:#10b981; font-weight:600;"><i class="fas fa-check-circle"></i> Production Ready</span>
+        </div>
+        <div class="code-tree" id="codeTreeViewport">src/
+├── api/
+│   ├── controllers/
+│   │   ├── agent.controller.ts
+│   │   ├── auth.controller.ts
+│   │   └── telemetry.controller.ts
+│   ├── middlewares/
+│   │   ├── auth.guard.ts
+│   │   └── rate-limit.ts
+│   └── routes/
+├── config/
+│   └── database.ts
+├── domain/
+│   ├── entities/
+│   └── repositories/
+├── services/
+│   ├── agent-orchestrator.service.ts
+│   └── queue.service.ts
+└── workers/
+    └── task.processor.ts</div>
+      </div>
+
+      <!-- Tab 2: API & Event Bus -->
+      <div id="tab-routes" class="view-content">
+        <h3 style="font-size:15px; font-weight:700; color:#38bdf8; margin-bottom:10px;"><i class="fas fa-route"></i> API Endpoints Specification</h3>
+        <table class="table-custom" id="apiRoutesTable">
+          <thead>
+            <tr><th>Method</th><th>Path</th><th>Summary</th><th>Response</th></tr>
+          </thead>
+          <tbody id="apiRoutesBody">
+            <tr><td><span class="badge-method badge-get">GET</span></td><td>/api/v1/health</td><td>Cluster liveness probe</td><td>200 OK</td></tr>
+            <tr><td><span class="badge-method badge-post">POST</span></td><td>/api/v1/agents/dispatch</td><td>Spawn worker task</td><td>202 Accepted</td></tr>
+            <tr><td><span class="badge-method badge-get">GET</span></td><td>/api/v1/telemetry/live</td><td>WebSocket Stream Handshake</td><td>101 Upgrade</td></tr>
+          </tbody>
+        </table>
+
+        <h3 style="font-size:15px; font-weight:700; color:#c084fc; margin-top:24px; margin-bottom:10px;"><i class="fas fa-tower-broadcast"></i> Redis Event Bus & PubSub Channels</h3>
+        <table class="table-custom">
+          <thead>
+            <tr><th>Channel</th><th>Payload Contract</th><th>Consumers</th></tr>
+          </thead>
+          <tbody id="redisEventsBody">
+            <tr><td><code>agent.job.queued</code></td><td><code>{ job_id, payload, priority }</code></td><td>Worker Daemon Pool</td></tr>
+            <tr><td><code>agent.job.finished</code></td><td><code>{ job_id, output, duration_ms }</code></td><td>Notification Service, DB Persister</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tab 3: Stitch Wireframe Preview -->
+      <div id="tab-wireframe" class="view-content">
+        <div class="wireframe-box" id="wireframeBox">
+          <div class="wireframe-nav">
+            <span style="font-weight:800; font-family:'Space Grotesk',sans-serif; color:#38bdf8;" id="wfBrand"><i class="fas fa-bolt"></i> Sevenforce Cockpit</span>
+            <div style="display:flex; gap:12px; font-size:12px; color:#94a3b8;">
+              <span>Dashboard</span>
+              <span>Agents</span>
+              <span>Telemetry</span>
+              <span style="color:#38bdf8; font-weight:700;">Settings</span>
+            </div>
+          </div>
+          <div style="background:#070d1e; border:1px solid #1e293b; border-radius:10px; padding:20px; text-align:center; margin-bottom:20px;">
+            <h2 style="font-size:20px; color:#fff; font-family:'Space Grotesk';" id="wfHeroTitle">Multi-Agent Autonomous Orchestration</h2>
+            <p style="color:#94a3b8; font-size:13px; margin-top:6px;" id="wfHeroDesc">Execute engineering, marketing, and operational pipelines with zero SaaS markups.</p>
+            <div style="margin-top:14px;">
+              <button class="chip" style="background:#0284c7; color:#fff; border:none; padding:8px 16px;">Quick Dispatch</button>
+              <button class="chip" style="background:#1e293b; color:#cbd5e1; border:none; padding:8px 16px;">Live Telemetry</button>
+            </div>
+          </div>
+          <div class="wireframe-card-grid" id="wfCardGrid">
+            <div class="wireframe-card">
+              <div style="color:#38bdf8; font-size:12px; font-weight:700;"><i class="fas fa-robot"></i> AGENT POOL</div>
+              <div style="font-size:24px; font-weight:800; color:#fff; margin:8px 0;">7 Active</div>
+              <div style="font-size:11px; color:#64748b;">Autonomous tasks scheduled</div>
+            </div>
+            <div class="wireframe-card">
+              <div style="color:#10b981; font-size:12px; font-weight:700;"><i class="fas fa-microchip"></i> INFERENCE RUNTIME</div>
+              <div style="font-size:24px; font-weight:800; color:#fff; margin:8px 0;">34ms</div>
+              <div style="font-size:11px; color:#64748b;">P95 token streaming latency</div>
+            </div>
+            <div class="wireframe-card">
+              <div style="color:#c084fc; font-size:12px; font-weight:700;"><i class="fas fa-shield-halved"></i> BYOK VAULT</div>
+              <div style="font-size:24px; font-weight:800; color:#fff; margin:8px 0;">AES-256-GCM</div>
+              <div style="font-size:11px; color:#64748b;">Client-side zero-knowledge</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Full BRD -->
+      <div id="tab-brd" class="view-content">
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:12px;">
+          <button class="chip" onclick="copyBrd()"><i class="fas fa-copy"></i> Copy Markdown</button>
+        </div>
+        <div class="markdown-rendered" id="brdMarkdownViewport">Click "Synthesize Architecture Blueprint" to generate the complete technical architecture document.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+let currentBlueprint = null;
+let currentBrdText = "";
+
+function switchTab(tabId, el) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view-content').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+function setArchPreset(name, audience, features, style, db, queue) {
+  document.getElementById('archProjectName').value = name;
+  document.getElementById('archAudience').value = audience;
+  document.getElementById('archFeatures').value = features.join(', ');
+  document.getElementById('archStyle').value = style;
+  document.getElementById('archDb').value = db;
+  document.getElementById('archQueue').value = queue;
+}
+
+async function generateArchitecture() {
+  const btn = document.getElementById('btnGenerateArch');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Synthesizing Blueprint & Wireframes...';
+
+  const payload = {
+    project_name: document.getElementById('archProjectName').value.trim(),
+    target_audience: document.getElementById('archAudience').value.trim(),
+    core_features: document.getElementById('archFeatures').value.split(',').map(s => s.trim()).filter(Boolean),
+    architecture_style: document.getElementById('archStyle').value,
+    db_type: document.getElementById('archDb').value,
+    queue_broker: document.getElementById('archQueue').value
+  };
+
+  try {
+    const res = await fetch('/api/power/architecture/generate-blueprint', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error('Failed to generate architecture');
+    const data = await res.json();
+    currentBlueprint = data.blueprint;
+    currentBrdText = data.brd_markdown || '';
+
+    // Render tree
+    if (data.blueprint && data.blueprint.folders) {
+      document.getElementById('codeTreeViewport').textContent = data.blueprint.folders.join('\n');
+    }
+
+    // Render routes
+    if (data.blueprint && data.blueprint.api_routes) {
+      const tbody = document.getElementById('apiRoutesBody');
+      tbody.innerHTML = '';
+      data.blueprint.api_routes.forEach(r => {
+        const badgeClass = r.method === 'GET' ? 'badge-get' : (r.method === 'POST' ? 'badge-post' : 'badge-delete');
+        tbody.innerHTML += `<tr>
+          <td><span class="badge-method ${badgeClass}">${r.method}</span></td>
+          <td><code>${r.path}</code></td>
+          <td>${r.summary || r.description || ''}</td>
+          <td>${r.response_code || 200}</td>
+        </tr>`;
+      });
+    }
+
+    // Render events
+    if (data.blueprint && data.blueprint.redis_events) {
+      const tbody = document.getElementById('redisEventsBody');
+      tbody.innerHTML = '';
+      data.blueprint.redis_events.forEach(e => {
+        tbody.innerHTML += `<tr>
+          <td><code>${e.channel}</code></td>
+          <td><code>${e.payload}</code></td>
+          <td>${e.consumer}</td>
+        </tr>`;
+      });
+    }
+
+    // Render wireframe
+    document.getElementById('wfBrand').innerHTML = `<i class="fas fa-bolt"></i> ${payload.project_name}`;
+    document.getElementById('wfHeroTitle').textContent = `${payload.project_name} Platform`;
+    document.getElementById('wfHeroDesc').textContent = `Target Audience: ${payload.target_audience}. Built with ${payload.architecture_style}.`;
+
+    // Render Markdown BRD
+    document.getElementById('brdMarkdownViewport').innerHTML = renderSimpleMarkdown(currentBrdText);
+
+  } catch (err) {
+    alert('Error generating architecture: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Synthesize Architecture Blueprint';
+  }
+}
+
+function renderSimpleMarkdown(md) {
+  if (!md) return '';
+  return md
+    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+    .replace(/\*\*(.*)\*\*/gim, '<b>$1</b>')
+    .replace(/```([\s\S]*?)```/gim, '<pre>$1</pre>')
+    .replace(/\n/gim, '<br>');
+}
+
+function copyBrd() {
+  if (!currentBrdText) return;
+  navigator.clipboard.writeText(currentBrdText);
+  alert('BRD Markdown copied to clipboard!');
+}
+</script>
+<script src="ws-shell.js"></script>
+</body>
+</html>

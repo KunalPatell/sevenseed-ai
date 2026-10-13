@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>WhatsWay Interactive WhatsApp CRM & Flow Studio — Sevenseed</title>
+  <meta name="description" content="Multi-agent WhatsApp Business inbox, visual conversational customer journey builder, broadcast campaign engine, and automated AI receptionist extracted from whatsway.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --wa-green: #25d366;
+      --wa-dark-green: #005c4b;
+      --wa-bubble-in: #202c33;
+    }
+    body { background: var(--bg-dark); color: #f8fafc; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+
+    /* Top Nav */
+    .top-nav { position: fixed; top: 0; left: 0; right: 0; height: 68px; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; z-index: 1000; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 800; color: #fff; text-decoration: none; }
+    .nav-brand span { color: var(--wa-green); }
+    .nav-links { display: flex; gap: 18px; align-items: center; font-size: 13px; font-weight: 600; }
+    .nav-links a { color: #94a3b8; text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .nav-links a:hover, .nav-links a.active { color: var(--wa-green); }
+
+    /* HUD Header */
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(24px, 3.2vw, 34px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(37, 211, 102, 0.12); color: var(--wa-green); border: 1px solid rgba(37, 211, 102, 0.3); }
+
+    /* Status Bar */
+    .status-hud { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 14px 20px; margin-bottom: 24px; }
+    .channel-badges { display: flex; gap: 10px; align-items: center; }
+    .ch-badge { font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; display: inline-flex; align-items: center; gap: 6px; }
+    .ch-active { background: rgba(37, 211, 102, 0.15); border-color: rgba(37, 211, 102, 0.4); color: var(--wa-green); }
+
+    /* Grid */
+    .grid-layout { display: grid; grid-template-columns: 420px 1fr; gap: 24px; }
+    @media (max-width: 1100px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+    .panel-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+
+    /* Contacts Thread List */
+    .threads-list { display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; padding-right: 4px; }
+    .thread-card { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 12px 14px; cursor: pointer; transition: all 0.2s; }
+    .thread-card:hover { border-color: var(--wa-green); }
+    .thread-card.active { border-color: var(--wa-green); background: rgba(37, 211, 102, 0.05); }
+    .thread-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .contact-name { font-weight: 700; font-size: 13.5px; color: #fff; display: flex; align-items: center; gap: 6px; }
+    .thread-time { font-size: 11px; color: #64748b; font-family: 'JetBrains Mono', monospace; }
+    .thread-preview { font-size: 12px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* WhatsApp Chat Window */
+    .chat-container { background: #0b141a; border: 1px solid #202c33; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; height: 500px; }
+    .chat-header { background: #202c33; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .chat-messages { flex: 1; padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png') repeat; background-size: 380px; }
+    
+    .msg-bubble { max-width: 75%; padding: 10px 14px; border-radius: 8px; font-size: 13px; line-height: 1.5; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    .msg-in { align-self: flex-start; background: var(--wa-bubble-in); color: #e9edef; border-top-left-radius: 0; }
+    .msg-out { align-self: flex-end; background: var(--wa-dark-green); color: #e9edef; border-top-right-radius: 0; }
+    .msg-meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+    .msg-sender { font-weight: 700; color: #53bdeb; }
+
+    .chat-input-bar { background: #202c33; padding: 10px 14px; display: flex; gap: 8px; align-items: center; }
+    .chat-input { flex: 1; background: #2a3942; border: none; border-radius: 8px; padding: 10px 14px; color: #fff; font-size: 13px; outline: none; }
+    .btn-send { background: var(--wa-green); color: #020617; border: none; border-radius: 8px; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; }
+
+    /* Tabs */
+    .tab-bar { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; margin-bottom: 18px; }
+    .tab-btn { background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; font-size: 12.5px; font-weight: 700; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .tab-btn.active { background: var(--wa-green); color: #020617; border-color: var(--wa-green); }
+
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: var(--wa-green); color: var(--wa-green); }
+
+    /* Flow Step Nodes */
+    .flow-node { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 14px; margin-bottom: 10px; position: relative; }
+    .flow-badge { font-size: 10.5px; font-weight: 800; padding: 3px 8px; border-radius: 6px; background: rgba(37, 211, 102, 0.15); color: var(--wa-green); }
+  </style>
+  <link rel="stylesheet" href="ws-shell.css">
+</head>
+<body>
+
+<div id="ws-shell" data-ws="whatsway"></div>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fab fa-whatsapp"></i> Extracted from whatsway (Unified Team Inbox & Flow Engine)</span>
+      <h1>WhatsWay WhatsApp Marketing CRM & Flow Studio</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:850px;">
+        Multi-agent unified WhatsApp inbox, conversational customer journey builder, broadcast dispatch engine (98.4% open rate), and automated lead qualification receptionist.
+      </p>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="chip" onclick="loadInbox()" style="color:var(--wa-green); border-color:rgba(37,211,102,0.3);"><i class="fas fa-rotate"></i> Sync Inbox</button>
+    </div>
+  </div>
+
+  <!-- Status HUD -->
+  <div class="status-hud">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-size:12px; font-weight:700; color:#94a3b8; text-transform:uppercase;"><i class="fab fa-whatsapp"></i> Connected WABA:</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-weight:700; color:#fff;">+1 (555) 733-6733</span>
+    </div>
+
+    <div class="channel-badges">
+      <span class="ch-badge ch-active"><i class="fas fa-circle-check"></i> Meta Cloud API Verified</span>
+      <span class="ch-badge ch-active"><i class="fas fa-robot"></i> AI Receptionist Online</span>
+      <span class="ch-badge" id="badgeThreadCount" style="color:var(--wa-green);"><i class="fas fa-inbox"></i> 3 Active Threads</span>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Column: Unified Contacts & Broadcast Controller -->
+    <div class="card-panel">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-address-book" style="color:var(--wa-green);"></i> Unified Customer Threads</div>
+        <span class="chip" style="color:var(--wa-green);">Multi-Agent</span>
+      </div>
+
+      <div class="threads-list" id="threadsList">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Quick Broadcast Campaign Drawer -->
+      <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:16px; margin-top:20px;">
+        <span style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase;"><i class="fas fa-bullhorn"></i> Launch Official Broadcast</span>
+        <div style="margin-top:8px;">
+          <input type="text" id="bcName" class="chip" style="width:100%; text-align:left; margin-bottom:6px;" value="Zero-Margin BYOK Venture Announcement">
+          <select id="bcTemplate" class="chip" style="width:100%; text-align:left; color:#fff; margin-bottom:6px;">
+            <option value="venture_launch_official_v1">venture_launch_official_v1 (Approved Template)</option>
+            <option value="pilot_onboarding_v2">pilot_onboarding_v2 (Approved Template)</option>
+          </select>
+          <button id="btnLaunchBroadcast" class="chip" style="width:100%; background:var(--wa-green); color:#020617; border:none; padding:10px; font-weight:700;" onclick="launchBroadcast()">
+            <i class="fas fa-paper-plane"></i> Dispatch to 1,420 Contacts (98.4% Open Rate)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Live Chat, Visual Flow, & Campaigns -->
+    <div class="card-panel">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('tab-chat', this)"><i class="fas fa-comments"></i> Live WhatsApp Chat</button>
+        <button class="tab-btn" onclick="switchTab('tab-flow', this)"><i class="fas fa-diagram-project"></i> Customer Journey Flow</button>
+        <button class="tab-btn" onclick="switchTab('tab-broadcasts', this)"><i class="fas fa-chart-line"></i> Broadcast Analytics</button>
+      </div>
+
+      <!-- Tab 1: Live Chat -->
+      <div id="tab-chat" class="tab-view">
+        <div class="chat-container">
+          <div class="chat-header">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:34px; height:34px; border-radius:50%; background:#128c7e; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800;">
+                <i class="fas fa-user"></i>
+              </div>
+              <div>
+                <div style="font-weight:700; font-size:13.5px; color:#fff;" id="chatContactName">Rajesh Sharma</div>
+                <div style="font-size:11px; color:#8696a0;" id="chatContactPhone">+91 98201 44521 • Active</div>
+              </div>
+            </div>
+            <div>
+              <span class="chip" style="color:var(--wa-green); border-color:rgba(37,211,102,0.3);"><i class="fas fa-shield"></i> End-to-End Encrypted</span>
+            </div>
+          </div>
+
+          <div class="chat-messages" id="chatMessages">
+            <!-- Messages rendered dynamically -->
+          </div>
+
+          <div class="chat-input-bar">
+            <input type="text" id="chatInputText" class="chat-input" placeholder="Type a WhatsApp reply as Agent Alex..." onkeydown="if(event.key==='Enter') sendMessage()">
+            <button class="btn-send" id="btnSendMsg" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+
+        <!-- Inbound Simulator -->
+        <div style="margin-top:14px; background:#020617; border:1px solid #1e293b; border-radius:12px; padding:14px;">
+          <span style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase;"><i class="fas fa-mobile-screen"></i> Simulate Inbound Customer Message:</span>
+          <div style="display:flex; gap:6px; margin-top:8px;">
+            <button class="chip" onclick="simulateInbound('How much does Sevenseed charge for the AI workforce?')">Ask Pricing</button>
+            <button class="chip" onclick="simulateInbound('Can we get an architecture review and demo call?')">Request Demo</button>
+            <button class="chip" onclick="simulateInbound('Hi, we need real-time 6-DOF telemetry for our Unity game.')">Game Dev Query</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Visual Journey Flow -->
+      <div id="tab-flow" class="tab-view" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <span style="font-weight:800; font-size:14px; color:#fff;">Interactive Customer Funnel: Autonomous Lead Qualification</span>
+          <span class="chip" style="color:var(--wa-green);"><i class="fas fa-bolt"></i> Trigger: "hi, hello, start, demo"</span>
+        </div>
+        <div id="flowNodesContainer">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Tab 3: Broadcast Analytics -->
+      <div id="tab-broadcasts" class="tab-view" style="display:none;">
+        <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+          <thead>
+            <tr style="border-bottom:1px solid #1e293b; color:#64748b; font-size:11px; text-transform:uppercase;">
+              <th style="padding:10px; text-align:left;">Campaign</th>
+              <th style="padding:10px; text-align:left;">Template</th>
+              <th style="padding:10px; text-align:left;">Audience</th>
+              <th style="padding:10px; text-align:left;">Sent</th>
+              <th style="padding:10px; text-align:left;">Delivery</th>
+              <th style="padding:10px; text-align:left;">Read Rate</th>
+            </tr>
+          </thead>
+          <tbody id="broadcastsTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+  let activeThreads = [];
+  let currentContactId = "wa_c01";
+
+  async function loadInbox() {
+    try {
+      const res = await fetch('/api/power/whatsway/inbox');
+      const data = await res.json();
+      if (data.status === 'success') {
+        activeThreads = data.threads;
+        document.getElementById('badgeThreadCount').innerHTML = `<i class="fas fa-inbox"></i> ${activeThreads.length} Active Threads`;
+        renderThreads();
+        selectThread(currentContactId);
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  function renderThreads() {
+    const list = document.getElementById('threadsList');
+    list.innerHTML = activeThreads.map(t => `
+      <div class="thread-card ${t.contact.id === currentContactId ? 'active' : ''}" onclick="selectThread('${t.contact.id}')">
+        <div class="thread-top">
+          <span class="contact-name"><i class="fas fa-user-circle" style="color:var(--wa-green);"></i> ${escapeHtml(t.contact.name)}</span>
+          <span class="thread-time">${escapeHtml(t.last_time || 'Just now')}</span>
+        </div>
+        <div class="thread-preview">${escapeHtml(t.last_message || 'No messages yet')}</div>
+        <div style="margin-top:6px; display:flex; gap:4px;">
+          ${t.contact.tags.map(tag => `<span class="chip" style="font-size:9.5px; padding:1px 6px;">${escapeHtml(tag)}</span>`).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function selectThread(cid) {
+    currentContactId = cid;
+    renderThreads();
+    const thread = activeThreads.find(t => t.contact.id === cid);
+    if (!thread) return;
+
+    document.getElementById('chatContactName').textContent = thread.contact.name;
+    document.getElementById('chatContactPhone').textContent = `${thread.contact.phone} • ${thread.contact.status}`;
+
+    const msgContainer = document.getElementById('chatMessages');
+    msgContainer.innerHTML = thread.messages.map(m => `
+      <div class="msg-bubble ${m.direction === 'inbound' ? 'msg-in' : 'msg-out'}">
+        <div>${escapeHtml(m.text)}</div>
+        <div class="msg-meta">
+          <span class="msg-sender">${m.direction === 'inbound' ? 'Customer' : escapeHtml(m.agent_assigned || 'Agent')}</span>
+          <span>${escapeHtml(m.timestamp)}</span>
+        </div>
+      </div>
+    `).join('');
+
+    msgContainer.scrollTop = msgContainer.scrollHeight;
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById('chatInputText');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+
+    try {
+      const res = await fetch('/api/power/whatsway/send-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contact_id: currentContactId, text: text, agent_name: "Agent Alex" })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        loadInbox();
+      }
+    } catch(err) {
+      alert("Error sending: " + err);
+    }
+  }
+
+  async function simulateInbound(txt) {
+    try {
+      const res = await fetch('/api/power/whatsway/simulate-inbound', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contact_id: currentContactId, text: txt })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        loadInbox();
+      }
+    } catch(err) {
+      alert("Inbound Error: " + err);
+    }
+  }
+
+  async function loadFlows() {
+    try {
+      const res = await fetch('/api/power/whatsway/flows');
+      const data = await res.json();
+      if (data.status === 'success' && data.flows.length > 0) {
+        const nodes = data.flows[0].nodes;
+        document.getElementById('flowNodesContainer').innerHTML = nodes.map(n => `
+          <div class="flow-node">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="flow-badge">NODE 0${n.step}: ${n.type.toUpperCase()}</span>
+              <span class="chip" style="font-size:10px;">Executed: 100%</span>
+            </div>
+            <div style="margin-top:6px; font-size:13px; color:#cbd5e1;">
+              ${n.text ? escapeHtml(n.text) : ''}
+              ${n.prompt ? `<em>${escapeHtml(n.prompt)}</em>` : ''}
+              ${n.assigned_role ? `<strong>Auto-Assign:</strong> ${escapeHtml(n.assigned_role)}` : ''}
+              ${n.options ? `<div style="display:flex; gap:6px; margin-top:6px;">${n.options.map(o => `<span class="chip" style="color:var(--wa-green);">${escapeHtml(o)}</span>`).join('')}</div>` : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  async function loadBroadcasts() {
+    try {
+      const res = await fetch('/api/power/whatsway/broadcasts');
+      const data = await res.json();
+      if (data.status === 'success') {
+        document.getElementById('broadcastsTableBody').innerHTML = data.broadcasts.map(b => `
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:10px; font-weight:700; color:#fff;">${escapeHtml(b.campaign_name)}</td>
+            <td style="padding:10px; font-family:'JetBrains Mono',monospace; color:#38bdf8;">${escapeHtml(b.template_name)}</td>
+            <td style="padding:10px;"><span class="chip">${escapeHtml(b.audience_tag)}</span></td>
+            <td style="padding:10px; font-weight:700;">${b.sent_count.toLocaleString()}</td>
+            <td style="padding:10px; color:#10b981; font-weight:700;">${b.delivered_pct}%</td>
+            <td style="padding:10px; color:var(--wa-green); font-weight:700;">${b.read_pct}%</td>
+          </tr>
+        `).join('');
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  async function launchBroadcast() {
+    const name = document.getElementById('bcName').value;
+    const template = document.getElementById('bcTemplate').value;
+    const btn = document.getElementById('btnLaunchBroadcast');
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Dispatching...`;
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/power/whatsway/launch-broadcast', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ campaign_name: name, template_name: template, audience_tag: "VIP & Enterprise", message_text: "Venture launch announcement" })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        alert(`Broadcast dispatched to ${data.sent_count} contacts! Est. Read Rate: ${data.estimated_read_rate}`);
+        loadBroadcasts();
+      }
+    } catch(err) {
+      alert("Broadcast Error: " + err);
+    } finally {
+      btn.innerHTML = `<i class="fas fa-paper-plane"></i> Dispatch to 1,420 Contacts (98.4% Open Rate)`;
+      btn.disabled = false;
+    }
+  }
+
+  function switchTab(tabId, el) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-view').forEach(v => v.style.display = 'none');
+    el.classList.add('active');
+    document.getElementById(tabId).style.display = 'block';
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    loadInbox();
+    loadFlows();
+    loadBroadcasts();
+  });
+</script>
+
+<script src="ws-shell.js"></script>
+</body>
+</html>

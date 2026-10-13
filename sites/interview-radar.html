@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AI Candidate Assessment & 5-Axis Radar Scorecard — Sevenseed / Comonk</title>
+  <meta name="description" content="Evaluate software engineering candidates with multi-axis competency radar metrics and automated hiring synthesis. 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(168,85,247,0.12); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
+
+    .grid-layout { display: grid; grid-template-columns: 460px 1fr; gap: 24px; }
+    @media(max-width: 1100px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px; }
+    .styled-input, .styled-select { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; }
+    .styled-input:focus, .styled-select:focus { border-color: #c084fc; }
+    .styled-textarea { width: 100%; min-height: 90px; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.6; outline: none; resize: vertical; }
+    .styled-textarea:focus { border-color: #c084fc; }
+
+    .preset-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #c084fc; color: #c084fc; }
+
+    .btn-purple { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; background: linear-gradient(135deg, #a855f7, #6366f1); color: #fff; box-shadow: 0 4px 20px rgba(168,85,247,0.4); transition: all 0.2s; }
+    .btn-purple:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(168,85,247,0.5); }
+    .btn-purple:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Radar SVG Container */
+    .radar-container { display: flex; justify-content: center; align-items: center; padding: 16px; background: #020617; border: 1px solid #1e293b; border-radius: 14px; margin-bottom: 20px; }
+
+    /* Score breakdown bars */
+    .axis-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
+    .axis-name { width: 140px; color: #cbd5e1; font-weight: 600; }
+    .axis-bar-bg { flex: 1; height: 8px; background: #0b1329; border-radius: 99px; overflow: hidden; margin: 0 12px; }
+    .axis-bar-fill { height: 100%; background: linear-gradient(90deg, #a855f7, #38bdf8); border-radius: 99px; transition: width 0.4s ease; }
+    .axis-score { width: 45px; text-align: right; font-weight: 700; font-family: 'Space Grotesk', sans-serif; color: #38bdf8; }
+
+    .hire-badge { font-size: 13px; font-weight: 800; padding: 6px 14px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.8px; }
+    .badge-strong { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-seedling"></i></span>
+    <span class="logo-text">Sevenseed <span class="logo-accent">Hub</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html"><i class="fas fa-compass"></i> Venture OS</a>
+    <a href="architecture-studio.html"><i class="fas fa-sitemap"></i> Architecture Studio</a>
+    <a href="email-cleaner.html"><i class="fas fa-envelope-circle-check"></i> Email Cleaner</a>
+    <a href="operations-intelligence.html"><i class="fas fa-database"></i> Operations NL</a>
+    <a href="ai-blog-studio.html"><i class="fas fa-feather-pointed"></i> Blog Studio</a>
+    <a href="interview-radar.html" style="color:#c084fc;font-weight:700;"><i class="fas fa-chart-pie"></i> Interview Radar</a>
+    <a href="edge-telemetry.html"><i class="fas fa-microchip"></i> Telemetry Lab</a>
+    <a href="spine-canvas.html"><i class="fas fa-person-running"></i> Spine 2D</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost sm" href="index.html">← Back to Hub</a>
+  </div>
+</nav>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-user-astronaut"></i> Extracted from ai-interview & Comonk AI Engine</span>
+      <h1>AI Candidate Assessment & 5-Axis Radar Scorecard</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:800px;">
+        Quantitative technical evaluation engine for engineering talent. Synthesizes interview transcripts, code submissions, and problem-solving dialogue into a 5-axis competency polygon and actionable hiring recommendation.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Configuration & Candidate Input -->
+    <div class="card-panel">
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-user"></i> Candidate Name</label>
+        <input type="text" id="candName" class="styled-input" value="Rohan Deshmukh">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-briefcase"></i> Target Engineering Role</label>
+        <select id="candRole" class="styled-select">
+          <option value="Staff Systems & AI Architect" selected>Staff Systems & AI Architect</option>
+          <option value="Senior Backend Engineer (FastAPI/Go)">Senior Backend Engineer (FastAPI/Go)</option>
+          <option value="Fullstack Product Engineer (React/Node)">Fullstack Product Engineer (React/Node)</option>
+          <option value="Lead Mobile & Unity Developer">Lead Mobile & Unity Developer</option>
+        </select>
+      </div>
+
+      <div class="preset-chips">
+        <span class="chip" onclick="setCandidatePreset('senior_arch')">Staff Architect (Distributed Lock)</span>
+        <span class="chip" onclick="setCandidatePreset('backend_perf')">Senior Backend (DB Indexing)</span>
+        <span class="chip" onclick="setCandidatePreset('junior_dev')">Junior Dev (Basic Recursion)</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-microphone"></i> Candidate Verbal Transcript Excerpt</label>
+        <textarea id="candTranscript" class="styled-textarea">When scaling the rate limiter to 500,000 requests per second, a naive database counter locks the row. I implemented a Redis sliding window log combined with a token bucket in Lua to guarantee atomicity in single roundtrips. For edge failures, we fall back to a local in-memory Leaky Bucket with circuit breaking.</textarea>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-code"></i> Code Submission Snippet</label>
+        <textarea id="candCode" class="styled-textarea" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#38bdf8;">async function rateLimit(key: string, limit: number, windowSec: number) {
+  const now = Date.now();
+  const multi = redis.multi();
+  multi.zremrangebyscore(key, 0, now - windowSec * 1000);
+  multi.zadd(key, now, `${now}-${Math.random()}`);
+  multi.zcard(key);
+  multi.expire(key, windowSec);
+  const results = await multi.exec();
+  const count = results[2][1] as number;
+  return count <= limit;
+}</textarea>
+      </div>
+
+      <button id="btnAssessCandidate" class="btn-purple" onclick="assessCandidate()">
+        <i class="fas fa-radar"></i> Synthesize 5-Axis Scorecard
+      </button>
+    </div>
+
+    <!-- Right Live Radar & Hiring Assessment -->
+    <div class="card-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div>
+          <h2 style="font-size:22px; font-weight:800; font-family:'Space Grotesk',sans-serif;" id="candDisplayTitle">Rohan Deshmukh</h2>
+          <span style="font-size:12px; color:#94a3b8;" id="candDisplayRole">Staff Systems & AI Architect</span>
+        </div>
+        <span class="hire-badge badge-strong" id="candHireBadge">STRONG HIRE</span>
+      </div>
+
+      <!-- 5-Axis SVG Radar Polygon -->
+      <div class="radar-container" id="radarSvgContainer">
+        <!-- Default Live SVG Polygon -->
+        <svg width="280" height="260" viewBox="0 0 300 280">
+          <circle cx="150" cy="140" r="100" fill="none" stroke="#1e293b" stroke-dasharray="3,3" />
+          <circle cx="150" cy="140" r="70" fill="none" stroke="#1e293b" stroke-dasharray="3,3" />
+          <circle cx="150" cy="140" r="35" fill="none" stroke="#1e293b" stroke-dasharray="3,3" />
+          <polygon id="radarPolygon" points="150,50 235,110 210,215 90,215 65,110" fill="rgba(168,85,247,0.25)" stroke="#c084fc" stroke-width="2.5" />
+          <text x="150" y="30" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="600">Architecture</text>
+          <text x="255" y="115" text-anchor="start" fill="#94a3b8" font-size="11" font-weight="600">Problem Solving</text>
+          <text x="220" y="240" text-anchor="start" fill="#94a3b8" font-size="11" font-weight="600">Code Quality</text>
+          <text x="75" y="240" text-anchor="end" fill="#94a3b8" font-size="11" font-weight="600">Communication</text>
+          <text x="40" y="115" text-anchor="end" fill="#94a3b8" font-size="11" font-weight="600">Domain Depth</text>
+        </svg>
+      </div>
+
+      <!-- 5 Competency Axis Rows -->
+      <div style="margin-bottom:20px;">
+        <div class="axis-row">
+          <span class="axis-name">System Architecture</span>
+          <div class="axis-bar-bg"><div class="axis-bar-fill" id="barArch" style="width:94%;"></div></div>
+          <span class="axis-score" id="valArch">94/100</span>
+        </div>
+        <div class="axis-row">
+          <span class="axis-name">Problem Solving</span>
+          <div class="axis-bar-bg"><div class="axis-bar-fill" id="barProblem" style="width:91%;"></div></div>
+          <span class="axis-score" id="valProblem">91/100</span>
+        </div>
+        <div class="axis-row">
+          <span class="axis-name">Code Quality & Cleanliness</span>
+          <div class="axis-bar-bg"><div class="axis-bar-fill" id="barCode" style="width:88%;"></div></div>
+          <span class="axis-score" id="valCode">88/100</span>
+        </div>
+        <div class="axis-row">
+          <span class="axis-name">Technical Communication</span>
+          <div class="axis-bar-bg"><div class="axis-bar-fill" id="barComm" style="width:92%;"></div></div>
+          <span class="axis-score" id="valComm">92/100</span>
+        </div>
+        <div class="axis-row">
+          <span class="axis-name">Domain & Concurrency</span>
+          <div class="axis-bar-bg"><div class="axis-bar-fill" id="barDomain" style="width:95%;"></div></div>
+          <span class="axis-score" id="valDomain">95/100</span>
+        </div>
+      </div>
+
+      <!-- Qualitative Feedback Box -->
+      <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:16px;">
+        <h4 style="font-size:13px; font-weight:700; color:#38bdf8; margin-bottom:8px;"><i class="fas fa-brain"></i> Qualitative Synthesis & Feedback</h4>
+        <p id="qualitativeText" style="font-size:13px; color:#cbd5e1; line-height:1.7;">
+          Candidate demonstrated exceptional fluency in low-latency distributed systems, atomic Redis transaction models, and resilience patterns. The code leverages pipelined atomic operations effectively.
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+function setCandidatePreset(type) {
+  if (type === 'senior_arch') {
+    document.getElementById('candName').value = "Rohan Deshmukh";
+    document.getElementById('candRole').value = "Staff Systems & AI Architect";
+    document.getElementById('candTranscript').value = "When scaling the rate limiter to 500,000 requests per second, a naive database counter locks the row. I implemented a Redis sliding window log combined with a token bucket in Lua to guarantee atomicity in single roundtrips. For edge failures, we fall back to a local in-memory Leaky Bucket with circuit breaking.";
+    document.getElementById('candCode').value = "async function rateLimit(key: string, limit: number, windowSec: number) {\n  const now = Date.now();\n  const multi = redis.multi();\n  multi.zremrangebyscore(key, 0, now - windowSec * 1000);\n  multi.zadd(key, now, `${now}-${Math.random()}`);\n  multi.zcard(key);\n  multi.expire(key, windowSec);\n  const results = await multi.exec();\n  return (results[2][1] as number) <= limit;\n}";
+  } else if (type === 'backend_perf') {
+    document.getElementById('candName').value = "Aditi Verma";
+    document.getElementById('candRole').value = "Senior Backend Engineer (FastAPI/Go)";
+    document.getElementById('candTranscript').value = "We had query p99 latency spikes over 3 seconds during peak hours. I ran EXPLAIN ANALYZE, identified a sequential table scan on non-indexed tenant IDs, and created a partial composite B-tree index. Reduced p99 to 24ms.";
+    document.getElementById('candCode').value = "CREATE INDEX CONCURRENTLY idx_orders_tenant_status \nON orders (tenant_id, created_at DESC) \nWHERE status = 'ACTIVE';";
+  } else {
+    document.getElementById('candName').value = "Ankit Sharma";
+    document.getElementById('candRole').value = "Fullstack Product Engineer (React/Node)";
+    document.getElementById('candTranscript').value = "I used recursion to reverse the linked list, but didn't consider recursion call stack overflow for deep chains of nodes.";
+    document.getElementById('candCode').value = "function reverse(head) {\n  if (!head || !head.next) return head;\n  let rev = reverse(head.next);\n  head.next.next = head;\n  head.next = null;\n  return rev;\n}";
+  }
+}
+
+async function assessCandidate() {
+  const btn = document.getElementById('btnAssessCandidate');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Assessing Candidate...';
+
+  const payload = {
+    candidate_name: document.getElementById('candName').value.trim(),
+    role: document.getElementById('candRole').value,
+    transcript: document.getElementById('candTranscript').value.trim(),
+    code_snippet: document.getElementById('candCode').value.trim()
+  };
+
+  try {
+    const res = await fetch('/api/power/interview-radar/generate-scorecard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error('Candidate assessment failed');
+    const data = await res.json();
+
+    document.getElementById('candDisplayTitle').textContent = data.candidate_name;
+    document.getElementById('candDisplayRole').textContent = data.role;
+
+    // Badges & Scores
+    const badge = document.getElementById('candHireBadge');
+    badge.textContent = data.recommendation || 'HIRE';
+
+    const scores = data.radar_scores || { architecture: 85, problem_solving: 85, code_quality: 85, communication: 85, domain_depth: 85 };
+    
+    updateAxis('barArch', 'valArch', scores.architecture || 85);
+    updateAxis('barProblem', 'valProblem', scores.problem_solving || 85);
+    updateAxis('barCode', 'valCode', scores.code_quality || 85);
+    updateAxis('barComm', 'valComm', scores.communication || 85);
+    updateAxis('barDomain', 'valDomain', scores.domain_depth || 85);
+
+    // Update SVG Polygon dynamically
+    renderRadarSvg(scores);
+
+    document.getElementById('qualitativeText').textContent = data.qualitative_feedback || 'Strong performance across technical dimensions.';
+
+  } catch (err) {
+    alert('Assessment error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-radar"></i> Synthesize 5-Axis Scorecard';
+  }
+}
+
+function updateAxis(barId, valId, score) {
+  document.getElementById(barId).style.width = score + '%';
+  document.getElementById(valId).textContent = score + '/100';
+}
+
+function renderRadarSvg(scores) {
+  const cx = 150, cy = 140, maxR = 100;
+  // 5 angles: -90, -18, 54, 126, 198 degrees in radians
+  const angles = [-Math.PI / 2, -Math.PI / 10, 3 * Math.PI / 10, 7 * Math.PI / 10, 11 * Math.PI / 10];
+  const vals = [
+    (scores.architecture || 80) / 100,
+    (scores.problem_solving || 80) / 100,
+    (scores.code_quality || 80) / 100,
+    (scores.communication || 80) / 100,
+    (scores.domain_depth || 80) / 100
+  ];
+
+  const points = vals.map((v, i) => {
+    const r = v * maxR;
+    const x = cx + r * Math.cos(angles[i]);
+    const y = cy + r * Math.sin(angles[i]);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+
+  const poly = document.getElementById('radarPolygon');
+  if (poly) poly.setAttribute('points', points);
+}
+</script>
+</body>
+</html>

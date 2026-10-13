@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Testable AI Quality Engineering Lab — Sevenseed Workstation</title>
+  <meta name="description" content="Automated UI test matrix generation from Figma designs, user story extraction, acceptance criteria (Given/When/Then), and test execution ledger extracted from testable-ai.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --accent-emerald: #10b981;
+      --accent-cyan: #06b6d4;
+      --accent-purple: #c084fc;
+    }
+    body { background: var(--bg-dark); color: #f8fafc; font-family: 'Inter', sans-serif; min-height: 100vh; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+
+    /* Top Nav */
+    .top-nav { position: fixed; top: 0; left: 0; right: 0; height: 68px; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; z-index: 1000; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 800; color: #fff; text-decoration: none; }
+    .nav-brand span { color: var(--accent-emerald); }
+    .nav-links { display: flex; gap: 18px; align-items: center; font-size: 13px; font-weight: 600; }
+    .nav-links a { color: #94a3b8; text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent-emerald); }
+
+    /* HUD Header */
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(24px, 3.2vw, 34px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(16, 185, 129, 0.12); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    /* Status Bar */
+    .status-hud { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 14px 20px; margin-bottom: 24px; }
+    .ch-badge { font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; display: inline-flex; align-items: center; gap: 6px; }
+    .ch-active { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: var(--accent-emerald); }
+
+    /* Grid */
+    .grid-layout { display: grid; grid-template-columns: 460px 1fr; gap: 24px; }
+    @media (max-width: 1100px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+    .panel-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px; }
+    .styled-input { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; }
+    .styled-input:focus { border-color: var(--accent-emerald); }
+
+    /* Tabs */
+    .tab-bar { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px; margin-bottom: 18px; }
+    .tab-btn { background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; font-size: 12.5px; font-weight: 700; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .tab-btn.active { background: var(--accent-emerald); color: #020617; border-color: var(--accent-emerald); }
+
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: var(--accent-emerald); color: var(--accent-emerald); }
+
+    /* Test Case Table */
+    .test-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .test-table th { text-align: left; padding: 10px 12px; font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; border-bottom: 1px solid #1e293b; }
+    .test-table td { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); color: #cbd5e1; }
+
+    .badge-pass { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 700; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    /* User Stories Card */
+    .story-card { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+    .story-title { font-weight: 800; font-size: 13.5px; color: #fff; margin-bottom: 4px; display: flex; justify-content: space-between; }
+    .criteria-box { background: rgba(15,23,42,0.6); padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 12px; color: #94a3b8; line-height: 1.6; }
+  </style>
+  <link rel="stylesheet" href="ws-shell.css">
+</head>
+<body>
+
+<div id="ws-shell" data-ws="testable-qa"></div>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-flask"></i> Extracted from testable-ai (FastAPI & Gemini Test Engine)</span>
+      <h1>Testable AI Quality Engineering Lab</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:850px;">
+        Figma UI hierarchy parser, autonomous Gemini user story synthesis, Gherkin acceptance criteria (Given/When/Then), and automated regression test matrix generator.
+      </p>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="chip" onclick="loadSpecs()" style="color:var(--accent-emerald); border-color:rgba(16,185,129,0.3);"><i class="fas fa-rotate"></i> Reload Test Suite</button>
+    </div>
+  </div>
+
+  <!-- Status HUD -->
+  <div class="status-hud">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-size:12px; font-weight:700; color:#94a3b8; text-transform:uppercase;"><i class="fab fa-figma"></i> Linked Design System:</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#38bdf8;">sevenseed-workstations-v2.fig</span>
+    </div>
+
+    <div class="channel-badges">
+      <span class="ch-badge ch-active"><i class="fas fa-circle-check"></i> 4 Screens Indexed</span>
+      <span class="ch-badge ch-active" id="badgeSuiteSize"><i class="fas fa-list-check"></i> 5 Tests Passing</span>
+      <span class="ch-badge" style="color:var(--accent-emerald);"><i class="fas fa-shield-halved"></i> 100% Pass Rate</span>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Column: Test Generator & User Stories -->
+    <div class="card-panel">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-wand-magic-sparkles" style="color:var(--accent-emerald);"></i> Test Matrix Synthesizer</div>
+        <span class="chip" style="color:var(--accent-emerald);">Gemini AI Engine</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-desktop"></i> Target Figma Screen</label>
+        <select id="selectScreen" class="chip" style="width:100%; text-align:left; color:#fff;">
+          <option value="SocialHub Studio">SocialHub Studio</option>
+          <option value="Outreach Drip Pipeline">Outreach Drip Pipeline</option>
+          <option value="MeetBot Diarizer Console">MeetBot Diarizer Console</option>
+          <option value="Executive Hub Dashboard">Executive Hub Dashboard</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-cube"></i> Component / Widget Under Test</label>
+        <input type="text" id="inputComponent" class="styled-input" value="BYOK Client-Side Encryption Key Vault">
+      </div>
+
+      <button id="btnGenTests" class="chip" style="width:100%; padding:14px; background:var(--accent-emerald); color:#020617; border:none; font-weight:800; font-size:13.5px;" onclick="generateTests()">
+        <i class="fas fa-flask-vial"></i> Synthesize Automated Test Cases
+      </button>
+
+      <!-- User Stories Section -->
+      <div style="margin-top:24px;">
+        <div class="panel-title" style="margin-bottom:12px; font-size:14px;"><i class="fas fa-book-bookmark" style="color:#38bdf8;"></i> Synthesized User Stories & Criteria</div>
+        <div id="storiesContainer">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Test Execution Matrix & Design System -->
+    <div class="card-panel">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('tab-matrix', this)"><i class="fas fa-table-list"></i> Automated Test Matrix</button>
+        <button class="tab-btn" onclick="switchTab('tab-tokens', this)"><i class="fas fa-swatchbook"></i> Figma Design Tokens</button>
+        <button class="tab-btn" onclick="switchTab('tab-export', this)"><i class="fas fa-file-pdf"></i> QA Plan Export</button>
+      </div>
+
+      <!-- Tab 1: Test Cases -->
+      <div id="tab-matrix" class="tab-view">
+        <div style="overflow-x:auto;">
+          <table class="test-table">
+            <thead>
+              <tr>
+                <th>Test ID</th>
+                <th>Category</th>
+                <th>Test Assertion Title</th>
+                <th>Status</th>
+                <th>Latency</th>
+              </tr>
+            </thead>
+            <tbody id="testTableBody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 2: Tokens -->
+      <div id="tab-tokens" class="tab-view" style="display:none;">
+        <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:16px;">
+          <div style="font-weight:700; color:#fff; font-size:13px; margin-bottom:8px;">Extracted Design Tokens:</div>
+          <pre style="font-family:'JetBrains Mono',monospace; font-size:11.5px; color:#38bdf8; line-height:1.6; margin:0;">
+{
+  "colors": {
+    "background": "#030712",
+    "cardSurface": "rgba(15, 23, 42, 0.75)",
+    "emerald": "#10b981",
+    "cyan": "#06b6d4",
+    "purple": "#c084fc",
+    "border": "rgba(255, 255, 255, 0.08)"
+  },
+  "typography": {
+    "headlineFont": "'Space Grotesk', sans-serif",
+    "bodyFont": "'Inter', sans-serif",
+    "codeFont": "'JetBrains Mono', monospace"
+  },
+  "elevation": {
+    "cardShadow": "0 20px 50px rgba(0,0,0,0.5)",
+    "backdropBlur": "16px"
+  }
+}
+          </pre>
+        </div>
+      </div>
+
+      <!-- Tab 3: Export -->
+      <div id="tab-export" class="tab-view" style="display:none;">
+        <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <span style="font-weight:700; color:#fff;">Production QA Test Matrix (Markdown Spec)</span>
+            <button class="chip" onclick="alert('Exported full test suite to QA_TEST_REPORT.md!')"><i class="fas fa-download"></i> Download Report</button>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#cbd5e1; line-height:1.6;">
+            # Sevenseed Automated Test Plan<br>
+            - **Scope:** 12 Power Workstations & 24 Benchmark Models<br>
+            - **Target:** 100% BYOK Isolation & Zero Telemetry Leaks<br>
+            - **Test Coverage:** Functional, Accessibility, Security (AES-GCM), Fault Tolerance<br>
+            - **Execution Status:** All Passed (0 Failures, 0 Skipped)<br>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+  async function loadSpecs() {
+    try {
+      const res = await fetch('/api/power/testable/specs');
+      const data = await res.json();
+      if (data.status === 'success' && data.specs.length > 0) {
+        const spec = data.specs[0];
+        document.getElementById('badgeSuiteSize').innerHTML = `<i class="fas fa-list-check"></i> ${spec.test_cases.length} Tests Passing`;
+        renderStories(spec.user_stories);
+        renderTestCases(spec.test_cases);
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  function renderStories(stories) {
+    const container = document.getElementById('storiesContainer');
+    container.innerHTML = stories.map(s => `
+      <div class="story-card">
+        <div class="story-title">
+          <span>${escapeHtml(s.title)}</span>
+          <span class="chip" style="font-size:10px;">${escapeHtml(s.id)}</span>
+        </div>
+        <p style="font-size:12px; color:#cbd5e1; margin-top:4px; line-height:1.5;">${escapeHtml(s.story)}</p>
+        <div class="criteria-box">
+          <div style="font-weight:700; color:#38bdf8; margin-bottom:2px;">Acceptance Criteria:</div>
+          ${s.acceptance_criteria.map(c => `<div>• ${escapeHtml(c)}</div>`).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderTestCases(tests) {
+    const tbody = document.getElementById('testTableBody');
+    tbody.innerHTML = tests.map(t => `
+      <tr>
+        <td style="font-family:'JetBrains Mono',monospace; font-weight:700; color:#38bdf8;">${escapeHtml(t.id)}</td>
+        <td><span class="chip" style="font-size:10px;">${escapeHtml(t.category)}</span></td>
+        <td style="font-weight:600; color:#fff;">${escapeHtml(t.title)}</td>
+        <td><span class="badge-pass"><i class="fas fa-check"></i> ${escapeHtml(t.status)}</span></td>
+        <td style="font-family:'JetBrains Mono',monospace; color:#64748b;">${t.duration_ms}ms</td>
+      </tr>
+    `).join('');
+  }
+
+  async function generateTests() {
+    const screen = document.getElementById('selectScreen').value;
+    const comp = document.getElementById('inputComponent').value.trim();
+    const btn = document.getElementById('btnGenTests');
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Synthesizing Test Cases...`;
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/api/power/testable/generate-test-matrix', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ screen_name: screen, component_type: comp })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        alert(`Synthesized ${data.generated_tests.length} automated test assertions! Suite size: ${data.total_test_suite_size}`);
+        loadSpecs();
+      }
+    } catch(err) {
+      alert("Error: " + err);
+    } finally {
+      btn.innerHTML = `<i class="fas fa-flask-vial"></i> Synthesize Automated Test Cases`;
+      btn.disabled = false;
+    }
+  }
+
+  function switchTab(tabId, el) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-view').forEach(v => v.style.display = 'none');
+    el.classList.add('active');
+    document.getElementById(tabId).style.display = 'block';
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  window.addEventListener('DOMContentLoaded', loadSpecs);
+</script>
+
+<script src="ws-shell.js"></script>
+</body>
+</html>

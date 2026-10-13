@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Race Telemetry & High-Speed Lap Timing Lab — Sevenseed Workstation</title>
+  <meta name="description" content="High-speed kart race telemetry, RFID transponder checkpoint tracking, 3-sector delta oscilloscope, and track safety marshal control extracted from Go_karting.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --accent-emerald: #10b981;
+      --accent-cyan: #06b6d4;
+      --accent-purple: #c084fc;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+    }
+    body { background: var(--bg-dark); color: #f8fafc; font-family: 'Inter', sans-serif; min-height: 100vh; margin: 0; }
+    .hub-container { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+
+    /* Top Nav */
+    .top-nav { position: fixed; top: 0; left: 0; right: 0; height: 68px; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; z-index: 1000; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 800; color: #fff; text-decoration: none; }
+    .nav-brand span { color: var(--accent-emerald); }
+    .nav-links { display: flex; gap: 16px; align-items: center; font-size: 13px; font-weight: 600; }
+    .nav-links a { color: #94a3b8; text-decoration: none; transition: color 0.2s; display: flex; align-items: center; gap: 6px; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent-emerald); }
+
+    /* HUD Header */
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(24px, 3.2vw, 34px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; margin: 0 0 8px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(16, 185, 129, 0.12); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    /* Safety Status Marshall Bar */
+    .marshal-bar { background: #0b1329; border: 1px solid var(--border-color); border-radius: 16px; padding: 18px 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .flag-status-pill { display: inline-flex; align-items: center; gap: 10px; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 800; padding: 8px 18px; border-radius: 99px; letter-spacing: 0.5px; text-transform: uppercase; transition: all 0.3s; }
+    .flag-clear { background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); border: 2px solid var(--accent-emerald); box-shadow: 0 0 20px rgba(16,185,129,0.3); }
+    .flag-yellow { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 2px solid var(--accent-amber); box-shadow: 0 0 20px rgba(245,158,11,0.3); }
+    .flag-red { background: rgba(244, 63, 94, 0.2); color: var(--accent-rose); border: 2px solid var(--accent-rose); box-shadow: 0 0 20px rgba(244,63,94,0.3); }
+    .flag-hazard { background: rgba(192, 132, 252, 0.2); color: var(--accent-purple); border: 2px solid var(--accent-purple); box-shadow: 0 0 20px rgba(192,132,252,0.3); }
+
+    .marshal-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-flag { padding: 8px 14px; font-size: 12px; font-weight: 700; border-radius: 8px; border: 1px solid #1e293b; background: #020617; color: #94a3b8; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-flag:hover { color: #fff; border-color: #38bdf8; }
+
+    /* Layout Grid */
+    .grid-layout { display: grid; grid-template-columns: 1fr 440px; gap: 24px; }
+    @media (max-width: 1180px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+    .panel-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+
+    /* Leaderboard Table */
+    .leader-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .leader-table th { text-align: left; padding: 12px 14px; background: #0b1329; color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #1e293b; }
+    .leader-table td { padding: 12px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .rank-badge { font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 14px; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; }
+    .rank-1 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
+    .rank-2 { background: rgba(148, 163, 184, 0.2); color: #e2e8f0; border: 1px solid #94a3b8; }
+    .rank-3 { background: rgba(180, 83, 9, 0.2); color: #f59e0b; border: 1px solid #b45309; }
+    .rank-other { background: #0f172a; color: #64748b; border: 1px solid #1e293b; }
+
+    .kart-badge { font-family: 'JetBrains Mono', monospace; font-weight: 800; padding: 3px 8px; border-radius: 6px; background: #1e293b; color: #38bdf8; font-size: 12px; border: 1px solid #334155; }
+    .best-lap { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #c084fc; }
+
+    /* Sector Bar */
+    .sector-wrap { display: flex; gap: 8px; margin: 18px 0; }
+    .sector-card { flex: 1; background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; text-align: center; }
+    .sector-title { font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-bottom: 4px; }
+    .sector-val { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 800; color: #f8fafc; }
+    .sector-delta { font-size: 11px; font-weight: 700; color: var(--accent-emerald); }
+
+    /* Detection Feed */
+    .detection-feed { display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; padding-right: 4px; }
+    .detection-item { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+    .detection-item:hover { border-color: var(--accent-cyan); }
+
+    /* Kart Fleet Diagnostic Cards */
+    .fleet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .fleet-card { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; }
+    .fleet-title { font-size: 12px; font-weight: 700; color: #fff; display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .tele-stat { display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; margin-top: 3px; }
+    .tele-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #f8fafc; }
+
+    /* Action Buttons */
+    .action-pill { background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+    .action-pill:hover { color: var(--accent-emerald); border-color: var(--accent-emerald); }
+    .btn-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px 16px; font-weight: 700; font-size: 13px; border-radius: 10px; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; }
+    .btn-cyan { background: var(--accent-cyan); color: #020617; }
+    .btn-cyan:hover { background: #22d3ee; }
+  </style>
+  <link rel="stylesheet" href="ws-shell.css">
+</head>
+<body>
+
+  <!-- Top Navigation -->
+<div id="ws-shell" data-ws="karting"></div>
+
+  <div class="hub-container">
+    <!-- HUD Header -->
+    <div class="hud-header">
+      <div class="hud-title-wrap">
+        <span class="hud-tag"><i class="fa-solid fa-stopwatch-20"></i> Extracted from Go_karting (React + TypeScript + Vite + RFID)</span>
+        <h1><i class="fa-solid fa-flag-checkered" style="color: var(--accent-emerald);"></i> Race Telemetry & Lap Timing Lab</h1>
+        <p style="color: #94a3b8; font-size: 14.5px; margin: 0; max-width: 820px;">
+          High-frequency transponder timing, optical lane tracking, 3-sector delta splits, live track safety marshalling, and telemetry diagnostics for autonomous race control.
+        </p>
+      </div>
+      <div>
+        <button class="action-pill" style="padding: 10px 16px; font-size: 13px;" onclick="loadAllKartingData()">
+          <i class="fa-solid fa-arrows-rotate"></i> Refresh Telemetry
+        </button>
+      </div>
+    </div>
+
+    <!-- Safety Marshall Control Bar -->
+    <div class="marshal-bar">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span style="font-size: 13px; font-weight: 700; color: #94a3b8; text-transform: uppercase;">Track Safety Status:</span>
+        <div id="flagStatusPill" class="flag-status-pill flag-clear">
+          <i class="fa-solid fa-flag"></i> <span id="flagStatusText">GREEN FLAG &bull; TRACK CLEAR</span>
+        </div>
+      </div>
+      <div class="marshal-controls">
+        <button class="btn-flag" onclick="setTrackFlag('CLEAR')"><i class="fa-solid fa-circle" style="color: #10b981;"></i> Green (Clear)</button>
+        <button class="btn-flag" onclick="setTrackFlag('YELLOW')"><i class="fa-solid fa-circle" style="color: #f59e0b;"></i> Yellow (Caution)</button>
+        <button class="btn-flag" onclick="setTrackFlag('RED')"><i class="fa-solid fa-circle" style="color: #f43f5e;"></i> Red (Stop)</button>
+        <button class="btn-flag" onclick="setTrackFlag('HAZARD')"><i class="fa-solid fa-triangle-exclamation" style="color: #c084fc;"></i> Hazard (Debris)</button>
+      </div>
+    </div>
+
+    <!-- Main Grid Layout -->
+    <div class="grid-layout">
+
+      <!-- LEFT: Live Leaderboard & Sector Radar -->
+      <div class="card-panel">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-trophy" style="color: #fbbf24;"></i> Live Race Leaderboard & Sector Splits</div>
+          <span style="font-size: 12px; color: #94a3b8;">Monaco Circuit &bull; Lap 8/10</span>
+        </div>
+
+        <!-- 3-Sector Delta Timing Bar -->
+        <div class="sector-wrap">
+          <div class="sector-card">
+            <div class="sector-title">Sector 1 (420m)</div>
+            <div class="sector-val" id="s1Val">15.420 s</div>
+            <div class="sector-delta">-0.124s vs Best</div>
+          </div>
+          <div class="sector-card">
+            <div class="sector-title">Sector 2 (510m)</div>
+            <div class="sector-val" id="s2Val">19.880 s</div>
+            <div class="sector-delta">+0.045s vs Best</div>
+          </div>
+          <div class="sector-card">
+            <div class="sector-title">Sector 3 (310m)</div>
+            <div class="sector-val" id="s3Val">12.914 s</div>
+            <div class="sector-delta">-0.088s vs Best</div>
+          </div>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <table class="leader-table">
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th>Kart</th>
+              <th>Driver</th>
+              <th>Lap</th>
+              <th>Last Lap</th>
+              <th>Best Lap</th>
+              <th>Gap</th>
+              <th>Speed</th>
+              <th>Simulate</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody">
+            <tr>
+              <td colspan="9" style="text-align: center; color: #64748b; padding: 20px;">Loading live leaderboard...</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Live Track Diagnostics Ribbon -->
+        <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; flex-wrap: wrap; gap: 10px;">
+          <span><i class="fa-solid fa-satellite-dish" style="color: var(--accent-cyan);"></i> 6 RFID Antennas Connected</span>
+          <span><i class="fa-solid fa-video" style="color: var(--accent-emerald);"></i> 4 High-Speed Optical Trackers</span>
+          <span><i class="fa-solid fa-gauge" style="color: var(--accent-amber);"></i> Transponder Clock: 0.1ms Precision</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: Checkpoint Detections & Fleet Health -->
+      <div>
+
+        <!-- Optical & RFID Detection Stream -->
+        <div class="card-panel" style="margin-bottom: 24px;">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-barcode" style="color: var(--accent-cyan);"></i> RFID Checkpoint Event Stream</div>
+            <span style="font-size: 11px; font-weight: 700; color: var(--accent-emerald); background: rgba(16,185,129,0.1); padding: 3px 8px; border-radius: 6px;">Live 100 Hz</span>
+          </div>
+
+          <div class="detection-feed" id="detectionFeed">
+            <div style="text-align: center; color: #64748b; padding: 20px;">Loading detection logs...</div>
+          </div>
+
+          <div style="margin-top: 14px;">
+            <button class="btn-action btn-cyan" onclick="simulatePing('04', 'CP-START-FINISH')">
+              <i class="fa-solid fa-bullseye"></i> Simulate Transponder Crossing (#04)
+            </button>
+          </div>
+        </div>
+
+        <!-- Kart Fleet Health Diagnostics -->
+        <div class="card-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-car-battery" style="color: var(--accent-emerald);"></i> Kart Fleet Diagnostics</div>
+            <span style="font-size: 12px; color: #94a3b8;">4 Karts Telemetry</span>
+          </div>
+
+          <div class="fleet-grid" id="fleetGrid">
+            <div style="grid-column: span 2; text-align: center; color: #64748b; padding: 20px;">Loading diagnostics...</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    async function loadAllKartingData() {
+      await Promise.all([
+        loadSession(),
+        loadLeaderboard(),
+        loadDetections(),
+        loadFleet()
+      ]);
+    }
+
+    async function loadSession() {
+      try {
+        const res = await fetch('/api/power/karting/session');
+        const data = await res.json();
+        if (data.status === 'success' && data.session) {
+          updateFlagDisplay(data.session.safety_flag);
+        }
+      } catch (e) {}
+    }
+
+    function updateFlagDisplay(flag) {
+      const pill = document.getElementById('flagStatusPill');
+      const txt = document.getElementById('flagStatusText');
+      pill.className = 'flag-status-pill';
+
+      if (flag === 'CLEAR') {
+        pill.classList.add('flag-clear');
+        txt.innerHTML = 'GREEN FLAG &bull; TRACK CLEAR';
+      } else if (flag === 'YELLOW') {
+        pill.classList.add('flag-yellow');
+        txt.innerHTML = 'YELLOW CAUTION &bull; GOVERNOR 30 KM/H';
+      } else if (flag === 'RED') {
+        pill.classList.add('flag-red');
+        txt.innerHTML = 'RED FLAG &bull; SESSION SUSPENDED';
+      } else if (flag === 'HAZARD') {
+        pill.classList.add('flag-hazard');
+        txt.innerHTML = 'HAZARD ALERT &bull; TRACK DEBRIS';
+      }
+    }
+
+    async function setTrackFlag(flag) {
+      try {
+        const res = await fetch('/api/power/karting/set-safety-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ flag, reason: 'Race Director Marshal Console' })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          updateFlagDisplay(data.new_safety_flag);
+        }
+      } catch (e) {
+        alert('Failed to set safety flag: ' + e.message);
+      }
+    }
+
+    async function loadLeaderboard() {
+      try {
+        const res = await fetch('/api/power/karting/leaderboard');
+        const data = await res.json();
+        const tbody = document.getElementById('leaderboardBody');
+        if (data.leaderboard && data.leaderboard.length > 0) {
+          tbody.innerHTML = data.leaderboard.map((k, idx) => {
+            const rankClass = idx === 0 ? 'rank-1' : (idx === 1 ? 'rank-2' : (idx === 2 ? 'rank-3' : 'rank-other'));
+            return `
+              <tr>
+                <td><span class="rank-badge ${rankClass}">P${k.rank}</span></td>
+                <td><span class="kart-badge">#${k.kart_number}</span></td>
+                <td>
+                  <strong style="color: #fff;">${k.driver_name}</strong>
+                  <div style="font-size: 10.5px; color: #64748b;">${k.status}</div>
+                </td>
+                <td style="font-family: 'JetBrains Mono', monospace; color: #94a3b8;">${k.current_lap}/10</td>
+                <td style="font-family: 'JetBrains Mono', monospace; color: #f8fafc;">${k.last_lap_seconds ? k.last_lap_seconds.toFixed(3) + 's' : '-'}</td>
+                <td class="best-lap">${k.best_lap_seconds ? k.best_lap_seconds.toFixed(3) + 's' : '-'}</td>
+                <td style="font-family: 'JetBrains Mono', monospace; color: ${idx === 0 ? 'var(--accent-emerald)' : '#94a3b8'};">${k.gap_delta}</td>
+                <td style="font-family: 'JetBrains Mono', monospace; color: var(--accent-cyan); font-weight: 700;">${k.top_speed_kmh} km/h</td>
+                <td>
+                  <button class="action-pill" onclick="simulatePing('${k.kart_number}', 'CP-START-FINISH')">Cross Line</button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch (e) {}
+    }
+
+    async function loadDetections() {
+      try {
+        const res = await fetch('/api/power/karting/checkpoint-detections');
+        const data = await res.json();
+        const feed = document.getElementById('detectionFeed');
+        if (data.detections && data.detections.length > 0) {
+          feed.innerHTML = data.detections.map(d => `
+            <div class="detection-item">
+              <div>
+                <div style="font-size: 12px; font-weight: 700; color: #fff;">
+                  <span class="kart-badge" style="font-size: 11px; padding: 2px 5px;">#${d.kart_number}</span> ${d.driver_name}
+                </div>
+                <div style="font-size: 10.5px; color: #64748b; font-family: 'JetBrains Mono', monospace; margin-top: 2px;">
+                  ${d.checkpoint_id} &bull; ${d.timestamp_str}
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 12px; font-weight: 700; color: var(--accent-emerald); font-family: 'JetBrains Mono', monospace;">
+                  ${d.speed_kmh} km/h
+                </div>
+                <div style="font-size: 10px; color: #94a3b8;">${d.rssi_dbm} dBm</div>
+              </div>
+            </div>
+          `).join('');
+        }
+      } catch (e) {}
+    }
+
+    async function loadFleet() {
+      try {
+        const res = await fetch('/api/power/karting/karts-status');
+        const data = await res.json();
+        const grid = document.getElementById('fleetGrid');
+        if (data.karts && data.karts.length > 0) {
+          grid.innerHTML = data.karts.map(k => `
+            <div class="fleet-card">
+              <div class="fleet-title">
+                <span>#${k.kart_number} &bull; ${k.driver_name.split(' ')[0]}</span>
+                <span style="font-size: 10px; padding: 2px 6px; border-radius: 4px; background: ${k.status === 'ON_TRACK' ? 'rgba(16,185,129,0.15)' : 'rgba(148,163,184,0.15)'}; color: ${k.status === 'ON_TRACK' ? 'var(--accent-emerald)' : '#94a3b8'};">${k.status}</span>
+              </div>
+              <div class="tele-stat">
+                <span>Battery:</span>
+                <span class="tele-val" style="color: ${k.battery_pct > 75 ? 'var(--accent-emerald)' : 'var(--accent-amber)'};">${k.battery_pct}%</span>
+              </div>
+              <div class="tele-stat">
+                <span>Motor Temp:</span>
+                <span class="tele-val">${k.motor_temp_c}°C</span>
+              </div>
+              <div class="tele-stat">
+                <span>Tire Pressure:</span>
+                <span class="tele-val">${k.tire_pressure_psi} PSI</span>
+              </div>
+            </div>
+          `).join('');
+        }
+      } catch (e) {}
+    }
+
+    async function simulatePing(kartNumber, checkpoint) {
+      try {
+        const res = await fetch('/api/power/karting/simulate-lap-event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ kart_number: kartNumber, checkpoint_id: checkpoint })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          loadLeaderboard();
+          loadDetections();
+        }
+      } catch (e) {}
+    }
+
+    // Initialize & Live Polling (every 5s)
+    loadAllKartingData();
+    setInterval(loadAllKartingData, 5000);
+  </script>
+<script src="ws-shell.js"></script>
+</body>
+</html>
