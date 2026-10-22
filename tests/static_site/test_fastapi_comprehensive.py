@@ -59,6 +59,18 @@ r_sp = client.get("/api/power/operations/sprints")
 j_sp = r_sp.json()
 log("GET /api/power/operations/sprints", r_sp.status_code == 200 and "sprint_name" in j_sp, f"Sprint: {j_sp.get('sprint_name')}, Velocity: {j_sp.get('velocity_pct')}%")
 
+r_seq = client.get("/api/power/outreach/sequences")
+j_seq = r_seq.json()
+log("GET /api/power/outreach/sequences", r_seq.status_code == 200 and len(j_seq.get("sequences", [])) > 0, f"Sequences: {len(j_seq.get('sequences', []))}")
+
+r_nlp = client.post("/api/power/outreach/classify-reply", json={"reply_text": "Let's jump on a call Thursday at 2pm"})
+j_nlp = r_nlp.json()
+log("POST /api/power/outreach/classify-reply", r_nlp.status_code == 200 and j_nlp.get("intent") == "Meeting Request", f"Intent: {j_nlp.get('intent')}, Sentiment: {j_nlp.get('sentiment')}")
+
+r_pix = client.get("/api/power/outreach/t/lead-001/1")
+log("GET /api/power/outreach/t/lead-001/1 (Pixel)", r_pix.status_code == 200 and r_pix.headers.get("content-type") == "image/gif", f"GIF bytes: {len(r_pix.content)}")
+
+
 # 3. AVP EMART & COMMERCE AI (price-com & bestseller-analytics)
 print("\n[3/7] AVP Emart & Commerce AI", flush=True)
 r_cmp = client.post("/api/emart/compare-multistore", json={"query": "Sony WH-1000XM5"})
@@ -86,6 +98,11 @@ r_mat = client.post("/api/comonk/match-resume-jd", json={
 })
 j_mat = r_mat.json()
 log("POST /api/comonk/match-resume-jd", r_mat.status_code == 200 and j_mat.get("match_score", 0) > 0, f"Match: {j_mat.get('match_score')}%, Missing: {len(j_mat.get('missing_skills', []))} skills")
+
+r_bul = client.post("/api/power/resume/generate-bullet", json={"skill": "Kubernetes", "role_context": "Platform Lead"})
+j_bul = r_bul.json()
+log("POST /api/power/resume/generate-bullet", r_bul.status_code == 200 and "Google XYZ" in j_bul.get("framework", ""), f"Bullet: {j_bul.get('bullet')[:45]}...")
+
 
 # 5. BREAKDOWN FACTOR & RAKSHAK AI (YOLOv8 & Biometric Security)
 print("\n[5/7] Breakdown Factor & Rakshak AI", flush=True)

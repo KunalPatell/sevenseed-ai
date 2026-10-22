@@ -446,7 +446,14 @@ function drawChart() {
 
 function setupAlert() {
   const target = document.getElementById('targetPriceInput').value;
-  alert(`🔔 Price Drop Alert Activated!\nWe will notify you via Telegram/Email the exact millisecond this item touches ${target}.`);
+  const prod = currentProd ? currentProd.title : 'Selected Item';
+  try {
+    let alerts = JSON.parse(localStorage.getItem('avp_price_alerts') || '[]');
+    alerts.unshift({ product: prod, target: target, timestamp: new Date().toISOString(), date: new Date().toLocaleDateString() });
+    alerts = alerts.slice(0, 10);
+    localStorage.setItem('avp_price_alerts', JSON.stringify(alerts));
+  } catch(e) {}
+  alert(`🔔 Price Drop Alert Activated!\nMonitoring "${prod}" at target: ${target}.\nSaved to your browser's persistent radar watchlist.`);
 }
 
 switchProduct('macbook');

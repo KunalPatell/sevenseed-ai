@@ -339,9 +339,28 @@ function renderAtsUI(score, matched, missing) {
 
 async function generateSpecificBullet(skill) {
   const el = document.getElementById('rewriteText');
-  el.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:#0ea5e9; margin-right:6px;"></i> Generating high-signal quantified bullet for <strong>${skill}</strong> via Gemini 2.5 Flash...`;
+  el.innerHTML = `<i class="fas fa-spinner fa-spin" style="color:#0ea5e9; margin-right:6px;"></i> Generating high-signal quantified bullet for <strong>${skill}</strong> via Google XYZ engine...`;
   
   const jd = (document.getElementById('jdInput')?.value || '').trim();
+
+  // Try backend power feature endpoint
+  try {
+    const res = await fetch('/api/power/resume/generate-bullet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ skill: skill, role_context: jd.slice(0, 300) })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.bullet) {
+        el.innerHTML = `"${data.bullet}"`;
+        return;
+      }
+    }
+  } catch(e) {
+    console.debug('Power endpoint offline, falling back to Vertex/BYOK', e);
+  }
+
   const prompt = `You are an elite Tech Recruiter and Resume Writer for Comonk AI.
 Write 1 powerful, ATS-optimized, quantified resume bullet point demonstrating hands-on experience in: "${skill}".
 Target Role Context: "${jd.slice(0, 300)}".

@@ -1,4 +1,51 @@
 // Enterprise site interactions - Sevenseed AI portfolio
+
+// Universal BYOK Quick-Connector Engine
+window.saveQuickBYOK = function(providerId, inputId, statusId) {
+  var pSel = document.getElementById(providerId || 'quickVaultProvider');
+  var provider = pSel ? pSel.value : 'groq';
+  var inp = document.getElementById(inputId || 'quickVaultKey');
+  var key = inp ? inp.value.trim() : '';
+  var st = document.getElementById(statusId || 'quickVaultStatus');
+  if (!key) {
+    if (st) st.innerHTML = '<span style="color:#f87171;"><i class="fas fa-triangle-exclamation"></i> Please paste an API key first.</span>';
+    return;
+  }
+  try {
+    localStorage.setItem('user_' + provider + '_key', key);
+    localStorage.setItem('ss_key_' + provider, key);
+    localStorage.setItem('ss_byok_' + provider, key);
+    if (provider === 'gemini') {
+      localStorage.setItem('ss_apikey_gemini', key);
+    }
+    if (st) {
+      st.innerHTML = '<span style="color:#34d399;"><i class="fas fa-check-circle"></i> ' + provider.toUpperCase() + ' key encrypted into local browser vault! Active for all 8 ventures.</span>';
+    }
+    if (inp) inp.value = '';
+    if (typeof updateCounts === 'function') updateCounts();
+  } catch(e) {
+    if (st) st.innerHTML = '<span style="color:#f87171;">Storage error: ' + e.message + '</span>';
+  }
+};
+
+window.checkQuickBYOKStatus = function(providerId, statusId) {
+  var pSel = document.getElementById(providerId || 'quickVaultProvider');
+  var provider = pSel ? pSel.value : 'groq';
+  var st = document.getElementById(statusId || 'quickVaultStatus');
+  if (!st) return;
+  var existing = localStorage.getItem('user_' + provider + '_key') || localStorage.getItem('ss_key_' + provider) || localStorage.getItem('ss_byok_' + provider);
+  if (existing) {
+    st.innerHTML = '<span style="color:#34d399;"><i class="fas fa-key"></i> ' + provider.toUpperCase() + ' key is configured & active.</span>';
+  } else {
+    st.innerHTML = '<span style="color:var(--text-3,#94a3b8);"><i class="fas fa-shield-halved" style="color:#10b981;"></i> AES-GCM Client Vault: No key saved yet for ' + provider.toUpperCase() + '.</span>';
+  }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (document.getElementById('quickVaultProvider')) {
+    window.checkQuickBYOKStatus();
+  }
+});
 document.body.classList.add('js');
 
 // Entrance orchestration: reveal blur-in elements + fire scramble

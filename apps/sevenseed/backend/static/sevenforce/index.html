@@ -52,6 +52,7 @@
         <a href="/" style="color:#818cf8;font-weight:700;"><i class="fas fa-seedling"></i> Sevenseed Hub</a>
     <a href="workflows.html"><i class="fas fa-diagram-project" style="color:var(--accent,#06b6d4)"></i> LangGraph Studio</a>
     <a href="devin-terminal.html"><i class="fas fa-terminal" style="color:var(--accent,#06b6d4)"></i> Devin AI Terminal</a>
+    <a href="/outreach-sequence-studio.html"><i class="fas fa-paper-plane" style="color:var(--accent,#06b6d4)"></i> Outreach Studio</a>
     <a href="employees.html"><i class="fas fa-users-gear" style="color:var(--accent,#06b6d4)"></i> 7 AI Employees</a>
     <a href="pricing.html"><i class="fas fa-calculator" style="color:var(--accent,#06b6d4)"></i> ROI & Pricing</a>
     <a href="/byok.html" style="color:#f59e0b;font-weight:700;"><i class="fas fa-key"></i> BYOK Vault</a>
@@ -157,6 +158,43 @@
         <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Transparent pricing tiers, per-seat unit economics, and interactive ROI calculator showing headcount cost displacement.</p>
       </div>
       <a class="btn btn-primary sm" href="pricing.html"><i class="fas fa-calculator"></i> Calculate ROI →</a>
+    </div>
+      <div class="border-beam-card">
+      <div>
+        <div style="font-size:32px; margin-bottom:12px;">📬</div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Sevenforce Outreach Sequence Studio</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px;">Multi-step cold outreach cadence with live 1x1 tracking pixel telemetry, intent classification, and AI email drafter.</p>
+      </div>
+      <a class="btn btn-primary sm" href="/outreach-sequence-studio.html"><i class="fas fa-paper-plane"></i> Open Outreach Studio →</a>
+    </div>
+    <div class="border-beam-card bento-wide" id="byok-vault">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">🔑</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);">100% Free · Universal BYOK</span>
+        </div>
+        <h3 style="font-size:22px; font-weight:700; color:#fff; margin-bottom:8px;">Zero-Cost Enterprise Agent BYOK Vault</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:14px;">Dispatch autonomous Devin AI developers and LangGraph multi-agent teams using your personal API keys at zero platform markup.</p>
+        <div style="background:rgba(15,23,42,0.6); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:16px;">
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+            <select id="quickVaultProvider" onchange="window.checkQuickBYOKStatus ? window.checkQuickBYOKStatus() : null" style="background:var(--bg-2,#1e293b); color:#fff; border:1px solid var(--border-hi,#334155); border-radius:8px; padding:8px 12px; font-size:13px; outline:none; cursor:pointer;">
+              <option value="groq">Groq (Llama 3.3 70B - Free)</option>
+              <option value="gemini">Google Gemini 2.5 / 1.5 Flash</option>
+              <option value="openai">OpenAI (GPT-4o-mini)</option>
+              <option value="mistral">Mistral AI</option>
+            </select>
+            <div style="position:relative; flex:1; min-width:200px;">
+              <input type="password" id="quickVaultKey" placeholder="Paste API key (gsk_... or AIza...)" style="width:100%; box-sizing:border-box; background:var(--bg-2,#1e293b); color:#fff; border:1px solid var(--border-hi,#334155); border-radius:8px; padding:8px 36px 8px 12px; font-size:13px; outline:none;" />
+              <button type="button" onclick="const f=document.getElementById('quickVaultKey');f.type=f.type==='password'?'text':'password';" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-3,#94a3b8); cursor:pointer; font-size:13px;" title="Show/Hide"><i class="fas fa-eye"></i></button>
+            </div>
+            <button type="button" class="btn btn-primary sm" onclick="window.saveQuickBYOK ? window.saveQuickBYOK() : null" style="white-space:nowrap;"><i class="fas fa-key"></i> Save to Vault</button>
+          </div>
+          <div id="quickVaultStatus" style="font-size:12px; color:var(--text-3); display:flex; align-items:center; gap:6px;">
+            <i class="fas fa-shield-halved" style="color:#10b981;"></i> AES-GCM Client Vault: Ready. Select provider and save.
+          </div>
+        </div>
+      </div>
+      <a class="btn btn-primary" href="/byok.html"><i class="fas fa-key"></i> Connect Self API & Tokens →</a>
     </div>
   </div>
 </section>
