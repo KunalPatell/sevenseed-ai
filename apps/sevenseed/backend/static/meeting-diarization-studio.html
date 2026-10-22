@@ -81,11 +81,24 @@
     .qa-box { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 18px; }
     .source-pill { font-size: 11px; font-family: 'JetBrains Mono', monospace; padding: 6px 10px; border-radius: 6px; background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); margin-top: 6px; }
   </style>
-  <link rel="stylesheet" href="ws-shell.css">
 </head>
 <body>
 
-<div id="ws-shell" data-ws="meetbot"></div>
+<nav class="top-nav">
+  <a class="nav-brand" href="index.html">
+    <i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed <span>Workstation 10</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html"><i class="fas fa-home"></i> Hub</a>
+    <a href="architecture-studio.html"><i class="fas fa-sitemap"></i> Architecture</a>
+    <a href="socialhub-studio.html"><i class="fas fa-share-nodes"></i> SocialHub</a>
+    <a href="outreach-sequence-studio.html"><i class="fas fa-paper-plane"></i> Outreach Engine</a>
+    <a href="meeting-diarization-studio.html" class="active"><i class="fas fa-headphones-simple"></i> MeetBot</a>
+  </div>
+  <div>
+    <a class="chip" href="index.html">← Back to Main Hub</a>
+  </div>
+</nav>
 
 <main class="hub-container">
   <div class="hud-header">
@@ -410,6 +423,5 @@
   window.addEventListener('DOMContentLoaded', loadSessions);
 </script>
 
-<script src="ws-shell.js"></script>
 </body>
 </html>

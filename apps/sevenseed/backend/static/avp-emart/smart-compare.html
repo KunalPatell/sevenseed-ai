@@ -704,6 +704,7 @@
       <a href="price-tracker.html"><i class="fas fa-chart-line" style="color:#a855f7"></i> Price Radar</a>
     </div>
     <div class="nav-right">
+      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme"><i
           class="fas fa-moon"></i></button>
       <a class="btn btn-ghost" href="/avp-emart/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
@@ -939,11 +940,12 @@
       try {
         const res = await fetch('/api/emart/compare', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: __emartHeaders(),
           body: JSON.stringify({ query: q })
         });
         if (res.ok) {
           const data = await res.json();
+          window.__lastCompare = data;
           if (data.all_results && data.all_results.length > 0) {
             currentStores = data.all_results.map(item => {
               let logo = 'amazon', cls = 'amazon', icon = 'fab fa-amazon';
@@ -958,14 +960,14 @@
                 name: item.site,
                 sub: item.name,
                 price: item.price,
-                orig: item.mrp || Math.round(item.price * 1.2),
-                discount: item.discount_pct || 15,
+                orig: item.mrp || item.price,
+                discount: item.discount_pct || 0,
                 mlScore: Math.round(item.final_score),
-                rating: item.rating || 4.5,
-                reviews: item.reviews ? item.reviews.toLocaleString('en-IN') : '1,200',
-                delivery: item.delivery || 'Free · 2-3 days',
+                rating: item.rating || '—',
+                reviews: item.reviews ? item.reviews.toLocaleString('en-IN') : '—',
+                delivery: item.delivery || 'See store',
                 deliveryCls: item.is_qcommerce ? 'del-fast' : 'del-std',
-                return: item.deal_integrity === 'HIGH' ? '15 days return' : 'Special promo deal',
+                return: 'Live listing',
                 link: item.link,
                 logo, cls, icon
               };
@@ -980,9 +982,12 @@
         console.warn('API connection failed, falling back to instant client engine:', err);
       }
 
-      // Instant local model fallback
-      currentStores = generateProductData(q);
-      renderResults(q, currentStores);
+      // No live listings: show real store links instead of generating fake prices.
+      currentStores = [];
+      document.getElementById('productNameDisplay').textContent = q;
+      document.getElementById('resultsSection').classList.add('visible');
+      document.getElementById('summaryChips').innerHTML = '';
+      __emartStoreLinks(document.getElementById('priceMatrix'), window.__lastCompare || { message: 'Could not reach the comparison service.', store_links: [] });
       btn.disabled = false;
       btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Compare Prices';
     }
@@ -1005,7 +1010,7 @@
       chips.innerHTML = `
     <div class="summary-chip" style="border-color:rgba(168,85,247,0.3);color:#c084fc"><i class="fas fa-trophy" style="color:#a855f7"></i> Best value: <strong>${best.name}</strong> (ML score ${best.mlScore}/100)</div>
     <div class="summary-chip" style="border-color:rgba(74,222,128,0.3);color:#86efac"><i class="fas fa-tag" style="color:#4ade80"></i> Lowest price: <strong>${cheapest.name}</strong> — ₹${cheapest.price.toLocaleString('en-IN')}</div>
-    <div class="summary-chip"><i class="fas fa-truck-fast" style="color:#38bdf8"></i> Fastest delivery: <strong>Reliance Digital</strong> (same day)</div>
+    <div class="summary-chip"><i class="fas fa-truck-fast" style="color:#38bdf8"></i> Fastest delivery: <strong>${(stores.find(s => s.deliveryCls === 'del-fast') || { name: 'see each store' }).name}</strong></div>
     <div class="summary-chip"><i class="fas fa-rotate-left" style="color:#f59e0b"></i> Best returns: <strong>Reliance Digital</strong> (15 days)</div>`;
 
       // Store rows
@@ -1203,6 +1208,34 @@
       loadWishlist();
     });
   </script>
+
+<script id="emart-live-helpers">
+  function __emartHeaders() {
+    const h = { 'Content-Type': 'application/json' };
+    try {
+      const k = (localStorage.getItem('user_serpapi_key') || localStorage.getItem('ss_key_serpapi') || '').trim();
+      if (k) h['X-SerpAPI-Key'] = k;
+    } catch (_) {}
+    return h;
+  }
+  function __emartEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+  // Honest empty state: no invented prices, just real links to each store's own results.
+  function __emartStoreLinks(container, data) {
+    if (!container) return;
+    const links = (data && data.store_links) || [];
+    container.innerHTML = `
+      <div style="grid-column:1/-1;padding:22px;border:1px solid rgba(148,163,184,.25);border-radius:16px;background:rgba(15,23,42,.55)">
+        <div style="font-weight:700;font-size:15px;margin-bottom:6px;color:#e2e8f0"><i class="fas fa-circle-info" style="color:#38bdf8"></i> Live prices not available</div>
+        <p style="margin:0 0 14px;color:#94a3b8;font-size:13px;line-height:1.6">${__emartEsc((data && data.message) || 'Live price comparison is unavailable right now.')}
+          <a href="/byok.html" style="color:#38bdf8;text-decoration:underline">Add a SerpAPI key</a></p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          ${links.map((l) => `<a href="${__emartEsc(l.url)}" target="_blank" rel="noopener noreferrer"
+               style="padding:9px 14px;border-radius:10px;border:1px solid ${__emartEsc(l.badge_color)}55;color:#f1f5f9;text-decoration:none;font-size:13px;font-weight:600;background:${__emartEsc(l.badge_color)}1a">
+               Search on ${__emartEsc(l.store)} <i class="fas fa-arrow-up-right-from-square" style="font-size:11px;opacity:.7"></i></a>`).join('')}
+        </div>
+      </div>`;
+  }
+</script>
 </body>
 
 </html>

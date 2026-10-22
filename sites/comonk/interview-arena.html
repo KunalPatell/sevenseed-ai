@@ -362,7 +362,7 @@ let currentKey = 'lru';
 function loadChallenge(key) {
   currentKey = key;
   document.querySelectorAll('.track-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  (function(){ var e = window.event, t = e && e.target ? (e.target.closest ? (e.target.closest('button,[onclick]') || e.target) : e.target) : document.querySelector('[onclick*="\'' + key + '\'"]'); if (t && t.classList) t.classList.add('active'); })();
 
   const c = CHALLENGES[key];
   document.getElementById('probTitle').innerText = c.title;

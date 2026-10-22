@@ -175,7 +175,7 @@ if (entCta) entCta.addEventListener('click', function(e){
 
 // Nav background on scroll
 var nav = document.querySelector('.nav');
-function onScroll(){ if (window.scrollY > 24) nav.classList.add('scrolled'); else nav.classList.remove('scrolled'); }
+function onScroll(){ if (!nav) return; if (window.scrollY > 24) nav.classList.add('scrolled'); else nav.classList.remove('scrolled'); }
 window.addEventListener('scroll', onScroll); onScroll();
 
 // Count-up animation for numeric stats/metrics
@@ -1524,52 +1524,7 @@ function toast(msg, type){
     renderer.setSize(nw, nh);
   });
 
-  var speedMultiplier = 1.0;
   var clock = new THREE.Clock();
-
-  // Expose enterprise 3D controls to window
-  window.sevenseed3dControls = {
-    setSpeed: function(mult) { speedMultiplier = mult; },
-    toggleWireframe: function() {
-      if (wireMesh) {
-        wireMesh.visible = !wireMesh.visible;
-        return wireMesh.visible;
-      }
-      return false;
-    },
-    pulse: function() {
-      velX = 0.16;
-      velY = -0.12;
-      camera.position.z = 6.4;
-      setTimeout(function(){ camera.position.z = 7.6; }, 600);
-    },
-    switchModel: function(mode) {
-      modelGroup.children.forEach(function(c){ c.visible = false; });
-      if (mode === 'core') {
-        if (coreMesh) coreMesh.visible = true;
-        if (wireMesh) wireMesh.visible = true;
-        rings.forEach(function(r){ r.mesh.visible = true; });
-        satellites.forEach(function(s){ s.mesh.visible = true; });
-      } else if (mode === 'neural') {
-        if (!window._neuralMesh) {
-          var knotGeom = new THREE.TorusKnotGeometry(1.1, 0.28, 128, 16, 2, 5);
-          window._neuralMesh = new THREE.Mesh(knotGeom, pbrPrimary);
-          modelGroup.add(window._neuralMesh);
-        }
-        window._neuralMesh.visible = true;
-        rings.forEach(function(r){ r.mesh.visible = true; });
-      } else if (mode === 'lattice') {
-        if (!window._latticeMesh) {
-          var octGeom = new THREE.OctahedronGeometry(1.4, 0);
-          window._latticeMesh = new THREE.Mesh(octGeom, pbrGold);
-          modelGroup.add(window._latticeMesh);
-        }
-        window._latticeMesh.visible = true;
-        satellites.forEach(function(s){ s.mesh.visible = true; });
-      }
-    }
-  };
-
   function animate(){
     requestAnimationFrame(animate);
     var delta = clock.getDelta();
@@ -1578,17 +1533,17 @@ function toast(msg, type){
     if (!isDragging) {
       velX *= friction;
       velY *= friction;
-      modelGroup.rotation.y += (velX + 0.004) * speedMultiplier;
-      modelGroup.rotation.x += velY * speedMultiplier;
+      modelGroup.rotation.y += velX + 0.004;
+      modelGroup.rotation.x += velY;
 
       rootGroup.rotation.y += (targetRotY - rootGroup.rotation.y) * 0.05;
       rootGroup.rotation.x += (targetRotX - rootGroup.rotation.x) * 0.05;
     }
 
-    rings.forEach(function(r){ r.mesh.rotation.z += r.speed * speedMultiplier; });
+    rings.forEach(function(r){ r.mesh.rotation.z += r.speed; });
 
     satellites.forEach(function(s){
-      s.angle += s.speed * speedMultiplier;
+      s.angle += s.speed;
       s.mesh.position.x = Math.cos(s.angle) * s.radius;
       s.mesh.position.y = Math.sin(s.angle) * s.radius * Math.sin(s.rx);
       s.mesh.position.z = Math.sin(s.angle) * s.radius * Math.cos(s.rx);
@@ -1596,7 +1551,7 @@ function toast(msg, type){
 
     customUpdaters.forEach(function(fn){ fn(time); });
 
-    pSystem.rotation.y = time * 0.018 * speedMultiplier;
+    pSystem.rotation.y = time * 0.018;
     pSystem.rotation.x = Math.sin(time * 0.012) * 0.04;
 
     renderer.render(scene, camera);

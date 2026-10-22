@@ -102,12 +102,25 @@
     .modal-overlay.open { display: flex; }
     .modal-box { background: #0b1329; border: 1px solid var(--border-color); border-radius: 20px; width: 90%; max-width: 580px; padding: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.8); }
   </style>
-  <link rel="stylesheet" href="ws-shell.css">
 </head>
 <body>
 
   <!-- Top Navigation -->
-<div id="ws-shell" data-ws="coding-agent"></div>
+  <nav class="top-nav">
+    <a href="index.html" class="nav-brand">
+      <i class="fa-solid fa-seedling"></i>
+      Sevenseed <span>Workstation 13</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Hub</a>
+      <a href="socialhub-studio.html"><i class="fa-solid fa-share-nodes"></i> SocialHub</a>
+      <a href="outreach-sequence-studio.html"><i class="fa-solid fa-paper-plane"></i> Outreach</a>
+      <a href="testable-qa-studio.html"><i class="fa-solid fa-vial"></i> QA Lab</a>
+      <a href="coding-agent-studio.html" class="active"><i class="fa-solid fa-terminal"></i> Coding Agent</a>
+      <a href="karting-telemetry.html"><i class="fa-solid fa-flag-checkered"></i> Karting Telemetry</a>
+      <a href="index.html" style="margin-left: 12px; color: #cbd5e1; border: 1px solid #334155; padding: 5px 12px; border-radius: 6px;">&larr; Back to Main Hub</a>
+    </div>
+  </nav>
 
   <div class="hub-container">
     <!-- HUD Header -->
@@ -445,17 +458,12 @@ if __name__ == "__main__":
       const statusEl = document.getElementById('consoleStatus');
 
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Executing in Sandbox...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Running in your browser...';
       statusEl.innerText = 'RUNNING';
       statusEl.style.color = 'var(--accent-amber)';
 
       try {
-        const res = await fetch('/api/power/coding-agent/run-code', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ language: currentLang, code })
-        });
-        const data = await res.json();
+        const data = await runInBrowser(currentLang, code);
 
         if (data.exit_code === 0) {
           statusEl.innerText = `PASSED (Exit 0 • ${data.duration_ms} ms)`;
@@ -547,6 +555,73 @@ if __name__ == "__main__":
     // Initialize
     loadExecutions();
   </script>
-<script src="ws-shell.js"></script>
+
+  <!-- In-browser code runners: user code never touches the server. -->
+  <script type="text/js-worker" id="pyWorkerSrc">
+    importScripts('https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js');
+    const ready = loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.2/full/' });
+    ready.then(() => self.postMessage({ ready: true }), (e) => self.postMessage({ loadError: String(e) }));
+    self.onmessage = async (e) => {
+      const py = await ready;
+      let out = '', err = '', code = 0;
+      py.setStdout({ batched: (s) => { out += s + '\n'; } });
+      py.setStderr({ batched: (s) => { err += s + '\n'; } });
+      try {
+        await py.loadPackagesFromImports(e.data.code);
+        await py.runPythonAsync(e.data.code);
+      } catch (x) { err += String((x && x.message) || x); code = 1; }
+      self.postMessage({ stdout: out, stderr: err, exit_code: code });
+    };
+  </script>
+  <script type="text/js-worker" id="jsWorkerSrc">
+    self.onmessage = (e) => {
+      const out = [];
+      const fmt = (a) => a.map((x) => (typeof x === 'object' ? JSON.stringify(x, null, 2) : String(x))).join(' ');
+      console.log = console.info = (...a) => out.push(fmt(a));
+      console.warn = console.error = (...a) => out.push(fmt(a));
+      const done = (stderr, code) => self.postMessage({ stdout: out.join('\n'), stderr, exit_code: code });
+      try {
+        Promise.resolve((0, eval)(e.data.code)).then(() => done('', 0), (x) => done(String((x && x.stack) || x), 1));
+      } catch (x) { done(String((x && x.stack) || x), 1); }
+    };
+  </script>
+  <script id="browser-runner-js">
+    let __pyWorker = null, __pyReady = null;
+    function __workerFrom(id) {
+      const src = document.getElementById(id).textContent;
+      return new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
+    }
+    function __getPyWorker() {
+      if (!__pyWorker) {
+        __pyWorker = __workerFrom('pyWorkerSrc');
+        __pyReady = new Promise((resolve, reject) => {
+          __pyWorker.onmessage = (e) => (e.data.ready ? resolve() : reject(new Error(e.data.loadError || 'Pyodide failed to load')));
+        });
+      }
+      return __pyReady.then(() => __pyWorker);
+    }
+    // Same response shape the old server endpoint returned, so the UI code is unchanged.
+    async function runInBrowser(lang, code, timeoutMs = 10000) {
+      const isPy = lang === 'python';
+      const statusEl = document.getElementById('consoleStatus');
+      if (isPy && !__pyWorker && statusEl) statusEl.innerText = 'LOADING PYTHON RUNTIME (first run only)...';
+      const worker = isPy ? await __getPyWorker() : __workerFrom('jsWorkerSrc');
+      if (statusEl) statusEl.innerText = 'RUNNING';
+      const t0 = performance.now();
+      return new Promise((resolve) => {
+        const timer = setTimeout(() => {
+          worker.terminate();
+          if (isPy) { __pyWorker = null; __pyReady = null; }
+          resolve({ exit_code: 124, duration_ms: timeoutMs, stdout: '', stderr: 'Execution timed out (' + timeoutMs / 1000 + 's limit). Runtime terminated.' });
+        }, timeoutMs);
+        worker.onmessage = (e) => {
+          clearTimeout(timer);
+          if (!isPy) worker.terminate();
+          resolve({ ...e.data, duration_ms: Math.round(performance.now() - t0) });
+        };
+        worker.postMessage({ code });
+      });
+    }
+  </script>
 </body>
 </html>

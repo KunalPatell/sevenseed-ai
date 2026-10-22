@@ -127,7 +127,7 @@ class EnhancedEcomComparator:
                     return r
             except Exception:
                 pass
-        return 4.3  # Fair baseline average if unstated
+        return 0.0  # Unknown: never invent a rating
 
     def _extract_reviews(self, product: Dict[str, Any]) -> int:
         """Extracts customer review count."""
@@ -144,7 +144,7 @@ class EnhancedEcomComparator:
                 return int(match.group(1).replace(",", ""))
             except Exception:
                 pass
-        return 150
+        return 0  # Unknown: never invent a review count
 
     def fetch_live_serp(self, query: str, site_domain: str, num_results: int = 3) -> List[Dict[str, Any]]:
         """Live SerpAPI fetch for a specific domain."""
@@ -282,7 +282,7 @@ class EnhancedEcomComparator:
                             "name": title,
                             "site": meta["name"],
                             "price": price,
-                            "mrp": round(price * 1.20, -1),
+                            "mrp": price,  # MRP not present in search snippets; don't invent a discount
                             "rating": self._extract_rating(item),
                             "reviews": self._extract_reviews(item),
                             "link": item.get("link", f"https://{domain}"),
@@ -291,7 +291,17 @@ class EnhancedEcomComparator:
                         })
 
         if not raw_items:
-            raw_items = self._generate_synthetic_variations(query)
+            # Never fabricate quotes. Return an honest empty result the UI can render as store links.
+            return {
+                "status": "no_live_data",
+                "data_mode": "no_results" if api_key else "links_only",
+                "query": query,
+                "total_stores_compared": 0,
+                "all_results": [],
+                "message": ("No live listings found for this query." if api_key else
+                            "Live prices need a SerpAPI key (free tier available). Add it on the BYOK page."),
+                "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+            }
 
         # ── Scoring & Normalization ───────────────────────────────────────────
         prices = [p["price"] for p in raw_items if p["price"] > 0]

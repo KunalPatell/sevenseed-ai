@@ -427,16 +427,18 @@ def diagnose_defect_image(image_path: str, demo: bool = False) -> dict:
     except Exception as e:
         print(f"[YOLO Inference Error] {e}")
 
+    # No filename-guessing fallback: a scan that found nothing must say so, not
+    # invent "wall + tile damage" for an arbitrary photo.
     if not detected:
-        fname = os.path.basename(image_path).lower()
-        if "wall" in fname: detected = ["wall_damage"]
-        elif "tile" in fname: detected = ["tile_damage"]
-        elif "switch" in fname: detected = ["switch_damage"]
-        elif "pipe" in fname: detected = ["pipe_damage"]
-        elif "glass" in fname: detected = ["broken_glass"]
-        elif "wood" in fname: detected = ["wooden_damage"]
+        if has_yolo:
+            msg = ("### ✅ No defects detected\n\nThe YOLO damage model scanned this photo and found no "
+                   "defects above the confidence threshold. For best results, upload a close, well-lit "
+                   "photo of the affected surface.")
         else:
-            detected = ["wall_damage", "tile_damage"]
+            msg = ("### ⚠️ Vision model unavailable\n\nThe defect-detection model could not be loaded on "
+                   "this server, so no scan was performed. Please try again later.")
+        return {"success": True, "yolo_active": has_yolo, "detected_classes": [], "results": [],
+                "cost_range": "₹0 – ₹0", "guidance": msg, "provider": active_provider()}
 
     detected = list(set(detected))
     

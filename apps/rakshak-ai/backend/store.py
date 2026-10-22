@@ -55,7 +55,7 @@ def _build_timeline(created, status):
     for i in range(idx + 1):
         s = STATUS_FLOW[i]
         timeline.append({"time": _fmt(t), "status": s, "note": notes[s]})
-        t = t + datetime.timedelta(hours=random.randint(2, 20))
+        t = t + datetime.timedelta(hours=6)  # deterministic 6-hour step per status
     return timeline
 
 # --- SQLite Database Initialization ---
@@ -188,10 +188,11 @@ def _seed_db():
     base = datetime.datetime.now()
     for i, s in enumerate(seeds):
         cid, ctype, summary, crime, loc, time, name, phone, risk, status = s
-        created = base - datetime.timedelta(days=random.randint(0, 3), hours=random.randint(1, 12))
+        summary = "[Sample case] " + summary  # demo records, never real citizens
+        created = base - datetime.timedelta(days=i % 4, hours=2 + i * 3)
         email = f"{name.lower().replace(' ', '')}@example.com" if name != "Anonymous" else "Not provided"
         priority = PRIORITY_BY_RISK.get(risk, "P3 · Normal")
-        officer = random.choice(OFFICERS) if status != "Registered" else "Pending assignment"
+        officer = OFFICERS[i % len(OFFICERS)] if status != "Registered" else "Pending assignment"
         created_at_str = _fmt(created)
         
         timeline = _build_timeline(created, status)
@@ -218,30 +219,10 @@ def _seed_db():
         conn.close()
 
 def _seed_telemetry():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM telemetry")
-    count = cursor.fetchone()[0]
-    
-    if count == 0:
-        providers = ["Groq (Llama 3.3)", "Mistral", "OpenAI (GPT-4o)", "Offline Fallback"]
-        actions = ["Chatbot Reply", "FIR Generation", "Cybercrime Analysis", "Legal RAG Search", "Agent Investigator"]
-        base_time = datetime.datetime.now()
-        for i in range(12):
-            prov = random.choice(providers)
-            act = random.choice(actions)
-            dur = random.randint(50, 250) if prov == "Offline Fallback" else random.randint(600, 1800)
-            status = "SUCCESS" if random.random() > 0.05 else "FAILED"
-            itok = random.randint(150, 600) if prov != "Offline Fallback" else 0
-            otok = random.randint(100, 450) if prov != "Offline Fallback" else 0
-            cost = (itok * 0.00015 + otok * 0.0006) / 1000 if prov == "OpenAI (GPT-4o)" else (itok * 0.00005 + otok * 0.0001) / 1000 if prov != "Offline Fallback" else 0.0
-            log_time = (base_time - datetime.timedelta(minutes=i*12 + random.randint(1, 10))).strftime("%Y-%m-%d %H:%M:%S")
-            cursor.execute("""
-                INSERT INTO telemetry (time, action, provider, duration_ms, input_tokens, output_tokens, status, cost)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """, (log_time, act, prov, dur, itok, otok, status, cost))
-        conn.commit()
-    conn.close()
+    """No-op: telemetry table starts empty and is populated only by real LLM calls."""
+    # Previously seeded 12 synthetic rows with random providers/durations/tokens;
+    # removed to avoid presenting fabricated call history on the dashboard.
+    pass
 
 
 
@@ -665,7 +646,7 @@ def verify_audit_trail():
 # Initialize schema and seed data
 init_db()
 _seed_db()
-_seed_telemetry()
+# Telemetry is no longer seeded with random rows: the dashboard shows only real calls.
 
 
 

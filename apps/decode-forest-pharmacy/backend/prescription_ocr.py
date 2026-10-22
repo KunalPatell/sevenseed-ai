@@ -46,17 +46,16 @@ def parse_prescription_image(image_path: str) -> dict:
             
     raw_text = "\n".join(text_lines) if text_lines else ""
     
-    # If OCR returns nothing (or disabled), use a mock prescription text based on standard doctors' notes
+    # If OCR returns nothing, say so. A made-up prescription here would show a
+    # patient medicines they were never prescribed.
     if not raw_text:
-        raw_text = (
-            "Dr. Kunal Patel, MD\n"
-            "Patient: Ramesh Solanki (Age 45)\n"
-            "Date: 16 July 2026\n"
-            "Rx:\n"
-            "1. Tab. Paracetamol 500mg - 1-0-1 after food\n"
-            "2. Cap. Ibuprofen 400mg - 0-0-1 when needed"
-        )
-        print("[OCR] Empty raw text, fell back to default prescription template.")
+        return {
+            "patient": "Unknown",
+            "drugs": [],
+            "ocr_status": "no_text" if HAS_EASYOCR else "ocr_unavailable",
+            "message": ("No readable text was found. Try a sharper, well-lit photo of the prescription."
+                        if HAS_EASYOCR else "Prescription OCR is not installed on this server. Type the medicine names instead."),
+        }
         
     # Use LLM to structure the prescription
     from agents import _llm_text
@@ -95,12 +94,12 @@ def parse_prescription_image(image_path: str) -> dict:
             if not any(d["name"] == name for d in drugs):
                 drugs.append({"name": name})
                 
-    if not drugs:
-        drugs = [{"name": "Paracetamol"}, {"name": "Ibuprofen"}]
-        
     return {
         "patient": patient,
-        "drugs": drugs
+        "drugs": drugs,
+        "ocr_status": "ok" if drugs else "no_known_drugs",
+        "raw_text": raw_text[:1000],
+        **({} if drugs else {"message": "Text was read, but no medicine names were recognised. Please check and type them in."}),
     }
 
 def check_interactions(drugs: list[dict]) -> dict:

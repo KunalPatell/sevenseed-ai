@@ -141,6 +141,12 @@ def test_growth_flywheel_simulation():
 def test_api_endpoints_education_and_growth():
     from fastapi import FastAPI
     from fastapi.testclient import TestClient
+
+    backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../apps/sevenseed/backend"))
+    if backend_dir in sys.path:
+        sys.path.remove(backend_dir)
+    sys.path.insert(0, backend_dir)
+    sys.modules.pop("features", None)
     import features
 
     app = FastAPI()

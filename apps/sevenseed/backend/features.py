@@ -72,37 +72,71 @@ def _c():
 def _init():
     try:
         with _c() as c:
-            c.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT, name TEXT, email TEXT UNIQUE, pw_hash TEXT, pw_salt TEXT)")
+            # `users` is owned by auth/ (SQLAlchemy) — see _signup below.
             c.execute("CREATE TABLE IF NOT EXISTS reminders (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT, email TEXT, title TEXT, remind_at TEXT)")
             c.execute("CREATE TABLE IF NOT EXISTS ideas (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT, email TEXT, title TEXT, sector TEXT, notes TEXT)")
     except Exception as e: print(f"[features] init {e}")
 def _hash(pw, salt=None):
     salt = salt or secrets.token_hex(16)
     return hashlib.pbkdf2_hmac("sha256", pw.encode(), bytes.fromhex(salt), 200000).hex(), salt
+
+# Auth: a single source of truth. This module once kept its own users table
+# (pw_hash/pw_salt) inside the same SQLite file that auth/ (SQLAlchemy) owns
+# with a different schema, so signup always crashed and its tokens never
+# verified. These helpers now delegate to auth/ and issue the same JWTs.
+def _auth_payload(user, workspace=None):
+    from auth.security import create_access_token
+    token = create_access_token({"sub": user.id, "workspace_id": workspace.id if workspace else None, "email": user.email})
+    return {"token": token, "access_token": token, "token_type": "bearer",
+            "user": {"id": user.id, "name": user.full_name or "Founder", "email": user.email}}
+
 def _signup(name, email, pw):
     email = (email or "").strip().lower()
     if "@" not in email: return {"error": "Enter a valid email."}
     if len(pw or "") < 6: return {"error": "Password must be 6+ characters."}
-    h, s = _hash(pw)
+    from fastapi import HTTPException as _HE
+    from db.db import SessionLocal
+    from auth.auth_router import register, UserRegisterRequest
+    from db.models import User, Workspace
+    s = SessionLocal()
     try:
-        with _c() as c:
-            uid = c.execute("INSERT INTO users (created_at,name,email,pw_hash,pw_salt) VALUES (?,?,?,?,?)",
-                            (datetime.datetime.utcnow().isoformat(), (name or "Founder").strip(), email, h, s)).lastrowid
-    except sqlite3.IntegrityError: return {"error": "Account already exists. Please log in."}
-    return {"token": _SER.dumps({"uid": uid}), "user": {"id": uid, "name": (name or "Founder").strip(), "email": email}}
+        register(UserRegisterRequest(email=email, password=pw, full_name=(name or "Founder").strip()), s)
+        user = s.query(User).filter(User.email == email).first()
+        ws = s.query(Workspace).filter(Workspace.owner_id == user.id).first()
+        return _auth_payload(user, ws)
+    except _HE as e:
+        return {"error": "Account already exists. Please log in." if e.status_code == 400 else str(e.detail)}
+    finally:
+        s.close()
+
 def _login(email, pw):
     email = (email or "").strip().lower()
-    with _c() as c: r = c.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
-    if not r: return {"error": "No account with this email."}
-    h, _ = _hash(pw, r["pw_salt"])
-    if not hmac.compare_digest(h, r["pw_hash"]): return {"error": "Incorrect password."}
-    return {"token": _SER.dumps({"uid": r["id"]}), "user": {"id": r["id"], "name": r["name"], "email": email}}
+    from db.db import SessionLocal
+    from db.models import User, Workspace
+    from auth.security import verify_password
+    s = SessionLocal()
+    try:
+        user = s.query(User).filter(User.email == email).first()
+        if not user: return {"error": "No account with this email."}
+        if not verify_password(pw or "", user.password_hash): return {"error": "Incorrect password."}
+        return _auth_payload(user, s.query(Workspace).filter(Workspace.owner_id == user.id).first())
+    finally:
+        s.close()
+
 def _verify(tok):
     if not tok: return None
-    try: d = _SER.loads(tok, max_age=_MAXAGE)
-    except Exception: return None
-    with _c() as c: r = c.execute("SELECT id,name,email FROM users WHERE id=?", (d.get("uid"),)).fetchone()
-    return dict(r) if r else None
+    from auth.security import decode_access_token
+    payload = decode_access_token(tok)
+    if not payload or "sub" not in payload: return None
+    from db.db import SessionLocal
+    from db.models import User
+    s = SessionLocal()
+    try:
+        u = s.query(User).filter(User.id == payload["sub"], User.is_active == True).first()  # noqa: E712
+        return {"id": u.id, "name": u.full_name, "email": u.email} if u else None
+    finally:
+        s.close()
+
 
 def _overview():
     with _c() as c:
@@ -1962,20 +1996,9 @@ def rakshak_pii_redact(req: PiiRedactReq):
 
 # ── AVP E-Mart: Live E-Commerce & Q-Commerce Arbitrage Engine ────────────────
 
-class EmartCompareReq(BaseModel):
-    query: str = "iPhone 16"
-    serpapi_key: Optional[str] = None
-
-
-@router.post("/api/emart/compare")
-def emart_compare_products(req: EmartCompareReq):
-    """
-    Compares live product prices across Amazon, Flipkart, Reliance Digital, Snapdeal,
-    Blinkit, and Zepto with fake discount detection and composite value scoring.
-    """
-    if _emart_engine:
-        return _emart_engine.compare_ecommerce_products(req.query, req.serpapi_key)
-    return {"status": "unavailable", "message": "E-Mart engine offline"}
+# NOTE: /api/emart/compare is served by frontier_ventures.py (live Google Shopping
+# listings via price_engine). The old duplicate here was registered first and
+# shadowed it with invented quotes, so it was removed.
 
 
 @router.get("/api/emart/trending")
@@ -1985,7 +2008,9 @@ def emart_trending_deals():
         return {
             "trending_queries": ["iPhone 16", "MacBook Air M3", "Samsung S24 Ultra", "Sony WH-1000XM5"],
             "categories": ["Smartphones", "Laptops", "Audio", "Q-Commerce Groceries"],
-            "featured_deals": _emart_engine.REFERENCE_CATALOG.get("iphone 16", [])[:3]
+            "featured_deals": _emart_engine.REFERENCE_CATALOG.get("iphone 16", [])[:3],
+            "data_mode": "reference_sample",
+            "note": "Featured deals are a static reference snapshot, not live prices. Search to get live listings.",
         }
     return {"trending_queries": []}
 

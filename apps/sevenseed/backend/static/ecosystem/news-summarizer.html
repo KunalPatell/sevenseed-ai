@@ -55,12 +55,12 @@
 <body class="site-body">
   <nav class="nav">
     <div class="nav-inner">
-      <a href="../sevenseed/index.html" class="nav-brand">
+      <a href="/" class="nav-brand">
         <span class="nav-brand-icon">🌐</span>
         <span class="nav-brand-text">Ecosystem<span class="brand-accent">Intel</span></span>
       </a>
       <div class="nav-links">
-        <a href="../sevenseed/index.html" class="nav-link">Studio Hub</a>
+        <a href="/" class="nav-link">Sevenseed Hub</a>
         <a href="news-summarizer.html" class="nav-link active">AI News Intel</a>
         <a href="../comonk/resume-analyzer.html" class="nav-link">Resume Scorer</a>
         <a href="../sevenseed/pitch-deck.html" class="nav-link">Pitch Deck AI</a>
@@ -176,7 +176,7 @@
       document.getElementById('newsHeadline').value = d.title;
       document.getElementById('newsContent').value = d.text;
       document.querySelectorAll('.n-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      (function(){ var e = window.event, t = e && e.target ? (e.target.closest ? (e.target.closest('button,[onclick]') || e.target) : e.target) : null; if (t && t.classList) t.classList.add('active'); })();
     }
 
     async function generateSummary() {

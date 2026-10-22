@@ -95,10 +95,20 @@ def create_checkout_session(
         raise HTTPException(status_code=400, detail="Unsupported payment provider")
 
 
+async def _json_body(request: Request) -> dict:
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid JSON payload")
+    if not isinstance(data, dict):
+        raise HTTPException(status_code=400, detail="Webhook payload must be a JSON object")
+    return data
+
+
 @router.post("/webhook/stripe")
 async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
     """Handle Stripe webhook events (checkout.session.completed, etc.)."""
-    payload = await request.json()
+    payload = await _json_body(request)
     event_type = payload.get("type", "")
     data_obj = payload.get("data", {}).get("object", {})
     
@@ -139,7 +149,7 @@ async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
 @router.post("/webhook/razorpay")
 async def razorpay_webhook(request: Request, db: Session = Depends(get_db)):
     """Handle Razorpay webhook events (subscription.charged, etc.)."""
-    payload = await request.json()
+    payload = await _json_body(request)
     event_type = payload.get("event", "")
     payload_data = payload.get("payload", {})
     

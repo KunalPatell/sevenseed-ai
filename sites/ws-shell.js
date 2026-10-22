@@ -24,6 +24,12 @@
 
   var WORKSTATIONS = [
     // ── Build & Engineering ────────────────────────────────────────────────
+    { slug: 'agentic-ai', cat: 'build', href: 'agentic-ai-studio.html', icon: 'fa-robot',
+      title: 'Agentic AI Studio', source: 'AgenticOS · LangGraph', badge: 'AI Core',
+      desc: 'Stateful multi-agent DAG workflow canvas with live execution trace.' },
+    { slug: 'prd-architect', cat: 'build', href: 'prd-architect.html', icon: 'fa-file-code',
+      title: 'PRD Architect', source: 'prd-architect', badge: 'New',
+      desc: 'AI-assisted product requirements document generator with edge cases & API spec.' },
     { slug: 'architecture', cat: 'build', href: 'architecture-studio.html', icon: 'fa-sitemap',
       title: 'Architecture Studio', source: 'ba-document-with-ui',
       desc: 'Layered system architecture, directory trees and interactive wireframes.' },
@@ -38,6 +44,9 @@
       desc: 'Forward-kinematics bone rigging with Spine JSON export.' },
 
     // ── Growth & Outreach ─────────────────────────────────────────────────
+    { slug: 'market-sizing', cat: 'growth', href: 'market-sizing.html', icon: 'fa-chart-pie',
+      title: 'Market Sizing Studio', source: 'market-sizing', badge: 'Live',
+      desc: 'TAM, SAM, SOM calculations and Indian market sector projections.' },
     { slug: 'email-cleaner', cat: 'growth', href: 'email-cleaner.html', icon: 'fa-envelope-circle-check',
       title: 'Email Cleaner', source: 'Email-Existence-Validator',
       desc: 'Syntax, DNS MX, disposable-domain and SMTP checks for email lists.' },
@@ -53,12 +62,17 @@
     { slug: 'whatsway', cat: 'growth', href: 'whatsapp-crm-studio.html', icon: 'fa-comments',
       title: 'WhatsWay CRM', source: 'whatsway',
       desc: 'Shared WhatsApp inbox, journey flows and broadcast campaigns.' },
-
     { slug: 'price-comparator', cat: 'growth', href: 'price-comparator.html', icon: 'fa-cart-shopping',
       title: 'Price Comparator', source: 'price-com · bestseller-analytics',
       desc: 'Multi-store e-commerce price comparison, arbitrage savings and bestseller velocity.' },
 
     // ── Operations & People ───────────────────────────────────────────────
+    { slug: 'startup-runway', cat: 'ops', href: 'startup-runway.html', icon: 'fa-calculator',
+      title: 'Startup Runway & Burn', source: 'startup-runway', badge: 'New',
+      desc: 'Cash runway modeling, burn rate simulation and hiring trajectory plans.' },
+    { slug: 'syndicate-ruv', cat: 'ops', href: 'syndicate-ruv.html', icon: 'fa-coins',
+      title: 'Syndicate RUV', source: 'syndicate-ruv', badge: 'Live',
+      desc: 'Angel syndicate cap table and roll-up vehicle allocation modeler.' },
     { slug: 'operations', cat: 'ops', href: 'operations-intelligence.html', icon: 'fa-database',
       title: 'Operations Intelligence', source: 'ZohoAgent',
       desc: 'Plain-English questions over project and timesheet data.' },
@@ -169,10 +183,29 @@
     function setOpen(open) {
       menu.hidden = !open;
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) {
+        var first = menu.querySelector('.ws-menu-item');
+        if (first) first.focus();
+      }
     }
     btn.addEventListener('click', function (e) { e.stopPropagation(); setOpen(menu.hidden); });
     document.addEventListener('click', function (e) { if (!menu.hidden && !menu.contains(e.target)) setOpen(false); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+      if (!menu.hidden && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+        var items = Array.prototype.slice.call(menu.querySelectorAll('.ws-menu-item'));
+        if (!items.length) return;
+        e.preventDefault();
+        var curIdx = items.indexOf(document.activeElement);
+        if (e.key === 'ArrowDown') {
+          var nextIdx = (curIdx + 1) % items.length;
+          items[nextIdx].focus();
+        } else {
+          var prevIdx = (curIdx - 1 + items.length) % items.length;
+          items[prevIdx].focus();
+        }
+      }
+    });
   }
 
   // ── Directory (workstations.html + hub section) ─────────────────────────
@@ -182,7 +215,8 @@
     if (!compact) {
       html += '<div class="ws-dir-toolbar">' +
         '<div class="ws-search"><i class="fas fa-magnifying-glass"></i>' +
-        '<input id="wsSearch" type="search" placeholder="Search workstations or source repos…" aria-label="Search workstations"></div>' +
+        '<input id="wsSearch" type="search" placeholder="Search workstations or source repos…" aria-label="Search workstations">' +
+        '<span class="ws-search-hint"><kbd>/</kbd></span></div>' +
         '<div class="ws-filters" role="tablist">' +
           '<button class="ws-filter is-active" data-cat="all" type="button">All <span>' + WORKSTATIONS.length + '</span></button>' +
           CATEGORIES.map(function (c) {
@@ -193,11 +227,12 @@
     }
     html += CATEGORIES.map(function (c) {
       var cards = byCat(c.id).map(function (w) {
+        var badgeHtml = w.badge ? '<span class="ws-badge ws-badge-' + (w.badge.toLowerCase().indexOf('new') !== -1 ? 'new' : (w.badge.toLowerCase().indexOf('live') !== -1 ? 'live' : 'beta')) + '">' + esc(w.badge) + '</span>' : '';
         return '<a class="ws-card" href="' + link(w.href) + '" data-cat="' + c.id + '" ' +
                'data-search="' + esc((w.title + ' ' + w.desc + ' ' + w.source + ' ' + c.label).toLowerCase()) + '" ' +
                'style="--ws-accent:' + c.color + '">' +
                '<div class="ws-card-top"><span class="ws-card-icon"><i class="fas ' + w.icon + '"></i></span>' +
-               '<code class="ws-card-src">' + esc(w.source) + '</code></div>' +
+               '<div style="display:flex;align-items:center;gap:6px;"><code class="ws-card-src">' + esc(w.source) + '</code>' + badgeHtml + '</div></div>' +
                '<h3>' + esc(w.title) + '</h3><p>' + esc(w.desc) + '</p>' +
                '<span class="ws-card-cta">Open <i class="fas fa-arrow-right"></i></span></a>';
       }).join('');
@@ -211,15 +246,32 @@
     if (compact) return;
     var activeCat = 'all';
     var input = el.querySelector('#wsSearch');
+    var selectedIndex = -1;
+
+    function getVisibleCards() {
+      return Array.prototype.slice.call(el.querySelectorAll('.ws-card:not([hidden])'));
+    }
+    function updateSelection(cards) {
+      cards.forEach(function (c, i) {
+        if (i === selectedIndex) c.classList.add('is-selected');
+        else c.classList.remove('is-selected');
+      });
+      if (selectedIndex >= 0 && cards[selectedIndex]) {
+        cards[selectedIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }
+
     function apply() {
       var q = (input.value || '').trim().toLowerCase();
       var shown = 0;
+      selectedIndex = -1;
       el.querySelectorAll('.ws-group').forEach(function (g) {
         var groupShown = 0;
         g.querySelectorAll('.ws-card').forEach(function (card) {
           var ok = (activeCat === 'all' || card.getAttribute('data-cat') === activeCat) &&
                    (!q || card.getAttribute('data-search').indexOf(q) !== -1);
           card.hidden = !ok;
+          card.classList.remove('is-selected');
           if (ok) groupShown++;
         });
         g.hidden = groupShown === 0;
@@ -228,6 +280,44 @@
       el.querySelector('.ws-empty').hidden = shown !== 0;
     }
     input.addEventListener('input', apply);
+
+    input.addEventListener('keydown', function (e) {
+      var cards = getVisibleCards();
+      if (!cards.length) return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndex = (selectedIndex + 1) % cards.length;
+        updateSelection(cards);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndex = (selectedIndex - 1 + cards.length) % cards.length;
+        updateSelection(cards);
+      } else if (e.key === 'Enter') {
+        if (selectedIndex >= 0 && cards[selectedIndex]) {
+          e.preventDefault();
+          location.href = cards[selectedIndex].href;
+        } else if (cards.length > 0) {
+          e.preventDefault();
+          location.href = cards[0].href;
+        }
+      } else if (e.key === 'Escape') {
+        input.value = '';
+        selectedIndex = -1;
+        apply();
+        input.blur();
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if ((e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) &&
+          document.activeElement.tagName !== 'INPUT' &&
+          document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        input.focus();
+        input.select();
+      }
+    });
+
     el.querySelectorAll('.ws-filter').forEach(function (b) {
       b.addEventListener('click', function () {
         el.querySelectorAll('.ws-filter').forEach(function (x) { x.classList.remove('is-active'); });

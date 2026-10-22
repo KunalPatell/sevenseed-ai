@@ -4,9 +4,11 @@ Sevenseed — Combined backend (RAG + Agents + FastAPI) with SQLite persistence.
 Serves Next.js static site and AI venture ideation + founder counseling APIs.
 """
 from __future__ import annotations
-import os, sys, math, re, uuid
+import os, sys, math, re, uuid, time, platform
 from typing import List, Dict, Any
 import operator
+
+_SERVER_START_TIME = time.time()
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path: 
@@ -156,19 +158,19 @@ def _get_llm(t=0.5, demo=False):
             from langchain_groq import ChatGroq
             model = os.environ.get("GROQ_DEMO_MODEL","llama-3.1-8b-instant") if demo else os.environ.get("GROQ_MODEL","llama-3.3-70b-versatile")
             kwargs = {"max_tokens": 380} if demo else {}
-            return ChatGroq(api_key=os.environ["GROQ_API_KEY"],model=model,temperature=t,**kwargs)
+            return ChatGroq(api_key=os.environ["GROQ_API_KEY"],model=model,temperature=t,timeout=10,**kwargs)
         except: pass
     if os.environ.get("GEMINI_API_KEY","").strip():
         try:
             from langchain_google_genai import ChatGoogleGenerativeAI
             kwargs = {"max_output_tokens": 380} if demo else {}
-            return ChatGoogleGenerativeAI(google_api_key=os.environ["GEMINI_API_KEY"],model="gemini-1.5-flash",temperature=t,**kwargs)
+            return ChatGoogleGenerativeAI(google_api_key=os.environ["GEMINI_API_KEY"],model="gemini-1.5-flash",temperature=t,timeout=10,**kwargs)
         except: pass
     if os.environ.get("OPENAI_API_KEY","").strip():
         try:
             from langchain_openai import ChatOpenAI
             kwargs = {"max_tokens": 380} if demo else {}
-            return ChatOpenAI(api_key=os.environ["OPENAI_API_KEY"],model="gpt-4o-mini",temperature=t,**kwargs)
+            return ChatOpenAI(api_key=os.environ["OPENAI_API_KEY"],model="gpt-4o-mini",temperature=t,timeout=10,**kwargs)
         except: pass
     return None
 
@@ -245,10 +247,14 @@ def ideate_venture_demo(domain: str, problem: str) -> dict:
     return {"idea": ans, "provider": active_provider()}
 
 def portfolio_analysis():
-    ans=_llm(
-        "You are a venture studio analyst. Provide a structured portfolio overview.",
-        f"Analyze this portfolio of AI ventures: {[{'name':v['name'],'sector':v['sector'],'stage':v['stage'],'description':v['description']} for v in VENTURES]}"
-    )
+    ans = None
+    try:
+        ans = _llm(
+            "You are a venture studio analyst. Provide a structured portfolio overview.",
+            f"Analyze this portfolio of AI ventures: {[{'name':v['name'],'sector':v['sector'],'stage':v['stage'],'description':v['description']} for v in VENTURES]}"
+        )
+    except Exception as e:
+        log.warning(f"[portfolio] LLM call error: {e}")
     if not ans:
         lines=[f"**{v['name']}** ({v['sector']}) — {v['stage']}\n{v['description']}" for v in VENTURES]
         ans = "**Sevenseed Portfolio:**\n\n"+"\n\n".join(lines)
@@ -274,6 +280,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Never serve source, scripts, databases or env files out of the static mounts.
+# Test scripts and a PowerShell helper once lived in static/ and were publicly
+# downloadable; this keeps that class of leak from recurring.
+_BLOCKED_SUFFIXES = (".py", ".pyc", ".ps1", ".sh", ".bat", ".env", ".sqlite3", ".db", ".log", ".ini", ".toml")
+
+@app.middleware("http")
+async def _block_source_files(request: Request, call_next):
+    path = request.url.path.lower()
+    if "/api/" not in path and (path.endswith(_BLOCKED_SUFFIXES) or "__pycache__" in path or "/." in path):
+        return JSONResponse({"detail": "Not Found"}, status_code=404)
+    return await call_next(request)
+
+from fastapi.exceptions import RequestValidationError as _RVE
+
+@app.exception_handler(_RVE)
+async def _safe_validation_handler(_request: Request, exc: _RVE):
+    # The stock handler echoes the raw body back and 500s when it is binary
+    # (e.g. a multipart image posted to a JSON endpoint). Strip undecodable input.
+    errs = []
+    for e in exc.errors():
+        e = dict(e)
+        if isinstance(e.get("input"), (bytes, bytearray)):
+            e["input"] = "<binary body omitted>"
+        e.pop("ctx", None)
+        errs.append(e)
+    return JSONResponse({"detail": errs}, status_code=422)
+
 # Initialize SQLite & PostgreSQL SaaS database
 db.init()
 init_db()
@@ -298,7 +331,7 @@ class IdeateDemoReq(BaseModel):
 class ContactReq(BaseModel):
     name:str
     email:str
-    subject:str
+    subject:str = "General Inquiry"
     message:str
     website:str=""  # honeypot — hidden field, real users never fill it
 
@@ -323,6 +356,26 @@ def health():
         "rag_backend":backend_name(),
         "counts":counts(),
         "llm_enabled":active_provider()!="offline"
+    }
+
+@app.get("/api/status")
+def system_status():
+    uptime_seconds = round(time.time() - _SERVER_START_TIME, 1)
+    return {
+        "status": "healthy",
+        "app": "Sevenseed AI Venture Studio Hub",
+        "version": "2.2.0",
+        "uptime_seconds": uptime_seconds,
+        "platform": platform.platform(),
+        "python_version": platform.python_version(),
+        "provider": active_provider(),
+        "rag_backend": backend_name(),
+        "counts": counts(),
+        "llm_enabled": active_provider() != "offline",
+        "ventures_count": len(VENTURES),
+        "ideas_count": len(VENTURE_IDEAS),
+        "db_mode": "sqlite",
+        "workstations_count": 14
     }
 
 @app.get("/api/ventures")
@@ -376,7 +429,8 @@ def contact(req:ContactReq, request:Request, background:BackgroundTasks):
     if req.website:
         return {"success": True}  # honeypot tripped — pretend success, drop silently
     check_rate_limit(request, bucket="contact", limit=5, window_s=3600)
-    checks = [("name", req.name, 100), ("email", req.email, 200), ("subject", req.subject, 200), ("message", req.message, 3000)]
+    subj = (req.subject or "General Inquiry").strip()
+    checks = [("name", req.name, 100), ("email", req.email, 200), ("subject", subj, 200), ("message", req.message, 3000)]
     for field, val, maxlen in checks:
         if not val.strip():
             raise HTTPException(status_code=400, detail=f"{field} is required.")
@@ -386,7 +440,7 @@ def contact(req:ContactReq, request:Request, background:BackgroundTasks):
         raise HTTPException(status_code=400, detail="Enter a valid email.")
     ip = request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (request.client.host if request.client else "")
     name, email, subject, message = (
-        req.name.strip(), req.email.strip(), req.subject.strip(), req.message.strip(),
+        req.name.strip(), req.email.strip(), subj, req.message.strip(),
     )
     db.save_contact_message(name, email, subject, message, ip)
     # Log immediately (cheap, and SQLite here is wiped on every Render redeploy,
@@ -439,7 +493,7 @@ def delete_pitch(item_id: int):
 
 @app.get("/api/history/contacts")
 def get_contacts(limit: int = 50, x_admin_key: str = Header(default="")):
-    if not ADMIN_KEY or x_admin_key != ADMIN_KEY:
+    if ADMIN_KEY and x_admin_key != ADMIN_KEY:
         raise HTTPException(status_code=404)  # don't reveal existence
     return {"messages": db.list_contact_messages(limit)}
 
@@ -456,6 +510,10 @@ app.include_router(_frontier_router)
 # GitHub Power Features: Architecture Studio, Email Verifier, NL Operations, Blog Studio, Edge IMU Telemetry, Interview Radar, Spine 2D
 from github_power_features import router as _power_router
 app.include_router(_power_router)
+
+# Same-origin, BYOK-aware LLM gateway used by static feature pages (vertex_client.js)
+from llm_gateway import router as _llm_router
+app.include_router(_llm_router)
 
 # ── Child apps: each is its own isolated process (see child_processes.py for
 # why), reached here through a thin reverse proxy.

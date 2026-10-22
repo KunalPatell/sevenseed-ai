@@ -122,7 +122,7 @@ with sync_playwright() as p:
         bm_btn.click()
         page.wait_for_timeout(200)
         bm_expanded = page.locator(".bm-card:not(.bm-collapsed)").count()
-        log_result("Benchmarks Expand Action", bm_expanded == 16, f"{bm_expanded}/16 benchmarks visible")
+        log_result("Benchmarks Expand Action", bm_expanded == 24, f"{bm_expanded}/24 benchmarks visible")
 
         bm_btn.click()
         page.wait_for_timeout(200)

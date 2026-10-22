@@ -31,24 +31,27 @@ print("======================================================================")
 print("\n[1/4] Testing Backend API Endpoints on " + BASE_URL)
 
 endpoints_to_test = [
-    ("GET", "/", 200, "Root Landing Page"),
-    ("GET", "/api/health", 200, "Health Check Endpoint"),
-    ("GET", "/api/ventures", 200, "Ventures Data Endpoint"),
-    ("GET", "/api/ideas", 200, "Venture Ideas Endpoint"),
-    ("GET", "/api/portfolio", 200, "Portfolio Data Endpoint"),
-    ("GET", "/api/history/contacts", 200, "Contacts History Endpoint"),
-    ("GET", "/api/history/sessions", 200, "Sessions History Endpoint"),
-    ("GET", "/api/history/pitches", 200, "Pitches History Endpoint"),
-    ("GET", "/dashboard", 200, "Admin/Founder Dashboard"),
-    ("GET", "/pricing.html", 200, "Pricing Page"),
-    ("GET", "/workstations.html", 200, "Workstations Hub"),
+    ("GET", "/", 200, "Root Landing Page", {}),
+    ("GET", "/api/health", 200, "Health Check Endpoint", {}),
+    ("GET", "/api/status", 200, "System Status Endpoint", {}),
+    ("GET", "/api/ventures", 200, "Ventures Data Endpoint", {}),
+    ("GET", "/api/ideas", 200, "Venture Ideas Endpoint", {}),
+    ("GET", "/api/portfolio", 200, "Portfolio Data Endpoint", {}),
+    ("GET", "/api/history/contacts", 200, "Contacts History Endpoint", {"X-Admin-Key": os.environ.get("ADMIN_KEY", "")}),
+    ("GET", "/api/history/sessions", 200, "Sessions History Endpoint", {}),
+    ("GET", "/api/history/pitches", 200, "Pitches History Endpoint", {}),
+    ("GET", "/dashboard", 200, "Admin/Founder Dashboard", {}),
+    ("GET", "/pricing.html", 200, "Pricing Page", {}),
+    ("GET", "/workstations.html", 200, "Workstations Hub", {}),
 ]
 
-for method, path, expected_code, desc in endpoints_to_test:
+for item in endpoints_to_test:
+    method, path, expected_code, desc = item[0], item[1], item[2], item[3]
+    headers = item[4] if len(item) > 4 else {}
     url = BASE_URL + path
     try:
-        req = urllib.request.Request(url, method=method)
-        with urllib.request.urlopen(req, timeout=5) as resp:
+        req = urllib.request.Request(url, method=method, headers=headers)
+        with urllib.request.urlopen(req, timeout=15) as resp:
             code = resp.getcode()
             body = resp.read()
             passed = (code == expected_code) and (len(body) > 0)
@@ -61,6 +64,7 @@ try:
     contact_payload = json.dumps({
         "name": "Validation Test",
         "email": "test@sevenseed.in",
+        "subject": "Automated verification test",
         "message": "Automated verification test",
         "service": "General"
     }).encode('utf-8')
@@ -70,7 +74,7 @@ try:
         headers={"Content-Type": "application/json"},
         method="POST"
     )
-    with urllib.request.urlopen(req, timeout=5) as resp:
+    with urllib.request.urlopen(req, timeout=10) as resp:
         code = resp.getcode()
         passed = (code == 200)
         log_test("api_tests", "POST /api/contact (Contact Submission)", passed, f"Status: {code}")

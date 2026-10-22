@@ -181,6 +181,12 @@ def test_pipeline_monitor_real_metrics():
 def test_http_api_endpoints():
     from fastapi import FastAPI
     app = FastAPI()
+    backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../apps/sevenseed/backend"))
+    if backend_dir in sys.path:
+        sys.path.remove(backend_dir)
+    sys.path.insert(0, backend_dir)
+    sys.modules.pop("features", None)
+    import features
     app.include_router(features.router)
     client = TestClient(app)
 

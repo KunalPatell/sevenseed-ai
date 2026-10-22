@@ -185,12 +185,20 @@ async function runPriceComparison() {
   try {
     const res = await fetch('/api/emart/compare-multistore', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: __emartHeaders(),
       body: JSON.stringify({ query: q })
     });
 
     if (!res.ok) throw new Error('Failed to fetch store pricing');
     const data = await res.json();
+
+    if (!data.stores || !data.stores.length) {
+      ['kpiLowestPrice', 'kpiLowestStore', 'kpiSavings', 'kpiDealScore', 'kpiDealVerdict'].forEach((id) => {
+        const el = document.getElementById(id); if (el) el.textContent = 'â€”';
+      });
+      __emartStoreLinks(document.getElementById('storesContainer'), data);
+      return;
+    }
 
     // Update KPIs
     document.getElementById('kpiLowestPrice').textContent = `₹${data.best_store.price.toLocaleString()}`;
@@ -228,7 +236,7 @@ async function runPriceComparison() {
             <div class="store-details">
               <div><i class="fas fa-truck-fast"></i> Delivery: <b style="color:#fff;">${s.delivery_time}</b></div>
               <div><i class="fas fa-star" style="color:#f59e0b;"></i> Rating: <b style="color:#fff;">${s.rating} ★</b> (${s.reviews_count.toLocaleString()} reviews)</div>
-              <div><i class="fas fa-shield-halved" style="color:#10b981;"></i> 1 Year Brand Warranty & Free Returns</div>
+              <div><i class="fas fa-shield-halved" style="color:#10b981;"></i> Live price via Google Shopping</div>
             </div>
           </div>
 
@@ -240,7 +248,7 @@ async function runPriceComparison() {
     });
 
     // Update Price History & Chart
-    if (data.historical_30d) {
+    if (data.historical_30d && data.historical_30d.points && data.historical_30d.points.length > 1) {
       document.getElementById('trendLowest').textContent = `₹${data.historical_30d.lowest.toLocaleString()}`;
       document.getElementById('trendHighest').textContent = `₹${data.historical_30d.highest.toLocaleString()}`;
       renderChart(data.historical_30d.points);
@@ -261,7 +269,7 @@ async function fetchBestsellerStats(q) {
   try {
     const res = await fetch('/api/emart/bestseller-analytics', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: __emartHeaders(),
       body: JSON.stringify({ asin_or_query: q })
     });
     if (!res.ok) return;
@@ -342,5 +350,33 @@ window.addEventListener('load', () => {
 });
 </script>
 <script src="ws-shell.js"></script>
+
+<script id="emart-live-helpers">
+  function __emartHeaders() {
+    const h = { 'Content-Type': 'application/json' };
+    try {
+      const k = (localStorage.getItem('user_serpapi_key') || localStorage.getItem('ss_key_serpapi') || '').trim();
+      if (k) h['X-SerpAPI-Key'] = k;
+    } catch (_) {}
+    return h;
+  }
+  function __emartEsc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+  // Honest empty state: no invented prices, just real links to each store's own results.
+  function __emartStoreLinks(container, data) {
+    if (!container) return;
+    const links = (data && data.store_links) || [];
+    container.innerHTML = `
+      <div style="grid-column:1/-1;padding:22px;border:1px solid rgba(148,163,184,.25);border-radius:16px;background:rgba(15,23,42,.55)">
+        <div style="font-weight:700;font-size:15px;margin-bottom:6px;color:#e2e8f0"><i class="fas fa-circle-info" style="color:#38bdf8"></i> Live prices not available</div>
+        <p style="margin:0 0 14px;color:#94a3b8;font-size:13px;line-height:1.6">${__emartEsc((data && data.message) || 'Live price comparison is unavailable right now.')}
+          <a href="/byok.html" style="color:#38bdf8;text-decoration:underline">Add a SerpAPI key</a></p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          ${links.map((l) => `<a href="${__emartEsc(l.url)}" target="_blank" rel="noopener noreferrer"
+               style="padding:9px 14px;border-radius:10px;border:1px solid ${__emartEsc(l.badge_color)}55;color:#f1f5f9;text-decoration:none;font-size:13px;font-weight:600;background:${__emartEsc(l.badge_color)}1a">
+               Search on ${__emartEsc(l.store)} <i class="fas fa-arrow-up-right-from-square" style="font-size:11px;opacity:.7"></i></a>`).join('')}
+        </div>
+      </div>`;
+  }
+</script>
 </body>
 </html>

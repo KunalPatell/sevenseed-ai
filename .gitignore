@@ -16,6 +16,7 @@ __pycache__/
 db.sqlite3
 db.sqlite3.bak
 apps/sevenseed/backend/data/
+apps/rakshak-ai/backend/data/
 scratch/
 *.pt
 *.onnx

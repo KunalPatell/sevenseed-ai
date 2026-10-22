@@ -226,7 +226,7 @@ const ctx = canvas.getContext('2d');
 function switchChannel(key) {
   currentCamKey = key;
   document.querySelectorAll('.ch-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  (function(){ var e = window.event, t = e && e.target ? (e.target.closest ? (e.target.closest('button,[onclick]') || e.target) : e.target) : document.querySelector('[onclick*="\'' + key + '\'"]'); if (t && t.classList) t.classList.add('active'); })();
 
   const c = CHANNELS[key];
   document.getElementById('camName').innerText = c.name;

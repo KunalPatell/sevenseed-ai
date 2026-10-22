@@ -23,6 +23,7 @@ import math
 import random
 import re
 import uuid
+import urllib.parse
 import numpy as np
 from pathlib import Path
 from typing import List, Dict, Any, Optional
@@ -36,13 +37,18 @@ except Exception:
     check_rate_limit = None
 
 _HERE = Path(__file__).resolve().parent
+if str(_HERE) not in sys.path:
+    sys.path.insert(0, str(_HERE))
 DB_PATH = os.environ.get("DB_PATH", str(_HERE / "db.sqlite3"))
-MODEL_ONNX_PATH = _HERE.parents[2] / "best.onnx"
-if not MODEL_ONNX_PATH.exists():
-    # Check current directory
-    alt_path = Path("e:/main/apps/sevenseed/best.onnx")
-    if alt_path.exists():
-        MODEL_ONNX_PATH = alt_path
+# The Docker image copies apps/breakdown-factor/backend/ (which ships best.onnx)
+# but not the repo-root copy, so look there first. The old fallback here was a
+# hard-coded Windows path, i.e. production silently ran with no model at all.
+_MODEL_CANDIDATES = [
+    Path(os.environ["BREAKDOWN_MODEL_PATH"]) if os.environ.get("BREAKDOWN_MODEL_PATH") else None,
+    _HERE.parents[1] / "breakdown-factor" / "backend" / "best.onnx",
+    _HERE.parents[2] / "best.onnx",
+]
+MODEL_ONNX_PATH = next((p for p in _MODEL_CANDIDATES if p and p.exists()), _MODEL_CANDIDATES[1])
 
 router = APIRouter(tags=["Frontier Multi-Venture Features"])
 
@@ -161,6 +167,10 @@ _init_frontier_tables()
 
 
 # ── LLM Helper ────────────────────────────────────────────────────────────────
+def _llm_configured() -> bool:
+    return any(os.environ.get(k, "").strip() for k in ("GROQ_API_KEY", "GEMINI_API_KEY", "OPENAI_API_KEY"))
+
+
 def _call_llm(system_prompt: str, user_prompt: str, temperature: float = 0.4) -> Optional[str]:
     """Helper to query available LLM providers (Groq, Gemini, OpenAI) with graceful fallback."""
     if os.environ.get("GROQ_API_KEY", "").strip():
@@ -363,7 +373,7 @@ HEALTH_CAMPS_DATABASE = [
         "city": "Ahmedabad",
         "venue": "Community Hall, Satellite Road, Ahmedabad",
         "dates": "October 10 - 12, 2026 (9:00 AM - 5:00 PM)",
-        "organizer": "AVP Charitable Trust & Civil Hospital Eye Wing",
+        "organizer": "AVP Charitable Trust (proposed)",
         "services": [
             "Comprehensive Vision Testing",
             "Free Prescription Eye Drops & Ointments",
@@ -372,7 +382,7 @@ HEALTH_CAMPS_DATABASE = [
             "Diabetic Retinopathy Screening"
         ],
         "helpline": "1800-419-7001",
-        "registered_count": 512,
+        "registered_count": 0,
         "status": "OPEN_FOR_REGISTRATION"
     },
     {
@@ -381,7 +391,7 @@ HEALTH_CAMPS_DATABASE = [
         "city": "Bengaluru",
         "venue": "Freedom Park & MG Road Metro Concourse, Bengaluru",
         "dates": "October 15, 2026 (8:00 AM - 6:00 PM)",
-        "organizer": "Red Cross Society & Decode Forest Pharmacy",
+        "organizer": "Decode Forest Pharmacy (proposed)",
         "services": [
             "Free Complete Blood Count (CBC) Panel",
             "Blood Grouping & Rh Factor Identity Card",
@@ -390,7 +400,7 @@ HEALTH_CAMPS_DATABASE = [
             "Nutritional Counseling Session"
         ],
         "helpline": "+91-80-22264424",
-        "registered_count": 924,
+        "registered_count": 0,
         "status": "OPEN_FOR_REGISTRATION"
     },
     {
@@ -399,7 +409,7 @@ HEALTH_CAMPS_DATABASE = [
         "city": "Mumbai",
         "venue": "Dadar Community Centre, Parel, Mumbai",
         "dates": "October 18 - 20, 2026 (8:30 AM - 4:00 PM)",
-        "organizer": "Jan Aushadhi Kendra (PMBJP) & AVP Trust",
+        "organizer": "AVP Charitable Trust (proposed)",
         "services": [
             "Free Fasting & Post-Prandial Blood Sugar (HbA1c)",
             "12-Lead Electrocardiogram (ECG)",
@@ -407,7 +417,7 @@ HEALTH_CAMPS_DATABASE = [
             "Clinical Nutrition & Diabetic Foot Care Guidance"
         ],
         "helpline": "1800-180-8080",
-        "registered_count": 680,
+        "registered_count": 0,
         "status": "OPEN_FOR_REGISTRATION"
     },
     {
@@ -416,7 +426,7 @@ HEALTH_CAMPS_DATABASE = [
         "city": "New Delhi",
         "venue": "MCD Community Centre, Rohini Sector 9, New Delhi",
         "dates": "October 24 - 25, 2026 (9:00 AM - 3:00 PM)",
-        "organizer": "Delhi Child Health Initiative & Decode Pharmacy",
+        "organizer": "Decode Forest Pharmacy (proposed)",
         "services": [
             "Pediatric Growth & Developmental Screening",
             "Free Universal Immunization Vaccines",
@@ -424,7 +434,7 @@ HEALTH_CAMPS_DATABASE = [
             "Child Nutrition & Dental Hygiene Kits"
         ],
         "helpline": "+91-11-27551020",
-        "registered_count": 395,
+        "registered_count": 0,
         "status": "OPEN_FOR_REGISTRATION"
     }
 ]
@@ -481,13 +491,19 @@ def get_emergency_hospitals(city: str = "", blood_bank_only: bool = False, ayush
     if ayushman_only:
         results = [h for h in results if h["ayushman_bharat"]]
     
+    # Ratings were never sourced, so they are not exposed. Phone numbers and bed
+    # counts come from public listings and can go stale; the UI is told so.
+    results = [{**{k: v for k, v in h.items() if k != "rating"},
+                "maps_url": "https://www.google.com/maps/search/?api=1&query=" + urllib.parse.quote(h["name"] + ", " + h["city"])}
+               for h in results]
     return {
         "hospitals": results,
         "count": len(results),
+        "data_note": "Compiled from public listings. Call ahead to confirm numbers and availability. In an emergency dial 112 or 108.",
         "national_emergency_helplines": {
             "all_emergencies": "112",
             "ambulance_service": "108",
-            "national_blood_bank": "104",
+            "health_helpline": "104",
             "women_helpline": "1091",
             "child_helpline": "1098"
         }
@@ -502,19 +518,22 @@ def get_health_camps(city: str = ""):
         city_lower = city.lower().strip()
         camps = [c for c in camps if city_lower in c["city"].lower()]
     
-    # Enrich with live registration numbers from DB
+    # Registration counts are only real sign-ups recorded in our database.
+    camps = [dict(c) for c in camps]
     try:
         with _get_db() as c:
             for camp in camps:
                 rows = c.execute("SELECT COUNT(*) FROM camp_registrations WHERE camp_title=?", (camp["title"],)).fetchone()
-                camp["registered_count"] = camp["registered_count"] + (rows[0] if rows else 0)
+                camp["registered_count"] = rows[0] if rows else 0
     except Exception:
         pass
 
     return {
         "camps": camps,
         "count": len(camps),
-        "message": "All camps provided 100% free of cost under AVP Charitable Trust & Decode Pharmacy initiative."
+        "listing_type": "proposed",
+        "message": ("These are proposed free camps that are not yet confirmed with venues. Registering records your interest; "
+                    "we will contact you before the date. For urgent care call 104 (health helpline) or 108 (ambulance).")
     }
 
 
@@ -547,7 +566,7 @@ def register_for_camp(req: CampRegisterReq):
         "token": token,
         "citizen_name": req.citizen_name,
         "camp_title": req.camp_title,
-        "confirmation_message": f"Registration confirmed for {req.citizen_name}! Please present token {token} at the venue."
+        "confirmation_message": f"Interest recorded for {req.citizen_name}. Reference {token}. This camp is proposed, so we will confirm the venue and date with you before it runs."
     }
 
 
@@ -576,8 +595,10 @@ def check_drug_interaction(req: InteractionCheckReq):
     llm_system = (
         "You are an expert Clinical Pharmacologist and Chief Medical Officer at Decode Forest Pharmacy. "
         "Analyze the interaction between the two requested substances. "
-        "Return clean JSON with keys: severity ('SAFE', 'MODERATE', 'HIGH', 'CRITICAL'), "
-        "mechanism, clinical_precautions, dietary_advice, and jan_aushadhi_generic_recommendation. Return only valid JSON."
+        "Return clean JSON with keys: severity ('SAFE', 'MODERATE', 'HIGH', 'CRITICAL', 'UNKNOWN'), "
+        "mechanism, clinical_precautions, dietary_advice, and jan_aushadhi_generic_recommendation. "
+        "If either input is not a recognised medicine or food, or the evidence is insufficient, severity MUST be 'UNKNOWN'. "
+        "Only use 'SAFE' for combinations with well-established safety. Return only valid JSON."
     )
     llm_user = f"Drug A: {req.drug_a}\nDrug B: {req.drug_b}\nPatient Notes: {req.patient_notes}"
     ai_raw = _call_llm(llm_system, llm_user)
@@ -588,12 +609,13 @@ def check_drug_interaction(req: InteractionCheckReq):
             return {
                 "drug_a": req.drug_a,
                 "drug_b": req.drug_b,
-                "severity": parsed.get("severity", "MODERATE"),
-                "mechanism": parsed.get("mechanism", "Pharmacodynamic or pharmacokinetic interaction detected."),
-                "precautions": parsed.get("clinical_precautions", "Consult a registered doctor before combining."),
-                "dietary_advice": parsed.get("dietary_advice", "Take with plenty of water."),
-                "generic_alternative": parsed.get("jan_aushadhi_generic_recommendation", "Ask your pharmacist for Jan Aushadhi generic substitutes."),
-                "source": "AI Pharmacovigilance Engine"
+                "severity": (parsed.get("severity") or "UNKNOWN").upper(),
+                "mechanism": parsed.get("mechanism") or "Not enough information to describe an interaction mechanism.",
+                "precautions": parsed.get("clinical_precautions") or "Ask a registered pharmacist or doctor before combining these.",
+                "dietary_advice": parsed.get("dietary_advice") or "Follow the instructions on each medicine's label.",
+                "generic_alternative": parsed.get("jan_aushadhi_generic_recommendation") or "Ask your pharmacist for Jan Aushadhi generic substitutes.",
+                "source": "AI Pharmacovigilance Engine",
+                "disclaimer": "AI-generated guidance. Confirm with a registered pharmacist or doctor before combining medicines."
             }
         except Exception:
             pass
@@ -607,19 +629,19 @@ def check_drug_interaction(req: InteractionCheckReq):
             "precautions": matrix_hit["precautions"],
             "dietary_advice": "Maintain hydration and do not consume alcohol.",
             "generic_alternative": matrix_hit["generic_alternative"],
-            "source": "Verified Clinical Matrix (Pharmacopoeia Standard)"
+            "source": "Curated reference matrix (not a substitute for a pharmacist)"
         }
 
-    # Safe / Low interaction default
+    # Unknown pair: never claim SAFE without evidence.
     return {
         "drug_a": req.drug_a,
         "drug_b": req.drug_b,
-        "severity": "SAFE",
-        "mechanism": "No direct critical contraindication identified in standard primary pharmacological pathways.",
-        "precautions": "Take each medication as instructed by your primary healthcare physician. Separate timing by 1-2 hours if experiencing mild gastric upset.",
-        "dietary_advice": "Take with normal water. Avoid excessive caffeine or alcohol.",
-        "generic_alternative": "Ask your Jan Aushadhi Kendra for affordable PMBJP generic versions.",
-        "source": "Decode Pharmacy Clinical Safety Database"
+        "severity": "UNKNOWN",
+        "mechanism": "This combination is not in our reference list and the AI checker is unavailable right now, so we cannot assess it.",
+        "precautions": "Ask a registered pharmacist or doctor before taking these together. Absence of a warning here does not mean the combination is safe.",
+        "dietary_advice": "Follow the instructions on each medicine's label.",
+        "generic_alternative": "Ask your Jan Aushadhi Kendra for affordable generic versions.",
+        "source": "Not assessed"
     }
 
 
@@ -644,64 +666,82 @@ REPAIR_ESTIMATES = {
 }
 
 _onnx_session = None
+_cv2_net = None
+_yolo_backend = "none"
+
 
 def _get_onnx_session():
-    global _onnx_session
-    if _onnx_session is None and MODEL_ONNX_PATH.exists():
-        try:
-            import onnxruntime as ort
-            _onnx_session = ort.InferenceSession(str(MODEL_ONNX_PATH), providers=['CPUExecutionProvider'])
-            print(f"[breakdown] YOLOv8 ONNX session initialized successfully from {MODEL_ONNX_PATH}")
-        except Exception as e:
-            print(f"[breakdown] Failed to load ONNX model: {e}")
-    return _onnx_session
-
-
-def _run_yolo_onnx(img_array: np.ndarray, conf_thresh: float = 0.25):
-    """Runs real ONNX inference on a 640x640 normalized RGB image array."""
-    sess = _get_onnx_session()
-    if sess is None:
-        return []
-
+    """Load the YOLOv8 damage model once. Prefers onnxruntime; falls back to
+    cv2.dnn (opencv-python-headless is already a production dependency, while
+    onnxruntime is not), so the model actually runs inside the Docker image."""
+    global _onnx_session, _cv2_net, _yolo_backend
+    if _onnx_session is not None or _cv2_net is not None or not MODEL_ONNX_PATH.exists():
+        return _onnx_session or _cv2_net
     try:
-        # Preprocess to [1, 3, 640, 640] float32
-        tensor = np.transpose(img_array, (2, 0, 1)).astype(np.float32) / 255.0
-        tensor = np.expand_dims(tensor, axis=0)
+        import onnxruntime as ort
+        _onnx_session = ort.InferenceSession(str(MODEL_ONNX_PATH), providers=["CPUExecutionProvider"])
+        _yolo_backend = "onnxruntime"
+    except Exception:
+        try:
+            import cv2
+            _cv2_net = cv2.dnn.readNetFromONNX(str(MODEL_ONNX_PATH))
+            _yolo_backend = "opencv-dnn"
+        except Exception as e:
+            print(f"[breakdown] Failed to load YOLO model: {e}")
+    if _yolo_backend != "none":
+        print(f"[breakdown] YOLOv8 model loaded via {_yolo_backend} from {MODEL_ONNX_PATH}")
+    return _onnx_session or _cv2_net
 
-        input_name = sess.get_inputs()[0].name
-        output_name = sess.get_outputs()[0].name
-        outputs = sess.run([output_name], {input_name: tensor})[0]  # shape [1, 14, 8400]
 
-        predictions = outputs[0]  # [14, 8400]
-        # predictions[0:4] = cx, cy, w, h
-        # predictions[4:14] = class scores
-        scores = predictions[4:, :]  # [10, 8400]
+def _model_available() -> bool:
+    return _get_onnx_session() is not None
+
+
+def _run_yolo_onnx(img_array: np.ndarray, conf_thresh: float = 0.25, nms_thresh: float = 0.45):
+    """Real YOLOv8 inference on a 640x640 RGB array -> NMS-filtered detections."""
+    model = _get_onnx_session()
+    if model is None:
+        return []
+    try:
+        tensor = np.expand_dims(np.transpose(img_array, (2, 0, 1)).astype(np.float32) / 255.0, axis=0)
+        if _onnx_session is not None:
+            outputs = _onnx_session.run([_onnx_session.get_outputs()[0].name],
+                                        {_onnx_session.get_inputs()[0].name: tensor})[0]
+        else:
+            _cv2_net.setInput(tensor)
+            outputs = _cv2_net.forward()
+        predictions = outputs[0]  # [4 + n_classes, 8400]
+        scores = predictions[4:, :]
         max_scores = np.max(scores, axis=0)
         class_ids = np.argmax(scores, axis=0)
+        idxs = np.where(max_scores >= conf_thresh)[0]
+        if len(idxs) == 0:
+            return []
 
-        mask = max_scores >= conf_thresh
-        valid_indices = np.where(mask)[0]
+        boxes = []
+        for idx in idxs:
+            cx, cy, w, h = (float(v) for v in predictions[0:4, idx])
+            boxes.append([cx - w / 2, cy - h / 2, w, h])
+        confs = [float(max_scores[i]) for i in idxs]
+        # Without NMS one crack produced dozens of near-identical overlapping boxes.
+        try:
+            import cv2
+            keep = np.array(cv2.dnn.NMSBoxes(boxes, confs, conf_thresh, nms_thresh)).flatten().tolist()
+        except Exception:
+            keep = list(range(len(boxes)))
 
         detections = []
-        for idx in valid_indices[:30]:  # limit to top 30
-            cx, cy, w, h = predictions[0:4, idx]
+        for k in keep[:30]:
+            idx = idxs[k]
+            x, y, w, h = boxes[k]
             cls_id = int(class_ids[idx])
-            conf = float(max_scores[idx])
-
-            xmin = max(0.0, float((cx - w / 2) / 640.0))
-            ymin = max(0.0, float((cy - h / 2) / 640.0))
-            xmax = min(1.0, float((cx + w / 2) / 640.0))
-            ymax = min(1.0, float((cy + h / 2) / 640.0))
-
-            cls_name = YOLO_CLASSES[cls_id] if cls_id < len(YOLO_CLASSES) else "damage"
             detections.append({
                 "class_id": cls_id,
-                "class_name": cls_name,
-                "confidence": round(conf, 3),
-                "bbox": [round(ymin, 3), round(xmin, 3), round(ymax, 3), round(xmax, 3)]
+                "class_name": YOLO_CLASSES[cls_id] if cls_id < len(YOLO_CLASSES) else "damage",
+                "confidence": round(confs[k], 3),
+                "bbox": [round(max(0.0, y / 640.0), 3), round(max(0.0, x / 640.0), 3),
+                         round(min(1.0, (y + h) / 640.0), 3), round(min(1.0, (x + w) / 640.0), 3)],
             })
-
-        # Sort by confidence descending
         detections.sort(key=lambda d: d["confidence"], reverse=True)
         return detections
     except Exception as e:
@@ -725,6 +765,7 @@ def detect_property_damage(req: DefectDetectReq):
     detections = []
     analyzed_preset = False
 
+    decoded = False
     if req.image_base64:
         try:
             # Decode image
@@ -733,11 +774,28 @@ def detect_property_damage(req: DefectDetectReq):
             from PIL import Image
             img = Image.open(io.BytesIO(img_bytes)).convert("RGB").resize((640, 640))
             img_np = np.array(img)
+            decoded = True
             detections = _run_yolo_onnx(img_np, req.confidence_threshold)
         except Exception as e:
             print(f"[breakdown] Image decode/inference error: {e}")
 
-    # Fallback to rich scenario preset if no uploaded image or no detections triggered
+    if req.image_base64 and not decoded and not req.defect_preset:
+        raise HTTPException(status_code=400, detail="IMAGE UNREADABLE: upload a JPEG or PNG photo.")
+
+    image_scanned = bool(req.image_base64) and decoded and _model_available()
+    # Sample scenarios are only shown when the visitor did NOT upload a photo (or
+    # explicitly picked a preset). An uploaded photo with no detections is reported
+    # honestly as clean instead of being dressed up with invented defects.
+    if not detections and req.image_base64 and not req.defect_preset:
+        return {
+            "status": "success", "detections_count": 0, "detections": [],
+            "structural_severity_score": 0, "hazard_classification": "NO DEFECTS DETECTED" if image_scanned else "MODEL UNAVAILABLE",
+            "is_model_live": _model_available(), "model_backend": _yolo_backend, "analyzed_preset": False,
+            "result_type": "live_scan" if image_scanned else "not_scanned",
+            "estimated_total_repair_inr": "\u20b90", "estimated_total_repair_usd": "$0", "action_plan": [],
+            "compliance_notes": ("The YOLO damage model found no defects above the confidence threshold. Try a closer, well-lit photo."
+                                 if image_scanned else "The vision model could not be loaded on this server, so no scan was performed."),
+        }
     if not detections:
         preset = req.defect_preset or "wall_crack"
         analyzed_preset = True
@@ -800,12 +858,15 @@ def detect_property_damage(req: DefectDetectReq):
         "detections": detections,
         "structural_severity_score": severity_score,
         "hazard_classification": grade,
-        "is_model_live": MODEL_ONNX_PATH.exists(),
+        "is_model_live": _model_available(),
+        "model_backend": _yolo_backend,
         "analyzed_preset": analyzed_preset,
+        "result_type": "sample_scenario" if analyzed_preset else "live_scan",
         "estimated_total_repair_inr": f"₹{total_cost_min:,} - ₹{total_cost_max:,}",
         "estimated_total_repair_usd": f"${round(total_cost_min/86)} - ${round(total_cost_max/86)}",
         "action_plan": remedy_steps,
-        "compliance_notes": "Meets IS 456:2000 Structural Concrete and OSHA 1926 Safety Inspection Standards."
+        "compliance_notes": ("Sample scenario for demonstration; no photo was analysed." if analyzed_preset else
+                             "AI screening only. Cost ranges are indicative. Have a qualified structural engineer inspect before any repair.")
     }
 
 
@@ -818,7 +879,7 @@ class SafetyReportReq(BaseModel):
 
 @router.post("/api/breakdown/generate-safety-report")
 def generate_safety_report(req: SafetyReportReq):
-    """Generates an OSHA & IS-code certified structural site audit inspection report."""
+    """Generates a structured site-inspection summary from the inspector's own findings (not a certification)."""
     now_str = datetime.datetime.now().strftime("%d %B %Y, %I:%M %p")
     report_id = f"BF-AUDIT-{int(time.time()) % 1000000}"
 
@@ -826,7 +887,7 @@ def generate_safety_report(req: SafetyReportReq):
         with _get_db() as c:
             c.execute(
                 "INSERT INTO structural_audits (created_at, site_name, detected_defects, severity_score, estimated_cost_inr, inspector_notes) VALUES (?, ?, ?, ?, ?, ?)",
-                (datetime.datetime.utcnow().isoformat(), req.site_name, "Verified via YOLOv8 Vision Scanner", req.severity_score, 12500.0, req.findings_summary)
+                (datetime.datetime.utcnow().isoformat(), req.site_name, "Inspector-reported findings", req.severity_score, None, req.findings_summary)
             )
     except Exception as e:
         print(f"[breakdown] Report log error: {e}")
@@ -838,15 +899,16 @@ def generate_safety_report(req: SafetyReportReq):
         "location": req.location,
         "timestamp": now_str,
         "structural_health_index": f"{100 - req.severity_score}/100",
-        "osha_compliance_status": "CONDITIONAL PASS — Remediation Required within 14 Days" if req.severity_score > 50 else "FULL COMPLIANCE",
+        "osha_compliance_status": ("REMEDIATION RECOMMENDED (based on inspector-reported severity)" if req.severity_score > 50
+                                   else "NO MAJOR ISSUES REPORTED"),
         "checklist": [
-            {"item": "Load-Bearing Pillar Integrity (IS 456)", "status": "VERIFIED SAFE"},
-            {"item": "Sub-Surface Moisture & Seepage (ASTM D4263)", "status": "MINOR WARNING"},
-            {"item": "Electrical Junction Box Fire Safety (NEC 110)", "status": "PASSED"},
-            {"item": "Slab Shear Stress & Spalling", "status": "MONITOR QUARTERLY"}
+            {"item": "Load-bearing pillar integrity (IS 456)", "status": "TO BE VERIFIED ON SITE"},
+            {"item": "Sub-surface moisture & seepage (ASTM D4263)", "status": "TO BE VERIFIED ON SITE"},
+            {"item": "Electrical junction box fire safety (NEC 110)", "status": "TO BE VERIFIED ON SITE"},
+            {"item": "Slab shear stress & spalling", "status": "TO BE VERIFIED ON SITE"}
         ],
-        "executive_summary": f"Structural inspection for '{req.site_name}' completed. {req.findings_summary}",
-        "authorized_signoff": "Breakdown Factor Computer Vision & Structural Diagnostic Engine"
+        "executive_summary": f"Inspection summary for '{req.site_name}'. {req.findings_summary}",
+        "authorized_signoff": "Not certified. Generated by Breakdown Factor from inspector input; requires sign-off by a licensed engineer."
     }
 
 
@@ -921,65 +983,52 @@ LIVE_DEAL_RADAR = [
 
 class EmartCompareReq(BaseModel):
     query: str = "iphone 15"
+    serpapi_key: Optional[str] = None
 
 @router.get("/api/emart/compare")
 @router.post("/api/emart/compare")
-def compare_product_prices(query: str = "iphone 15", req: Optional[EmartCompareReq] = None):
-    """Compares live pricing, delivery speeds, and bank offers across Amazon, Flipkart, Blinkit, and JioMart."""
-    q_str = (req.query if (req and req.query) else query) or "iphone 15"
-    q_lower = q_str.lower().strip()
-    match = None
-
-    for key, data in PRICE_COMPARISON_CATALOG.items():
-        if key in q_lower or q_lower in key:
-            match = data
-            break
-
-    if not match:
-        # Dynamic fallback generation for any arbitrary query
-        base_price = 2999
-        match = {
-            "product_name": q_str.title(),
-            "category": "Smart Shopping Catalog",
-            "mrp": base_price * 1.3,
-            "stores": [
-                {"store": "Amazon India", "price": round(base_price * 0.85), "delivery": "Tomorrow", "discount": "15% OFF", "card_offer": "Bank card discount available", "in_stock": True, "rating": 4.5},
-                {"store": "Flipkart", "price": round(base_price * 0.88), "delivery": "2 Days", "discount": "12% OFF", "card_offer": "Cashback eligible", "in_stock": True, "rating": 4.4},
-                {"store": "Blinkit", "price": round(base_price * 0.95), "delivery": "10-15 Minutes", "discount": "5% OFF", "card_offer": "Instant delivery fee waived", "in_stock": True, "rating": 4.7}
-            ],
-            "best_value_store": "Amazon India",
-            "speed_champion": "Blinkit",
-            "ai_verdict": f"Amazon India provides the lowest price for '{q_str.title()}', while quick commerce delivers in 15 minutes."
-        }
-
-    # Format all_results for smart-compare.html UI
-    all_results = []
-    for s in match["stores"]:
-        disc_num = 15
+def compare_product_prices(request: Request, query: str = "iphone 15", req: Optional[EmartCompareReq] = None):
+    """Live multi-store price comparison (Google Shopping India via SerpAPI).
+    Without a SerpAPI key this returns real store search links, never invented prices."""
+    try:
+        import price_engine
+    except ImportError:
         try:
-            disc_num = int("".join(c for c in s["discount"] if c.isdigit()) or "15")
-        except Exception:
-            pass
-        all_results.append({
-            "site": s["store"],
-            "name": match["product_name"],
-            "price": s["price"],
-            "mrp": match["mrp"],
-            "discount_pct": disc_num,
-            "final_score": 96 if s["store"] == match["best_value_store"] else 82,
-            "rating": s["rating"],
-            "reviews": 1280,
-            "delivery": s["delivery"],
-            "is_qcommerce": ("Minute" in s["delivery"] or "Blinkit" in s["store"] or "Zepto" in s["store"]),
-            "deal_integrity": "HIGH",
-            "link": "#"
-        })
-
+            from apps.sevenseed.backend import price_engine
+        except ImportError:
+            sys.path.insert(0, str(Path(__file__).resolve().parent))
+            import price_engine
+    q_str = ((req.query if (req and req.query) else query) or "").strip()
+    if not q_str:
+        raise HTTPException(status_code=400, detail="Search query is required.")
+    key = (req.serpapi_key or "").strip() if (req and req.serpapi_key) else price_engine.serpapi_key(request)
+    cards = [price_engine.to_store_card(l) for l in price_engine.cheapest_per_store(price_engine.fetch_listings(q_str, key))]
+    if not cards:
+        return {"status": "no_live_data", "query": q_str, "data_mode": "no_results" if key else "links_only", "result": None,
+                "all_results": [], "store_links": price_engine.store_search_links(q_str),
+                "message": price_engine.no_live_data_message(bool(key)),
+                "timestamp": datetime.datetime.utcnow().isoformat()}
+    best = cards[0]
+    fastest = next((c for c in cards if c["store_id"] in ("blinkit", "zepto")), None)
+    score = price_engine.deal_score(cards)
+    all_results = [{
+        "site": c["name"], "name": c["title"], "price": c["price"], "mrp": c["mrp"],
+        "discount_pct": c["discount_pct"], "final_score": max(0, score - i * 4), "rating": c["rating"],
+        "reviews": c["reviews_count"], "delivery": c["delivery_time"],
+        "is_qcommerce": c["store_id"] in ("blinkit", "zepto"), "deal_integrity": "LIVE", "link": c["url"],
+    } for i, c in enumerate(cards)]
+    verdict = f"{best['name']} has the lowest live price for '{q_str}' at \u20b9{best['price']:,}"
+    if len(cards) > 1:
+        verdict += f", \u20b9{cards[-1]['price'] - best['price']:,} less than the most expensive store."
     return {
-        "query": q_str,
-        "result": match,
+        "query": q_str, "data_mode": "live",
+        "result": {"product_name": best["title"], "category": "Live listings", "mrp": best["mrp"],
+                   "stores": [{"store": c["name"], "price": c["price"], "delivery": c["delivery_time"],
+                               "discount": f"{c['discount_pct']}% OFF", "in_stock": True, "rating": c["rating"]} for c in cards],
+                   "best_value_store": best["name"], "speed_champion": fastest["name"] if fastest else None,
+                   "ai_verdict": verdict},
         "all_results": all_results,
-        "timestamp": datetime.datetime.utcnow().isoformat()
+        "timestamp": datetime.datetime.utcnow().isoformat(),
     }
 
 
@@ -989,7 +1038,7 @@ def get_deal_radar():
     return {
         "deals": LIVE_DEAL_RADAR,
         "count": len(LIVE_DEAL_RADAR),
-        "status": "LIVE_FEED_ACTIVE"
+        "status": "CURATED_SAMPLE", "note": "Curated example deals, not a live price feed."
     }
 
 
@@ -1034,9 +1083,7 @@ AI_EMPLOYEES_ROSTER = [
         "division": "Growth & Brand",
         "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
         "specialties": ["Multi-Channel Viral Campaigns", "SEO Content Clusters", "LinkedIn Thought Leadership", "Copywriting A/B Matrix"],
-        "status": "ACTIVE_ONLINE",
-        "tasks_completed": 1420,
-        "efficiency_rating": "99.4%"
+        "status": "AVAILABLE"
     },
     {
         "id": "alex",
@@ -1045,9 +1092,7 @@ AI_EMPLOYEES_ROSTER = [
         "division": "Revenue & Pipeline",
         "avatar": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80",
         "specialties": ["Hyper-Personalized Cold Inmail", "B2B Lead Qualification", "Objection Handling Playbooks", "CRM Deal Stage Pushing"],
-        "status": "ACTIVE_ONLINE",
-        "tasks_completed": 2180,
-        "efficiency_rating": "98.9%"
+        "status": "AVAILABLE"
     },
     {
         "id": "dev",
@@ -1056,9 +1101,7 @@ AI_EMPLOYEES_ROSTER = [
         "division": "Engineering & DevOps",
         "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80",
         "specialties": ["Full-Stack Architecture", "Python & Next.js Synthesis", "CI/CD Docker Pipelines", "Security Vulnerability Audits"],
-        "status": "ACTIVE_ONLINE",
-        "tasks_completed": 3540,
-        "efficiency_rating": "99.8%"
+        "status": "AVAILABLE"
     },
     {
         "id": "sara",
@@ -1067,9 +1110,7 @@ AI_EMPLOYEES_ROSTER = [
         "division": "Human Capital",
         "avatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80",
         "specialties": ["ATS Resume Screening", "Boolean LinkedIn Sourcing", "Behavioral Interview Scoring", "Offer Compensation Benchmarking"],
-        "status": "ACTIVE_ONLINE",
-        "tasks_completed": 890,
-        "efficiency_rating": "98.7%"
+        "status": "AVAILABLE"
     },
     {
         "id": "justin",
@@ -1078,9 +1119,7 @@ AI_EMPLOYEES_ROSTER = [
         "division": "Legal & Compliance",
         "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
         "specialties": ["SaaS Master Service Agreements", "Mutual Non-Disclosure Agreements", "GDPR / DPDP Compliance", "SAFE Investment Notes"],
-        "status": "ACTIVE_ONLINE",
-        "tasks_completed": 640,
-        "efficiency_rating": "99.9%"
+        "status": "AVAILABLE"
     },
     {
         "id": "priya",
@@ -1089,9 +1128,7 @@ AI_EMPLOYEES_ROSTER = [
         "division": "Customer Experience",
         "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
         "specialties": ["Sub-Second Ticket Resolution", "Churn Risk Sentiment Detection", "User Onboarding Guides", "SLA Escalation Routing"],
-        "status": "ACTIVE_ONLINE",
-        "tasks_completed": 4820,
-        "efficiency_rating": "99.6%"
+        "status": "AVAILABLE"
     },
     {
         "id": "liam",
@@ -1100,9 +1137,7 @@ AI_EMPLOYEES_ROSTER = [
         "division": "Capital & Unit Economics",
         "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
         "specialties": ["SaaS Runway Burn Forecasting", "Cap Table Dilution Modeling", "CAC to LTV Payback Analysis", "Cohort Retention Economics"],
-        "status": "ACTIVE_ONLINE",
-        "tasks_completed": 1130,
-        "efficiency_rating": "99.5%"
+        "status": "AVAILABLE"
     }
 ]
 
@@ -1110,11 +1145,19 @@ AI_EMPLOYEES_ROSTER = [
 @router.get("/api/sevenforce/employees")
 def get_sevenforce_employees():
     """Returns the full roster and live operational metrics for the 7 autonomous AI employees."""
+    counts: Dict[str, int] = {}
+    try:
+        with _get_db() as c:
+            for name, n in c.execute("SELECT agent_name, COUNT(*) FROM agent_dispatches GROUP BY agent_name").fetchall():
+                counts[name] = n
+    except Exception:
+        pass
+    employees = [{**a, "tasks_completed": counts.get(a["name"], 0)} for a in AI_EMPLOYEES_ROSTER]
     return {
-        "employees": AI_EMPLOYEES_ROSTER,
-        "count": len(AI_EMPLOYEES_ROSTER),
-        "autonomous_mode": "SYNCHRONIZED_SWARM",
-        "all_systems_operational": True
+        "employees": employees,
+        "count": len(employees),
+        "tasks_note": "tasks_completed counts real dispatches handled on this server.",
+        "llm_available": _llm_configured(),
     }
 
 
@@ -1157,19 +1200,8 @@ def dispatch_autonomous_agent(req: DispatchAgentReq):
     ai_output = _call_llm(sys_p, user_p, temperature=0.5)
 
     if not ai_output:
-        # High-quality structured fallback
-        ai_output = (
-            f"**Autonomous Execution Report by {agent['name']} ({agent['role']})**\n\n"
-            f"**Objective Analyzed:** {task_str}\n\n"
-            f"**1. Strategic Assessment:**\n"
-            f"Evaluated core parameters against {', '.join(agent['specialties'])}. Immediate opportunities identified to scale velocity.\n\n"
-            f"**2. Deliverable Outline:**\n"
-            f"• High-impact operational execution blueprint initiated.\n"
-            f"• Automated cross-functional handoff established with Sevenforce Swarm.\n"
-            f"• Risk posture: Zero regulatory/compliance flags.\n\n"
-            f"**3. Recommended Next Action:**\n"
-            f"Approve deliverable and propagate to production pipeline."
-        )
+        raise HTTPException(status_code=503, detail=(
+            f"{agent['name']} could not reach an AI provider. Add a free Groq or Gemini key on the BYOK page and try again."))
 
     # Save to DB
     try:
@@ -1189,10 +1221,8 @@ def dispatch_autonomous_agent(req: DispatchAgentReq):
         "reasoning_steps": [
             f"Received objective in {agent['division']} queue",
             f"Validated constraints using {agent['specialties'][0]}",
-            "Synthesized enterprise deliverable using autonomous reasoning trace",
-            "Quality assurance check passed (99.5% threshold)"
+            "Generated deliverable with the configured LLM",
         ],
-        "deliverable": ai_output,
         "timestamp": datetime.datetime.utcnow().isoformat()
     }
 
@@ -1257,25 +1287,17 @@ def get_byok_vault_status():
 
 @router.post("/api/byok/save-vault")
 def save_byok_vault(req: ByokSaveReq):
-    """Saves user BYOK tokens to runtime environment for zero-cost unlimited usage."""
-    updated = []
-    if req.groq_api_key and req.groq_api_key.strip():
-        os.environ["GROQ_API_KEY"] = req.groq_api_key.strip()
-        updated.append("Groq")
-    if req.gemini_api_key and req.gemini_api_key.strip():
-        os.environ["GEMINI_API_KEY"] = req.gemini_api_key.strip()
-        updated.append("Gemini")
-    if req.openai_api_key and req.openai_api_key.strip():
-        os.environ["OPENAI_API_KEY"] = req.openai_api_key.strip()
-        updated.append("OpenAI")
-    if req.mistral_api_key and req.mistral_api_key.strip():
-        os.environ["MISTRAL_API_KEY"] = req.mistral_api_key.strip()
-        updated.append("Mistral")
-
+    """BYOK keys are kept in the visitor's browser and sent per request (X-Groq-API-Key etc.).
+    This endpoint used to write them into os.environ, letting any visitor replace the
+    server's own keys for every other user. It now only reports which keys were supplied."""
+    supplied = [n for n, v in (("Groq", req.groq_api_key), ("Gemini", req.gemini_api_key),
+                               ("OpenAI", req.openai_api_key), ("Mistral", req.mistral_api_key)) if v and v.strip()]
     return {
         "success": True,
-        "updated_providers": updated,
-        "message": f"Successfully activated {len(updated)} AI provider(s)! All Sevenseed ventures are now operating with your custom token."
+        "stored_on_server": False,
+        "updated_providers": supplied,
+        "message": ("Keys stay in your browser and are sent only with your own requests. "
+                    "The server never stores them."),
     }
 
 
@@ -1457,16 +1479,12 @@ def evaluate_interview_response(req: ResponseEvalReq):
         "problem_solving": base_prob,
         "communication": base_comm,
         "confidence": base_conf,
-        "strengths": [
-            "Demonstrated clear practical context regarding core concepts.",
-            "Structured response with logical progression and real-world examples."
-        ],
-        "gaps": [
-            "Could quantify operational metrics and performance numbers more precisely.",
-            "Explicitly addressing failure modes and edge cases would elevate answer to Senior tier."
-        ],
-        "coaching_feedback": "Strong foundational answer. Practice the STAR methodology (Situation, Task, Action, Result) to make executive points even more compelling.",
-        "hiring_verdict": "HIRE" if total >= 75 else "LEANING HIRE" if total >= 60 else "NEEDS IMPROVEMENT"
+        "strengths": [f"Answer length: {words} words."],
+        "gaps": ["Content was not assessed. Add an AI key on the BYOK page for a real evaluation."],
+        "coaching_feedback": "AI evaluator is offline, so these scores are a rough length-based estimate only. Practice the STAR method (Situation, Task, Action, Result).",
+        "hiring_verdict": "NOT ASSESSED",
+        "is_heuristic": True,
+        "source": "Length-based heuristic (AI evaluator unavailable)"
     }
 
 
@@ -1509,28 +1527,27 @@ def summarize_meeting(req: MeetingSummarizeReq):
         except Exception:
             pass
 
+    # Extractive fallback built only from the transcript itself.
+    sentences = [x.strip() for x in re.split(r"(?<=[.!?])\s+|\n+", req.transcript_text) if len(x.strip()) > 12]
+    decisions = [x for x in sentences if re.search(r"\b(decided|agreed|approve[d]?|final(ised|ized)?|we will go with)\b", x, re.I)][:5]
+    actions = []
+    for x in sentences:
+        m = re.search(r"\b([A-Z][a-z]+)\b\s+(will|to|should|must|owns?)\b\s+(.+)", x)
+        if m or re.search(r"\b(action item|todo|to-do|follow up|by (monday|tuesday|wednesday|thursday|friday|eod|tomorrow))\b", x, re.I):
+            actions.append({"task": x[:200], "owner": m.group(1) if m else "Unassigned", "deadline": "Not stated", "priority": "Normal"})
+    risks = [x for x in sentences if re.search(r"\b(risk|blocker|blocked|concern|issue|delay)\b", x, re.I)][:5]
     return {
         "meeting_title": req.meeting_title,
         "status": "PROCESSED",
         "summary": {
-            "executive_summary": "The team aligned on core architectural milestones, validated Q4 deliverables, and established zero-margin BYOK integration targets.",
-            "key_decisions": [
-                "Adopt unified FastAPI + Next.js micro-architecture across all 8 ventures.",
-                "Enforce 100% free citizen model backed by Bring-Your-Own-Key token vault.",
-                "Transition mobile views to native touch-optimized drawer components."
-            ],
-            "action_items": [
-                {"task": "Finalize YOLO damage vision integration for Breakdown Factor", "owner": "Dev Vance", "deadline": "Friday EOD", "priority": "High"},
-                {"task": "Publish statewide health camp calendar with SMS confirmation tokens", "owner": "Priya Sharma", "deadline": "Monday 10 AM", "priority": "High"},
-                {"task": "Benchmark multi-store price scraper across Blinkit & Amazon", "owner": "Maya Lin", "deadline": "Wednesday", "priority": "Medium"}
-            ],
-            "unresolved_risks": [
-                "Render free tier cold-start latency mitigation.",
-                "Third-party store anti-scraping rate limits."
-            ],
-            "engagement_score": 94
+            "executive_summary": " ".join(sentences[:3]) if sentences else "Transcript was empty.",
+            "key_decisions": decisions,
+            "action_items": actions[:8],
+            "unresolved_risks": risks,
+            "engagement_score": None,
         },
-        "source": "Echo Meeting Intelligence Heuristic Engine"
+        "source": "Extractive keyword summary (AI unavailable). Add a key on the BYOK page for a full AI summary.",
+        "is_heuristic": True,
     }
 
 
@@ -1580,7 +1597,7 @@ def generate_social_campaign(req: CampaignGenReq):
         "topic": req.topic,
         "campaign": {
             "linkedin_post": {
-                "hook": f"90% of startups fail because they pay enterprise markups for generic wrappers.\n\nHere is how we built a 100% free AI venture stack:",
+                "hook": f"Most AI tools charge a monthly markup on top of cheap model APIs.\n\nHere is how we built a 100% free AI venture stack instead:",
                 "body": f"We connected 8 specialized AI ventures—from healthcare OCR to construction defect vision—onto a single zero-margin BYOK architecture.\n\nKey takeaways:\n1. Zero subscription fatigue: Users bring their own API key.\n2. Modular micro-agents outperform monoliths.\n3. Transparent pricing creates unshakeable trust.",
                 "cta": "What AI tools are saving your team the most time this quarter? Drop your thoughts below 👇",
                 "hashtags": ["#ArtificialIntelligence", "#Startups", "#SaaS", "#BuildingInPublic", "#OpenSource"]
@@ -1588,8 +1605,8 @@ def generate_social_campaign(req: CampaignGenReq):
             "twitter_thread": [
                 f"1/5 Most AI platforms charge $50/mo for a glorified API wrapper.\n\nWe decided to do the opposite: 8 ventures, 100% free, powered by your own keys.\n\nHere is how the architecture works 🧵👇",
                 "2/5 The problem with SaaS billing: Cloud providers charge pennies per million tokens, while platforms charge 1000x markups. By enabling zero-margin BYOK, users get enterprise intelligence at actual cost.",
-                "3/5 In healthcare (Decode Pharmacy), our AI reads prescriptions and matches free Jan Aushadhi generic medicines—saving families 80%+ on monthly healthcare bills.",
-                "4/5 In construction (Breakdown Factor), native YOLO computer vision scans structural cracks and quotes repair budgets according to IS 456 standards in real time.",
+                "3/5 In healthcare (Decode Pharmacy), the AI reads prescriptions and points you to Jan Aushadhi generic equivalents, which are usually far cheaper than branded medicines.",
+                "4/5 In construction (Breakdown Factor), a YOLO vision model flags cracks, leaks and burnt switches in a photo and gives indicative repair ranges.",
                 "5/5 Try it completely free with zero credit card required: https://sevenseed.onrender.com\n\nRT the first tweet if you believe AI tools should be accessible to everyone! 🚀"
             ],
             "instagram_carousel": [
@@ -1607,12 +1624,13 @@ def generate_social_campaign(req: CampaignGenReq):
                     "The Economic Inefficiency of Modern AI Wrappers",
                     "Designing a Shared Multi-Tenant Multi-Venture Core",
                     "Computer Vision and NLP at Zero Infrastructure Overhead",
-                    "Case Study: 80% Medication Cost Savings with Jan Aushadhi",
+                    "Case Study: Finding Jan Aushadhi Generic Equivalents",
                     "Conclusion and Open Roadmap"
                 ]
             }
         },
-        "engine": "SocialHub Autonomous Content Pipeline"
+        "engine": "Static template (AI unavailable). Add a key on the BYOK page for a campaign written for your topic.",
+        "is_template": True
     }
 
 
@@ -2053,167 +2071,65 @@ class MultiStoreCompareReq(BaseModel):
     category: str = "Electronics & Tech"
 
 @router.post("/api/emart/compare-multistore")
-def compare_multistore_prices(req: MultiStoreCompareReq):
-    """
-    Simulates / queries multi-store pricing across Amazon India, Flipkart, Reliance Digital,
-    Snapdeal, Blinkit, and Zepto with 30-day price trend analysis and arbitrage calculator.
-    """
+def compare_multistore_prices(req: MultiStoreCompareReq, request: Request):
+    """Live multi-store comparison. Prices come from Google Shopping India (SerpAPI,
+    BYOK or server key); history is built only from prices this platform actually
+    observed for the same query before. Nothing here is synthesised."""
+    import price_engine
     q = req.query.strip()
     if not q:
         raise HTTPException(status_code=400, detail="Search query is required.")
+    key = price_engine.serpapi_key(request)
+    cards = [price_engine.to_store_card(l) for l in price_engine.cheapest_per_store(price_engine.fetch_listings(q, key))]
+    if not cards:
+        return {"status": "no_live_data", "data_mode": "no_results" if key else "links_only", "query": q,
+                "category": req.category, "stores_count": 0, "stores": [],
+                "store_links": price_engine.store_search_links(q),
+                "message": price_engine.no_live_data_message(bool(key))}
 
-    # Base price calculation based on query hash to keep realistic consistency
-    q_hash = int(hashlib.md5(q.lower().encode()).hexdigest()[:6], 16)
-    base_mrp = 15000 + (q_hash % 65000)
+    best_store, worst_store = cards[0], cards[-1]
+    score = price_engine.deal_score(cards)
 
-    stores_data = [
-        {
-            "store_id": "amazon",
-            "name": "Amazon India",
-            "price": round(base_mrp * 0.76),
-            "mrp": base_mrp,
-            "discount_pct": 24,
-            "delivery_time": "Tomorrow, Free with Prime",
-            "delivery_type": "Express",
-            "rating": 4.6,
-            "reviews_count": 14250,
-            "badge": "Prime Fulfilled",
-            "badge_color": "#ff9900",
-            "in_stock": True,
-            "url": f"https://www.amazon.in/s?k={q.replace(' ', '+')}"
-        },
-        {
-            "store_id": "flipkart",
-            "name": "Flipkart",
-            "price": round(base_mrp * 0.74),  # Often slightly cheaper
-            "mrp": base_mrp,
-            "discount_pct": 26,
-            "delivery_time": "2 Days Delivery",
-            "delivery_type": "Standard",
-            "rating": 4.5,
-            "reviews_count": 18920,
-            "badge": "Assured Plus",
-            "badge_color": "#2874f0",
-            "in_stock": True,
-            "url": f"https://www.flipkart.com/search?q={q.replace(' ', '+')}"
-        },
-        {
-            "store_id": "reliance",
-            "name": "Reliance Digital",
-            "price": round(base_mrp * 0.81),
-            "mrp": base_mrp,
-            "discount_pct": 19,
-            "delivery_time": "Same Day In-Store Pickup",
-            "delivery_type": "Store Pickup",
-            "rating": 4.4,
-            "reviews_count": 4310,
-            "badge": "Official Warranty",
-            "badge_color": "#e11d48",
-            "in_stock": True,
-            "url": f"https://www.reliancedigital.in/search?q={q.replace(' ', '+')}"
-        },
-        {
-            "store_id": "blinkit",
-            "name": "Blinkit",
-            "price": round(base_mrp * 0.79),
-            "mrp": base_mrp,
-            "discount_pct": 21,
-            "delivery_time": "12 Minutes Delivery",
-            "delivery_type": "Quick Commerce (10m)",
-            "rating": 4.7,
-            "reviews_count": 680,
-            "badge": "10-Min Superfast",
-            "badge_color": "#facc15",
-            "in_stock": (base_mrp < 45000),  # Available if consumer tech
-            "url": "https://blinkit.com"
-        },
-        {
-            "store_id": "zepto",
-            "name": "Zepto",
-            "price": round(base_mrp * 0.78),
-            "mrp": base_mrp,
-            "discount_pct": 22,
-            "delivery_time": "9 Minutes Delivery",
-            "delivery_type": "Quick Commerce (10m)",
-            "rating": 4.6,
-            "reviews_count": 920,
-            "badge": "Lightning Fast",
-            "badge_color": "#a855f7",
-            "in_stock": (base_mrp < 45000),
-            "url": "https://zeptonow.com"
-        },
-        {
-            "store_id": "snapdeal",
-            "name": "Snapdeal",
-            "price": round(base_mrp * 0.85),
-            "mrp": base_mrp,
-            "discount_pct": 15,
-            "delivery_time": "3-4 Days Delivery",
-            "delivery_type": "Economy",
-            "rating": 4.1,
-            "reviews_count": 2100,
-            "badge": "Budget Deal",
-            "badge_color": "#ef4444",
-            "in_stock": True,
-            "url": f"https://www.snapdeal.com/search?keyword={q.replace(' ', '+')}"
-        }
-    ]
-
-    valid_stores = [s for s in stores_data if s["in_stock"]]
-    best_store = min(valid_stores, key=lambda s: s["price"])
-    worst_store = max(valid_stores, key=lambda s: s["price"])
-    arbitrage_savings = worst_store["price"] - best_store["price"]
-
-    # 30-day historical trend generator
+    # Real observed history for this query (previous live searches on this platform).
     history_points = []
-    cur_p = best_store["price"]
-    for day in range(30, 0, -1):
-        noise = (math.sin(day * 0.5) * 0.04) + ((day % 5 == 0) * -0.06)
-        pt_price = round(cur_p * (1.0 + noise))
-        history_points.append({
-            "day": f"Day -{day}",
-            "price": pt_price
-        })
+    try:
+        with _get_db() as c:
+            rows = c.execute(
+                "SELECT created_at, min_price FROM multistore_comparisons WHERE lower(query)=lower(?) "
+                "ORDER BY created_at DESC LIMIT 30", (q,)).fetchall()
+        history_points = [{"day": r[0][:10], "price": round(r[1])} for r in reversed(rows) if r[1]]
+    except Exception:
+        pass
+    history_points.append({"day": "Now", "price": best_store["price"]})
+    prices = [p["price"] for p in history_points]
 
-    lowest_30d = min(p["price"] for p in history_points)
-    highest_30d = max(p["price"] for p in history_points)
-
-    deal_score = min(99, round((best_store["discount_pct"] * 2.2) + (best_store["rating"] * 8.5)))
-
-    # Persist search in SQLite
     try:
         with _get_db() as c:
             c.execute("""
                 INSERT INTO multistore_comparisons (created_at, query, best_store, min_price, max_price, deal_score)
                 VALUES (?, ?, ?, ?, ?, ?)
-            """, (
-                datetime.datetime.utcnow().isoformat(),
-                q,
-                best_store["name"],
-                best_store["price"],
-                worst_store["price"],
-                deal_score
-            ))
+            """, (datetime.datetime.utcnow().isoformat(), q, best_store["name"], best_store["price"],
+                  worst_store["price"], score))
     except Exception as e:
         print(f"[emart] DB log error: {e}")
 
     return {
         "status": "success",
+        "data_mode": "live",
         "query": q,
         "category": req.category,
-        "stores_count": len(stores_data),
+        "stores_count": len(cards),
         "best_store": best_store,
-        "arbitrage_savings_inr": f"₹{arbitrage_savings:,}",
-        "deal_score": deal_score,
-        "deal_verdict": "🔥 EXCEPTIONAL DEAL" if deal_score > 85 else "⚡ GOOD VALUE" if deal_score > 70 else "FAIR PRICE",
-        "stores": stores_data,
+        "arbitrage_savings_inr": f"\u20b9{worst_store['price'] - best_store['price']:,}",
+        "deal_score": score,
+        "deal_verdict": "\U0001F525 EXCEPTIONAL DEAL" if score > 85 else "\u26a1 GOOD VALUE" if score > 70 else "FAIR PRICE",
+        "stores": cards,
         "historical_30d": {
-            "lowest": lowest_30d,
-            "highest": highest_30d,
-            "current": best_store["price"],
-            "trend": "FALLING" if best_store["price"] <= lowest_30d * 1.03 else "STABLE",
-            "points": history_points
-        }
+            "lowest": min(prices), "highest": max(prices), "current": best_store["price"],
+            "trend": "FALLING" if len(prices) > 1 and prices[-1] < prices[0] else "STABLE" if len(prices) > 1 else "NEW",
+            "points": history_points,
+            "observed_searches": len(history_points) - 1,
+        },
     }
 
 
@@ -2222,34 +2138,30 @@ class BestsellerAnalyticsReq(BaseModel):
     category: str = "Electronics"
 
 @router.post("/api/emart/bestseller-analytics")
-def analyze_bestseller_velocity(req: BestsellerAnalyticsReq):
-    r"""
-    Ported from E:\Project\bestseller-analytics:
-    Calculates BSR ranking trajectory, monthly unit sales velocity, discount depth, and review polarity.
-    """
+def analyze_bestseller_velocity(req: BestsellerAnalyticsReq, request: Request):
+    """Demand signals from real data only: how many live listings/stores carry the
+    item and their review volume. (BSR rank and unit sales are not publicly
+    available without a marketplace seller API, so they are not invented.)"""
+    import price_engine
     q = req.asin_or_query.strip()
-    h = int(hashlib.md5(q.lower().encode()).hexdigest()[:6], 16)
-
-    bsr_rank = 1 + (h % 240)
-    units_per_month = 500 + (h % 4800)
-    est_monthly_revenue = units_per_month * (850 + (h % 3500))
-
+    key = price_engine.serpapi_key(request)
+    listings = price_engine.fetch_listings(q, key) if q else []
+    if not listings:
+        return {"status": "no_live_data", "item": q, "category": req.category,
+                "bsr_rank": "Needs live data", "monthly_velocity_units": "Needs live data",
+                "buy_recommendation": price_engine.no_live_data_message(bool(key)).split(".")[0] + "."}
+    stores = {l["store_id"] for l in listings}
+    reviews = sum(int(l["reviews"] or 0) for l in listings)
+    rated = [l["rating"] for l in listings if isinstance(l["rating"], (int, float))]
+    prices = sorted(l["price"] for l in listings)
+    spread = (prices[-1] - prices[0]) / prices[-1] if prices[-1] else 0
     return {
-        "status": "success",
-        "item": q,
-        "category": req.category,
-        "bsr_rank": f"#{bsr_rank} in {req.category}",
-        "monthly_velocity_units": f"{units_per_month:,} units/month",
-        "estimated_monthly_gmv_inr": f"₹{est_monthly_revenue:,}",
-        "sentiment_polarity": {
-            "positive_pct": 86,
-            "neutral_pct": 10,
-            "critical_pct": 4,
-            "top_positive_keywords": ["battery life", "soundstage", "build quality", "value for money"],
-            "top_complaint_keywords": ["case scratch", "app pairing delay"]
-        },
-        "price_elasticity": "HIGH — Sales jump 48% when discounted >15%",
-        "buy_recommendation": "BUY NOW — Price is within 3% of all-time low."
+        "status": "success", "item": q, "category": req.category,
+        "bsr_rank": f"Sold by {len(stores)} stores ({len(listings)} listings)",
+        "monthly_velocity_units": f"{reviews:,} total reviews across listings",
+        "average_rating": round(sum(rated) / len(rated), 2) if rated else None,
+        "buy_recommendation": ("Prices vary a lot between stores - buy from the cheapest listing." if spread > 0.15
+                               else "Prices are consistent across stores - buy where delivery suits you."),
     }
 
 
@@ -2310,7 +2222,13 @@ def detect_safety_ppe_compliance(req: PpeDetectReq):
             "helmet": "PASS" if compliance_pct > 50 else "FAIL - Helmet Missing",
             "vest": "PASS" if compliance_pct > 50 else "WARNING - High-Vis Vest Unverified"
         },
-        "standards": "Complies with OSHA 1910.132 Personal Protective Equipment & IS 2925 Industrial Safety Helmets"
+        "standards": "Reference standards: OSHA 1910.132 (PPE), IS 2925 (industrial safety helmets)",
+        # This hub endpoint returns a fixed illustrative scenario; it does not analyse
+        # the image. Real mask/PPE detection runs in the Rakshak AI app.
+        "result_type": "demo_scenario",
+        "is_demo": True,
+        "live_detector_url": "/rakshak-ai/cv-sandbox.html",
+        "note": "Illustrative demo scenario - no image was analysed. Use Rakshak AI's CV Sandbox for real detection.",
     }
 
 
@@ -2329,6 +2247,9 @@ def match_facial_recognition_attendance(req: FaceMatchReq):
     now_str = datetime.datetime.now().strftime("%I:%M:%S %p")
 
     # Match target employee
+    # DEMO ONLY: no biometric comparison is performed here (the image is not
+    # analysed). It used to report "Biometric Identity Confirmed" + "liveness
+    # PASSED" for any input. Real face matching runs in the Rakshak AI app.
     matched_employee = next((e for e in STAFF_DIRECTORY if e["employee_id"] == req.candidate_id), STAFF_DIRECTORY[0])
     similarity = 0.978 if req.candidate_id in ["EMP-001", "EMP-002", "EMP-003"] else 0.942
 
@@ -2343,8 +2264,8 @@ def match_facial_recognition_attendance(req: FaceMatchReq):
                 matched_employee["employee_id"],
                 matched_employee["name"],
                 similarity,
-                "PPE_COMPLIANT",
-                "VERIFIED_ENTRY"
+                "DEMO",
+                "DEMO_SCENARIO"
             ))
     except Exception as e:
         print(f"[rakshak] Attendance DB log error: {e}")
@@ -2358,10 +2279,13 @@ def match_facial_recognition_attendance(req: FaceMatchReq):
         "name": matched_employee["name"],
         "role": matched_employee["role"],
         "department": matched_employee["dept"],
-        "access_permission": "GRANTED — Biometric Identity Confirmed",
+        "access_permission": "DEMO SCENARIO — no biometric comparison was performed",
         "attendance_timestamp": now_str,
-        "liveness_check": "PASSED (Blink & Micro-motion Verified)",
-        "security_badge": "Rakshak AI Vision Gate L3"
+        "liveness_check": "Not performed (demo scenario)",
+        "security_badge": "Rakshak AI Vision Gate L3 (demo)",
+        "result_type": "demo_scenario",
+        "is_demo": True,
+        "live_matcher_url": "/rakshak-ai/face-matcher.html",
     }
 
 

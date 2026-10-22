@@ -384,7 +384,7 @@ let currentLabKey = 'attention';
 function loadChallenge(key) {
   currentLabKey = key;
   document.querySelectorAll('.ch-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  (function(){ var e = window.event, t = e && e.target ? (e.target.closest ? (e.target.closest('button,[onclick]') || e.target) : e.target) : document.querySelector('[onclick*="\'' + key + '\'"]'); if (t && t.classList) t.classList.add('active'); })();
 
   const c = LAB_CHALLENGES[key];
   document.getElementById('probBadge').innerText = c.badge;

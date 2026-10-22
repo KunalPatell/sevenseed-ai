@@ -211,7 +211,7 @@
       document.getElementById('fundingAsk').value = p.ask;
 
       document.querySelectorAll('.temp-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      (function(){ var e = window.event, t = e && e.target ? (e.target.closest ? (e.target.closest('button,[onclick]') || e.target) : e.target) : null; if (t && t.classList) t.classList.add('active'); })();
     }
 
     async function generateDeck() {

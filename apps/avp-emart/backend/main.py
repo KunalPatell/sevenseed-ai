@@ -89,6 +89,10 @@ class AlertReq(BaseModel):
 
 
 # ── API ───────────────────────────────────────────────────────────────────────
+# Typical standard-delivery times by store (metro India), used only when a live
+# listing doesn't state its own delivery estimate.
+_TYPICAL_DELIVERY_DAYS = {"Amazon": 2, "Flipkart": 3, "Croma": 3, "Tata CLiQ": 4, "Reliance Digital": 3, "Snapdeal": 5}
+
 @app.get("/api/health")
 def health():
     return {
@@ -108,7 +112,6 @@ def compare(req: CompareReq):
     # Computed before save_search() below, so it never includes this search.
     typical = db.price_typical(req.query, exclude_latest=False)
     mapped = []
-    import random
     for p in products:
         price = p.get("price", 0)
         vs_typical_pct = None
@@ -122,7 +125,9 @@ def compare(req: CompareReq):
             "rating": p.get("rating", 0.0),
             "reviews_count": p.get("reviews", 0),
             "in_stock": p.get("in_stock", True),
-            "delivery_days": random.randint(1, 5),
+            # Stable standard-delivery estimate per store (was random.randint(1, 5)
+            # on every request, so the same listing changed delivery time on refresh).
+            "delivery_days": p.get("delivery_days") or _TYPICAL_DELIVERY_DAYS.get(p.get("platform", ""), 3),
             "best_value_score": p.get("value_score", 0),
             "positioning": p.get("positioning", "Standard"),
             "z_score": p.get("z_score", 0.0),

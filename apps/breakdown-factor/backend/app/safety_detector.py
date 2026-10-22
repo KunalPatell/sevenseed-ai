@@ -22,11 +22,10 @@ def detect_safety_gear(image_path: str) -> dict:
     violations = []
     has_yolo = False
     
-    # Search for local YOLO weights
-    best_pt_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "yolov8s-seg.pt")
-    if not os.path.exists(best_pt_path):
-        best_pt_path = r"e:\Project\local-face-recognition\yolov8s-seg.pt"
-        
+    # Search for local YOLO weights (model file next to the app, or env override)
+    best_pt_path = os.environ.get("SAFETY_YOLO_PATH") or os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "yolov8s-seg.pt")
+
     if os.path.exists(best_pt_path):
         try:
             from ultralytics import YOLO
@@ -40,39 +39,31 @@ def detect_safety_gear(image_path: str) -> dict:
             has_yolo = True
         except Exception as e:
             print(f"[YOLO Safety Error] {e}")
-            
-    # Mock / Fallback logic if YOLO failed or no persons found
-    if detected_persons == 0:
-        fname = os.path.basename(image_path).lower()
-        if "safe" in fname or "compliant" in fname:
-            detected_persons = 3
-            wearing_helmets = 3
-            wearing_masks = 3
-        else:
-            detected_persons = 2
-            wearing_helmets = 1
-            wearing_masks = 0
-            violations = ["Worker #2 is missing safety helmet", "Worker #1 and #2 are missing face masks"]
-    else:
-        # Fill in safety counts based on persons detected
-        wearing_helmets = max(0, detected_persons - 1)
-        wearing_masks = max(0, detected_persons - 2)
-        for i in range(detected_persons):
-            if i >= wearing_helmets:
-                violations.append(f"Worker #{i+1} is missing safety helmet")
-            if i >= wearing_masks:
-                violations.append(f"Worker #{i+1} is missing face mask")
-                
-    compliance_score = int((wearing_helmets + wearing_masks) / (2 * max(1, detected_persons)) * 100)
-    status = "COMPLIANT" if compliance_score >= 80 else "WARNING" if compliance_score >= 50 else "NON-COMPLIANT"
-    
+
+    # The bundled COCO model detects people, not helmets or masks, so PPE is
+    # reported as not assessed instead of being guessed.
+    if not has_yolo:
+        return {
+            "success": False,
+            "workers_detected": None,
+            "wearing_helmets": None,
+            "wearing_masks": None,
+            "violations": [],
+            "compliance_score": None,
+            "status": "MODEL_UNAVAILABLE",
+            "yolo_active": False,
+            "message": "The person-detection model is not installed on this server, so no scan was performed.",
+        }
+
     return {
         "success": True,
         "workers_detected": detected_persons,
-        "wearing_helmets": wearing_helmets,
-        "wearing_masks": wearing_masks,
-        "violations": violations,
-        "compliance_score": compliance_score,
-        "status": status,
-        "yolo_active": has_yolo
+        "wearing_helmets": None,
+        "wearing_masks": None,
+        "violations": [],
+        "compliance_score": None,
+        "status": "PPE_NOT_ASSESSED",
+        "yolo_active": True,
+        "message": (f"Detected {detected_persons} person(s). Helmet and mask checks need a PPE-trained model, "
+                    "which is not bundled yet, so PPE compliance was not assessed."),
     }

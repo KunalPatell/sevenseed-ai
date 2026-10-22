@@ -172,6 +172,8 @@ async def scan_prescription(request: Request, file: UploadFile = File(...)):
     try:
         from prescription_ocr import parse_prescription_image, check_interactions
         parsed = parse_prescription_image(tmp_path)
+        if not parsed.get("drugs"):
+            return {"parsed": parsed, "safety": {"result": parsed.get("message", "No medicines could be read from the image.")}}
         safety = check_interactions(parsed.get("drugs", []))
         text_summary = f"Patient: {parsed.get('patient', 'Unknown')}, Drugs: {', '.join([d['name'] for d in parsed.get('drugs', [])])}"
         db.save_prescription(text_summary, json.dumps(safety))

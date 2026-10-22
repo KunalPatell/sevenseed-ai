@@ -82,11 +82,25 @@
 
     .result-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; margin-top: 8px; }
   </style>
-  <link rel="stylesheet" href="ws-shell.css">
 </head>
 <body>
 
-<div id="ws-shell" data-ws="outreach"></div>
+<nav class="top-nav">
+  <a class="nav-brand" href="index.html">
+    <i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed <span>Workstation 9</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html"><i class="fas fa-home"></i> Hub</a>
+    <a href="architecture-studio.html"><i class="fas fa-sitemap"></i> Architecture</a>
+    <a href="email-cleaner.html"><i class="fas fa-envelope-circle-check"></i> Email Cleaner</a>
+    <a href="socialhub-studio.html"><i class="fas fa-share-nodes"></i> SocialHub</a>
+    <a href="outreach-sequence-studio.html" class="active"><i class="fas fa-paper-plane"></i> Outreach Engine</a>
+    <a href="meeting-diarization-studio.html"><i class="fas fa-headphones-simple"></i> MeetBot</a>
+  </div>
+  <div>
+    <a class="chip" href="index.html">← Back to Main Hub</a>
+  </div>
+</nav>
 
 <main class="hub-container">
   <div class="hud-header">
@@ -456,6 +470,5 @@
   window.addEventListener('DOMContentLoaded', refreshAll);
 </script>
 
-<script src="ws-shell.js"></script>
 </body>
 </html>

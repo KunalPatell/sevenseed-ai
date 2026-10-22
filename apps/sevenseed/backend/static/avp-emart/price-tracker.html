@@ -323,7 +323,7 @@ const ctx = canvas.getContext('2d');
 function switchProduct(key) {
   currentProdKey = key;
   document.querySelectorAll('.prod-chip').forEach(c => c.classList.remove('active'));
-  event.target.classList.add('active');
+  (function(){ var e = window.event, t = e && e.target ? (e.target.closest ? (e.target.closest('button,[onclick]') || e.target) : e.target) : document.querySelector('[onclick*="\'' + key + '\'"]'); if (t && t.classList) t.classList.add('active'); })();
 
   const p = PRODUCTS[key];
   document.getElementById('pTitle').innerText = p.title;

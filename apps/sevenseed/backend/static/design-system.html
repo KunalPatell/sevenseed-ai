@@ -1380,7 +1380,7 @@
 
     function filterCategory(cat) {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      (function(){ var e = window.event, t = e && e.target ? (e.target.closest ? (e.target.closest('button,[onclick]') || e.target) : e.target) : null; if (t && t.classList) t.classList.add('active'); })();
       const cards = document.querySelectorAll('.comp-card');
       cards.forEach(card => {
         if (cat === 'all' || card.getAttribute('data-cat') === cat) {

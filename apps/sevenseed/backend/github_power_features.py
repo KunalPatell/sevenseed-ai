@@ -2490,8 +2490,30 @@ def save_coding_skill(req: SkillReq):
         """, (skill_id, req.title, req.category, req.description, req.prompt_text, now_str))
     return {"status": "success", "skill_id": skill_id}
 
+def _sandbox_env() -> dict:
+    # Minimal environment: no API keys, tokens or DATABASE_URL reach user code.
+    keep = ("PATH", "SYSTEMROOT", "TEMP", "TMP", "HOME", "LANG", "PYTHONIOENCODING")
+    env = {k: os.environ[k] for k in keep if k in os.environ}
+    env["PYTHONIOENCODING"] = "utf-8"
+    return env
+
+
 @router.post("/coding-agent/run-code")
-def run_code_sandbox(req: CodeExecutionReq):
+def run_code_sandbox(req: CodeExecutionReq, request: Request):
+    # Server-side execution is arbitrary code execution on the host. It used to be
+    # open to anyone, which let any visitor read every secret in os.environ (and
+    # /proc/<pid>/environ defeats env scrubbing on its own). Public visitors now
+    # run Python/JS in their own browser (Pyodide / Web Worker); only an operator
+    # holding ADMIN_KEY may execute on the server.
+    admin_key = os.environ.get("ADMIN_KEY", "").strip()
+    if not admin_key or request.headers.get("x-admin-key", "") != admin_key:
+        raise HTTPException(
+            status_code=403,
+            detail="Server-side execution is disabled for public users. Code runs in your browser instead.",
+        )
+    if len(req.code or "") > 20000:
+        raise HTTPException(status_code=400, detail="Code too long (20,000 character limit).")
+
     exec_id = f"exec_{uuid.uuid4().hex[:8]}"
     start_t = time.perf_counter()
     stdout_str = ""
@@ -2499,55 +2521,35 @@ def run_code_sandbox(req: CodeExecutionReq):
     exit_code = 0
 
     lang = req.language.lower().strip()
+    runtimes = {
+        "python": [sys.executable, "-I", "-c", req.code], "py": [sys.executable, "-I", "-c", req.code],
+        "javascript": ["node", "-e", req.code], "js": ["node", "-e", req.code], "node": ["node", "-e", req.code],
+    }
     try:
-        if lang in ["python", "py"]:
+        if lang in runtimes:
             proc = subprocess.run(
-                [sys.executable, "-c", req.code],
+                runtimes[lang],
                 input=req.stdin or "",
                 capture_output=True,
                 text=True,
                 timeout=6.0,
                 encoding="utf-8",
-                errors="replace"
-            )
-            stdout_str = proc.stdout
-            stderr_str = proc.stderr
-            exit_code = proc.returncode
-        elif lang in ["javascript", "js", "node"]:
-            proc = subprocess.run(
-                ["node", "-e", req.code],
-                input=req.stdin or "",
-                capture_output=True,
-                text=True,
-                timeout=6.0,
-                encoding="utf-8",
-                errors="replace"
-            )
-            stdout_str = proc.stdout
-            stderr_str = proc.stderr
-            exit_code = proc.returncode
-        elif lang in ["sh", "bash", "shell", "powershell"]:
-            proc = subprocess.run(
-                ["powershell", "-NoProfile", "-Command", req.code],
-                input=req.stdin or "",
-                capture_output=True,
-                text=True,
-                timeout=6.0,
-                encoding="utf-8",
-                errors="replace"
+                errors="replace",
+                env=_sandbox_env(),
             )
             stdout_str = proc.stdout
             stderr_str = proc.stderr
             exit_code = proc.returncode
         else:
-            stderr_str = f"Unsupported execution runtime: '{req.language}'. Supported: python, javascript, powershell."
+            stderr_str = f"Unsupported execution runtime: '{req.language}'. Supported: python, javascript."
             exit_code = 1
     except subprocess.TimeoutExpired:
         stderr_str = "Execution timed out (6.0s limit reached). Sandbox process terminated."
         exit_code = 124
     except Exception as e:
-        stderr_str = f"Sandbox Exception: {str(e)}\n{traceback.format_exc()}"
+        stderr_str = f"Sandbox Exception: {type(e).__name__}: {e}"
         exit_code = 1
+
 
     duration_ms = int((time.perf_counter() - start_t) * 1000)
     now_str = datetime.datetime.utcnow().isoformat()

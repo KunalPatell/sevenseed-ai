@@ -68,11 +68,28 @@
     .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
     .chip:hover { border-color: #10b981; color: #10b981; }
   </style>
-  <link rel="stylesheet" href="ws-shell.css">
 </head>
 <body>
 
-<div id="ws-shell" data-ws="email-cleaner"></div>
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-seedling"></i></span>
+    <span class="logo-text">Sevenseed <span class="logo-accent">Hub</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html"><i class="fas fa-compass"></i> Venture OS</a>
+    <a href="architecture-studio.html"><i class="fas fa-sitemap"></i> Architecture Studio</a>
+    <a href="email-cleaner.html" style="color:#10b981;font-weight:700;"><i class="fas fa-envelope-circle-check"></i> Email Cleaner</a>
+    <a href="operations-intelligence.html"><i class="fas fa-database"></i> Operations NL</a>
+    <a href="ai-blog-studio.html"><i class="fas fa-feather-pointed"></i> Blog Studio</a>
+    <a href="interview-radar.html"><i class="fas fa-chart-pie"></i> Interview Radar</a>
+    <a href="edge-telemetry.html"><i class="fas fa-microchip"></i> Telemetry Lab</a>
+    <a href="spine-canvas.html"><i class="fas fa-person-running"></i> Spine 2D</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost sm" href="index.html">← Back to Hub</a>
+  </div>
+</nav>
 
 <main class="hub-container">
   <div class="hud-header">
@@ -416,6 +433,5 @@ function exportCleanCsv() {
   document.body.removeChild(link);
 }
 </script>
-<script src="ws-shell.js"></script>
 </body>
 </html>

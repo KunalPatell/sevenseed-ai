@@ -175,7 +175,7 @@ if (entCta) entCta.addEventListener('click', function(e){
 
 // Nav background on scroll
 var nav = document.querySelector('.nav');
-function onScroll(){ if (window.scrollY > 24) nav.classList.add('scrolled'); else nav.classList.remove('scrolled'); }
+function onScroll(){ if (!nav) return; if (window.scrollY > 24) nav.classList.add('scrolled'); else nav.classList.remove('scrolled'); }
 window.addEventListener('scroll', onScroll); onScroll();
 
 // Count-up animation for numeric stats/metrics

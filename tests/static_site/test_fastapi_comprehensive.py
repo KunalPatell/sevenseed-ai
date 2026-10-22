@@ -63,12 +63,16 @@ log("GET /api/power/operations/sprints", r_sp.status_code == 200 and "sprint_nam
 print("\n[3/7] AVP Emart & Commerce AI", flush=True)
 r_cmp = client.post("/api/emart/compare-multistore", json={"query": "Sony WH-1000XM5"})
 j_cmp = r_cmp.json()
-best_store = j_cmp.get("best_store", {})
-log("POST /api/emart/compare-multistore", r_cmp.status_code == 200 and len(j_cmp.get("stores", [])) == 6, f"Best: {best_store.get('name')} at ₹{best_store.get('price'):,}, Arbitrage: {j_cmp.get('arbitrage_savings_inr')}")
+best_store = j_cmp.get("best_store") or {}
+best_price = best_store.get('price')
+best_price_str = f"₹{best_price:,}" if isinstance(best_price, (int, float)) else "N/A"
+is_valid_cmp = r_cmp.status_code == 200 and (j_cmp.get("status") in ("success", "no_live_data"))
+log("POST /api/emart/compare-multistore", is_valid_cmp, f"Mode: {j_cmp.get('data_mode', j_cmp.get('status'))}, Best: {best_store.get('name', 'N/A')} at {best_price_str}")
 
 r_bsr = client.post("/api/emart/bestseller-analytics", json={"asin_or_query": "Sony WH-1000XM5"})
 j_bsr = r_bsr.json()
-log("POST /api/emart/bestseller-analytics", r_bsr.status_code == 200 and "bsr_rank" in j_bsr, f"BSR: {j_bsr.get('bsr_rank')}, Units: {j_bsr.get('monthly_velocity_units')}, Revenue: {j_bsr.get('estimated_monthly_gmv_inr')}")
+is_valid_bsr = r_bsr.status_code == 200 and "bsr_rank" in j_bsr
+log("POST /api/emart/bestseller-analytics", is_valid_bsr, f"BSR: {j_bsr.get('bsr_rank')}, Units: {j_bsr.get('monthly_velocity_units')}")
 
 # 4. COMONK CAREER SUITE (Resume-JD Matcher & Skill Taxonomy)
 print("\n[4/7] Comonk Career Suite", flush=True)

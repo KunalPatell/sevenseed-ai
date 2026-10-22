@@ -96,12 +96,24 @@
     .btn-cyan { background: var(--accent-cyan); color: #020617; }
     .btn-cyan:hover { background: #22d3ee; }
   </style>
-  <link rel="stylesheet" href="ws-shell.css">
 </head>
 <body>
 
   <!-- Top Navigation -->
-<div id="ws-shell" data-ws="karting"></div>
+  <nav class="top-nav">
+    <a href="index.html" class="nav-brand">
+      <i class="fa-solid fa-seedling"></i>
+      Sevenseed <span>Workstation 14</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Hub</a>
+      <a href="edge-telemetry.html"><i class="fa-solid fa-wave-square"></i> IMU Sensor</a>
+      <a href="socialhub-studio.html"><i class="fa-solid fa-share-nodes"></i> SocialHub</a>
+      <a href="coding-agent-studio.html"><i class="fa-solid fa-terminal"></i> Coding Agent</a>
+      <a href="karting-telemetry.html" class="active"><i class="fa-solid fa-flag-checkered"></i> Karting Telemetry</a>
+      <a href="index.html" style="margin-left: 12px; color: #cbd5e1; border: 1px solid #334155; padding: 5px 12px; border-radius: 6px;">&larr; Back to Main Hub</a>
+    </div>
+  </nav>
 
   <div class="hub-container">
     <!-- HUD Header -->
@@ -397,6 +409,5 @@
     loadAllKartingData();
     setInterval(loadAllKartingData, 5000);
   </script>
-<script src="ws-shell.js"></script>
 </body>
 </html>

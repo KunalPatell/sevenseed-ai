@@ -401,7 +401,10 @@ def generate_chat_response(text, lang="en"):
         
     workflow.add_conditional_edges("router", route_nodes)
     
+    import time as _time
+    _t0 = _time.perf_counter()
     final_state = workflow.run(initial_state)
+    duration_ms = int((_time.perf_counter() - _t0) * 1000)
     
     # Log telemetry for telemetry dashboard
     import store
@@ -409,7 +412,7 @@ def generate_chat_response(text, lang="en"):
     provider = "Offline Graph Engine"
     if llm is not None and llm.is_enabled():
         provider = f"LLM State Graph ({llm.PROVIDER})"
-    duration_ms = random.randint(20, 80)
+    # duration_ms measured above around workflow.run
     store.add_telemetry("Chatbot Reply", provider, duration_ms, len(text.split()), len(final_state["reply"].split()), "SUCCESS", 0.0)
     
     # Add traces to the response so the UI debug panel can display them!
@@ -983,7 +986,7 @@ def generate_internal_report(text, complaint_id=None):
 
     # Offline fallback
     import store
-    store.add_telemetry("Report Generator", "Offline Fallback", random.randint(5, 15), 0, 0, "SUCCESS", 0.0)
+    store.add_telemetry("Report Generator", "Offline Fallback", 0, 0, 0, "SUCCESS", 0.0)
     classification = "Routine Incident"
     if case_data:
         classification = case_data.get("crime_type", "Routine Incident")
@@ -1050,7 +1053,7 @@ def summarize_internal_meeting(text, summary_type="standard"):
 
     # Offline fallback
     import store
-    store.add_telemetry("Meeting Summary", "Offline Fallback", random.randint(4, 12), 0, 0, "SUCCESS", 0.0)
+    store.add_telemetry("Meeting Summary", "Offline Fallback", 0, 0, 0, "SUCCESS", 0.0)
     lines = text.split("\n")
     non_empty = [l.strip() for l in lines if l.strip()]
     entities = list(set(re.findall(r"\b[A-Z][a-z]+\b", text)))
@@ -1091,7 +1094,7 @@ def match_hr_resume(role, resume):
 
     # Offline fallback
     import store
-    store.add_telemetry("Resume JD Matcher", "Offline Fallback", random.randint(6, 18), 0, 0, "SUCCESS", 0.0)
+    store.add_telemetry("Resume JD Matcher", "Offline Fallback", 0, 0, 0, "SUCCESS", 0.0)
     resume_lower = resume.lower()
     role_lower = role.lower()
     
@@ -1143,7 +1146,7 @@ def rag_search_cases(query):
     for c in cases:
         c_words = set(re.findall(r"\w+", c["summary"].lower() + " " + c["crime_type"].lower()))
         overlap = query_words.intersection(c_words)
-        score = min(99, len(overlap) * 15 + random.randint(10, 30))
+        score = min(99, len(overlap) * 15 + 20)  # base bonus for structural match
         if len(overlap) > 0 or (any(w in query.lower() for w in ["theft", "stolen", "stole"]) and "theft" in c["crime_type"].lower()):
             matches.append({
                 "id": c["id"],
@@ -1245,7 +1248,7 @@ def run_agent_investigation(case_id):
                 
     # Offline Fallback
     import store
-    store.add_telemetry("Agent Investigator", "Offline Fallback", random.randint(15, 30), 0, 0, "SUCCESS", 0.0)
+    store.add_telemetry("Agent Investigator", "Offline Fallback", 0, 0, 0, "SUCCESS", 0.0)
     crime_type = case_data.get("crime_type", "General")
     loc = case_data.get("location", "Ahmedabad")
     
@@ -1348,7 +1351,7 @@ def evaluate_rag_performance(query, k=3, retrieval_type="hybrid", temperature=0.
         # Semantic retrieval mock (using character/word overlaps with synonyms + random embedding emulation)
         semantic_score = 0
         overlap = set(q_words).intersection(set(law["description"].lower().split() + law["title"].lower().split()))
-        semantic_score = len(overlap) * 25 + (random.randint(15, 30) if len(overlap) > 0 else random.randint(5, 12))
+        semantic_score = len(overlap) * 25 + (20 if len(overlap) > 0 else 8)  # deterministic overlap bonus
         
         # Combine score based on retrieval_type
         if retrieval_type == "bm25":

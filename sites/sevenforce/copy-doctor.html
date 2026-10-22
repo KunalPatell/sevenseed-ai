@@ -316,7 +316,7 @@
 
     function loadExample(key) {
       document.querySelectorAll('.r-chip').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      (function(){ var e = window.event, t = e && e.target ? (e.target.closest ? (e.target.closest('button,[onclick]') || e.target) : e.target) : null; if (t && t.classList) t.classList.add('active'); })();
       const td = TEARDOWNS[key];
       if (!td) return;
       document.getElementById('beforeH1').innerText = td.bH1;
