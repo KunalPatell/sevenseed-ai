@@ -328,13 +328,96 @@
     });
   }
 
-  window.SevenseedWorkstations = { categories: CATEGORIES, list: WORKSTATIONS };
+  function initSpotlight(root) {
+    var targets = (root || document).querySelectorAll('.ws-card, .metric-card, .card-panel, .hosp-card, .tool-card, .stat-card, .glow-card');
+    targets.forEach(function (card) {
+      if (card._hasSpotlight) return;
+      card._hasSpotlight = true;
+      card.addEventListener('mousemove', function (e) {
+        var rect = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+        card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+      });
+    });
+  }
+
+  // ── Universal Glassmorphic Toast Notification Engine ───────────────────
+  window.showToast = function (message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3600;
+    var container = document.getElementById('ss-toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'ss-toast-container';
+      container.setAttribute('aria-live', 'polite');
+      document.body.appendChild(container);
+    }
+
+    var iconClass = 'fa-circle-info';
+    if (type === 'success') iconClass = 'fa-circle-check';
+    else if (type === 'error') iconClass = 'fa-circle-xmark';
+    else if (type === 'warning') iconClass = 'fa-triangle-exclamation';
+    else if (type === 'ai') iconClass = 'fa-wand-magic-sparkles';
+
+    var toast = document.createElement('div');
+    toast.className = 'ss-toast ss-toast-' + type;
+    toast.setAttribute('role', 'alert');
+    toast.innerHTML =
+      '<span class="ss-toast-icon"><i class="fas ' + iconClass + '"></i></span>' +
+      '<div class="ss-toast-msg">' + message + '</div>' +
+      '<button type="button" class="ss-toast-close" aria-label="Dismiss"><i class="fas fa-xmark"></i></button>' +
+      '<div class="ss-toast-progress" style="animation-duration:' + duration + 'ms;"></div>';
+
+    container.appendChild(toast);
+
+    function dismiss() {
+      if (toast.classList.contains('ss-toast-closing')) return;
+      toast.classList.add('ss-toast-closing');
+      setTimeout(function () {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 250);
+    }
+
+    var timer = setTimeout(dismiss, duration);
+
+    var closeBtn = toast.querySelector('.ss-toast-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        clearTimeout(timer);
+        dismiss();
+      });
+    }
+
+    toast.addEventListener('click', function () {
+      clearTimeout(timer);
+      dismiss();
+    });
+  };
+
+  // Intercept window.alert to provide sleek, non-blocking toast notifications
+  if (!window._ssOrigAlert) {
+    window._ssOrigAlert = window.alert;
+    window.alert = function (msg) {
+      if (typeof msg === 'string' && (msg.toLowerCase().indexOf('error') !== -1 || msg.toLowerCase().indexOf('failed') !== -1)) {
+        window.showToast(msg, 'error', 4500);
+      } else if (typeof msg === 'string' && (msg.toLowerCase().indexOf('copied') !== -1 || msg.toLowerCase().indexOf('success') !== -1 || msg.toLowerCase().indexOf('saved') !== -1 || msg.toLowerCase().indexOf('exported') !== -1 || msg.toLowerCase().indexOf('dispatched') !== -1)) {
+        window.showToast(msg, 'success', 3600);
+      } else {
+        window.showToast(msg, 'info', 3600);
+      }
+      console.log('[Sevenseed Notification]', msg);
+    };
+  }
+
+  window.SevenseedWorkstations = { categories: CATEGORIES, list: WORKSTATIONS, initSpotlight: initSpotlight };
 
   function boot() {
     var shell = document.getElementById('ws-shell');
     if (shell) renderShell(shell);
     var dir = document.getElementById('ws-directory');
     if (dir) renderDirectory(dir);
+    initSpotlight();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();

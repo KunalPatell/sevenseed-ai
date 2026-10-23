@@ -1863,5 +1863,126 @@ document.addEventListener('DOMContentLoaded', function() {
   if (document.getElementById('quickVaultProvider')) {
     window.checkQuickBYOKStatus();
   }
+  initDynamicSpotlight();
+  initStatCounters();
 });
+
+// ── Dynamic Cursor Spotlight & Micro-Interactions ───────────────────────
+function initDynamicSpotlight() {
+  var cards = document.querySelectorAll('.vent-card, .svc-card, .proc-step, .metric, .tcard, .ent-card, .about-card, .metric-card, .hosp-card, .bm-card, .stat-card, .glow-card, .ws-card');
+  cards.forEach(function (card) {
+    if (card._hasSpotlight) return;
+    card._hasSpotlight = true;
+    card.addEventListener('mousemove', function (e) {
+      var rect = card.getBoundingClientRect();
+      card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+      card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+    });
+  });
+}
+
+// ── Smooth Numeric Stat Counter ─────────────────────────────────────────
+function initStatCounters() {
+  var nums = document.querySelectorAll('.hs-num');
+  if (!nums.length || !('IntersectionObserver' in window)) return;
+  var obs = new IntersectionObserver(function(entries, observer) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var el = entry.target;
+        observer.unobserve(el);
+        var txt = el.textContent.trim();
+        var match = txt.match(/^([\D]*)(\d+[\d,.]*)([\D]*)$/);
+        if (!match) return;
+        var prefix = match[1] || '';
+        var rawNum = parseFloat(match[2].replace(/,/g, ''));
+        var suffix = match[3] || '';
+        if (isNaN(rawNum) || rawNum <= 0) return;
+        var dur = 1400;
+        var startTime = null;
+        function step(timestamp) {
+          if (!startTime) startTime = timestamp;
+          var progress = Math.min((timestamp - startTime) / dur, 1);
+          var ease = 1 - Math.pow(1 - progress, 3);
+          var current = Math.floor(ease * rawNum);
+          el.textContent = prefix + (current >= 1000 ? current.toLocaleString() : current) + suffix;
+          if (progress < 1) requestAnimationFrame(step);
+          else el.textContent = txt;
+        }
+        requestAnimationFrame(step);
+      }
+    });
+  }, { threshold: 0.25 });
+  nums.forEach(function(n) { obs.observe(n); });
+}
+
+// ── Universal Glassmorphic Toast Engine ──────────────────────────────────
+if (!window.showToast) {
+  window.showToast = function (message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3600;
+    var container = document.getElementById('ss-toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'ss-toast-container';
+      container.setAttribute('aria-live', 'polite');
+      document.body.appendChild(container);
+    }
+
+    var iconClass = 'fa-circle-info';
+    if (type === 'success') iconClass = 'fa-circle-check';
+    else if (type === 'error') iconClass = 'fa-circle-xmark';
+    else if (type === 'warning') iconClass = 'fa-triangle-exclamation';
+    else if (type === 'ai') iconClass = 'fa-wand-magic-sparkles';
+
+    var toast = document.createElement('div');
+    toast.className = 'ss-toast ss-toast-' + type;
+    toast.setAttribute('role', 'alert');
+    toast.innerHTML =
+      '<span class="ss-toast-icon"><i class="fas ' + iconClass + '"></i></span>' +
+      '<div class="ss-toast-msg">' + message + '</div>' +
+      '<button type="button" class="ss-toast-close" aria-label="Dismiss"><i class="fas fa-xmark"></i></button>' +
+      '<div class="ss-toast-progress" style="animation-duration:' + duration + 'ms;"></div>';
+
+    container.appendChild(toast);
+
+    function dismiss() {
+      if (toast.classList.contains('ss-toast-closing')) return;
+      toast.classList.add('ss-toast-closing');
+      setTimeout(function () {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 250);
+    }
+
+    var timer = setTimeout(dismiss, duration);
+
+    var closeBtn = toast.querySelector('.ss-toast-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        clearTimeout(timer);
+        dismiss();
+      });
+    }
+
+    toast.addEventListener('click', function () {
+      clearTimeout(timer);
+      dismiss();
+    });
+  };
+}
+
+if (!window._ssOrigAlert) {
+  window._ssOrigAlert = window.alert;
+  window.alert = function (msg) {
+    if (typeof msg === 'string' && (msg.toLowerCase().indexOf('error') !== -1 || msg.toLowerCase().indexOf('failed') !== -1)) {
+      window.showToast(msg, 'error', 4500);
+    } else if (typeof msg === 'string' && (msg.toLowerCase().indexOf('copied') !== -1 || msg.toLowerCase().indexOf('success') !== -1 || msg.toLowerCase().indexOf('saved') !== -1 || msg.toLowerCase().indexOf('exported') !== -1 || msg.toLowerCase().indexOf('dispatched') !== -1)) {
+      window.showToast(msg, 'success', 3600);
+    } else {
+      window.showToast(msg, 'info', 3600);
+    }
+    console.log('[Sevenseed Notification]', msg);
+  };
+}
+
 
