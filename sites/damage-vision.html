@@ -118,13 +118,28 @@
         <span style="font-size:12px; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.8px;">Defects Detected: <b id="defectCount" style="color:#fff;">2</b></span>
       </div>
 
-      <div id="remedyList" style="max-height:280px; overflow-y:auto; margin-bottom:18px;">
+      <div id="remedyList" style="max-height:220px; overflow-y:auto; margin-bottom:14px;">
         <!-- Populated by JS -->
       </div>
 
-      <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:14px; font-size:12px; color:#94a3b8; margin-bottom:16px;">
-        <strong style="color:#e2e8f0; display:block; margin-bottom:4px;"><i class="fas fa-shield-halved" style="color:#10b981;"></i> IS 456:2000 Compliance Standard</strong>
-        Meets CPWD Schedule of Rates (DSR-2023) Item 14.2 & ASTM C1583 Tensile Surface Pull-Off testing protocols.
+      <!-- Live Bill of Quantities (BOQ) Panel -->
+      <div id="boqPanel" style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:14px; margin-bottom:16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="color:#fff; font-size:12.5px;"><i class="fas fa-calculator" style="color:#f59e0b;"></i> CPWD Bill of Quantities (BOQ)</strong>
+          <span id="boqUrgency" class="badge-urgency High">High Urgency</span>
+        </div>
+        <div id="boqItems" style="font-size:11.5px; color:#94a3b8;">
+          <!-- Loaded via API -->
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #1e293b; padding-top:8px; margin-top:8px; font-weight:800; font-size:12.5px;">
+          <span style="color:#fff;">Net Estimated Repair:</span>
+          <span id="boqTotal" style="color:#f59e0b; font-family:'JetBrains Mono',monospace;">₹14,500</span>
+        </div>
+      </div>
+
+      <div style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:12px; font-size:11.5px; color:#94a3b8; margin-bottom:14px;">
+        <strong style="color:#e2e8f0; display:block; margin-bottom:3px;"><i class="fas fa-shield-halved" style="color:#10b981;"></i> IS 456 & IS 15988 Compliance Standard</strong>
+        Meets CPWD Schedule of Rates (DSR-2023) Item 14.2 & ASTM C881 Type I epoxy specifications.
       </div>
 
       <button class="btn-amber" style="width:100%;" onclick="downloadAuditPdf()">
@@ -245,8 +260,47 @@ async function fetchDetections(preset) {
     // Draw Overlays on canvas
     renderBoundingBoxes(currentDetections);
 
+    // Fetch detailed CPWD BOQ Bill of Quantities
+    fetchBoqEstimate(preset);
+
   } catch (err) {
     console.error('Detection fetch error:', err);
+  }
+}
+
+async function fetchBoqEstimate(preset) {
+  try {
+    const res = await fetch('/api/power/breakdown/estimate-repair', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ damage_type: preset, area_sqft: 28.0 })
+    });
+    if (!res.ok) return;
+    const boqData = await res.json();
+    
+    const boqItemsDiv = document.getElementById('boqItems');
+    const boqUrgencySpan = document.getElementById('boqUrgency');
+    const boqTotalSpan = document.getElementById('boqTotal');
+
+    if (boqUrgencySpan) {
+      boqUrgencySpan.textContent = boqData.urgency;
+      boqUrgencySpan.className = 'badge-urgency ' + (boqData.urgency.includes('Critical') ? 'Critical' : 'High');
+    }
+
+    if (boqTotalSpan && boqData.cost_summary) {
+      boqTotalSpan.textContent = `₹${boqData.cost_summary.grand_total_inr.toLocaleString()} ($${boqData.cost_summary.grand_total_usd} USD)`;
+    }
+
+    if (boqItemsDiv && boqData.bill_of_quantities) {
+      boqItemsDiv.innerHTML = boqData.bill_of_quantities.map(item => `
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px; padding:2px 0;">
+          <span style="color:#e2e8f0;">• ${item.item} (${item.qty} ${item.unit})</span>
+          <span style="font-family:'JetBrains Mono',monospace; color:#cbd5e1;">₹${(item.qty * item.rate_inr).toFixed(0)}</span>
+        </div>
+      `).join('');
+    }
+  } catch (e) {
+    console.warn("BOQ estimate error:", e);
   }
 }
 

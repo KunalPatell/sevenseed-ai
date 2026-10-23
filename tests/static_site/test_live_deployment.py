@@ -52,6 +52,10 @@ TEST_ROUTES = [
     ("GET", "/api/comonk/skill-taxonomy", "Comonk Taxonomy API"),
     ("POST", "/api/comonk/match-resume-jd", "Comonk Resume Matcher API", {"resume_text": "Python FastAPI Docker PostgreSQL", "jd_text": "Python FastAPI Kubernetes Docker PostgreSQL Kafka"}),
     ("POST", "/api/rakshak/detect-safety-ppe", "Rakshak PPE Vision API", {"image_base64": "dummy", "scenario_preset": "compliant_worker"}),
+    ("POST", "/api/power/pharmacy/health-advice", "Clinical Triage & Health Advice API", {"query": "High fever 102F and chills for 2 days"}),
+    ("GET", "/api/power/pharmacy/schemes", "Free Healthcare & Ayushman Schemes API"),
+    ("POST", "/api/power/outreach/enrich-lead", "Autonomous Prospect Intelligence API", {"company_name": "Datadog", "role": "VP Engineering"}),
+    ("POST", "/api/power/breakdown/estimate-repair", "Structural Damage Repair BOQ Estimator API", {"damage_type": "shear_crack", "area_sqft": 30.0}),
 ]
 
 import sys

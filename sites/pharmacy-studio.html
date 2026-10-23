@@ -64,6 +64,8 @@
   <div class="pharm-tabs">
     <button class="pharm-tab-btn active" onclick="switchPharmTab('hospitals')"><i class="fas fa-hospital"></i> 24/7 Apex Emergency Hospitals</button>
     <button class="pharm-tab-btn" onclick="switchPharmTab('interactions')"><i class="fas fa-pills"></i> Drug Interaction Matrix</button>
+    <button class="pharm-tab-btn" onclick="switchPharmTab('triage')"><i class="fas fa-stethoscope"></i> 24/7 AI Clinical Triage & Advice</button>
+    <button class="pharm-tab-btn" onclick="switchPharmTab('schemes')"><i class="fas fa-shield-heart"></i> Free Treatment & Ayushman Schemes</button>
     <button class="pharm-tab-btn" onclick="switchPharmTab('camps')"><i class="fas fa-tent"></i> Free Health & Blood Camps</button>
     <button class="pharm-tab-btn" onclick="switchPharmTab('medicine')"><i class="fas fa-hand-holding-medical"></i> Free Jan Aushadhi Medicines</button>
   </div>
@@ -122,7 +124,97 @@
     </div>
   </div>
 
-  <!-- TAB 3: FREE HEALTH CAMPS -->
+  <!-- TAB 3: 24/7 CLINICAL TRIAGE & HEALTH ADVICE -->
+  <div id="tab-triage" class="tab-content">
+    <div class="card-panel" style="max-width:920px; margin:0 auto;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+        <div>
+          <h3 style="font-size:18px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+            <i class="fas fa-stethoscope" style="color:#10b981;"></i> 24/7 AI Clinical Symptom Triage & Health Advice
+          </h3>
+          <p style="font-size:13px; color:#94a3b8; margin-top:4px;">
+            Describe your clinical symptoms or ask a health query. Evaluates urgency, identifies emergency red flags, suggests immediate first-aid, and recommends Jan Aushadhi generic options.
+          </p>
+        </div>
+        <span class="badge-ayushman" style="background:rgba(56,189,248,0.15); color:#38bdf8; border-color:rgba(56,189,248,0.3);">
+          <i class="fas fa-lock"></i> 100% Private & Free
+        </span>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <span style="font-size:12px; color:#64748b; font-weight:600; margin-right:8px;">Common Presets:</span>
+        <span class="chip" onclick="setHealthPreset('Crushing substernal chest pain radiating to left arm and shortness of breath')">⚠️ Chest Pain (Emergency)</span>
+        <span class="chip" onclick="setHealthPreset('Continuous fever 102°F with severe shivering and body ache for 2 days')">High Fever</span>
+        <span class="chip" onclick="setHealthPreset('Persistent dry cough and throat irritation for 10 days with mild evening fatigue')">Chronic Cough</span>
+        <span class="chip" onclick="setHealthPreset('Burning sensation in chest and sour stomach fluid regurgitation after meals')">Acid Reflux / GERD</span>
+        <span class="chip" onclick="setHealthPreset('Twisted ankle while running with acute swelling and pain bearing weight')">Ankle Sprain</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Describe Symptoms or Clinical Question</label>
+        <textarea id="triageQuery" class="styled-input" style="min-height:90px;" placeholder="e.g. Sharp pain in lower right abdomen since morning with nausea and low grade fever..."></textarea>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:18px;">
+        <div>
+          <label class="input-label">Age Group</label>
+          <select id="triageAge" class="styled-input">
+            <option value="Infant / Child (0-12)">Infant / Child (0-12 yrs)</option>
+            <option value="Teenager (13-17)">Teenager (13-17 yrs)</option>
+            <option value="Adult (18-64)" selected>Adult (18-64 yrs)</option>
+            <option value="Senior Citizen (65+)">Senior Citizen (65+ yrs)</option>
+          </select>
+        </div>
+        <div>
+          <label class="input-label">Symptom Duration</label>
+          <select id="triageDuration" class="styled-input">
+            <option value="Less than 6 hours">Less than 6 hours (Sudden)</option>
+            <option value="1-3 days" selected>1 - 3 days</option>
+            <option value="1-2 weeks">1 - 2 weeks</option>
+            <option value="More than 1 month">More than 1 month (Chronic)</option>
+          </select>
+        </div>
+        <div>
+          <label class="input-label">Self-Assessed Severity</label>
+          <select id="triageSeverity" class="styled-input">
+            <option value="Mild">Mild Discomfort</option>
+            <option value="Moderate" selected>Moderate (Impacting daily work)</option>
+            <option value="Severe">Severe (Incapacitating)</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-emerald" style="width:100%;" onclick="runClinicalTriage()">
+        <i class="fas fa-heart-pulse"></i> Analyze Clinical Urgency & Get Free Medical Guidance
+      </button>
+
+      <div id="triageResult" style="display:none; margin-top:20px; background:#020617; border:1px solid #1e293b; border-radius:14px; padding:20px;">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: FREE HEALTHCARE & AYUSHMAN SCHEMES -->
+  <div id="tab-schemes" class="tab-content">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h3 style="font-size:18px; font-weight:800; color:#fff; display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-shield-heart" style="color:#ef4444;"></i> 100% Free & Subsidized National Healthcare Schemes
+        </h3>
+        <p style="font-size:13px; color:#94a3b8; margin-top:4px;">
+          Government of India and state initiatives offering cashless surgeries, dialysis, maternal delivery, and affordable generic medication.
+        </p>
+      </div>
+      <span class="badge-ayushman" style="padding:6px 12px; font-size:11px;">
+        <i class="fas fa-phone"></i> National Health Helpline: 104 / 14555
+      </span>
+    </div>
+    <div class="hospital-card-grid" id="schemesContainer">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- TAB 5: FREE HEALTH CAMPS -->
   <div id="tab-camps" class="tab-content">
     <div style="display:grid; grid-template-columns:1fr 440px; gap:24px;">
       <div>
@@ -381,10 +473,125 @@ async function submitMedicineRequest(e) {
   }
 }
 
+function setHealthPreset(text) {
+  document.getElementById('triageQuery').value = text;
+}
+
+async function runClinicalTriage() {
+  const query = document.getElementById('triageQuery').value.trim();
+  if (!query) {
+    alert('Please describe your symptoms or clinical question.');
+    return;
+  }
+  const age_group = document.getElementById('triageAge').value;
+  const duration = document.getElementById('triageDuration').value;
+  const severity = document.getElementById('triageSeverity').value;
+  const resBox = document.getElementById('triageResult');
+
+  resBox.style.display = 'block';
+  resBox.innerHTML = '<div style="color:#94a3b8; text-align:center; padding:16px;"><i class="fas fa-spinner fa-spin"></i> Analyzing clinical symptoms & safety pathways...</div>';
+
+  try {
+    const res = await fetch('/api/power/pharmacy/health-advice', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, age_group, duration, severity })
+    });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.detail || 'Clinical analysis failed');
+
+    const firstAidHtml = d.first_aid_steps.map(s => `<li style="margin-bottom:6px; color:#e2e8f0;"><i class="fas fa-check-circle" style="color:#10b981; margin-right:8px;"></i>${s}</li>`).join('');
+    const redFlagsHtml = d.red_flag_warnings.map(r => `<li style="margin-bottom:6px; color:#fca5a5;"><i class="fas fa-triangle-exclamation" style="color:#ef4444; margin-right:8px;"></i>${r}</li>`).join('');
+
+    resBox.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; flex-wrap:wrap; gap:10px; border-bottom:1px solid #1e293b; padding-bottom:14px;">
+        <div>
+          <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.8px; font-weight:700; color:#94a3b8;">Triage Assessment Level</span>
+          <h4 style="font-size:18px; font-weight:900; color:${d.triage_color}; margin-top:2px;">${d.triage_level}</h4>
+        </div>
+        <div style="text-align:right;">
+          <span style="font-size:11px; color:#94a3b8;">Recommended Action Window</span>
+          <div style="font-size:14px; font-weight:800; color:#fff;">${d.urgency}</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;">
+        <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:14px;">
+          <h5 style="font-size:12px; font-weight:800; color:#10b981; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px;">
+            <i class="fas fa-kit-medical"></i> Immediate First-Aid & Home Measures
+          </h5>
+          <ul style="list-style:none; padding:0; margin:0; font-size:13px; line-height:1.5;">${firstAidHtml}</ul>
+        </div>
+        <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(239,68,68,0.2); border-radius:12px; padding:14px;">
+          <h5 style="font-size:12px; font-weight:800; color:#ef4444; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px;">
+            <i class="fas fa-skull-crossbones"></i> Emergency Red-Flag Warnings (Call 108)
+          </h5>
+          <ul style="list-style:none; padding:0; margin:0; font-size:13px; line-height:1.5;">${redFlagsHtml}</ul>
+        </div>
+      </div>
+
+      <div style="background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.25); border-radius:10px; padding:12px 14px; margin-bottom:14px; font-size:13px; color:#e0f2fe;">
+        <b><i class="fas fa-user-doctor" style="color:#38bdf8;"></i> Recommended Specialist:</b> ${d.recommended_specialty}
+        <br><span style="font-size:12px; color:#94a3b8; display:block; margin-top:4px;"><b>Jan Aushadhi Generic Guidance:</b> ${d.jan_aushadhi_generic_notes}</span>
+      </div>
+
+      <div style="font-size:11px; color:#64748b; line-height:1.4; border-top:1px solid #1e293b; padding-top:10px;">
+        <i class="fas fa-shield"></i> <b>Clinical Disclaimer:</b> ${d.disclaimer}
+      </div>
+    `;
+  } catch (err) {
+    resBox.innerHTML = `<div style="color:#ef4444; padding:12px;">⚠️ Error: ${err.message}</div>`;
+  }
+}
+
+async function loadHealthcareSchemes() {
+  const container = document.getElementById('schemesContainer');
+  if (!container) return;
+  try {
+    const res = await fetch('/api/power/pharmacy/schemes');
+    if (!res.ok) return;
+    const data = await res.json();
+    const schemes = data.schemes || [];
+    container.innerHTML = '';
+    schemes.forEach(s => {
+      const benefits = s.key_benefits.map(b => `<li style="margin-bottom:4px;"><i class="fas fa-circle-check" style="color:#10b981; font-size:11px; margin-right:6px;"></i>${b}</li>`).join('');
+      container.innerHTML += `
+        <div class="hosp-card">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+              <h4 style="font-size:16px; font-weight:800; color:#fff;">${s.name}</h4>
+              <span class="badge-ayushman">${s.type}</span>
+            </div>
+            <div style="font-size:15px; font-weight:800; color:#38bdf8; margin-bottom:8px; font-family:'JetBrains Mono',monospace;">
+              ${s.coverage}
+            </div>
+            <p style="font-size:12px; color:#94a3b8; margin-bottom:12px;">
+              <b>Target Beneficiary:</b> ${s.beneficiary}
+            </p>
+            <ul style="list-style:none; padding:0; margin:0 0 14px; font-size:12.5px; color:#cbd5e1; line-height:1.45;">
+              ${benefits}
+            </ul>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid #1e293b; flex-wrap:wrap; gap:8px;">
+            <div>
+              <span style="font-size:10px; color:#94a3b8; text-transform:uppercase; display:block;">Helpline</span>
+              <b style="color:#fff; font-size:13px; font-family:'JetBrains Mono',monospace;">📞 ${s.helpline}</b>
+            </div>
+            <a href="${s.portal}" target="_blank" rel="noopener noreferrer" class="btn-emerald" style="padding:6px 14px; font-size:12px; text-decoration:none;">
+              Official Portal <i class="fas fa-arrow-up-right-from-square" style="font-size:10px;"></i>
+            </a>
+          </div>
+        </div>
+      `;
+    });
+  } catch (e) {}
+}
+
 // Initial Run
 window.addEventListener('load', () => {
   loadHospitals();
   loadCamps();
+  loadHealthcareSchemes();
 });
 </script>
 <script src="ws-shell.js"></script>

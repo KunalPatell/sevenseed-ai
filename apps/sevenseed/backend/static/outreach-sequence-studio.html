@@ -225,6 +225,44 @@
           <!-- Result rendered here -->
         </div>
       </div>
+
+      <!-- Autonomous Prospect Intelligence & Icebreaker Studio -->
+      <div class="analyzer-box" style="margin-top:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:12px; font-weight:800; color:#fff; text-transform:uppercase;"><i class="fas fa-radar" style="color:#38bdf8;"></i> Autonomous Prospect Intelligence & Icebreakers</span>
+          <span class="chip" style="color:#38bdf8;">Sevenforce AI</span>
+        </div>
+        <p style="font-size:12px; color:#94a3b8; margin-top:4px;">
+          Enrich target company accounts, diagnose operational engineering bottlenecks, and generate 3 personalized cold hooks.
+        </p>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+          <div>
+            <label style="font-size:11px; text-transform:uppercase; color:#94a3b8; font-weight:700;">Company Name</label>
+            <input type="text" id="enrichCompany" class="styled-input" value="CloudScale Labs" placeholder="e.g. Datadog, Stripe, Postman" style="margin-top:4px; padding:8px 10px; font-size:12px;">
+          </div>
+          <div>
+            <label style="font-size:11px; text-transform:uppercase; color:#94a3b8; font-weight:700;">Target Persona / Role</label>
+            <input type="text" id="enrichRole" class="styled-input" value="VP of Engineering" placeholder="e.g. CTO, Head of Growth" style="margin-top:4px; padding:8px 10px; font-size:12px;">
+          </div>
+        </div>
+
+        <div style="display:flex; gap:6px; margin-top:10px; flex-wrap:wrap;">
+          <button class="chip" onclick="setEnrichPreset('Postman', 'VP of Engineering', 'API Development Platform')">Postman / VP Eng</button>
+          <button class="chip" onclick="setEnrichPreset('Razorpay', 'Director of DevOps', 'FinTech Payments')">Razorpay / DevOps</button>
+          <button class="chip" onclick="setEnrichPreset('ScaleAI', 'Head of AI Infrastructure', 'AI Data Ops')">ScaleAI / AI Infra</button>
+        </div>
+
+        <div style="margin-top:12px;">
+          <button class="btn btn-primary sm" style="width:100%; justify-content:center;" onclick="generateProspectIntelligence()">
+            <i class="fas fa-brain-circuit"></i> Generate Account Intelligence & 3 Icebreakers
+          </button>
+        </div>
+
+        <div id="enrichResult" style="display:none; margin-top:14px; padding:14px; background:#0f172a; border-radius:10px; border:1px solid #334155;">
+          <!-- Populated by JS -->
+        </div>
+      </div>
     </div>
   </div>
 </main>
@@ -454,6 +492,87 @@
       btn.innerHTML = `<i class="fas fa-wand-magic-sparkles"></i> Classify Reply`;
       btn.disabled = false;
     }
+  }
+
+  function setEnrichPreset(company, role, industry) {
+    document.getElementById('enrichCompany').value = company;
+    document.getElementById('enrichRole').value = role;
+    if (industry) document.getElementById('enrichCompany').dataset.industry = industry;
+  }
+
+  async function generateProspectIntelligence() {
+    const company = document.getElementById('enrichCompany').value.trim();
+    const role = document.getElementById('enrichRole').value.trim();
+    const industry = document.getElementById('enrichCompany').dataset.industry || "Software & SaaS";
+    const resBox = document.getElementById('enrichResult');
+
+    if (!company) {
+      alert("Please enter target company name.");
+      return;
+    }
+
+    resBox.style.display = 'block';
+    resBox.innerHTML = `<div style="text-align:center; color:#94a3b8; font-size:12px; padding:12px;"><i class="fas fa-spinner fa-spin"></i> Synthesizing firmographics & generating cold hooks for ${escapeHtml(company)}...</div>`;
+
+    try {
+      const res = await fetch('/api/power/outreach/enrich-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ company_name: company, role: role, industry: industry })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Enrichment failed");
+
+      const hooksHtml = data.icebreakers.map((h, idx) => `
+        <div style="background:#020617; border:1px solid #1e293b; border-radius:8px; padding:10px; margin-top:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:11px; font-weight:800; color:#38bdf8;">Hook ${idx + 1}: ${escapeHtml(h.type)}</span>
+            <button class="chip" style="font-size:10px; padding:2px 8px;" onclick="copyTextToClipboard('${escapeHtml(h.text.replace(/'/g, "\\'").replace(/\n/g, "\\n"))}')">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+          <div style="font-size:11.5px; color:#cbd5e1; margin-top:4px; font-family:'JetBrains Mono',monospace; white-space:pre-wrap; background:#0b1120; padding:8px; border-radius:6px;">${escapeHtml(h.text)}</div>
+        </div>
+      `).join('');
+
+      resBox.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; border-bottom:1px solid #334155; padding-bottom:8px;">
+          <div>
+            <span style="font-size:11px; text-transform:uppercase; color:#94a3b8; font-weight:700;">Account Profile</span>
+            <h4 style="font-size:15px; font-weight:800; color:#fff; margin-top:2px;">${escapeHtml(data.company)} <span style="font-size:12px; color:#a855f7;">(${escapeHtml(data.firmographics.automation_readiness_score)})</span></h4>
+          </div>
+          <span class="chip" style="color:#10b981; border-color:rgba(16,185,129,0.3); font-size:11px;">Est. Spend: ${escapeHtml(data.firmographics.estimated_saas_spend)}</span>
+        </div>
+
+        <div style="font-size:11.5px; color:#94a3b8; margin-bottom:8px;">
+          <strong style="color:#e2e8f0;"><i class="fas fa-bolt" style="color:#f59e0b;"></i> Identified Bottlenecks:</strong>
+          <ul style="padding-left:16px; margin:4px 0 8px;">
+            ${data.friction_diagnosis.map(f => `<li>${escapeHtml(f)}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div>
+          <strong style="color:#e2e8f0; font-size:12px;"><i class="fas fa-sparkles" style="color:#38bdf8;"></i> High-Converting Personalized Hooks:</strong>
+          ${hooksHtml}
+        </div>
+      `;
+    } catch(err) {
+      resBox.innerHTML = `<div style="color:#ef4444; font-size:12px; padding:8px;">⚠️ ${err.message}</div>`;
+    }
+  }
+
+  function copyTextToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Icebreaker copied to clipboard!");
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      alert("Icebreaker copied to clipboard!");
+    });
   }
 
   function refreshAll() {
