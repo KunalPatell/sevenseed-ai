@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>WhatsWay Interactive Broadcast Studio — Sevenforce</title>
+  <meta name="description" content="AI WhatsApp marketing campaigns with interactive quick-reply buttons and autonomous lead qualification bot flows. 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; }
+    .hub-container { max-width: 1400px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(37,211,102,0.12); color: #25d366; border: 1px solid rgba(37,211,102,0.3); }
+
+    .grid-layout { display: grid; grid-template-columns: 460px 1fr; gap: 24px; }
+    @media(max-width: 1080px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px; }
+    .styled-input { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; }
+    .styled-input:focus { border-color: #25d366; }
+
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #25d366; color: #25d366; }
+
+    .btn-wa { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; background: linear-gradient(135deg, #10b981, #059669); color: #fff; box-shadow: 0 4px 20px rgba(16,185,129,0.4); transition: all 0.2s; }
+    .btn-wa:hover { transform: translateY(-1px); }
+
+    /* Smartphone Chat Preview */
+    .phone-mockup { max-width: 440px; margin: 0 auto; background: #0b141a; border: 2px solid #202c33; border-radius: 32px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.8); }
+    .phone-header { background: #202c33; padding: 14px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .wa-avatar { width: 38px; height: 38px; border-radius: 50%; background: #128c7e; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; }
+    .wa-name { font-size: 14px; font-weight: 700; color: #e9edef; display: flex; align-items: center; gap: 6px; }
+    .wa-sub { font-size: 11px; color: #8696a0; }
+
+    .phone-screen { padding: 18px; background: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png') repeat; background-size: 400px; min-height: 480px; }
+    
+    .wa-bubble { background: #005c4b; border-radius: 8px; border-top-left-radius: 0; padding: 12px 14px; max-width: 90%; color: #e9edef; font-size: 13.5px; line-height: 1.5; box-shadow: 0 2px 5px rgba(0,0,0,0.3); margin-bottom: 10px; position: relative; }
+    .wa-bubble-header { font-weight: 800; color: #25d366; font-size: 14px; margin-bottom: 6px; }
+    .wa-time { font-size: 10px; color: rgba(255,255,255,0.6); text-align: right; margin-top: 6px; }
+
+    .wa-buttons { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; }
+    .wa-btn-pill { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.15); color: #53bdeb; border-radius: 6px; padding: 8px; font-size: 12px; font-weight: 600; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+    /* Bot sequence */
+    .bot-flow-box { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 18px; margin-top: 24px; }
+    .bot-step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-size: 13px; color: #cbd5e1; }
+    .bot-step:last-child { margin-bottom: 0; }
+    .bot-num { width: 22px; height: 22px; border-radius: 50%; background: rgba(37,211,102,0.15); border: 1px solid #25d366; color: #25d366; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-shield-halved"></i></span>
+    <span class="logo-text">Sevenforce <span class="logo-accent">AI</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="agent-dispatch.html"><i class="fas fa-satellite-dish"></i> Agent Cockpit</a>
+    <a href="meeting-intelligence.html"><i class="fas fa-comments"></i> Echo MeetBot</a>
+    <a href="social-syndicator.html"><i class="fas fa-share-nodes"></i> Maya SocialHub</a>
+    <a href="lead-validator.html"><i class="fas fa-envelope-circle-check"></i> Alex Lead Validator</a>
+    <a href="whatsapp-studio.html" style="color:#25d366;font-weight:700;"><i class="fab fa-whatsapp"></i> WhatsWay Studio</a>
+    <a href="/byok.html"><i class="fas fa-key"></i> BYOK Vault</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost sm" href="index.html">← Back to Sevenforce</a>
+  </div>
+</nav>
+
+<main class="hub-container">
+  <!-- HUD Header -->
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fab fa-whatsapp"></i> WhatsWay Broadcast Pipeline</span>
+      <h1>WhatsWay Interactive WhatsApp Broadcast Studio</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:700px;">
+        Synthesize high-converting WhatsApp Business broadcast campaigns with interactive quick reply buttons, URL triggers, and automated lead qualification dialogue trees.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Column: Input Controller -->
+    <div class="card-panel">
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-bullhorn"></i> Campaign Name</label>
+        <input type="text" id="waCampaignName" class="styled-input" value="Zero-Margin AI Agent Deployment" placeholder="e.g. Summer Free Pilot">
+      </div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;">
+        <span class="chip" onclick="setPreset('Zero-Margin AI Agent Deployment', 'Free 14-day autonomous team trial with Bring Your Own Key')">AI Workforce Trial</span>
+        <span class="chip" onclick="setPreset('Free Jan Aushadhi Generic Medicine Match', 'Upload prescription to save 80% with Jan Aushadhi generic equivalents')">Generic Pharma Savings</span>
+        <span class="chip" onclick="setPreset('YOLOv8 Construction Damage Audit', 'Instant computer vision structural crack & pipe defect estimate')">Defect Vision Scan</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-users"></i> Target Audience</label>
+        <input type="text" id="waAudience" class="styled-input" value="Founders & Engineering Leaders" placeholder="Target demographic">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-gift"></i> Core Offer Details</label>
+        <input type="text" id="waOffer" class="styled-input" value="Deploy 7 autonomous AI employees on your existing codebase with zero platform markups" placeholder="Value proposition">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-arrow-pointer"></i> Primary CTA Button Label</label>
+        <input type="text" id="waCta" class="styled-input" value="⚡ Launch Free Sandbox" placeholder="Button text">
+      </div>
+
+      <button class="btn-wa" id="btnGenWa" onclick="generateWaCampaign()">
+        <i class="fab fa-whatsapp"></i> Synthesize Broadcast Blueprint
+      </button>
+
+      <div style="margin-top:16px; padding:12px; background:#070d1e; border:1px solid #1e293b; border-radius:10px; font-size:11.5px; color:#94a3b8;">
+        <i class="fab fa-whatsapp" style="color:#25d366;"></i> <b>Meta Business API Ready:</b> Conforms to WhatsApp Business Cloud API interactive template message specifications.
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive Phone Preview -->
+    <div class="card-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <span style="font-size:13px; font-weight:700; color:#25d366;"><i class="fas fa-mobile-screen"></i> Live WhatsApp Business Preview</span>
+        <button class="btn btn-ghost sm" onclick="copyWaPayload()"><i class="fas fa-copy"></i> Copy Cloud API JSON</button>
+      </div>
+
+      <div class="phone-mockup">
+        <div class="phone-header">
+          <div class="wa-avatar"><i class="fas fa-shield-halved"></i></div>
+          <div>
+            <div class="wa-name">Sevenforce AI <i class="fas fa-circle-check" style="color:#25d366; font-size:12px;"></i></div>
+            <div class="wa-sub">Official Business Account</div>
+          </div>
+        </div>
+
+        <div class="phone-screen">
+          <div class="wa-bubble">
+            <div class="wa-bubble-header" id="bubbleHeader">🚀 Exclusive Access: Zero-Margin AI Agent Deployment</div>
+            <div id="bubbleBody">Hi {{1}}, hope you're having a productive week! 👋<br><br>We noticed teams in your space are looking for smarter ways to scale without ballooning software costs.<br><br>💡 *Deploy 7 autonomous AI employees on your existing codebase with zero platform markups*<br><br>With Sevenseed's 100% free BYOK infrastructure, you get autonomous AI agents working for you 24/7 with zero monthly markups.<br><br>Tap a button below to explore:</div>
+            
+            <div class="wa-buttons" id="bubbleButtons">
+              <div class="wa-btn-pill"><i class="fas fa-reply"></i> ⚡ See Live Demo</div>
+              <div class="wa-btn-pill"><i class="fas fa-reply"></i> 💰 View Free Tier</div>
+              <div class="wa-btn-pill"><i class="fas fa-arrow-up-right-from-square"></i> ⚡ Launch Free Sandbox</div>
+            </div>
+            
+            <div class="wa-time">10:42 AM · Delivered ✓✓</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Autonomous Lead Qualification Dialogue Flow -->
+      <div class="bot-flow-box">
+        <div style="font-size:12px; font-weight:700; text-transform:uppercase; color:#38bdf8; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+          <i class="fas fa-robot"></i> Automated Lead Qualification Bot Tree (WhatsWay AI)
+        </div>
+        <div id="botTreeSteps">
+          <div class="bot-step">
+            <div class="bot-num">1</div>
+            <div>What is your primary bottleneck right now (Engineering velocity, Outbound sales, or Support)?</div>
+          </div>
+          <div class="bot-step">
+            <div class="bot-num">2</div>
+            <div>How many team members or active users are in your organization?</div>
+          </div>
+          <div class="bot-step">
+            <div class="bot-num">3</div>
+            <div>Would you prefer a 3-minute async video walkthrough or a live interactive sandbox link?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  let lastWaData = null;
+
+  function setPreset(name, offer) {
+    document.getElementById('waCampaignName').value = name;
+    document.getElementById('waOffer').value = offer;
+  }
+
+  async function generateWaCampaign() {
+    const name = document.getElementById('waCampaignName').value.trim();
+    const aud = document.getElementById('waAudience').value.trim();
+    const off = document.getElementById('waOffer').value.trim();
+    const cta = document.getElementById('waCta').value.trim();
+
+    const btn = document.getElementById('btnGenWa');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Synthesizing Broadcast...';
+
+    try {
+      const resp = await fetch('/api/marketing/whatsapp-campaign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          campaign_name: name,
+          target_audience: aud,
+          offer_details: off,
+          call_to_action: cta
+        })
+      });
+      const data = await resp.json();
+      if (data && data.campaign) {
+        lastWaData = data.campaign;
+        renderWa(data.campaign);
+      }
+    } catch (err) {
+      console.error('WhatsApp campaign error:', err);
+      alert('Error communicating with WhatsApp campaign API.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fab fa-whatsapp"></i> Synthesize Broadcast Blueprint';
+    }
+  }
+
+  function renderWa(c) {
+    if (c.header_text) document.getElementById('bubbleHeader').innerText = c.header_text;
+    if (c.message_body) document.getElementById('bubbleBody').innerHTML = c.message_body.replace(/\n/g, '<br>');
+
+    const btnContainer = document.getElementById('bubbleButtons');
+    let html = '';
+    if (c.quick_reply_buttons && Array.isArray(c.quick_reply_buttons)) {
+      c.quick_reply_buttons.forEach(b => {
+        html += `<div class="wa-btn-pill"><i class="fas fa-reply"></i> ${b}</div>`;
+      });
+    }
+    if (c.cta_button && c.cta_button.text) {
+      html += `<div class="wa-btn-pill" style="color:#25d366;"><i class="fas fa-arrow-up-right-from-square"></i> ${c.cta_button.text}</div>`;
+    }
+    btnContainer.innerHTML = html;
+
+    if (c.lead_qualification_bot && Array.isArray(c.lead_qualification_bot)) {
+      const tree = document.getElementById('botTreeSteps');
+      tree.innerHTML = c.lead_qualification_bot.map((step, idx) => `
+        <div class="bot-step">
+          <div class="bot-num">${idx + 1}</div>
+          <div>${step}</div>
+        </div>
+      `).join('');
+    }
+  }
+
+  function copyWaPayload() {
+    if (lastWaData) {
+      navigator.clipboard.writeText(JSON.stringify(lastWaData, null, 2));
+      alert('WhatsApp Business Cloud API payload copied to clipboard!');
+    } else {
+      alert('Please generate a campaign first.');
+    }
+  }
+</script>
+</body>
+</html>

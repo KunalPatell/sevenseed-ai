@@ -2502,9 +2502,10 @@ def get_clinical_health_advice(req: HealthAdviceReq):
 
     # 1. Critical Red Flag Triage Detection
     red_flag_keywords = [
-        "chest pain", "shortness of breath", "difficulty breathing", "blood in vomit",
-        "loss of consciousness", "sudden numbness", "slurred speech", "seizure",
-        "paralysis", "coughing blood", "crushing pain", "unconscious"
+        "chest pain", "chest tightness", "chest pressure", "radiating down left arm", "radiating to arm",
+        "shortness of breath", "difficulty breathing", "breathlessness", "choking", "blood in vomit",
+        "loss of consciousness", "sudden numbness", "slurred speech", "seizure", "collapse", "fainting",
+        "paralysis", "coughing blood", "crushing pain", "unconscious", "heart attack", "stroke"
     ]
     is_emergency = any(kw in q for kw in red_flag_keywords)
 

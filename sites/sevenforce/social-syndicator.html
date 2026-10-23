@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Maya Social & Viral Syndicator — Sevenforce (SocialHub AI)</title>
+  <meta name="description" content="Autonomous multi-platform social media campaign generator across LinkedIn, Twitter threads, Instagram carousels, and SEO blogs. 100% Free BYOK.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; }
+    .hub-container { max-width: 1400px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(236,72,153,0.12); color: #ec4899; border: 1px solid rgba(236,72,153,0.3); }
+
+    .grid-layout { display: grid; grid-template-columns: 460px 1fr; gap: 24px; }
+    @media(max-width: 1080px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px; }
+    .styled-input { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; transition: border-color 0.2s; }
+    .styled-input:focus { border-color: #ec4899; }
+    .styled-select { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; }
+
+    .preset-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #ec4899; color: #ec4899; }
+
+    .btn-syndicate { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; background: linear-gradient(135deg, #ec4899, #8b5cf6); color: #fff; box-shadow: 0 4px 20px rgba(236,72,153,0.4); transition: all 0.2s; }
+    .btn-syndicate:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(236,72,153,0.6); }
+
+    /* Tabs Bar */
+    .tabs-bar { display: flex; gap: 8px; border-bottom: 1px solid #1e293b; padding-bottom: 12px; margin-bottom: 20px; overflow-x: auto; }
+    .tab-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 10px; font-size: 12.5px; font-weight: 700; cursor: pointer; background: transparent; border: 1px solid transparent; color: #94a3b8; transition: all 0.2s; }
+    .tab-btn.active { background: rgba(236,72,153,0.15); border-color: rgba(236,72,153,0.3); color: #ec4899; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+    /* Post preview cards */
+    .preview-box { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 20px; font-size: 14px; line-height: 1.7; color: #e2e8f0; white-space: pre-wrap; font-family: 'Inter', sans-serif; position: relative; }
+    
+    .thread-deck { display: flex; flex-direction: column; gap: 14px; }
+    .tweet-card { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; font-size: 13.5px; line-height: 1.6; }
+    .tweet-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #38bdf8; margin-bottom: 8px; }
+
+    .carousel-deck { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .slide-card { background: #070d1e; border: 1px solid rgba(236,72,153,0.25); border-radius: 14px; padding: 16px; text-align: left; }
+    .slide-num { font-size: 11px; font-weight: 800; color: #ec4899; text-transform: uppercase; margin-bottom: 6px; }
+    .slide-prompt { font-size: 11.5px; color: #94a3b8; font-style: italic; background: #020617; padding: 8px; border-radius: 6px; margin-top: 10px; border: 1px dashed #1e293b; }
+
+    .kw-tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 6px; background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); margin: 3px; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-shield-halved"></i></span>
+    <span class="logo-text">Sevenforce <span class="logo-accent">AI</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="agent-dispatch.html"><i class="fas fa-satellite-dish"></i> Agent Cockpit</a>
+    <a href="meeting-intelligence.html"><i class="fas fa-comments"></i> Echo MeetBot</a>
+    <a href="social-syndicator.html" style="color:#ec4899;font-weight:700;"><i class="fas fa-share-nodes"></i> Maya SocialHub</a>
+    <a href="lead-validator.html"><i class="fas fa-envelope-circle-check"></i> Alex Lead Validator</a>
+    <a href="whatsapp-studio.html"><i class="fab fa-whatsapp"></i> WhatsWay Studio</a>
+    <a href="/byok.html"><i class="fas fa-key"></i> BYOK Vault</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost sm" href="index.html">← Back to Sevenforce</a>
+  </div>
+</nav>
+
+<main class="hub-container">
+  <!-- HUD Header -->
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-bullhorn"></i> SocialHub Multi-Channel Engine</span>
+      <h1>Maya Multi-Platform Social & Viral Syndicator</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:700px;">
+        Synthesize high-converting copy across LinkedIn thought leadership, 5-tweet viral threads, 5-slide Instagram carousels, and SEO blog architecture.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Column: Controller -->
+    <div class="card-panel">
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-lightbulb"></i> Campaign Topic / Hook</label>
+        <input type="text" id="campaignTopic" class="styled-input" value="Why Founders Overpay for SaaS AI Wrappers" placeholder="Topic or product update...">
+      </div>
+
+      <div class="preset-chips">
+        <span class="chip" onclick="setTopic('Why Founders Overpay for SaaS AI Wrappers')">Overpaying for AI</span>
+        <span class="chip" onclick="setTopic('Zero-Margin BYOK Architecture Blueprint')">BYOK Architecture</span>
+        <span class="chip" onclick="setTopic('Saving 80% on Family Medicine via Jan Aushadhi AI')">Generic Medicine</span>
+        <span class="chip" onclick="setTopic('YOLOv8 Real-Time Defect Detection for Construction')">YOLO Vision</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-users"></i> Target Audience</label>
+        <select id="targetAudience" class="styled-select">
+          <option value="Founders, CTOs, and AI Engineers" selected>Founders, CTOs, and AI Engineers</option>
+          <option value="B2B Business Owners & Executives">B2B Business Owners & Executives</option>
+          <option value="Healthcare Consumers & Families">Healthcare Consumers & Families</option>
+          <option value="Civil Engineers & Site Managers">Civil Engineers & Site Managers</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-bullseye"></i> Primary Conversion Goal</label>
+        <select id="primaryGoal" class="styled-select">
+          <option value="Product Signups & Ecosystem Virality" selected>Product Signups & Ecosystem Virality</option>
+          <option value="Authority & Thought Leadership">Authority & Thought Leadership</option>
+          <option value="Inbound Leads & Demo Bookings">Inbound Leads & Demo Bookings</option>
+        </select>
+      </div>
+
+      <button class="btn-syndicate" id="btnSyndicate" onclick="generateCampaign()">
+        <i class="fas fa-wand-magic-sparkles"></i> Synthesize Multi-Platform Campaign
+      </button>
+
+      <div style="margin-top:16px; padding:12px; background:#070d1e; border:1px solid #1e293b; border-radius:10px; font-size:11.5px; color:#94a3b8;">
+        <i class="fas fa-sparkles" style="color:#ec4899;"></i> <b>AIDA + Algorithmic Optimizations:</b> Complies with LinkedIn scannability, X cliffhanger hooks, and Instagram save/share triggers.
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive Deck -->
+    <div class="card-panel">
+      <!-- Platform Tabs -->
+      <div class="tabs-bar">
+        <button class="tab-btn active" onclick="switchTab('linkedin')"><i class="fab fa-linkedin"></i> LinkedIn Post</button>
+        <button class="tab-btn" onclick="switchTab('twitter')"><i class="fab fa-x-twitter"></i> 5-Tweet Thread</button>
+        <button class="tab-btn" onclick="switchTab('instagram')"><i class="fab fa-instagram"></i> Instagram Carousel</button>
+        <button class="tab-btn" onclick="switchTab('blog')"><i class="fas fa-newspaper"></i> SEO Blog Blueprint</button>
+      </div>
+
+      <!-- Tab 1: LinkedIn -->
+      <div class="tab-content active" id="tab-linkedin">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <span style="font-size:12px; font-weight:700; color:#38bdf8;"><i class="fab fa-linkedin"></i> B2B Thought Leadership (Hook · AIDA · Executive CTA)</span>
+          <button class="btn btn-ghost sm" onclick="copyText('previewLinkedin')"><i class="fas fa-copy"></i> Copy Post</button>
+        </div>
+        <div class="preview-box" id="previewLinkedin">90% of startups fail because they pay enterprise markups for generic wrappers.
+
+Here is how we built a 100% free AI venture stack:
+
+We connected 8 specialized AI ventures—from healthcare OCR to construction defect vision—onto a single zero-margin BYOK architecture.
+
+Key takeaways:
+1. Zero subscription fatigue: Users bring their own API key.
+2. Modular micro-agents outperform monoliths.
+3. Transparent pricing creates unshakeable trust.
+
+What AI tools are saving your team the most time this quarter? Drop your thoughts below 👇
+
+#ArtificialIntelligence #Startups #SaaS #BuildingInPublic #OpenSource</div>
+      </div>
+
+      <!-- Tab 2: Twitter Thread -->
+      <div class="tab-content" id="tab-twitter">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <span style="font-size:12px; font-weight:700; color:#38bdf8;"><i class="fab fa-x-twitter"></i> 5-Tweet Viral Thread (Cliffhangers & Breakdown)</span>
+          <button class="btn btn-ghost sm" onclick="copyThread()"><i class="fas fa-copy"></i> Copy Entire Thread</button>
+        </div>
+        <div class="thread-deck" id="threadDeck">
+          <div class="tweet-card">
+            <div class="tweet-header"><span>TWEET 1 / 5 (HOOK)</span><span>234 / 280</span></div>
+            <div>1/5 Most AI platforms charge $50/mo for a glorified API wrapper.<br><br>We decided to do the opposite: 8 ventures, 100% free, powered by your own keys.<br><br>Here is how the architecture works 🧵👇</div>
+          </div>
+          <div class="tweet-card">
+            <div class="tweet-header"><span>TWEET 2 / 5</span><span>241 / 280</span></div>
+            <div>2/5 The problem with SaaS billing: Cloud providers charge pennies per million tokens, while platforms charge 1000x markups. By enabling zero-margin BYOK, users get enterprise intelligence at actual cost.</div>
+          </div>
+          <div class="tweet-card">
+            <div class="tweet-header"><span>TWEET 3 / 5</span><span>210 / 280</span></div>
+            <div>3/5 In healthcare (Decode Pharmacy), our AI reads prescriptions and matches free Jan Aushadhi generic medicines—saving families 80%+ on monthly healthcare bills.</div>
+          </div>
+          <div class="tweet-card">
+            <div class="tweet-header"><span>TWEET 4 / 5</span><span>228 / 280</span></div>
+            <div>4/5 In construction (Breakdown Factor), native YOLO computer vision scans structural cracks and quotes repair budgets according to IS 456 standards in real time.</div>
+          </div>
+          <div class="tweet-card">
+            <div class="tweet-header"><span>TWEET 5 / 5 (CTA)</span><span>195 / 280</span></div>
+            <div>5/5 Try it completely free with zero credit card required: https://sevenseed.onrender.com<br><br>RT the first tweet if you believe AI tools should be accessible to everyone! 🚀</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Instagram Carousel -->
+      <div class="tab-content" id="tab-instagram">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <span style="font-size:12px; font-weight:700; color:#ec4899;"><i class="fab fa-instagram"></i> 5-Slide Carousel Deck (Visual Prompts & Headlines)</span>
+        </div>
+        <div class="carousel-deck" id="carouselDeck">
+          <div class="slide-card">
+            <div class="slide-num">Slide 1 · Hook</div>
+            <div style="font-weight:700; color:#fff; font-size:14px;">Why You Are Overpaying for AI</div>
+            <div class="slide-prompt">Prompt: Clean dark cybernetic graphic showing SaaS subscription invoices being shredded</div>
+          </div>
+          <div class="slide-card">
+            <div class="slide-num">Slide 2 · Tension</div>
+            <div style="font-weight:700; color:#fff; font-size:14px;">The Hidden 1000x SaaS Markup</div>
+            <div class="slide-prompt">Prompt: Split comparison bar chart between raw token cost vs typical monthly subscription</div>
+          </div>
+          <div class="slide-card">
+            <div class="slide-num">Slide 3 · Solution</div>
+            <div style="font-weight:700; color:#fff; font-size:14px;">8 Ventures. 1 Shared Brain.</div>
+            <div class="slide-prompt">Prompt: 3D constellation connecting Healthcare, Construction, E-Commerce, and EdTech</div>
+          </div>
+          <div class="slide-card">
+            <div class="slide-num">Slide 4 · Value</div>
+            <div style="font-weight:700; color:#fff; font-size:14px;">BYOK = Unlimited Freedom</div>
+            <div class="slide-prompt">Prompt: Sleek glowing key vault graphic inserting Groq and Gemini tokens</div>
+          </div>
+          <div class="slide-card">
+            <div class="slide-num">Slide 5 · Action</div>
+            <div style="font-weight:700; color:#fff; font-size:14px;">Start Building Today</div>
+            <div class="slide-prompt">Prompt: Call-to-action slide with Sevenseed logo and mobile device preview</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: SEO Blog Outline -->
+      <div class="tab-content" id="tab-blog">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <span style="font-size:12px; font-weight:700; color:#38bdf8;"><i class="fas fa-newspaper"></i> SEO Article Architecture</span>
+          <button class="btn btn-ghost sm" onclick="copyText('blogMetaBox')"><i class="fas fa-copy"></i> Copy Outline</button>
+        </div>
+        <div id="blogMetaBox" style="background:#020617; border:1px solid #1e293b; border-radius:12px; padding:18px;">
+          <div style="font-size:16px; font-weight:800; color:#fff; margin-bottom:8px;" id="blogTitle">
+            How to Build a Zero-Margin AI Venture Platform: Complete Architecture Guide
+          </div>
+          <div style="font-size:13px; color:#94a3b8; line-height:1.6; margin-bottom:14px;" id="blogDesc">
+            Learn how Sevenseed orchestrates 8 AI startups on a shared RAG and BYOK token infrastructure with zero subscription markup.
+          </div>
+          <div style="margin-bottom:14px;">
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:#64748b; margin-bottom:6px;">Target Keywords</div>
+            <div id="blogKeywords">
+              <span class="kw-tag">AI startup architecture</span>
+              <span class="kw-tag">BYOK AI platforms</span>
+              <span class="kw-tag">autonomous agents</span>
+              <span class="kw-tag">zero-margin SaaS</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:#64748b; margin-bottom:6px;">Heading Hierarchy (H2 / H3)</div>
+            <ul id="blogHeadings" style="padding-left:18px; color:#cbd5e1; font-size:13px; line-height:1.8;">
+              <li>The Economic Inefficiency of Modern AI Wrappers</li>
+              <li>Designing a Shared Multi-Tenant Multi-Venture Core</li>
+              <li>Computer Vision and NLP at Zero Infrastructure Overhead</li>
+              <li>Case Study: 80% Medication Cost Savings with Jan Aushadhi</li>
+              <li>Conclusion and Open Roadmap</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  let currentCampaign = null;
+
+  function setTopic(t) {
+    document.getElementById('campaignTopic').value = t;
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.getElementById('tab-' + tabId).classList.add('active');
+  }
+
+  async function generateCampaign() {
+    const topic = document.getElementById('campaignTopic').value.trim();
+    const audience = document.getElementById('targetAudience').value;
+    const goal = document.getElementById('primaryGoal').value;
+
+    if (!topic) {
+      alert('Please enter a campaign topic.');
+      return;
+    }
+
+    const btn = document.getElementById('btnSyndicate');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syndicating with Maya AI...';
+
+    try {
+      const resp = await fetch('/api/marketing/generate-campaign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          topic: topic,
+          target_audience: audience,
+          primary_goal: goal
+        })
+      });
+      const data = await resp.json();
+      if (data && data.campaign) {
+        currentCampaign = data.campaign;
+        renderCampaign(data.campaign);
+      }
+    } catch (err) {
+      console.error('Syndication error:', err);
+      alert('Error communicating with social syndicator API.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Synthesize Multi-Platform Campaign';
+    }
+  }
+
+  function renderCampaign(c) {
+    // LinkedIn
+    if (c.linkedin_post) {
+      const lp = c.linkedin_post;
+      const text = `${lp.hook || ''}\n\n${lp.body || ''}\n\n${lp.cta || ''}\n\n${(lp.hashtags || []).join(' ')}`;
+      document.getElementById('previewLinkedin').innerText = text;
+    }
+
+    // Twitter
+    if (c.twitter_thread && Array.isArray(c.twitter_thread)) {
+      const deck = document.getElementById('threadDeck');
+      deck.innerHTML = c.twitter_thread.map((t, idx) => `
+        <div class="tweet-card">
+          <div class="tweet-header">
+            <span>TWEET ${idx + 1} / ${c.twitter_thread.length} ${idx === 0 ? '(HOOK)' : idx === c.twitter_thread.length - 1 ? '(CTA)' : ''}</span>
+            <span>${t.length} / 280</span>
+          </div>
+          <div>${t.replace(/\\n/g, '<br>')}</div>
+        </div>
+      `).join('');
+    }
+
+    // Instagram
+    if (c.instagram_carousel && Array.isArray(c.instagram_carousel)) {
+      const cdeck = document.getElementById('carouselDeck');
+      cdeck.innerHTML = c.instagram_carousel.map(s => `
+        <div class="slide-card">
+          <div class="slide-num">Slide ${s.slide_number || 1}</div>
+          <div style="font-weight:700; color:#fff; font-size:14px;">${s.headline || ''}</div>
+          <div class="slide-prompt">Prompt: ${s.visual_prompt || ''}</div>
+        </div>
+      `).join('');
+    }
+
+    // Blog
+    if (c.blog_outline) {
+      const b = c.blog_outline;
+      if (b.seo_title) document.getElementById('blogTitle').innerText = b.seo_title;
+      if (b.meta_description) document.getElementById('blogDesc').innerText = b.meta_description;
+      if (b.target_keywords) {
+        document.getElementById('blogKeywords').innerHTML = b.target_keywords.map(k => `<span class="kw-tag">${k}</span>`).join(' ');
+      }
+      if (b.headings_list) {
+        document.getElementById('blogHeadings').innerHTML = b.headings_list.map(h => `<li>${h}</li>`).join('');
+      }
+    }
+  }
+
+  function copyText(elId) {
+    const text = document.getElementById(elId).innerText;
+    navigator.clipboard.writeText(text);
+    alert('Copied to clipboard!');
+  }
+
+  function copyThread() {
+    if (currentCampaign && currentCampaign.twitter_thread) {
+      navigator.clipboard.writeText(currentCampaign.twitter_thread.join('\n\n---\n\n'));
+      alert('Complete 5-tweet thread copied to clipboard!');
+    }
+  }
+</script>
+</body>
+</html>

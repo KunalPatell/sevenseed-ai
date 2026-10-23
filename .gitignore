@@ -30,6 +30,10 @@ frontend/
 
 # ── Local debug output ────────────────────────────────────────────────────────
 _run_log.txt
+_banner_inject_template.txt
+_inject_banner.ps1
+apps/sevenseed/backend/static/_banner_inject_template.txt
+apps/sevenseed/backend/static/_inject_banner.ps1
 
 # ── Built frontend copied into the backend at build time ─────────────────────
 # Ensure backend/static is tracked so Render serves the compiled Next.js single-page applications

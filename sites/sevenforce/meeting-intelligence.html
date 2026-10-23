@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Echo Meeting Intelligence Agent — Sevenforce (MeetBot 2.0)</title>
+  <meta name="description" content="Autonomous meeting transcription analysis, executive summaries, decision logs, and action item extraction. 100% Free BYOK AI.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; }
+    .hub-container { max-width: 1400px; margin: 0 auto; padding: 88px 24px 60px; }
+    
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(56,189,248,0.12); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); }
+
+    .grid-layout { display: grid; grid-template-columns: 460px 1fr; gap: 24px; }
+    @media(max-width: 1080px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    
+    .input-group { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #94a3b8; margin-bottom: 8px; }
+    .styled-input { width: 100%; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13.5px; outline: none; transition: border-color 0.2s; }
+    .styled-input:focus { border-color: #38bdf8; }
+    .styled-textarea { width: 100%; min-height: 220px; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; outline: none; resize: vertical; }
+    .styled-textarea:focus { border-color: #38bdf8; }
+
+    .preset-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .chip { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #38bdf8; color: #38bdf8; }
+
+    .btn-run { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; box-shadow: 0 4px 20px rgba(2,132,199,0.4); transition: all 0.2s; }
+    .btn-run:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(2,132,199,0.6); }
+
+    /* Telemetry row */
+    .tele-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    @media(max-width: 640px) { .tele-grid { grid-template-columns: repeat(2, 1fr); } }
+    .tele-card { background: #070d1e; border: 1px solid rgba(56,189,248,0.15); border-radius: 12px; padding: 14px; text-align: center; }
+    .tele-num { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 800; color: #38bdf8; }
+    .tele-text { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; margin-top: 4px; font-weight: 600; }
+
+    /* Results layout */
+    .section-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #f8fafc; margin-bottom: 12px; }
+    .summary-box { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; font-size: 13.5px; line-height: 1.7; color: #cbd5e1; margin-bottom: 20px; }
+    
+    .decisions-list { list-style: none; padding: 0; margin: 0 0 20px 0; display: flex; flex-direction: column; gap: 8px; }
+    .decisions-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #e2e8f0; background: rgba(15,23,42,0.6); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+    .decisions-list li i { color: #10b981; margin-top: 3px; }
+
+    /* Action items table */
+    .table-wrap { overflow-x: auto; margin-bottom: 20px; }
+    .action-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12.5px; }
+    .action-table th { background: #070d1e; padding: 10px 12px; color: #94a3b8; font-weight: 700; text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.5px; border-bottom: 1px solid #1e293b; }
+    .action-table td { padding: 12px; border-bottom: 1px solid #1e293b; color: #f8fafc; }
+    .badge-prio { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; }
+    .badge-high { background: rgba(244,63,94,0.15); color: #f43f5e; border: 1px solid rgba(244,63,94,0.3); }
+    .badge-med { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+    .badge-low { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+
+    .risks-box { background: rgba(244,63,94,0.05); border: 1px solid rgba(244,63,94,0.2); border-radius: 12px; padding: 14px; margin-bottom: 20px; }
+    .risk-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: #fda4af; margin-bottom: 6px; }
+    .risk-item:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-shield-halved"></i></span>
+    <span class="logo-text">Sevenforce <span class="logo-accent">AI</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="agent-dispatch.html"><i class="fas fa-satellite-dish"></i> Agent Cockpit</a>
+    <a href="meeting-intelligence.html" style="color:#38bdf8;font-weight:700;"><i class="fas fa-comments"></i> Echo MeetBot</a>
+    <a href="social-syndicator.html"><i class="fas fa-share-nodes"></i> Maya SocialHub</a>
+    <a href="lead-validator.html"><i class="fas fa-envelope-circle-check"></i> Alex Lead Validator</a>
+    <a href="whatsapp-studio.html"><i class="fab fa-whatsapp"></i> WhatsWay Studio</a>
+    <a href="/byok.html"><i class="fas fa-key"></i> BYOK Vault</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost sm" href="index.html">← Back to Sevenforce</a>
+  </div>
+</nav>
+
+<main class="hub-container">
+  <!-- HUD Header -->
+  <div class="hud-header">
+    <div class="hud-title-wrap">
+      <span class="hud-tag"><i class="fas fa-microphone-lines"></i> MeetBot 2.0 Map-Reduce Pipeline</span>
+      <h1>Echo Meeting Intelligence Agent</h1>
+      <p style="color:#94a3b8; font-size:14px; margin-top:6px; max-width:700px;">
+        Ingest conversation transcripts to autonomously synthesize executive abstracts, decision logs, risk assessments, and assigned action item matrices.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Column: Input Controller -->
+    <div class="card-panel">
+      <div class="input-group">
+        <label class="input-label"><i class="fas fa-heading"></i> Meeting Title</label>
+        <input type="text" id="meetingTitle" class="styled-input" value="Q4 Architecture & BYOK Sprint Sync" placeholder="e.g. Weekly Product Strategy">
+      </div>
+
+      <div class="input-group">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <label class="input-label" style="margin:0;"><i class="fas fa-file-lines"></i> Meeting Transcript</label>
+          <span style="font-size:10px; color:#64748b;">Supports WebRTC / Whisper dumps</span>
+        </div>
+        <div class="preset-chips">
+          <span class="chip" onclick="loadPreset('arch')">Architecture Sync</span>
+          <span class="chip" onclick="loadPreset('vc')">VC Investor Pitch</span>
+          <span class="chip" onclick="loadPreset('postmortem')">Outage Post-Mortem</span>
+        </div>
+        <textarea id="transcriptInput" class="styled-textarea" placeholder="Paste dialogue, WebRTC transcription, or speaker turns..."></textarea>
+      </div>
+
+      <button class="btn-run" id="btnSummarize" onclick="runMeetingAnalysis()">
+        <i class="fas fa-bolt"></i> Synthesize Meeting Intel
+      </button>
+
+      <div style="margin-top:16px; padding:12px; background:#070d1e; border:1px solid #1e293b; border-radius:10px; font-size:11.5px; color:#94a3b8;">
+        <i class="fas fa-shield-halved" style="color:#10b981;"></i> <b>Zero Data Leakage:</b> Processed via BYOK vault client keys or zero-storage stateless API.
+      </div>
+    </div>
+
+    <!-- Right Column: Results Cockpit -->
+    <div class="card-panel" id="resultsCard">
+      <!-- Telemetry Counters -->
+      <div class="tele-grid">
+        <div class="tele-card">
+          <div class="tele-num" id="statEngagement">94%</div>
+          <div class="tele-text">Engagement Index</div>
+        </div>
+        <div class="tele-card">
+          <div class="tele-num" id="statDecisions">3</div>
+          <div class="tele-text">Decisions Locked</div>
+        </div>
+        <div class="tele-card">
+          <div class="tele-num" id="statActions">3</div>
+          <div class="tele-text">Action Items</div>
+        </div>
+        <div class="tele-card">
+          <div class="tele-num" id="statRisks" style="color:#f43f5e;">2</div>
+          <div class="tele-text">Open Risks</div>
+        </div>
+      </div>
+
+      <!-- Executive Summary -->
+      <div class="section-title"><i class="fas fa-file-contract" style="color:#38bdf8;"></i> Executive Abstract</div>
+      <div class="summary-box" id="summaryText">
+        The team aligned on core architectural milestones, validated Q4 deliverables, and established zero-margin BYOK integration targets across all 8 portfolio ventures.
+      </div>
+
+      <!-- Key Decisions -->
+      <div class="section-title"><i class="fas fa-gavel" style="color:#10b981;"></i> Decisions Log</div>
+      <ul class="decisions-list" id="decisionsList">
+        <li><i class="fas fa-check-circle"></i> Adopt unified FastAPI + Next.js micro-architecture across all 8 ventures.</li>
+        <li><i class="fas fa-check-circle"></i> Enforce 100% free citizen model backed by Bring-Your-Own-Key token vault.</li>
+        <li><i class="fas fa-check-circle"></i> Transition mobile views to native touch-optimized drawer components.</li>
+      </ul>
+
+      <!-- Action Items Table -->
+      <div class="section-title"><i class="fas fa-list-check" style="color:#f59e0b;"></i> Action Items & Assigned Owners</div>
+      <div class="table-wrap">
+        <table class="action-table">
+          <thead>
+            <tr>
+              <th>Task Deliverable</th>
+              <th>Owner</th>
+              <th>Deadline</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody id="actionTableBody">
+            <tr>
+              <td>Finalize YOLO damage vision integration for Breakdown Factor</td>
+              <td><span style="color:#38bdf8; font-weight:600;">Dev Vance</span></td>
+              <td>Friday EOD</td>
+              <td><span class="badge-prio badge-high">High</span></td>
+            </tr>
+            <tr>
+              <td>Publish statewide health camp calendar with SMS confirmation tokens</td>
+              <td><span style="color:#38bdf8; font-weight:600;">Priya Sharma</span></td>
+              <td>Monday 10 AM</td>
+              <td><span class="badge-prio badge-high">High</span></td>
+            </tr>
+            <tr>
+              <td>Benchmark multi-store price scraper across Blinkit & Amazon</td>
+              <td><span style="color:#38bdf8; font-weight:600;">Maya Lin</span></td>
+              <td>Wednesday</td>
+              <td><span class="badge-prio badge-med">Medium</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Unresolved Risks -->
+      <div class="section-title"><i class="fas fa-triangle-exclamation" style="color:#f43f5e;"></i> Unresolved Blockers & Risks</div>
+      <div class="risks-box" id="risksBox">
+        <div class="risk-item"><i class="fas fa-circle-exclamation"></i> Render free tier cold-start latency mitigation required.</div>
+        <div class="risk-item"><i class="fas fa-circle-exclamation"></i> Third-party store anti-scraping rate limits on high-frequency price refreshes.</div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn btn-ghost sm" onclick="copySummary()"><i class="fas fa-copy"></i> Copy Summary</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const PRESETS = {
+    arch: `Dev Vance: We just verified the ONNX YOLOv8 model for Breakdown Factor. It handles wall and pipe damage with 45ms CPU latency.\nAlice: What about the free health camp calendar for Decode Forest Pharmacy?\nPriya Sharma: The database schema is ready with 12 camps across Ahmedabad and Surat. We need SMS tokens before Friday.\nBob: Let's ensure the BYOK vault is unified so users don't have to enter their Groq key multiple times.\nMaya Lin: Agreed. I will also draft the multi-channel launch campaign for social channels by Wednesday.`,
+    vc: `Alex Mercer: Sevenforce has achieved 4,200 autonomous agent tasks executed this month at zero infrastructure margin.\nInvestor: How do you compete with traditional enterprise SaaS charging $50 per seat?\nAlex Mercer: Traditional platforms add 1000x token markups. By giving users 100% free software where they supply their own API keys, we achieve zero customer churn and viral developer adoption.\nInvestor: What is your primary capital requirement for Q1?\nAlice: Expanding computer vision model training pipelines for property inspection and medical prescription OCR.`,
+    postmortem: `Liam: At 14:10 UTC we noticed intermittent 502 bad gateway responses on the price comparison service.\nDev Vance: The Blinkit scraper encountered Cloudflare challenge rate limits because worker concurrent threads were set to 20 instead of 4.\nLiam: We rolled back worker pool concurrency and added exponential backoff jitter at 14:35 UTC.\nDev Vance: Permanent action item: Deploy rotating proxy pool and Redis cache headers before Tuesday.`
+  };
+
+  function loadPreset(key) {
+    if (PRESETS[key]) {
+      document.getElementById('transcriptInput').value = PRESETS[key];
+    }
+  }
+
+  async function runMeetingAnalysis() {
+    const title = document.getElementById('meetingTitle').value.trim() || 'Architecture Sync';
+    const text = document.getElementById('transcriptInput').value.trim();
+    if (!text) {
+      alert('Please paste a meeting transcript or select a preset.');
+      return;
+    }
+
+    const btn = document.getElementById('btnSummarize');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Synthesizing with Echo Agent...';
+
+    try {
+      const resp = await fetch('/api/meeting/summarize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ meeting_title: title, transcript_text: text })
+      });
+      const data = await resp.json();
+      if (data && data.summary) {
+        renderSummary(data.summary);
+      }
+    } catch (err) {
+      console.error('Failed to summarize:', err);
+      alert('Encountered an issue calling meeting intelligence API.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-bolt"></i> Synthesize Meeting Intel';
+    }
+  }
+
+  function renderSummary(s) {
+    if (s.engagement_score) document.getElementById('statEngagement').innerText = s.engagement_score + '%';
+    if (s.key_decisions) document.getElementById('statDecisions').innerText = s.key_decisions.length;
+    if (s.action_items) document.getElementById('statActions').innerText = s.action_items.length;
+    if (s.unresolved_risks) document.getElementById('statRisks').innerText = s.unresolved_risks.length;
+
+    if (s.executive_summary) document.getElementById('summaryText').innerText = s.executive_summary;
+
+    if (s.key_decisions) {
+      const list = document.getElementById('decisionsList');
+      list.innerHTML = s.key_decisions.map(d => `<li><i class="fas fa-check-circle"></i> ${d}</li>`).join('');
+    }
+
+    if (s.action_items) {
+      const tbody = document.getElementById('actionTableBody');
+      tbody.innerHTML = s.action_items.map(a => {
+        const pClass = (a.priority || '').toLowerCase() === 'high' ? 'badge-high' : (a.priority || '').toLowerCase() === 'medium' ? 'badge-med' : 'badge-low';
+        return `<tr>
+          <td>${a.task || ''}</td>
+          <td><span style="color:#38bdf8; font-weight:600;">${a.owner || 'Unassigned'}</span></td>
+          <td>${a.deadline || 'ASAP'}</td>
+          <td><span class="badge-prio ${pClass}">${a.priority || 'Normal'}</span></td>
+        </tr>`;
+      }).join('');
+    }
+
+    if (s.unresolved_risks) {
+      const rBox = document.getElementById('risksBox');
+      rBox.innerHTML = s.unresolved_risks.map(r => `<div class="risk-item"><i class="fas fa-circle-exclamation"></i> ${r}</div>`).join('');
+    }
+  }
+
+  function copySummary() {
+    const text = document.getElementById('summaryText').innerText;
+    navigator.clipboard.writeText(text);
+    alert('Summary copied to clipboard!');
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    loadPreset('arch');
+  });
+</script>
+</body>
+</html>
