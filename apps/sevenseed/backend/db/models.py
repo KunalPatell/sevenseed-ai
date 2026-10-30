@@ -115,3 +115,110 @@ class TokenUsageLog(Base):
 
     # Relationships
     workspace = relationship("Workspace", back_populates="usage_logs")
+
+class CRMCompany(Base):
+    __tablename__ = "crm_companies"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    name = Column(String(255), nullable=False, index=True)
+    domain = Column(String(255), nullable=True)
+    industry = Column(String(100), nullable=True)
+    size = Column(String(50), nullable=True)
+    website = Column(String(255), nullable=True)
+    phone = Column(String(50), nullable=True)
+    address = Column(Text, nullable=True)
+    notes = Column(Text, nullable=True)
+    tags = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    contacts = relationship("CRMContact", back_populates="company", cascade="all, delete-orphan")
+    deals = relationship("CRMDeal", back_populates="company", cascade="all, delete-orphan")
+
+
+class CRMContact(Base):
+    __tablename__ = "crm_contacts"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    first_name = Column(String(100), nullable=False)
+    last_name = Column(String(100), nullable=True)
+    email = Column(String(255), unique=True, nullable=False, index=True)
+    phone = Column(String(50), nullable=True)
+    job_title = Column(String(100), nullable=True)
+    company_id = Column(String(36), ForeignKey("crm_companies.id", ondelete="SET NULL"), nullable=True)
+    linkedin_url = Column(String(255), nullable=True)
+    twitter_url = Column(String(255), nullable=True)
+    avatar_url = Column(Text, nullable=True)
+    source = Column(String(50), nullable=True)
+    status = Column(String(50), default="lead")
+    tags = Column(Text, nullable=True)
+    notes = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    company = relationship("CRMCompany", back_populates="contacts")
+    deals = relationship("CRMDeal", back_populates="contact", cascade="all, delete-orphan")
+    activities = relationship("CRMActivity", back_populates="contact", cascade="all, delete-orphan")
+    tasks = relationship("CRMTask", back_populates="contact", cascade="all, delete-orphan")
+
+
+class CRMDeal(Base):
+    __tablename__ = "crm_deals"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    title = Column(String(255), nullable=False)
+    amount = Column(Integer, default=0)
+    currency = Column(String(10), default="USD")
+    stage = Column(String(50), default="prospect")
+    probability = Column(Integer, default=10)
+    expected_close_date = Column(DateTime, nullable=True)
+    contact_id = Column(String(36), ForeignKey("crm_contacts.id", ondelete="SET NULL"), nullable=True)
+    company_id = Column(String(36), ForeignKey("crm_companies.id", ondelete="SET NULL"), nullable=True)
+    owner_id = Column(String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    source = Column(String(50), nullable=True)
+    description = Column(Text, nullable=True)
+    tags = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    contact = relationship("CRMContact", back_populates="deals")
+    company = relationship("CRMCompany", back_populates="deals")
+    activities = relationship("CRMActivity", back_populates="deal", cascade="all, delete-orphan")
+    tasks = relationship("CRMTask", back_populates="deal", cascade="all, delete-orphan")
+
+
+class CRMActivity(Base):
+    __tablename__ = "crm_activities"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    type = Column(String(50), nullable=False)
+    subject = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    contact_id = Column(String(36), ForeignKey("crm_contacts.id", ondelete="CASCADE"), nullable=True)
+    deal_id = Column(String(36), ForeignKey("crm_deals.id", ondelete="CASCADE"), nullable=True)
+    user_id = Column(String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    activity_date = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    contact = relationship("CRMContact", back_populates="activities")
+    deal = relationship("CRMDeal", back_populates="activities")
+
+
+class CRMTask(Base):
+    __tablename__ = "crm_tasks"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    status = Column(String(50), default="todo")
+    priority = Column(String(50), default="medium")
+    due_date = Column(DateTime, nullable=True)
+    contact_id = Column(String(36), ForeignKey("crm_contacts.id", ondelete="CASCADE"), nullable=True)
+    deal_id = Column(String(36), ForeignKey("crm_deals.id", ondelete="CASCADE"), nullable=True)
+    assigned_to = Column(String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    completed_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    contact = relationship("CRMContact", back_populates="tasks")
+    deal = relationship("CRMDeal", back_populates="tasks")

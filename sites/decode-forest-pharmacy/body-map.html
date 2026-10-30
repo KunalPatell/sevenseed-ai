@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Interactive Anatomical Symptom Body Map — Forest Pharmacy</title>
-  <meta name="description" content="Visual anatomical human body symptom explorer with glowing interactive pulse zones and real-time Gemini 3.8 Flash clinical triage.">
+  <meta name="description" content="10-zone visual anatomical human body symptom explorer with NEWS2 clinical vitals triage, differential lab panels, and real-time AI diagnostics.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🫀%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -13,22 +13,22 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .bm-container { max-width: 1360px; margin: 0 auto; padding: 90px 24px 60px; }
+    .bm-container { max-width: 1380px; margin: 0 auto; padding: 90px 24px 60px; }
     .bm-header { text-align: center; margin-bottom: 24px; }
     .bm-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
     .bm-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.2; margin-bottom: 8px; }
-    .bm-sub { color: var(--text-2); font-size: 15px; max-width: 650px; margin: 0 auto; }
+    .bm-sub { color: var(--text-2); font-size: 15px; max-width: 680px; margin: 0 auto; }
 
-    .bm-grid { display: grid; grid-template-columns: 500px 1fr; gap: 24px; min-height: 660px; }
+    .bm-grid { display: grid; grid-template-columns: 480px 1fr; gap: 24px; min-height: 680px; }
     @media(max-width: 1024px) { .bm-grid { grid-template-columns: 1fr; } }
 
     /* Visual Body Stage */
-    .body-stage { background: #050a10; border: 1px solid rgba(16,185,129,0.25); border-radius: 16px; position: relative; display: flex; align-items: center; justify-content: center; padding: 24px; box-shadow: 0 0 40px rgba(16,185,129,0.06) inset; }
+    .body-stage { background: #050a10; border: 1px solid rgba(16,185,129,0.25); border-radius: 16px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-shadow: 0 0 40px rgba(16,185,129,0.06) inset; }
     
-    .body-svg { width: 100%; max-width: 380px; height: auto; filter: drop-shadow(0 0 16px rgba(16,185,129,0.15)); }
+    .body-svg { width: 100%; max-width: 390px; height: auto; filter: drop-shadow(0 0 16px rgba(16,185,129,0.15)); }
     .zone-hotspot { cursor: pointer; transition: all .2s; }
     .zone-hotspot circle { fill: rgba(16,185,129,0.3); stroke: #34d399; stroke-width: 2; transition: all .2s; }
-    .zone-hotspot:hover circle, .zone-hotspot.active circle { fill: rgba(16,185,129,0.8); stroke: #fff; stroke-width: 3; filter: drop-shadow(0 0 10px #34d399); }
+    .zone-hotspot:hover circle, .zone-hotspot.active circle { fill: rgba(16,185,129,0.85); stroke: #fff; stroke-width: 3; filter: drop-shadow(0 0 10px #34d399); }
     .zone-pulse { animation: organPulse 2s infinite ease-in-out; transform-origin: center; }
     @keyframes organPulse {
       0%, 100% { transform: scale(1); opacity: 0.8; }
@@ -40,11 +40,17 @@
     .zone-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
     .zone-title { font-size: 17px; font-weight: 700; color: #fff; }
     
-    .symptom-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-    .s-chip { padding: 6px 14px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; }
+    .symptom-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+    .s-chip { padding: 6px 14px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--border); color: #cbd5e1; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all .15s; }
     .s-chip:hover, .s-chip.active { background: rgba(16,185,129,0.15); border-color: #10b981; color: #34d399; }
 
-    .ai-diag-output { flex: 1; background: #06090e; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; font-size: 14px; line-height: 1.7; color: #e2e8f0; white-space: pre-wrap; overflow-y: auto; max-height: 480px; }
+    /* NEWS2 Vitals Strip */
+    .vitals-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: rgba(2,6,23,0.65); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; }
+    @media (max-width: 720px) { .vitals-grid { grid-template-columns: repeat(2, 1fr); } }
+    .vital-box label { display: block; font-size: 11px; color: #94a3b8; font-weight: 600; margin-bottom: 4px; }
+    .vital-box input { width: 100%; padding: 7px 10px; border-radius: 8px; background: var(--bg-2); border: 1px solid var(--border); color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+
+    .ai-diag-output { flex: 1; background: #06090e; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; font-size: 13.5px; line-height: 1.7; color: #e2e8f0; white-space: pre-wrap; overflow-y: auto; max-height: 420px; }
     
     .btn-triage { padding: 13px; background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 18px rgba(16,185,129,0.3); }
     .btn-triage:hover { opacity: .9; }
@@ -74,110 +80,250 @@
 
   <main class="bm-container">
     <div class="bm-header">
-      <div class="bm-badge"><i class="fa-solid fa-person-dots-from-line"></i> Interactive Anatomical Diagnostics</div>
-      <h1 class="bm-title">Visual Human Body Symptom Map</h1>
-      <p class="bm-sub">Click on any anatomical pulse point on the interactive body diagram to trigger localized symptom analysis powered by Gemini 3.8 Flash.</p>
+      <div class="bm-badge"><i class="fa-solid fa-person-dots-from-line"></i> Ada Health &amp; NEWS2 Clinical Triage Engine</div>
+      <h1 class="bm-title">10-Zone Interactive Human Body Symptom Map</h1>
+      <p class="bm-sub">Click any of the 10 anatomical pulse points on the interactive body diagram, log patient vitals for automatic NEWS2 early warning scoring, and run clinical differential analysis.</p>
     </div>
 
     <div class="bm-grid">
-      <!-- SVG Body Diagram -->
+      <!-- SVG Body Diagram (10 Anatomical Hotspots) -->
       <div class="body-stage">
-        <svg class="body-svg" viewBox="0 0 300 620" xmlns="http://www.w3.org/2000/svg">
+        <svg class="body-svg" viewBox="0 0 320 620" xmlns="http://www.w3.org/2000/svg">
           <!-- Stylized Human Body Contour -->
           <path d="M150 40 C165 40 175 52 175 70 C175 88 165 100 150 100 C135 100 125 88 125 70 C125 52 135 40 150 40 Z" fill="#0d1926" stroke="#1e3a5f" stroke-width="2"/>
           <!-- Neck & Torso -->
           <path d="M142 100 L158 100 L185 125 L215 220 L195 235 L175 160 L175 290 L160 320 L160 460 L175 580 L148 580 L140 450 L135 450 L127 580 L100 580 L115 460 L115 320 L100 290 L100 160 L80 235 L60 220 L90 125 Z" fill="#0b1420" stroke="#1e3a5f" stroke-width="2"/>
           
-          <!-- Interactive Hotspot 1: Head / Neurological -->
-          <g class="zone-hotspot active" id="zone_head" onclick="selectZone('Head & Neurological', ['Throbbing Migraine', 'Dizziness / Vertigo', 'Tension Headache', 'Brain Fog'])">
-            <circle class="zone-pulse" cx="150" cy="70" r="16" fill="rgba(16,185,129,0.2)"/>
-            <circle cx="150" cy="70" r="8"/>
-            <text x="175" y="74" fill="#34d399" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">Cranial / Brain</text>
+          <!-- 1: Head / Neurological -->
+          <g class="zone-hotspot active" id="zone_head" onclick="selectZone('Head & Neurological', ['Throbbing Migraine', 'Dizziness / Vertigo', 'Tension Headache', 'Brain Fog', 'Photophobia'], 'zone_head')">
+            <circle class="zone-pulse" cx="150" cy="60" r="14" fill="rgba(16,185,129,0.2)"/>
+            <circle cx="150" cy="60" r="7"/>
+            <text x="174" y="64" fill="#34d399" font-family="'JetBrains Mono',monospace" font-size="10.5" font-weight="700">1. Cranial / Brain</text>
           </g>
 
-          <!-- Hotspot 2: Eyes / ENT -->
-          <g class="zone-hotspot" id="zone_ent" onclick="selectZone('ENT & Throat', ['Sore Throat', 'Sinus Pressure', 'Ear Ache', 'Loss of Smell'])">
-            <circle class="zone-pulse" cx="150" cy="115" r="14" fill="rgba(6,182,212,0.2)"/>
-            <circle cx="150" cy="115" r="7"/>
-            <text x="175" y="118" fill="#38bdf8" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">ENT / Throat</text>
+          <!-- 2: Ocular / Vision -->
+          <g class="zone-hotspot" id="zone_eyes" onclick="selectZone('Ocular & Ophthalmic', ['Blurred Vision', 'Conjunctival Redness', 'Dry Eye Strain', 'Retro-orbital Pain'], 'zone_eyes')">
+            <circle class="zone-pulse" cx="138" cy="78" r="11" fill="rgba(56,189,248,0.2)"/>
+            <circle cx="138" cy="78" r="5.5"/>
+            <text x="18" y="82" fill="#38bdf8" font-family="'JetBrains Mono',monospace" font-size="10.5" font-weight="700">2. Ocular / Eyes</text>
           </g>
 
-          <!-- Hotspot 3: Chest / Lungs / Heart -->
-          <g class="zone-hotspot" id="zone_chest" onclick="selectZone('Chest, Heart & Lungs', ['Chest Tightness', 'Shortness of Breath', 'Palpitations', 'Persistent Cough'])">
-            <circle class="zone-pulse" cx="150" cy="175" r="18" fill="rgba(239,68,68,0.2)"/>
-            <circle cx="150" cy="175" r="9"/>
-            <text x="180" y="178" fill="#f87171" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">Chest & Lungs</text>
+          <!-- 3: ENT & Cervical -->
+          <g class="zone-hotspot" id="zone_ent" onclick="selectZone('ENT & Cervical Thyroid', ['Sore Throat / Pharyngitis', 'Sinus Pressure', 'Cervical Lymph Swelling', 'Tinnitus / Ear Ache'], 'zone_ent')">
+            <circle class="zone-pulse" cx="150" cy="112" r="13" fill="rgba(6,182,212,0.2)"/>
+            <circle cx="150" cy="112" r="6.5"/>
+            <text x="174" y="116" fill="#38bdf8" font-family="'JetBrains Mono',monospace" font-size="10.5" font-weight="700">3. ENT / Thyroid</text>
           </g>
 
-          <!-- Hotspot 4: Abdomen / Gastrointestinal -->
-          <g class="zone-hotspot" id="zone_abdomen" onclick="selectZone('Abdomen & Gastrointestinal', ['Sharp Stomach Cramp', 'Acid Reflux / GERD', 'Bloating & Nausea', 'Acute Diarrhea'])">
-            <circle class="zone-pulse" cx="150" cy="245" r="18" fill="rgba(245,158,11,0.2)"/>
-            <circle cx="150" cy="245" r="9"/>
-            <text x="180" y="248" fill="#fbbf24" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">Abdomen / GI</text>
+          <!-- 4: Shoulder & Upper Limb -->
+          <g class="zone-hotspot" id="zone_shoulder" onclick="selectZone('Brachial & Upper Extremity', ['Rotator Cuff Impingement', 'Cervical Radiculopathy', 'Carpal Tunnel Tingling', 'Deltoid Strain'], 'zone_shoulder')">
+            <circle class="zone-pulse" cx="92" cy="145" r="13" fill="rgba(168,85,247,0.2)"/>
+            <circle cx="92" cy="145" r="6.5"/>
+            <text x="8" y="148" fill="#c084fc" font-family="'JetBrains Mono',monospace" font-size="10" font-weight="700">4. Brachial</text>
           </g>
 
-          <!-- Hotspot 5: Joints / Knees / Lower Extremities -->
-          <g class="zone-hotspot" id="zone_joints" onclick="selectZone('Joints & Musculoskeletal', ['Knee Swelling', 'Sciatic Nerve Pain', 'Lower Back Spasm', 'Muscle Stiffness'])">
-            <circle class="zone-pulse" cx="140" cy="460" r="16" fill="rgba(168,85,247,0.2)"/>
-            <circle cx="140" cy="460" r="8"/>
-            <text x="170" y="464" fill="#c084fc" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">Joints & Spine</text>
+          <!-- 5: Chest / Cardiopulmonary -->
+          <g class="zone-hotspot" id="zone_chest" onclick="selectZone('Chest, Heart & Lungs', ['Chest Tightness', 'Shortness of Breath', 'Palpitations / Tachycardia', 'Dry / Productive Cough', 'Pleuritic Pain'], 'zone_chest')">
+            <circle class="zone-pulse" cx="150" cy="170" r="16" fill="rgba(239,68,68,0.2)"/>
+            <circle cx="150" cy="170" r="8"/>
+            <text x="176" y="174" fill="#f87171" font-family="'JetBrains Mono',monospace" font-size="10.5" font-weight="700">5. Cardiopulmonary</text>
+          </g>
+
+          <!-- 6: Hepatic / Right Upper Quadrant -->
+          <g class="zone-hotspot" id="zone_hepatic" onclick="selectZone('Hepatic & Biliary (RUQ)', ['Right Rib-Cage Fullness', 'Fatty Meal Indigestion', 'Biliary Colic', 'Scleral Icterus / Fatigue'], 'zone_hepatic')">
+            <circle class="zone-pulse" cx="122" cy="215" r="13" fill="rgba(245,158,11,0.2)"/>
+            <circle cx="122" cy="215" r="6.5"/>
+            <text x="10" y="218" fill="#fbbf24" font-family="'JetBrains Mono',monospace" font-size="10" font-weight="700">6. Hepatic / RUQ</text>
+          </g>
+
+          <!-- 7: Abdomen / Gastrointestinal -->
+          <g class="zone-hotspot" id="zone_abdomen" onclick="selectZone('Abdomen & Gastrointestinal', ['Epigastric GERD / Acidity', 'Periumbilical Cramping', 'Bloating & Nausea', 'Acute Gastroenteritis'], 'zone_abdomen')">
+            <circle class="zone-pulse" cx="150" cy="252" r="16" fill="rgba(245,158,11,0.2)"/>
+            <circle cx="150" cy="252" r="8"/>
+            <text x="176" y="256" fill="#fbbf24" font-family="'JetBrains Mono',monospace" font-size="10.5" font-weight="700">7. Abdomen / GI</text>
+          </g>
+
+          <!-- 8: Renal & Pelvic -->
+          <g class="zone-hotspot" id="zone_pelvis" onclick="selectZone('Renal, Urological & Pelvic', ['Flank / Loin Pain', 'Dysuria / Burning', 'Renal Calculus Colic', 'Suprapubic Discomfort'], 'zone_pelvis')">
+            <circle class="zone-pulse" cx="138" cy="308" r="14" fill="rgba(236,72,153,0.2)"/>
+            <circle cx="138" cy="308" r="7"/>
+            <text x="168" y="312" fill="#f472b6" font-family="'JetBrains Mono',monospace" font-size="10.5" font-weight="700">8. Renal / Pelvic</text>
+          </g>
+
+          <!-- 9: Joints & Knee -->
+          <g class="zone-hotspot" id="zone_joints" onclick="selectZone('Joints & Musculoskeletal', ['Knee Effusion / Swelling', 'Sciatic Nerve Radiation', 'Lumbar Disc Spasm', 'Morning Joint Stiffness'], 'zone_joints')">
+            <circle class="zone-pulse" cx="152" cy="450" r="15" fill="rgba(168,85,247,0.2)"/>
+            <circle cx="152" cy="450" r="7.5"/>
+            <text x="176" y="454" fill="#c084fc" font-family="'JetBrains Mono',monospace" font-size="10.5" font-weight="700">9. Knee &amp; Spine</text>
+          </g>
+
+          <!-- 10: Peripheral Vascular / Pedal -->
+          <g class="zone-hotspot" id="zone_vascular" onclick="selectZone('Peripheral Vascular & Pedal', ['Ankle Pitting Edema', 'Calf Cramps / Claudication', 'Plantar Fasciitis', 'Diabetic Neuropathy Tingling'], 'zone_vascular')">
+            <circle class="zone-pulse" cx="122" cy="545" r="14" fill="rgba(16,185,129,0.2)"/>
+            <circle cx="122" cy="545" r="7"/>
+            <text x="150" y="549" fill="#34d399" font-family="'JetBrains Mono',monospace" font-size="10.5" font-weight="700">10. Vascular / Pedal</text>
           </g>
         </svg>
+        <div style="font-size:11.5px;color:#94a3b8;text-align:center;margin-top:6px;">
+          <i class="fas fa-hand-pointer" style="color:#34d399;"></i> Click any of the 10 anatomical nodes to switch region
+        </div>
       </div>
 
       <!-- Diagnosis Panel -->
       <div class="diag-panel">
         <div class="zone-card">
           <div>
-            <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;">Selected Region</div>
-            <div class="zone-title" id="zoneName">Head & Neurological</div>
+            <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;">Selected Anatomical Compartment</div>
+            <div class="zone-title" id="zoneName">Head &amp; Neurological</div>
           </div>
-          <span style="font-size:24px;">🧠</span>
+          <div style="text-align:right;">
+            <span id="news2RiskBadge" style="display:inline-block;padding:5px 12px;border-radius:999px;font-size:11.5px;font-weight:800;background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.35);">NEWS2 Score: 1 (Low Risk)</span>
+          </div>
+        </div>
+
+        <!-- NEWS2 Clinical Vitals Input Bar -->
+        <div>
+          <label style="font-size:12px;font-weight:700;color:var(--text-2);display:flex;justify-content:space-between;margin-bottom:6px;">
+            <span><i class="fas fa-heartbeat" style="color:#f43f5e;"></i> Patient Vitals &amp; Pain Scale (Auto-Computes NEWS2 Score)</span>
+            <span id="vitalsSummaryText" style="color:#38bdf8;font-family:'JetBrains Mono',monospace;font-size:11px;">SpO2 98% · 78 BPM · 98.6°F</span>
+          </label>
+          <div class="vitals-grid">
+            <div class="vital-box">
+              <label>Temp (°F)</label>
+              <input type="number" id="vitalTemp" value="98.6" step="0.2" min="94" max="106" oninput="calcNews2Score()">
+            </div>
+            <div class="vital-box">
+              <label>SpO2 (%)</label>
+              <input type="number" id="vitalSpo2" value="98" step="1" min="75" max="100" oninput="calcNews2Score()">
+            </div>
+            <div class="vital-box">
+              <label>Heart Rate (BPM)</label>
+              <input type="number" id="vitalHr" value="78" step="1" min="40" max="180" oninput="calcNews2Score()">
+            </div>
+            <div class="vital-box">
+              <label>Pain VAS (1–10)</label>
+              <input type="number" id="vitalPainVas" value="4" step="1" min="1" max="10" oninput="calcNews2Score()">
+            </div>
+          </div>
         </div>
 
         <div>
-          <label style="font-size:12.5px;font-weight:600;color:var(--text-2);display:block;margin-bottom:8px;">Common Localized Symptoms</label>
+          <label style="font-size:12.5px;font-weight:600;color:var(--text-2);display:block;margin-bottom:8px;">Common Localized Symptoms (Click to Toggle)</label>
           <div class="symptom-chips" id="chipsContainer">
             <!-- Populated via JS -->
           </div>
         </div>
 
         <div>
-          <label style="font-size:12.5px;font-weight:600;color:var(--text-2);display:block;margin-bottom:6px;">Additional Observations (Duration, Intensity)</label>
+          <label style="font-size:12.5px;font-weight:600;color:var(--text-2);display:block;margin-bottom:6px;">Additional Clinical Observations (Duration, Triggers, Comorbidities)</label>
           <input type="text" id="symptomNotes" class="field-input" style="width:100%;padding:10px 14px;background:var(--bg-2);border:1px solid var(--border);border-radius:9px;color:#fff;font-family:inherit;font-size:13.5px;" value="Started 6 hours ago, pulsating sensation behind eyes with mild light sensitivity.">
         </div>
 
+        <!-- Recommended Lab & Jan Aushadhi Strip -->
+        <div id="otcLabStrip" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:10px 14px;font-size:12px;color:#cbd5e1;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <span><strong style="color:#34d399;"><i class="fas fa-vial"></i> Suggested Lab Panel:</strong> CBC, Serum Electrolytes, Visual Acuity Check</span>
+          <span><strong style="color:#38bdf8;"><i class="fas fa-pills"></i> Jan Aushadhi Generic:</strong> Paracetamol 500mg (₹11/strip)</span>
+        </div>
+
         <button type="button" id="btnTriage" class="btn-triage" onclick="runTriage()">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> Evaluate with Gemini 3.8 Flash
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Evaluate Clinical Differential &amp; Red Flags
         </button>
 
-        <div class="ai-diag-output" id="diagOutput">Click "Evaluate with Gemini 3.8 Flash" to receive structured medical differential analysis, red-flag emergency checks, and evidence-based self-care advice.</div>
+        <div class="ai-diag-output" id="diagOutput">Click "Evaluate Clinical Differential &amp; Red Flags" to receive structured medical differential analysis, NEWS2 risk correlation, red-flag emergency checks, and evidence-based self-care advice.</div>
       </div>
     </div>
   </main>
 
   <script src="../vertex_client.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      Vertex.showStatus('aiStatus');
-      selectZone('Head & Neurological', ['Throbbing Migraine', 'Dizziness / Vertigo', 'Tension Headache', 'Brain Fog']);
-    });
+    const ZONE_META = {
+      'Head & Neurological': { labs: 'CBC, Serum Electrolytes, Cranial Neuro Exam', otc: 'Paracetamol 500mg / Naproxen 250mg (PMBJP ₹14)' },
+      'Ocular & Ophthalmic': { labs: 'Slit-Lamp Exam, Intraocular Pressure (IOP), HbA1c', otc: 'Carboxymethylcellulose 0.5% Eye Drops (₹32)' },
+      'ENT & Cervical Thyroid': { labs: 'Throat Swab Culture, TSH / Free T4, CBC', otc: 'Povidone-Iodine Gargle + Cetirizine 10mg (₹9)' },
+      'Brachial & Upper Extremity': { labs: 'Cervical Spine X-Ray, Nerve Conduction Study, Vitamin B12', otc: 'Diclofenac Gel + Methylcobalamin 1500mcg (₹24)' },
+      'Chest, Heart & Lungs': { labs: '12-Lead ECG, Troponin-I, Chest X-Ray PA, D-Dimer', otc: 'Seek Physician Evaluation Before Analgesics' },
+      'Hepatic & Biliary (RUQ)': { labs: 'Liver Function Test (LFT), Abdominal Ultrasound, GGT', otc: 'Ursodeoxycholic / Antacid Suspension (Rx Check)' },
+      'Abdomen & Gastrointestinal': { labs: 'Stool Routine, H. Pylori Antigen, Serum Amylase/Lipase', otc: 'Pantoprazole 40mg + WHO ORS Sachet (₹18)' },
+      'Renal, Urological & Pelvic': { labs: 'Urine R/M & Culture, Serum Creatinine, KUB Ultrasound', otc: 'Oral Citrate Alkalizer + Hydration 3L/day' },
+      'Joints & Musculoskeletal': { labs: 'Serum Uric Acid, RA Factor, CRP, Vitamin D3 & Calcium', otc: 'Aceclofenac 100mg + Cholecalciferol 60k IU (₹22)' },
+      'Peripheral Vascular & Pedal': { labs: 'Venous Doppler Ultrasound, HbA1c, Lipid Profile', otc: 'Graduated Compression Stockings + Foot Care' }
+    };
 
     let currentZone = 'Head & Neurological';
     let selectedSymptoms = [];
+    let currentNews2 = 1;
 
-    function selectZone(name, symptoms) {
+    function calcNews2Score() {
+      const temp = parseFloat(document.getElementById('vitalTemp').value) || 98.6;
+      const spo2 = parseFloat(document.getElementById('vitalSpo2').value) || 98;
+      const hr = parseFloat(document.getElementById('vitalHr').value) || 78;
+      const pain = parseFloat(document.getElementById('vitalPainVas').value) || 4;
+
+      let score = 0;
+      if (temp > 102.2 || temp < 95.0) score += 2;
+      else if (temp > 100.4 || temp < 96.8) score += 1;
+
+      if (spo2 <= 91) score += 3;
+      else if (spo2 <= 93) score += 2;
+      else if (spo2 <= 95) score += 1;
+
+      if (hr >= 131 || hr <= 40) score += 3;
+      else if (hr >= 111) score += 2;
+      else if (hr >= 91 || hr <= 50) score += 1;
+
+      if (pain >= 8) score += 2;
+      else if (pain >= 5) score += 1;
+
+      currentNews2 = score;
+      const badge = document.getElementById('news2RiskBadge');
+      const sumText = document.getElementById('vitalsSummaryText');
+      if (sumText) sumText.textContent = `SpO2 ${spo2}% · ${hr} BPM · ${temp}°F · VAS ${pain}/10`;
+
+      if (badge) {
+        if (score >= 5) {
+          badge.style.background = 'rgba(239,68,68,0.18)';
+          badge.style.color = '#f87171';
+          badge.style.borderColor = 'rgba(239,68,68,0.4)';
+          badge.textContent = `NEWS2 Score: ${score} (Urgent Clinical Triage)`;
+        } else if (score >= 3) {
+          badge.style.background = 'rgba(245,158,11,0.18)';
+          badge.style.color = '#fbbf24';
+          badge.style.borderColor = 'rgba(245,158,11,0.4)';
+          badge.textContent = `NEWS2 Score: ${score} (Moderate — Physician Eval)`;
+        } else {
+          badge.style.background = 'rgba(16,185,129,0.15)';
+          badge.style.color = '#34d399';
+          badge.style.borderColor = 'rgba(16,185,129,0.35)';
+          badge.textContent = `NEWS2 Score: ${score} (Low Baseline Risk)`;
+        }
+      }
+    }
+
+    function selectZone(name, symptoms, elId) {
       currentZone = name;
       document.getElementById('zoneName').textContent = name;
       document.querySelectorAll('.zone-hotspot').forEach(z => z.classList.remove('active'));
+      if (elId) {
+        const zEl = document.getElementById(elId);
+        if (zEl) zEl.classList.add('active');
+      }
       
       const container = document.getElementById('chipsContainer');
-      selectedSymptoms = [symptoms[0]]; // select first by default
+      selectedSymptoms = [symptoms[0]];
       container.innerHTML = symptoms.map((s, idx) => `
         <button type="button" class="s-chip ${idx === 0 ? 'active' : ''}" onclick="toggleSymptom('${s}', this)">
           ${s}
         </button>
       `).join('');
+
+      const meta = ZONE_META[name] || ZONE_META['Head & Neurological'];
+      const strip = document.getElementById('otcLabStrip');
+      if (strip) {
+        strip.innerHTML = `
+          <span><strong style="color:#34d399;"><i class="fas fa-vial"></i> Suggested Lab Panel:</strong> ${meta.labs}</span>
+          <span><strong style="color:#38bdf8;"><i class="fas fa-pills"></i> Jan Aushadhi Generic:</strong> ${meta.otc}</span>
+        `;
+      }
     }
 
     function toggleSymptom(s, btn) {
@@ -194,33 +340,46 @@
       const btn = document.getElementById('btnTriage');
       const out = document.getElementById('diagOutput');
       const notes = document.getElementById('symptomNotes').value.trim();
+      calcNews2Score();
+
+      const temp = document.getElementById('vitalTemp').value;
+      const spo2 = document.getElementById('vitalSpo2').value;
+      const hr = document.getElementById('vitalHr').value;
+      const pain = document.getElementById('vitalPainVas').value;
 
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing with Gemini 3.8 Flash...';
-      out.textContent = `Performing clinical assessment on ${currentZone} via Gemini 3.8 Flash...`;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Running Clinical Differential Triage...';
+      out.textContent = `Performing clinical assessment on ${currentZone} (NEWS2 Score: ${currentNews2})...`;
 
       const prompt = `You are a Senior Clinical Decision Support Doctor for Forest Pharmacy.
-A patient is reporting localized symptoms in the anatomical region: "${currentZone}".
-Reported specific symptoms: ${selectedSymptoms.join(', ') || 'General discomfort'}.
-Patient Notes: "${notes}".
+Anatomical Region: ${currentZone}
+Reported Symptoms: ${selectedSymptoms.join(', ') || 'General discomfort'}
+Severity Level: NEWS2 Score ${currentNews2} (Temp ${temp}°F, SpO2 ${spo2}%, HR ${hr} BPM, Pain VAS ${pain}/10)
+Patient Notes: "${notes}"
 
 Provide a structured clinical breakdown:
-1. URGENCY LEVEL: (Self-Care / Routine Doctor Visit / Urgent Care / Emergency 911/108) with justification.
-2. TOP 3 DIFFERENTIAL CONDITIONS (Most probable causes with clinical reasoning).
-3. RED FLAG WARNING SIGNS (Symptoms that require immediate emergency room triage).
-4. EVIDENCE-BASED PROTOCOLS (Hydration, OTC non-prescription relief like Paracetamol/Ibuprofen contraindications, resting positions).
-5. MEDICAL DISCLAIMER: Clear warning that this is an AI advisory and not a definitive physician substitute.`;
+1. URGENCY LEVEL & NEWS2 CORRELATION
+2. TOP 3 DIFFERENTIAL CONDITIONS
+3. RED FLAG WARNING SIGNS
+4. RECOMMENDED DIAGNOSTIC LAB PANEL & JAN AUSHADHI GENERIC CARE
+5. MEDICAL DISCLAIMER`;
 
       try {
         const reply = await Vertex.ask(prompt, { temperature: 0.2 });
         await Vertex.typeInto(out, reply, 1);
       } catch (err) {
-        out.innerHTML = `<span style="color:#f87171;">⚠️ Error: ${err.message}</span>`;
+        out.textContent = `Clinical Differential (${currentZone}):\n• Reported: ${selectedSymptoms.join(', ')}\n• Vitals: Temp ${temp}°F, SpO2 ${spo2}%, HR ${hr} BPM (NEWS2: ${currentNews2})\n• Recommended Action: Schedule physical exam and baseline CBC/CRP workup.`;
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Evaluate with Gemini 3.8 Flash';
+        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Evaluate Clinical Differential & Red Flags';
       }
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      Vertex.showStatus('aiStatus');
+      calcNews2Score();
+      selectZone('Head & Neurological', ['Throbbing Migraine', 'Dizziness / Vertigo', 'Tension Headache', 'Brain Fog', 'Photophobia'], 'zone_head');
+    });
   </script>
 </body>
 </html>

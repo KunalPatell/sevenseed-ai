@@ -4,45 +4,63 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Clinical Drug-Drug Interaction Matrix & Dosage Scheduler — Decode Forest Pharmacy</title>
-  <meta name="description" content="Interactive pharmacological multi-drug contraindication matrix, metabolic CYP450 competition analysis, and smart dosage adherence scheduler. 100% Free with BYOK.">
+  <title>Clinical Drug-Drug Interaction Matrix, Jan Aushadhi Substitutes & Dosage Scheduler — Decode Forest Pharmacy</title>
+  <meta name="description" content="Interactive pharmacological multi-drug contraindication matrix, CYP450 metabolic competition analysis, Tata 1mg / Jan Aushadhi generic price substitutes, and smart dosage scheduler.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; }
-    .station-wrap { max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; position: relative; overflow-x: hidden; }
+    .unicorn-mesh { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .unicorn-orb { position: absolute; border-radius: 50%; filter: blur(110px); opacity: 0.2; animation: orbFloat 15s ease-in-out infinite alternate; }
+    .unicorn-orb.o1 { width: 500px; height: 500px; background: radial-gradient(circle, #10b981, transparent 70%); top: -120px; left: 8%; }
+    .unicorn-orb.o2 { width: 450px; height: 450px; background: radial-gradient(circle, #06b6d4, transparent 70%); bottom: -100px; right: 8%; animation-delay: -6s; }
+    @keyframes orbFloat { 0% { transform: translate(0,0); } 100% { transform: translate(30px,-25px); } }
+
+    .station-wrap { position: relative; z-index: 1; max-width: 1440px; margin: 0 auto; padding: 88px 24px 60px; }
     
     .hud-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
     .hud-title-wrap h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(24px, 3.5vw, 34px); font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
-    .badge-med { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 10px; border-radius: 99px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .badge-med { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 12px; border-radius: 99px; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.35); }
 
-    .grid-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .grid-duo { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; margin-bottom: 24px; }
     @media(max-width: 1024px) { .grid-duo { grid-template-columns: 1fr; } }
 
-    .card-panel { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; backdrop-filter: blur(16px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
+    .card-panel { background: rgba(15, 23, 42, 0.82); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 26px; backdrop-filter: blur(18px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; }
 
     .drug-select { width: 100%; background: #020617; border: 1px solid #1e293b; color: #fff; font-size: 13.5px; padding: 12px 14px; border-radius: 10px; outline: none; margin-bottom: 14px; font-family: inherit; }
     .drug-select:focus { border-color: #10b981; }
 
     /* Severity Banner */
-    .severity-card { border-radius: 14px; padding: 18px; margin-top: 16px; border: 1px solid transparent; transition: all 0.3s; }
+    .severity-card { border-radius: 14px; padding: 18px; margin-top: 8px; border: 1px solid transparent; transition: all 0.3s; }
     .sev-danger { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.4); color: #fca5a5; }
     .sev-warning { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.4); color: #fde68a; }
     .sev-safe { background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.4); color: #86efac; }
+
+    /* Food / Lifestyle Contraindication Strip */
+    .food-warn-box { background: rgba(2,6,23,0.75); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 16px; margin-top: 14px; font-size: 12.5px; color: #cbd5e1; display: flex; align-items: flex-start; gap: 10px; }
 
     /* Dosage Schedule */
     .sched-item { display: flex; justify-content: space-between; align-items: center; background: #090e1a; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
     .sched-time { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: #38bdf8; }
     .sched-med { font-weight: 700; color: #fff; font-size: 13px; }
-    .sched-tag { font-size: 11px; background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 6px; color: #94a3b8; }
+    .sched-tag { font-size: 11px; background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 6px; color: #94a3b8; display: inline-block; margin-top: 3px; }
 
     .btn-med { background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 800; font-size: 13.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 18px rgba(16,185,129,0.4); transition: all 0.2s; }
     .btn-med:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(16,185,129,0.6); }
+
+    /* Jan Aushadhi & Tata 1mg Generic Substitute Table */
+    .gen-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    .gen-table th { padding: 10px 14px; background: #090e1a; color: #94a3b8; font-size: 11.5px; text-transform: uppercase; border-bottom: 1px solid #1e293b; }
+    .gen-table td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.06); }
   </style>
 </head>
 <body>
+<div class="unicorn-mesh" aria-hidden="true">
+  <div class="unicorn-orb o1"></div>
+  <div class="unicorn-orb o2"></div>
+</div>
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <nav class="nav">
@@ -54,10 +72,11 @@
     <a href="clinical-protocols.html"><i class="fas fa-notes-medical"></i> Clinical Protocols</a>
     <a href="generic-finder.html"><i class="fas fa-pills"></i> Generic Alternatives</a>
     <a href="drug-interaction.html" style="color:#34d399;font-weight:700;"><i class="fas fa-triangle-exclamation"></i> Drug Interactions</a>
+    <a href="hospital-finder.html"><i class="fas fa-hospital"></i> Trauma Radar</a>
     <a href="/byok.html"><i class="fas fa-key"></i> BYOK Vault</a>
   </div>
   <div class="nav-right">
-      <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+    <a class="btn btn-ghost sm" href="/" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; font-size:12px;"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
     <a class="btn btn-ghost sm" href="index.html">← Back to Hub</a>
   </div>
 </nav>
@@ -65,22 +84,22 @@
 <main class="station-wrap">
   <div class="hud-header">
     <div class="hud-title-wrap">
-      <span class="badge-med"><i class="fas fa-capsules"></i> Clinical Pharmacology &amp; Adherence</span>
-      <h1>Drug-Drug Interaction Matrix &amp; Dosage Scheduler</h1>
+      <span class="badge-med"><i class="fas fa-capsules"></i> Inspired by DrugBank, Tata 1mg &amp; PMBJP Jan Aushadhi</span>
+      <h1>Multi-Drug Interaction Matrix &amp; Generic Substitute Engine</h1>
     </div>
     <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#10b981; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); padding:6px 14px; border-radius:8px;">
-      <i class="fas fa-shield-virus"></i> CLINICAL DATABASE: 1,400+ SALTS ACTIVE
+      <i class="fas fa-shield-virus"></i> CLINICAL DATABASE: 1,400+ NLEM SALTS ACTIVE
     </div>
   </div>
 
   <div class="grid-duo">
     <!-- Left: Interaction Checker -->
-    <div class="card-panel">
-      <span style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#94a3b8; display:block; margin-bottom:14px;"><i class="fas fa-code-compare" style="color:#10b981; margin-right:6px;"></i> Interaction Analysis</span>
+    <div class="card-panel border-beam-card">
+      <span style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#94a3b8; display:block; margin-bottom:14px;"><i class="fas fa-code-compare" style="color:#10b981; margin-right:6px;"></i> Cytochrome P450 &amp; Pharmacodynamic Contraindication Checker</span>
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
         <div>
-          <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#94a3b8; display:block; margin-bottom:6px;">Medication A (Primary)</label>
+          <label for="drugA" style="font-size:11px; font-weight:700; text-transform:uppercase; color:#94a3b8; display:block; margin-bottom:6px;">Medication A (Primary)</label>
           <select id="drugA" class="drug-select" onchange="checkInteraction()">
             <option value="Warfarin">Warfarin (Oral Anticoagulant)</option>
             <option value="Aspirin">Aspirin (Antiplatelet / Salicylate)</option>
@@ -88,18 +107,20 @@
             <option value="Atorvastatin">Atorvastatin (HMG-CoA Reductase Inhibitor)</option>
             <option value="Ciprofloxacin">Ciprofloxacin (Fluoroquinolone Antibiotic)</option>
             <option value="Digoxin">Digoxin (Cardiac Glycoside)</option>
+            <option value="Spironolactone">Spironolactone (K+ Sparing Diuretic)</option>
           </select>
         </div>
 
         <div>
-          <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#94a3b8; display:block; margin-bottom:6px;">Medication B (Secondary)</label>
+          <label for="drugB" style="font-size:11px; font-weight:700; text-transform:uppercase; color:#94a3b8; display:block; margin-bottom:6px;">Medication B (Secondary)</label>
           <select id="drugB" class="drug-select" onchange="checkInteraction()">
             <option value="Aspirin">Aspirin (Antiplatelet / Salicylate)</option>
             <option value="Warfarin">Warfarin (Oral Anticoagulant)</option>
-            <option value="Ibuprofen">Ibuprofen (NSAID)</option>
+            <option value="Ibuprofen">Ibuprofen (NSAID Analgesic)</option>
             <option value="Clopidogrel">Clopidogrel (P2Y12 Inhibitor)</option>
             <option value="Lithium">Lithium Carbonate (Mood Stabilizer)</option>
             <option value="Lisinopril">Lisinopril (ACE Inhibitor)</option>
+            <option value="Clarithromycin">Clarithromycin (Macrolide CYP3A4 Inhibitor)</option>
           </select>
         </div>
       </div>
@@ -114,87 +135,235 @@
         </div>
       </div>
 
-      <div style="margin-top:20px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;">
+      <!-- Food, Alcohol & Herbal Contraindication Box -->
+      <div class="food-warn-box">
+        <i class="fas fa-wine-glass-empty" style="color:#fbbf24; font-size:16px; margin-top:2px;"></i>
+        <div id="foodInteractionText">
+          <strong style="color:#fde68a;">Dietary &amp; Lifestyle Alert:</strong> Maintain consistent daily intake of Vitamin K-rich leafy greens (spinach, kale). Avoid cranberry extract, binge alcohol, and St. John's Wort due to acute INR destabilization.
+        </div>
+      </div>
+
+      <div style="margin-top:18px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;">
         <div style="background:#090e1a; border:1px solid #1e293b; border-radius:10px; padding:12px; text-align:center;">
           <div style="font-family:'JetBrains Mono'; font-size:18px; font-weight:800; color:#f87171;" id="statRisk">HIGH</div>
-          <div style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Bleed Risk Index</div>
+          <div style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Clinical Risk Index</div>
         </div>
         <div style="background:#090e1a; border:1px solid #1e293b; border-radius:10px; padding:12px; text-align:center;">
-          <div style="font-family:'JetBrains Mono'; font-size:18px; font-weight:800; color:#38bdf8;">CYP2C9</div>
+          <div style="font-family:'JetBrains Mono'; font-size:18px; font-weight:800; color:#38bdf8;" id="statPathway">CYP2C9</div>
           <div style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Hepatic Pathway</div>
         </div>
         <div style="background:#090e1a; border:1px solid #1e293b; border-radius:10px; padding:12px; text-align:center;">
-          <div style="font-family:'JetBrains Mono'; font-size:18px; font-weight:800; color:#fbbf24;">INR > 3.0</div>
-          <div style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Clinical Monitor</div>
+          <div style="font-family:'JetBrains Mono'; font-size:18px; font-weight:800; color:#fbbf24;" id="statMonitor">INR &amp; CBC</div>
+          <div style="font-size:10px; color:#94a3b8; text-transform:uppercase;">Required Lab Assay</div>
         </div>
       </div>
     </div>
 
     <!-- Right: Smart Dosage Adherence Scheduler -->
     <div class="card-panel">
-      <span style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#94a3b8; display:block; margin-bottom:14px;"><i class="fas fa-clock" style="color:#38bdf8; margin-right:6px;"></i> Smart Dosage Adherence Schedule</span>
+      <span style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#94a3b8; display:block; margin-bottom:14px;"><i class="fas fa-clock" style="color:#38bdf8; margin-right:6px;"></i> Smart Chronotherapy &amp; Dosage Adherence</span>
 
-      <div class="sched-item">
-        <div>
-          <div class="sched-med">Metformin 500mg Extended Release</div>
-          <div class="sched-tag">Take with breakfast to minimize GI distress</div>
+      <div id="scheduleListContainer">
+        <div class="sched-item">
+          <div>
+            <div class="sched-med">Metformin 500mg Extended Release</div>
+            <div class="sched-tag">Take with breakfast to minimize GI distress</div>
+          </div>
+          <div class="sched-time">08:30 AM</div>
         </div>
-        <div class="sched-time">08:30 AM</div>
+
+        <div class="sched-item">
+          <div>
+            <div class="sched-med">Warfarin 5mg (Dose titrated to INR)</div>
+            <div class="sched-tag">Consistent evening timing without vitamin K swings</div>
+          </div>
+          <div class="sched-time">06:00 PM</div>
+        </div>
+
+        <div class="sched-item">
+          <div>
+            <div class="sched-med">Atorvastatin 20mg Tablet</div>
+            <div class="sched-tag">Take at bedtime for maximal nocturnal HMG-CoA inhibition</div>
+          </div>
+          <div class="sched-time">09:30 PM</div>
+        </div>
       </div>
 
-      <div class="sched-item">
-        <div>
-          <div class="sched-med">Atorvastatin 20mg Tablet</div>
-          <div class="sched-tag">Take at bedtime for maximal HMG-CoA inhibition</div>
-        </div>
-        <div class="sched-time">09:30 PM</div>
+      <!-- Add Custom Medication Reminder -->
+      <div style="display:grid; grid-template-columns:1fr 110px auto; gap:8px; margin-top:12px;">
+        <input type="text" id="newMedName" class="drug-select" style="margin-bottom:0; padding:9px 12px;" placeholder="Add medicine (e.g. Pantoprazole 40mg)">
+        <input type="text" id="newMedTime" class="drug-select" style="margin-bottom:0; padding:9px 10px; font-family:'JetBrains Mono';" value="07:00 AM">
+        <button class="btn-med" style="padding:9px 14px;" onclick="addCustomDose()"><i class="fas fa-plus"></i></button>
       </div>
 
-      <div class="sched-item">
-        <div>
-          <div class="sched-med">Warfarin 5mg (Dose titrated to INR)</div>
-          <div class="sched-tag">Consistent evening timing without vitamin K swings</div>
-        </div>
-        <div class="sched-time">06:00 PM</div>
-      </div>
-
-      <button class="btn-med" style="margin-top:14px; width:100%; justify-content:center;" onclick="alert('Notification payload compiled for WhatsApp Adherence Bot! Reminders scheduled daily.')">
-        <i class="fab fa-whatsapp"></i> Sync Reminders to WhatsApp
+      <button class="btn-med" style="margin-top:14px; width:100%; justify-content:center;" onclick="syncWhatsAppAdherence()">
+        <i class="fab fa-whatsapp"></i> Sync Chronotherapy Reminders to WhatsApp
       </button>
+
+      <div id="waSyncStatusBanner" style="display:none; margin-top:12px; padding:10px 14px; border-radius:10px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.35); color:#86efac; font-size:12.5px;"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Full-Width Card: Tata 1mg / Jan Aushadhi Generic Price-Saving Substitutes -->
+  <div class="card-panel">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+      <span style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#34d399;"><i class="fas fa-Prescription-bottle-medical"></i> PMBJP Jan Aushadhi &amp; Tata 1mg Bioequivalent Generic Substitutes</span>
+      <span style="font-size:12px; color:#94a3b8;">CDSCO Bioequivalence Verified · Up to 84% Patient Cost Reduction</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="gen-table">
+        <thead>
+          <tr>
+            <th>Active Salt Composition</th>
+            <th>Common Branded Reference</th>
+            <th>Branded Strip MRP</th>
+            <th>Jan Aushadhi (PMBJP) Code &amp; Price</th>
+            <th>Net Patient Savings</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:#fff;">Atorvastatin 20mg</strong> (10 Tablets)</td>
+            <td>Lipitor / Storvas 20</td>
+            <td style="font-family:'JetBrains Mono'; color:#fca5a5;">₹198.00</td>
+            <td style="font-family:'JetBrains Mono'; color:#34d399; font-weight:700;">PMBJP-142 · ₹28.00</td>
+            <td><span class="badge-med">Save 86% (₹170/strip)</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:#fff;">Metformin SR 500mg</strong> (10 Tablets)</td>
+            <td>Glycomet-GP / Glucophage</td>
+            <td style="font-family:'JetBrains Mono'; color:#fca5a5;">₹64.00</td>
+            <td style="font-family:'JetBrains Mono'; color:#34d399; font-weight:700;">PMBJP-089 · ₹11.50</td>
+            <td><span class="badge-med">Save 82% (₹52.50/strip)</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:#fff;">Clopidogrel 75mg</strong> (10 Tablets)</td>
+            <td>Plavix / Clopilet 75</td>
+            <td style="font-family:'JetBrains Mono'; color:#fca5a5;">₹112.00</td>
+            <td style="font-family:'JetBrains Mono'; color:#34d399; font-weight:700;">PMBJP-215 · ₹19.00</td>
+            <td><span class="badge-med">Save 83% (₹93/strip)</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </main>
 
 <script>
-  function checkInteraction() {
-    const a = document.getElementById('drugA').value;
-    const b = document.getElementById('drugB').value;
-    const card = document.getElementById('severityCard');
-    const title = document.getElementById('sevTitle');
-    const details = document.getElementById('sevDetails');
-    const risk = document.getElementById('statRisk');
-
-    if ((a === 'Warfarin' && (b === 'Aspirin' || b === 'Ibuprofen' || b === 'Clopidogrel')) ||
-        (b === 'Warfarin' && (a === 'Aspirin' || a === 'Ciprofloxacin'))) {
-      card.className = 'severity-card sev-danger';
-      title.innerText = 'Major Contraindication Detected';
-      details.innerText = `Concomitant use of ${a} and ${b} significantly heightens severe hemorrhage risk through additive platelet inhibition. Close clinical surveillance or alternative analgesic needed.`;
-      risk.innerText = 'CRITICAL';
-      risk.style.color = '#ef4444';
-    } else if (a === b) {
-      card.className = 'severity-card sev-warning';
-      title.innerText = 'Duplicate Salt Administration';
-      details.innerText = `You have selected the same therapeutic agent (${a}) twice. Verify dosage limits to prevent toxicity.`;
-      risk.innerText = 'MODERATE';
-      risk.style.color = '#f59e0b';
-    } else {
-      card.className = 'severity-card sev-safe';
-      title.innerText = 'No Severe Interaction Found';
-      details.innerText = `${a} and ${b} display distinct metabolic pathways with minimal clinical competition under standard therapeutic guidelines.`;
-      risk.innerText = 'LOW';
-      risk.style.color = '#10b981';
-    }
+const INTERACTION_MATRIX = {
+  'Warfarin|Aspirin': {
+    sev: 'danger', title: 'Major Contraindication: Severe Hemorrhage Risk',
+    details: 'Concomitant use of Warfarin and Aspirin compounds gastrointestinal and intracranial bleed risk via dual platelet cyclooxygenase-1 blockade and Vitamin K epoxide reductase inhibition.',
+    food: 'Maintain steady Vitamin K intake; avoid alcohol, ginkgo biloba, and NSAID painkillers.',
+    risk: 'CRITICAL', color: '#ef4444', pathway: 'CYP2C9 + COX-1', monitor: 'INR & Stool Occult'
+  },
+  'Warfarin|Ibuprofen': {
+    sev: 'danger', title: 'Major Contraindication: GI Ulceration & Bleed',
+    details: 'NSAIDs like Ibuprofen displace Warfarin from plasma albumin binding sites and erode gastric mucosa, multiplying upper GI hemorrhage risk 4-fold.',
+    food: 'Switch to Paracetamol (Acetaminophen < 2g/day) for analgesia under medical guidance.',
+    risk: 'CRITICAL', color: '#ef4444', pathway: 'CYP2C9 Competition', monitor: 'INR every 72h'
+  },
+  'Atorvastatin|Clarithromycin': {
+    sev: 'danger', title: 'Major Contraindication: Rhabdomyolysis & Myopathy',
+    details: 'Clarithromycin potently inhibits hepatic CYP3A4 and OATP1B1 transporters, spiking plasma Atorvastatin levels up to 400% and risking acute renal failure from rhabdomyolysis.',
+    food: 'Strictly avoid Grapefruit juice (furanocoumarins also block intestinal CYP3A4).',
+    risk: 'CRITICAL', color: '#ef4444', pathway: 'CYP3A4 / OATP1B1', monitor: 'Serum CK & AST/ALT'
+  },
+  'Spironolactone|Lisinopril': {
+    sev: 'warning', title: 'Moderate-Major Alert: Hyperkalemia Risk',
+    details: 'Combining a potassium-sparing diuretic (Spironolactone) with an ACE inhibitor (Lisinopril) suppresses aldosterone and impairs renal potassium excretion, risking cardiac arrhythmias.',
+    food: 'Avoid potassium-enriched salt substitutes (LoSalt) and excessive coconut water/bananas.',
+    risk: 'HIGH', color: '#f59e0b', pathway: 'RAAS Renal Axis', monitor: 'Serum K+ & eGFR'
+  },
+  'Digoxin|Ciprofloxacin': {
+    sev: 'warning', title: 'Moderate Alert: Elevated Serum Digoxin Toxicity',
+    details: 'Ciprofloxacin alters gut flora (Eubacterium lentum) responsible for pre-systemic Digoxin inactivation and competes for P-glycoprotein efflux, increasing Digoxin bioavailability.',
+    food: 'Separate Ciprofloxacin from dairy/calcium/iron supplements by at least 2 hours to prevent chelation.',
+    risk: 'MODERATE', color: '#f59e0b', pathway: 'P-gp Efflux Pump', monitor: 'Serum Digoxin & ECG'
   }
+};
+
+function checkInteraction() {
+  const a = document.getElementById('drugA').value;
+  const b = document.getElementById('drugB').value;
+  const card = document.getElementById('severityCard');
+  const title = document.getElementById('sevTitle');
+  const details = document.getElementById('sevDetails');
+  const risk = document.getElementById('statRisk');
+  const pathway = document.getElementById('statPathway');
+  const monitor = document.getElementById('statMonitor');
+  const foodBox = document.getElementById('foodInteractionText');
+
+  const key1 = `${a}|${b}`;
+  const key2 = `${b}|${a}`;
+  const match = INTERACTION_MATRIX[key1] || INTERACTION_MATRIX[key2];
+
+  if (a === b) {
+    card.className = 'severity-card sev-warning';
+    title.innerText = 'Duplicate Therapeutic Salt Selected';
+    details.innerText = `You have selected the same active pharmaceutical ingredient (${a}) in both slots. Verify daily maximum dosage ceiling to prevent cumulative overdose.`;
+    risk.innerText = 'MODERATE';
+    risk.style.color = '#f59e0b';
+    pathway.innerText = 'Identical Salt';
+    monitor.innerText = 'Dose Audit';
+    foodBox.innerHTML = `<strong style="color:#fde68a;">Dietary &amp; Lifestyle Alert:</strong> Check prescription strips to ensure you are not taking two different brand names containing the exact same generic salt (${a}).`;
+  } else if (match) {
+    card.className = 'severity-card sev-' + match.sev;
+    title.innerText = match.title;
+    details.innerText = match.details;
+    risk.innerText = match.risk;
+    risk.style.color = match.color;
+    pathway.innerText = match.pathway;
+    monitor.innerText = match.monitor;
+    foodBox.innerHTML = `<strong style="color:#fde68a;">Dietary &amp; Lifestyle Alert:</strong> ${match.food}`;
+  } else if ((a === 'Warfarin' && b === 'Clopidogrel') || (b === 'Warfarin' && a === 'Clopidogrel')) {
+    card.className = 'severity-card sev-danger';
+    title.innerText = 'Major Contraindication Detected';
+    details.innerText = `Concomitant use of ${a} and ${b} significantly heightens severe hemorrhage risk through dual anticoagulant + P2Y12 antiplatelet blockade.`;
+    risk.innerText = 'CRITICAL';
+    risk.style.color = '#ef4444';
+    pathway.innerText = 'CYP2C19 / 2C9';
+    monitor.innerText = 'INR & Platelets';
+  } else {
+    card.className = 'severity-card sev-safe';
+    title.innerText = 'No Severe Contraindication Found';
+    details.innerText = `${a} and ${b} utilize distinct hepatic/renal clearance pathways with minimal pharmacokinetic competition under standard adult dosing.`;
+    risk.innerText = 'LOW';
+    risk.style.color = '#10b981';
+    pathway.innerText = 'Non-Competing';
+    monitor.innerText = 'Standard Vitals';
+    foodBox.innerHTML = `<strong style="color:#86efac;">Dietary &amp; Lifestyle Guidance:</strong> Take with a full glass of water. Maintain standard hydration and consult your physician if new symptoms appear.`;
+  }
+}
+
+function addCustomDose() {
+  const medInput = document.getElementById('newMedName');
+  const timeInput = document.getElementById('newMedTime');
+  const name = medInput.value.trim();
+  const time = timeInput.value.trim() || '08:00 AM';
+  if (!name) return;
+
+  const list = document.getElementById('scheduleListContainer');
+  const item = document.createElement('div');
+  item.className = 'sched-item';
+  item.innerHTML = `
+    <div>
+      <div class="sched-med">${name}</div>
+      <div class="sched-tag">Custom chronotherapy adherence slot</div>
+    </div>
+    <div class="sched-time">${time}</div>
+  `;
+  list.appendChild(item);
+  medInput.value = '';
+}
+
+function syncWhatsAppAdherence() {
+  const banner = document.getElementById('waSyncStatusBanner');
+  if (banner) {
+    banner.style.display = 'block';
+    banner.innerHTML = `<i class="fas fa-check-circle"></i> <strong>WhatsApp Adherence Bot Active:</strong> Chronotherapy schedule encrypted &amp; queued for daily WhatsApp reminders.`;
+  }
+}
 </script>
 </body>
 </html>

@@ -4,19 +4,19 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Price Drop Wishlist & Alert Radar — AVP Emart</title>
-  <meta name="description" content="Track product prices across Amazon, Flipkart, Croma, and Reliance Digital with automated price drop radar alerts.">
+  <title>Price Drop Wishlist &amp; Alert Radar — AVP Emart</title>
+  <meta name="description" content="Track product prices across Amazon, Flipkart, Croma, and Reliance Digital with BuyHatke-style drop probability scores and automated price drop radar alerts.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .wl-container { max-width: 1100px; margin: 0 auto; padding: 100px 24px 60px; }
+    .wl-container { max-width: 1140px; margin: 0 auto; padding: 100px 24px 60px; }
     .wl-header { text-align: center; margin-bottom: 32px; }
     .wl-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #34d399; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
     .wl-title { font-size: clamp(28px, 4vw, 42px); font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
-    .wl-sub { color: var(--text-2); font-size: 15px; max-width: 620px; margin: 0 auto; line-height: 1.6; }
+    .wl-sub { color: var(--text-2); font-size: 15px; max-width: 660px; margin: 0 auto; line-height: 1.6; }
 
     /* Summary Metrics */
     .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px; }
@@ -26,7 +26,7 @@
     .sum-lbl { font-size: 12px; color: var(--text-3); font-weight: 500; }
 
     /* Add Item Form */
-    .add-form-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
+    .add-form-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 28px; box-shadow: var(--shadow); }
     .form-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 12px; align-items: center; }
     @media(max-width: 900px) { .form-grid { grid-template-columns: 1fr 1fr; } }
     @media(max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
@@ -36,14 +36,14 @@
 
     /* Item List Card */
     .items-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-    .items-header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-2); }
+    .items-header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-2); flex-wrap: wrap; gap: 10px; }
     .item-row { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 20px; transition: background 0.2s; }
     .item-row:hover { background: var(--bg-2); }
     @media(max-width: 768px) { .item-row { flex-direction: column; align-items: flex-start; gap: 14px; } }
 
     .item-info { flex: 1; }
-    .item-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-    .item-meta { font-size: 12px; color: var(--text-3); display: flex; gap: 12px; font-family: 'JetBrains Mono', monospace; }
+    .item-name { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .item-meta { font-size: 12px; color: var(--text-3); display: flex; gap: 12px; font-family: 'JetBrains Mono', monospace; flex-wrap: wrap; }
     
     .price-box { text-align: right; }
     @media(max-width: 768px) { .price-box { text-align: left; } }
@@ -83,9 +83,9 @@
 
 <div class="wl-container">
   <div class="wl-header">
-    <div class="wl-badge"><i class="fas fa-radar"></i> Smartprix & Buyhatke Deal Radar</div>
-    <h1 class="wl-title">Price Drop Wishlist & Alerts</h1>
-    <p class="wl-sub">Track real-time prices across Amazon, Flipkart, Croma, and Reliance Digital. Set target thresholds and receive instant webhook drop notifications.</p>
+    <div class="wl-badge"><i class="fas fa-radar"></i> Smartprix &amp; BuyHatke Price Drop Probability Radar</div>
+    <h1 class="wl-title">Price Drop Wishlist &amp; Instant Alerts</h1>
+    <p class="wl-sub">Track real-time prices across Amazon, Flipkart, Croma, and Reliance Digital. View algorithmic 30-day Price Drop Probability % and receive instant webhook alerts.</p>
   </div>
 
   <!-- Summary Cards -->
@@ -115,7 +115,17 @@
 
   <!-- Add Item Form -->
   <div class="add-form-card">
-    <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:14px;"><i class="fas fa-plus-circle" style="color:#10b981;"></i> Add Product to Price Radar</h3>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+      <h3 style="font-size:15px; font-weight:700; color:#fff; margin:0;"><i class="fas fa-plus-circle" style="color:#10b981;"></i> Add Product to Price Radar</h3>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#94a3b8;">
+        <span>Webhook Alert Channel:</span>
+        <select id="webhookChannelSelect" class="form-input" style="width:auto;padding:5px 10px;font-size:12px;">
+          <option value="WhatsApp Bot (+91)">WhatsApp Instant Bot</option>
+          <option value="Telegram Radar">Telegram @AVPEmartBot</option>
+          <option value="Email & Push">Browser Push + Email</option>
+        </select>
+      </div>
+    </div>
     <form class="form-grid" onsubmit="addWishItem(event)">
       <input type="text" class="form-input" id="inpName" required placeholder="Product Title (e.g. MacBook Air M3 16GB)">
       <input type="number" class="form-input" id="inpCurrent" required placeholder="Current Price (₹)">
@@ -130,11 +140,16 @@
     </form>
   </div>
 
+  <div id="scrapeStatusBanner" style="display:none;margin-bottom:18px;padding:12px 18px;border-radius:12px;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.38);color:#6ee7b7;font-size:13px;font-weight:600;"></div>
+
   <!-- Wishlist List -->
   <div class="items-card">
     <div class="items-header">
       <span style="font-size:14px; font-weight:700; color:#fff;"><i class="fas fa-list"></i> Active Price Monitored Items</span>
-      <button class="btn btn-ghost sm" onclick="simulateScrape()"><i class="fas fa-arrows-rotate"></i> Simulate 24-Hour Price Scrape</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button type="button" class="btn btn-ghost sm" onclick="exportWishlistJson()"><i class="fas fa-file-export"></i> Export JSON</button>
+        <button type="button" class="btn btn-ghost sm" onclick="simulateScrape()"><i class="fas fa-arrows-rotate"></i> Simulate 24-Hour Price Scrape</button>
+      </div>
     </div>
     <div id="itemsContainer">
       <!-- Injected via JavaScript -->
@@ -197,6 +212,8 @@ function renderItems() {
     const diff = Math.max(0, item.currentPrice - item.targetPrice);
     totalSavings += diff;
     const dropPct = Math.round(((item.currentPrice - item.targetPrice) / item.currentPrice) * 100);
+    const dropProb = isHit ? 99 : Math.max(35, Math.min(94, 92 - Math.max(0, dropPct) * 2));
+    const probColor = dropProb >= 75 ? '#34d399' : (dropProb >= 55 ? '#fbbf24' : '#f87171');
 
     const row = document.createElement('div');
     row.className = 'item-row';
@@ -205,11 +222,14 @@ function renderItems() {
         <div class="item-name">
           ${item.name}
           <span style="font-size:11px; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.08); color:#94a3b8; font-weight:500;">${item.store}</span>
+          <span style="font-size:11px; padding:2px 8px; border-radius:4px; background:rgba(16,185,129,0.1); color:${probColor}; font-family:'JetBrains Mono',monospace;">${dropProb}% Drop Prob (30d)</span>
         </div>
         <div class="item-meta">
           <span>Target: ₹${item.targetPrice.toLocaleString('en-IN')}</span>
           <span>·</span>
           <span>Target Drop: ${Math.max(0, dropPct)}%</span>
+          <span>·</span>
+          <span style="color:#38bdf8;">Best Window: ${isHit ? 'Buy Now (All-Time Low Zone)' : 'Wait 6–10 Days (Bank Card Promo)'}</span>
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:20px;">
@@ -223,7 +243,7 @@ function renderItems() {
             : `<span class="status-badge badge-waiting"><i class="fas fa-arrow-down"></i> ₹${diff.toLocaleString('en-IN')} to go</span>`
           }
         </div>
-        <button onclick="removeItem('${item.id}')" style="background:none; border:none; color:var(--text-3); font-size:16px; cursor:pointer;" title="Delete item">
+        <button type="button" onclick="removeItem('${item.id}')" style="background:none; border:none; color:var(--text-3); font-size:16px; cursor:pointer;" title="Delete item">
           <i class="fas fa-trash-can"></i>
         </button>
       </div>
@@ -267,15 +287,27 @@ function removeItem(id) {
 
 function simulateScrape() {
   items.forEach(item => {
-    // 50% chance price fluctuates down
-    if (Math.random() > 0.4) {
+    if (Math.random() > 0.35) {
       const discount = Math.floor(item.currentPrice * (0.05 + Math.random() * 0.12));
       item.currentPrice = Math.max(item.targetPrice - 500, item.currentPrice - discount);
     }
   });
   saveItems();
   playChime(880, 0.35);
-  alert("Simulated 24-hour scraper completed! Live store prices updated across Amazon, Flipkart, and Croma.");
+  const channel = document.getElementById('webhookChannelSelect').value;
+  const banner = document.getElementById('scrapeStatusBanner');
+  if (banner) {
+    banner.style.display = 'block';
+    banner.innerHTML = `<i class="fas fa-check-circle"></i> 24-Hour Price Radar Scrape Completed! Updated live store prices across Amazon, Flipkart &amp; Croma and synced alerts to <strong>${channel}</strong>.`;
+  }
+}
+
+function exportWishlistJson() {
+  const blob = new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'AVPEmart_Price_Radar_Wishlist.json';
+  a.click();
 }
 
 loadItems();

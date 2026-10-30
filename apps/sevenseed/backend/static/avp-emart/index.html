@@ -51,6 +51,7 @@
   <div class="nav-links" id="navLinks">
         <a href="/" style="color:#818cf8;font-weight:700;"><i class="fas fa-seedling"></i> Sevenseed Hub</a>
     <a href="spec-compare.html"><i class="fas fa-scale-balanced" style="color:var(--accent,#a855f7)"></i> Smartprix Specs</a>
+    <a href="shopping-discovery.html"><i class="fas fa-bag-shopping" style="color:var(--accent,#a855f7)"></i> Discovery Lab</a>
     <a href="qcommerce.html"><i class="fas fa-basket-shopping" style="color:var(--accent,#a855f7)"></i> Quick Commerce</a>
     <a href="coupon-tester.html"><i class="fas fa-ticket" style="color:var(--accent,#a855f7)"></i> Coupon Tester</a>
     <a href="price-tracker.html"><i class="fas fa-chart-line" style="color:var(--accent,#a855f7)"></i> Price Radar</a>
@@ -170,8 +171,281 @@
       </div>
       <a class="btn btn-primary" href="price-tracker.html"><i class="fas fa-chart-line"></i> View Price History →</a>
     </div>
+
+    <div class="border-beam-card bento-wide">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">🛍️</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);">Google Shopping & Smartprix</span>
+        </div>
+        <h3 style="font-size:22px; font-weight:700; color:#fff; margin-bottom:8px;">Smart Commerce Discovery Lab</h3>
+        <p style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Real-time price discovery lab featuring dynamic animated mesh backdrop, spotlight cards, instant cross-store price matching, side-by-side comparison matrix, and deal alerts.</p>
+      </div>
+      <a class="btn btn-primary" href="shopping-discovery.html"><i class="fas fa-bag-shopping"></i> Launch Discovery Lab →</a>
+    </div>
   </div>
 </section>
+
+
+<section class="section" id="live-command-deck" style="padding-top:10px;padding-bottom:64px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-bolt"></i> Instant Interactive Workbench · Zero Page Reloads</div>
+    <h2 class="sec-title">Live Price, Spec, Coupon &amp; Quick-Commerce Engine</h2>
+    <p class="sec-sub">Experience Google Shopping (?udm=28), Smartprix Spec Scoring, BuyHatke 90-Day Price Graphs, Xerve Bank Stacking, and Blinkit/Zepto Cart Optimization right here.</p>
+  </div>
+
+  <div class="glass reveal" style="max-width:1240px;margin:0 auto;background:rgba(15,23,42,0.78);border:1px solid rgba(56,189,248,0.28);border-radius:24px;padding:28px;box-shadow:0 24px 80px rgba(0,0,0,0.55);">
+    <!-- Tab Navigation -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:16px;margin-bottom:22px;" id="emartDeckTabs">
+      <button type="button" class="btn btn-primary sm emart-tab-btn" data-tab="tab-udm" style="border-radius:99px;"><i class="fas fa-wand-magic-sparkles"></i> 1. Google Shopping (?udm=28) &amp; Smartprix</button>
+      <button type="button" class="btn btn-ghost sm emart-tab-btn" data-tab="tab-buyhatke" style="border-radius:99px;"><i class="fas fa-chart-area"></i> 2. BuyHatke 90-Day Price Graph</button>
+      <button type="button" class="btn btn-ghost sm emart-tab-btn" data-tab="tab-xerve" style="border-radius:99px;"><i class="fas fa-ticket"></i> 3. Xerve Bank &amp; Coupon Auto-Stacker</button>
+      <button type="button" class="btn btn-ghost sm emart-tab-btn" data-tab="tab-qcomm" style="border-radius:99px;"><i class="fas fa-bolt"></i> 4. Blinkit vs Zepto 10-Min Cart</button>
+    </div>
+
+    <!-- TAB 1: GOOGLE SHOPPING + SMARTPRIX -->
+    <div class="emart-tab-pane" id="tab-udm">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;align-items:center;">
+        <select id="homeUdmCategory" style="background:#0f172a;border:1px solid rgba(255,255,255,0.14);color:#fff;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;">
+          <option value="flagship-phones">📱 Flagship Camera &amp; AI Smartphones</option>
+          <option value="pro-laptops">💻 Coding &amp; Creator Laptops (M3 / OLED)</option>
+          <option value="anc-headphones">🎧 Flight ANC Wireless Headphones</option>
+        </select>
+        <div style="font-size:13px;color:#94a3b8;">Max Budget: <strong id="homeUdmBudgetLbl" style="color:#38bdf8;font-family:'JetBrains Mono',monospace;">₹1,20,000</strong></div>
+        <input type="range" id="homeUdmBudget" min="20000" max="150000" step="5000" value="120000" style="flex:1;min-width:160px;accent-color:#38bdf8;">
+        <a href="shopping-discovery.html" class="btn btn-ghost sm"><i class="fas fa-arrow-up-right-from-square"></i> Full 16-Product Discovery Lab</a>
+      </div>
+      <div id="homeUdmGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;"></div>
+    </div>
+
+    <!-- TAB 2: BUYHATKE 90-DAY PRICE HISTORY -->
+    <div class="emart-tab-pane" id="tab-buyhatke" style="display:none;">
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:center;">
+        <div style="background:rgba(2,6,23,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:18px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <select id="homeBhProduct" style="background:#0f172a;border:1px solid rgba(56,189,248,0.3);color:#fff;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:700;">
+              <option value="0">iPhone 15 (128GB) — Current ₹72,900</option>
+              <option value="1">Samsung Galaxy S24 5G — Current ₹69,999</option>
+              <option value="2">Sony WH-1000XM5 ANC — Current ₹26,990</option>
+              <option value="3">MacBook Air 13" M3 — Current ₹99,900</option>
+            </select>
+            <span id="homeBhVerdict" style="background:rgba(16,185,129,0.18);color:#34d399;border:1px solid rgba(16,185,129,0.4);padding:4px 12px;border-radius:99px;font-size:11px;font-weight:800;">94% BUY NOW CONFIDENCE</span>
+          </div>
+          <canvas id="homeBhCanvas" width="580" height="170" style="width:100%;height:170px;"></canvas>
+        </div>
+        <div style="background:rgba(2,6,23,0.7);border:1px solid rgba(168,85,247,0.28);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#c084fc;margin-bottom:6px;">BuyHatke AI Price Forecast</div>
+          <div id="homeBhStats" style="font-size:13px;color:#cbd5e1;line-height:1.7;margin-bottom:14px;"></div>
+          <button type="button" class="btn btn-primary sm" id="homeBhAlertBtn" style="width:100%;justify-content:center;"><i class="fas fa-bell"></i> Set Instant Price Drop Alert</button>
+          <a href="price-tracker.html" class="btn btn-ghost sm" style="width:100%;justify-content:center;margin-top:8px;">Open Full Price Tracker →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: XERVE BANK & COUPON AUTO-STACKER -->
+    <div class="emart-tab-pane" id="tab-xerve" style="display:none;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div style="background:rgba(2,6,23,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+          <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;"><i class="fas fa-sliders" style="color:#38bdf8;"></i> Configure Cart &amp; Payment Instrument</h4>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <label style="font-size:12px;color:#94a3b8;">Cart Base Value (INR): <strong id="homeXvCartLbl" style="color:#fff;">₹69,999</strong>
+              <input type="range" id="homeXvCartSlider" min="2000" max="150000" step="1000" value="69999" style="width:100%;accent-color:#10b981;margin-top:4px;">
+            </label>
+            <select id="homeXvBank" style="background:#0f172a;border:1px solid rgba(255,255,255,0.14);color:#fff;padding:10px;border-radius:8px;font-size:13px;">
+              <option value="hdfc" data-pct="10" data-cap="5000">HDFC Infinia / Regalia Credit Card (10% up to ₹5,000)</option>
+              <option value="sbi" data-pct="5" data-cap="4000">SBI Cashback Credit Card (5% Flat up to ₹4,000)</option>
+              <option value="icici" data-pct="5" data-cap="6000">Amazon Pay ICICI Card (5% + ₹500 Welcome Bonus)</option>
+              <option value="upi" data-pct="2" data-cap="750">NPCI BHIM / Super.money UPI (2% Cashback up to ₹750)</option>
+            </select>
+            <button type="button" class="btn btn-primary sm" id="homeXvRunBtn" style="justify-content:center;"><i class="fas fa-bolt"></i> Auto-Test 5 Store Coupons + Bank Stack</button>
+          </div>
+        </div>
+        <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:20px;" id="homeXvResultBox">
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: QUICK COMMERCE BASKET -->
+    <div class="emart-tab-pane" id="tab-qcomm" style="display:none;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;" id="homeQcItems">
+        <button type="button" class="btn btn-primary sm qc-item-pill" data-price="68">🥛 Amul Gold Milk (₹68)</button>
+        <button type="button" class="btn btn-primary sm qc-item-pill" data-price="95">🍞 Sourdough Bread (₹95)</button>
+        <button type="button" class="btn btn-primary sm qc-item-pill" data-price="180">🥑 Hass Avocado 2pc (₹180)</button>
+        <button type="button" class="btn btn-primary sm qc-item-pill" data-price="340">☕ Blue Tokai Cold Brew (₹340)</button>
+        <button type="button" class="btn btn-ghost sm qc-item-pill" data-price="220">🍫 Lindt 85% Dark (₹220)</button>
+        <button type="button" class="btn btn-ghost sm qc-item-pill" data-price="145">🥚 Protein Eggs 12pc (₹145)</button>
+      </div>
+      <div id="homeQcCompareGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const udmData = {
+    'flagship-phones': [
+      { name:'OnePlus 12 (16GB/512GB)', price:64999, spec:95, store:'Amazon', net:59999, pros:'Snapdragon 8 Gen 3 · 100W · Hasselblad 50MP' },
+      { name:'Samsung Galaxy S24 5G (256GB)', price:69999, spec:94, store:'Flipkart', net:64999, pros:'7-Yr OS Updates · Galaxy AI · 120Hz LTPO' },
+      { name:'Apple iPhone 15 (128GB)', price:72900, spec:93, store:'Croma', net:67900, pros:'A16 Bionic · 48MP Main · Dynamic Island' }
+    ],
+    'pro-laptops': [
+      { name:'MacBook Air 13" M3 (16GB/512GB)', price:99900, spec:97, store:'Amazon', net:94900, pros:'18h Battery · Silent Fanless · Liquid Retina' },
+      { name:'iPad Pro 11" M4 OLED (256GB)', price:94900, spec:98, store:'Reliance', net:89900, pros:'Tandem OLED · Apple M4 · 5.3mm Thin' },
+      { name:'ASUS ROG Zephyrus G14 OLED', price:134990, spec:96, store:'Croma', net:129990, pros:'Ryzen 9 · RTX 4060 · 3K 120Hz OLED' }
+    ],
+    'anc-headphones': [
+      { name:'Sony WH-1000XM5 Wireless ANC', price:26990, spec:96, store:'Amazon', net:24290, pros:'8-Mic Auto ANC · 30h Battery · LDAC' },
+      { name:'Sennheiser Momentum 4 Wireless', price:24990, spec:94, store:'Flipkart', net:22490, pros:'60-Hour Battery · Audiophile 42mm' },
+      { name:'Apple AirPods Pro 2 (USB-C)', price:20990, spec:94, store:'Croma', net:18990, pros:'H2 Chip · Adaptive Transparency · IP54' }
+    ]
+  };
+
+  function renderHomeUdm() {
+    const cat = document.getElementById('homeUdmCategory').value;
+    const maxB = Number(document.getElementById('homeUdmBudget').value);
+    document.getElementById('homeUdmBudgetLbl').textContent = '₹' + maxB.toLocaleString('en-IN');
+    const items = (udmData[cat] || []).filter(x => x.price <= maxB);
+    const grid = document.getElementById('homeUdmGrid');
+    if (!items.length) {
+      grid.innerHTML = '<div style="padding:20px;color:#94a3b8;">Raise budget slider above ₹65,000 to view flagships in this tier.</div>';
+      return;
+    }
+    grid.innerHTML = items.map((it, idx) => `
+      <div style="background:rgba(2,6,23,0.7);border:1px solid ${idx===0?'rgba(16,185,129,0.45)':'rgba(255,255,255,0.08)'};border-radius:16px;padding:18px;position:relative;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <span style="font-size:11px;font-family:'JetBrains Mono',monospace;background:rgba(16,185,129,0.16);color:#34d399;padding:3px 8px;border-radius:6px;font-weight:800;">Spec Score: ${it.spec}/100</span>
+          <span style="font-size:11px;color:#38bdf8;font-weight:700;">Lowest on ${it.store}</span>
+        </div>
+        <h4 style="font-size:16px;font-weight:700;color:#fff;margin-bottom:6px;">${it.name}</h4>
+        <p style="font-size:12px;color:#94a3b8;margin-bottom:12px;">${it.pros}</p>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;">
+          <div><span style="font-size:11px;color:#64748b;text-decoration:line-through;">₹${it.price.toLocaleString('en-IN')}</span> <strong style="font-size:18px;color:#10b981;font-family:'JetBrains Mono',monospace;">₹${it.net.toLocaleString('en-IN')}</strong> <small style="font-size:10px;color:#94a3b8;">w/ Card</small></div>
+          <a href="shopping-discovery.html" style="font-size:12px;color:#38bdf8;font-weight:700;text-decoration:none;">Inspect Deal →</a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  const bhSeries = [
+    { name:'iPhone 15 (128GB)', pts:[79900,77900,76500,74900,73900,72900], drop:18, low:72900, high:79900 },
+    { name:'Samsung Galaxy S24 5G', pts:[79999,76999,74999,72500,71000,69999], drop:22, low:69999, high:79999 },
+    { name:'Sony WH-1000XM5 ANC', pts:[32990,29990,28990,27990,26990,26990], drop:12, low:26990, high:32990 },
+    { name:'MacBook Air 13" M3', pts:[114900,109900,106900,103900,101900,99900], drop:10, low:99900, high:114900 }
+  ];
+
+  function renderHomeBh() {
+    const idx = Number(document.getElementById('homeBhProduct').value || 0);
+    const item = bhSeries[idx] || bhSeries[0];
+    const c = document.getElementById('homeBhCanvas');
+    if (c && c.getContext) {
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, c.width, c.height);
+      const pad = 24, gw = c.width - pad*2, gh = c.height - pad*2;
+      const span = Math.max(1, item.high - item.low);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      item.pts.forEach((v, i) => {
+        const x = pad + (i / (item.pts.length - 1)) * gw;
+        const y = pad + gh - ((v - item.low) / span) * gh;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      item.pts.forEach((v, i) => {
+        const x = pad + (i / (item.pts.length - 1)) * gw;
+        const y = pad + gh - ((v - item.low) / span) * gh;
+        ctx.fillStyle = i === item.pts.length - 1 ? '#10b981' : '#38bdf8';
+        ctx.beginPath(); ctx.arc(x, y, 4.5, 0, Math.PI*2); ctx.fill();
+      });
+    }
+    document.getElementById('homeBhStats').innerHTML =
+      `<div>90-Day High: <strong style="color:#f87171;">₹${item.high.toLocaleString('en-IN')}</strong></div>` +
+      `<div>90-Day Floor: <strong style="color:#34d399;">₹${item.low.toLocaleString('en-IN')} (Current)</strong></div>` +
+      `<div>30-Day Further Drop Odds: <strong>${item.drop}%</strong></div>` +
+      `<div style="margin-top:6px;color:#a7f3d0;">Verdict: Trading at 90-day historical floor. Stack HDFC/SBI card now.</div>`;
+  }
+
+  function renderHomeXv() {
+    const base = Number(document.getElementById('homeXvCartSlider').value);
+    document.getElementById('homeXvCartLbl').textContent = '₹' + base.toLocaleString('en-IN');
+    const sel = document.getElementById('homeXvBank');
+    const opt = sel.options[sel.selectedIndex];
+    const pct = Number(opt.dataset.pct || 5);
+    const cap = Number(opt.dataset.cap || 4000);
+    const bankOff = Math.min(Math.round(base * (pct / 100)), cap);
+    const couponOff = Math.round(base * 0.045);
+    const upiReward = 250;
+    const net = Math.max(999, base - bankOff - couponOff - upiReward);
+    const saved = base - net;
+    document.getElementById('homeXvResultBox').innerHTML = `
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#34d399;margin-bottom:4px;">Verified Xerve + BuyHatke Stack</div>
+      <div style="font-size:28px;font-weight:900;color:#fff;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">₹${net.toLocaleString('en-IN')} <span style="font-size:13px;color:#34d399;">(Save ₹${saved.toLocaleString('en-IN')})</span></div>
+      <div style="font-size:12.5px;color:#cbd5e1;display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;justify-content:space-between;"><span>Promo Code (SAVE45):</span><strong style="color:#38bdf8;">-₹${couponOff.toLocaleString('en-IN')}</strong></div>
+        <div style="display:flex;justify-content:space-between;"><span>Instant Bank Discount (${pct}%):</span><strong style="color:#34d399;">-₹${bankOff.toLocaleString('en-IN')}</strong></div>
+        <div style="display:flex;justify-content:space-between;"><span>Xerve Cashback Ledger Bonus:</span><strong style="color:#fbbf24;">-₹${upiReward}</strong></div>
+        <div style="display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.1);padding-top:6px;"><span>6-Month No-Cost EMI:</span><strong>₹${Math.round(net/6).toLocaleString('en-IN')}/mo</strong></div>
+      </div>
+    `;
+  }
+
+  function renderHomeQc() {
+    let sub = 0;
+    document.querySelectorAll('.qc-item-pill.btn-primary').forEach(b => { sub += Number(b.dataset.price || 0); });
+    const platforms = [
+      { name:'Zepto Pass', eta:'9 mins', fee:0, discount:Math.round(sub*0.08), color:'#a855f7' },
+      { name:'Blinkit', eta:'11 mins', fee:15, discount:Math.round(sub*0.04), color:'#f59e0b' },
+      { name:'Swiggy Instamart', eta:'13 mins', fee:9, discount:Math.round(sub*0.06), color:'#f97316' },
+      { name:'BigBasket BBNow', eta:'18 mins', fee:0, discount:Math.round(sub*0.10), color:'#10b981' }
+    ];
+    document.getElementById('homeQcCompareGrid').innerHTML = platforms.map((p, i) => {
+      const total = Math.max(0, sub + p.fee - p.discount);
+      return `<div style="background:rgba(2,6,23,0.7);border:1px solid ${i===0?'rgba(168,85,247,0.45)':'rgba(255,255,255,0.08)'};border-radius:14px;padding:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <strong style="color:${p.color};font-size:14px;">${p.name}</strong>
+          <span style="font-size:11px;color:#94a3b8;"><i class="fas fa-bolt"></i> ${p.eta}</span>
+        </div>
+        <div style="font-size:22px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;">₹${total}</div>
+        <div style="font-size:11.5px;color:#94a3b8;margin-top:4px;">Items ₹${sub} · Delivery ₹${p.fee} · Promo -₹${p.discount}</div>
+      </div>`;
+    }).join('');
+  }
+
+  document.querySelectorAll('.emart-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.emart-tab-btn').forEach(b => { b.classList.remove('btn-primary'); b.classList.add('btn-ghost'); });
+      btn.classList.remove('btn-ghost'); btn.classList.add('btn-primary');
+      document.querySelectorAll('.emart-tab-pane').forEach(p => p.style.display = 'none');
+      const target = document.getElementById(btn.dataset.tab);
+      if (target) target.style.display = 'block';
+      if (btn.dataset.tab === 'tab-buyhatke') renderHomeBh();
+      if (btn.dataset.tab === 'tab-xerve') renderHomeXv();
+      if (btn.dataset.tab === 'tab-qcomm') renderHomeQc();
+    });
+  });
+
+  document.getElementById('homeUdmCategory').addEventListener('change', renderHomeUdm);
+  document.getElementById('homeUdmBudget').addEventListener('input', renderHomeUdm);
+  document.getElementById('homeBhProduct').addEventListener('change', renderHomeBh);
+  document.getElementById('homeBhAlertBtn').addEventListener('click', () => {
+    if (window.showToast) window.showToast('Price drop alert activated for selected flagship!', 'success');
+  });
+  document.getElementById('homeXvCartSlider').addEventListener('input', renderHomeXv);
+  document.getElementById('homeXvBank').addEventListener('change', renderHomeXv);
+  document.getElementById('homeXvRunBtn').addEventListener('click', renderHomeXv);
+  document.querySelectorAll('.qc-item-pill').forEach(b => {
+    b.addEventListener('click', () => {
+      b.classList.toggle('btn-primary');
+      b.classList.toggle('btn-ghost');
+      renderHomeQc();
+    });
+  });
+
+  renderHomeUdm();
+  renderHomeXv();
+  renderHomeQc();
+})();
+</script>
 
 <section class="ai-strip">
   <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>

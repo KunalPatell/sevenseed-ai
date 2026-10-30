@@ -2246,14 +2246,16 @@ body[data-variant="clinical-grid"] .svc-card .svc-tag{flex-shrink:0}
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── 1. Dynamic Cursor-Following Spotlight Glow ────────────────────────── */
+/* No !important here on purpose: page-level <style> blocks (studio accents)
+   and the .reveal fade transition must be able to override these defaults. */
 .vent-card, .svc-card, .proc-step, .metric, .tcard, .ent-card, .about-card,
 .metric-card, .hosp-card, .bm-card, .stat-card, .glow-card {
-  position: relative !important;
-  overflow: hidden !important;
+  position: relative;
+  overflow: hidden;
   isolation: isolate;
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.25s ease,
-              box-shadow 0.28s ease !important;
+              box-shadow 0.28s ease;
 }
 
 .vent-card::after, .svc-card::after, .proc-step::after, .metric::after,
@@ -2264,7 +2266,7 @@ body[data-variant="clinical-grid"] .svc-card .svc-tag{flex-shrink:0}
   inset: 0;
   border-radius: inherit;
   background: radial-gradient(380px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                              rgba(99, 102, 241, 0.18),
+                              rgba(var(--primary-rgb, 99,102,241), 0.18),
                               transparent 75%);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -2279,14 +2281,24 @@ body[data-variant="clinical-grid"] .svc-card .svc-tag{flex-shrink:0}
   opacity: 1;
 }
 
+/* industrial-blueprint uses .proc-step::after as a permanent accent line */
+body[data-variant="industrial-blueprint"] .proc-step::after { opacity: 1; }
+
 .vent-card:hover, .svc-card:hover, .proc-step:hover, .metric:hover,
 .tcard:hover, .about-card:hover, .metric-card:hover, .hosp-card:hover,
 .bm-card:hover, .stat-card:hover {
   transform: translateY(-4px) scale(1.01);
-  border-color: rgba(99, 102, 241, 0.45) !important;
+  border-color: rgba(var(--primary-rgb, 99,102,241), 0.45);
   box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.6),
-              0 0 28px -4px rgba(99, 102, 241, 0.22),
-              inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+              0 0 28px -4px rgba(var(--primary-rgb, 99,102,241), 0.22),
+              inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vent-card:hover, .svc-card:hover, .proc-step:hover, .metric:hover,
+  .tcard:hover, .about-card:hover, .metric-card:hover, .hosp-card:hover,
+  .bm-card:hover, .stat-card:hover { transform: none; }
+  .border-beam-card::before, .shimmer-text, .ambient-orb, .live-pulse-dot::before { animation: none; }
 }
 
 /* ── 2. Border Beam & Dynamic Shimmer ──────────────────────────────────── */
@@ -2503,3 +2515,22 @@ body[data-variant="clinical-grid"] .svc-card .svc-tag{flex-shrink:0}
 
 
 
+
+/* PREMIUM ENHANCEMENT LAYER */
+.glass { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%); box-shadow: 0 12px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06); }
+:root[data-theme="light"] .glass { background: rgba(20,20,45,0.04); border-color: rgba(20,20,45,0.09); }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+.btn:hover, button:hover { transform: translateY(-1px); }
+.btn:active, button:active { transform: translateY(0) scale(.98); }
+:focus-visible { outline: 2px solid var(--primary-l); outline-offset: 2px; border-radius: 6px; }
+::selection { background: rgba(var(--primary-rgb),0.4); color: #fff; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-1); }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary), var(--secondary)); border-radius: 10px; border: 2px solid var(--bg-1); }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--primary-l), var(--secondary-l)); }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+.shimmer { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); background-size: 200% 100%; animation: shimmer 2.4s linear infinite; }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.float { animation: float 4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .reveal, .float, .shimmer { transition: none; animation: none; opacity: 1; transform: none; } }

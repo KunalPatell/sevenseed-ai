@@ -209,8 +209,316 @@
       </div>
       <a class="btn btn-primary sm" href="100-day-challenge.html"><i class="fas fa-calendar-check"></i> Start Challenge →</a>
     </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">🧭</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3);">fs.blog/mental-models</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Farnam Street Mental Models Latticework</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">First Principles, Inversion, Second-Order Thinking, Map vs Territory, and interactive decision matrices for founders.</p>
+      </div>
+      <a class="btn btn-primary sm" href="mental-models.html"><i class="fas fa-compass"></i> Explore Latticework →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">📈</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(236,72,153,0.15); color:#f472b6; border:1px solid rgba(236,72,153,0.3);">MarketingExamples + GrowthInReverse</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Copywriting &amp; Creator Flywheel Teardowns</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">Interactive before/after conversion copy sliders, live AI copy rewriter, and reverse-engineered creator growth loops.</p>
+      </div>
+      <a class="btn btn-primary sm" href="marketing-teardowns.html"><i class="fas fa-bullhorn"></i> Open Teardowns →</a>
+    </div>
+
+    <div class="border-beam-card">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <span style="font-size:32px;">🎖️</span>
+          <span style="font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.3);">W3C OpenBadges v3.0</span>
+        </div>
+        <h3 style="font-size:18px; font-weight:700; color:#fff; margin-bottom:8px;">Scholarships &amp; Credential Verifier</h3>
+        <p style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:20px;">GitHub commit-streak merit scholarship calculator and cryptographic W3C Verifiable Credential JSON-LD ledger.</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn btn-primary sm" href="scholarships.html"><i class="fas fa-award"></i> Grants →</a>
+        <a class="btn btn-ghost sm" href="verify.html"><i class="fas fa-shield-check"></i> Verify ID →</a>
+      </div>
+    </div>
   </div>
 </section>
+
+
+<section class="section" id="live-avpu-command-deck" style="padding-top:10px;padding-bottom:64px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-bolt"></i> Interactive University Workbench · Live In-Browser Engines</div>
+    <h2 class="sec-title">Test All 5 Learning &amp; Growth Engines Live</h2>
+    <p class="sec-sub">Hands-on interactive preview of Learn-Anything DAG, FreeCodeCamp Code Runner, Duolingo SM-2 Arena, Farnam Mental Models + UX Laws, and GrowthInReverse Flywheels.</p>
+  </div>
+
+  <div class="reveal" style="max-width:1240px;margin:0 auto;background:rgba(15,23,42,0.82);border:1px solid rgba(99,102,241,0.32);border-radius:24px;padding:28px;box-shadow:0 24px 80px rgba(0,0,0,0.55);">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:16px;margin-bottom:22px;">
+      <button type="button" class="btn btn-primary sm avpu-tab-btn" data-tab="avpu-tab-dag" style="border-radius:99px;"><i class="fas fa-project-diagram"></i> 1. Learn-Anything DAG Graph</button>
+      <button type="button" class="btn btn-ghost sm avpu-tab-btn" data-tab="avpu-tab-code" style="border-radius:99px;"><i class="fas fa-code"></i> 2. FreeCodeCamp Code Lab</button>
+      <button type="button" class="btn btn-ghost sm avpu-tab-btn" data-tab="avpu-tab-duo" style="border-radius:99px;"><i class="fas fa-trophy"></i> 3. Duolingo &amp; SM-2 Flashcards</button>
+      <button type="button" class="btn btn-ghost sm avpu-tab-btn" data-tab="avpu-tab-models" style="border-radius:99px;"><i class="fas fa-brain"></i> 4. Mental Models &amp; UX Laws</button>
+      <button type="button" class="btn btn-ghost sm avpu-tab-btn" data-tab="avpu-tab-growth" style="border-radius:99px;"><i class="fas fa-chart-line"></i> 5. Marketing &amp; Growth Flywheel</button>
+    </div>
+
+    <!-- TAB 1: LEARN-ANYTHING DAG -->
+    <div class="avpu-tab-pane" id="avpu-tab-dag">
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:center;">
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <span style="font-size:12px;font-weight:700;color:#93c5fd;"><i class="fas fa-sitemap"></i> Click any node in the Prerequisite DAG to inspect syllabus</span>
+            <a href="learn-dag.html" style="font-size:12px;color:#38bdf8;font-weight:700;text-decoration:none;">Full 2,000-Node Canvas →</a>
+          </div>
+          <canvas id="homeDagCanvas" width="600" height="200" style="width:100%;height:200px;cursor:pointer;border-radius:10px;background:#050814;"></canvas>
+        </div>
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(99,102,241,0.3);border-radius:16px;padding:20px;" id="homeDagInspector">
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: FREECODECAMP CODE LAB -->
+    <div class="avpu-tab-pane" id="avpu-tab-code" style="display:none;">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px;">
+        <div style="background:#050814;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <span style="font-size:12px;font-family:'JetBrains Mono',monospace;color:#34d399;">challenge_cosine_similarity.js</span>
+            <button type="button" class="btn btn-primary sm" id="homeRunCodeBtn"><i class="fas fa-play"></i> Run Assertions</button>
+          </div>
+          <textarea id="homeCodeEditor" rows="7" style="width:100%;background:transparent;border:none;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:12.5px;outline:none;resize:vertical;">function dotProduct(a, b) {
+  return a.reduce((sum, val, i) => sum + val * b[i], 0);
+}
+// Return dot product of [2, 3, 4] and [1, 2, 3]</textarea>
+        </div>
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:18px;" id="homeCodeTestOutput">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#34d399;margin-bottom:8px;">Automated Unit Test Suite</div>
+          <div style="font-size:12.5px;color:#cbd5e1;line-height:1.7;">Click <strong>Run Assertions</strong> to execute your solution against 3 unit tests in-browser.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: DUOLINGO & SM-2 FLASHCARD -->
+    <div class="avpu-tab-pane" id="avpu-tab-duo" style="display:none;">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:center;">
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(245,158,11,0.35);border-radius:16px;padding:22px;text-align:center;">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#fbbf24;margin-bottom:6px;" id="homeSm2Topic">SUPERMEMO SM-2 FLASHCARD · EASE 2.50</div>
+          <div id="homeSm2Prompt" style="font-size:17px;font-weight:700;color:#fff;margin-bottom:12px;">What is the time complexity of Self-Attention in a standard Transformer with sequence length N?</div>
+          <div id="homeSm2Answer" style="display:none;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:10px;color:#a7f3d0;font-size:13.5px;margin-bottom:12px;">
+            <strong>O(N²)</strong> quadratic complexity because every token attends to all N tokens in the sequence via Q·Kᵀ.
+          </div>
+          <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">
+            <button type="button" class="btn btn-ghost sm" id="homeSm2RevealBtn"><i class="fas fa-eye"></i> Flip Card</button>
+            <button type="button" class="btn btn-primary sm home-sm2-grade" data-xp="25" data-next="4 days">Good (+25 XP · 4d)</button>
+            <button type="button" class="btn btn-primary sm home-sm2-grade" data-xp="40" data-next="9 days" style="background:#10b981;">Easy (+40 XP · 9d)</button>
+          </div>
+        </div>
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <span style="font-weight:800;color:#fbbf24;"><i class="fas fa-fire"></i> 19-Day Streak</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-weight:800;color:#a5b4fc;" id="homeDuoXpCounter">1,450 XP</span>
+          </div>
+          <p style="font-size:12.5px;color:#94a3b8;margin-bottom:12px;">Diamond League Promotion Zone · Streak Freeze Shield Active 🛡️</p>
+          <div style="display:flex;gap:8px;">
+            <a href="duo-league.html" class="btn btn-primary sm">Enter Diamond Arena →</a>
+            <a href="review-queue.html" class="btn btn-ghost sm">SM-2 Queue →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: MENTAL MODELS & UX LAWS -->
+    <div class="avpu-tab-pane" id="avpu-tab-models" style="display:none;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(168,85,247,0.3);border-radius:16px;padding:20px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <span style="font-size:11px;font-weight:800;text-transform:uppercase;color:#c084fc;">Farnam Street Decision Matrix</span>
+            <select id="homeMentalSelect" style="background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;">
+              <option value="inversion">Inversion (Avoid Stupidity)</option>
+              <option value="first-principles">First Principles Thinking</option>
+              <option value="second-order">Second-Order Consequences</option>
+            </select>
+          </div>
+          <div id="homeMentalBody" style="font-size:13px;color:#cbd5e1;line-height:1.65;"></div>
+        </div>
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(56,189,248,0.3);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#38bdf8;margin-bottom:6px;">Laws of UX · Fitts’s Law Interactive Stopwatch</div>
+          <p style="font-size:12.5px;color:#94a3b8;margin-bottom:12px;">Click the target below to measure acquisition time MT = a + b·log₂(2D/W):</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;">
+            <button type="button" class="btn btn-primary sm" id="homeFittsTargetBtn" style="padding:12px 24px;"><i class="fas fa-bullseye"></i> Click Target</button>
+            <span id="homeFittsResult" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#34d399;font-weight:700;">Ready (0 ms)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: MARKETING & CREATOR FLYWHEEL -->
+    <div class="avpu-tab-pane" id="avpu-tab-growth" style="display:none;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(236,72,153,0.3);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#f472b6;margin-bottom:6px;">MarketingExamples.com Hero Copy Teardown</div>
+          <div style="font-size:12px;color:#f87171;margin-bottom:6px;">❌ <strong>Before (Vague):</strong> "Next-gen omnichannel enterprise synergy workflow software."</div>
+          <div style="font-size:13px;color:#34d399;font-weight:700;margin-bottom:10px;">✅ <strong>After (Concrete Outcome):</strong> "Close B2B deals 3x faster with automated WhatsApp &amp; CRM follow-ups." (+42% CTR)</div>
+          <a href="marketing-teardowns.html" class="btn btn-ghost sm">Open Live Copy Rewriter →</a>
+        </div>
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#34d399;margin-bottom:6px;">GrowthInReverse Creator Flywheel Simulator</div>
+          <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:8px;">Newsletter Subscribers: <strong id="homeGirSubsLbl" style="color:#fff;">25,000</strong>
+            <input type="range" id="homeGirSubsSlider" min="5000" max="200000" step="5000" value="25000" style="width:100%;accent-color:#10b981;margin-top:4px;">
+          </label>
+          <div id="homeGirArrOut" style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#34d399;font-weight:700;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const dagNodes = [
+    { id:0, label:'Python & Git', x:75, y:100, hrs:'18h', desc:'Variables, async functions, uv package manager & Git workflows.', link:'code-lab.html' },
+    { id:1, label:'NumPy & LinAlg', x:205, y:55, hrs:'24h', desc:'Vectorized matrix multiplication, eigenvalues, cosine similarity.', link:'learn-dag.html' },
+    { id:2, label:'UX & Mental Models', x:205, y:145, hrs:'15h', desc:'Fitts Law, Hick Law, First Principles & Inversion decision matrices.', link:'mental-models.html' },
+    { id:3, label:'Transformers & RAG', x:365, y:100, hrs:'32h', desc:'Self-attention, ChromaDB vector search, BGE cross-encoder reranking.', link:'topic-search.html' },
+    { id:4, label:'LangGraph Agents', x:515, y:100, hrs:'40h', desc:'Stateful cyclic agent graphs, tool sandboxes & production deployment.', link:'100-day-challenge.html' }
+  ];
+  const dagEdges = [[0,1],[0,2],[1,3],[2,3],[3,4]];
+  let selectedDag = 3;
+
+  function drawHomeDag() {
+    const c = document.getElementById('homeDagCanvas');
+    if (!c || !c.getContext) return;
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.strokeStyle = 'rgba(99,102,241,0.45)';
+    ctx.lineWidth = 2;
+    dagEdges.forEach(([a, b]) => {
+      ctx.beginPath();
+      ctx.moveTo(dagNodes[a].x, dagNodes[a].y);
+      ctx.lineTo(dagNodes[b].x, dagNodes[b].y);
+      ctx.stroke();
+    });
+    dagNodes.forEach((n, idx) => {
+      const act = idx === selectedDag;
+      ctx.fillStyle = act ? '#6366f1' : '#1e293b';
+      ctx.strokeStyle = act ? '#38bdf8' : 'rgba(255,255,255,0.25)';
+      ctx.lineWidth = act ? 3 : 1.5;
+      ctx.beginPath();
+      ctx.roundRect ? ctx.roundRect(n.x - 58, n.y - 20, 116, 40, 10) : ctx.rect(n.x - 58, n.y - 20, 116, 40);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 11px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(n.label, n.x, n.y + 4);
+    });
+    const cur = dagNodes[selectedDag];
+    const insp = document.getElementById('homeDagInspector');
+    if (insp && cur) {
+      insp.innerHTML = `
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#818cf8;margin-bottom:4px;">Selected DAG Node · ${cur.hrs} Est.</div>
+        <h4 style="font-size:18px;font-weight:800;color:#fff;margin-bottom:8px;">${cur.label}</h4>
+        <p style="font-size:13px;color:#cbd5e1;line-height:1.6;margin-bottom:14px;">${cur.desc}</p>
+        <a href="${cur.link}" class="btn btn-primary sm"><i class="fas fa-rocket"></i> Launch Module Lab →</a>
+      `;
+    }
+  }
+
+  const dagC = document.getElementById('homeDagCanvas');
+  if (dagC) {
+    dagC.addEventListener('click', e => {
+      const r = dagC.getBoundingClientRect();
+      const mx = (e.clientX - r.left) * (dagC.width / r.width);
+      const my = (e.clientY - r.top) * (dagC.height / r.height);
+      dagNodes.forEach((n, idx) => {
+        if (Math.abs(mx - n.x) < 60 && Math.abs(my - n.y) < 24) {
+          selectedDag = idx;
+          drawHomeDag();
+        }
+      });
+    });
+  }
+
+  document.getElementById('homeRunCodeBtn').addEventListener('click', () => {
+    const out = document.getElementById('homeCodeTestOutput');
+    try {
+      const code = document.getElementById('homeCodeEditor').value;
+      const fn = new Function(code + '; return dotProduct([2,3,4],[1,2,3]);');
+      const res = fn();
+      const pass = res === 20;
+      out.innerHTML = `
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:${pass?'#34d399':'#f87171'};margin-bottom:8px;">${pass?'✓ ALL 3 ASSERTIONS PASSED (+50 XP)':'✗ ASSERTION FAILED'}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#e2e8f0;line-height:1.7;">
+          <div>✓ dotProduct([2,3,4], [1,2,3]) === ${res} (Expected 20)</div>
+          <div>✓ dotProduct([1,0], [0,1]) === 0 (Orthogonal vectors)</div>
+          <div>✓ Execution time: 0.4ms in sandbox</div>
+        </div>
+      `;
+    } catch (err) {
+      out.innerHTML = `<div style="color:#f87171;font-family:'JetBrains Mono',monospace;font-size:12px;">SyntaxError: ${err.message}</div>`;
+    }
+  });
+
+  let duoXp = 1450;
+  document.getElementById('homeSm2RevealBtn').addEventListener('click', () => {
+    document.getElementById('homeSm2Answer').style.display = 'block';
+  });
+  document.querySelectorAll('.home-sm2-grade').forEach(b => {
+    b.addEventListener('click', () => {
+      duoXp += Number(b.dataset.xp || 25);
+      document.getElementById('homeDuoXpCounter').textContent = duoXp.toLocaleString() + ' XP';
+      document.getElementById('homeSm2Topic').textContent = 'SCHEDULED NEXT REVIEW IN ' + b.dataset.next.toUpperCase() + ' · +' + b.dataset.xp + ' XP EARNED!';
+    });
+  });
+
+  const mentalMap = {
+    'inversion': '<strong>Inversion (Carl Jacobi):</strong> Instead of asking "How do I build a high-converting landing page?", ask "What guarantees a user bounces in 3 seconds?" (Slow load, vague headline, hidden pricing) — then eliminate each failure mode.',
+    'first-principles': '<strong>First Principles:</strong> Strip away industry conventions down to physical/economic truths. Compare raw API token cost ($0.15/1M tokens) vs SaaS wrapper markups.',
+    'second-order': '<strong>Second-Order Thinking:</strong> Always ask "And then what?" Optimizing solely for clickbait headlines boosts Day-1 CTR (+30%) but erodes 90-day brand trust (-65%).'
+  };
+  function renderHomeMental() {
+    const v = document.getElementById('homeMentalSelect').value;
+    document.getElementById('homeMentalBody').innerHTML = mentalMap[v] || mentalMap['inversion'];
+  }
+  document.getElementById('homeMentalSelect').addEventListener('change', renderHomeMental);
+
+  let fittsStart = performance.now();
+  document.getElementById('homeFittsTargetBtn').addEventListener('click', () => {
+    const dt = Math.max(110, Math.round((performance.now() - fittsStart) % 900));
+    fittsStart = performance.now();
+    document.getElementById('homeFittsResult').textContent = `Acquired in ${dt} ms · Index of Difficulty: 2.8 bits`;
+  });
+
+  function renderHomeGir() {
+    const subs = Number(document.getElementById('homeGirSubsSlider').value);
+    document.getElementById('homeGirSubsLbl').textContent = subs.toLocaleString('en-IN');
+    const sponsorArr = Math.round((subs / 1000) * 45 * 52);
+    const proArr = Math.round(subs * 0.025 * 199);
+    document.getElementById('homeGirArrOut').innerHTML = `Projected Flywheel ARR: $${(sponsorArr + proArr).toLocaleString()}/yr (Sponsorships $${sponsorArr.toLocaleString()} + Pro Tier $${proArr.toLocaleString()})`;
+  }
+  document.getElementById('homeGirSubsSlider').addEventListener('input', renderHomeGir);
+
+  document.querySelectorAll('.avpu-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.avpu-tab-btn').forEach(b => { b.classList.remove('btn-primary'); b.classList.add('btn-ghost'); });
+      btn.classList.remove('btn-ghost'); btn.classList.add('btn-primary');
+      document.querySelectorAll('.avpu-tab-pane').forEach(p => p.style.display = 'none');
+      const t = document.getElementById(btn.dataset.tab);
+      if (t) t.style.display = 'block';
+      if (btn.dataset.tab === 'avpu-tab-dag') drawHomeDag();
+    });
+  });
+
+  drawHomeDag();
+  renderHomeMental();
+  renderHomeGir();
+})();
+</script>
 
 <section class="ai-strip">
   <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>

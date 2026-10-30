@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>SevenCRM — Universal Sales Pipeline & Contact Intelligence</title>
+  <meta name="description" content="Universal CRM, interactive deal Kanban board, contact intelligence, and follow-up task engine across all 8 Sevenseed ventures.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🌱%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: radial-gradient(ellipse at top, rgba(99,102,241,0.16), transparent 55%), #030712; color: #f8fafc; min-height: 100vh; }
+    .nav { position: fixed; top: 0; width: 100%; height: 68px; background: rgba(3,7,18,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; z-index: 100; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; text-decoration: none; color: #fff; font-size: 18px; font-family: 'Space Grotesk', sans-serif; }
+    .nav-links-row { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+    .nav-links-row a { color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: color .2s; }
+    .nav-links-row a:hover, .nav-links-row a.active { color: #fff; }
+    .container { max-width: 1440px; margin: 0 auto; padding: 96px 28px 64px; }
+    .header { margin-bottom: 28px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+    .header h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 36px); font-weight: 800; background: linear-gradient(135deg, #fff, #a5b4fc); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-bottom: 28px; }
+    .stat { background: linear-gradient(180deg, rgba(15,23,42,0.82), rgba(15,23,42,0.5)); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; backdrop-filter: blur(16px); transition: transform .2s ease, border-color .2s; }
+    .stat:hover { transform: translateY(-2px); border-color: rgba(99,102,241,0.35); }
+    .stat-label { color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+    .stat-value { font-size: 28px; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: #fff; }
+
+    /* Tabs */
+    .crm-tabs { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; }
+    .crm-tab { background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.08); color: #94a3b8; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all .2s; }
+    .crm-tab:hover { color: #fff; border-color: rgba(99,102,241,0.3); }
+    .crm-tab.active { background: linear-gradient(135deg, rgba(99,102,241,0.22), rgba(139,92,246,0.22)); color: #a5b4fc; border-color: rgba(99,102,241,0.5); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    .card { background: linear-gradient(180deg, rgba(15,23,42,0.82), rgba(15,23,42,0.5)); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; margin-bottom: 24px; backdrop-filter: blur(16px); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+    .pipeline { display: grid; grid-template-columns: repeat(5, minmax(230px, 1fr)); gap: 14px; overflow-x: auto; padding-bottom: 6px; }
+    .stage { background: rgba(15,23,42,0.65); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-height: 260px; }
+    .stage-title { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.6px; color: #e2e8f0; }
+    .badge { background: rgba(99,102,241,0.2); color: #a5b4fc; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1px solid rgba(99,102,241,0.3); }
+    .stage-amt { font-size: 18px; font-weight: 800; color: #10b981; font-family: 'Space Grotesk', sans-serif; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .deal-card { background: rgba(2,6,23,0.75); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 6px; transition: border-color .2s; }
+    .deal-card:hover { border-color: rgba(99,102,241,0.4); }
+    .deal-title { font-size: 13px; font-weight: 700; color: #f1f5f9; line-height: 1.35; }
+    .deal-meta { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #94a3b8; }
+    .deal-val { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #38bdf8; }
+    .deal-actions { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-top: 4px; }
+    .btn-mini { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all .15s; }
+    .btn-mini:hover { background: rgba(99,102,241,0.25); color: #fff; border-color: rgba(99,102,241,0.4); }
+
+    .btn-action { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: filter .2s, transform .15s; }
+    .btn-action:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-ghost { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #e2e8f0; padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+
+    /* Forms & Tables */
+    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px; background: rgba(2,6,23,0.5); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06); }
+    .crm-input, .crm-select { width: 100%; background: rgba(15,23,42,0.9); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 13px; font-family: inherit; outline: none; }
+    .crm-input:focus, .crm-select:focus { border-color: #6366f1; }
+    .crm-table-wrap { overflow-x: auto; }
+    .crm-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    .crm-table th { color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(2,6,23,0.4); }
+    .crm-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); color: #e2e8f0; }
+    .status-pill { display: inline-block; padding: 3px 9px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="logo"><i class="fas fa-users" style="color:#6366f1"></i> SevenCRM</a>
+    <div class="nav-links-row">
+      <a href="/"><i class="fas fa-seedling" style="color:#10b981"></i> Sevenseed Hub</a>
+      <a href="ventures.html"><i class="fas fa-cubes"></i> Ventures</a>
+      <a href="workstations.html"><i class="fas fa-terminal"></i> Workstations</a>
+      <a href="universal-crm.html" class="active"><i class="fas fa-chart-pie" style="color:#6366f1"></i> Universal CRM</a>
+      <a href="/byok.html" style="color:#f59e0b;"><i class="fas fa-key"></i> BYOK Vault</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="header">
+      <div>
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;padding:4px 10px;border-radius:99px;background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.3);margin-bottom:8px;"><i class="fas fa-bolt"></i> Enterprise Deal Flow</span>
+        <h1>Universal CRM & Deal Pipeline</h1>
+        <p style="color:#94a3b8;margin-top:6px;font-size:14px;">End-to-end customer relationship management, deal progression & follow-ups across all 8 Sevenseed ventures</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn-ghost" id="exportCsvBtn"><i class="fas fa-file-csv"></i> Export Deals CSV</button>
+        <button class="btn-action" id="refreshBtn"><i class="fas fa-arrows-rotate"></i> Refresh Pipeline</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-label"><span>Active Contacts</span><i class="fas fa-address-book" style="color:#6366f1"></i></div><div class="stat-value" id="c">4</div></div>
+      <div class="stat"><div class="stat-label"><span>Target Companies</span><i class="fas fa-building" style="color:#38bdf8"></i></div><div class="stat-value" id="co">4</div></div>
+      <div class="stat"><div class="stat-label"><span>Active Deals</span><i class="fas fa-handshake" style="color:#a855f7"></i></div><div class="stat-value" id="d">5</div></div>
+      <div class="stat"><div class="stat-label"><span>Pipeline Value</span><i class="fas fa-sack-dollar" style="color:#10b981"></i></div><div class="stat-value" style="color:#10b981" id="v">$285.4K</div></div>
+      <div class="stat"><div class="stat-label"><span>Open Tasks</span><i class="fas fa-list-check" style="color:#f59e0b"></i></div><div class="stat-value" style="color:#f59e0b" id="tCount">3</div></div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="crm-tabs">
+      <button class="crm-tab active" data-tab="pipelinePane"><i class="fas fa-columns"></i> Deal Pipeline Board</button>
+      <button class="crm-tab" data-tab="contactsPane"><i class="fas fa-user-group"></i> Contacts Directory</button>
+      <button class="crm-tab" data-tab="companiesPane"><i class="fas fa-building"></i> Accounts & Companies</button>
+      <button class="crm-tab" data-tab="tasksPane"><i class="fas fa-check-double"></i> Follow-Up Tasks</button>
+    </div>
+
+    <!-- TAB 1: PIPELINE KANBAN -->
+    <div class="tab-pane active" id="pipelinePane">
+      <div class="card">
+        <div class="card-header">
+          <h2 style="font-size:18px;font-family:'Space Grotesk',sans-serif;"><i class="fas fa-layer-group" style="color:#6366f1;"></i> Interactive Kanban Pipeline</h2>
+          <span style="font-size:12px;color:#94a3b8;">Synced live with SQLite via <code>/api/crm/deals</code></span>
+        </div>
+        <!-- Quick Add Deal -->
+        <div class="form-row">
+          <input class="crm-input" id="dealTitleIn" placeholder="Deal Title (e.g., Apollo Hospitals — OCR License)" />
+          <input class="crm-input" id="dealAmountIn" type="number" placeholder="Amount USD (e.g., 48000)" />
+          <select class="crm-select" id="dealStageIn">
+            <option value="prospect">Stage: Prospect (20%)</option>
+            <option value="qualified">Stage: Qualified (45%)</option>
+            <option value="proposal">Stage: Proposal (70%)</option>
+            <option value="negotiation">Stage: Negotiation (85%)</option>
+            <option value="won">Stage: Won (100%)</option>
+          </select>
+          <input class="crm-input" id="dealTagIn" placeholder="Venture Tag (e.g., sevenforce, avpu)" />
+          <button class="btn-action" id="addDealBtn" style="justify-content:center;"><i class="fas fa-plus"></i> Create Deal</button>
+        </div>
+        <div class="pipeline" id="pipeline"></div>
+      </div>
+    </div>
+
+    <!-- TAB 2: CONTACTS -->
+    <div class="tab-pane" id="contactsPane">
+      <div class="card">
+        <div class="card-header">
+          <h2 style="font-size:18px;font-family:'Space Grotesk',sans-serif;"><i class="fas fa-address-card" style="color:#6366f1;"></i> Venture Contacts & Decision Makers</h2>
+          <input class="crm-input" id="contactSearchIn" placeholder="Filter contacts by name, email, role…" style="max-width:280px;" />
+        </div>
+        <div class="form-row">
+          <input class="crm-input" id="ctFirstIn" placeholder="First Name *" />
+          <input class="crm-input" id="ctLastIn" placeholder="Last Name" />
+          <input class="crm-input" id="ctEmailIn" type="email" placeholder="Email Address *" />
+          <input class="crm-input" id="ctRoleIn" placeholder="Job Title (e.g., CTO)" />
+          <input class="crm-input" id="ctPhoneIn" placeholder="Phone (+91...)" />
+          <button class="btn-action" id="addContactBtn" style="justify-content:center;"><i class="fas fa-user-plus"></i> Add Contact</button>
+        </div>
+        <div class="crm-table-wrap">
+          <table class="crm-table">
+            <thead>
+              <tr><th>Name</th><th>Email</th><th>Role</th><th>Phone</th><th>Status</th><th>Tags</th><th>Action</th></tr>
+            </thead>
+            <tbody id="contactsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: COMPANIES -->
+    <div class="tab-pane" id="companiesPane">
+      <div class="card">
+        <div class="card-header">
+          <h2 style="font-size:18px;font-family:'Space Grotesk',sans-serif;"><i class="fas fa-building" style="color:#38bdf8;"></i> Enterprise Accounts & Companies</h2>
+        </div>
+        <div class="form-row">
+          <input class="crm-input" id="coNameIn" placeholder="Company Name *" />
+          <input class="crm-input" id="coDomainIn" placeholder="Domain (e.g., acme.in)" />
+          <input class="crm-input" id="coIndIn" placeholder="Industry (e.g., Healthcare)" />
+          <input class="crm-input" id="coSizeIn" placeholder="Company Size (e.g., 500+)" />
+          <button class="btn-action" id="addCompanyBtn" style="justify-content:center;"><i class="fas fa-plus"></i> Add Company</button>
+        </div>
+        <div class="crm-table-wrap">
+          <table class="crm-table">
+            <thead>
+              <tr><th>Company</th><th>Domain</th><th>Industry</th><th>Size</th><th>Notes</th></tr>
+            </thead>
+            <tbody id="companiesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: TASKS -->
+    <div class="tab-pane" id="tasksPane">
+      <div class="card">
+        <div class="card-header">
+          <h2 style="font-size:18px;font-family:'Space Grotesk',sans-serif;"><i class="fas fa-list-check" style="color:#f59e0b;"></i> Action Items & Sales Follow-Ups</h2>
+        </div>
+        <div class="form-row">
+          <input class="crm-input" id="tkTitleIn" placeholder="Task Title *" />
+          <input class="crm-input" id="tkDescIn" placeholder="Details / Notes" />
+          <select class="crm-select" id="tkPrioIn">
+            <option value="high">Priority: High</option>
+            <option value="medium" selected>Priority: Medium</option>
+            <option value="low">Priority: Low</option>
+          </select>
+          <input class="crm-input" id="tkDueIn" type="date" />
+          <button class="btn-action" id="addTaskBtn" style="justify-content:center;"><i class="fas fa-plus"></i> Add Task</button>
+        </div>
+        <div class="crm-table-wrap">
+          <table class="crm-table">
+            <thead>
+              <tr><th>Status</th><th>Task</th><th>Priority</th><th>Due Date</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="tasksBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var STAGES = ["prospect", "qualified", "proposal", "negotiation", "won"];
+    var allDeals = [];
+    var allContacts = [];
+    var allCompanies = [];
+    var allTasks = [];
+
+    function notify(msg, type) {
+      if (typeof window.showToast === 'function') window.showToast(msg, type || 'info');
+    }
+
+    // Tab switching
+    document.querySelectorAll('.crm-tab').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.crm-tab').forEach(function(b) { b.classList.remove('active'); });
+        document.querySelectorAll('.tab-pane').forEach(function(p) { p.classList.remove('active'); });
+        btn.classList.add('active');
+        var pane = document.getElementById(btn.getAttribute('data-tab'));
+        if (pane) pane.classList.add('active');
+      });
+    });
+
+    function renderPipeline(dashboardData, dealsList) {
+      var p = document.getElementById("pipeline");
+      p.innerHTML = "";
+      STAGES.forEach(function(s, sIdx) {
+        var stageDeals = (dealsList || []).filter(function(d) { return (d.stage || 'prospect') === s; });
+        var stSummary = (dashboardData && dashboardData.pipeline && dashboardData.pipeline.find(function(x) { return x.stage === s; })) || {
+          cnt: stageDeals.length,
+          total: stageDeals.reduce(function(acc, x) { return acc + (Number(x.amount) || 0); }, 0)
+        };
+        var col = document.createElement('div');
+        col.className = 'stage';
+        var cardsHtml = stageDeals.map(function(dl) {
+          var prevStage = sIdx > 0 ? STAGES[sIdx - 1] : null;
+          var nextStage = sIdx < STAGES.length - 1 ? STAGES[sIdx + 1] : null;
+          return '<div class="deal-card">' +
+            '<div class="deal-title">' + escapeHtml(dl.title) + '</div>' +
+            '<div class="deal-meta"><span class="deal-val">$' + Number(dl.amount || 0).toLocaleString() + '</span><span>' + (dl.probability || 20) + '% prob</span></div>' +
+            (dl.tags ? '<div style="font-size:10px;color:#a5b4fc;">#' + escapeHtml(dl.tags) + '</div>' : '') +
+            '<div class="deal-actions">' +
+              '<div>' +
+                (prevStage ? '<button class="btn-mini" onclick="moveDeal(\'' + dl.id + '\',\'' + prevStage + '\')" title="Move back">←</button> ' : '') +
+                (nextStage ? '<button class="btn-mini" onclick="moveDeal(\'' + dl.id + '\',\'' + nextStage + '\')" title="Advance stage">Stage →</button>' : '<span style="font-size:11px;color:#10b981;font-weight:700;"><i class="fas fa-trophy"></i> Closed Won</span>') +
+              '</div>' +
+              '<button class="btn-mini" onclick="deleteDeal(\'' + dl.id + '\')" title="Delete deal" style="color:#f87171;"><i class="fas fa-trash"></i></button>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+        col.innerHTML =
+          '<div class="stage-title"><span>' + s + '</span><span class="badge">' + stSummary.cnt + ' deals</span></div>' +
+          '<div class="stage-amt">$' + Number(stSummary.total || 0).toLocaleString() + '</div>' +
+          (cardsHtml || '<div style="font-size:12px;color:#64748b;text-align:center;padding:24px 0;">No deals in ' + s + '</div>');
+        p.appendChild(col);
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function renderContacts() {
+      var q = (document.getElementById('contactSearchIn').value || '').toLowerCase();
+      var tbody = document.getElementById('contactsBody');
+      var filtered = allContacts.filter(function(c) {
+        if (!q) return true;
+        var hay = ((c.first_name || '') + ' ' + (c.last_name || '') + ' ' + (c.email || '') + ' ' + (c.job_title || '') + ' ' + (c.tags || '')).toLowerCase();
+        return hay.indexOf(q) !== -1;
+      });
+      tbody.innerHTML = filtered.map(function(c) {
+        return '<tr>' +
+          '<td style="font-weight:700;color:#fff;">' + escapeHtml((c.first_name || '') + ' ' + (c.last_name || '')) + '</td>' +
+          '<td><code>' + escapeHtml(c.email) + '</code></td>' +
+          '<td>' + escapeHtml(c.job_title || '—') + '</td>' +
+          '<td>' + escapeHtml(c.phone || '—') + '</td>' +
+          '<td><span class="status-pill">' + escapeHtml(c.status || 'lead') + '</span></td>' +
+          '<td style="font-size:12px;color:#a5b4fc;">' + escapeHtml(c.tags || '—') + '</td>' +
+          '<td><button class="btn-mini" onclick="deleteContact(\'' + c.id + '\')" style="color:#f87171;"><i class="fas fa-trash"></i></button></td>' +
+        '</tr>';
+      }).join('') || '<tr><td colspan="7" style="text-align:center;color:#64748b;">No contacts found</td></tr>';
+    }
+
+    function renderCompanies() {
+      var tbody = document.getElementById('companiesBody');
+      tbody.innerHTML = allCompanies.map(function(co) {
+        return '<tr>' +
+          '<td style="font-weight:700;color:#fff;">' + escapeHtml(co.name) + '</td>' +
+          '<td><code>' + escapeHtml(co.domain || '—') + '</code></td>' +
+          '<td>' + escapeHtml(co.industry || '—') + '</td>' +
+          '<td>' + escapeHtml(co.size || '—') + '</td>' +
+          '<td style="color:#94a3b8;">' + escapeHtml(co.notes || '—') + '</td>' +
+        '</tr>';
+      }).join('') || '<tr><td colspan="5" style="text-align:center;color:#64748b;">No companies found</td></tr>';
+    }
+
+    function renderTasks() {
+      var tbody = document.getElementById('tasksBody');
+      tbody.innerHTML = allTasks.map(function(tk) {
+        var isDone = tk.status === 'done';
+        return '<tr>' +
+          '<td><button class="btn-mini" onclick="toggleTask(\'' + tk.id + '\',\'' + (isDone ? 'todo' : 'done') + '\')" style="color:' + (isDone ? '#10b981' : '#f59e0b') + '"><i class="fas ' + (isDone ? 'fa-check-circle' : 'fa-circle') + '"></i> ' + escapeHtml(tk.status) + '</button></td>' +
+          '<td style="' + (isDone ? 'text-decoration:line-through;color:#64748b;' : 'font-weight:600;color:#fff;') + '">' + escapeHtml(tk.title) + (tk.description ? '<div style="font-size:11px;color:#94a3b8;font-weight:400;">' + escapeHtml(tk.description) + '</div>' : '') + '</td>' +
+          '<td><span class="status-pill" style="background:rgba(245,158,11,0.15);color:#fbbf24;border-color:rgba(245,158,11,0.3);">' + escapeHtml(tk.priority || 'medium') + '</span></td>' +
+          '<td>' + escapeHtml(tk.due_date || '—') + '</td>' +
+          '<td><button class="btn-mini" onclick="deleteTask(\'' + tk.id + '\')" style="color:#f87171;"><i class="fas fa-trash"></i></button></td>' +
+        '</tr>';
+      }).join('') || '<tr><td colspan="5" style="text-align:center;color:#64748b;">No tasks scheduled</td></tr>';
+    }
+
+    function loadCRM() {
+      Promise.all([
+        fetch("/api/crm/dashboard").then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; }),
+        fetch("/api/crm/deals").then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; }),
+        fetch("/api/crm/contacts").then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; }),
+        fetch("/api/crm/companies").then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; }),
+        fetch("/api/crm/tasks").then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; })
+      ]).then(function(res) {
+        var data = res[0];
+        allDeals = Array.isArray(res[1]) ? res[1] : [];
+        allContacts = Array.isArray(res[2]) ? res[2] : [];
+        allCompanies = Array.isArray(res[3]) ? res[3] : [];
+        allTasks = Array.isArray(res[4]) ? res[4] : [];
+
+        if (data && typeof data.contacts !== 'undefined') {
+          document.getElementById("c").textContent = (data.contacts || 0).toLocaleString();
+          document.getElementById("co").textContent = (data.companies || 0).toLocaleString();
+          document.getElementById("d").textContent = (data.deals || 0).toLocaleString();
+          document.getElementById("tCount").textContent = (data.tasks || 0).toLocaleString();
+          var val = data.total_value || 0;
+          document.getElementById("v").textContent = "$" + (val >= 1000 ? (val / 1000).toFixed(1) + "K" : val);
+          renderPipeline(data, allDeals);
+        } else {
+          // Offline fallback
+          var sample = [
+            { id: 's1', title: 'Apex InfraBuild — YOLO Safety', amount: 42000, stage: 'prospect', probability: 25, tags: 'breakdown' },
+            { id: 's2', title: 'MedCare — Prescription OCR', amount: 68000, stage: 'qualified', probability: 50, tags: 'pharmacy' },
+            { id: 's3', title: 'FinEdge — Sevenforce 7-Agent Seat', amount: 95000, stage: 'proposal', probability: 70, tags: 'sevenforce' },
+            { id: 's4', title: 'Metro Civic — Rakshak Sentinel', amount: 54000, stage: 'negotiation', probability: 85, tags: 'rakshak-ai' },
+            { id: 's5', title: 'Shree Vidya — AVPU AI Campus', amount: 26400, stage: 'won', probability: 100, tags: 'avpu' }
+          ];
+          allDeals = sample;
+          renderPipeline(null, sample);
+        }
+        renderContacts();
+        renderCompanies();
+        renderTasks();
+      });
+    }
+
+    window.moveDeal = function(dealId, newStage) {
+      fetch('/api/crm/deals/' + encodeURIComponent(dealId), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stage: newStage })
+      }).then(function(r) {
+        if (r.ok) {
+          notify('Deal moved to ' + newStage.toUpperCase(), 'success');
+          loadCRM();
+        }
+      });
+    };
+
+    window.deleteDeal = function(dealId) {
+      fetch('/api/crm/deals/' + encodeURIComponent(dealId), { method: 'DELETE' }).then(function() {
+        notify('Deal removed', 'info');
+        loadCRM();
+      });
+    };
+
+    window.deleteContact = function(cid) {
+      fetch('/api/crm/contacts/' + encodeURIComponent(cid), { method: 'DELETE' }).then(function() {
+        notify('Contact deleted', 'info');
+        loadCRM();
+      });
+    };
+
+    window.toggleTask = function(tid, status) {
+      fetch('/api/crm/tasks/' + encodeURIComponent(tid), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: status })
+      }).then(function() {
+        notify('Task marked ' + status, 'success');
+        loadCRM();
+      });
+    };
+
+    window.deleteTask = function(tid) {
+      fetch('/api/crm/tasks/' + encodeURIComponent(tid), { method: 'DELETE' }).then(function() {
+        notify('Task deleted', 'info');
+        loadCRM();
+      });
+    };
+
+    document.getElementById('addDealBtn').addEventListener('click', function() {
+      var title = document.getElementById('dealTitleIn').value.trim();
+      var amount = parseInt(document.getElementById('dealAmountIn').value || '0', 10);
+      var stage = document.getElementById('dealStageIn').value;
+      var tags = document.getElementById('dealTagIn').value.trim();
+      if (!title) { notify('Enter a deal title', 'error'); return; }
+      fetch('/api/crm/deals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: title, amount: isNaN(amount) ? 0 : amount, stage: stage, tags: tags })
+      }).then(function(r) {
+        if (r.ok) {
+          document.getElementById('dealTitleIn').value = '';
+          document.getElementById('dealAmountIn').value = '';
+          document.getElementById('dealTagIn').value = '';
+          notify('Deal added to pipeline', 'success');
+          loadCRM();
+        }
+      });
+    });
+
+    document.getElementById('addContactBtn').addEventListener('click', function() {
+      var fn = document.getElementById('ctFirstIn').value.trim();
+      var ln = document.getElementById('ctLastIn').value.trim();
+      var em = document.getElementById('ctEmailIn').value.trim();
+      var role = document.getElementById('ctRoleIn').value.trim();
+      var ph = document.getElementById('ctPhoneIn').value.trim();
+      if (!fn || !em) { notify('First name and email required', 'error'); return; }
+      fetch('/api/crm/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ first_name: fn, last_name: ln, email: em, job_title: role, phone: ph })
+      }).then(function(r) {
+        if (r.ok) {
+          document.getElementById('ctFirstIn').value = '';
+          document.getElementById('ctLastIn').value = '';
+          document.getElementById('ctEmailIn').value = '';
+          document.getElementById('ctRoleIn').value = '';
+          document.getElementById('ctPhoneIn').value = '';
+          notify('Contact saved', 'success');
+          loadCRM();
+        }
+      });
+    });
+
+    document.getElementById('addCompanyBtn').addEventListener('click', function() {
+      var name = document.getElementById('coNameIn').value.trim();
+      var dom = document.getElementById('coDomainIn').value.trim();
+      var ind = document.getElementById('coIndIn').value.trim();
+      var sz = document.getElementById('coSizeIn').value.trim();
+      if (!name) { notify('Company name required', 'error'); return; }
+      fetch('/api/crm/companies', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, domain: dom, industry: ind, size: sz })
+      }).then(function(r) {
+        if (r.ok) {
+          document.getElementById('coNameIn').value = '';
+          document.getElementById('coDomainIn').value = '';
+          document.getElementById('coIndIn').value = '';
+          document.getElementById('coSizeIn').value = '';
+          notify('Company added', 'success');
+          loadCRM();
+        }
+      });
+    });
+
+    document.getElementById('addTaskBtn').addEventListener('click', function() {
+      var title = document.getElementById('tkTitleIn').value.trim();
+      var desc = document.getElementById('tkDescIn').value.trim();
+      var prio = document.getElementById('tkPrioIn').value;
+      var due = document.getElementById('tkDueIn').value;
+      if (!title) { notify('Task title required', 'error'); return; }
+      fetch('/api/crm/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: title, description: desc, priority: prio, due_date: due })
+      }).then(function(r) {
+        if (r.ok) {
+          document.getElementById('tkTitleIn').value = '';
+          document.getElementById('tkDescIn').value = '';
+          notify('Follow-up task created', 'success');
+          loadCRM();
+        }
+      });
+    });
+
+    document.getElementById('contactSearchIn').addEventListener('input', renderContacts);
+
+    document.getElementById('exportCsvBtn').addEventListener('click', function() {
+      var rows = [['Deal ID', 'Title', 'Amount (USD)', 'Stage', 'Probability (%)', 'Tags']];
+      allDeals.forEach(function(d) {
+        rows.push([d.id || '', '"' + String(d.title || '').replace(/"/g, '""') + '"', d.amount || 0, d.stage || '', d.probability || 0, d.tags || '']);
+      });
+      var csv = rows.map(function(r) { return r.join(','); }).join('\n');
+      var a = document.createElement('a');
+      a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+      a.download = 'sevenseed-crm-pipeline.csv';
+      a.click();
+      notify('Exported deals CSV', 'success');
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", function() {
+      loadCRM();
+      notify('Refreshing pipeline…', 'info');
+    });
+
+    loadCRM();
+  </script>
+  <script src="ws-shell.js"></script>
+</body>
+</html>

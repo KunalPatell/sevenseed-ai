@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Bharatiya Nyaya Sanhita (BNS 2023) Auto-FIR Legal Engine — Rakshak AI</title>
-  <meta name="description" content="AI legal engine mapping incident reports to new BNS 2023 criminal sections, determining cognizable status, and drafting formal Police Complaints.">
+  <meta name="description" content="AI legal engine mapping incident reports from repealed IPC to BNS 2023 criminal sections, BSA Section 63 digital evidence certificates, and formal Police Complaints.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -22,7 +22,7 @@
     .case-chip.active, .case-chip:hover { background: rgba(239,68,68,0.18); border-color: #ef4444; color: #f87171; }
 
     /* Workspace */
-    .fir-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .fir-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 36px; }
     @media(max-width: 1024px) { .fir-grid { grid-template-columns: 1fr; } }
 
     .input-card, .output-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); }
@@ -40,6 +40,13 @@
     .legal-stat-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
     .stat-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-2); margin-bottom: 6px; }
     .stat-val { font-weight: 700; color: #fff; font-family: 'JetBrains Mono', monospace; }
+
+    /* IPC to BNS Crosswalk Directory */
+    .crosswalk-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); }
+    .cw-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 14px; }
+    .cw-table th, .cw-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .cw-table th { color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; background: var(--bg-2); }
+    .cw-row:hover { background: rgba(239,68,68,0.06); cursor: pointer; }
   </style>
 </head>
 <body>
@@ -67,17 +74,17 @@
 
 <div class="fir-container">
   <div class="fir-header">
-    <div class="fir-badge"><i class="fas fa-gavel"></i> Modern Criminal Code (BNS 2023 & BNSS 2023 Compliant)</div>
+    <div class="fir-badge"><i class="fas fa-gavel"></i> Modern Criminal Code (BNS 2023, BNSS 2023 &amp; BSA Section 63 Compliant)</div>
     <h1 class="fir-title">Bharatiya Nyaya Sanhita (BNS) Auto-FIR Drafter</h1>
-    <p style="color:var(--text-2); max-width:760px; margin:0 auto;">Input factual incident narrative. Our legal LLM engine maps offenses from repealed IPC to modern BNS 2023 clauses, classifies cognizable status, and generates a submission-ready Police Complaint.</p>
+    <p style="color:var(--text-2); max-width:760px; margin:0 auto;">Input factual incident narrative. Our legal engine maps offenses from repealed IPC 1860 to modern BNS 2023 clauses, attaches Section 63 BSA digital evidence declarations, and generates a Zero-FIR complaint.</p>
   </div>
 
   <!-- Incident Case Presets -->
   <div class="case-presets-bar">
-    <button class="case-chip active" onclick="loadCase('snatching')"><i class="fas fa-motorcycle"></i> Snatching & Armed Robbery</button>
-    <button class="case-chip" onclick="loadCase('cyber')"><i class="fas fa-credit-card"></i> UPI Phishing & Cyber Fraud</button>
-    <button class="case-chip" onclick="loadCase('hitrun')"><i class="fas fa-car-burst"></i> Hit & Run (Section 106)</button>
-    <button class="case-chip" onclick="loadCase('stalking')"><i class="fas fa-user-secret"></i> Digital Stalking & Threat</button>
+    <button class="case-chip active" onclick="loadCase('snatching')"><i class="fas fa-motorcycle"></i> Snatching &amp; Armed Robbery</button>
+    <button class="case-chip" onclick="loadCase('cyber')"><i class="fas fa-credit-card"></i> UPI Phishing &amp; Cyber Fraud</button>
+    <button class="case-chip" onclick="loadCase('hitrun')"><i class="fas fa-car-burst"></i> Hit &amp; Run (Section 106)</button>
+    <button class="case-chip" onclick="loadCase('stalking')"><i class="fas fa-user-secret"></i> Digital Stalking &amp; Threat</button>
   </div>
 
   <div class="fir-grid">
@@ -86,25 +93,35 @@
       <h3 style="font-size:17px; font-weight:700; color:#fff; margin-bottom:16px;">Incident Statement</h3>
       
       <div class="form-group">
-        <label>Complainant Name & Contact</label>
-        <input type="text" id="cName" class="form-control" value="Rahul Sharma, Gandhinagar, Gujarat (+91 98765 43210)">
+        <label>Complainant Name &amp; Contact</label>
+        <input type="text" id="cName" class="form-control" value="Rahul Sharma, Gandhinagar, Gujarat (+91 98765 43210)" oninput="generateFIR()">
       </div>
 
       <div class="form-group">
-        <label>Incident Date, Time & Location</label>
-        <input type="text" id="cLoc" class="form-control" value="September 18, 2026 at 20:30 hrs near Infocity Circle">
+        <label>Incident Date, Time &amp; Location</label>
+        <input type="text" id="cLoc" class="form-control" value="September 18, 2026 at 20:30 hrs near Infocity Circle" oninput="generateFIR()">
       </div>
 
       <div class="form-group">
         <label>Statement of Facts / Narrative</label>
-        <textarea id="cNarrative" class="form-control" rows="7" placeholder="Describe the factual sequence of events...">Two unknown persons on a black motorcycle intercepted my vehicle, verbally threatened me with physical harm, snatched my gold chain and mobile phone, and fled toward Sector 24.</textarea>
+        <textarea id="cNarrative" class="form-control" rows="6" placeholder="Describe the factual sequence of events..." oninput="generateFIR()">Two unknown persons on a black motorcycle intercepted my vehicle, verbally threatened me with physical harm, snatched my gold chain and mobile phone, and fled toward Sector 24.</textarea>
       </div>
 
-      <div style="display:flex; gap:10px;">
-        <button class="btn btn-primary" style="flex:1; justify-content:center; background:#ef4444; border:none;" onclick="generateFIR()">
+      <div class="form-group" style="background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.25);padding:12px 14px;border-radius:10px;">
+        <label style="display:flex;align-items:center;gap:10px;margin:0;cursor:pointer;color:#38bdf8;">
+          <input type="checkbox" id="includeBsa63Toggle" checked onchange="generateFIR()" style="accent-color:#38bdf8;width:16px;height:16px;">
+          <span>Attach <strong>Section 63 BSA 2023 Electronic Evidence Certificate</strong> (replaces 65B Evidence Act for CCTV/UPI/WhatsApp logs)</span>
+        </label>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-primary" type="button" style="flex:1; justify-content:center; background:#ef4444; border:none;" onclick="generateFIR()">
           <i class="fas fa-file-contract"></i> Draft BNS 2023 Police Complaint
         </button>
-        <button class="btn btn-ghost" onclick="window.print()" title="Print Formal Complaint">
+        <button class="btn btn-ghost" type="button" onclick="copyFirText()" title="Copy Complaint">
+          <i class="fas fa-copy"></i> <span id="firCopyLabel">Copy</span>
+        </button>
+        <button class="btn btn-ghost" type="button" onclick="window.print()" title="Print Formal Complaint">
           <i class="fas fa-print"></i>
         </button>
       </div>
@@ -114,33 +131,64 @@
     <div class="output-card">
       <!-- Legal Analysis Card -->
       <div class="legal-stat-box">
-        <div class="stat-row"><span>Mapped BNS Section:</span> <span class="stat-val" style="color:#f87171;" id="statBns">Section 304 & 309 BNS</span></div>
-        <div class="stat-row"><span>Repealed IPC Equivalent:</span> <span class="stat-val" style="color:#94a3b8;" id="statIpc">Section 379 & 392 IPC</span></div>
-        <div class="stat-row"><span>Legal Classification:</span> <span class="stat-val" style="color:#ef4444;" id="statClass">Cognizable & Non-Bailable</span></div>
+        <div class="stat-row"><span>Mapped BNS Section:</span> <span class="stat-val" style="color:#f87171;" id="statBns">Section 304 &amp; 309 BNS</span></div>
+        <div class="stat-row"><span>Repealed IPC Equivalent:</span> <span class="stat-val" style="color:#94a3b8;" id="statIpc">Section 379 &amp; 392 IPC</span></div>
+        <div class="stat-row"><span>Legal Classification:</span> <span class="stat-val" style="color:#ef4444;" id="statClass">Cognizable &amp; Non-Bailable</span></div>
         <div class="stat-row"><span>Maximum Punishment:</span> <span class="stat-val" style="color:#f59e0b;" id="statPenalty">Up to 7 Years Rigorous Imprisonment</span></div>
       </div>
 
       <div class="fir-doc" id="firDoc">
         <div class="doc-header">
-          <div style="font-size:16px; font-weight:800; color:#fff;">FORMAL POLICE COMPLAINT / E-FIR</div>
+          <div style="font-size:16px; font-weight:800; color:#fff;">FORMAL POLICE COMPLAINT / ZERO E-FIR</div>
           <div style="font-size:11px; color:var(--text-3);">Under Section 173 of Bharatiya Nagarik Suraksha Sanhita (BNSS), 2023</div>
           <div class="doc-badge-cognizable" id="cognizableBadge">COGNIZABLE OFFENSE DETECTED</div>
         </div>
 
         <div id="docBody">
           <strong>To:</strong> The Station House Officer (SHO), Local Police Station.<br><br>
-          <strong>Sub:</strong> Formal complaint regarding commission of cognizable offenses under <strong>Sections 304 and 309 of Bharatiya Nyaya Sanhita (BNS), 2023</strong>.<br><br>
+          <strong>Sub:</strong> Formal complaint regarding commission of cognizable offenses under <strong id="docSubBns">Sections 304 and 309 of Bharatiya Nyaya Sanhita (BNS), 2023</strong>.<br><br>
           <strong>Sir/Madam,</strong><br>
           I, <span id="outName" style="color:#fff;">Rahul Sharma</span>, resident of Gandhinagar, Gujarat, respectfully report the following incident occurring on <span id="outLoc" style="color:#fff;">September 18, 2026 at 20:30 hrs</span>:<br><br>
-          <div id="outText" style="background:#090d1e; padding:12px; border-left:3px solid #ef4444; margin:10px 0; font-family:'JetBrains Mono'; font-size:12px;">
+          <div id="outText" style="background:#090d1e; padding:12px; border-left:3px solid #ef4444; margin:10px 0; font-family:'JetBrains Mono',monospace; font-size:12px;">
             "Two unknown persons on a black motorcycle intercepted my vehicle, verbally threatened me with physical harm, snatched my gold chain and mobile phone, and fled toward Sector 24."
           </div>
-          The acts detailed above constitute cognizable offenses under Section 304 (Snatching) and Section 309 (Robbery) of the Bharatiya Nyaya Sanhita, 2023 (formerly Sections 379 and 392 of the repealed IPC). I request immediate registration of an FIR under Section 173 of BNSS 2023 and retrieval of CCTV footage.<br><br>
+          The acts detailed above constitute cognizable offenses under the Bharatiya Nyaya Sanhita, 2023. I request immediate registration of a Zero-FIR / e-FIR under Section 173 of BNSS 2023 and preservation of relevant digital/CCTV evidence.<br><br>
+          <div id="bsa63AppendixBlock" style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);padding:10px 12px;border-radius:8px;font-size:11.5px;color:#bae6fd;margin-bottom:14px;">
+            <strong>ANNEXURE A — SECTION 63 BSA 2023 DIGITAL EVIDENCE DECLARATION:</strong> Electronic records (UPI UTR logs / mobile screenshots / CCTV timestamps) annexed herewith were produced by a regularly operating device in my lawful control without tampering.
+          </div>
           <strong>Yours sincerely,</strong><br>
           <span id="outSign" style="color:#fff;">Rahul Sharma</span><br>
           Date: <span id="outDate">23-Sep-2026</span>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Nyaaya / IndiaCode Style Live IPC-to-BNS 2023 Statutory Crosswalk -->
+  <div class="crosswalk-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <div>
+        <span style="font-size:11px;font-weight:800;color:#f87171;text-transform:uppercase;letter-spacing:0.08em;"><i class="fas fa-scale-balanced"></i> Statutory Reference Crosswalk (Repealed IPC 1860 → BNS 2023)</span>
+        <h3 style="font-size:19px;font-weight:800;color:#fff;margin-top:4px;">Search Any Old IPC Section or Offense to Map to BNS 2023</h3>
+      </div>
+      <input type="text" id="ipcBnsSearchInput" class="form-control" style="max-width:320px;" placeholder="Search e.g. 420, 302, 379, cheating, theft..." oninput="filterIpcBnsCrosswalk()">
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="cw-table">
+        <thead>
+          <tr>
+            <th>Repealed IPC Section</th>
+            <th>New BNS 2023 Section</th>
+            <th>Offense Description</th>
+            <th>Cognizable / Bail Status</th>
+            <th>Statutory Punishment</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="ipcBnsCrosswalkGrid">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -189,6 +237,17 @@ const CASES = {
   }
 };
 
+const CROSSWALK_DATA = [
+  { ipc: 'IPC 420', bns: 'BNS 318(4)', title: 'Cheating & Dishonestly Inducing Delivery of Property', status: 'Cognizable · Non-Bailable', penalty: 'Up to 7 Years + Fine' },
+  { ipc: 'IPC 379', bns: 'BNS 303(2) & 304', title: 'Theft & Street Snatching (New Distinct Offense)', status: 'Cognizable · Non-Bailable', penalty: 'Up to 3–5 Years + Community Service/Fine' },
+  { ipc: 'IPC 302', bns: 'BNS 103(1)', title: 'Punishment for Murder / Mob Lynching (103(2))', status: 'Cognizable · Non-Bailable', penalty: 'Death or Life Imprisonment' },
+  { ipc: 'IPC 304A', bns: 'BNS 106(1) & 106(2)', title: 'Causing Death by Negligence / Hit & Run', status: 'Cognizable · Non-Bailable (106(2))', penalty: 'Up to 5–10 Years + Fine' },
+  { ipc: 'IPC 354D', bns: 'BNS 78', title: 'Physical & Cyber Electronic Stalking', status: 'Cognizable · Bailable (1st)', penalty: 'Up to 3–5 Years + Fine' },
+  { ipc: 'IPC 498A', bns: 'BNS 85 & 86', title: 'Domestic Cruelty by Husband or Relatives', status: 'Cognizable · Non-Bailable', penalty: 'Up to 3 Years + Fine' },
+  { ipc: 'IPC 506', bns: 'BNS 351(2)/(3)', title: 'Criminal Intimidation & Extortion Threats', status: 'Cognizable (Aggravated)', penalty: 'Up to 2–7 Years' },
+  { ipc: 'IPC 406', bns: 'BNS 316(2)', title: 'Criminal Breach of Trust', status: 'Cognizable · Non-Bailable', penalty: 'Up to 5 Years + Fine' }
+];
+
 let currentCaseKey = 'snatching';
 
 function loadCase(key) {
@@ -215,12 +274,62 @@ function generateFIR() {
   document.getElementById('statPenalty').innerText = c.penalty;
   document.getElementById('cognizableBadge').innerText = c.badge;
 
+  const subEl = document.getElementById('docSubBns');
+  if (subEl) subEl.textContent = c.bns;
+
   document.getElementById('outName').innerText = name.split(',')[0];
   document.getElementById('outLoc').innerText = loc;
   document.getElementById('outText').innerText = `"${narrative}"`;
   document.getElementById('outSign').innerText = name.split(',')[0];
+
+  const bsaToggle = document.getElementById('includeBsa63Toggle');
+  const bsaBlock = document.getElementById('bsa63AppendixBlock');
+  if (bsaToggle && bsaBlock) {
+    bsaBlock.style.display = bsaToggle.checked ? 'block' : 'none';
+  }
 }
 
+function applyCrosswalkSection(idx) {
+  const row = CROSSWALK_DATA[idx];
+  if (!row) return;
+  document.getElementById('statBns').innerText = row.bns + ' (' + row.title + ')';
+  document.getElementById('statIpc').innerText = row.ipc;
+  document.getElementById('statClass').innerText = row.status;
+  document.getElementById('statPenalty').innerText = row.penalty;
+  const subEl = document.getElementById('docSubBns');
+  if (subEl) subEl.textContent = `${row.bns} (${row.title})`;
+  document.getElementById('firDoc').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function filterIpcBnsCrosswalk() {
+  const q = (document.getElementById('ipcBnsSearchInput').value || '').toLowerCase();
+  const tbody = document.getElementById('ipcBnsCrosswalkGrid');
+  if (!tbody) return;
+  tbody.innerHTML = CROSSWALK_DATA.map((r, idx) => {
+    const match = !q || `${r.ipc} ${r.bns} ${r.title} ${r.status}`.toLowerCase().includes(q);
+    if (!match) return '';
+    return `<tr class="cw-row" onclick="applyCrosswalkSection(${idx})">
+      <td style="font-family:'JetBrains Mono',monospace;color:#94a3b8;">${r.ipc}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:#f87171;font-weight:700;">${r.bns}</td>
+      <td><strong style="color:#fff;">${r.title}</strong></td>
+      <td style="color:#38bdf8;">${r.status}</td>
+      <td style="color:#fbbf24;">${r.penalty}</td>
+      <td><button type="button" style="padding:4px 10px;border-radius:6px;background:rgba(239,68,68,0.18);border:1px solid rgba(239,68,68,0.4);color:#f87171;font-size:11px;font-weight:700;cursor:pointer;">Apply to FIR</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function copyFirText() {
+  const text = document.getElementById('firDoc').innerText;
+  navigator.clipboard.writeText(text);
+  const lbl = document.getElementById('firCopyLabel');
+  if (lbl) {
+    lbl.textContent = 'Copied!';
+    setTimeout(() => { lbl.textContent = 'Copy'; }, 2500);
+  }
+}
+
+filterIpcBnsCrosswalk();
 generateFIR();
 </script>
 

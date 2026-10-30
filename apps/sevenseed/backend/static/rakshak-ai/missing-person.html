@@ -4,21 +4,21 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Rapid Missing Person & Lost Article Citizen Radar — Rakshak AI</title>
-  <meta name="description" content="Rapid missing person alert broadcaster, AI facial feature matching, and automated nearest police station dispatch. 100% Free Public Safety Initiative.">
+  <title>Rapid Missing Person &amp; Lost Article Citizen Radar — Rakshak AI</title>
+  <meta name="description" content="Rapid missing person Amber Alert broadcaster, Cell Broadcast geo-fence simulator, AI facial feature matching, and automated nearest police station dispatch.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .mp-container { max-width: 1200px; margin: 0 auto; padding: 90px 24px 70px; }
+    .mp-container { max-width: 1240px; margin: 0 auto; padding: 90px 24px 70px; }
     .mp-header { text-align: center; margin-bottom: 32px; }
     .mp-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(239,68,68,0.14); border: 1px solid rgba(239,68,68,0.35); color: #f87171; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
     .mp-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.15; margin-bottom: 12px; color: var(--text, #fff); }
     .mp-sub { font-size: 16px; color: var(--text-2, #94a3b8); max-width: 720px; margin: 0 auto 24px; line-height: 1.6; }
 
     /* Top Grid: Filing Form + Station Router */
-    .top-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; margin-bottom: 40px; }
+    .top-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; margin-bottom: 32px; }
     @media(max-width: 960px) { .top-grid { grid-template-columns: 1fr; } }
 
     .file-card { background: var(--bg-1, #0c1222); border: 1px solid rgba(239,68,68,0.3); border-radius: 18px; padding: 26px; }
@@ -27,9 +27,13 @@
     .f-input { width: 100%; padding: 10px 14px; background: #141c30; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
     .f-input:focus { border-color: #ef4444; }
 
-    .station-card { background: #070a12; border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+    .station-card { background: #070a12; border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
     .station-head { font-size: 16px; font-weight: 800; color: #f87171; margin-bottom: 8px; }
     .station-detail { font-size: 13px; color: #cbd5e1; line-height: 1.5; margin-bottom: 12px; }
+
+    /* Amber Alert Geo-Fence Simulator */
+    .amber-box { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.25); border-radius: 12px; padding: 14px; }
+    .amber-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
 
     /* Feed Grid */
     .feed-sec-title { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
@@ -45,7 +49,10 @@
     .alert-name { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 4px; }
     .alert-loc { font-size: 12.5px; color: #fca5a5; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
     .alert-desc { font-size: 13px; color: var(--text-2, #94a3b8); line-height: 1.5; margin-bottom: 14px; }
-    .alert-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 12px; }
+    .alert-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 12px; gap: 8px; flex-wrap: wrap; }
+
+    /* Sighting Drawer */
+    .sighting-drawer { display: none; background: #0d1527; border: 1px solid #38bdf8; border-radius: 14px; padding: 20px; margin-bottom: 24px; }
   </style>
 </head>
 <body>
@@ -74,10 +81,12 @@
 
   <main class="mp-container">
     <div class="mp-header">
-      <div class="mp-badge"><i class="fas fa-bullhorn"></i> Rapid Citizen Alert Network (CitizenCOP / TrackChild Standard)</div>
-      <h1 class="mp-title">Rapid Missing Person & Lost Article Citizen Radar</h1>
-      <p class="mp-sub">Instant public safety broadcast network for missing children, vulnerable seniors, and lost critical identification documents with automated nearest police station dispatch.</p>
+      <div class="mp-badge"><i class="fas fa-bullhorn"></i> Rapid Citizen Alert Network (TrackChild / Amber Alert CBS Standard)</div>
+      <h1 class="mp-title">Rapid Missing Person &amp; Lost Article Citizen Radar</h1>
+      <p class="mp-sub">Instant public safety broadcast network for missing children, vulnerable seniors, and lost critical identification documents with Cell Broadcast geo-fencing and nearest police station dispatch.</p>
     </div>
+
+    <div id="alertBroadcastBanner" style="display:none;margin-bottom:20px;padding:14px 18px;border-radius:12px;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.4);color:#6ee7b7;font-size:13px;font-weight:600;"></div>
 
     <!-- Top Grid: Form and Police Auto-Router -->
     <div class="top-grid">
@@ -104,38 +113,61 @@
               <input type="text" id="repLoc" class="f-input" placeholder="e.g. Maninagar Bus Depot, Ahmedabad" required>
             </div>
             <div>
-              <label style="font-size:11.5px; font-weight:700; color:#cbd5e1; display:block; margin-bottom:4px;">Date & Time Last Seen</label>
+              <label style="font-size:11.5px; font-weight:700; color:#cbd5e1; display:block; margin-bottom:4px;">Date &amp; Time Last Seen</label>
               <input type="text" id="repTime" class="f-input" placeholder="e.g. Today around 5:30 PM" required>
             </div>
           </div>
           <div style="margin-bottom:12px;">
-            <label style="font-size:11.5px; font-weight:700; color:#cbd5e1; display:block; margin-bottom:4px;">Detailed Physical Description & Identifying Marks</label>
+            <label style="font-size:11.5px; font-weight:700; color:#cbd5e1; display:block; margin-bottom:4px;">Detailed Physical Description &amp; Identifying Marks</label>
             <textarea id="repDesc" class="f-input" rows="3" placeholder="Height, build, clothing worn (e.g. blue school shirt, grey trousers), scar/mole, backpack details..." required></textarea>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:11px; color:#94a3b8;"><i class="fas fa-lock" style="color:#10b981;"></i> End-to-End Cryptographic Report Reference</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <span style="font-size:11px; color:#94a3b8;"><i class="fas fa-lock" style="color:#10b981;"></i> Section 173 BNSS Zero-FIR Timestamped</span>
             <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Broadcast Rapid Alert</button>
           </div>
         </form>
       </div>
 
-      <!-- Nearest Station Dispatch Card -->
+      <!-- Nearest Station Dispatch + Amber Alert Radius Card -->
       <div class="station-card">
         <div>
           <div class="station-head"><i class="fas fa-building-shield"></i> Nearest Police Command Center</div>
           <div class="station-detail">
             <strong>Command Unit:</strong> Ahmedabad City Central Control Room<br>
-            <strong>Emergency Dial:</strong> <span style="font-family:'JetBrains Mono'; color:#38bdf8; font-weight:700;">112 / 100 / 1098 (Childline)</span><br>
-            <strong>Jurisdiction:</strong> Maninagar Police Station (0.8 km from incident anchor)<br>
+            <strong>Emergency Dial:</strong> <span style="font-family:'JetBrains Mono',monospace; color:#38bdf8; font-weight:700;">112 / 100 / 1098 (Childline)</span><br>
+            <strong>Jurisdiction:</strong> Maninagar Police Station (0.8 km from anchor)<br>
             <strong>Station In-charge:</strong> Inspector R. K. Vaghela
           </div>
-          <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:10px; padding:12px; font-size:12px; color:#fca5a5; line-height:1.5;">
-            <i class="fas fa-triangle-exclamation"></i> <strong>Golden Hour Protocol:</strong> The first 3 hours of a missing person report are critical. All reports filed here are timestamped and formatted to Section 173 BNS 2023 FIR standards.
+
+          <!-- Amber Alert Cell Broadcast Radius Simulator -->
+          <div class="amber-box">
+            <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#fca5a5;margin-bottom:6px;">
+              <span><i class="fas fa-broadcast-tower"></i> Amber Alert Geo-Fence Radius</span>
+              <span id="amberRadiusVal" style="font-family:'JetBrains Mono',monospace;color:#fff;">10 km</span>
+            </div>
+            <input type="range" id="amberRadiusSlider" min="2" max="25" step="1" value="10" style="width:100%;accent-color:#ef4444;" oninput="updateAmberRadius()">
+            <div class="amber-stats">
+              <div>Cell Towers Pinged: <strong id="amberTowersCount" style="color:#38bdf8;">42 Towers</strong></div>
+              <div>Est. Citizens Alerted: <strong id="amberCitizensReached" style="color:#34d399;">68,000+</strong></div>
+            </div>
           </div>
         </div>
-        <div style="margin-top:20px;">
+        <div>
           <a href="tel:112" class="btn btn-primary" style="width:100%; text-decoration:none; justify-content:center; background:#ef4444;"><i class="fas fa-phone"></i> Emergency Call 112 Control Room</a>
         </div>
+      </div>
+    </div>
+
+    <!-- Interactive Sighting Submission Drawer -->
+    <div class="sighting-drawer" id="sightingDrawer">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <strong style="color:#38bdf8;font-size:14px;"><i class="fas fa-eye"></i> Submit Citizen Sighting / CCTV Lead for <span id="sightingCaseIdLabel">FIR-LR-4819</span></strong>
+        <button type="button" onclick="document.getElementById('sightingDrawer').style.display='none'" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:center;">
+        <input type="text" id="sightingLocationInput" class="f-input" placeholder="Location & time observed (e.g. Kalupur Railway Platform 2 at 6:15 PM)">
+        <input type="text" id="sightingContactInput" class="f-input" placeholder="Your Contact / Vehicle Dashcam Ref (Optional)">
+        <button type="button" class="btn btn-primary sm" onclick="submitSightingLog()"><i class="fas fa-check"></i> Dispatch Lead</button>
       </div>
     </div>
 
@@ -143,7 +175,15 @@
     <div>
       <div class="feed-sec-title">
         <span><i class="fas fa-tower-broadcast" style="color:#f87171;"></i> Active Citizen Alerts Feed</span>
-        <span style="font-size:13px; font-weight:normal; color:#94a3b8;">Refreshed real-time · LocalStorage Synced</span>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <input type="text" id="mpSearchInput" class="f-input" style="width:220px;padding:7px 12px;" placeholder="Search name, ID, location..." oninput="renderFeed()">
+          <select id="mpStatusFilter" class="f-input" style="width:160px;padding:7px 12px;" onchange="renderFeed()">
+            <option value="ALL">All Statuses</option>
+            <option value="Active Alert">Active Alert</option>
+            <option value="Investigating">Investigating</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+        </div>
       </div>
       <div class="feed-grid" id="feedGrid">
         <!-- Injected -->
@@ -152,7 +192,7 @@
   </main>
 
   <footer class="footer" style="padding:40px 24px; text-align:center; border-top:1px solid rgba(255,255,255,0.08); font-size:13px; color:#94a3b8;">
-    <p>Rakshak AI · 100% Free Public Safety & Citizen Defense · Zero Commercial Lockin</p>
+    <p>Rakshak AI · 100% Free Public Safety &amp; Citizen Defense · Zero Commercial Lockin</p>
   </footer>
 
   <script>
@@ -165,7 +205,8 @@
         time: "Yesterday, ~5:30 PM",
         desc: "Last seen boarding a city AMTS bus. Height approx 5'2\", wearing Kendriya Vidyalaya blue striped shirt and navy shorts. Carrying grey Skybags backpack.",
         status: "Active Alert",
-        date: "6 Oct 2026"
+        date: "6 Oct 2026",
+        sightings: 2
       },
       {
         id: "FIR-LR-3920",
@@ -175,7 +216,8 @@
         time: "3 days ago, morning walk",
         desc: "Mild memory impairment (dementia). Height 5'0\", wearing yellow cotton saree, carrying brass pooja bag. Speaks Gujarati and Hindi.",
         status: "Investigating",
-        date: "4 Oct 2026"
+        date: "4 Oct 2026",
+        sightings: 4
       },
       {
         id: "FIR-LR-2041",
@@ -185,12 +227,14 @@
         time: "Sunday afternoon, 3:00 PM",
         desc: "Contains Aadhaar card ending in 8192, State Bank of India debit card, and college ID card. Cash approx ₹1,200.",
         status: "Resolved",
-        date: "2 Oct 2026"
+        date: "2 Oct 2026",
+        sightings: 1
       }
     ];
 
     var state = {
-      reports: SEED_REPORTS.slice()
+      reports: SEED_REPORTS.slice(),
+      activeSightingCaseId: "FIR-LR-4819"
     };
 
     try {
@@ -201,11 +245,31 @@
       }
     } catch(e){}
 
+    function updateAmberRadius() {
+      var r = parseInt(document.getElementById('amberRadiusSlider').value, 10) || 10;
+      document.getElementById('amberRadiusVal').textContent = r + ' km';
+      document.getElementById('amberTowersCount').textContent = Math.round(r * 4.2) + ' Towers';
+      document.getElementById('amberCitizensReached').textContent = Math.round(r * 6800).toLocaleString('en-IN') + '+';
+    }
+
     function renderFeed() {
       var grid = document.getElementById('feedGrid');
+      if (!grid) return;
       grid.innerHTML = '';
 
-      state.reports.forEach(function(rep){
+      var qEl = document.getElementById('mpSearchInput');
+      var stEl = document.getElementById('mpStatusFilter');
+      var q = qEl ? (qEl.value || '').toLowerCase() : '';
+      var stFilter = stEl ? stEl.value : 'ALL';
+
+      var filtered = state.reports.filter(function(rep) {
+        var matchSt = stFilter === 'ALL' || rep.status === stFilter;
+        var text = (rep.id + ' ' + rep.name + ' ' + rep.loc + ' ' + rep.desc).toLowerCase();
+        var matchQ = !q || text.indexOf(q) !== -1;
+        return matchSt && matchQ;
+      });
+
+      filtered.forEach(function(rep){
         var card = document.createElement('div');
         card.className = 'alert-card' + (rep.status === 'Active Alert' ? ' urgent' : '');
 
@@ -216,7 +280,7 @@
           '<div>' +
             '<div class="alert-top">' +
               '<span class="alert-type-tag ' + typeCls + '">' + rep.type + '</span>' +
-              '<span style="font-family:\'JetBrains Mono\'; font-size:11px; font-weight:700; color:' + statusColor + ';"><i class="fas fa-circle" style="font-size:7px;"></i> ' + rep.status + '</span>' +
+              '<span style="font-family:\'JetBrains Mono\'; font-size:11px; font-weight:700; color:' + statusColor + ';"><i class="fas fa-circle" style="font-size:7px;"></i> ' + rep.status + ' (' + (rep.sightings || 0) + ' Leads)</span>' +
             '</div>' +
             '<div class="alert-name">' + rep.name + '</div>' +
             '<div class="alert-loc"><i class="fas fa-location-dot"></i> ' + rep.loc + ' (' + rep.time + ')</div>' +
@@ -224,7 +288,10 @@
           '</div>' +
           '<div class="alert-footer">' +
             '<span style="font-family:\'JetBrains Mono\'; color:#94a3b8;">ID: <strong style="color:#cbd5e1;">' + rep.id + '</strong></span>' +
-            '<button class="btn btn-secondary sm" onclick="reportSighting(\'' + rep.id + '\')"><i class="fas fa-eye"></i> Report Sighting</button>' +
+            '<div style="display:flex;gap:6px;">' +
+              '<button type="button" class="btn btn-secondary sm" onclick="downloadPosterTxt(\'' + rep.id + '\')"><i class="fas fa-file-Download"></i> Poster</button>' +
+              '<button type="button" class="btn btn-secondary sm" onclick="reportSighting(\'' + rep.id + '\')"><i class="fas fa-eye"></i> Report Sighting</button>' +
+            '</div>' +
           '</div>';
 
         grid.appendChild(card);
@@ -250,7 +317,8 @@
         time: time,
         desc: desc,
         status: "Active Alert",
-        date: "Today"
+        date: "Today",
+        sightings: 1
       };
 
       state.reports.unshift(newRep);
@@ -261,16 +329,63 @@
 
       document.getElementById('alertForm').reset();
       renderFeed();
-      alert('Alert Broadcast Successful! Reference Case ID: ' + newId + ' generated and routed to nearest police unit.');
-    }
-
-    function reportSighting(caseId) {
-      var contact = prompt('Enter location/details of your sighting or contact number for Case ' + caseId + ':');
-      if (contact) {
-        alert('Thank you! Your sighting intelligence for ' + caseId + ' has been logged and dispatched to the control room.');
+      var banner = document.getElementById('alertBroadcastBanner');
+      if (banner) {
+        banner.style.display = 'block';
+        banner.innerHTML = '<i class="fas fa-satellite-dish"></i> <strong>Amber Alert Broadcast Dispatched!</strong> Case ID <code>' + newId + '</code> routed to Ahmedabad Central Control Room &amp; active Cell Broadcast geo-fence.';
       }
     }
 
+    function reportSighting(caseId) {
+      state.activeSightingCaseId = caseId;
+      document.getElementById('sightingCaseIdLabel').textContent = caseId;
+      var drawer = document.getElementById('sightingDrawer');
+      if (drawer) {
+        drawer.style.display = 'block';
+        document.getElementById('sightingLocationInput').focus();
+      }
+    }
+
+    function submitSightingLog() {
+      var loc = (document.getElementById('sightingLocationInput').value || '').trim();
+      if (!loc) return;
+      var cid = state.activeSightingCaseId;
+      state.reports.forEach(function(r) {
+        if (r.id === cid) r.sightings = (r.sightings || 0) + 1;
+      });
+      document.getElementById('sightingLocationInput').value = '';
+      document.getElementById('sightingContactInput').value = '';
+      document.getElementById('sightingDrawer').style.display = 'none';
+      renderFeed();
+
+      var banner = document.getElementById('alertBroadcastBanner');
+      if (banner) {
+        banner.style.display = 'block';
+        banner.innerHTML = '<i class="fas fa-check-circle"></i> Sighting intelligence for <strong>' + cid + '</strong> (' + loc + ') logged and dispatched to PCR Van Patrol Unit.';
+      }
+    }
+
+    function downloadPosterTxt(caseId) {
+      var rep = state.reports.find(function(r) { return r.id === caseId; }) || state.reports[0];
+      var text = "=================================================================\n" +
+                 "URGENT PUBLIC SAFETY & MISSING CITIZEN BULLETIN (RAKSHAK AI)\n" +
+                 "CASE ID: " + rep.id + " | STATUS: " + rep.status.toUpperCase() + "\n" +
+                 "=================================================================\n\n" +
+                 "CATEGORY: " + rep.type + "\n" +
+                 "SUBJECT: " + rep.name + "\n" +
+                 "LAST SEEN LOCATION: " + rep.loc + "\n" +
+                 "LAST SEEN TIME: " + rep.time + "\n\n" +
+                 "DESCRIPTION & IDENTIFYING DETAILS:\n" + rep.desc + "\n\n" +
+                 "EMERGENCY CONTROL ROOM: Dial 112 / 100 / 1098 (Childline)\n" +
+                 "=================================================================";
+      var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = rep.id + '_Public_Alert_Poster.txt';
+      a.click();
+    }
+
+    updateAmberRadius();
     renderFeed();
   </script>
 </body>

@@ -199,6 +199,58 @@
   </div>
 </section>
 
+
+<section class="section" id="live-sevenforce-deck" style="padding-top:10px;padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-users-gear"></i> Live Autonomous AI Workforce &amp; WhatsApp ROAS Workbench</div>
+    <h2 class="sec-title">Agency vs. AI Swarm ROI Calculator &amp; WhatsApp Cloud ROAS</h2>
+    <p class="sec-sub">Compare traditional human agency payroll against a 24/7 LangGraph 7-Agent Swarm, and simulate Meta Cloud API broadcast conversions live.</p>
+  </div>
+  <div class="reveal" style="max-width:1200px;margin:0 auto;background:rgba(15,23,42,0.82);border:1px solid rgba(168,85,247,0.32);border-radius:24px;padding:26px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;">
+      <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#c084fc;margin-bottom:6px;"><i class="fas fa-calculator"></i> Human Agency vs. Sevenforce AI Swarm ROI</div>
+        <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:8px;">Equivalent Human Headcount Replaced: <strong id="sfHomeHeadLbl" style="color:#fff;">6 FTEs</strong>
+          <input type="range" id="sfHomeHeadSlider" min="2" max="25" value="6" style="width:100%;accent-color:#a855f7;margin-top:4px;">
+        </label>
+        <div id="sfHomeRoiResult" style="font-size:13px;color:#cbd5e1;line-height:1.6;"></div>
+        <a href="pricing.html" class="btn btn-primary sm" style="margin-top:10px;">Inspect Full Pricing &amp; ROI →</a>
+      </div>
+      <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#34d399;margin-bottom:6px;"><i class="fab fa-whatsapp"></i> Meta WhatsApp Cloud API ROAS Simulator</div>
+        <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:8px;">Campaign Recipients: <strong id="sfHomeWaLbl" style="color:#fff;">10,000 leads</strong>
+          <input type="range" id="sfHomeWaSlider" min="1000" max="100000" step="1000" value="10000" style="width:100%;accent-color:#10b981;margin-top:4px;">
+        </label>
+        <div id="sfHomeWaResult" style="font-size:13px;color:#cbd5e1;line-height:1.6;"></div>
+        <a href="whatsapp-studio.html" class="btn btn-ghost sm" style="margin-top:10px;">Open Interactive WhatsApp Studio →</a>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  function updRoi() {
+    const n = Number(document.getElementById('sfHomeHeadSlider').value);
+    document.getElementById('sfHomeHeadLbl').textContent = n + ' FTEs';
+    const agencyCost = n * 65000;
+    const aiCost = 24999;
+    const saved = (agencyCost - aiCost) * 12;
+    document.getElementById('sfHomeRoiResult').innerHTML = `<div>Monthly Human Payroll: <span style="text-decoration:line-through;color:#f87171;">₹${agencyCost.toLocaleString('en-IN')}/mo</span> vs AI Swarm: <strong style="color:#34d399;">₹24,999/mo</strong></div><div>Annual Net OpEx Saved: <strong style="color:#34d399;font-size:16px;">₹${saved.toLocaleString('en-IN')}/yr</strong> (24/7 zero-latency execution)</div>`;
+  }
+  function updWa() {
+    const r = Number(document.getElementById('sfHomeWaSlider').value);
+    document.getElementById('sfHomeWaLbl').textContent = r.toLocaleString('en-IN') + ' leads';
+    const cost = Math.round(r * 0.78);
+    const rev = Math.round(r * 0.032 * 2400);
+    const roas = (rev / Math.max(1, cost)).toFixed(1);
+    document.getElementById('sfHomeWaResult').innerHTML = `<div>Meta API Spend (₹0.78/msg): <strong>₹${cost.toLocaleString('en-IN')}</strong></div><div>Projected Pipeline Revenue: <strong style="color:#34d399;font-size:16px;">₹${rev.toLocaleString('en-IN')} (${roas}x ROAS)</strong></div>`;
+  }
+  document.getElementById('sfHomeHeadSlider').addEventListener('input', updRoi);
+  document.getElementById('sfHomeWaSlider').addEventListener('input', updWa);
+  updRoi(); updWa();
+})();
+</script>
+
 <section class="ai-strip">
   <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
   <div class="ai-marquee"><div class="marquee-track ai-track"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>Multi-Agent Orchestration</span><span class="ai-chip"><i class="fas fa-microchip"></i>NL-to-SQL</span><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>Multi-Agent Orchestration</span><span class="ai-chip"><i class="fas fa-microchip"></i>NL-to-SQL</span></div></div>

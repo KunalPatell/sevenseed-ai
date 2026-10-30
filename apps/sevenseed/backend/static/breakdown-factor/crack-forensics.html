@@ -4,17 +4,17 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Concrete Crack Forensics & NDT Schmidt Hammer Estimator — Breakdown Factor</title>
-  <meta name="description" content="Civil engineering structural forensics: IS 456 crack width hazard assessment, IS 13311 Schmidt Rebound Hammer compressive strength estimator, and remediation planning.">
+  <title>Concrete Crack Forensics, NDT Schmidt Hammer & CPWD Repair BOQ — Breakdown Factor</title>
+  <meta name="description" content="Civil engineering structural forensics: IS 456 crack width hazard assessment, interactive beam crack visualizer, IS 13311 Schmidt Rebound Hammer estimator, and CPWD BOQ repair calculator.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🏗️%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
-    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh;position:relative;overflow-x:hidden}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.88));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
     .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee);text-decoration:none}
     .nt-brand b{color:#f59e0b}
     .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
@@ -24,13 +24,13 @@
     .nt-wrap{max-width:1380px;margin:0 auto;padding:36px 20px 80px}
     .nt-head{text-align:center;margin-bottom:30px}
     .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:12px;color:#fbbf24;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3)}
-    .nt-title{font-size:clamp(26px,3.8vw,42px);font-weight:900;line-height:1.15;margin-bottom:10px;letter-spacing:-.02em}
+    .nt-title{font-family:'Space Grotesk','Inter',sans-serif;font-size:clamp(26px,3.8vw,42px);font-weight:900;line-height:1.15;margin-bottom:10px;letter-spacing:-.02em}
     .nt-sub{color:var(--text-2,#9aa0b8);font-size:15px;max-width:760px;margin:0 auto;line-height:1.55}
 
-    .forensic-grid{display:grid;grid-template-columns:minmax(0,540px) minmax(0,1fr);gap:24px;align-items:start}
+    .forensic-grid{display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:24px;align-items:start}
     @media(max-width:1040px){.forensic-grid{grid-template-columns:1fr}}
 
-    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:14px;padding:22px}
+    .nt-card{background:rgba(13,13,22,.88);backdrop-filter:blur(16px);border:1px solid var(--border,rgba(255,255,255,.09));border-radius:16px;padding:24px;box-shadow:0 16px 40px rgba(0,0,0,.4)}
     .nt-card+.nt-card{margin-top:18px}
     .nt-card h2{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;gap:10px;align-items:center}
     .nt-card h2 i{color:#f59e0b}
@@ -47,11 +47,12 @@
     .out-num{font-family:'JetBrains Mono';font-size:26px;font-weight:900;display:block}
 
     /* Remediation Card */
-    .fix-box{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:14px;font-size:12.5px;color:var(--text-2);line-height:1.55}
+    .fix-box{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:14px;font-size:12.5px;color:var(--text-2);line-height:1.55;margin-bottom:14px}
 
-    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;border-radius:8px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s}
-    .nt-btn:hover{border-color:#f59e0b;color:#f59e0b}
-    .nt-btn.pri{background:#f59e0b;border-color:#f59e0b;color:#000}
+    /* BOQ Table */
+    .boq-mini-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}
+    .boq-mini-table th{text-align:left;padding:8px 10px;background:#090912;color:#9aa0b8;font-size:11px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.08)}
+    .boq-mini-table td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.05);font-family:'JetBrains Mono',monospace}
   </style>
 </head>
 <body class="nt-body">
@@ -65,6 +66,7 @@
     <a href="index.html">Home</a>
     <a href="crack-forensics.html" class="on">Crack Forensics</a>
     <a href="defect-scanner.html">Defect Scanner</a>
+    <a href="bim-viewer.html">3D BIM Viewer</a>
     <a href="boq-estimator.html">BOQ Estimator</a>
     <a href="rcc-estimator.html">RCC Calculator</a>
     <a href="safety-audit.html">Safety Audit</a>
@@ -76,15 +78,15 @@
 
 <div class="nt-wrap">
   <div class="nt-head">
-    <div class="nt-badge"><i class="fas fa-microscope"></i> Civil Engineering IS 456 & IS 13311 NDT Standards</div>
-    <h1 class="nt-title">Concrete Crack Forensics & NDT Schmidt Hammer Estimator</h1>
-    <p class="nt-sub">Evaluate reinforced concrete crack width hazard levels under IS 456, compute in-situ compressive strength via Schmidt rebound number, and generate structural remediation plans.</p>
+    <div class="nt-badge"><i class="fas fa-microscope"></i> Inspired by Procore, Togal.AI &amp; IS 456 / IS 13311 NDT Standards</div>
+    <h1 class="nt-title">Concrete Crack Forensics, NDT Schmidt Hammer &amp; CPWD BOQ</h1>
+    <p class="nt-sub">Evaluate reinforced concrete crack width hazard levels under IS 456, inspect live structural crack geometry on our CAD canvas, compute Schmidt rebound compressive strength, and generate CPWD DSR repair estimates.</p>
   </div>
 
   <div class="forensic-grid">
-    <!-- Left: Inputs -->
+    <!-- Left: Inputs + Interactive CAD Beam Canvas -->
     <div>
-      <div class="nt-card">
+      <div class="nt-card border-beam-card">
         <h2><i class="fas fa-ruler-combined"></i> Crack Characterization (IS 456:2000)</h2>
         
         <div class="slider-f">
@@ -93,6 +95,14 @@
             <strong id="valWidth">0.22 mm</strong>
           </div>
           <input type="range" id="rngWidth" min="0.05" max="2.5" step="0.01" value="0.22" oninput="calcForensics()">
+        </div>
+
+        <div class="slider-f">
+          <div class="slider-top">
+            <span>Measured Crack Length (L) for BOQ</span>
+            <strong id="valLength">2.4 m</strong>
+          </div>
+          <input type="range" id="rngLength" min="0.5" max="15.0" step="0.1" value="2.4" oninput="calcForensics()">
         </div>
 
         <div class="slider-f">
@@ -109,7 +119,7 @@
 
         <div class="slider-f">
           <div class="slider-top">
-            <span>Crack Orientation & Structural Mechanism</span>
+            <span>Crack Orientation &amp; Structural Mechanism</span>
             <strong id="valMech">Flexural Tension</strong>
           </div>
           <select id="selMech" style="width:100%;padding:8px 10px;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:13px;" onchange="calcForensics()">
@@ -118,6 +128,15 @@
             <option value="settle">Differential Settlement (Diagonal across Masonry / Grade Beam)</option>
             <option value="shrink">Plastic / Thermal Shrinkage (Map / Craze Cracking on Surface)</option>
           </select>
+        </div>
+
+        <!-- Interactive CAD Structural Beam & Crack Propagation Canvas -->
+        <div style="background:#05070e;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px;margin-top:14px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#9aa0b8;font-family:'JetBrains Mono';margin-bottom:6px;">
+            <span>CAD BEAM TELEMETRY (FE250/FE500 REBAR CAGE)</span>
+            <span id="cadScaleLabel" style="color:#fbbf24;">MAGNIFICATION: 50x</span>
+          </div>
+          <canvas id="crackVisualCanvas" width="490" height="150" style="width:100%;height:150px;display:block;"></canvas>
         </div>
       </div>
 
@@ -131,15 +150,15 @@
           <input type="range" id="rngRebound" min="15" max="55" step="1" value="34" oninput="calcForensics()">
         </div>
         <p style="font-size:11.5px;color:var(--text-3);margin:0;">
-          Horizontal impact on smooth, non-carbonated concrete surface. Formula: $f_{ck} = 1.15 \times R - 12.5\text{ MPa}$.
+          Horizontal impact on smooth, non-carbonated concrete surface. Correlation: $f_{ck} = 1.15 \times R - 12.5\text{ MPa}$.
         </p>
       </div>
     </div>
 
-    <!-- Right: Outputs & Forensics Report -->
+    <!-- Right: Outputs, Forensics Report & CPWD Repair BOQ -->
     <div>
       <div class="nt-card">
-        <h2><i class="fas fa-clipboard-check"></i> Structural Hazard & Integrity Verdict</h2>
+        <h2><i class="fas fa-clipboard-check"></i> Structural Hazard &amp; Integrity Verdict</h2>
         
         <div class="out-box">
           <small style="color:var(--text-3);font-size:11px;font-weight:700;text-transform:uppercase;">Crack Severity Category</small>
@@ -157,9 +176,27 @@
         <div class="fix-box" id="fixBox">
           <b style="color:#fbbf24;display:block;margin-bottom:6px;"><i class="fas fa-wrench"></i> Recommended Remediation Engineering:</b>
           <div id="remediationText">
-            • <b>Low-Viscosity Epoxy Injection:</b> Drill injection ports at 150mm centers along crack line. Pressure inject structural epoxy resin (viscosity < 200 cps) to restore monolithic structural integrity.<br>
+            • <b>Low-Viscosity Epoxy Injection:</b> Drill injection ports at 150mm centers along crack line. Pressure inject structural epoxy resin (viscosity &lt; 200 cps) to restore monolithic structural integrity.<br>
             • <b>Moisture Barrier:</b> Apply elastomeric silane-siloxane hydrophobic sealer over exposed surface to stop carbonation.
           </div>
+        </div>
+
+        <!-- Togal.AI / CPWD Automated Repair BOQ Estimator -->
+        <div style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.28);border-radius:12px;padding:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <strong style="font-size:13.5px;color:#34d399;"><i class="fas fa-file-invoice-dollar"></i> CPWD DSR 2026 Automated Repair BOQ</strong>
+            <span id="boqTotalCost" style="font-family:'JetBrains Mono';font-size:18px;font-weight:900;color:#fff;">₹6,840</span>
+          </div>
+          <table class="boq-mini-table">
+            <thead>
+              <tr>
+                <th>DSR Item Description</th>
+                <th>Quantity</th>
+                <th>Amount (INR)</th>
+              </tr>
+            </thead>
+            <tbody id="boqRepairTableBody"></tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -168,16 +205,102 @@
 </div>
 
 <script>
+function drawBeamCrackCanvas(w, mech, sevColor) {
+  const canvas = document.getElementById('crackVisualCanvas');
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Concrete Beam Body
+  ctx.fillStyle = '#141826';
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 2;
+  ctx.fillRect(30, 25, W - 60, H - 55);
+  ctx.strokeRect(30, 25, W - 60, H - 55);
+
+  // Support Triangles
+  ctx.fillStyle = '#475569';
+  [[55, H - 30], [W - 55, H - 30]].forEach(([sx, sy]) => {
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(sx - 12, sy + 18);
+    ctx.lineTo(sx + 12, sy + 18);
+    ctx.closePath();
+    ctx.fill();
+  });
+
+  // Dashed Rebar Cage (Top & Bottom Tension Bars)
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+  ctx.setLineDash([6, 4]);
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(42, 40); ctx.lineTo(W - 42, 40);
+  ctx.moveTo(42, H - 42); ctx.lineTo(W - 42, H - 42);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Draw Crack Propagation based on Mechanism & Width
+  ctx.strokeStyle = sevColor;
+  ctx.lineWidth = Math.min(6, Math.max(1.5, w * 2.4));
+  ctx.shadowBlur = 10;
+  ctx.shadowColor = sevColor;
+  ctx.beginPath();
+
+  if (mech === 'flex') {
+    // Flexural cracks rising from bottom tension zone at mid-span
+    const cx = W / 2;
+    ctx.moveTo(cx, H - 30);
+    ctx.lineTo(cx - 5, H - 55);
+    ctx.lineTo(cx + 4, H - 80);
+    ctx.lineTo(cx - 2, H - 102);
+    // Secondary hairline cracks
+    ctx.moveTo(cx - 45, H - 30);
+    ctx.lineTo(cx - 42, H - 68);
+    ctx.moveTo(cx + 45, H - 30);
+    ctx.lineTo(cx + 41, H - 68);
+  } else if (mech === 'shear') {
+    // 45-degree diagonal shear cracks near left & right supports
+    ctx.moveTo(75, H - 32);
+    ctx.lineTo(105, H - 65);
+    ctx.lineTo(135, 38);
+    ctx.moveTo(W - 75, H - 32);
+    ctx.lineTo(W - 105, H - 65);
+    ctx.lineTo(W - 135, 38);
+  } else if (mech === 'settle') {
+    // Diagonal stepped crack across span
+    ctx.moveTo(160, 26);
+    ctx.lineTo(195, 62);
+    ctx.lineTo(240, 88);
+    ctx.lineTo(285, H - 30);
+  } else {
+    // Shrinkage map cracking
+    ctx.moveTo(190, 50); ctx.lineTo(235, 72); ctx.lineTo(275, 55);
+    ctx.moveTo(235, 72); ctx.lineTo(240, 105); ctx.lineTo(205, 112);
+  }
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+}
+
 function calcForensics() {
   const w = parseFloat(document.getElementById('rngWidth').value);
+  const lenInput = document.getElementById('rngLength');
+  const lenM = lenInput ? parseFloat(lenInput.value) : 2.4;
   const exposure = document.getElementById('selExposure').value;
   const mech = document.getElementById('selMech').value;
   const r = parseFloat(document.getElementById('rngRebound').value);
 
   document.getElementById('valWidth').innerText = w.toFixed(2) + ' mm';
+  if (document.getElementById('valLength')) {
+    document.getElementById('valLength').innerText = lenM.toFixed(1) + ' m';
+  }
   document.getElementById('valRebound').innerText = r.toFixed(1) + ' (Type N Hammer)';
 
-  // Limit check
+  const expNames = { mild: 'Mild (Internal)', moderate: 'Moderate (Standard External)', severe: 'Severe (Coastal / Industrial)' };
+  const mechNames = { flex: 'Flexural Tension', shear: 'Diagonal Shear (45°)', settle: 'Differential Settlement', shrink: 'Plastic / Thermal Shrinkage' };
+  if (document.getElementById('valExposure')) document.getElementById('valExposure').innerText = expNames[exposure] || exposure;
+  if (document.getElementById('valMech')) document.getElementById('valMech').innerText = mechNames[mech] || mech;
+
   let wLim = 0.20;
   if(exposure === 'mild') wLim = 0.30;
   if(exposure === 'severe') wLim = 0.10;
@@ -185,20 +308,24 @@ function calcForensics() {
   const outSev = document.getElementById('outSeverity');
   const outComp = document.getElementById('outCompliance');
   const fix = document.getElementById('remediationText');
+  let sevColor = '#fbbf24';
 
   if(w <= wLim * 0.7) {
+    sevColor = '#10b981';
     outSev.innerText = "Negligible / Hairline (Cosmetic)";
-    outSev.style.color = "#10b981";
+    outSev.style.color = sevColor;
     outComp.innerText = `Within safe IS 456 threshold (${w.toFixed(2)} mm ≤ ${wLim.toFixed(2)} mm). No immediate structural risk.`;
     fix.innerHTML = `• <b>Surface Sealant:</b> Clean crack with compressed air and seal with acrylic polymer modified cement slurry.<br>• <b>Monitoring:</b> Place glass tell-tale monitor to observe crack active displacement over 90 days.`;
   } else if(w <= wLim * 1.3) {
+    sevColor = '#fbbf24';
     outSev.innerText = "Moderate (Water Permeable)";
-    outSev.style.color = "#fbbf24";
+    outSev.style.color = sevColor;
     outComp.innerText = `Approaching or slightly exceeding limit (${w.toFixed(2)} mm vs ${wLim.toFixed(2)} mm limit). Carbonation & rebar corrosion risk.`;
-    fix.innerHTML = `• <b>Epoxy Pressure Injection:</b> Drill injection ports at 150mm spacing. Inject low-viscosity structural epoxy (< 200 cps).<br>• <b>Protective Coating:</b> Apply breathable elastomeric anti-carbonation coating.`;
+    fix.innerHTML = `• <b>Epoxy Pressure Injection:</b> Drill injection ports at 150mm spacing. Inject low-viscosity structural epoxy (&lt; 200 cps).<br>• <b>Protective Coating:</b> Apply breathable elastomeric anti-carbonation coating.`;
   } else {
+    sevColor = '#ef4444';
     outSev.innerText = "CRITICAL STRUCTURAL HAZARD";
-    outSev.style.color = "#ef4444";
+    outSev.style.color = sevColor;
     outComp.innerText = `CRITICAL DEFECT: Exceeds safe limit by +${(w - wLim).toFixed(2)} mm. Severe rebar corrosion and loss of load capacity.`;
     fix.innerHTML = `• <b>Propping:</b> Immediate auxiliary steel propping below affected spans.<br>• <b>Structural Strengthening:</b> External post-tensioning or Carbon Fiber Reinforced Polymer (CFRP) composite wrapping.<br>• <b>Core Drilling:</b> Extract 75mm core samples to verify compressive loss and carbonation depth.`;
   }
@@ -213,6 +340,37 @@ function calcForensics() {
   else if(r >= 20) gradeText = "Equivalent Grade: M15-M20 Concrete (Fair / Aging Concrete)";
   else gradeText = "Equivalent Grade: < M15 (Poor / Delaminated Concrete Layer)";
   document.getElementById('outGrade').innerText = gradeText;
+
+  // Compute CPWD Repair BOQ
+  const packers = Math.ceil(lenM / 0.15);
+  const epoxyKg = +(lenM * (0.25 + w * 0.4)).toFixed(2);
+  const cfrpSqm = w > wLim * 1.3 ? +(lenM * 0.6).toFixed(2) : 0;
+  const costPackers = packers * 145;
+  const costEpoxy = Math.round(epoxyKg * 1450);
+  const costCfrp = Math.round(cfrpSqm * 4800);
+  const totalBoq = costPackers + costEpoxy + costCfrp;
+
+  if (document.getElementById('boqTotalCost')) {
+    document.getElementById('boqTotalCost').innerText = '₹' + totalBoq.toLocaleString();
+  }
+  const tbody = document.getElementById('boqRepairTableBody');
+  if (tbody) {
+    tbody.innerHTML = `
+      <tr>
+        <td>DSR 26.42 · NRV Injection Packers (150mm c/c)</td>
+        <td>${packers} Nos</td>
+        <td>₹${costPackers.toLocaleString()}</td>
+      </tr>
+      <tr>
+        <td>DSR 26.44 · Low-Viscosity Epoxy Resin Grout</td>
+        <td>${epoxyKg} kg</td>
+        <td>₹${costEpoxy.toLocaleString()}</td>
+      </tr>
+      ${cfrpSqm > 0 ? `<tr><td>DSR 26.58 · 400 GSM Unidirectional CFRP Wrap</td><td>${cfrpSqm} m²</td><td>₹${costCfrp.toLocaleString()}</td></tr>` : ''}
+    `;
+  }
+
+  drawBeamCrackCanvas(w, mech, sevColor);
 }
 
 calcForensics();

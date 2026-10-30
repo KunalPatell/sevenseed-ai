@@ -4,49 +4,74 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Automated Coupon Tester & Cashback Wallet — AVP Emart</title>
-  <meta name="description" content="Auto-test 5 promo coupons in 3 seconds, apply the highest discount code, and withdraw instant cashback rewards to UPI.">
+  <title>Automated Coupon Tester, Bank Offer Stacker & Cashback Wallet — AVP Emart</title>
+  <meta name="description" content="Auto-test promo coupons in 3 seconds, stack Xerve.in HDFC/ICICI/SBI/Axis bank card discounts, and withdraw instant cashback rewards to UPI.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .cp-container { max-width: 1180px; margin: 0 auto; padding: 100px 24px 60px; }
-    .cp-header { text-align: center; margin-bottom: 32px; }
-    .cp-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
-    .cp-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    body { position: relative; overflow-x: hidden; }
+    .unicorn-mesh { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .unicorn-orb { position: absolute; border-radius: 50%; filter: blur(110px); opacity: 0.2; animation: orbFloat 15s ease-in-out infinite alternate; }
+    .unicorn-orb.o1 { width: 480px; height: 480px; background: radial-gradient(circle, #f59e0b, transparent 70%); top: -100px; left: 10%; }
+    .unicorn-orb.o2 { width: 440px; height: 440px; background: radial-gradient(circle, #10b981, transparent 70%); bottom: -80px; right: 10%; animation-delay: -7s; }
+    @keyframes orbFloat { 0% { transform: translate(0,0); } 100% { transform: translate(30px,-25px); } }
+
+    .cp-container { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 100px 24px 70px; }
+    .cp-header { text-align: center; margin-bottom: 28px; }
+    .cp-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.35); color: #fbbf24; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+    .cp-title { font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.15; margin-bottom: 10px; }
+
+    /* Store & Product Selector Bar */
+    .product-picker-bar { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 26px; }
+    .picker-chip { padding: 9px 16px; border-radius: 999px; background: rgba(15,23,42,0.85); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+    .picker-chip:hover, .picker-chip.active { background: rgba(245,158,11,0.16); border-color: #f59e0b; color: #fbbf24; transform: translateY(-1px); }
 
     /* Layout */
-    .cp-grid { display: grid; grid-template-columns: 1fr 380px; gap: 28px; }
-    @media(max-width: 900px) { .cp-grid { grid-template-columns: 1fr; } }
+    .cp-grid { display: grid; grid-template-columns: 1fr 400px; gap: 26px; }
+    @media(max-width: 960px) { .cp-grid { grid-template-columns: 1fr; } }
 
     /* Auto Tester Card */
-    .tester-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow); }
-    .cart-summary { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
-    .cart-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: var(--text-2); }
-    .cart-row.final { border-top: 1px solid var(--border); padding-top: 10px; font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 0; }
+    .tester-card { background: rgba(13,18,32,0.88); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.45); }
+    .cart-summary { background: rgba(2,6,23,0.65); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; margin-bottom: 22px; }
+    .cart-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; font-size: 13.5px; color: var(--text-2); }
+    .cart-row.final { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 0; }
+
+    /* Xerve Bank Card Selector */
+    .bank-stack-box { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.28); border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; }
+    .bank-select { width: 100%; padding: 10px 12px; background: #090d16; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 13px; font-family: inherit; margin-top: 8px; outline: none; }
 
     /* Progress & Coupon List */
-    .tester-progress-box { display: none; margin-bottom: 24px; }
-    .progress-bar-bg { width: 100%; height: 10px; background: var(--bg-3); border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
+    .tester-progress-box { display: none; margin-bottom: 20px; }
+    .progress-bar-bg { width: 100%; height: 10px; background: #1e293b; border-radius: 999px; overflow: hidden; margin-bottom: 10px; }
     .progress-bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); transition: width 0.3s; }
 
-    .coupons-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
-    .cp-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; }
-    .cp-code { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fbbf24; }
-    .cp-status { font-weight: 600; font-size: 12px; }
+    .coupons-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+    .cp-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(15,23,42,0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; font-size: 13px; transition: border-color 0.2s, transform 0.2s; }
+    .cp-item.winner-cp { border-color: #10b981; background: rgba(16,185,129,0.1); box-shadow: 0 0 20px rgba(16,185,129,0.15); }
+    .cp-code { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fbbf24; background: rgba(245,158,11,0.12); padding: 3px 8px; border-radius: 6px; margin-right: 6px; }
+    .cp-status { font-weight: 700; font-size: 12px; }
 
     /* Wallet Card */
-    .wallet-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; justify-content: space-between; }
-    .wallet-header { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #fff; }
-    .wallet-balance-box { background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(6,182,212,0.1)); border: 1px solid #10b981; border-radius: 14px; padding: 24px; text-align: center; margin-bottom: 24px; }
-    .bal-lbl { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-2); margin-bottom: 4px; }
-    .bal-amt { font-size: 36px; font-weight: 800; color: #34d399; font-family: 'JetBrains Mono', monospace; }
+    .wallet-card { background: rgba(13,18,32,0.88); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 20px 50px rgba(0,0,0,0.45); }
+    .wallet-header { display: flex; align-items: center; justify-content: space-between; font-size: 17px; font-weight: 800; margin-bottom: 18px; color: #fff; }
+    .wallet-balance-box { background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(6,182,212,0.1)); border: 1px solid #10b981; border-radius: 16px; padding: 22px; text-align: center; margin-bottom: 18px; box-shadow: 0 0 30px rgba(16,185,129,0.15); }
+    .bal-lbl { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.06em; color: #cbd5e1; margin-bottom: 4px; font-weight: 700; }
+    .bal-amt { font-size: 36px; font-weight: 900; color: #34d399; font-family: 'JetBrains Mono', monospace; }
 
-    .upi-input { width: 100%; padding: 12px 14px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 8px; color: #fff; font-size: 13px; outline: none; margin-bottom: 12px; font-family: inherit; }
+    .upi-input { width: 100%; padding: 12px 14px; background: #090d16; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff; font-size: 13.5px; outline: none; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; }
+    .upi-input:focus { border-color: #10b981; }
+
+    .ledger-box { margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .ledger-item { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 8px 10px; border-radius: 8px; background: rgba(2,6,23,0.55); margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
   </style>
 </head>
 <body>
+<div class="unicorn-mesh" aria-hidden="true">
+  <div class="unicorn-orb o1"></div>
+  <div class="unicorn-orb o2"></div>
+</div>
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <nav class="nav" id="mainNav">
@@ -57,6 +82,7 @@
     </a>
     <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
       <a href="index.html">Home</a>
+      <a href="shopping-discovery.html">AI Discovery</a>
       <a href="deals-radar.html">Deals Radar</a>
       <a href="price-tracker.html">Price Tracker</a>
       <a href="spec-compare.html">Spec Comparator</a>
@@ -73,27 +99,59 @@
 
 <div class="cp-container">
   <div class="cp-header">
-    <div class="cp-badge"><i class="fas fa-tags"></i> Inspired by Xerve.in Automated Coupon Engine</div>
-    <h1 class="cp-title">Automated Coupon Tester & Cashback Wallet</h1>
-    <p style="color:var(--text-2); max-width:720px; margin:0 auto;">Stop hunting for dead discount codes. Our automated engine stress-tests 5 partner coupons in 3 seconds, applies the maximum discount, and routes instant cashback to your UPI.</p>
+    <div class="cp-badge"><i class="fas fa-tags"></i> Inspired by BuyHatke &amp; Xerve.in Coupon + Bank Offer Engine</div>
+    <h1 class="cp-title">Automated Coupon Stacker, Bank Card Calculator &amp; UPI Cashback</h1>
+    <p style="color:var(--text-2); max-width:760px; margin:0 auto;">Stop hunting for dead discount codes. Stress-test 5 store promo codes in 3 seconds, stack HDFC/ICICI/SBI/Axis bank card offers, and withdraw 5% Xerve cashback straight to your UPI ID.</p>
+  </div>
+
+  <!-- Product & Store Selector -->
+  <div class="product-picker-bar">
+    <button class="picker-chip active" onclick="selectCartItem('sony', this)"><i class="fab fa-amazon"></i> Sony WH-1000XM5 (Amazon · ₹26,990)</button>
+    <button class="picker-chip" onclick="selectCartItem('ipad', this)"><i class="fas fa-tablet-screen-button"></i> iPad Air M2 (Croma · ₹59,900)</button>
+    <button class="picker-chip" onclick="selectCartItem('dyson', this)"><i class="fas fa-bolt"></i> Dyson V12 Detect (Flipkart · ₹44,900)</button>
+    <button class="picker-chip" onclick="selectCartItem('nike', this)"><i class="fas fa-shoe-prints"></i> Nike Pegasus 41 (Myntra · ₹11,895)</button>
   </div>
 
   <div class="cp-grid">
-    <!-- Auto Tester -->
-    <div class="tester-card">
+    <!-- Auto Tester & Bank Offer Stacker -->
+    <div class="tester-card border-beam-card">
       <div class="cart-summary">
         <div class="cart-row">
-          <span>Checkout Subtotal (Sony WH-1000XM5):</span>
-          <span style="color:#fff; font-weight:700;">₹26,990</span>
+          <span id="cartItemLabel">Checkout Subtotal (Sony WH-1000XM5 · Amazon):</span>
+          <span id="cartSubtotalText" style="color:#fff; font-weight:700; font-family:'JetBrains Mono';">₹26,990</span>
         </div>
         <div class="cart-row">
-          <span>Applied Discount Coupon:</span>
-          <span id="couponSavingsText" style="color:#34d399; font-weight:700;">None Applied</span>
+          <span>Applied Store Promo Coupon:</span>
+          <span id="couponSavingsText" style="color:#34d399; font-weight:700; font-family:'JetBrains Mono';">None Applied</span>
+        </div>
+        <div class="cart-row">
+          <span>Xerve Bank Card Instant Discount:</span>
+          <span id="bankSavingsText" style="color:#a5b4fc; font-weight:700; font-family:'JetBrains Mono';">-₹1,500 (HDFC 10%)</span>
+        </div>
+        <div class="cart-row">
+          <span>Extra 5% Xerve UPI Cashback Credited:</span>
+          <span id="xerveCashbackPreview" style="color:#fbbf24; font-weight:700; font-family:'JetBrains Mono';">+₹1,275</span>
         </div>
         <div class="cart-row final">
-          <span>Final Payable Amount:</span>
-          <span id="finalPriceText" style="color:#fbbf24;">₹26,990</span>
+          <span>True Net Effective Price:</span>
+          <span id="finalPriceText" style="color:#fbbf24; font-family:'JetBrains Mono';">₹25,490</span>
         </div>
+      </div>
+
+      <!-- Xerve.in Bank Card Selector -->
+      <div class="bank-stack-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:12.5px; font-weight:700; color:#c7d2fe;">
+          <span><i class="fas fa-credit-card"></i> Xerve.in Bank Card &amp; EMI Offer Stacker</span>
+          <span style="color:#34d399;">Auto-Stacks with Promo Code</span>
+        </div>
+        <select id="bankCardSelect" class="bank-select" aria-label="Select Bank Card Offer" onchange="recalculateTotals()">
+          <option value="hdfc1500" data-disc="1500">HDFC Infinia / Millennia Credit Card — Flat ₹1,500 Instant Off</option>
+          <option value="icici5pct" data-pct="5">ICICI Amazon Pay Credit Card — 5% Unlimited Instant Cashback</option>
+          <option value="sbi5pct" data-pct="5">SBI Cashback Credit Card — 5% Online Merchant Rebate</option>
+          <option value="axis2000" data-disc="2000">Axis Magnus / Flipkart Axis — ₹2,000 Off on Electronics</option>
+          <option value="upi250" data-disc="250">BHIM / GPay UPI Instant Discount — Flat ₹250 Off</option>
+          <option value="none" data-disc="0">No Bank Card Selected (Promo Coupon Only)</option>
+        </select>
       </div>
 
       <div class="tester-progress-box" id="progressBox">
@@ -108,29 +166,29 @@
 
       <div class="coupons-list" id="couponList">
         <div class="cp-item" id="cp-0">
-          <div><span class="cp-code">SAVE500</span> · Flat ₹500 Instant Discount</div>
+          <div><span class="cp-code">SAVE500</span> Flat ₹500 Instant Discount</div>
           <span class="cp-status" style="color:var(--text-3);"><i class="far fa-clock"></i> Untested</span>
         </div>
         <div class="cp-item" id="cp-1">
-          <div><span class="cp-code">AXISBANK1000</span> · 10% Off Axis Cards</div>
+          <div><span class="cp-code">AXISBANK1000</span> ₹1,000 Partner Voucher</div>
           <span class="cp-status" style="color:var(--text-3);"><i class="far fa-clock"></i> Untested</span>
         </div>
         <div class="cp-item" id="cp-2">
-          <div><span class="cp-code">EXPIRED20</span> · Flash Summer Deal</div>
+          <div><span class="cp-code">EXPIRED20</span> Flash Summer Deal</div>
           <span class="cp-status" style="color:var(--text-3);"><i class="far fa-clock"></i> Untested</span>
         </div>
         <div class="cp-item" id="cp-3">
-          <div><span class="cp-code">AVPEXCLUSIVE</span> · Flat ₹1,500 Off AVPU Community</div>
+          <div><span class="cp-code">AVPEXCLUSIVE</span> Flat ₹1,500 Off AVPU Community</div>
           <span class="cp-status" style="color:var(--text-3);"><i class="far fa-clock"></i> Untested</span>
         </div>
         <div class="cp-item" id="cp-4">
-          <div><span class="cp-code">FESTIVE300</span> · ₹300 Off Sitewide</div>
+          <div><span class="cp-code">FESTIVE300</span> ₹300 Off Sitewide</div>
           <span class="cp-status" style="color:var(--text-3);"><i class="far fa-clock"></i> Untested</span>
         </div>
       </div>
 
-      <button class="btn btn-primary" id="runTesterBtn" style="width:100%; justify-content:center;" onclick="startCouponTest()">
-        <i class="fas fa-magic"></i> Auto-Test All 5 Coupons (Find Best Deal)
+      <button class="btn btn-primary" id="runTesterBtn" style="width:100%; justify-content:center; padding:14px;" onclick="startCouponTest()">
+        <i class="fas fa-wand-magic-sparkles"></i> Auto-Test All 5 Coupons &amp; Stack Bank Offer
       </button>
     </div>
 
@@ -138,8 +196,8 @@
     <div class="wallet-card">
       <div>
         <div class="wallet-header">
-          <i class="fas fa-wallet" style="color:#10b981;"></i>
-          <span>Xerve Instant Cashback</span>
+          <span><i class="fas fa-wallet" style="color:#10b981; margin-right:8px;"></i> Xerve Instant Cashback</span>
+          <span style="font-size:11px; color:#34d399; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); padding:3px 8px; border-radius:99px;">NPCI UPI 2.0</span>
         </div>
 
         <div class="wallet-balance-box">
@@ -147,34 +205,167 @@
           <div class="bal-amt" id="walletBalance">₹450</div>
         </div>
 
-        <div style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:18px;">
-          Cashback is automatically credited on every verified order. Withdraw straight to your Google Pay, PhonePe, or Paytm UPI ID within 60 seconds.
+        <div style="font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:14px;">
+          Xerve &amp; BuyHatke partner commission is shared directly with you. Withdraw verified cashback straight to Google Pay, PhonePe, or Paytm UPI with zero fees.
         </div>
 
+        <label for="upiId" style="font-size:11.5px; font-weight:700; color:#94a3b8; text-transform:uppercase; display:block; margin-bottom:6px;">Destination UPI VPA</label>
         <input type="text" id="upiId" class="upi-input" placeholder="e.g. yourname@oksbi" value="kunal@okaxis">
+
+        <button class="btn btn-ghost sm" style="width:100%; justify-content:center; border-color:#10b981; color:#34d399; padding:11px;" onclick="withdrawCashback()">
+          <i class="fas fa-paper-plane" style="color:#10b981;"></i> Withdraw Instant Cashback to UPI
+        </button>
+
+        <div id="walletToastMsg" style="display:none; margin-top:12px; padding:10px 12px; border-radius:10px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.35); color:#86efac; font-size:12.5px; line-height:1.45;"></div>
       </div>
 
-      <div>
-        <button class="btn btn-ghost sm" style="width:100%; justify-content:center;" onclick="withdrawCashback()">
-          <i class="fas fa-paper-plane" style="color:#10b981;"></i> Withdraw to UPI
-        </button>
+      <div class="ledger-box">
+        <div style="font-size:11.5px; font-weight:700; text-transform:uppercase; color:#94a3b8; margin-bottom:8px;"><i class="fas fa-receipt"></i> Recent UPI Cashback Payouts</div>
+        <div id="upiLedgerList">
+          <div class="ledger-item">
+            <span style="color:#cbd5e1;">UTR#429108841 · kunal@okaxis</span>
+            <span style="color:#34d399;font-weight:700;">+₹620</span>
+          </div>
+          <div class="ledger-item">
+            <span style="color:#cbd5e1;">UTR#428991204 · kunal@okaxis</span>
+            <span style="color:#34d399;font-weight:700;">+₹340</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const COUPONS = [
-  { code: 'SAVE500', discount: 500, valid: true },
-  { code: 'AXISBANK1000', discount: 1000, valid: true },
-  { code: 'EXPIRED20', discount: 0, valid: false },
-  { code: 'AVPEXCLUSIVE', discount: 1500, valid: true }, // Winner
-  { code: 'FESTIVE300', discount: 300, valid: true }
-];
+const CART_PRESETS = {
+  sony: {
+    label: 'Checkout Subtotal (Sony WH-1000XM5 · Amazon):',
+    store: 'amazon',
+    price: 26990,
+    coupons: [
+      { code: 'SAVE500', desc: 'Flat ₹500 Instant Discount', discount: 500, valid: true },
+      { code: 'AXISBANK1000', desc: '₹1,000 Partner Voucher', discount: 1000, valid: true },
+      { code: 'EXPIRED20', desc: 'Flash Summer Deal', discount: 0, valid: false },
+      { code: 'AVPEXCLUSIVE', desc: 'Flat ₹1,500 Off AVPU Community', discount: 1500, valid: true },
+      { code: 'FESTIVE300', desc: '₹300 Off Sitewide', discount: 300, valid: true }
+    ]
+  },
+  ipad: {
+    label: 'Checkout Subtotal (Apple iPad Air M2 · Croma):',
+    store: 'croma',
+    price: 59900,
+    coupons: [
+      { code: 'CRMAAPPLE3K', desc: '₹3,000 Croma Apple Instant Promo', discount: 3000, valid: true },
+      { code: 'STUDENT1500', desc: '₹1,500 Back to Campus Code', discount: 1500, valid: true },
+      { code: 'OLDIPAD10', desc: 'Expired Launch Offer', discount: 0, valid: false },
+      { code: 'TATANEW1000', desc: '₹1,000 Tata NeuPass Bonus', discount: 1000, valid: true },
+      { code: 'WELCOME500', desc: '₹500 New User Code', discount: 500, valid: true }
+    ]
+  },
+  dyson: {
+    label: 'Checkout Subtotal (Dyson V12 Detect · Flipkart):',
+    store: 'flipkart',
+    price: 44900,
+    coupons: [
+      { code: 'HOMECARE2500', desc: '₹2,500 SuperCoin + Appliance Code', discount: 2500, valid: true },
+      { code: 'FKPLUS1000', desc: '₹1,000 Flipkart Plus Member', discount: 1000, valid: true },
+      { code: 'MONSOON50', desc: 'Expired Seasonal Promo', discount: 0, valid: false },
+      { code: 'DYSONVIP3200', desc: '₹3,200 Brand Co-Funded Deal', discount: 3200, valid: true },
+      { code: 'SAVE750', desc: '₹750 Appliances Coupon', discount: 750, valid: true }
+    ]
+  },
+  nike: {
+    label: 'Checkout Subtotal (Nike Pegasus 41 · Myntra):',
+    store: 'myntra',
+    price: 11895,
+    coupons: [
+      { code: 'MYNTRA400', desc: '₹400 Off Sports Footwear', discount: 400, valid: true },
+      { code: 'INSIDER800', desc: '₹800 Myntra Insider Elite', discount: 800, valid: true },
+      { code: 'RUN2025', desc: 'Expired Marathon Promo', discount: 0, valid: false },
+      { code: 'NIKEPRO1400', desc: '₹1,400 Brand Club Voucher', discount: 1400, valid: true },
+      { code: 'FIT300', desc: '₹300 Activewear Code', discount: 300, valid: true }
+    ]
+  }
+};
 
+let activeCartKey = 'sony';
+let currentBasePrice = 26990;
+let appliedCouponSavings = 0;
+let appliedCouponCode = null;
 let walletAmt = 450;
 
+function notifyBanner(msg) {
+  const box = document.getElementById('walletToastMsg');
+  if (box) {
+    box.style.display = 'block';
+    box.textContent = msg;
+  }
+  if (typeof window.showToast === 'function') {
+    window.showToast(msg, 'success', 4000);
+  }
+}
+
+function selectCartItem(key, btnEl) {
+  document.querySelectorAll('.picker-chip').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+  activeCartKey = key;
+  const item = CART_PRESETS[key] || CART_PRESETS.sony;
+  currentBasePrice = item.price;
+  appliedCouponSavings = 0;
+  appliedCouponCode = null;
+
+  document.getElementById('cartItemLabel').textContent = item.label;
+  document.getElementById('cartSubtotalText').textContent = '₹' + item.price.toLocaleString();
+  document.getElementById('couponSavingsText').textContent = 'None Applied';
+  document.getElementById('progressBox').style.display = 'none';
+
+  const btn = document.getElementById('runTesterBtn');
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Auto-Test All 5 Coupons & Stack Bank Offer';
+  btn.style.background = '';
+
+  // Render coupon items
+  item.coupons.forEach((c, idx) => {
+    const el = document.getElementById('cp-' + idx);
+    if (el) {
+      el.classList.remove('winner-cp');
+      el.innerHTML = `
+        <div><span class="cp-code">${c.code}</span> ${c.desc}</div>
+        <span class="cp-status" style="color:var(--text-3);"><i class="far fa-clock"></i> Untested</span>
+      `;
+    }
+  });
+
+  recalculateTotals();
+}
+
+function getBankDiscount(priceAfterCoupon) {
+  const sel = document.getElementById('bankCardSelect');
+  if (!sel) return { disc: 0, label: '₹0' };
+  const opt = sel.options[sel.selectedIndex];
+  const fixed = parseInt(opt.getAttribute('data-disc') || '0', 10);
+  const pct = parseFloat(opt.getAttribute('data-pct') || '0');
+  if (pct > 0) {
+    const d = Math.round((priceAfterCoupon * pct) / 100);
+    return { disc: d, label: `-₹${d.toLocaleString()} (${pct}% Card)` };
+  }
+  return { disc: fixed, label: fixed > 0 ? `-₹${fixed.toLocaleString()}` : '₹0' };
+}
+
+function recalculateTotals() {
+  const afterCoupon = Math.max(0, currentBasePrice - appliedCouponSavings);
+  const bank = getBankDiscount(afterCoupon);
+  const payable = Math.max(0, afterCoupon - bank.disc);
+  const xerveCashback = Math.round(payable * 0.05);
+
+  document.getElementById('bankSavingsText').textContent = bank.label;
+  document.getElementById('xerveCashbackPreview').textContent = `+₹${xerveCashback.toLocaleString()}`;
+  document.getElementById('finalPriceText').textContent = `₹${(payable - appliedCouponSavings === currentBasePrice ? afterCoupon : payable).toLocaleString()}`;
+}
+
 function startCouponTest() {
+  const item = CART_PRESETS[activeCartKey] || CART_PRESETS.sony;
+  const coupons = item.coupons;
   const btn = document.getElementById('runTesterBtn');
   btn.disabled = true;
   btn.innerText = 'Testing Coupons in Progress...';
@@ -182,13 +373,21 @@ function startCouponTest() {
   const progressBox = document.getElementById('progressBox');
   progressBox.style.display = 'block';
 
+  // Also query live backend /api/coupons/stack asynchronously
+  fetch('/api/coupons/stack', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ store: item.store, cart_total_inr: item.price, category: 'electronics' })
+  }).catch(() => {});
+
   let currentIdx = 0;
   let bestSavings = 0;
   let bestCoupon = null;
+  let bestIdx = -1;
 
   function testNext() {
-    if (currentIdx < COUPONS.length) {
-      const c = COUPONS[currentIdx];
+    if (currentIdx < coupons.length) {
+      const c = coupons[currentIdx];
       const itemEl = document.getElementById(`cp-${currentIdx}`);
       const statusEl = itemEl.querySelector('.cp-status');
 
@@ -197,31 +396,42 @@ function startCouponTest() {
 
       setTimeout(() => {
         if (c.valid) {
-          statusEl.innerHTML = `<span style="color:#34d399;">✔ Valid (-₹${c.discount})</span>`;
+          statusEl.innerHTML = `<span style="color:#34d399;">✔ Valid (-₹${c.discount.toLocaleString()})</span>`;
           if (c.discount > bestSavings) {
             bestSavings = c.discount;
             bestCoupon = c.code;
-            document.getElementById('bestSavingsText').innerText = `Best: ₹${bestSavings} Off`;
+            bestIdx = currentIdx;
+            document.getElementById('bestSavingsText').innerText = `Best: ₹${bestSavings.toLocaleString()} Off`;
           }
         } else {
           statusEl.innerHTML = `<span style="color:#f87171;">✖ Expired / Invalid</span>`;
         }
         currentIdx++;
         testNext();
-      }, 550);
+      }, 320);
     } else {
-      // Completed
-      document.getElementById('testingStatus').innerHTML = `🎉 Optimal code <strong>${bestCoupon}</strong> applied!`;
-      document.getElementById('couponSavingsText').innerText = `-₹${bestSavings.toLocaleString()}`;
-      document.getElementById('finalPriceText').innerText = `₹${(26990 - bestSavings).toLocaleString()}`;
-      btn.innerText = 'Best Coupon Applied Successfully!';
+      appliedCouponSavings = bestSavings;
+      appliedCouponCode = bestCoupon;
+      if (bestIdx >= 0) {
+        const winEl = document.getElementById(`cp-${bestIdx}`);
+        if (winEl) winEl.classList.add('winner-cp');
+      }
+      document.getElementById('testingStatus').innerHTML = `🎉 Optimal code <strong>${bestCoupon}</strong> stacked with Bank Offer!`;
+      document.getElementById('couponSavingsText').innerText = `-₹${bestSavings.toLocaleString()} (${bestCoupon})`;
+      recalculateTotals();
+
+      const afterCoupon = Math.max(0, currentBasePrice - bestSavings);
+      const bank = getBankDiscount(afterCoupon);
+      const netPayable = Math.max(0, afterCoupon - bank.disc);
+      document.getElementById('finalPriceText').innerText = `₹${netPayable.toLocaleString()}`;
+
+      btn.innerText = 'Best Coupon + Bank Offer Applied!';
       btn.style.background = '#10b981';
 
-      // Credit 5% extra cashback to wallet
-      const cashbackEarned = Math.round((26990 - bestSavings) * 0.05);
+      const cashbackEarned = Math.round(netPayable * 0.05);
       walletAmt += cashbackEarned;
       document.getElementById('walletBalance').innerText = `₹${walletAmt.toLocaleString()}`;
-      alert(`🎉 Highest discount code ${bestCoupon} applied!\nYou saved ₹${bestSavings} + earned ₹${cashbackEarned} instant cashback in your wallet!`);
+      notifyBanner(`🎉 Code ${bestCoupon} (-₹${bestSavings.toLocaleString()}) + Bank Offer (-₹${bank.disc.toLocaleString()}) applied! Earned +₹${cashbackEarned.toLocaleString()} UPI cashback.`);
     }
   }
 
@@ -230,31 +440,36 @@ function startCouponTest() {
 
 function withdrawCashback() {
   const upi = document.getElementById('upiId').value.trim();
-  if (!upi) {
-    alert('Please enter a valid UPI ID!');
+  if (!upi || upi.indexOf('@') === -1) {
+    notifyBanner('⚠️ Please enter a valid UPI VPA (e.g. yourname@okaxis).');
     return;
   }
   if (walletAmt <= 0) {
-    alert('No balance available to withdraw.');
+    notifyBanner('ℹ️ Your cashback wallet balance is currently ₹0. Run the coupon stacker to earn cashback!');
     return;
   }
-  alert(`💸 ₹${walletAmt} successfully transferred to ${upi} via UPI Instant Payout!`);
+  const payout = walletAmt;
+  const utr = 'UTR#' + Math.floor(430000000 + Math.random() * 69999999);
+  const ledger = document.getElementById('upiLedgerList');
+  if (ledger) {
+    const row = document.createElement('div');
+    row.className = 'ledger-item';
+    row.innerHTML = `<span style="color:#cbd5e1;">${utr} · ${upi}</span><span style="color:#34d399;font-weight:700;">+₹${payout.toLocaleString()}</span>`;
+    ledger.insertBefore(row, ledger.firstChild);
+  }
   walletAmt = 0;
   document.getElementById('walletBalance').innerText = '₹0';
+  notifyBanner(`💸 ₹${payout.toLocaleString()} transferred to ${upi} via NPCI IMPS/UPI (${utr})!`);
 }
 </script>
 
-
 <script>
 (function() {
-  // Theme Toggle Handler
   var tBtn = document.getElementById('themeToggle');
   if (tBtn) {
     function updateIcon(theme) {
       var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
+      if (ic) ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
     }
     var cur = document.documentElement.getAttribute('data-theme') || 'dark';
     updateIcon(cur);
@@ -267,15 +482,10 @@ function withdrawCashback() {
     });
   }
 
-  // Cursor Ring
   var ring = document.getElementById('cursorRing');
   if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
+    var mouseX = -100, mouseY = -100, ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) { mouseX = e.clientX; mouseY = e.clientY; });
     function renderCursor() {
       ringX += (mouseX - ringX) * 0.2;
       ringY += (mouseY - ringY) * 0.2;
@@ -286,6 +496,5 @@ function withdrawCashback() {
   }
 })();
 </script>
-
 </body>
 </html>

@@ -181,6 +181,55 @@
   </div>
 </section>
 
+
+<section class="section" id="live-comonk-deck" style="padding-top:10px;padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-briefcase"></i> Live Career Intelligence &amp; STAR Interview Workbench</div>
+    <h2 class="sec-title">Levels.fyi Tech Compensation Calculator &amp; Live STAR Grader</h2>
+    <p class="sec-sub">Benchmark Indian tech salaries across Bengaluru, Hyderabad, Pune &amp; NCR, and grade your behavioral interview answers against Amazon Bar-Raiser STAR rubrics.</p>
+  </div>
+  <div class="reveal" style="max-width:1200px;margin:0 auto;background:rgba(15,23,42,0.82);border:1px solid rgba(56,189,248,0.32);border-radius:24px;padding:26px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;">
+      <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#38bdf8;margin-bottom:6px;"><i class="fas fa-coins"></i> Indian Tech CTC Benchmark (Levels.fyi Engine)</div>
+        <select id="cmHomeRoleSelect" style="width:100%;background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#fff;padding:10px;border-radius:10px;font-size:13px;margin-bottom:10px;">
+          <option value="sde2">SDE-2 Full-Stack / Backend (3–6 YOE)</option>
+          <option value="aiml">Senior AI / ML Engineer — LLMs &amp; RAG (4–8 YOE)</option>
+          <option value="pm">Technical Product Manager (4–7 YOE)</option>
+        </select>
+        <div id="cmHomeSalaryResult" style="font-size:13px;color:#cbd5e1;line-height:1.6;"></div>
+        <a href="salary-insights.html" class="btn btn-primary sm" style="margin-top:10px;">Open Full Salary Radar →</a>
+      </div>
+      <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#34d399;margin-bottom:6px;"><i class="fas fa-microphone-lines"></i> Live STAR Response Telemetry Grader</div>
+        <textarea id="cmHomeStarInput" rows="3" style="width:100%;background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#fff;padding:10px;border-radius:10px;font-size:12.5px;margin-bottom:8px;">When checkout latency spiked to 1.8s during Diwali sale (Situation), I redesigned Redis caching and async payment webhooks (Action), cutting p99 latency by 64% and recovering ₹1.4Cr GMV (Result).</textarea>
+        <div id="cmHomeStarResult" style="font-size:12.5px;color:#34d399;font-weight:700;"></div>
+        <a href="interview-coach.html" class="btn btn-ghost sm" style="margin-top:8px;">Open Voice Interview Coach →</a>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  const roles = {
+    'sde2': '<div>Median Base: <strong>₹28.5 LPA</strong> · RSU/Bonus: <strong>₹9.5 LPA</strong></div><div>Total Target CTC (Bengaluru/Hyd): <strong style="color:#34d399;font-size:16px;">₹38.0 LPA</strong> (P75: ₹48.5 LPA)</div>',
+    'aiml': '<div>Median Base: <strong>₹36.0 LPA</strong> · RSU/Bonus: <strong>₹14.0 LPA</strong></div><div>Total Target CTC (AI/LLM Specialist): <strong style="color:#34d399;font-size:16px;">₹50.0 LPA</strong> (P75: ₹64.0 LPA)</div>',
+    'pm': '<div>Median Base: <strong>₹31.0 LPA</strong> · ESOP/Bonus: <strong>₹10.0 LPA</strong></div><div>Total Target CTC: <strong style="color:#34d399;font-size:16px;">₹41.0 LPA</strong> (P75: ₹52.0 LPA)</div>'
+  };
+  function updSal() { document.getElementById('cmHomeSalaryResult').innerHTML = roles[document.getElementById('cmHomeRoleSelect').value] || ''; }
+  function updStar() {
+    const txt = document.getElementById('cmHomeStarInput').value || '';
+    const hasMetric = /%|₹|\$|ms|x\\b|\d+/i.test(txt);
+    const words = txt.trim().split(/\s+/).filter(Boolean).length;
+    const score = Math.min(98, 60 + (hasMetric ? 25 : 0) + Math.min(13, Math.round(words / 3)));
+    document.getElementById('cmHomeStarResult').textContent = `Bar-Raiser STAR Score: ${score}/100 · ${hasMetric ? '✓ Quantified Impact Detected' : '⚠ Add % or ₹ metrics to boost Result score'}`;
+  }
+  document.getElementById('cmHomeRoleSelect').addEventListener('change', updSal);
+  document.getElementById('cmHomeStarInput').addEventListener('input', updStar);
+  updSal(); updStar();
+})();
+</script>
+
 <section class="ai-strip">
   <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
   <div class="ai-marquee"><div class="marquee-track ai-track"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span></div></div>

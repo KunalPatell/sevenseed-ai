@@ -161,6 +161,94 @@
   </div>
 </section>
 
+
+<section class="section" id="live-pharmacy-deck" style="padding-top:10px;padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-heart-pulse"></i> Live Clinical Workbench · Instant Pharmacology &amp; Triage</div>
+    <h2 class="sec-title">Interactive CYP450, Jan Aushadhi &amp; NEWS2 Triage</h2>
+    <p class="sec-sub">Test our evidence-graded drug interaction engine, PMBJP Jan Aushadhi generic price substitutor, and Royal College NEWS2 clinical vitals scorer right here.</p>
+  </div>
+  <div class="reveal" style="max-width:1200px;margin:0 auto;background:rgba(15,23,42,0.82);border:1px solid rgba(16,185,129,0.32);border-radius:24px;padding:26px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;">
+      <!-- Widget 1: Jan Aushadhi Generic Savings -->
+      <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#34d399;margin-bottom:6px;"><i class="fas fa-pills"></i> PMBJP Jan Aushadhi Salt Finder</div>
+        <select id="phHomeDrugSelect" style="width:100%;background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#fff;padding:10px;border-radius:10px;font-size:13px;margin-bottom:12px;">
+          <option value="0">Augmentin 625 Duo (₹204) → Amoxycillin + Clavulanate</option>
+          <option value="1">Lipitor / Atorva 20mg (₹198) → Atorvastatin IP</option>
+          <option value="2">Janumet 50/500mg (₹395) → Sitagliptin + Metformin</option>
+          <option value="3">Pan-D Capsule (₹190) → Pantoprazole + Domperidone</option>
+        </select>
+        <div id="phHomeDrugResult" style="font-size:13px;color:#cbd5e1;line-height:1.6;"></div>
+        <a href="generic-finder.html" class="btn btn-primary sm" style="margin-top:10px;">Open Full Generic Finder →</a>
+      </div>
+      <!-- Widget 2: CYP450 Interaction Pair -->
+      <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#f59e0b;margin-bottom:6px;"><i class="fas fa-triangle-exclamation"></i> CYP450 Hepatic Interaction Check</div>
+        <select id="phHomePairSelect" style="width:100%;background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#fff;padding:10px;border-radius:10px;font-size:13px;margin-bottom:12px;">
+          <option value="warfarin-aspirin">Warfarin + Aspirin (CYP2C9 / Bleeding Risk)</option>
+          <option value="clopidogrel-omeprazole">Clopidogrel + Omeprazole (CYP2C19 Inhibition)</option>
+          <option value="atorvastatin-clarithromycin">Atorvastatin + Clarithromycin (CYP3A4 Myopathy)</option>
+        </select>
+        <div id="phHomePairResult" style="font-size:13px;color:#cbd5e1;line-height:1.6;"></div>
+        <a href="drug-interaction.html" class="btn btn-ghost sm" style="margin-top:10px;">Open Interaction Matrix →</a>
+      </div>
+      <!-- Widget 3: NEWS2 Clinical Vitals -->
+      <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#38bdf8;margin-bottom:6px;"><i class="fas fa-stethoscope"></i> NEWS2 Early Warning Calculator</div>
+        <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:8px;">SpO₂ Oxygen Saturation: <strong id="phHomeSpo2Lbl" style="color:#fff;">96%</strong>
+          <input type="range" id="phHomeSpo2" min="84" max="100" value="96" style="width:100%;accent-color:#38bdf8;">
+        </label>
+        <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:8px;">Heart Rate (BPM): <strong id="phHomeHrLbl" style="color:#fff;">82 bpm</strong>
+          <input type="range" id="phHomeHr" min="45" max="150" value="82" style="width:100%;accent-color:#10b981;">
+        </label>
+        <div id="phHomeNewsResult" style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#34d399;"></div>
+        <a href="body-map.html" class="btn btn-ghost sm" style="margin-top:10px;">3D Anatomical Body Map →</a>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  const drugs = [
+    { brand:'Augmentin 625 Duo', bPrice:204, gen:'Amoxycillin 500mg + Clavulanic Acid 125mg (PMBJP #142)', gPrice:38 },
+    { brand:'Lipitor / Atorva 20mg', bPrice:198, gen:'Atorvastatin IP 20mg (PMBJP #289)', gPrice:24 },
+    { brand:'Janumet 50/500mg', bPrice:395, gen:'Sitagliptin 50mg + Metformin 500mg (PMBJP #614)', gPrice:65 },
+    { brand:'Pan-D Capsule', bPrice:190, gen:'Pantoprazole 40mg + Domperidone 30mg SR', gPrice:28 }
+  ];
+  function updDrug() {
+    const d = drugs[Number(document.getElementById('phHomeDrugSelect').value)||0];
+    const sav = Math.round(((d.bPrice - d.gPrice)/d.bPrice)*100);
+    document.getElementById('phHomeDrugResult').innerHTML = `<div>Generic Salt: <strong style="color:#fff;">${d.gen}</strong></div><div style="margin-top:4px;">Jan Aushadhi Price: <strong style="color:#34d399;font-size:16px;">₹${d.gPrice}/strip</strong> vs Brand ₹${d.bPrice} <span style="background:rgba(16,185,129,0.2);color:#34d399;padding:2px 6px;border-radius:4px;font-weight:700;">Save ${sav}%</span></div>`;
+  }
+  const pairs = {
+    'warfarin-aspirin': '<span style="color:#f87171;font-weight:800;">[MAJOR SEVERITY]</span> Synergistic antiplatelet + anticoagulant activity increases GI hemorrhage risk 3.4x. Monitor INR closely.',
+    'clopidogrel-omeprazole': '<span style="color:#fbbf24;font-weight:800;">[MODERATE-HIGH]</span> Omeprazole inhibits CYP2C19 bioactivation of Clopidogrel by 42%. Switch PPI to Pantoprazole.',
+    'atorvastatin-clarithromycin': '<span style="color:#f87171;font-weight:800;">[MAJOR SEVERITY]</span> Strong CYP3A4 inhibition elevates statin AUC, risking rhabdomyolysis. Hold statin during macrolide course.'
+  };
+  function updPair() {
+    document.getElementById('phHomePairResult').innerHTML = pairs[document.getElementById('phHomePairSelect').value] || '';
+  }
+  function updNews() {
+    const spo2 = Number(document.getElementById('phHomeSpo2').value);
+    const hr = Number(document.getElementById('phHomeHr').value);
+    document.getElementById('phHomeSpo2Lbl').textContent = spo2 + '%';
+    document.getElementById('phHomeHrLbl').textContent = hr + ' bpm';
+    let score = 0;
+    if (spo2 <= 91) score += 3; else if (spo2 <= 93) score += 2; else if (spo2 <= 95) score += 1;
+    if (hr >= 131 || hr <= 40) score += 3; else if (hr >= 111) score += 2; else if (hr >= 91 || hr <= 50) score += 1;
+    const risk = score >= 5 ? 'HIGH CLINICAL RISK (Urgent ICU Assessment)' : (score >= 3 ? 'MEDIUM RISK (Hourly Vitals)' : 'LOW RISK (Routine Ward Care)');
+    document.getElementById('phHomeNewsResult').style.color = score >= 5 ? '#f87171' : (score >= 3 ? '#fbbf24' : '#34d399');
+    document.getElementById('phHomeNewsResult').textContent = `NEWS2 Score: ${score} · ${risk}`;
+  }
+  document.getElementById('phHomeDrugSelect').addEventListener('change', updDrug);
+  document.getElementById('phHomePairSelect').addEventListener('change', updPair);
+  document.getElementById('phHomeSpo2').addEventListener('input', updNews);
+  document.getElementById('phHomeHr').addEventListener('input', updNews);
+  updDrug(); updPair(); updNews();
+})();
+</script>
+
 <section class="ai-strip">
   <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
   <div class="ai-marquee"><div class="marquee-track ai-track"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>OCR + Vision</span><span class="ai-chip"><i class="fas fa-microchip"></i>ML Forecasting</span><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>OCR + Vision</span><span class="ai-chip"><i class="fas fa-microchip"></i>ML Forecasting</span></div></div>

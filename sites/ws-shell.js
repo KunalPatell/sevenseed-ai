@@ -364,9 +364,11 @@
     toast.setAttribute('role', 'alert');
     toast.innerHTML =
       '<span class="ss-toast-icon"><i class="fas ' + iconClass + '"></i></span>' +
-      '<div class="ss-toast-msg">' + message + '</div>' +
+      '<div class="ss-toast-msg"></div>' +
       '<button type="button" class="ss-toast-close" aria-label="Dismiss"><i class="fas fa-xmark"></i></button>' +
       '<div class="ss-toast-progress" style="animation-duration:' + duration + 'ms;"></div>';
+    // Message is often raw err.message / server text — never parse it as HTML.
+    toast.querySelector('.ss-toast-msg').textContent = String(message == null ? '' : message);
 
     container.appendChild(toast);
 
@@ -412,12 +414,39 @@
 
   window.SevenseedWorkstations = { categories: CATEGORIES, list: WORKSTATIONS, initSpotlight: initSpotlight };
 
+  // ── Premium: scroll progress bar + auto-reveal ──────────────────────────
+  function initPremiumEnhancements() {
+    if (!document.getElementById('ss-scroll-progress')) {
+      var bar = document.createElement('div');
+      bar.id = 'ss-scroll-progress';
+      bar.style.cssText = 'position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--primary,#6366f1),var(--secondary,#a855f7));z-index:9999;pointer-events:none;transition:width .1s linear;';
+      document.body.appendChild(bar);
+      window.addEventListener('scroll', function () {
+        var h = document.documentElement;
+        var pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+        bar.style.width = (isFinite(pct) ? pct : 0) + '%';
+      }, { passive: true });
+    }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+    } else {
+      document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+    }
+  }
+
+
   function boot() {
     var shell = document.getElementById('ws-shell');
     if (shell) renderShell(shell);
     var dir = document.getElementById('ws-directory');
     if (dir) renderDirectory(dir);
     initSpotlight();
+    initPremiumEnhancements();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();

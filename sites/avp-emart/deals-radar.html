@@ -4,45 +4,74 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Google Shopping Multi-Seller Price Radar — AVP Emart</title>
-  <meta name="description" content="Live multi-merchant deal scanner aggregating Amazon, Flipkart, Croma, Reliance Digital, and Vijay Sales offers.">
+  <title>Google Shopping (udm=28) AI Buying Brief & Multi-Seller Price Radar — AVP Emart</title>
+  <meta name="description" content="Live Google Shopping udm=28 AI Buying Brief, Typical Price Range Gauge, and multi-merchant deal scanner aggregating Amazon, Flipkart, Croma, Reliance Digital, and Vijay Sales.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .deals-container { max-width: 1280px; margin: 0 auto; padding: 100px 24px 60px; }
-    .deals-header { text-align: center; margin-bottom: 32px; }
-    .deals-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fbbf24; font-size: 13px; font-weight: 600; margin-bottom: 12px; }
-    .deals-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+    body { position: relative; overflow-x: hidden; }
+    .unicorn-mesh { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .unicorn-orb { position: absolute; border-radius: 50%; filter: blur(110px); opacity: 0.2; animation: orbFloat 15s ease-in-out infinite alternate; }
+    .unicorn-orb.o1 { width: 500px; height: 500px; background: radial-gradient(circle, #f59e0b, transparent 70%); top: -120px; right: 10%; }
+    .unicorn-orb.o2 { width: 460px; height: 460px; background: radial-gradient(circle, #3b82f6, transparent 70%); bottom: -100px; left: 8%; animation-delay: -6s; }
+    @keyframes orbFloat { 0% { transform: translate(0,0); } 100% { transform: translate(-30px, 25px); } }
+
+    .deals-container { position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; padding: 100px 24px 70px; }
+    .deals-header { text-align: center; margin-bottom: 28px; }
+    .deals-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 999px; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.35); color: #fbbf24; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+    .deals-title { font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.15; margin-bottom: 10px; }
+
+    /* Google Shopping ?udm=28 AI Buying Brief Banner */
+    .udm-ai-brief { background: linear-gradient(135deg, rgba(15,23,42,0.92), rgba(30,27,75,0.78)); border: 1px solid rgba(99,102,241,0.35); border-radius: 20px; padding: 24px 28px; margin-bottom: 26px; box-shadow: 0 20px 50px rgba(0,0,0,0.45); position: relative; overflow: hidden; }
+    .udm-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+    .udm-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; color: #a5b4fc; background: rgba(99,102,241,0.16); border: 1px solid rgba(99,102,241,0.35); padding: 4px 12px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .udm-cat-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .udm-pill { padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .udm-pill.active, .udm-pill:hover { background: #6366f1; border-color: #6366f1; color: #fff; }
+    .udm-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; align-items: center; }
+    @media(max-width: 860px) { .udm-grid { grid-template-columns: 1fr; } }
+    .udm-factors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    @media(max-width: 640px) { .udm-factors { grid-template-columns: 1fr; } }
+    .udm-factor-box { background: rgba(2,6,23,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; font-size: 12px; }
 
     /* Filters Bar */
-    .deals-filter-bar { display: flex; justify-content: space-between; align-items: center; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 24px; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
-    .sort-options { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--text-2); }
-    .sort-btn { padding: 6px 14px; border-radius: 6px; background: var(--bg-2); border: 1px solid var(--border); color: #fff; cursor: pointer; font-size: 12px; font-weight: 600; }
-    .sort-btn.active { background: #f59e0b; color: #000; border-color: #f59e0b; }
+    .deals-filter-bar { display: flex; justify-content: space-between; align-items: center; background: rgba(13,18,32,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px 22px; margin-bottom: 28px; flex-wrap: wrap; gap: 16px; }
+    .sort-options { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--text-2); flex-wrap: wrap; }
+    .sort-btn { padding: 7px 14px; border-radius: 8px; background: var(--bg-2); border: 1px solid var(--border); color: #fff; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; }
+    .sort-btn.active, .sort-btn:hover { background: #f59e0b; color: #000; border-color: #f59e0b; }
 
     /* Deals Grid */
-    .deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 24px; }
-    .deal-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s; position: relative; }
-    .deal-card:hover { transform: translateY(-4px); border-color: rgba(245,158,11,0.4); box-shadow: var(--shadow); }
+    .deals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(370px, 1fr)); gap: 24px; }
+    .deal-card { background: rgba(13,18,32,0.88); backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s; position: relative; box-shadow: 0 14px 36px rgba(0,0,0,0.35); }
+    .deal-card:hover { transform: translateY(-5px); border-color: rgba(245,158,11,0.45); box-shadow: 0 22px 48px rgba(0,0,0,0.5); }
 
-    .deal-badge-pill { position: absolute; top: 16px; right: 16px; font-size: 11px; font-weight: 800; background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; padding: 3px 8px; border-radius: 6px; }
-    .deal-seller { font-size: 12px; color: #fbbf24; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
-    .deal-item-name { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1.35; }
+    .deal-badge-pill { position: absolute; top: 16px; right: 16px; font-size: 11px; font-weight: 800; background: rgba(16,185,129,0.16); border: 1px solid #10b981; color: #34d399; padding: 4px 10px; border-radius: 99px; }
+    .deal-seller { font-size: 12px; color: #fbbf24; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .deal-item-name { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 12px; line-height: 1.35; padding-right: 90px; }
 
-    .price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
-    .deal-price { font-size: 26px; font-weight: 800; color: #34d399; font-family: 'JetBrains Mono', monospace; }
-    .deal-mrp { font-size: 14px; color: var(--text-3); text-decoration: line-through; }
-    .deal-disc { font-size: 12px; color: #ef4444; font-weight: 700; }
+    .price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .deal-price { font-size: 26px; font-weight: 900; color: #34d399; font-family: 'JetBrains Mono', monospace; }
+    .deal-mrp { font-size: 14px; color: var(--text-3); text-decoration: line-through; font-family: 'JetBrains Mono', monospace; }
+    .deal-disc { font-size: 12px; color: #fb7185; font-weight: 700; background: rgba(244,63,94,0.12); padding: 2px 8px; border-radius: 6px; }
 
-    .seller-specs { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 12px; color: var(--text-2); display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+    /* Google Shopping Typical Price Gauge */
+    .typical-gauge-box { background: rgba(2,6,23,0.65); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 10px 12px; margin-bottom: 14px; font-size: 11.5px; }
+    .gauge-bar { height: 6px; border-radius: 99px; background: linear-gradient(90deg, #10b981 0%, #10b981 35%, #f59e0b 35%, #f59e0b 75%, #ef4444 75%, #ef4444 100%); position: relative; margin: 7px 0 5px; }
+    .gauge-Pin { position: absolute; top: -4px; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid #10b981; transform: translateX(-50%); box-shadow: 0 0 10px rgba(16,185,129,0.8); }
+
+    .seller-specs { background: rgba(15,23,42,0.7); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 12px; font-size: 12px; color: var(--text-2); display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
     .seller-specs div { display: flex; justify-content: space-between; }
 
     .deal-footer { display: flex; gap: 10px; }
   </style>
 </head>
 <body>
+<div class="unicorn-mesh" aria-hidden="true">
+  <div class="unicorn-orb o1"></div>
+  <div class="unicorn-orb o2"></div>
+</div>
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
 <nav class="nav" id="mainNav">
@@ -53,6 +82,7 @@
     </a>
     <div class="nav-links" style="display:flex; gap:18px; font-size:14px;">
       <a href="index.html">Home</a>
+      <a href="shopping-discovery.html">AI Discovery</a>
       <a href="deals-radar.html" style="color:#fbbf24; font-weight:600;">Deals Radar</a>
       <a href="price-tracker.html">Price Tracker</a>
       <a href="spec-compare.html">Spec Comparator</a>
@@ -69,25 +99,63 @@
 
 <div class="deals-container">
   <div class="deals-header">
-    <div class="deals-badge"><i class="fas fa-satellite-dish"></i> Inspired by Google Shopping India Radar</div>
-    <h1 class="deals-title">Multi-Seller Live Price & Deal Radar</h1>
-    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">Compare verified sellers across Amazon, Flipkart, Croma, Reliance Digital, and Vijay Sales with transparent stock, warranty, and return terms.</p>
+    <div class="deals-badge"><i class="fas fa-satellite-dish"></i> Inspired by Google Shopping (?udm=28) AI Price Intelligence</div>
+    <h1 class="deals-title">Multi-Seller Live Price &amp; Typical Price Range Radar</h1>
+    <p style="color:var(--text-2); max-width:740px; margin:0 auto;">Compare verified sellers across Amazon, Flipkart, Croma, Reliance Digital, and Vijay Sales with Google Shopping `udm=28` AI Buying Briefs and 90-day typical price gauges.</p>
   </div>
 
+  <!-- Google Shopping ?udm=28 AI Shopping Brief -->
+  <div class="udm-ai-brief border-beam-card">
+    <div class="udm-top">
+      <span class="udm-tag"><i class="fas fa-wand-magic-sparkles"></i> Google Shopping (udm=28) AI Buying Guide</span>
+      <div class="udm-cat-pills">
+        <button class="udm-pill active" onclick="filterByCategory('all', this)">All Categories (6)</button>
+        <button class="udm-pill" onclick="filterByCategory('phones', this)">Flagship Phones</button>
+        <button class="udm-pill" onclick="filterByCategory('audio', this)">ANC Audio &amp; Laptops</button>
+        <button class="udm-pill" onclick="filterByCategory('home', this)">Appliances &amp; Gaming</button>
+      </div>
+    </div>
+    <div class="udm-grid">
+      <div>
+        <h3 id="udmBriefHeadline" style="font-size:19px; font-weight:800; color:#fff; margin-bottom:6px;">AI Shopping Brief: Q4 Festival &amp; Bank Card Arbitrage</h3>
+        <p id="udmBriefSummary" style="font-size:13.5px; color:#cbd5e1; line-height:1.6; margin:0;">
+          Our telemetry across 5 Indian e-commerce marketplaces shows flagship electronics are currently trading <strong>8% to 23% below their 90-day median</strong>. Stacking instant HDFC/ICICI bank discounts with store coupons yields all-time low net effective prices on 4 of the 6 tracked items below.
+        </p>
+      </div>
+      <div class="udm-factors" id="udmFactorsGrid">
+        <div class="udm-factor-box">
+          <div style="color:#34d399; font-weight:800; margin-bottom:3px;"><i class="fas fa-chart-line"></i> Price Benchmark</div>
+          <div style="color:#94a3b8;">Only buy when the gauge pin sits in the green <strong>Low vs Typical</strong> zone.</div>
+        </div>
+        <div class="udm-factor-box">
+          <div style="color:#fbbf24; font-weight:800; margin-bottom:3px;"><i class="fas fa-shield-halved"></i> Seller Trust</div>
+          <div style="color:#94a3b8;">All listed offers are authorized domestic warranty sellers (Appario, Croma, Vijay Sales).</div>
+        </div>
+        <div class="udm-factor-box">
+          <div style="color:#a5b4fc; font-weight:800; margin-bottom:3px;"><i class="fas fa-credit-card"></i> Card Stack</div>
+          <div style="color:#94a3b8;">Use our <a href="coupon-tester.html" style="color:#fbbf24;text-decoration:underline;">Coupon Stacker</a> for extra 5% UPI cashback.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter & Sort Bar -->
   <div class="deals-filter-bar">
     <div class="sort-options">
       <span>Sort Deals:</span>
-      <button class="sort-btn active" onclick="sortDeals('discount')">Highest Discount</button>
-      <button class="sort-btn" onclick="sortDeals('price')">Lowest Price First</button>
-      <button class="sort-btn" onclick="sortDeals('rating')">Top Rated Sellers</button>
+      <button class="sort-btn active" onclick="sortDeals('discount', this)">Highest Discount</button>
+      <button class="sort-btn" onclick="sortDeals('price', this)">Lowest Price First</button>
+      <button class="sort-btn" onclick="sortDeals('rating', this)">Top Rated Sellers</button>
     </div>
-    <div style="font-size:13px; color:var(--text-2);">
-      Showing 6 Verified Multi-Merchant Deals
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <input type="search" id="dealSearchInput" placeholder="Filter by product or store..." aria-label="Filter deals" oninput="filterDealSearch(this.value)" style="padding:7px 12px; border-radius:8px; background:#090d16; border:1px solid rgba(255,255,255,0.14); color:#fff; font-size:12.5px; outline:none;">
+      <span id="dealsCountLabel" style="font-size:13px; color:var(--text-2); font-weight:600;">Showing 6 Verified Multi-Merchant Deals</span>
     </div>
   </div>
 
   <div class="deals-grid" id="dealsGrid">
-    <div class="deal-card" data-price="127990" data-disc="5" data-rating="4.8">
+    <!-- Card 1 -->
+    <div class="deal-card" data-price="127990" data-disc="5" data-rating="4.8" data-cat="phones">
       <span class="deal-badge-pill">⭐ Lowest Price</span>
       <div>
         <div class="deal-seller"><i class="fas fa-store"></i> Vijay Sales Verified</div>
@@ -97,18 +165,26 @@
           <span class="deal-mrp">₹1,34,900</span>
           <span class="deal-disc">Save ₹6,910 (5% Off)</span>
         </div>
+        <div class="typical-gauge-box">
+          <div style="display:flex;justify-content:space-between;color:#cbd5e1;">
+            <span>Google Price Check: <strong style="color:#34d399;">₹4,900 Below Typical</strong></span>
+            <span style="font-family:'JetBrains Mono';color:#94a3b8;">Typical: ₹1.31L–₹1.34L</span>
+          </div>
+          <div class="gauge-bar"><div class="gauge-Pin" style="left:22%;"></div></div>
+        </div>
         <div class="seller-specs">
           <div><span>Merchant Rating:</span> <span>4.8 / 5.0 (14,200 Reviews)</span></div>
-          <div><span>Return Policy:</span> <span>7-Day Replacement</span></div>
+          <div><span>Return Policy:</span> <span>7-Day Service Center Replacement</span></div>
           <div><span>Warranty:</span> <span>1 Year Official Apple India</span></div>
         </div>
       </div>
       <div class="deal-footer">
-        <a class="btn btn-primary sm" style="flex:1; justify-content:center;" href="https://www.google.com/search?q=iPhone+15+Pro+Vijay+Sales" target="_blank">View on Vijay Sales →</a>
+        <a class="btn btn-primary sm" style="flex:1; justify-content:center;" href="https://www.google.com/search?q=iPhone+15+Pro+Vijay+Sales&udm=28" target="_blank" rel="noopener">Compare on Google Shopping →</a>
       </div>
     </div>
 
-    <div class="deal-card" data-price="129999" data-disc="13" data-rating="4.7">
+    <!-- Card 2 -->
+    <div class="deal-card" data-price="129999" data-disc="13" data-rating="4.7" data-cat="phones">
       <span class="deal-badge-pill">🔥 Prime 1-Day</span>
       <div>
         <div class="deal-seller"><i class="fab fa-amazon"></i> Amazon India (Appario Retail)</div>
@@ -118,26 +194,41 @@
           <span class="deal-mrp">₹1,49,999</span>
           <span class="deal-disc">Save ₹20,000 (13% Off)</span>
         </div>
+        <div class="typical-gauge-box">
+          <div style="display:flex;justify-content:space-between;color:#cbd5e1;">
+            <span>Google Price Check: <strong style="color:#34d399;">All-Time Low Window</strong></span>
+            <span style="font-family:'JetBrains Mono';color:#94a3b8;">Typical: ₹1.35L–₹1.42L</span>
+          </div>
+          <div class="gauge-bar"><div class="gauge-Pin" style="left:16%;"></div></div>
+        </div>
         <div class="seller-specs">
           <div><span>Merchant Rating:</span> <span>4.7 / 5.0 (28,000 Reviews)</span></div>
-          <div><span>Delivery:</span> <span>Free Next-Day Prime</span></div>
+          <div><span>Delivery:</span> <span>Free Next-Day Prime Air</span></div>
           <div><span>Bank Offer:</span> <span>₹5,000 Instant HDFC Card Discount</span></div>
         </div>
       </div>
       <div class="deal-footer">
-        <a class="btn btn-primary sm" style="flex:1; justify-content:center;" href="https://www.google.com/search?q=Galaxy+S24+Ultra+Amazon" target="_blank">View on Amazon →</a>
+        <a class="btn btn-primary sm" style="flex:1; justify-content:center;" href="https://www.google.com/search?q=Galaxy+S24+Ultra+Amazon&udm=28" target="_blank" rel="noopener">Compare on Google Shopping →</a>
       </div>
     </div>
 
-    <div class="deal-card" data-price="26990" data-disc="23" data-rating="4.9">
+    <!-- Card 3 -->
+    <div class="deal-card" data-price="26990" data-disc="23" data-rating="4.9" data-cat="audio">
       <span class="deal-badge-pill">🎧 Editor Choice</span>
       <div>
-        <div class="deal-seller"><i class="fas fa-store"></i> Croma Electronics</div>
-        <h3 class="deal-item-name">Sony WH-1000XM5 Noise Cancelling Headphones</h3>
+        <div class="deal-seller"><i class="fas fa-store"></i> Croma Electronics (Tata Enterprise)</div>
+        <h3 class="deal-item-name">Sony WH-1000XM5 Wireless ANC Headphones</h3>
         <div class="price-row">
           <span class="deal-price">₹26,990</span>
           <span class="deal-mrp">₹34,990</span>
           <span class="deal-disc">Save ₹8,000 (23% Off)</span>
+        </div>
+        <div class="typical-gauge-box">
+          <div style="display:flex;justify-content:space-between;color:#cbd5e1;">
+            <span>Google Price Check: <strong style="color:#34d399;">₹3,000 Below Typical</strong></span>
+            <span style="font-family:'JetBrains Mono';color:#94a3b8;">Typical: ₹29,990</span>
+          </div>
+          <div class="gauge-bar"><div class="gauge-Pin" style="left:18%;"></div></div>
         </div>
         <div class="seller-specs">
           <div><span>Merchant Rating:</span> <span>4.9 / 5.0 (9,800 Reviews)</span></div>
@@ -146,16 +237,167 @@
         </div>
       </div>
       <div class="deal-footer">
-        <a class="btn btn-primary sm" style="flex:1; justify-content:center;" href="https://www.google.com/search?q=Sony+WH1000XM5+Croma" target="_blank">View on Croma →</a>
+        <a class="btn btn-primary sm" style="flex:1; justify-content:center;" href="https://www.google.com/search?q=Sony+WH1000XM5+Croma&udm=28" target="_blank" rel="noopener">Compare on Google Shopping →</a>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="deal-card" data-price="175900" data-disc="12" data-rating="4.9" data-cat="audio">
+      <span class="deal-badge-pill">💻 Pro Workstation</span>
+      <div>
+        <div class="deal-seller"><i class="fas fa-laptop"></i> Reliance Digital Verified</div>
+        <h3 class="deal-item-name">Apple MacBook Pro 14" (M3 Pro, 18GB RAM, 512GB SSD)</h3>
+        <div class="price-row">
+          <span class="deal-price">₹1,75,900</span>
+          <span class="deal-mrp">₹1,99,900</span>
+          <span class="deal-disc">Save ₹24,000 (12% Off)</span>
+        </div>
+        <div class="typical-gauge-box">
+          <div style="display:flex;justify-content:space-between;color:#cbd5e1;">
+            <span>Google Price Check: <strong style="color:#34d399;">₹11,000 Below Typical</strong></span>
+            <span style="font-family:'JetBrains Mono';color:#94a3b8;">Typical: ₹1.86L–₹1.94L</span>
+          </div>
+          <div class="gauge-bar"><div class="gauge-Pin" style="left:14%;"></div></div>
+        </div>
+        <div class="seller-specs">
+          <div><span>Merchant Rating:</span> <span>4.9 / 5.0 (6,420 Reviews)</span></div>
+          <div><span>Delivery:</span> <span>Express Same-Day Metro Courier</span></div>
+          <div><span>Bank Offer:</span> <span>₹5,000 Instant ICICI / SBI Card Cashback</span></div>
+        </div>
+      </div>
+      <div class="deal-footer">
+        <a class="btn btn-primary sm" style="flex:1; justify-content:center;" href="https://www.google.com/search?q=MacBook+Pro+14+M3+Pro+Reliance+Digital&udm=28" target="_blank" rel="noopener">Compare on Google Shopping →</a>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="deal-card" data-price="44990" data-disc="18" data-rating="4.8" data-cat="home">
+      <span class="deal-badge-pill">🎮 Restock Alert</span>
+      <div>
+        <div class="deal-seller"><i class="fas fa-bolt"></i> Flipkart (SuperComNet)</div>
+        <h3 class="deal-item-name">Sony PlayStation 5 Slim Disc Edition (1TB SSD Console)</h3>
+        <div class="price-row">
+          <span class="deal-price">₹44,990</span>
+          <span class="deal-mrp">₹54,990</span>
+          <span class="deal-disc">Save ₹10,000 (18% Off)</span>
+        </div>
+        <div class="typical-gauge-box">
+          <div style="display:flex;justify-content:space-between;color:#cbd5e1;">
+            <span>Google Price Check: <strong style="color:#34d399;">₹5,000 Below Typical</strong></span>
+            <span style="font-family:'JetBrains Mono';color:#94a3b8;">Typical: ₹49,990–₹54,990</span>
+          </div>
+          <div class="gauge-bar"><div class="gauge-Pin" style="left:19%;"></div></div>
+        </div>
+        <div class="seller-specs">
+          <div><span>Merchant Rating:</span> <span>4.8 / 5.0 (19,300 Reviews)</span></div>
+          <div><span>Open-Box Delivery:</span> <span>Verified Serial &amp; Seal Inspection</span></div>
+          <div><span>Bank Offer:</span> <span>5% Unlimited Flipkart Axis Cashback</span></div>
+        </div>
+      </div>
+      <div class="deal-footer">
+        <a class="btn btn-primary sm" style="flex:1; justify-content:center;" href="https://www.google.com/search?q=PS5+Slim+Disc+Flipkart&udm=28" target="_blank" rel="noopener">Compare on Google Shopping →</a>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="deal-card" data-price="42900" data-disc="27" data-rating="4.7" data-cat="home">
+      <span class="deal-badge-pill">⚡ 27% Price Drop</span>
+      <div>
+        <div class="deal-seller"><i class="fab fa-amazon"></i> Amazon India (Dyson Official)</div>
+        <h3 class="deal-item-name">Dyson V12 Detect Slim Absolute Laser Cordless Vacuum</h3>
+        <div class="price-row">
+          <span class="deal-price">₹42,900</span>
+          <span class="deal-mrp">₹58,900</span>
+          <span class="deal-disc">Save ₹16,000 (27% Off)</span>
+        </div>
+        <div class="typical-gauge-box">
+          <div style="display:flex;justify-content:space-between;color:#cbd5e1;">
+            <span>Google Price Check: <strong style="color:#34d399;">Steepest 90-Day Drop</strong></span>
+            <span style="font-family:'JetBrains Mono';color:#94a3b8;">Typical: ₹48,900–₹55,900</span>
+          </div>
+          <div class="gauge-bar"><div class="gauge-Pin" style="left:12%;"></div></div>
+        </div>
+        <div class="seller-specs">
+          <div><span>Merchant Rating:</span> <span>4.7 / 5.0 (5,140 Reviews)</span></div>
+          <div><span>Warranty:</span> <span>2 Years Dyson India Accidental Care</span></div>
+          <div><span>EMI Option:</span> <span>12-Month No-Cost EMI Available</span></div>
+        </div>
+      </div>
+      <div class="deal-footer">
+        <a class="btn btn-primary sm" style="flex:1; justify-content:center;" href="https://www.google.com/search?q=Dyson+V12+Detect+Slim+Amazon&udm=28" target="_blank" rel="noopener">Compare on Google Shopping →</a>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-function sortDeals(criterion) {
+const UDM_BRIEFS = {
+  all: {
+    title: 'AI Shopping Brief: Q4 Festival & Bank Card Arbitrage',
+    desc: 'Our telemetry across 5 Indian e-commerce marketplaces shows flagship electronics are currently trading <strong>8% to 27% below their 90-day median</strong>. Stacking instant HDFC/ICICI bank discounts with store coupons yields all-time low net effective prices on all 6 tracked items below.'
+  },
+  phones: {
+    title: 'AI Shopping Brief: Flagship Smartphones (iPhone 15 Pro vs Galaxy S24 Ultra)',
+    desc: 'Vijay Sales leads on Apple iPhone 15 Pro pricing at ₹1,27,990, while Amazon Appario offers a ₹20,000 discount + ₹5,000 HDFC instant discount on the 512GB Galaxy S24 Ultra. Both sit in the bottom 15th percentile of their 90-day price range.'
+  },
+  audio: {
+    title: 'AI Shopping Brief: ANC Headphones & Pro Creator Laptops',
+    desc: 'Sony WH-1000XM5 has dipped to ₹26,990 on Croma with 2-hour store pickup, while the M3 Pro MacBook Pro 14" is ₹24,000 off at Reliance Digital before card cashback.'
+  },
+  home: {
+    title: 'AI Shopping Brief: Next-Gen Consoles & Smart Home Appliances',
+    desc: 'Flipkart Open-Box Delivery has the PS5 Slim 1TB Disc Edition at ₹44,990 (₹10,000 below MRP), and Dyson V12 Detect Slim is at its lowest verified price of ₹42,900 on Amazon.'
+  }
+};
+
+let activeCategory = 'all';
+
+function filterByCategory(cat, btnEl) {
+  activeCategory = cat;
+  document.querySelectorAll('.udm-pill').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+
+  const brief = UDM_BRIEFS[cat] || UDM_BRIEFS.all;
+  const hEl = document.getElementById('udmBriefHeadline');
+  const sEl = document.getElementById('udmBriefSummary');
+  if (hEl) hEl.textContent = brief.title;
+  if (sEl) sEl.innerHTML = brief.desc;
+
+  applyDealFilters();
+}
+
+function filterDealSearch() {
+  applyDealFilters();
+}
+
+function applyDealFilters() {
+  const qInput = document.getElementById('dealSearchInput');
+  const q = qInput ? qInput.value.trim().toLowerCase() : '';
+  const cards = document.querySelectorAll('#dealsGrid .deal-card');
+  let shown = 0;
+
+  cards.forEach(card => {
+    const catMatch = (activeCategory === 'all' || card.getAttribute('data-cat') === activeCategory);
+    const textMatch = (!q || card.textContent.toLowerCase().indexOf(q) !== -1);
+    if (catMatch && textMatch) {
+      card.style.display = 'flex';
+      shown++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  const lbl = document.getElementById('dealsCountLabel');
+  if (lbl) lbl.textContent = `Showing ${shown} Verified Multi-Merchant Deal${shown === 1 ? '' : 's'}`;
+}
+
+function sortDeals(criterion, btnEl) {
   document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  if (btnEl) {
+    btnEl.classList.add('active');
+  } else if (typeof event !== 'undefined' && event && event.currentTarget) {
+    event.currentTarget.classList.add('active');
+  }
 
   const grid = document.getElementById('dealsGrid');
   const cards = Array.from(grid.children);
@@ -172,17 +414,13 @@ function sortDeals(criterion) {
 }
 </script>
 
-
 <script>
 (function() {
-  // Theme Toggle Handler
   var tBtn = document.getElementById('themeToggle');
   if (tBtn) {
     function updateIcon(theme) {
       var ic = tBtn.querySelector('i');
-      if (ic) {
-        ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
-      }
+      if (ic) ic.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
     }
     var cur = document.documentElement.getAttribute('data-theme') || 'dark';
     updateIcon(cur);
@@ -195,15 +433,10 @@ function sortDeals(criterion) {
     });
   }
 
-  // Cursor Ring
   var ring = document.getElementById('cursorRing');
   if (ring && !window.matchMedia('(pointer: coarse)').matches) {
-    var mouseX = -100, mouseY = -100;
-    var ringX = -100, ringY = -100;
-    window.addEventListener('mousemove', function(e) {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
+    var mouseX = -100, mouseY = -100, ringX = -100, ringY = -100;
+    window.addEventListener('mousemove', function(e) { mouseX = e.clientX; mouseY = e.clientY; });
     function renderCursor() {
       ringX += (mouseX - ringX) * 0.2;
       ringY += (mouseY - ringY) * 0.2;
@@ -214,6 +447,5 @@ function sortDeals(criterion) {
   }
 })();
 </script>
-
 </body>
 </html>

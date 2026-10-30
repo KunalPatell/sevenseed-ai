@@ -630,7 +630,7 @@
 
     <!-- Brief form -->
     <div class="brief-panel">
-      <h3><span class="dot"></span> Task Brief — <span id="selectedAgentName">Maya</span></h3>
+      <h3><span class="dot"></span> Task Brief — <span id="selectedAgentName">Maya</span> <span id="selectedAgentRole" style="color:#06b6d4;font-weight:600;font-size:13px;margin-left:4px;">Content &amp; SEO</span></h3>
       <div class="byok-notice">
         <i class="fas fa-key"></i>
         <span>Your API key is used only in-browser and never stored on our servers. <a href="index.html#byok"
@@ -811,7 +811,7 @@
       document.querySelectorAll('.agent-chip').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
       currentAgent = el.dataset.agent;
-      document.getElementById('selectedAgentName').textContent = AGENT_NAMES[currentAgent];
+      document.getElementById('selectedAgentName').textContent = AGENT_NAMES[currentAgent]; if (document.getElementById('selectedAgentRole')) document.getElementById('selectedAgentRole').textContent = ({ maya: 'Content & SEO', vibe: 'Social Media', wave: 'Sales & Comms', nova: 'Business Analyst', echo: 'Meeting Assistant', scout: 'AI Recruiter', sage: 'Data Analyst' })[currentAgent] || 'Autonomous Specialist';
       // Update task dropdown
       const sel = document.getElementById('taskType');
       sel.innerHTML = '<option value="">Select task type…</option>';
@@ -1081,7 +1081,7 @@ Add a free Groq or Gemini key on the BYOK page, then dispatch again.`;
           body.appendChild(twDiv);
           body.scrollTop = body.scrollHeight;
 
-          typewriter(document.getElementById('typewriterTarget'), output, function () {
+          typewriter(twDiv, output, function () {
             termLine('t-sys', '');
             termLine('t-success', `✅ Done · ${agentName} · ${((performance.now() - __t0) / 1000).toFixed(1)}s`);
 

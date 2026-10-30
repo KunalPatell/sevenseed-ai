@@ -61,7 +61,7 @@
     <button class="icon-btn" id="searchBtn" type="button" aria-label="Search (Ctrl+K)" title="Search (Ctrl+K)"><i class="fas fa-magnifying-glass"></i></button>
     <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light / dark theme" title="Toggle theme"><i class="fas fa-moon"></i></button>
     <a class="btn btn-ghost" href="/rakshak-ai/app/"><i class="fas fa-wand-magic-sparkles"></i> Launch App</a>
-    <a class="btn btn-primary" href="https://sevenseed.onrender.com/rakshak-ai" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch</a>
+    <a class="btn btn-primary" href="/rakshak-ai/app/"><i class="fas fa-rocket"></i> Launch</a>
     <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
   </div>
 </nav>
@@ -85,7 +85,7 @@
     <h1 class="hero-title" data-blur-in style="--i:1">AI Citizen Assistant, Police Copilot & <span class="grad">Vision Security Sentinel</span></h1>
     <p class="hero-sub" data-blur-in style="--i:2">Rakshak AI is a 5-in-1 public safety and computer vision platform combining automatic FIR generation (BNS/IPC), multilingual AI chatbot, cybercrime scam analyzer, safety mask PPE scanner, and YOLO occupancy detection.</p>
     <div class="hero-actions" data-blur-in style="--i:3">
-      <a class="btn btn-primary lg" href="https://sevenseed.onrender.com/rakshak-ai" target="_blank" rel="noopener"><i class="fas fa-rocket"></i> Launch Rakshak AI</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
+      <a class="btn btn-primary lg" href="/rakshak-ai/app/"><i class="fas fa-rocket"></i> Launch Rakshak AI</a><a class="btn btn-ghost lg" href="#services"><i class="fas fa-microchip"></i> See the AI</a>
     </div>
     <div class="stats-row" data-blur-in style="--i:4">
         <div class="hs"><div class="hs-num count">5-in-1</div><div class="hs-lbl">AI Workstations</div></div>
@@ -143,6 +143,59 @@
     </div>
   </div>
 </section>
+
+
+<section class="section" id="live-rakshak-deck" style="padding-top:10px;padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-shield-halved"></i> Live Legal-Tech &amp; Citizen Safety Workbench</div>
+    <h2 class="sec-title">IPC-to-BNS 2023 Crosswalk &amp; Amber Alert Broadcast Simulator</h2>
+    <p class="sec-sub">Convert legacy Indian Penal Code sections to Bharatiya Nyaya Sanhita (BNS 2023) instantly and simulate geo-fenced emergency cell broadcasts.</p>
+  </div>
+  <div class="reveal" style="max-width:1200px;margin:0 auto;background:rgba(15,23,42,0.82);border:1px solid rgba(239,68,68,0.32);border-radius:24px;padding:26px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;">
+      <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#f87171;margin-bottom:6px;"><i class="fas fa-scale-balanced"></i> IPC 1860 → BNS 2023 Statutory Crosswalk</div>
+        <select id="rkHomeIpcSelect" style="width:100%;background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#fff;padding:10px;border-radius:10px;font-size:13px;margin-bottom:10px;">
+          <option value="420">IPC Section 420 (Cheating &amp; Cyber Fraud)</option>
+          <option value="379">IPC Section 379 (Theft / Vehicle Snatching)</option>
+          <option value="302">IPC Section 302 (Punishment for Murder)</option>
+          <option value="506">IPC Section 506 (Criminal Intimidation)</option>
+        </select>
+        <div id="rkHomeIpcResult" style="font-size:13px;color:#cbd5e1;line-height:1.6;"></div>
+        <a href="fir-generator.html" class="btn btn-primary sm" style="margin-top:10px;">Draft BNS 2023 e-FIR →</a>
+      </div>
+      <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#fbbf24;margin-bottom:6px;"><i class="fas fa-tower-broadcast"></i> Amber Alert Geo-Fence Simulator</div>
+        <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:8px;">Broadcast Radius (km): <strong id="rkHomeRadLbl" style="color:#fff;">15 km</strong>
+          <input type="range" id="rkHomeRadSlider" min="2" max="50" value="15" style="width:100%;accent-color:#f59e0b;margin-top:4px;">
+        </label>
+        <div id="rkHomeRadResult" style="font-size:13px;color:#cbd5e1;line-height:1.6;"></div>
+        <a href="missing-person.html" class="btn btn-ghost sm" style="margin-top:10px;">Missing Person &amp; Sighting Hub →</a>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  const bnsMap = {
+    '420': '→ <strong style="color:#34d399;">BNS Section 318(4):</strong> Cheating and dishonestly inducing delivery of property. Cognizable, Non-bailable, up to 7 years imprisonment. Include Sec 63 BSA 2023 certificate for UPI/screen logs.',
+    '379': '→ <strong style="color:#34d399;">BNS Section 303(2):</strong> Theft &amp; snatching (BNS Sec 304). Zero-FIR filing mandatory under Sec 173 BNSS 2023 regardless of jurisdiction.',
+    '302': '→ <strong style="color:#34d399;">BNS Section 103(1):</strong> Punishment for murder. Mandatory forensic videography of crime scene under Sec 176(3) BNSS 2023.',
+    '506': '→ <strong style="color:#34d399;">BNS Section 351(2)/(3):</strong> Criminal intimidation &amp; extortion threats via electronic communication.'
+  };
+  function updIpc() { document.getElementById('rkHomeIpcResult').innerHTML = bnsMap[document.getElementById('rkHomeIpcSelect').value] || ''; }
+  function updRad() {
+    const r = Number(document.getElementById('rkHomeRadSlider').value);
+    document.getElementById('rkHomeRadLbl').textContent = r + ' km';
+    const towers = Math.round(r * r * 1.4);
+    const citizens = (towers * 1850).toLocaleString('en-IN');
+    document.getElementById('rkHomeRadResult').innerHTML = `<div>Active Telecom Cell Towers: <strong>${towers} towers</strong></div><div>Estimated Citizen Handsets Reached: <strong style="color:#34d399;font-size:16px;">${citizens} devices</strong> in &lt;4.2 seconds</div>`;
+  }
+  document.getElementById('rkHomeIpcSelect').addEventListener('change', updIpc);
+  document.getElementById('rkHomeRadSlider').addEventListener('input', updRad);
+  updIpc(); updRad();
+})();
+</script>
 
 <section class="ai-strip">
   <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>

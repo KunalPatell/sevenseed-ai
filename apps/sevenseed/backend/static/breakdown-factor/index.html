@@ -151,6 +151,63 @@
   </div>
 </section>
 
+
+<section class="section" id="live-civil-deck" style="padding-top:10px;padding-bottom:60px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-helmet-safety"></i> Live Civil &amp; Structural Engineering Workbench</div>
+    <h2 class="sec-title">IS 456 Crack Forensics, FMEA RPN &amp; CPWD DSR 2026 BOQ</h2>
+    <p class="sec-sub">Simulate structural crack width compliance, calculate Failure Mode Risk Priority Numbers (S×O×D), and price epoxy/micro-concrete retrofits live.</p>
+  </div>
+  <div class="reveal" style="max-width:1200px;margin:0 auto;background:rgba(15,23,42,0.82);border:1px solid rgba(245,158,11,0.32);border-radius:24px;padding:26px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;">
+      <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#fbbf24;margin-bottom:6px;"><i class="fas fa-ruler-combined"></i> IS 456:2000 Crack Width Diagnostic</div>
+        <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:10px;">Measured Surface Crack Width: <strong id="bfHomeCrackLbl" style="color:#fff;">0.45 mm</strong>
+          <input type="range" id="bfHomeCrackSlider" min="0.05" max="2.50" step="0.05" value="0.45" style="width:100%;accent-color:#f59e0b;margin-top:4px;">
+        </label>
+        <div id="bfHomeCrackResult" style="font-size:13px;color:#cbd5e1;line-height:1.6;"></div>
+        <a href="crack-forensics.html" class="btn btn-primary sm" style="margin-top:10px;">Open CAD Crack Forensics →</a>
+      </div>
+      <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#38bdf8;margin-bottom:6px;"><i class="fas fa-cubes"></i> CPWD DSR 2026 Retrofit BOQ Calculator</div>
+        <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:10px;">Damaged RCC Area (Sq.m): <strong id="bfHomeAreaLbl" style="color:#fff;">45 sq.m</strong>
+          <input type="range" id="bfHomeAreaSlider" min="5" max="500" step="5" value="45" style="width:100%;accent-color:#38bdf8;margin-top:4px;">
+        </label>
+        <div id="bfHomeBoqResult" style="font-size:13px;color:#cbd5e1;line-height:1.6;"></div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <a href="boq-estimator.html" class="btn btn-ghost sm">Full BOQ Studio →</a>
+          <a href="bim-viewer.html" class="btn btn-ghost sm">3D BIM Twin →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  function updCrack() {
+    const w = Number(document.getElementById('bfHomeCrackSlider').value);
+    document.getElementById('bfHomeCrackLbl').textContent = w.toFixed(2) + ' mm';
+    let status = '';
+    if (w <= 0.30) status = '<span style="color:#34d399;font-weight:800;">✓ WITHIN IS 456 LIMIT (≤0.3mm):</span> Cosmetic hairline crack. Apply elastomeric breathable UV coating.';
+    else if (w <= 1.00) status = '<span style="color:#fbbf24;font-weight:800;">⚠ MODERATE STRUCTURAL CRACK:</span> Exceeds IS 456 serviceability limit. Specify low-viscosity epoxy injection grouting (CPWD DSR 14.82).';
+    else status = '<span style="color:#f87171;font-weight:800;">🚨 CRITICAL SHEAR / FLEXURAL BREACH:</span> Immediate propping + carbon-fiber FRP wrapping &amp; micro-concrete jacketing required.';
+    document.getElementById('bfHomeCrackResult').innerHTML = status;
+  }
+  function updBoq() {
+    const a = Number(document.getElementById('bfHomeAreaSlider').value);
+    document.getElementById('bfHomeAreaLbl').textContent = a + ' sq.m';
+    const epoxyCost = a * 1450;
+    const jacketCost = a * 2850;
+    const gst = Math.round((epoxyCost + jacketCost) * 0.18);
+    const tot = epoxyCost + jacketCost + gst;
+    document.getElementById('bfHomeBoqResult').innerHTML = `<div>Epoxy Grouting + Micro-Concrete: <strong>₹${(epoxyCost+jacketCost).toLocaleString('en-IN')}</strong></div><div>18% GST: <strong>₹${gst.toLocaleString('en-IN')}</strong> · Total Estimate: <strong style="color:#34d399;font-size:16px;">₹${tot.toLocaleString('en-IN')}</strong></div>`;
+  }
+  document.getElementById('bfHomeCrackSlider').addEventListener('input', updCrack);
+  document.getElementById('bfHomeAreaSlider').addEventListener('input', updBoq);
+  updCrack(); updBoq();
+})();
+</script>
+
 <section class="ai-strip">
   <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
   <div class="ai-marquee"><div class="marquee-track ai-track"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>YOLO Vision</span><span class="ai-chip"><i class="fas fa-microchip"></i>ML Forecasting</span><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>YOLO Vision</span><span class="ai-chip"><i class="fas fa-microchip"></i>ML Forecasting</span></div></div>

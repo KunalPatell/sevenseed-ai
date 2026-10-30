@@ -42,12 +42,11 @@ def main():
     print(" 🚀 SEVENSEED SaaS DUAL-REMOTE DEPLOYMENT")
     print("==================================================")
 
-    # 1. Regenerate static marketing sites & sub-pages
-    print("\n1. Regenerating static venture marketing sites & dedicated sub-pages...")
-    gen_script = REPO_ROOT / "generate_sites.py"
-    if gen_script.is_file():
-        run_cmd(f'"{sys.executable}" "{gen_script}"')
-    # Preserve all rich next.js app workstations and bespoke domain feature pages (do not overwrite with templates)
+    # 1. Sync mirror directories & preserve all custom venture homepages and workstations
+    print("\n1. Synchronizing venture mirror directories & preserving bespoke pages...")
+    sync_script = REPO_ROOT / "sync_mirrors.py"
+    if sync_script.is_file():
+        run_cmd(f'"{sys.executable}" "{sync_script}"')
     print("   [OK] Preserving all rich venture apps, bespoke domain tools, and Kiro feature pages.")
 
     # 1b. Sync Hub & venture sub-pages to backend static directory

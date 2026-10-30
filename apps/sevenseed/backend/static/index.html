@@ -19,6 +19,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🌱%3C/text%3E%3C/svg%3E">
+  <meta name="theme-color" content="#060609">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style id="suites-style">
 /* ════════════════════════════════════════════════════════════════════
@@ -843,6 +846,8 @@
 
 </style>
 </head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <body data-variant="bold-centered" style="--font-display:'Inter', system-ui, -apple-system, sans-serif">
 <span id="top"></span>
 
@@ -953,6 +958,7 @@
 
     <a href="pricing.html"><i class="fas fa-tag"></i> Pricing</a>
     <a href="#feature-suites"><i class="fas fa-layer-group"></i> All Suites (35)</a>
+    <a href="universal-crm.html"><i class="fas fa-address-book"></i> Universal CRM</a>
     <a href="#faq"><i class="fas fa-circle-question"></i> FAQ</a>
 
     <!-- Mobile Drawer Actions -->
@@ -2017,6 +2023,183 @@
   </div>
 </section>
 
+
+<section class="section" id="master-live-command-deck" style="padding-top:16px;padding-bottom:64px;">
+  <div class="sec-head reveal">
+    <div class="eyebrow"><i class="fas fa-bolt"></i> Interactive Studio Command Center · 8 Ventures Live</div>
+    <h2 class="sec-title">Experience All 8 AI Ventures In-Browser</h2>
+    <p class="sec-sub">Switch between our live production calculators across E-Commerce, Higher Education, Clinical Pharmacy, Civil Engineering, Philanthropy, Public Safety, Career Intelligence, and Autonomous Agent Swarms.</p>
+  </div>
+
+  <div class="reveal" style="max-width:1280px;margin:0 auto;background:rgba(15,23,42,0.84);border:1px solid rgba(99,102,241,0.35);border-radius:24px;padding:28px;box-shadow:0 24px 80px rgba(0,0,0,0.6);">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:16px;margin-bottom:22px;">
+      <button type="button" class="btn btn-primary sm hub-live-tab" data-pane="hub-pane-emart" style="border-radius:99px;"><i class="fas fa-bag-shopping"></i> 1. AVP Emart (Price &amp; Coupons)</button>
+      <button type="button" class="btn btn-ghost sm hub-live-tab" data-pane="hub-pane-avpu" style="border-radius:99px;"><i class="fas fa-graduation-cap"></i> 2. AVPU (DAG, Code &amp; UX)</button>
+      <button type="button" class="btn btn-ghost sm hub-live-tab" data-pane="hub-pane-pharm" style="border-radius:99px;"><i class="fas fa-heart-pulse"></i> 3. Pharmacy (CYP450 &amp; Generic)</button>
+      <button type="button" class="btn btn-ghost sm hub-live-tab" data-pane="hub-pane-civil" style="border-radius:99px;"><i class="fas fa-helmet-safety"></i> 4. Breakdown (IS 456 &amp; BIM)</button>
+      <button type="button" class="btn btn-ghost sm hub-live-tab" data-pane="hub-pane-trust" style="border-radius:99px;"><i class="fas fa-hand-holding-heart"></i> 5. AVP Trust (80G &amp; Merkle)</button>
+      <button type="button" class="btn btn-ghost sm hub-live-tab" data-pane="hub-pane-rakshak" style="border-radius:99px;"><i class="fas fa-shield-halved"></i> 6. Rakshak (BNS 2023 e-FIR)</button>
+    </div>
+
+    <!-- PANE 1: AVP EMART -->
+    <div class="hub-live-pane" id="hub-pane-emart">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:center;">
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(56,189,248,0.3);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#38bdf8;margin-bottom:6px;">Google Shopping (?udm=28) + Smartprix + BuyHatke + Xerve</div>
+          <h4 style="font-size:18px;font-weight:800;color:#fff;margin-bottom:10px;">Live Multi-Store Price &amp; Bank Card Net Calculator</h4>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+            <select id="hubEmartProd" style="flex:1;background:#0f172a;border:1px solid rgba(255,255,255,0.15);color:#fff;padding:10px;border-radius:10px;font-size:13px;">
+              <option value="72900" data-spec="93" data-low="72900">Apple iPhone 15 (128GB) — ₹72,900</option>
+              <option value="64999" data-spec="95" data-low="64999">OnePlus 12 (16GB/512GB) — ₹64,999</option>
+              <option value="99900" data-spec="97" data-low="99900">MacBook Air 13" M3 — ₹99,900</option>
+              <option value="26990" data-spec="96" data-low="26990">Sony WH-1000XM5 Wireless ANC — ₹26,990</option>
+            </select>
+            <select id="hubEmartCard" style="background:#0f172a;border:1px solid rgba(16,185,129,0.4);color:#34d399;padding:10px;border-radius:10px;font-size:13px;font-weight:700;">
+              <option value="0.10" data-cap="5000">HDFC Infinia 10% (Up to ₹5k)</option>
+              <option value="0.05" data-cap="4000">SBI Cashback 5% Flat</option>
+              <option value="0.05" data-cap="6000">Amazon Pay ICICI 5%</option>
+            </select>
+          </div>
+          <div id="hubEmartOut" style="font-size:13.5px;color:#cbd5e1;line-height:1.7;"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="/avp-emart/shopping-discovery.html" class="btn btn-primary" style="justify-content:center;"><i class="fas fa-wand-magic-sparkles"></i> Open Smart Discovery Lab →</a>
+          <a href="/avp-emart/spec-compare.html" class="btn btn-ghost" style="justify-content:center;"><i class="fas fa-scale-balanced"></i> Smartprix 3-Slot Spec Compare →</a>
+          <a href="/avp-emart/coupon-tester.html" class="btn btn-ghost" style="justify-content:center;"><i class="fas fa-ticket"></i> Xerve &amp; BuyHatke Coupon Stacker →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 2: AVPU UNIVERSITY -->
+    <div class="hub-live-pane" id="hub-pane-avpu" style="display:none;">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:center;">
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(168,85,247,0.3);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#c084fc;margin-bottom:6px;">Learn-Anything.xyz + FreeCodeCamp + Duolingo + FS.blog</div>
+          <h4 style="font-size:18px;font-weight:800;color:#fff;margin-bottom:10px;">Interactive Study Roadmap &amp; Merit Scholarship Estimator</h4>
+          <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:10px;">GitHub 90-Day Contributions &amp; Streak: <strong id="hubAvpuCommitsLbl" style="color:#fff;">140 commits</strong>
+            <input type="range" id="hubAvpuCommits" min="10" max="400" step="10" value="140" style="width:100%;accent-color:#a855f7;margin-top:4px;">
+          </label>
+          <div id="hubAvpuOut" style="font-size:13.5px;color:#cbd5e1;line-height:1.7;"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="/avpu/learn-dag.html" class="btn btn-primary" style="justify-content:center;"><i class="fas fa-project-diagram"></i> Interactive Prerequisite DAG →</a>
+          <a href="/avpu/100-day-challenge.html" class="btn btn-ghost" style="justify-content:center;"><i class="fas fa-fire"></i> 100-Day AI Challenge &amp; Labs →</a>
+          <a href="/avpu/mental-models.html" class="btn btn-ghost" style="justify-content:center;"><i class="fas fa-brain"></i> Mental Models &amp; UX Laws →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 3: DECODE FOREST PHARMACY -->
+    <div class="hub-live-pane" id="hub-pane-pharm" style="display:none;">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:center;">
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#34d399;margin-bottom:6px;">Clinical CYP450 + NEWS2 Vitals + PMBJP Jan Aushadhi</div>
+          <h4 style="font-size:18px;font-weight:800;color:#fff;margin-bottom:10px;">Bioequivalent Salt &amp; Hepatic Pathway Analyzer</h4>
+          <p style="font-size:13px;color:#cbd5e1;line-height:1.65;">Switching chronic cardiac &amp; diabetic prescriptions to NABL-tested PMBJP Jan Aushadhi bioequivalent generics saves <strong>78%–86%</strong> monthly while checking CYP3A4 / CYP2C19 enzyme conflicts.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="/decode-forest-pharmacy/body-map.html" class="btn btn-primary" style="justify-content:center;"><i class="fas fa-person-rays"></i> 10-Zone Anatomical Body Map →</a>
+          <a href="/decode-forest-pharmacy/drug-interaction.html" class="btn btn-ghost" style="justify-content:center;"><i class="fas fa-capsules"></i> CYP450 Drug Interaction Matrix →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 4: BREAKDOWN FACTOR -->
+    <div class="hub-live-pane" id="hub-pane-civil" style="display:none;">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:center;">
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(245,158,11,0.3);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#fbbf24;margin-bottom:6px;">IS 456:2000 + IS 1893 Seismic + CPWD DSR 2026</div>
+          <h4 style="font-size:18px;font-weight:800;color:#fff;margin-bottom:10px;">3D BIM Digital Twin &amp; Structural Crack BOQ</h4>
+          <p style="font-size:13px;color:#cbd5e1;line-height:1.65;">Inspect structural Factor of Safety across Seismic Zones II–V, calculate FMEA Risk Priority Numbers (S×O×D), and export automated CPWD DSR repair schedules.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="/breakdown-factor/bim-viewer.html" class="btn btn-primary" style="justify-content:center;"><i class="fas fa-cube"></i> Launch 3D BIM Seismic Viewer →</a>
+          <a href="/breakdown-factor/crack-forensics.html" class="btn btn-ghost" style="justify-content:center;"><i class="fas fa-magnifying-glass-chart"></i> CAD Crack Forensics &amp; BOQ →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 5: AVP CHARITABLE TRUST -->
+    <div class="hub-live-pane" id="hub-pane-trust" style="display:none;">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:center;">
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#34d399;margin-bottom:6px;">CBDT Form 10BE + Polygon Merkle Proof + Haqdarshak</div>
+          <h4 style="font-size:18px;font-weight:800;color:#fff;margin-bottom:10px;">100% Zero-Overhead Ledger &amp; 80G Tax Shield</h4>
+          <p style="font-size:13px;color:#cbd5e1;line-height:1.65;">Every rupee is tracked via cryptographic SHA-256 Merkle proofs with instant Section 80G tax deduction calculation and citizen welfare scheme matching.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="/avp-charitable-trust/tax-exemption.html" class="btn btn-primary" style="justify-content:center;"><i class="fas fa-file-invoice-dollar"></i> 80G Tax Savings Calculator →</a>
+          <a href="/avp-charitable-trust/impact-tracker.html" class="btn btn-ghost" style="justify-content:center;"><i class="fas fa-link"></i> Polygon Merkle Proof Ledger →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 6: RAKSHAK AI -->
+    <div class="hub-live-pane" id="hub-pane-rakshak" style="display:none;">
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:center;">
+        <div style="background:rgba(2,6,23,0.75);border:1px solid rgba(239,68,68,0.3);border-radius:16px;padding:20px;">
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#f87171;margin-bottom:6px;">BNS 2023 + BNSS Sec 173 + BSA Sec 63 + Amber Alert</div>
+          <h4 style="font-size:18px;font-weight:800;color:#fff;margin-bottom:10px;">Statutory IPC-to-BNS Crosswalk &amp; Biometric Sentinel</h4>
+          <p style="font-size:13px;color:#cbd5e1;line-height:1.65;">Instant statutory mapping from IPC 1860 to Bharatiya Nyaya Sanhita 2023 with Section 63 Digital Evidence certification and geo-fenced missing person alerts.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="/rakshak-ai/fir-generator.html" class="btn btn-primary" style="justify-content:center;"><i class="fas fa-gavel"></i> IPC-to-BNS 2023 e-FIR Studio →</a>
+          <a href="/rakshak-ai/missing-person.html" class="btn btn-ghost" style="justify-content:center;"><i class="fas fa-tower-broadcast"></i> Amber Alert Broadcast Hub →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  function updHubEmart() {
+    const pSel = document.getElementById('hubEmartProd');
+    const cSel = document.getElementById('hubEmartCard');
+    if (!pSel || !cSel) return;
+    const price = Number(pSel.value);
+    const pOpt = pSel.options[pSel.selectedIndex];
+    const spec = pOpt.dataset.spec;
+    const cOpt = cSel.options[cSel.selectedIndex];
+    const pct = Number(cOpt.value);
+    const cap = Number(cOpt.dataset.cap);
+    const cardOff = Math.min(Math.round(price * pct), cap);
+    const promoOff = Math.round(price * 0.04);
+    const net = price - cardOff - promoOff;
+    document.getElementById('hubEmartOut').innerHTML =
+      `<div>Smartprix Spec Score: <strong style="color:#34d399;">${spec}/100</strong> · Promo (SAVE4) <strong style="color:#38bdf8;">-₹${promoOff.toLocaleString('en-IN')}</strong> · Bank Instant Off <strong style="color:#34d399;">-₹${cardOff.toLocaleString('en-IN')}</strong></div>` +
+      `<div style="margin-top:4px;">Effective Net Landed Price: <strong style="color:#10b981;font-size:19px;font-family:'JetBrains Mono',monospace;">₹${net.toLocaleString('en-IN')}</strong> (6m No-Cost EMI: ₹${Math.round(net/6).toLocaleString('en-IN')}/mo)</div>`;
+  }
+  function updHubAvpu() {
+    const sl = document.getElementById('hubAvpuCommits');
+    if (!sl) return;
+    const c = Number(sl.value);
+    document.getElementById('hubAvpuCommitsLbl').textContent = c + ' commits';
+    const boost = Math.min(35, Math.round(c / 10));
+    const scholarship = Math.min(90, 45 + boost);
+    document.getElementById('hubAvpuOut').innerHTML =
+      `<div>Open-Source Proof-of-Work Multiplier: <strong style="color:#c084fc;">+${boost}% Merit Boost</strong></div>` +
+      `<div>Estimated AVPU Tuition Grant Waiver: <strong style="color:#34d399;font-size:18px;">${scholarship}% Scholarship</strong> (W3C OpenBadges v3.0 Verified)</div>`;
+  }
+  document.querySelectorAll('.hub-live-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.hub-live-tab').forEach(b => { b.classList.remove('btn-primary'); b.classList.add('btn-ghost'); });
+      btn.classList.remove('btn-ghost'); btn.classList.add('btn-primary');
+      document.querySelectorAll('.hub-live-pane').forEach(p => p.style.display = 'none');
+      const pane = document.getElementById(btn.dataset.pane);
+      if (pane) pane.style.display = 'block';
+    });
+  });
+  const ep = document.getElementById('hubEmartProd');
+  const ec = document.getElementById('hubEmartCard');
+  const ac = document.getElementById('hubAvpuCommits');
+  if (ep) ep.addEventListener('change', updHubEmart);
+  if (ec) ec.addEventListener('change', updHubEmart);
+  if (ac) ac.addEventListener('input', updHubAvpu);
+  updHubEmart();
+  updHubAvpu();
+})();
+</script>
+
 <section class="ai-strip">
   <span class="ai-strip-label"><i class="fas fa-bolt"></i> Powered by a production-grade AI stack</span>
   <div class="ai-marquee"><div class="marquee-track ai-track"><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>Computer Vision</span><span class="ai-chip"><i class="fas fa-microchip"></i>MLOps</span><span class="ai-chip"><i class="fas fa-microchip"></i>LangGraph Multi-Agent</span><span class="ai-chip"><i class="fas fa-microchip"></i>Groq LLaMA 3.3 70B</span><span class="ai-chip"><i class="fas fa-microchip"></i>ChromaDB RAG</span><span class="ai-chip"><i class="fas fa-microchip"></i>MiniLM Embeddings</span><span class="ai-chip"><i class="fas fa-microchip"></i>FastAPI</span><span class="ai-chip"><i class="fas fa-microchip"></i>Computer Vision</span><span class="ai-chip"><i class="fas fa-microchip"></i>MLOps</span></div></div>
@@ -2890,5 +3073,14 @@
 })();
 </script>
 
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('SW registered', reg.scope);
+    }).catch(function(err) {
+      console.log('SW registration failed', err);
+    });
+  }
+  </script>
 </body>
 </html>

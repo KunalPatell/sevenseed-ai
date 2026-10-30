@@ -1939,9 +1939,11 @@ if (!window.showToast) {
     toast.setAttribute('role', 'alert');
     toast.innerHTML =
       '<span class="ss-toast-icon"><i class="fas ' + iconClass + '"></i></span>' +
-      '<div class="ss-toast-msg">' + message + '</div>' +
+      '<div class="ss-toast-msg"></div>' +
       '<button type="button" class="ss-toast-close" aria-label="Dismiss"><i class="fas fa-xmark"></i></button>' +
       '<div class="ss-toast-progress" style="animation-duration:' + duration + 'ms;"></div>';
+    // Message is often raw err.message / server text — never parse it as HTML.
+    toast.querySelector('.ss-toast-msg').textContent = String(message == null ? '' : message);
 
     container.appendChild(toast);
 
@@ -1985,4 +1987,271 @@ if (!window._ssOrigAlert) {
   };
 }
 
+// 13. AUTOMATION BUILDER (if-then flows)
+// ═══════════════════════════════════════════════════════════════════════════
+(function() {
+  var container = document.getElementById('automationBuilder');
+  if (!container) return;
 
+  var abCreateBtn = document.getElementById('abCreateBtn');
+  var abFlowName = document.getElementById('abFlowName');
+  var abFlowDesc = document.getElementById('abFlowDesc');
+  var abTriggerType = document.getElementById('abTriggerType');
+  var abCreateResult = document.getElementById('abCreateResult');
+
+  var abListBtn = document.getElementById('abListBtn');
+  var abFlowList = document.getElementById('abFlowList');
+
+  var abGetBtn = document.getElementById('abGetBtn');
+  var abFlowIdGet = document.getElementById('abFlowIdGet');
+  var abFlowDetail = document.getElementById('abFlowDetail');
+
+  var abTestBtn = document.getElementById('abTestBtn');
+  var abFlowIdTest = document.getElementById('abFlowIdTest');
+  var abTestInput = document.getElementById('abTestInput');
+  var abTestResult = document.getElementById('abTestResult');
+
+  var abExecBtn = document.getElementById('abExecBtn');
+  var abFlowIdExec = document.getElementById('abFlowIdExec');
+  var abExecInput = document.getElementById('abExecInput');
+  var abExecResult = document.getElementById('abExecResult');
+
+  var abExecutionsBtn = document.getElementById('abExecutionsBtn');
+  var abExecutionsList = document.getElementById('abExecutionsList');
+
+  var abTemplatesBtn = document.getElementById('abTemplatesBtn');
+  var abTemplatesList = document.getElementById('abTemplatesList');
+
+  function showResult(el, data) {
+    if (!el) return;
+    if (typeof data === 'string') {
+      el.textContent = data;
+    } else {
+      el.textContent = JSON.stringify(data, null, 2);
+    }
+  }
+
+  if (abCreateBtn) {
+    abCreateBtn.addEventListener('click', function() {
+      var name = abFlowName ? abFlowName.value.trim() : '';
+      var desc = abFlowDesc ? abFlowDesc.value.trim() : '';
+      var trigger = abTriggerType ? abTriggerType.value : '';
+      if (!name) {
+        if (typeof ssToast === 'function') ssToast('Flow name required', 'error');
+        else if (typeof window.showToast === 'function') window.showToast('Flow name required', 'error');
+        return;
+      }
+      abCreateBtn.disabled = true;
+      fetch('/api/automation/flows', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, description: desc, trigger_type: trigger })
+      })
+      .then(function(res) {
+        if (!res.ok) return res.text().then(function(t) { throw new Error(t || res.statusText); });
+        return res.json();
+      })
+      .then(function(data) {
+        showResult(abCreateResult, data);
+        if (typeof ssToast === 'function') ssToast('Flow created', 'success');
+        else if (typeof window.showToast === 'function') window.showToast('Flow created', 'success');
+      })
+      .catch(function(err) {
+        showResult(abCreateResult, err.message);
+        if (typeof ssToast === 'function') ssToast(err.message, 'error');
+        else if (typeof window.showToast === 'function') window.showToast(err.message, 'error');
+      })
+      .finally(function() {
+        abCreateBtn.disabled = false;
+      });
+    });
+  }
+
+  if (abListBtn) {
+    abListBtn.addEventListener('click', function() {
+      abListBtn.disabled = true;
+      fetch('/api/automation/flows')
+      .then(function(res) {
+        if (!res.ok) return res.text().then(function(t) { throw new Error(t || res.statusText); });
+        return res.json();
+      })
+      .then(function(data) {
+        showResult(abFlowList, data);
+        if (typeof ssToast === 'function') ssToast('Flows loaded', 'success');
+        else if (typeof window.showToast === 'function') window.showToast('Flows loaded', 'success');
+      })
+      .catch(function(err) {
+        showResult(abFlowList, err.message);
+        if (typeof ssToast === 'function') ssToast(err.message, 'error');
+        else if (typeof window.showToast === 'function') window.showToast(err.message, 'error');
+      })
+      .finally(function() {
+        abListBtn.disabled = false;
+      });
+    });
+  }
+
+  if (abGetBtn) {
+    abGetBtn.addEventListener('click', function() {
+      var flowId = abFlowIdGet ? abFlowIdGet.value.trim() : '';
+      if (!flowId) {
+        if (typeof ssToast === 'function') ssToast('Flow ID required', 'error');
+        else if (typeof window.showToast === 'function') window.showToast('Flow ID required', 'error');
+        return;
+      }
+      abGetBtn.disabled = true;
+      fetch('/api/automation/flows/' + encodeURIComponent(flowId))
+      .then(function(res) {
+        if (!res.ok) return res.text().then(function(t) { throw new Error(t || res.statusText); });
+        return res.json();
+      })
+      .then(function(data) {
+        showResult(abFlowDetail, data);
+        if (typeof ssToast === 'function') ssToast('Flow loaded', 'success');
+        else if (typeof window.showToast === 'function') window.showToast('Flow loaded', 'success');
+      })
+      .catch(function(err) {
+        showResult(abFlowDetail, err.message);
+        if (typeof ssToast === 'function') ssToast(err.message, 'error');
+        else if (typeof window.showToast === 'function') window.showToast(err.message, 'error');
+      })
+      .finally(function() {
+        abGetBtn.disabled = false;
+      });
+    });
+  }
+
+  if (abTestBtn) {
+    abTestBtn.addEventListener('click', function() {
+      var flowId = abFlowIdTest ? abFlowIdTest.value.trim() : '';
+      var input = abTestInput ? abTestInput.value : '';
+      if (!flowId) {
+        if (typeof ssToast === 'function') ssToast('Flow ID required', 'error');
+        else if (typeof window.showToast === 'function') window.showToast('Flow ID required', 'error');
+        return;
+      }
+      var inputData = {};
+      if (input && input.trim()) {
+        try {
+          inputData = JSON.parse(input);
+        } catch (e) {
+          inputData = { raw: input };
+        }
+      }
+      abTestBtn.disabled = true;
+      fetch('/api/automation/flows/' + encodeURIComponent(flowId) + '/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input_data: inputData })
+      })
+      .then(function(res) {
+        if (!res.ok) return res.text().then(function(t) { throw new Error(t || res.statusText); });
+        return res.json();
+      })
+      .then(function(data) {
+        showResult(abTestResult, data);
+        if (typeof ssToast === 'function') ssToast('Test completed', 'success');
+        else if (typeof window.showToast === 'function') window.showToast('Test completed', 'success');
+      })
+      .catch(function(err) {
+        showResult(abTestResult, err.message);
+        if (typeof ssToast === 'function') ssToast(err.message, 'error');
+        else if (typeof window.showToast === 'function') window.showToast(err.message, 'error');
+      })
+      .finally(function() {
+        abTestBtn.disabled = false;
+      });
+    });
+  }
+
+  if (abExecBtn) {
+    abExecBtn.addEventListener('click', function() {
+      var flowId = abFlowIdExec ? abFlowIdExec.value.trim() : '';
+      var input = abExecInput ? abExecInput.value : '';
+      if (!flowId) {
+        if (typeof ssToast === 'function') ssToast('Flow ID required', 'error');
+        else if (typeof window.showToast === 'function') window.showToast('Flow ID required', 'error');
+        return;
+      }
+      var inputData = {};
+      if (input && input.trim()) {
+        try {
+          inputData = JSON.parse(input);
+        } catch (e) {
+          inputData = { raw: input };
+        }
+      }
+      abExecBtn.disabled = true;
+      fetch('/api/automation/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ flow_id: flowId, input_data: inputData })
+      })
+      .then(function(res) {
+        if (!res.ok) return res.text().then(function(t) { throw new Error(t || res.statusText); });
+        return res.json();
+      })
+      .then(function(data) {
+        showResult(abExecResult, data);
+        if (typeof ssToast === 'function') ssToast('Execution started', 'success');
+        else if (typeof window.showToast === 'function') window.showToast('Execution started', 'success');
+      })
+      .catch(function(err) {
+        showResult(abExecResult, err.message);
+        if (typeof ssToast === 'function') ssToast(err.message, 'error');
+        else if (typeof window.showToast === 'function') window.showToast(err.message, 'error');
+      })
+      .finally(function() {
+        abExecBtn.disabled = false;
+      });
+    });
+  }
+
+  if (abExecutionsBtn) {
+    abExecutionsBtn.addEventListener('click', function() {
+      abExecutionsBtn.disabled = true;
+      fetch('/api/automation/executions')
+      .then(function(res) {
+        if (!res.ok) return res.text().then(function(t) { throw new Error(t || res.statusText); });
+        return res.json();
+      })
+      .then(function(data) {
+        showResult(abExecutionsList, data);
+        if (typeof ssToast === 'function') ssToast('Executions loaded', 'success');
+        else if (typeof window.showToast === 'function') window.showToast('Executions loaded', 'success');
+      })
+      .catch(function(err) {
+        showResult(abExecutionsList, err.message);
+        if (typeof ssToast === 'function') ssToast(err.message, 'error');
+        else if (typeof window.showToast === 'function') window.showToast(err.message, 'error');
+      })
+      .finally(function() {
+        abExecutionsBtn.disabled = false;
+      });
+    });
+  }
+
+  if (abTemplatesBtn) {
+    abTemplatesBtn.addEventListener('click', function() {
+      abTemplatesBtn.disabled = true;
+      fetch('/api/automation/templates')
+      .then(function(res) {
+        if (!res.ok) return res.text().then(function(t) { throw new Error(t || res.statusText); });
+        return res.json();
+      })
+      .then(function(data) {
+        showResult(abTemplatesList, data);
+        if (typeof ssToast === 'function') ssToast('Templates loaded', 'success');
+        else if (typeof window.showToast === 'function') window.showToast('Templates loaded', 'success');
+      })
+      .catch(function(err) {
+        showResult(abTemplatesList, err.message);
+        if (typeof ssToast === 'function') ssToast(err.message, 'error');
+        else if (typeof window.showToast === 'function') window.showToast(err.message, 'error');
+      })
+      .finally(function() {
+        abTemplatesBtn.disabled = false;
+      });
+    });
+  }
+})();

@@ -510,6 +510,8 @@ app.include_router(_frontier_router)
 # GitHub Power Features: Architecture Studio, Email Verifier, NL Operations, Blog Studio, Edge IMU Telemetry, Interview Radar, Spine 2D
 from github_power_features import router as _power_router
 app.include_router(_power_router)
+from crm_router import router as crm_router
+app.include_router(crm_router)
 
 # Same-origin, BYOK-aware LLM gateway used by static feature pages (vertex_client.js)
 from llm_gateway import router as _llm_router

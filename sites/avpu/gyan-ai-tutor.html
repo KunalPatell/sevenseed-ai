@@ -1215,7 +1215,7 @@
       addTyping();
       const delay = 800 + Math.random() * 600;
       setTimeout(() => {
-        document.getElementById('typingIndicator')?.remove();
+        if (document.getElementById('typingIndicator')) document.getElementById('typingIndicator').remove();
         addMsg('ai', gyanReply(q));
         const topic = getTopicFromQuery(q);
         topicCounts[topic] = (topicCounts[topic] || 0) + 1;

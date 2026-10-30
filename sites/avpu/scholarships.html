@@ -4,8 +4,8 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Merit & Equity Scholarships — AVPU</title>
-  <meta name="description" content="Calculate your 100% full-ride AI scholarship eligibility and stipend grant using our automated merit assessment engine.">
+  <title>Merit &amp; Equity Scholarships — AVPU</title>
+  <meta name="description" content="Calculate your 100% full-ride AI scholarship eligibility, H100/A100 GPU compute credits, and monthly stipend grant using our automated merit assessment engine.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -18,20 +18,33 @@
     .sch-title { font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
 
     /* Calculator Card */
-    .calc-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); margin-bottom: 48px; }
-    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .calc-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); margin-bottom: 32px; }
+    .calc-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 32px; }
     @media(max-width: 900px) { .calc-grid { grid-template-columns: 1fr; } }
 
-    .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
     .form-control { width: 100%; padding: 12px 16px; background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 10px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
     .form-control:focus { border-color: #10b981; }
 
-    .result-box { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; min-height: 280px; }
+    .result-box { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; min-height: 320px; }
     .result-status { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #34d399; letter-spacing: 0.08em; margin-bottom: 8px; }
-    .result-grant { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; }
-    .result-breakdown { font-size: 13px; color: var(--text-2); line-height: 1.6; margin-bottom: 20px; }
+    .result-grant { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace; }
+    .result-breakdown { font-size: 13px; color: var(--text-2); line-height: 1.75; margin-bottom: 20px; }
     .result-breakdown strong { color: #fff; }
+
+    .tranche-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+    .tranche-table th, .tranche-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .tranche-table th { color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .award-letter-box {
+      background: linear-gradient(145deg, rgba(16,185,129,0.08), rgba(99,102,241,0.08)), #090d16;
+      border: 1px solid rgba(16,185,129,0.35);
+      border-radius: 16px;
+      padding: 28px;
+      margin-top: 24px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -67,52 +80,117 @@
 <div class="sch-container">
   <div class="sch-header">
     <div class="sch-badge"><i class="fas fa-hand-holding-heart"></i> Philanthropic Endowment by AVP Charitable Trust</div>
-    <h1 class="sch-title">Merit & Equity AI Scholarship Calculator</h1>
-    <p style="color:var(--text-2); max-width:700px; margin:0 auto;">At AVPU, education is 100% tuition-free. Compute your additional GPU compute stipend and hardware grant eligibility instantly.</p>
+    <h1 class="sch-title">Merit &amp; Equity AI Scholarship Calculator</h1>
+    <p style="color:var(--text-2); max-width:740px; margin:0 auto;">At AVPU, education is 100% tuition-free. Compute your additional NVIDIA H100/A100 GPU compute stipend, hardware allowance, and milestone disbursement schedule instantly.</p>
   </div>
 
   <div class="calc-card">
     <div class="calc-grid">
       <div>
         <div class="form-group">
-          <label>Academic Standing / GPA (Out of 10.0 or 4.0 scale)</label>
-          <input type="number" id="gpa" class="form-control" value="8.8" step="0.1" min="0" max="10">
+          <label><span>Candidate Full Name</span><span style="color:#34d399;font-size:11px;">For Award Letter</span></label>
+          <input type="text" id="applicantName" class="form-control" value="Aarav Sharma" placeholder="Enter your full name" oninput="calculateGrant()">
         </div>
         <div class="form-group">
-          <label>Annual Family Income Bracket</label>
-          <select id="income" class="form-control">
-            <option value="tier1">&lt; ₹3 Lakhs / Year (High Need)</option>
-            <option value="tier2">₹3 - ₹8 Lakhs / Year (Moderate Need)</option>
-            <option value="tier3">&gt; ₹8 Lakhs / Year (General Merit)</option>
+          <label><span>Academic Standing / GPA (Out of 10.0 Scale)</span><span id="gpaValLabel" style="color:#38bdf8;font-family:'JetBrains Mono',monospace;">8.8 / 10.0</span></label>
+          <input type="number" id="gpa" class="form-control" value="8.8" step="0.1" min="0" max="10" oninput="calculateGrant()">
+        </div>
+        <div class="form-group">
+          <label><span>Annual Family Income Bracket (EWS / Equity Index)</span></label>
+          <select id="income" class="form-control" onchange="calculateGrant()">
+            <option value="tier1">&lt; ₹3 Lakhs / Year (High Need — Full Living Stipend)</option>
+            <option value="tier2">₹3 - ₹8 Lakhs / Year (Moderate Need — Co-Pay Grant)</option>
+            <option value="tier3">&gt; ₹8 Lakhs / Year (General Merit — Compute Fellowship)</option>
           </select>
         </div>
         <div class="form-group">
-          <label>Prior Open Source / Coding Experience</label>
-          <select id="codingExp" class="form-control">
-            <option value="beginner">Beginner (Curious learner)</option>
-            <option value="intermediate" selected>Intermediate (Built Python apps, Git)</option>
-            <option value="advanced">Advanced (Shipped production code)</option>
+          <label><span>Prior Open Source / Coding Experience</span></label>
+          <select id="codingExp" class="form-control" onchange="calculateGrant()">
+            <option value="beginner">Beginner (Curious learner • 100 Days No-Code/AI Track)</option>
+            <option value="intermediate" selected>Intermediate (Built Python apps, Git &amp; FastAPI)</option>
+            <option value="advanced">Advanced (Shipped production ML / Open-Source PRs)</option>
           </select>
         </div>
-        <button class="btn btn-primary" onclick="calculateGrant()"><i class="fas fa-calculator"></i> Calculate Scholarship Package</button>
+        <div class="form-group">
+          <label>
+            <span>GitHub Commits / Proof-of-Work Streak (Past 12 Months)</span>
+            <span id="ghCommitsLabel" style="color:#a5b4fc;font-family:'JetBrains Mono',monospace;">180 Commits (+₹9,000 Bonus)</span>
+          </label>
+          <input type="range" id="githubContributions" min="0" max="500" step="20" value="180" style="width:100%;accent-color:#10b981;" oninput="calculateGrant()">
+        </div>
+        <button class="btn btn-primary" type="button" onclick="calculateGrant()" style="width:100%;justify-content:center;"><i class="fas fa-calculator"></i> Recalculate Scholarship Package</button>
       </div>
 
       <div>
         <div class="result-box">
           <div>
-            <div class="result-status">Verified Eligibility Assessment</div>
-            <div class="result-grant" id="grantAmount">100% Tuition + ₹40,000 GPU Grant</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <div class="result-status"><i class="fas fa-shield-alt"></i> Verified Eligibility Assessment</div>
+              <span id="meritTierBadge" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3);">TIER-1 FELLOW</span>
+            </div>
+            <div class="result-grant" id="grantAmount">100% Tuition + ₹74,000 Support</div>
             <div class="result-breakdown" id="grantBreakdown">
               • <strong>Tuition Coverage:</strong> 100% Free ($0 out of pocket)<br>
-              • <strong>Cloud GPU Compute Credits:</strong> ₹30,000 (NVIDIA A100 / Groq)<br>
-              • <strong>Hardware Allowance:</strong> ₹10,000 book & workstation stipend<br>
-              • <strong>Mentorship Access:</strong> Direct 1-on-1 with Staff AI Engineers
+              • <strong>Cloud GPU Compute Credits:</strong> ₹49,000 (A100 / Groq clusters)<br>
+              • <strong>Living &amp; Hardware Allowance:</strong> ₹25,000 direct bank stipend<br>
+              • <strong>Verified Merit Score:</strong> 92 / 100
             </div>
           </div>
-          <button class="btn btn-primary" style="background:#10b981; border:none;" onclick="alert('🎉 Application submitted! Check your email for formal acceptance letter.')">
-            <i class="fas fa-paper-plane"></i> Submit Formal Scholarship Application
-          </button>
+
+          <div>
+            <div id="schSubmitStatus" style="display:none;margin-bottom:12px;padding:10px 14px;border-radius:10px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.35);color:#6ee7b7;font-size:12.5px;font-weight:600;"></div>
+            <button class="btn btn-primary" type="button" style="background:#10b981; border:none; width:100%; justify-content:center;" onclick="submitScholarshipApp()">
+              <i class="fas fa-file-signature"></i> Generate Provisional Grant Award Letter
+            </button>
+          </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Milestone Tranche Schedule -->
+    <div style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.08);">
+      <h3 style="font-size:16px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+        <i class="fas fa-calendar-check" style="color:#10b981;"></i> Proof-of-Work Milestone Disbursement Schedule
+      </h3>
+      <p style="font-size:12.5px;color:var(--text-2);margin-bottom:12px;">Zero student debt or income-share agreements (ISAs). Stipends unlock automatically as you complete verifiable coding and AI deployment milestones.</p>
+      <div style="overflow-x:auto;">
+        <table class="tranche-table">
+          <thead>
+            <tr>
+              <th>Tranche Phase</th>
+              <th>Required Curriculum Milestone</th>
+              <th>GPU Compute Release</th>
+              <th>Direct Bank Stipend (DBT)</th>
+              <th>Verification Method</th>
+            </tr>
+          </thead>
+          <tbody id="disbursementTableBody">
+            <!-- Populated dynamically by calculateGrant() -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Provisional Award Letter Box -->
+    <div class="award-letter-box" id="awardLetterCard">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div>
+          <div style="font-size:11px;font-weight:800;color:#34d399;letter-spacing:0.08em;text-transform:uppercase;">AVP Charitable Trust × Alpaben Vipulbhai Patel University</div>
+          <h3 style="font-size:20px;font-weight:800;color:#fff;margin-top:4px;">Provisional Fellowship &amp; Compute Grant Offer</h3>
+        </div>
+        <div style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;color:#38bdf8;">
+          <div id="awardRefId">REF: AVPU-GRANT-2026-8941</div>
+          <div style="color:#94a3b8;">Valid for 30 Days</div>
+        </div>
+      </div>
+      <div id="awardLetterBody" style="font-size:13.5px;line-height:1.75;color:#e2e8f0;margin-bottom:18px;"></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button type="button" class="btn btn-primary sm" onclick="downloadAwardLetter()" style="background:#6366f1;border:none;">
+          <i class="fas fa-download"></i> Download Award Letter (.txt)
+        </button>
+        <a href="100-day-challenge.html" class="btn btn-ghost sm" style="border:1px solid rgba(16,185,129,0.4);color:#34d399;">
+          <i class="fas fa-rocket"></i> Start Day 1 Proof-of-Work
+        </a>
       </div>
     </div>
   </div>
@@ -120,30 +198,144 @@
 
 <script>
 function calculateGrant() {
-  const gpa = parseFloat(document.getElementById('gpa').value);
+  const rawGpa = parseFloat(document.getElementById('gpa').value);
+  const gpa = isNaN(rawGpa) ? 8.0 : Math.max(0, Math.min(10, rawGpa));
   const income = document.getElementById('income').value;
   const exp = document.getElementById('codingExp').value;
+  const ghSlider = document.getElementById('githubContributions');
+  const ghCommits = ghSlider ? parseInt(ghSlider.value, 10) || 0 : 0;
 
-  let gpuAmount = 25000;
+  const gpaLabel = document.getElementById('gpaValLabel');
+  if (gpaLabel) gpaLabel.textContent = `${gpa.toFixed(1)} / 10.0`;
+
+  const ghBonus = Math.round(ghCommits * 50);
+  const ghLabel = document.getElementById('ghCommitsLabel');
+  if (ghLabel) ghLabel.textContent = `${ghCommits} Commits (+₹${ghBonus.toLocaleString('en-IN')} Bonus)`;
+
+  let gpuAmount = 25000 + ghBonus;
   let stipend = 0;
 
   if (gpa >= 8.5) gpuAmount += 15000;
+  else if (gpa >= 7.5) gpuAmount += 7500;
+
   if (income === 'tier1') stipend += 25000;
-  else if (income === 'tier2') stipend += 10000;
+  else if (income === 'tier2') stipend += 12000;
+  else stipend += 4000;
 
   if (exp === 'advanced') gpuAmount += 10000;
+  else if (exp === 'intermediate') gpuAmount += 4000;
 
   const totalExtra = gpuAmount + stipend;
-  document.getElementById('grantAmount').innerText = `100% Tuition + ₹${totalExtra.toLocaleString()} Support`;
-  document.getElementById('grantBreakdown').innerHTML = `
-    • <strong>Tuition Coverage:</strong> 100% Free ($0 out of pocket)<br>
-    • <strong>Cloud GPU Compute Credits:</strong> ₹${gpuAmount.toLocaleString()} (A100 / Groq clusters)<br>
-    • <strong>Living & Hardware Allowance:</strong> ₹${stipend.toLocaleString()} direct bank stipend<br>
-    • <strong>Verified Merit Score:</strong> ${(gpa * 10).toFixed(0)} / 100
-  `;
-}
-</script>
+  const meritScore = Math.min(100, Math.round(gpa * 8.2 + (ghCommits / 500) * 12 + (exp === 'advanced' ? 6 : 3)));
 
+  document.getElementById('grantAmount').innerText = `100% Tuition + ₹${totalExtra.toLocaleString('en-IN')} Support`;
+  document.getElementById('grantBreakdown').innerHTML = `
+    • <strong>Tuition Coverage:</strong> 100% Free ($0 out of pocket — CSR Endowed)<br>
+    • <strong>Cloud GPU Compute Credits:</strong> ₹${gpuAmount.toLocaleString('en-IN')} (NVIDIA H100 / Groq LPU clusters)<br>
+    • <strong>Living &amp; Hardware Allowance:</strong> ₹${stipend.toLocaleString('en-IN')} direct NPCI Aadhaar-DBT stipend<br>
+    • <strong>Open-Source Proof Bonus:</strong> +₹${ghBonus.toLocaleString('en-IN')} (${ghCommits} verified commits)<br>
+    • <strong>Composite Merit Index:</strong> ${meritScore} / 100
+  `;
+
+  const badge = document.getElementById('meritTierBadge');
+  if (badge) {
+    badge.textContent = meritScore >= 88 ? 'DISTINCTION FELLOW' : (meritScore >= 75 ? 'MERIT SCHOLAR' : 'FOUNDATION GRANT');
+  }
+
+  const tbody = document.getElementById('disbursementTableBody');
+  if (tbody) {
+    const t1Gpu = Math.round(gpuAmount * 0.30);
+    const t2Gpu = Math.round(gpuAmount * 0.35);
+    const t3Gpu = gpuAmount - t1Gpu - t2Gpu;
+
+    const t1Stip = Math.round(stipend * 0.30);
+    const t2Stip = Math.round(stipend * 0.35);
+    const t3Stip = stipend - t1Stip - t2Stip;
+
+    tbody.innerHTML = `
+      <tr>
+        <td><strong>Phase 1 (Month 1)</strong></td>
+        <td>Foundations &amp; 30-Day AI Proof-of-Work Streak</td>
+        <td style="color:#38bdf8;font-family:'JetBrains Mono',monospace;">₹${t1Gpu.toLocaleString('en-IN')}</td>
+        <td style="color:#34d399;font-family:'JetBrains Mono',monospace;">₹${t1Stip.toLocaleString('en-IN')}</td>
+        <td><span style="color:#a5b4fc;"><i class="fas fa-check-circle"></i> Automated Git CI Check</span></td>
+      </tr>
+      <tr>
+        <td><strong>Phase 2 (Month 3)</strong></td>
+        <td>Full-Stack RAG &amp; Multi-Agent Architecture Eval</td>
+        <td style="color:#38bdf8;font-family:'JetBrains Mono',monospace;">₹${t2Gpu.toLocaleString('en-IN')}</td>
+        <td style="color:#34d399;font-family:'JetBrains Mono',monospace;">₹${t2Stip.toLocaleString('en-IN')}</td>
+        <td><span style="color:#a5b4fc;"><i class="fas fa-check-circle"></i> Code Lab Sandbox Pass</span></td>
+      </tr>
+      <tr>
+        <td><strong>Phase 3 (Month 6)</strong></td>
+        <td>Production Capstone Deployment &amp; Peer Demo Day</td>
+        <td style="color:#38bdf8;font-family:'JetBrains Mono',monospace;">₹${t3Gpu.toLocaleString('en-IN')}</td>
+        <td style="color:#34d399;font-family:'JetBrains Mono',monospace;">₹${t3Stip.toLocaleString('en-IN')}</td>
+        <td><span style="color:#34d399;"><i class="fas fa-award"></i> W3C OpenBadge Issuance</span></td>
+      </tr>
+    `;
+  }
+}
+
+function submitScholarshipApp() {
+  calculateGrant();
+  const name = (document.getElementById('applicantName').value || 'Candidate').trim();
+  const grantText = document.getElementById('grantAmount').innerText;
+  const refId = 'AVPU-GRANT-2026-' + Math.floor(1000 + Math.random() * 9000);
+
+  const statusEl = document.getElementById('schSubmitStatus');
+  if (statusEl) {
+    statusEl.style.display = 'block';
+    statusEl.innerHTML = `<i class="fas fa-check-circle"></i> Provisional Fellowship Approved for <strong>${name}</strong> (${refId}). Scroll down to inspect your award letter.`;
+  }
+
+  const card = document.getElementById('awardLetterCard');
+  const refEl = document.getElementById('awardRefId');
+  const bodyEl = document.getElementById('awardLetterBody');
+  if (refEl) refEl.textContent = `REF: ${refId}`;
+  if (bodyEl) {
+    bodyEl.innerHTML = `
+      Dear <strong>${name}</strong>,<br><br>
+      On behalf of the Admissions &amp; Philanthropic Endowment Committee at <strong>Alpaben Vipulbhai Patel University (AVPU)</strong> and <strong>AVP Charitable Trust</strong>, we are pleased to confirm your provisional eligibility for the <strong>${grantText}</strong> package.<br><br>
+      Your grant includes 100% tuition remission along with dedicated cloud compute credits and milestone-linked direct benefit transfers. No collateral, student loan, or income-share agreement is required.
+    `;
+  }
+  if (card) {
+    card.style.display = 'block';
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function downloadAwardLetter() {
+  const name = (document.getElementById('applicantName').value || 'Candidate').trim();
+  const ref = document.getElementById('awardRefId').textContent;
+  const grant = document.getElementById('grantAmount').innerText;
+  const text = `====================================================================
+ALPABEN VIPULBHAI PATEL UNIVERSITY (AVPU) × AVP CHARITABLE TRUST
+PROVISIONAL AI FELLOWSHIP & COMPUTE GRANT AWARD LETTER
+${ref} | Date: ${new Date().toISOString().slice(0, 10)}
+====================================================================
+
+Recipient: ${name}
+Approved Package: ${grant}
+
+Breakdown:
+${document.getElementById('grantBreakdown').innerText}
+
+Terms: 100% Tuition-Free Philanthropic Endowment. Zero Debt / Zero ISA.
+Verify at: https://sevenseed.in/avpu/verify.html
+====================================================================`;
+
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${ref.replace(/[^A-Z0-9-]/gi, '_')}_Award_Letter.txt`;
+  a.click();
+}
+
+window.addEventListener('DOMContentLoaded', calculateGrant);
+</script>
 
 <script>
 (function() {
