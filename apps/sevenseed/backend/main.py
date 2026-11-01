@@ -512,6 +512,8 @@ from github_power_features import router as _power_router
 app.include_router(_power_router)
 from crm_router import router as crm_router
 app.include_router(crm_router)
+from advance_site_router import router as _advance_router
+app.include_router(_advance_router)
 
 # Same-origin, BYOK-aware LLM gateway used by static feature pages (vertex_client.js)
 from llm_gateway import router as _llm_router
