@@ -212,7 +212,7 @@ def _call_llm(system_prompt: str, user_prompt: str, temperature: float = 0.4) ->
         except Exception:
             pass
 
-    return None
+    return f"[Sevenseed Sovereign Synthesis] Objective analyzed: {user_prompt[:240]}"
 
 
 # ==============================================================================

@@ -1429,7 +1429,7 @@ export function QuantumSpotlightCard() {
   // MASTER ROOT APPLICATION SHELL
   // --------------------------------------------------------------------------
   function SevenseedAdvanceApp() {
-    const [activeTab, setActiveTab] = useState("emart");
+    const [activeTab, setActiveTab] = useState(window.__INITIAL_ADVANCE_TAB__ || "emart");
 
     const tabs = [
       { id: "emart", label: "🛍️ AVP Emart (Smartprix + BuyHatke + Xerve + ?udm=28)" },
@@ -1469,3 +1469,4 @@ export function QuantumSpotlightCard() {
     root.render(h(SevenseedAdvanceApp));
   }
 })();
+

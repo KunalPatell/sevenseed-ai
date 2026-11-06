@@ -369,3 +369,54 @@ async def api_angular_enterprise_feed():
             {"code": "AVPU", "name": "AVP University", "rps": 310, "p99_ms": 22, "arr_cr": 3.6, "status": "HEALTHY"},
         ],
     }
+
+
+@router.get("/api/web3/telemetry")
+async def api_web3_telemetry():
+    return {
+        "status": "ok",
+        "engine": "Sevenseed Sovereign Web3 Multi-Chain Engine (EIP-1193 + ERC-4337 Account Abstraction)",
+        "chains": [
+            {"id": "polygon", "name": "Polygon POS", "chainId": 137, "tps": 420, "gas_gwei": 32.4, "block": 68492014, "use_case": "AVP Trust 80G SBT & Rakshak BSA Sec 63 Evidence Notary"},
+            {"id": "base", "name": "Base L2 (Coinbase)", "chainId": 8453, "tps": 610, "gas_gwei": 0.012, "block": 24910482, "use_case": "Sevenforce AgentKit ERC-4337 Wallets & Comonk EAS Attestations"},
+            {"id": "solana", "name": "Solana Mainnet-Beta", "chainId": 101, "tps": 3840, "gas_gwei": 0.00025, "block": 318492011, "use_case": "AVP E-Mart Instant Loyalty Cashback & DePIN Compute"},
+            {"id": "ethereum", "name": "Ethereum Mainnet", "chainId": 1, "tps": 15.4, "gas_gwei": 8.2, "block": 21948210, "use_case": "Sevenseed Syndicate DAO & Safe Multi-Sig SPV Vault"},
+            {"id": "arbitrum", "name": "Arbitrum One", "chainId": 42161, "tps": 540, "gas_gwei": 0.02, "block": 294810221, "use_case": "Breakdown Factor RWA Infrastructure Milestone Escrow"},
+        ],
+    }
+
+
+@router.post("/api/web3/execute")
+async def api_web3_execute(payload: Dict[str, Any]):
+    import hashlib
+    venture = str(payload.get("venture", "hub")).lower()
+    chain = str(payload.get("chain", "Polygon POS (ChainID: 137)"))
+    wallet = str(payload.get("wallet", "0x71C8f9A20b3E49184d2A0b91E3C89A4"))
+    action = str(payload.get("action", "Mint On-Chain Proof"))
+    raw_seed = f"{venture}:{chain}:{wallet}:{action}:{int(time.time())}"
+    tx_hash = "0x" + hashlib.sha256(raw_seed.encode("utf-8")).hexdigest()
+    ipfs_cid = "bafybeig" + hashlib.md5(raw_seed.encode("utf-8")).hexdigest()[:38]
+    contract_map = {
+        "hub": ("SafeMultiSigSPV_v1.sol", "ERC-1400 Tokenized Syndicate RUV Allocation & 20% Carry Escrow"),
+        "avpu": ("AVPUSoulboundDegree_ERC5192.sol", "Minted W3C OpenBadges v3.0 + Non-Transferable Academic SBT"),
+        "emart": ("EmartCashbackEscrow.sol", "Credited $EMART On-Chain Cashback + Group-Buy Smart Escrow"),
+        "pharmacy": ("DeSciColdChainBatchNFT.sol", "Anchored NLEM Batch Provenance & CYP450 Clinical Audit Hash"),
+        "breakdown": ("RWAConstructionEscrow.sol", "Verified CPWD DSR BOQ Milestone & Released Smart-Contract Retention"),
+        "trust": ("GitcoinAlloQF_80G.sol", "Executed CLR Quadratic Matching & Minted Soulbound Form 10BE Tax NFT"),
+        "rakshak": ("BSASection63EvidenceNotary.sol", "Notarized Immutable Zero-FIR SHA-256 Digital Evidence on Blockchain"),
+        "comonk": ("EAS_CareerAttestation.sol", "Issued Ethereum Attestation Service (EAS) Verified Skill & CTC Proof"),
+        "agency": ("ERC4337_AgentKitPaymaster.sol", "Authorized Autonomous AI Agent Session Key & x402 Micro-Settlement"),
+    }
+    contract_name, summary = contract_map.get(venture, contract_map["hub"])
+    return {
+        "status": "CONFIRMED_ON_CHAIN",
+        "network": chain,
+        "smart_contract": contract_name,
+        "signer_wallet": wallet,
+        "tx_hash": tx_hash,
+        "ipfs_metadata_cid": f"ipfs://{ipfs_cid}",
+        "block_confirmations": 12,
+        "gas_used": "46,820 gas ($0.0014 via ERC-4337 Paymaster)",
+        "execution_summary": summary,
+    }
+

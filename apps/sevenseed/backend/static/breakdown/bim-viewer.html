@@ -4,7 +4,7 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Interactive 3D BIM Structural Digital Twin &amp; BOQ Takeoff — Breakdown Factor</title>
+  <title>Interactive 3D BIM Structural Digital Twin &amp; BOQ Takeoff — Breakdown / Bim Viewer | Sevenseed</title>
   <meta name="description" content="Three.js 3D Building Information Modeling (BIM) structural digital twin with IS 1893 seismic stress telemetry, wireframe toggles, and live CPWD DSR 2026 takeoff calculations.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -52,7 +52,7 @@
     .spec-table td { padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
     .spec-table td:last-child { text-align: right; font-family: 'JetBrains Mono', monospace; color: #cbd5e1; font-weight: 600; }
   </style>
-</head>
+<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.1"/></head>
 <body>
   <nav class="nav">
     <div class="nav-inner">
@@ -427,5 +427,6 @@
     selectComponent('col1', document.querySelector('.lvl-btn.active'));
     calcStructuralStress();
   </script>
+<script src="/static/quantum-enhancer.js?v=6.1" defer></script>
 </body>
 </html>

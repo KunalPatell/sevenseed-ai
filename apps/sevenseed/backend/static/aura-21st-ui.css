@@ -1,0 +1,169 @@
+/* ============================================================================
+ * ✨ SEVENSEED ADVANCE SITE v6.1 — SENIOR DESIGNER UI & LAYOUT SYSTEM
+ * Preserves 100% of every Venture's unique frontend (60 Next.js 15 pages +
+ * 245+ specialized Sevenseed tools) while enforcing:
+ *   • Strictly 1 fixed top navbar (zero stacked/double fixed headers)
+ *   • Scroll-padding clearance so fixed nav never covers scrolled buttons
+ *   • WCAG AA typography contrast & crisp SSR headline rendering
+ *   • Non-blocking decorative layers & responsive floating quick-dock
+ * ============================================================================ */
+
+:root {
+  --aura-indigo: #6366f1;
+  --aura-cyan: #06b6d4;
+  --aura-pink: #ec4899;
+  --aura-emerald: #10b981;
+  --aura-amber: #f59e0b;
+}
+
+html {
+  scroll-padding-top: 5.5rem !important;
+  scroll-padding-bottom: 4.5rem !important;
+}
+
+/* Fix SSR blur/opacity spans so headlines are always crisp without mutating DOM attributes */
+.opacity-0.inline-block {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Strictly ONE fixed top navbar across the entire website */
+body > nav.fixed.top-0 + div > nav.fixed.top-0 {
+  display: none !important;
+}
+
+/* Convert secondary fixed venture headers & marquees inside <main> into normal document flow */
+main > header.fixed.top-0,
+main > div.fixed.top-16,
+main > header.fixed.top-0 + div.fixed.top-16 {
+  position: relative !important;
+  top: 0 !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: 20 !important;
+}
+
+main > header.fixed.top-0 ~ section.pt-36,
+main > header.fixed.top-0 ~ section.pt-40 {
+  padding-top: 3rem !important;
+}
+
+/* Ensure bottom of <main> has clearance for the floating quick-action pill */
+main {
+  padding-bottom: 5.5rem !important;
+}
+
+/* Ensure decorative spotlights, border beams, and background canvases never intercept clicks */
+svg.animate-spotlight,
+.pointer-events-none,
+#webgl-hero-canvas {
+  pointer-events: none !important;
+}
+
+svg.animate-spotlight {
+  opacity: 0.85 !important;
+  transition: opacity 0.6s ease;
+}
+
+@keyframes adv-marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  animation: adv-marquee 25s linear infinite;
+}
+
+@keyframes border-beam {
+  100% { offset-distance: 100%; }
+}
+.after\:animate-border-beam::after {
+  animation: border-beam calc(var(--duration, 10) * 1s) infinite linear;
+  pointer-events: none !important;
+}
+
+/* Senior Designer Readability & Contrast Polish (WCAG AA on dark slate) */
+main .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #38bdf8 !important;
+  outline-offset: 2px !important;
+}
+
+/* Sub-page Semantic <h1> Header Bar (injected when a workstation page lacks an <h1>) */
+#adv-subpage-header {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Quick-Action Dock (Bottom bar in normal flow — never covers content or buttons) */
+#adv-floating-dock {
+  position: relative;
+  margin: 1.25rem auto 2rem;
+  width: fit-content;
+  max-width: calc(100vw - 2rem);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(6, 10, 25, 0.92);
+  border: 1px solid rgba(129, 140, 248, 0.4);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#adv-floating-dock .adv-dock-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(15, 23, 42, 0.85);
+}
+
+#adv-floating-dock a,
+#adv-floating-dock button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration: none;
+  border: 1px solid rgba(99, 102, 241, 0.45);
+  background: rgba(30, 41, 59, 0.9);
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease;
+}
+
+#adv-floating-dock a:hover,
+#adv-floating-dock button:hover {
+  transform: translateY(-1px);
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  #adv-floating-dock .adv-dock-btn-secondary {
+    display: none;
+  }
+}
