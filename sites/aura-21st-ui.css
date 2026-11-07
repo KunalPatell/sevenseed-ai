@@ -8,12 +8,35 @@
  *   • Non-blocking decorative layers & responsive floating quick-dock
  * ============================================================================ */
 
+/* Real fonts, self-hosted. --font-sans was never defined, so every page fell back to system-ui
+   and synthesised its heavy weights, which smeared headings. */
+@font-face {
+  font-family: "Inter Variable";
+  src: url("/media/fonts/inter-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Bricolage Grotesque Variable";
+  src: url("/media/fonts/bricolage-grotesque-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
+  --font-sans: "Inter Variable";
+  --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
   --aura-indigo: #6366f1;
   --aura-cyan: #06b6d4;
   --aura-pink: #ec4899;
   --aura-emerald: #10b981;
   --aura-amber: #f59e0b;
+}
+
+body {
+  font-family: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 html {

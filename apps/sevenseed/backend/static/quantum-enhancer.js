@@ -614,8 +614,11 @@
   function boot() {
     wireUniversalNavbar();
     ensureSemanticH1Header();
-    injectFloatingQuickDock();
-    injectVentureWeb3AndRefFooterSection();
+    // The homepage has its own footer and calls to action; these bars belong on tool pages.
+    if (path !== "/" && path !== "/index.html") {
+      injectFloatingQuickDock();
+      injectVentureWeb3AndRefFooterSection();
+    }
     setTimeout(() => {
       hydrateHero3DContainers();
     }, 150);

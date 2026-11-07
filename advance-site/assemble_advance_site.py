@@ -238,6 +238,27 @@ def assemble():
             canonical_next_files.discard(dst_idx.resolve())
             canonical_next_files.discard(dst_flat.resolve())
 
+    # 4b. Bidirectional twin-directory sync so every .html tool exists under both canonical & alias venture slugs
+    twin_pairs = [
+        ("decode-forest-pharmacy", "pharmacy"),
+        ("avp-charitable-trust", "trust"),
+        ("breakdown-factor", "breakdown"),
+        ("comonk-ai", "comonk"),
+        ("avp-emart", "emart"),
+        ("sevenforce", "agency"),
+        ("rakshak-ai", "rakshak"),
+    ]
+    for dir_a, dir_b in twin_pairs:
+        pa, pb = OUT_DIR / dir_a, OUT_DIR / dir_b
+        pa.mkdir(parents=True, exist_ok=True)
+        pb.mkdir(parents=True, exist_ok=True)
+        for src_dir, dst_dir in ((pa, pb), (pb, pa)):
+            for html_f in src_dir.glob("*.html"):
+                target_f = dst_dir / html_f.name
+                if not target_f.is_file():
+                    t_txt = strip_nextjs_hydration_scripts(html_f.read_text(encoding="utf-8", errors="ignore"))
+                    target_f.write_text(t_txt, encoding="utf-8")
+
     # 5. Generate the 6 dedicated Multi-Framework Studio routes
     print("[4/6] Building 6 dedicated Multi-Framework Studios (LangGraph, Canva, Framer, AngularJS, Web3, Quantum Deck)...")
     studios = {
