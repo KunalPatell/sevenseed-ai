@@ -476,6 +476,7 @@ function shareRoadmap(){navigator.clipboard.writeText(window.location.href).catc
 function resetRoadmap(){document.getElementById('learnInput').value='';document.getElementById('nodesList').classList.add('hidden');document.getElementById('roadmapProgress').style.display='none';document.getElementById('aiPanel').classList.remove('visible');document.getElementById('resourcesPanel').style.display='none';document.getElementById('canvasEmpty').classList.remove('hidden');completedNodes=new Set();currentPath=null;updProg(0);}
 document.getElementById('learnInput').addEventListener('keydown',e=>{if(e.key==='Enter')generatePath();});
 </script>
+
 <script src="/static/quantum-enhancer.js?v=6.1" defer></script>
 </body>
 </html>

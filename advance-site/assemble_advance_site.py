@@ -24,7 +24,11 @@ ADVANCE_ROOT = Path(__file__).resolve().parent
 OUT_DIR = ADVANCE_ROOT / "out"
 RUNTIME_DIR = ADVANCE_ROOT / "runtime"
 SEVENSEED_SITES = ADVANCE_ROOT.parent / "sevenseed" / "sites"
-NEXT_BUILD_DIR = ADVANCE_ROOT.parent / "sevenseed" / "frontend" / ".next"
+NEXT_BUILD_DIR = (
+    ADVANCE_ROOT / ".next"
+    if (ADVANCE_ROOT / ".next" / "server" / "app").is_dir()
+    else (ADVANCE_ROOT.parent / "sevenseed" / "frontend" / ".next")
+)
 
 
 def create_studio_page(title: str, badge: str, active_tab: str) -> str:
@@ -126,7 +130,7 @@ def assemble():
         shutil.copytree(next_static_src, next_static_dst, dirs_exist_ok=True)
 
     adv_next_dir = ADVANCE_ROOT / ".next"
-    if NEXT_BUILD_DIR.is_dir():
+    if NEXT_BUILD_DIR.is_dir() and NEXT_BUILD_DIR.resolve() != adv_next_dir.resolve():
         shutil.copytree(NEXT_BUILD_DIR, adv_next_dir, dirs_exist_ok=True)
 
     # 3. Overlay all 56 compiled Next.js 15 HTML + RSC routes from .next/server/app

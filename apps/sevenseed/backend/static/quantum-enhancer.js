@@ -547,6 +547,102 @@
           <div class="text-[11px] text-slate-400 mt-1">100% Distinct Venture Theme Preserved</div>
         </div>
       </div>
+      <div class="mt-4 p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80">
+        <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-2">Complete ${v.name} Workstation & Tool Directory</div>
+        <div class="flex flex-wrap gap-2 text-[11px] font-mono">
+          ${(
+            {
+              avpu: [
+                ["Knowledge DAG", "/avpu/learn-dag/"],
+                ["Topic Search", "/avpu/topic-search.html"],
+                ["SM-2 Review Queue", "/avpu/review-queue.html"],
+                ["100-Day Challenge", "/avpu/100-day-challenge.html"],
+                ["AI Learning Path", "/avpu/ai-learning-path.html"],
+                ["AI Socratic Tutor", "/avpu/ai-tutor/"],
+                ["Code Lab IDE", "/avpu/code-lab/"],
+                ["Duolingo League", "/avpu/duo-league/"],
+                ["Laws of UX", "/avpu/laws-of-ux/"],
+                ["Mental Models", "/avpu/mental-models/"],
+                ["Marketing Teardowns", "/avpu/marketing-teardowns/"],
+                ["Flashcards (Leitner)", "/avpu/flashcards/"],
+                ["Courses & Modules", "/avpu/courses/"],
+                ["Scholarships", "/avpu/scholarships.html"],
+                ["Certifications", "/avpu/credentials/"],
+                ["Evervault Crypto Lab", "/avpu/evervault-lab.html"],
+              ],
+              emart: [
+                ["Spec Comparator", "/avp-emart/spec-compare/"],
+                ["90-Day Price Tracker", "/avp-emart/price-tracker/"],
+                ["Auto-Coupon Tester", "/avp-emart/coupon-tester/"],
+                ["Live Deals Radar", "/avp-emart/deals-radar/"],
+                ["Q-Commerce Radar", "/avp-emart/qcommerce/"],
+                ["Smart Wishlist", "/avp-emart/wishlist/"],
+                ["AI Deal Scanner", "/avp-emart/deal-scanner/"],
+                ["Shopping Discovery", "/avp-emart/shopping-discovery.html"],
+              ],
+              pharmacy: [
+                ["Jan Aushadhi Generic Finder", "/pharmacy/generic-finder/"],
+                ["CYP450 Interaction Checker", "/pharmacy/interaction-checker/"],
+                ["Doctor Consultation", "/pharmacy/doctor-consultation/"],
+                ["Hospital & Camp Finder", "/pharmacy/hospital-finder/"],
+                ["Medicine Reminders", "/pharmacy/medicine-reminders/"],
+                ["Clinical Health Wiki", "/decode-forest-pharmacy/health-wiki.html"],
+                ["Prescription OCR Lab", "/decode-forest-pharmacy/prescription-ocr.html"],
+              ],
+              breakdown: [
+                ["CPWD BOQ Estimator", "/breakdown/boq-estimator/"],
+                ["Live Material Prices", "/breakdown/material-prices/"],
+                ["CPM Project Timeline", "/breakdown/project-timeline/"],
+                ["YOLOv8 Crack Scanner", "/breakdown-factor/cv-scanner.html"],
+                ["OSHA Safety Audit", "/breakdown-factor/safety-audit.html"],
+              ],
+              trust: [
+                ["80G / Form 10BE Calculator", "/trust/tax-exemption/"],
+                ["Active Causes & Campaigns", "/trust/campaigns/"],
+                ["Merkle Donation Ledger", "/trust/ledger/"],
+                ["Volunteer Portal", "/trust/volunteer/"],
+                ["Health Camps", "/avp-charitable-trust/health-camps.html"],
+              ],
+              rakshak: [
+                ["BNS 2023 FIR Generator", "/rakshak-ai/fir-generator/"],
+                ["Cyber Threat Radar", "/rakshak-ai/threat-radar/"],
+                ["Live Safety Heatmap", "/rakshak-ai/safety-heatmap/"],
+                ["Missing Person Biometrics", "/rakshak-ai/missing-person/"],
+                ["DPDP 2023 Auditor", "/rakshak-ai/dpdp-auditor.html"],
+              ],
+              comonk: [
+                ["ATS Resume Analyzer", "/comonk/resume-analyzer/"],
+                ["AI Mock Interview Arena", "/comonk/interview-arena/"],
+                ["Levels.fyi Salary Insights", "/comonk/salary-insights/"],
+                ["Verified Company Reviews", "/comonk/company-reviews/"],
+                ["Real Interview Experiences", "/comonk/interview-experiences/"],
+              ],
+              agency: [
+                ["Devin Autonomous Terminal", "/sevenforce/devin-terminal/"],
+                ["LangGraph Workflow Builder", "/sevenforce/workflows/"],
+                ["7-Agent Marketplace", "/sevenforce/marketplace/"],
+                ["Enterprise ROI Calculator", "/sevenforce/roi-calculator/"],
+                ["Growth Flywheel Simulator", "/sevenforce/flywheel-simulator.html"],
+              ],
+              hub: [
+                ["Ventures Directory", "/ventures/"],
+                ["AgenticOS Control Plane", "/agenticos/"],
+                ["Syndicate RUV Calculator", "/syndicate-ruv/"],
+                ["TAM/SAM/SOM Market Sizing", "/market-sizing/"],
+                ["Universal BYOK Key Vault", "/byok/"],
+                ["LangGraph Studio", "/langgraph-studio/"],
+                ["Web3 Multi-Chain Studio", "/web3-studio/"],
+                ["Quantum All-in-One Deck", "/quantum-deck/"],
+              ],
+            }[v.key] || []
+          )
+            .map(
+              ([label, url]) =>
+                `<a href="${url}" class="px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-indigo-600/30 border border-slate-700 hover:border-indigo-400 text-slate-200 transition">${label}</a>`
+            )
+            .join("")}
+        </div>
+      </div>
       <pre id="adv-page-output" class="mt-4 p-4 rounded-2xl bg-black/70 border border-slate-800 text-[11px] font-mono text-emerald-300 overflow-x-auto max-h-56">Click "⛓️ Mint / Execute ${v.contract}" or "⚡ Run Live Reference API" above to execute live backend & Web3 transactions...</pre>
     `;
 

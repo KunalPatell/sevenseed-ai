@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>No-Cost EMI? See What It Really Costs — E-Mart / Emi Calculator | Sevenseed</title>
+  <meta name="description" content="Find the real cost of EMI: interest, GST on interest and fees, and the effective annual rate versus paying upfront.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E💳%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.nt-body{background:var(--bg,#060609);color:var(--text,#eeeef8);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+    .nt-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:var(--nav-glass,rgba(8,8,14,.85));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
+    .nt-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--text,#eee)}
+    .nt-brand b{color:var(--primary,#f97316)}
+    .nt-links{display:flex;gap:6px;flex-wrap:wrap;font-size:13.5px}
+    .nt-links a{padding:7px 13px;border-radius:999px;color:var(--text-2,#9aa0b8);border:1px solid transparent;transition:all .15s}
+    .nt-links a:hover{color:var(--text,#fff);border-color:var(--border-hi,rgba(255,255,255,.14))}
+    .nt-links a.on{color:var(--primary,#f97316);border-color:rgba(var(--primary-rgb,249,115,22),.4);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-wrap{max-width:1240px;margin:0 auto;padding:44px 24px 80px}
+    .nt-head{text-align:center;margin-bottom:34px}
+    .nt-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;font-size:12.5px;font-weight:600;margin-bottom:14px;color:var(--primary,#f97316);background:rgba(var(--primary-rgb,249,115,22),.1);border:1px solid rgba(var(--primary-rgb,249,115,22),.3)}
+    .nt-title{font-size:clamp(28px,4.2vw,46px);font-weight:900;line-height:1.15;margin-bottom:12px;letter-spacing:-.02em}
+    .nt-sub{color:var(--text-2,#9aa0b8);font-size:16px;max-width:700px;margin:0 auto;line-height:1.6}
+    .nt-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:26px;align-items:start}
+    @media(max-width:980px){.nt-grid{grid-template-columns:1fr}}
+    .nt-card{background:var(--bg-1,#0d0d16);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:16px;padding:24px}
+    .nt-card+.nt-card{margin-top:22px}
+    .nt-card h2{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;gap:10px;align-items:center}
+    .nt-card h2 i{color:var(--primary,#f97316)}
+    .nt-f{margin-bottom:14px}
+    .nt-f label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2,#9aa0b8);margin-bottom:6px}
+    .nt-f input,.nt-f select,.nt-f textarea{width:100%;padding:10px 12px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px;color:var(--text,#eee);font:inherit;font-size:14px;outline:none;transition:border-color .15s}
+    .nt-f input:focus,.nt-f select:focus,.nt-f textarea:focus{border-color:var(--primary,#f97316)}
+    .nt-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .nt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+    .nt-stat{background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:12px;padding:14px 16px}
+    .nt-stat small{display:block;color:var(--text-3,#5b5f78);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:5px}
+    .nt-stat strong{font-size:22px;font-weight:800;line-height:1.2;word-break:break-word}
+    .nt-stat.hl{border-color:rgba(var(--primary-rgb,249,115,22),.5);background:rgba(var(--primary-rgb,249,115,22),.08)}
+    .nt-table{width:100%;border-collapse:collapse;font-size:13px}
+    .nt-table th,.nt-table td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border,rgba(255,255,255,.07));white-space:nowrap}
+    .nt-table th:first-child,.nt-table td:first-child{text-align:left}
+    .nt-table th{color:var(--text-3,#5b5f78);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:var(--bg-1,#0d0d16)}
+    .nt-scroll{max-height:320px;overflow:auto;border:1px solid var(--border,rgba(255,255,255,.07));border-radius:10px}
+    .nt-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700}
+    .nt-good{background:rgba(16,185,129,.15);color:#10b981}
+    .nt-warn{background:rgba(245,158,11,.15);color:#f59e0b}
+    .nt-bad{background:rgba(239,68,68,.15);color:#ef4444}
+    .nt-bar{height:8px;background:var(--bg-3,#18182a);border-radius:99px;overflow:hidden}
+    .nt-bar>i{display:block;height:100%;background:var(--primary,#f97316);border-radius:99px;transition:width .35s}
+    .nt-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:10px;border:1px solid var(--border-hi,rgba(255,255,255,.14));background:var(--bg-2,#12121e);color:var(--text,#eee);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+    .nt-btn:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-btn.pri{background:var(--primary,#f97316);border-color:var(--primary,#f97316);color:#fff}
+    .nt-btn.pri:hover{opacity:.9;color:#fff}
+    .nt-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .nt-chip{padding:6px 12px;font-size:12px;font-weight:600;border-radius:999px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));color:var(--text-2,#9aa0b8);cursor:pointer}
+    .nt-chip:hover{border-color:var(--primary,#f97316);color:var(--primary,#f97316)}
+    .nt-note{font-size:12px;color:var(--text-3,#7d7f9a);line-height:1.65;margin-top:18px;padding:12px 14px;border-left:3px solid var(--primary,#f97316);background:var(--bg-2,#12121e);border-radius:0 8px 8px 0}
+    .nt-list{list-style:none;display:grid;gap:8px;font-size:13.5px}
+    .nt-list li{display:flex;gap:10px;align-items:flex-start;color:var(--text-2,#9aa0b8)}
+    .nt-bd{display:grid;gap:12px}
+    .nt-bd .r{display:grid;grid-template-columns:150px 1fr 54px;gap:12px;align-items:center;font-size:13px;color:var(--text-2,#9aa0b8)}
+    .nt-bd .r span:last-child{text-align:right;font-weight:700;color:var(--text,#eee)}
+    .nt-rowx{display:grid;grid-template-columns:1.4fr .7fr .8fr 34px;gap:8px;margin-bottom:8px;align-items:center}
+    .nt-rowx input,.nt-rowx select{width:100%;padding:8px 10px;background:var(--bg-2,#12121e);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:8px;color:var(--text,#eee);font:inherit;font-size:13px;outline:none;min-width:0}
+    .nt-x{width:34px;height:34px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,.07));background:transparent;color:var(--text-3,#7d7f9a);cursor:pointer}
+    .nt-x:hover{color:#ef4444;border-color:#ef4444}
+    .nt-big{font-size:clamp(34px,5vw,54px);font-weight:900;line-height:1.1}
+    .nt-mono{font-family:'JetBrains Mono',monospace}
+    @media print{.nt-nav,.nt-btn{display:none!important}}
+  
+    /* ════════════════════ PREMIUM VISUAL EFFECTS ════════════════════ */
+
+    /* Animated dark gradient background */
+    @keyframes bgShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    body.nt-body{
+      background:linear-gradient(135deg,#060609 0%,#0a0a20 25%,#10061a 50%,#060615 75%,#060609 100%)!important;
+      background-size:400% 400%!important;
+      animation:bgShift 25s ease infinite!important;
+      overflow-x:hidden;
+    }
+
+    /* Scroll progress bar */
+    .nt-progress{position:fixed;top:0;left:0;height:3px;z-index:999;background:linear-gradient(90deg,var(--primary,#f97316),#a855f7,#06b6d4);border-radius:0 2px 2px 0;transition:width .1s;box-shadow:0 0 10px var(--primary,#f97316)}
+
+    /* Floating blurred orbs */
+    .nt-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;opacity:.10;will-change:transform}
+    .nt-orb:nth-child(1){width:550px;height:550px;top:-12%;left:-8%;background:var(--primary,#f97316);filter:blur(120px);animation:orbA 22s ease-in-out infinite}
+    .nt-orb:nth-child(2){width:420px;height:420px;bottom:-10%;right:-8%;background:#a855f7;filter:blur(110px);animation:orbB 28s ease-in-out infinite}
+    .nt-orb:nth-child(3){width:350px;height:350px;top:35%;left:55%;background:#06b6d4;filter:blur(100px);animation:orbC 32s ease-in-out infinite}
+    @keyframes orbA{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-50px) scale(1.08)}66%{transform:translate(-30px,40px) scale(.94)}}
+    @keyframes orbB{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-40px,30px) scale(1.05)}66%{transform:translate(35px,-35px) scale(.96)}}
+    @keyframes orbC{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-50px,25px) scale(1.1)}}
+
+    /* Particle canvas */
+    #nt-particles{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+    .nt-wrap,.nt-nav{position:relative;z-index:2}
+
+    /* ─── 3D Card effects ─── */
+    .nt-card{
+      position:relative;overflow:hidden;
+      transition:transform .45s cubic-bezier(.25,.46,.45,.94),box-shadow .45s ease,border-color .3s;
+      will-change:transform;
+    }
+    .nt-card:hover{
+      box-shadow:0 25px 50px -12px rgba(0,0,0,.4),0 0 30px rgba(var(--primary-rgb,249,115,22),.08);
+      border-color:rgba(var(--primary-rgb,249,115,22),.25);
+    }
+    /* Spotlight radial gradient that follows cursor */
+    .nt-card::after{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(circle 300px at var(--mx,50%) var(--my,50%),rgba(var(--primary-rgb,249,115,22),.07),transparent 70%);
+      pointer-events:none;opacity:0;transition:opacity .4s;border-radius:inherit;
+    }
+    .nt-card:hover::after{opacity:1}
+
+    /* Animated top-border glow line */
+    .nt-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,transparent,var(--primary,#f97316),transparent);
+      opacity:0;transition:opacity .4s;
+    }
+    .nt-card:hover::before{opacity:.7}
+
+    /* ─── Entry animations (scroll reveal) ─── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(40px) scale(.97)}to{opacity:1;transform:none}}
+    @keyframes scaleIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:none}}
+    @keyframes slideRight{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+    .nt-reveal{opacity:0}
+    .nt-visible{animation:fadeUp .7s cubic-bezier(.22,1,.36,1) forwards}
+    .nt-visible.nt-scale{animation-name:scaleIn}
+
+    /* ─── Stat card glow pulse ─── */
+    .nt-stat{transition:transform .3s,box-shadow .3s;will-change:transform}
+    .nt-stat:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(0,0,0,.2)}
+    .nt-stat.hl{
+      box-shadow:0 0 25px rgba(var(--primary-rgb,249,115,22),.12),inset 0 1px 0 rgba(255,255,255,.05);
+      animation:statPulse 3.5s ease-in-out infinite;
+    }
+    @keyframes statPulse{
+      0%,100%{box-shadow:0 0 20px rgba(var(--primary-rgb,249,115,22),.10),inset 0 1px 0 rgba(255,255,255,.05)}
+      50%{box-shadow:0 0 40px rgba(var(--primary-rgb,249,115,22),.22),inset 0 1px 0 rgba(255,255,255,.08)}
+    }
+
+    /* ─── Animated gradient title ─── */
+    .nt-title{
+      background:linear-gradient(135deg,var(--text,#eee) 0%,var(--text,#eee) 40%,var(--primary,#f97316) 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      background-clip:text;background-size:200% 200%;
+      animation:titleShift 6s ease-in-out infinite;
+    }
+    @keyframes titleShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+    /* ─── Badge breathing ─── */
+    .nt-badge{animation:badgeBreathe 2.8s ease-in-out infinite}
+    @keyframes badgeBreathe{
+      0%,100%{box-shadow:0 0 0 0 rgba(var(--primary-rgb,249,115,22),.35);transform:scale(1)}
+      50%{box-shadow:0 0 0 10px rgba(var(--primary-rgb,249,115,22),0);transform:scale(1.03)}
+    }
+
+    /* ─── Enhanced glassmorphism nav ─── */
+    .nt-nav{
+      background:rgba(8,8,14,.65)!important;
+      box-shadow:0 4px 30px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.04)!important;
+      border-bottom:1px solid rgba(255,255,255,.04)!important;
+    }
+    .nt-links a{transition:all .25s cubic-bezier(.22,1,.36,1)}
+    .nt-links a:hover{transform:translateY(-2px);text-shadow:0 0 12px rgba(var(--primary-rgb,249,115,22),.3)}
+
+    /* ─── Shimmer on primary button ─── */
+    .nt-btn.pri{position:relative;overflow:hidden;transition:all .25s}
+    .nt-btn.pri::after{
+      content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+      animation:shimmer 3s ease-in-out infinite;
+    }
+    @keyframes shimmer{0%{left:-100%}50%,100%{left:100%}}
+
+    /* ─── Button hover lift ─── */
+    .nt-btn{transition:all .25s cubic-bezier(.22,1,.36,1)}
+    .nt-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.25)}
+    .nt-btn.pri:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(var(--primary-rgb,249,115,22),.3)}
+
+    /* ─── Bar chart animation ─── */
+    @keyframes barGrow{from{width:0%!important;opacity:0}to{opacity:1}}
+    .nt-bar>i{animation:barGrow .9s cubic-bezier(.22,1,.36,1)}
+
+    /* ─── Input focus neon glow ─── */
+    .nt-f input:focus,.nt-f select:focus,.nt-f textarea:focus{
+      box-shadow:0 0 0 3px rgba(var(--primary-rgb,249,115,22),.15),0 0 20px rgba(var(--primary-rgb,249,115,22),.1);
+      border-color:var(--primary,#f97316)!important;
+    }
+    .nt-f input,.nt-f select,.nt-f textarea{transition:all .25s}
+
+    /* ─── Table row hover ─── */
+    .nt-table tbody tr{transition:background .2s,transform .2s}
+    .nt-table tbody tr:hover{background:rgba(var(--primary-rgb,249,115,22),.04)}
+
+    /* ─── Chip hover lift + glow ─── */
+    .nt-chip{transition:all .25s cubic-bezier(.22,1,.36,1)}
+    .nt-chip:hover{
+      transform:translateY(-3px);
+      box-shadow:0 8px 20px rgba(var(--primary-rgb,249,115,22),.15);
+      border-color:var(--primary,#f97316);color:var(--primary,#f97316);
+    }
+
+    /* ─── Note bar glow ─── */
+    .nt-note{box-shadow:-4px 0 20px rgba(var(--primary-rgb,249,115,22),.08);transition:box-shadow .3s}
+    .nt-note:hover{box-shadow:-4px 0 30px rgba(var(--primary-rgb,249,115,22),.18)}
+
+    /* ─── SVG chart glow ─── */
+    svg polyline{filter:drop-shadow(0 0 8px var(--primary,#f97316));transition:filter .3s}
+    svg circle{filter:drop-shadow(0 0 5px var(--primary,#f97316));transition:all .3s}
+    svg:hover polyline{filter:drop-shadow(0 0 14px var(--primary,#f97316))}
+    svg:hover circle{filter:drop-shadow(0 0 10px var(--primary,#f97316))}
+
+    /* ─── Big number glow ─── */
+    .nt-big{text-shadow:0 0 40px rgba(var(--primary-rgb,249,115,22),.25);transition:text-shadow .3s}
+
+    /* ─── Pill pop-in ─── */
+    .nt-pill{animation:pillPop .45s cubic-bezier(.22,1,.36,1)}
+    @keyframes pillPop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+
+    /* ─── Header area glow ─── */
+    .nt-head{position:relative}
+    .nt-head::before{
+      content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+      width:600px;height:300px;
+      background:radial-gradient(ellipse,rgba(var(--primary-rgb,249,115,22),.10),transparent 70%);
+      pointer-events:none;animation:headGlow 5s ease-in-out infinite;
+    }
+    @keyframes headGlow{0%,100%{opacity:.5;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.15)}}
+
+    /* ─── Grid column glow divider (desktop) ─── */
+    @media(min-width:981px){
+      .nt-grid>section:first-child{border-right:1px solid rgba(var(--primary-rgb,249,115,22),.06);padding-right:26px}
+    }
+
+    /* ─── Scroll-bar styling ─── */
+    ::-webkit-scrollbar{width:6px;height:6px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:rgba(var(--primary-rgb,249,115,22),.25);border-radius:99px}
+    ::-webkit-scrollbar-thumb:hover{background:rgba(var(--primary-rgb,249,115,22),.5)}
+    html{scroll-behavior:smooth;scrollbar-color:rgba(var(--primary-rgb,249,115,22),.25) transparent}
+
+    /* ─── Stat counter num animation ─── */
+    .nt-stat strong{transition:color .3s,text-shadow .3s}
+    .nt-stat:hover strong{text-shadow:0 0 12px rgba(var(--primary-rgb,249,115,22),.25)}
+
+    /* ─── Accessible reduced motion ─── */
+    @media(prefers-reduced-motion:reduce){
+      *,::before,::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+      .nt-orb,.nt-progress,#nt-particles{display:none!important}
+    }
+
+  </style>
+<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.1"/></head>
+<body class="nt-body">
+  <!-- ss-new-tool -->
+<!-- ss-enhanced-v2 -->
+  <div class="nt-progress" id="ntProg"></div>
+  <div class="nt-orb"></div><div class="nt-orb"></div><div class="nt-orb"></div>
+  <canvas id="nt-particles"></canvas>
+
+  <header class="nt-nav">
+    <a href="index.html" class="nt-brand"><span>💳</span> AVP<b>Emart</b></a>
+    <nav class="nt-links" aria-label="Tools">
+      <a href="index.html">Home</a>
+      <a href="emi-calculator.html" class="on">EMI Truth</a>
+      <a href="deal-scorer.html">Deal Scorer</a>
+      <a href="/">Sevenseed Hub</a>
+    </nav>
+  </header>
+
+  <main class="nt-wrap">
+    <div class="nt-head">
+      <div class="nt-badge"><i class="fa-solid fa-credit-card"></i> True cost of credit</div>
+      <h1 class="nt-title">No-Cost EMI? See What It Really Costs</h1>
+      <p class="nt-sub">Enter the price, offer and loan terms. We add GST on interest and fees, compare against paying upfront, and compute the effective annual rate you are really paying.</p>
+    </div>
+
+    <div class="nt-grid">
+      <section class="nt-card">
+        <h2><i class="fa-solid fa-sliders"></i> Purchase &amp; loan</h2>
+        <div class="nt-f"><label for="price">Listed price (₹)</label><input id="price" type="number" min="0" value="79999" oninput="calc()"></div>
+        <div class="nt-f"><label for="cashdisc">Instant discount if you pay in full today (₹)</label><input id="cashdisc" type="number" min="0" value="4000" oninput="calc()"></div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="down">Down payment (₹)</label><input id="down" type="number" min="0" value="0" oninput="calc()"></div>
+          <div class="nt-f"><label for="rate">Interest (% per year)</label><input id="rate" type="number" min="0" step="0.1" value="15" oninput="calc()"></div>
+        </div>
+        <div class="nt-row2">
+          <div class="nt-f"><label for="tenure">Tenure (months)</label><select id="tenure" onchange="calc()"><option>3</option><option>6</option><option selected>9</option><option>12</option><option>18</option><option>24</option><option>36</option></select></div>
+          <div class="nt-f"><label for="fee">Processing fee (₹)</label><input id="fee" type="number" min="0" value="199" oninput="calc()"></div>
+        </div>
+        <div class="nt-chips">
+          <button class="nt-chip" type="button" onclick="preset(0)">Bank 0% (no-cost)</button>
+          <button class="nt-chip" type="button" onclick="preset(15)">Card EMI 15%</button>
+          <button class="nt-chip" type="button" onclick="preset(24)">Pay-later 24%</button>
+        </div>
+        <p class="nt-note">GST of 18% is applied on interest and processing fee, as banks and NBFCs do in India. “Pay in full” means paying the listed price minus the instant discount you would lose by choosing EMI.</p>
+      </section>
+      <section>
+        <div class="nt-stats">
+          <div class="nt-stat hl"><small>Monthly EMI</small><strong id="oEmi">—</strong></div>
+          <div class="nt-stat"><small>Total interest</small><strong id="oInt">—</strong></div>
+          <div class="nt-stat"><small>GST + fees</small><strong id="oGst">—</strong></div>
+          <div class="nt-stat"><small>Total you pay</small><strong id="oTot">—</strong></div>
+          <div class="nt-stat"><small>Pay upfront instead</small><strong id="oCash">—</strong></div>
+          <div class="nt-stat hl"><small>Hidden extra cost</small><strong id="oExtra">—</strong></div>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-scale-balanced"></i> Verdict</h2>
+          <p id="verdict" style="font-size:15px;line-height:1.7"></p>
+          <p style="margin-top:10px;font-size:13px;color:var(--text-2)">Effective annual cost of this credit: <b id="oApr" style="color:var(--primary)">—</b></p>
+        </div>
+        <div class="nt-card">
+          <h2><i class="fa-solid fa-table-list"></i> Repayment schedule</h2>
+          <div class="nt-scroll"><table class="nt-table"><thead><tr><th>Month</th><th>EMI</th><th>Interest</th><th>Principal</th><th>Balance</th></tr></thead><tbody id="sched"></tbody></table></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const $=id=>document.getElementById(id);
+    const nv=id=>{const v=parseFloat($(id).value);return Number.isFinite(v)?v:0;};
+    const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+    const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+
+    function preset(r){$('rate').value=r;if(r===0){$('fee').value=0;}calc();}
+    function calc(){
+      const price=nv('price'),down=Math.min(nv('down'),nv('price')),rate=nv('rate'),n=+$('tenure').value,fee=nv('fee'),cd=nv('cashdisc');
+      const P=Math.max(0,price-down),r=rate/1200;
+      const emi=P<=0?0:(r===0?P/n:P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1));
+      const interest=Math.max(0,emi*n-P),gst=0.18*(interest+fee);
+      const total=down+emi*n+fee+gst,cash=Math.max(0,price-cd),extra=total-cash;
+      const M=emi+0.18*interest/n,F=cash-down-fee*1.18;
+      let apr=0;
+      if(F>0&&M*n>F){let lo=0,hi=1;for(let i=0;i<80;i++){const m=(lo+hi)/2;const pv=M*(1-Math.pow(1+m,-n))/m;if(pv>F)lo=m;else hi=m;}apr=(Math.pow(1+(lo+hi)/2,12)-1)*100;}
+      $('oEmi').textContent=inr(emi);$('oInt').textContent=inr(interest);$('oGst').textContent=inr(gst+fee);
+      $('oTot').textContent=inr(total);$('oCash').textContent=inr(cash);
+      $('oExtra').textContent=(extra>=0?'+':'−')+inr(Math.abs(extra));
+      $('oApr').textContent=apr.toFixed(1)+'% per year';
+      const ep=cash>0?extra/cash*100:0;
+      let cls='nt-good',txt='Cheap credit',msg;
+      if(ep>=8){cls='nt-bad';txt='Expensive';}else if(ep>=3){cls='nt-warn';txt='Costly';}
+      if(extra<=0){msg='EMI works out cheaper than paying upfront here — the offer is genuinely good value.';}
+      else{msg='Choosing EMI costs you '+inr(extra)+' more ('+ep.toFixed(1)+'%) than paying upfront. '+(rate===0?'The “0%” label hides it: the discount you give up and GST on fees are the real price of the credit.':'Interest plus GST drives this; a shorter tenure or higher down payment reduces it.');}
+      $('verdict').innerHTML='<span class="nt-pill '+cls+'">'+txt+'</span> '+msg;
+      let bal=P,rows='';
+      for(let m=1;m<=n&&P>0;m++){const it=bal*r,pr=emi-it;bal=Math.max(0,bal-pr);
+        rows+='<tr><td>'+m+'</td><td>'+inr(emi)+'</td><td>'+inr(it)+'</td><td>'+inr(pr)+'</td><td>'+inr(bal)+'</td></tr>';}
+      $('sched').innerHTML=rows||'<tr><td colspan="5">No loan needed</td></tr>';
+    }
+    calc();
+  </script>
+
+  <script>
+  (function(){
+    /* ── Scroll progress bar ── */
+    const prog=document.getElementById('ntProg');
+    if(prog){window.addEventListener('scroll',()=>{
+      const h=document.documentElement.scrollHeight-window.innerHeight;
+      prog.style.width=h>0?(window.scrollY/h*100)+'%':'0%';
+    },{passive:true});}
+
+    /* ── 3D Tilt + Spotlight on cards ── */
+    document.querySelectorAll('.nt-card').forEach(card=>{
+      card.addEventListener('mousemove',e=>{
+        const r=card.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+        card.style.setProperty('--mx',(x*100)+'%');
+        card.style.setProperty('--my',(y*100)+'%');
+        const rx=(y-.5)*6,ry=-(x-.5)*6;
+        card.style.transform='perspective(800px) rotateX('+rx+'deg) rotateY('+ry+'deg) translateY(-6px) scale(1.01)';
+      });
+      card.addEventListener('mouseleave',()=>{
+        card.style.transform='';
+      });
+    });
+
+    /* ── Scroll reveal (IntersectionObserver) ── */
+    const revealEls=document.querySelectorAll('.nt-card,.nt-stats,.nt-head,.nt-note');
+    revealEls.forEach(el=>el.classList.add('nt-reveal'));
+    const revObs=new IntersectionObserver((entries)=>{
+      entries.forEach((en,i)=>{
+        if(en.isIntersecting){
+          setTimeout(()=>{en.target.classList.remove('nt-reveal');en.target.classList.add('nt-visible');},i*60);
+          revObs.unobserve(en.target);
+        }
+      });
+    },{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+    revealEls.forEach(el=>revObs.observe(el));
+
+    /* ── Lightweight particle system ── */
+    const cv=document.getElementById('nt-particles');
+    if(cv){
+      const ctx=cv.getContext('2d');
+      let W,H;
+      function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+      resize();window.addEventListener('resize',resize);
+      const N=45,ps=[];
+      for(let i=0;i<N;i++)ps.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.4,dx:(Math.random()-.5)*.35,dy:(Math.random()-.5)*.35,o:Math.random()*.5+.15});
+      function draw(){
+        ctx.clearRect(0,0,W,H);
+        const cs=getComputedStyle(document.documentElement);
+        const prim=cs.getPropertyValue('--primary').trim()||'#f97316';
+        ps.forEach(p=>{
+          p.x+=p.dx;p.y+=p.dy;
+          if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+          ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=prim;ctx.globalAlpha=p.o;ctx.fill();
+        });
+        /* Connect nearby particles */
+        for(let i=0;i<N;i++){for(let j=i+1;j<N;j++){
+          const dx=ps[i].x-ps[j].x,dy=ps[i].y-ps[j].y,d=Math.sqrt(dx*dx+dy*dy);
+          if(d<140){ctx.beginPath();ctx.moveTo(ps[i].x,ps[i].y);ctx.lineTo(ps[j].x,ps[j].y);ctx.strokeStyle=prim;ctx.globalAlpha=(1-d/140)*.12;ctx.lineWidth=.6;ctx.stroke();}
+        }}
+        ctx.globalAlpha=1;
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    /* ── Stat card stagger animation ── */
+    document.querySelectorAll('.nt-stats').forEach(grid=>{
+      const stats=grid.querySelectorAll('.nt-stat');
+      stats.forEach((s,i)=>{s.style.opacity='0';s.style.animation='scaleIn .5s cubic-bezier(.22,1,.36,1) '+(0.1+i*0.08)+'s forwards';});
+    });
+
+    /* ── Navbar link active glow ── */
+    document.querySelectorAll('.nt-links a.on').forEach(a=>{
+      a.style.boxShadow='0 0 14px rgba(var(--primary-rgb,249,115,22),.25)';
+    });
+  })();
+  </script>
+
+
+<script src="/static/quantum-enhancer.js?v=6.1" defer></script>
+</body>
+</html>
