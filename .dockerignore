@@ -1,0 +1,16 @@
+.git
+.gitignore
+.kiro
+.pytest_cache
+__pycache__
+**/__pycache__
+**/*.pyc
+**/node_modules
+**/.next
+frontend
+sites
+advance-site
+tests
+docs
+scripts
+site_builder
