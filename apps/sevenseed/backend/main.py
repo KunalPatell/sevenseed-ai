@@ -292,6 +292,26 @@ async def _block_source_files(request: Request, call_next):
         return JSONResponse({"detail": "Not Found"}, status_code=404)
     return await call_next(request)
 
+# The site assembler writes alias copies of Next.js pages (e.g. /emart/ for /avp-emart/)
+# with React stripped, so they look interactive but nothing on them works. Send those
+# URLs to the live page instead. Map: dead_copy_redirects.json (path -> target).
+import json as _json
+from pathlib import Path as _Path
+try:
+    _DEAD_COPY_REDIRECTS = _json.loads((_Path(__file__).parent / "dead_copy_redirects.json").read_text(encoding="utf-8"))
+except (OSError, ValueError):
+    _DEAD_COPY_REDIRECTS = {}
+
+@app.middleware("http")
+async def _redirect_dead_copies(request: Request, call_next):
+    if request.method in ("GET", "HEAD"):
+        target = _DEAD_COPY_REDIRECTS.get(request.url.path)
+        if target:
+            if request.url.query and "#" not in target:
+                target += "?" + request.url.query
+            return RedirectResponse(url=target, status_code=301)
+    return await call_next(request)
+
 from fastapi.exceptions import RequestValidationError as _RVE
 
 @app.exception_handler(_RVE)
@@ -514,6 +534,9 @@ from crm_router import router as crm_router
 app.include_router(crm_router)
 from advance_site_router import router as _advance_router
 app.include_router(_advance_router)
+# Live, read-only blockchain status and proof-transaction checks for the Web3 tools
+from web3_engine import router as _web3_router
+app.include_router(_web3_router)
 
 # Same-origin, BYOK-aware LLM gateway used by static feature pages (vertex_client.js)
 from llm_gateway import router as _llm_router
@@ -536,16 +559,17 @@ if config.STATIC_DIR.exists():
             app.mount(f"/{prefix}", StaticFiles(directory=str(static_sub), html=True), name=prefix)
             mounted.add(prefix)
 
-    # Alias mounts for long URL compatibility
+    # Alias mounts for long URL compatibility. /comonk is deliberately not aliased to
+    # comonk-ai: its tool pages exist only in static/comonk, served by the root mount.
     aliases = {
-        "comonk": "comonk-ai",
         "decode-forest-pharmacy": "pharmacy",
         "breakdown-factor": "breakdown",
         "avp-charitable-trust": "trust"
     }
     for alias_name, target_prefix in aliases.items():
         if alias_name not in mounted:
-            target_sub = config.STATIC_DIR / target_prefix
+            own_sub = config.STATIC_DIR / alias_name
+            target_sub = own_sub if own_sub.exists() else (config.STATIC_DIR / target_prefix)
             if target_sub.exists():
                 app.mount(f"/{alias_name}", StaticFiles(directory=str(target_sub), html=True), name=f"alias_{alias_name}")
                 mounted.add(alias_name)

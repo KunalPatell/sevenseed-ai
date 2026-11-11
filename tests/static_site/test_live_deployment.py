@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """Comprehensive live production testing suite against https://sevenseed.onrender.com"""
+import os
 import urllib.request
 import urllib.error
 import json
 import time
 
-BASE_URL = "https://sevenseed.onrender.com"
+BASE_URL = os.environ.get("BASE_URL", "https://sevenseed.onrender.com")
 
 TEST_ROUTES = [
     # 1. Core & Hub
@@ -56,6 +57,34 @@ TEST_ROUTES = [
     ("GET", "/api/power/pharmacy/schemes", "Free Healthcare & Ayushman Schemes API"),
     ("POST", "/api/power/outreach/enrich-lead", "Autonomous Prospect Intelligence API", {"company_name": "Datadog", "role": "VP Engineering"}),
     ("POST", "/api/power/breakdown/estimate-repair", "Structural Damage Repair BOQ Estimator API", {"damage_type": "shear_crack", "area_sqft": 30.0}),
+
+    # 5. v7.0 Frontier AI Studios, New Ventures & Promoted Reference Workstations
+    ("GET", "/perplexity-research/", "Perplexity Cited Deep-Research Studio"),
+    ("GET", "/ai-ui-builder/", "v0 + Bolt Live UI Synthesizer"),
+    ("GET", "/infinite-canvas/", "Infinite System Architecture Whiteboard"),
+    ("GET", "/linear-os/", "Linear + Raycast Engineering OS"),
+    ("GET", "/quant-terminal/", "Sevenseed Quant & Options Greeks Terminal"),
+    ("GET", "/climate-agritech/", "TerraPulse Climate & AgriTech AI"),
+    ("GET", "/proptech-studio/", "UrbanGrid PropTech & Real Estate AI"),
+    ("GET", "/shader-3d-lab/", "Live WebGL & GLSL Fragment Shader Lab"),
+    ("GET", "/stripe-atlas/", "Stripe Atlas & IRS 83(b) Incorporation Studio"),
+    ("GET", "/pharmacy/pregnancy-lactation-safety/", "LactMed RID% & Food-Drug Safety Workstation"),
+    ("GET", "/decode-forest-pharmacy/pregnancy-lactation-safety/", "Decode Forest Pharmacy LactMed Twin"),
+    ("GET", "/trust/crowdfunding-milestones/", "Ketto & GoFundMe Milestone Escrow Planner"),
+    ("GET", "/avp-charitable-trust/crowdfunding-milestones/", "AVP Charitable Trust Milestone Twin"),
+
+    # 6. v7.0 Reference Registry & Mathematical/AI APIs
+    ("GET", "/api/reference-sites/registry", "126-Platform Master Reference Registry"),
+    ("POST", "/api/perplexity/research", "Perplexity Multi-Hop Research API", {"query": "Delaware C-Corp vs India Pvt Ltd"}),
+    ("POST", "/api/v0/generate-ui", "v0 Live UI Code Synthesizer API", {"prompt": "Pricing tier bento", "theme": "midnight"}),
+    ("POST", "/api/canvas/architecture", "M/M/1 Queueing Architecture Graph API", {"prompt": "AI RAG API", "target_rps": 3000}),
+    ("POST", "/api/linear/sprint-forecast", "Monte Carlo Sprint Burnup API", {"backlog_points": 140, "target_sprints": 4}),
+    ("POST", "/api/quant/analyze", "Black-Scholes Greeks & Kelly API", {"spot": 22450, "strike": 22500, "days_to_expiry": 30}),
+    ("POST", "/api/climate/analyze", "Scope 1-3 GHG & FAO-56 Irrigation API", {"diesel_liters_yr": 15000, "crop": "wheat"}),
+    ("POST", "/api/proptech/valuation", "DCF Cap-Rate & FSI Massing API", {"property_price_inr": 12500000, "monthly_rent_inr": 42000}),
+    ("POST", "/api/stripe-atlas/incorporate", "Stripe Atlas & 83(b) Deadline API", {"grant_date": "2026-11-11", "founder_shares": 4000000}),
+    ("POST", "/api/drugs/safety-matrix", "Pharmacokinetic RID% & Food-Drug API", {"drug": "atorvastatin", "maternal_dose_mg_day": 20}),
+    ("POST", "/api/ketto/milestone-escrow", "Crowdfunding Milestone Tranche API", {"goal_inr": 1500000, "current_raised_inr": 420000}),
 ]
 
 import sys

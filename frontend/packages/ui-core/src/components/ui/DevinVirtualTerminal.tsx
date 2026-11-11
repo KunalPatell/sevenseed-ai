@@ -1,82 +1,93 @@
 "use client";
 
 import React, { useState } from "react";
-import { Terminal, GitPullRequest, CheckCircle2, Play } from "lucide-react";
+import { Terminal, Loader2, Copy, Send } from "lucide-react";
+
+// AI coding assistant. The old "terminal" printed a fixed script ("42 tests passed",
+// "PR #142 created") whatever you did. This sends the visitor's task to Sevenseed's AI
+// gateway (/api/llm/chat) and shows the real answer: a plan, code and how to test it.
+// It can't run code or open pull requests, and says so.
+
+const KEY_SOURCES: Record<string, string[]> = {
+  "X-Groq-API-Key": ["user_groq_key", "ss_key_groq", "groq_api_key"],
+  "X-Gemini-API-Key": ["user_gemini_key", "ss_key_gemini", "ss_apikey_gemini"],
+  "X-OpenAI-API-Key": ["user_openai_key", "ss_key_openai"],
+};
+function headers() {
+  const h: Record<string, string> = { "Content-Type": "application/json" };
+  try {
+    for (const [header, names] of Object.entries(KEY_SOURCES)) {
+      for (const n of names) { const v = (localStorage.getItem(n) || "").trim(); if (v) { h[header] = v; break; } }
+    }
+  } catch { /* storage blocked */ }
+  return h;
+}
+
+const SYSTEM = "You are a senior software engineer helping someone with a coding task. Reply in this order: 1) a short plan (3-6 bullet points), 2) the code in fenced code blocks with the language named, 3) how to test it. Be concise. If the task is unclear, ask one clarifying question instead. Never claim you ran code, ran tests or opened a pull request: you can't.";
+const EXAMPLES = [
+  "Write a Python function that validates an Indian PAN number and explain the format.",
+  "A React form submits twice when I press Enter. What are the common causes and fixes?",
+  "Write a SQL query for the top 5 customers by total order value in the last 90 days.",
+];
 
 export function DevinVirtualTerminal() {
-  const [logs, setLogs] = useState<string[]>([
-    "$ devin init --repo main/sevenseed",
-    "Initializing autonomous environment in isolated Docker sandbox...",
-    "Cloning repository branch: feature/modern-ui",
-    "Running test assertions: 42 passed in 1.4s."
-  ]);
-  const [prCreated, setPrCreated] = useState(false);
+  const [task, setTask] = useState("");
+  const [lang, setLang] = useState("Any");
+  const [answer, setAnswer] = useState("");
+  const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  const runTest = () => {
-    setLogs((prev) => [
-      ...prev,
-      "$ pytest tests/ -v",
-      "tests/test_agents.py::test_orchestrator PASSED",
-      "tests/test_waterfall.py::test_ruv_calc PASSED",
-      "✨ All tests passed! Ready to submit pull request."
-    ]);
-  };
-
-  const createPR = () => {
-    setPrCreated(true);
-    setLogs((prev) => [
-      ...prev,
-      "$ devin create-pr --title 'feat: complete React & Node migration'",
-      "🔗 Pull Request #142 created: https://github.com/sevenseed/platform/pull/142"
-    ]);
+  const run = async () => {
+    if (!task.trim() || busy) return;
+    setBusy(true); setErr(""); setAnswer("");
+    try {
+      const r = await fetch("/api/llm/chat", {
+        method: "POST",
+        headers: headers(),
+        body: JSON.stringify({ system: SYSTEM, temperature: 0.3, maxTokens: 1800, messages: [{ role: "user", content: `${lang !== "Any" ? `Language: ${lang}\n` : ""}${task.trim()}` }] }),
+      });
+      const body = await r.json().catch(() => ({}));
+      if (r.status === 429) throw new Error("The free hourly AI limit was reached. Add your own AI key on the Your AI keys page, or try again later.");
+      if (!r.ok) throw new Error(body.detail || `The AI service returned an error (${r.status}).`);
+      setAnswer(body.text || "");
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally { setBusy(false); }
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto p-6 md:p-8 bg-slate-900/90 border border-slate-800 rounded-2xl shadow-2xl backdrop-blur-xl">
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">
-          <Terminal className="w-4 h-4" /> Autonomous Software Engineer Workspace
+    <div className="w-full max-w-5xl mx-auto p-6 md:p-8 bg-slate-900/90 border border-slate-800 rounded-2xl shadow-2xl">
+      <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2"><Terminal className="w-6 h-6 text-cyan-400" /> AI coding assistant</h1>
+      <p className="mt-2 text-sm text-slate-300 max-w-2xl">Describe a coding task or paste an error. You get a plan, the code and how to test it. It writes code but can't run it, so check the result before you use it.</p>
+
+      <div className="mt-6 space-y-3">
+        <label className="block text-sm text-slate-300">Your task
+          <textarea rows={5} value={task} onChange={(e) => setTask(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) run(); }} placeholder="e.g. Write a FastAPI endpoint that accepts a CSV upload and returns the row count" className="mt-1.5 w-full p-3 rounded-lg bg-slate-950 border border-slate-700 text-sm text-white font-mono focus:outline-none focus:border-cyan-400" />
+        </label>
+        <div className="flex flex-wrap items-center gap-2">
+          <label className="text-sm text-slate-300">Language <select value={lang} onChange={(e) => setLang(e.target.value)} className="ml-1 px-2 py-1.5 rounded-md bg-slate-950 border border-slate-700 text-sm text-white">{["Any", "Python", "JavaScript", "TypeScript", "Java", "Go", "SQL", "Bash"].map((l) => <option key={l}>{l}</option>)}</select></label>
+          <button type="button" onClick={run} disabled={busy || !task.trim()} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-cyan-500 text-black text-sm font-bold disabled:opacity-50">{busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {busy ? "Thinking…" : "Ask"}</button>
+          <span className="text-xs text-slate-500">Ctrl + Enter</span>
         </div>
-        <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
-          Devin AI Sandboxed Terminal
-        </h2>
-        <p className="text-slate-400 text-sm mt-2 max-w-xl mx-auto">
-          Sandboxed developer environment executing shell commands, git diff inspections, and automated PR dispatches.
-        </p>
+        {!task && (
+          <div className="flex flex-wrap gap-2">
+            {EXAMPLES.map((x) => <button key={x} type="button" onClick={() => setTask(x)} className="text-left text-xs px-3 py-1.5 rounded-full border border-slate-700 text-slate-300 hover:border-cyan-400">{x}</button>)}
+          </div>
+        )}
       </div>
 
-      <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden font-mono text-xs">
-        <div className="bg-slate-900/80 px-4 py-2.5 border-b border-slate-800 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-rose-500 inline-block" />
-            <span className="w-3 h-3 rounded-full bg-amber-500 inline-block" />
-            <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
-            <span className="text-slate-400 ml-2">devin@container:~#</span>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={runTest}
-              className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[11px] font-sans font-semibold flex items-center gap-1 transition"
-            >
-              <Play className="w-3 h-3" /> Run Pytest
-            </button>
-            <button
-              onClick={createPR}
-              disabled={prCreated}
-              className="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white rounded text-[11px] font-sans font-semibold flex items-center gap-1 transition"
-            >
-              <GitPullRequest className="w-3 h-3" /> {prCreated ? "PR #142 Merged" : "Create PR"}
-            </button>
-          </div>
-        </div>
-
-        <div className="p-4 text-slate-300 space-y-1.5 h-64 overflow-y-auto leading-relaxed">
-          {logs.map((log, idx) => (
-            <div key={idx} className={log.startsWith("$") ? "text-cyan-400 font-bold" : "text-slate-400"}>
-              {log}
+      <div className="mt-6" aria-live="polite">
+        {err && <p className="p-3 rounded-lg bg-rose-950/50 border border-rose-800 text-sm text-rose-200">{err}</p>}
+        {answer && (
+          <div className="rounded-xl border border-slate-800 bg-slate-950">
+            <div className="flex justify-between items-center px-4 py-2 border-b border-slate-800">
+              <span className="text-xs text-slate-400">Answer</span>
+              <button type="button" onClick={async () => { try { await navigator.clipboard.writeText(answer); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch { /* ignore */ } }} className="inline-flex items-center gap-1 text-xs text-slate-300"><Copy className="w-3.5 h-3.5" /> {copied ? "Copied" : "Copy"}</button>
             </div>
-          ))}
-        </div>
+            <pre className="p-4 whitespace-pre-wrap text-sm text-slate-200 font-mono leading-relaxed max-h-[560px] overflow-y-auto">{answer}</pre>
+          </div>
+        )}
       </div>
     </div>
   );

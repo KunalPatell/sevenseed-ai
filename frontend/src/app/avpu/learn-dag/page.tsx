@@ -24,7 +24,7 @@ export default function LearnDAGRoute() {
               <div className="text-[11px] font-mono uppercase text-sky-400">AVPU Curriculum Engine</div>
               <h1 className="text-xl sm:text-2xl font-bold text-slate-100 flex items-center gap-2">
                 <Network className="w-5 h-5 text-sky-400" />
-                <span>Interactive Knowledge DAG (learn-anything.xyz)</span>
+                <span>Interactive Knowledge DAG</span>
               </h1>
             </div>
           </div>

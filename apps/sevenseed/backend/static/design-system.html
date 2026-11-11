@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Cybernetic UI Laboratory — Design System | Sevenseed</title>
-  <meta name="description" content="Production-grade modern UI component laboratory inspired by 21st.dev, Aceternity UI, Unicorn Studio, Uiverse, Spline 3D, and Aura Build. 100% Vanilla HTML, CSS & WebGL with 1-click copy.">
+  <meta name="description" content="Sevenseed's UI component library: spotlights, border beams, shaders, switches and tickers in plain HTML, CSS and WebGL, with 1-click copy.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -321,7 +321,7 @@
       background: rgba(10, 15, 30, 0.4);
     }
 
-    /* 1. SPOTLIGHT CARD (Aceternity UI) */
+    /* 1. SPOTLIGHT CARD (UI) */
     .spotlight-box {
       width: 100%;
       max-width: 320px;
@@ -358,7 +358,7 @@
     .spot-title { font-weight: 700; font-size: 16px; margin-bottom: 6px; color: #fff; }
     .spot-p { font-size: 12px; color: #94a3b8; line-height: 1.5; }
 
-    /* 2. EVERVAULT MATRIX CIPHER (Aceternity UI) */
+    /* 2. EVERVAULT MATRIX CIPHER (UI) */
     .evervault-card {
       width: 100%;
       max-width: 320px;
@@ -726,7 +726,7 @@
       transform: translateX(-50%) translateY(0);
     }
   </style>
-<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.1"/></head>
+<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.3"/></head>
 <body>
 
   <!-- Nav -->
@@ -766,10 +766,10 @@
     <p class="hero-sub">Production-grade interactive design engineering primitives. Pure Vanilla HTML, CSS & WebGL with zero bloated node dependencies and instant 1-click code export.</p>
     
     <div class="ref-chips">
-      <div class="ref-chip"><i class="fas fa-lightbulb"></i> Aceternity Spotlight</div>
-      <div class="ref-chip"><i class="fas fa-terminal"></i> Evervault Cipher</div>
-      <div class="ref-chip"><i class="fas fa-wave-square"></i> Unicorn Shaders</div>
-      <div class="ref-chip"><i class="fas fa-border-all"></i> 21st.dev Laser Beams</div>
+      <div class="ref-chip"><i class="fas fa-lightbulb"></i> Spotlight</div>
+      <div class="ref-chip"><i class="fas fa-terminal"></i> Cipher</div>
+      <div class="ref-chip"><i class="fas fa-wave-square"></i> Shaders</div>
+      <div class="ref-chip"><i class="fas fa-border-all"></i> Laser Beams</div>
       <div class="ref-chip"><i class="fas fa-microchip"></i> Aura Telemetry HUD</div>
       <div class="ref-chip"><i class="fas fa-cube"></i> Three.js 3D Tilt</div>
     </div>
@@ -790,7 +790,7 @@
     <div class="comp-card" data-cat="cards">
       <div class="comp-head">
         <div class="comp-meta">
-          <span class="comp-badge">Aceternity</span>
+          <span class="comp-badge">Spotlight</span>
           <span class="comp-title">Radial Spotlight Glare</span>
         </div>
         <div class="comp-actions">
@@ -811,8 +811,8 @@
     <div class="comp-card" data-cat="cards">
       <div class="comp-head">
         <div class="comp-meta">
-          <span class="comp-badge">Aceternity</span>
-          <span class="comp-title">Evervault Matrix Cipher</span>
+          <span class="comp-badge">Spotlight</span>
+          <span class="comp-title">Matrix Cipher</span>
         </div>
         <div class="comp-actions">
           <button class="icon-action-btn" title="View Code" onclick="openCode('evervault')"><i class="fas fa-code"></i></button>
@@ -831,7 +831,7 @@
     <div class="comp-card" data-cat="cards">
       <div class="comp-head">
         <div class="comp-meta">
-          <span class="comp-badge">21st.dev</span>
+          <span class="comp-badge">Border</span>
           <span class="comp-title">Laser Border Beam</span>
         </div>
         <div class="comp-actions">
@@ -861,7 +861,7 @@
     <div class="comp-card" data-cat="shaders">
       <div class="comp-head">
         <div class="comp-meta">
-          <span class="comp-badge">Unicorn Studio</span>
+          <span class="comp-badge">Shader</span>
           <span class="comp-title">Interactive Fluid Mesh</span>
         </div>
         <div class="comp-actions">
@@ -881,7 +881,7 @@
     <div class="comp-card" data-cat="buttons">
       <div class="comp-head">
         <div class="comp-meta">
-          <span class="comp-badge">Uiverse.io</span>
+          <span class="comp-badge">Control</span>
           <span class="comp-title">Cyber Switch & Shimmer</span>
         </div>
         <div class="comp-actions">
@@ -906,7 +906,7 @@
     <div class="comp-card" data-cat="cards">
       <div class="comp-head">
         <div class="comp-meta">
-          <span class="comp-badge">Spline 3D</span>
+          <span class="comp-badge">3D</span>
           <span class="comp-title">Perspective 3D Gyro Tilt</span>
         </div>
         <div class="comp-actions">
@@ -926,7 +926,7 @@
     <div class="comp-card" data-cat="motion">
       <div class="comp-head">
         <div class="comp-meta">
-          <span class="comp-badge">MotionSites.ai</span>
+          <span class="comp-badge">Motion</span>
           <span class="comp-title">Kinetic Spring Ticker</span>
         </div>
         <div class="comp-actions">
@@ -1186,7 +1186,7 @@
     /* 9. CODE PREVIEW MODAL DATA */
     const CODE_SNIPPETS = {
       spotlight: {
-        title: "Aceternity Radial Spotlight Card",
+        title: "Radial Spotlight Card",
         html: `<div class="spotlight-card" id="spotlightCard">
   <div class="icon"><i class="fas fa-bolt"></i></div>
   <h3>Autonomous Agent Node</h3>
@@ -1215,7 +1215,7 @@
 .spotlight-card:hover::before { opacity: 1; }`
       },
       evervault: {
-        title: "Aceternity Evervault Matrix Cipher",
+        title: "Matrix Cipher",
         html: `<div class="evervault-box">
   <div class="matrix-text" id="matrixText"></div>
   <div class="cipher-core">QUANTUM</div>
@@ -1243,7 +1243,7 @@
 }`
       },
       borderbeam: {
-        title: "21st.dev Laser Border Beam",
+        title: "Laser Border Beam",
         html: `<div class="beam-card">
   <svg class="beam-svg">
     <rect class="beam-rect" x="2" y="2" width="calc(100% - 4px)" height="calc(100% - 4px)" rx="16" />
@@ -1263,7 +1263,7 @@
 }`
       },
       fluid: {
-        title: "Unicorn Studio Fluid Shader",
+        title: "Fluid Shader",
         html: `<canvas id="fluidCanvas"></canvas>`,
         css: `#fluidCanvas {
   width: 100%;
@@ -1273,7 +1273,7 @@
 }`
       },
       uiverse: {
-        title: "Uiverse Shimmer Button",
+        title: "Shimmer Button",
         html: `<button class="shimmer-btn">Neural Launch</button>`,
         css: `.shimmer-btn {
   position: relative;
@@ -1310,7 +1310,7 @@
 .tilt-inner { transform: translateZ(30px); }`
       },
       ticker: {
-        title: "MotionSites.ai Kinetic Number Ticker",
+        title: "Kinetic Number Ticker",
         html: `<div class="ticker-number" id="tickerNum">0</div>`,
         css: `.ticker-number {
   font-family: 'JetBrains Mono', monospace;
@@ -1392,6 +1392,6 @@
     }
   </script>
 
-<script src="/static/quantum-enhancer.js?v=6.1" defer></script>
+<script src="/static/quantum-enhancer.js?v=6.3" defer></script>
 </body>
 </html>

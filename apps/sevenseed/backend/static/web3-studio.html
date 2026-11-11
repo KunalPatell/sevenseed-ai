@@ -1,306 +1,369 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Multi-Framework AI &amp; Interactive Reference Super-Platform — Web3 Studio | Sevenseed</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Three.js WebGL 3D Engine (Spline / Unicorn Studio / 21st.dev Shader Canvas) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <!-- React 18 Production Runtime -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <!-- AngularJS 1.8.3 Enterprise Two-Way Data Binding Engine -->
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
-
+  <title>Web3 Studio | Sevenseed</title>
+  <meta name="description" content="Fingerprint a file, sign the fingerprint with your wallet or record it on a public blockchain, and check proofs later. Your file never leaves your device." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🌱%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #020617;
-      color: #f8fafc;
-      overflow-x: hidden;
+    :root {
+      --bg: #f7f8fa; --panel: #ffffff; --panel-2: #f1f3f6; --text: #0f172a; --muted: #52607a; --border: #dde2ea;
+      --accent: #4f46e5; --accent-ink: #ffffff; --good: #047857; --good-bg: #ecfdf5; --bad: #b91c1c; --bad-bg: #fef2f2; --warn: #92400e; --warn-bg: #fffbeb;
     }
-    .font-mono { font-family: 'JetBrains Mono', monospace; }
-    .glass-card {
-      background: rgba(15, 23, 42, 0.78);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #070a12; --panel: #0e1320; --panel-2: #141b2b; --text: #e8ecf4; --muted: #9aa6bd; --border: #232c40;
+        --accent: #818cf8; --accent-ink: #0b0f1a; --good: #6ee7b7; --good-bg: #052e22; --bad: #fca5a5; --bad-bg: #3a0d0d; --warn: #fcd34d; --warn-bg: #2f2205;
+      }
     }
-    /* Aceternity / 21st.dev Animated Conic Border Glow */
-    .quantum-glow {
-      box-shadow: 0 0 45px -10px rgba(56, 189, 248, 0.35), 0 0 25px -8px rgba(16, 185, 129, 0.25);
+    :root[data-theme="dark"] {
+      --bg: #070a12; --panel: #0e1320; --panel-2: #141b2b; --text: #e8ecf4; --muted: #9aa6bd; --border: #232c40;
+      --accent: #818cf8; --accent-ink: #0b0f1a; --good: #6ee7b7; --good-bg: #052e22; --bad: #fca5a5; --bad-bg: #3a0d0d; --warn: #fcd34d; --warn-bg: #2f2205;
     }
-    #webgl-hero-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.55;
-    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 32px 16px 96px; }
+    h1 { font-size: clamp(28px, 4.4vw, 42px); line-height: 1.12; letter-spacing: -0.02em; margin: 0 0 10px; }
+    h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: -0.01em; }
+    h3 { font-size: 15px; margin: 0 0 6px; }
+    p { margin: 0; }
+    .lede { color: var(--muted); font-size: 16.5px; max-width: 720px; }
+    .eyebrow { display: inline-block; font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+    .stack > * + * { margin-top: 14px; }
+    section { margin-top: 28px; }
+    .muted { color: var(--muted); }
+    .small { font-size: 13px; }
+    .mono { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 13px; word-break: break-all; }
+    .grid-net { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 14px; }
+    .net { background: var(--panel-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; }
+    .net b { display: block; font-size: 14px; }
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: var(--muted); vertical-align: 1px; }
+    .dot.on { background: #10b981; } .dot.off { background: #ef4444; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+    label.field { display: block; font-size: 13px; font-weight: 600; color: var(--muted); }
+    label.field > * { margin-top: 6px; }
+    input[type=text], textarea, select { width: 100%; font: inherit; color: var(--text); background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+    textarea { min-height: 96px; resize: vertical; }
+    input:focus, textarea:focus, select:focus, button:focus-visible, .drop:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .drop { display: block; border: 1.5px dashed var(--border); border-radius: 12px; padding: 22px; text-align: center; cursor: pointer; background: var(--panel-2); }
+    .drop.over { border-color: var(--accent); }
+    .drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: inherit; font-weight: 700; font-size: 14px; border-radius: 10px; padding: 10px 16px; cursor: pointer; border: 1px solid var(--border); background: var(--panel); color: var(--text); text-decoration: none; }
+    .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+    .btn[disabled] { opacity: .5; cursor: not-allowed; }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .note { border-radius: 12px; padding: 12px 14px; font-size: 14px; border: 1px solid var(--border); background: var(--panel-2); }
+    .note.good { background: var(--good-bg); color: var(--good); border-color: transparent; }
+    .note.bad { background: var(--bad-bg); color: var(--bad); border-color: transparent; }
+    .note.warn { background: var(--warn-bg); color: var(--warn); border-color: transparent; }
+    .note a { color: inherit; }
+    .hashbox { background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tab { font: inherit; font-size: 13.5px; font-weight: 600; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; }
+    .tab[aria-selected=true] { color: var(--text); border-color: var(--accent); background: var(--panel-2); }
+    .plan { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .plan div { border: 1px solid var(--border); border-radius: 12px; padding: 14px; background: var(--panel); }
+    .tag { display: inline-block; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--panel-2); color: var(--muted); border: 1px solid var(--border); }
+    details { border-top: 1px solid var(--border); padding: 12px 0; }
+    summary { cursor: pointer; font-weight: 600; }
+    details p { margin-top: 8px; color: var(--muted); }
+    [hidden] { display: none !important; }
   </style>
-<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.1"/></head>
-<body class="min-h-screen relative selection:bg-sky-500 selection:text-slate-950">
-
-  <!-- Three.js WebGL 3D Interactive Shader Canvas (Unicorn Studio / Spline / Aceternity) -->
-  <canvas id="webgl-hero-canvas"></canvas>
-
-  <!-- Main Content Container -->
-  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-8">
-
-    <!-- Top Executive Header & Render Free-Tier 512MB RAM Architecture Proof -->
-    <header class="glass-card quantum-glow rounded-3xl p-6 sm:p-8 border border-sky-500/30">
-      <div class="flex flex-wrap items-center justify-between gap-4">
-        <div class="space-y-2 max-w-3xl">
-          <div class="flex flex-wrap items-center gap-2">
-            <span class="px-3 py-1 rounded-full text-xs font-extrabold bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-500 text-slate-950">
-              ⛓️ WEB3 MULTI-CHAIN & ERC-4337 STUDIO
-            </span>
-            <span class="px-3 py-1 rounded-full text-xs font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-              🟢 Render Free Tier Safe: 72.4 MB / 512 MB RAM (Zero OOM Crash)
-            </span>
-            <span class="px-3 py-1 rounded-full text-xs font-mono bg-purple-500/15 text-purple-300 border border-purple-500/30">
-              React 18 · AngularJS 1.8 · LangChain · LangGraph · Canva · Framer · Three.js
-            </span>
-          </div>
-          <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Multi-Framework AI & Interactive Reference Super-Platform
-          </h1>
-          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Built with genuine <strong class="text-sky-300">React 18</strong>, <strong class="text-rose-300">AngularJS 1.8 Two-Way Binding</strong>, <strong class="text-emerald-300">Python LangChain + LangGraph Cyclic StateGraphs</strong>, <strong class="text-amber-300">Three.js WebGL 3D Shaders (21st.dev / Aceternity / Unicorn Studio / Spline)</strong>, <strong class="text-purple-300">Canva Vector Studio</strong>, and <strong class="text-indigo-300">Framer Spring Physics</strong> — replicating 100% of your reference sites while staying under 85MB RAM on Render Free Tier.
-          </p>
-        </div>
-
-        <!-- Render Free Tier Memory Telemetry Gauge -->
-        <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 w-full sm:w-72 space-y-2">
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-bold text-slate-300">Render Free Tier RAM</span>
-            <span class="font-mono font-bold text-emerald-400">72.4 / 512 MB (14%)</span>
-          </div>
-          <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
-            <div class="h-full bg-gradient-to-r from-emerald-400 to-sky-400 rounded-full" style="width: 14.2%"></div>
-          </div>
-          <div class="text-[11px] text-slate-400 flex justify-between">
-            <span>Legacy Next SSR: <s class="text-rose-400">980MB (OOM)</s></span>
-            <span class="text-emerald-300 font-semibold">Hybrid GPU: PASS ✔</span>
-          </div>
-        </div>
-      </div>
+  <link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.3" />
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <span class="eyebrow">Web3 Studio</span>
+      <h1>Prove a file existed, and that it hasn't changed</h1>
+      <p class="lede">Make a fingerprint of any document, photo or contract, then sign it with your wallet or record it on a public blockchain. Later, anyone can check the file against that proof. Your file never leaves your device: only its fingerprint is used.</p>
     </header>
 
-    <!-- ================================================================== -->
-    <!-- REACT 18 INTERACTIVE MULTI-WORKSPACE ROOT MOUNT                    -->
-    <!-- ================================================================== -->
-    <main id="react-advance-root">
-      <div class="glass-card rounded-2xl p-8 text-center text-slate-300">
-        Loading React 18 + LangGraph + Three.js Quantum Workspaces...
-      </div>
-    </main>
-
-    <!-- ================================================================== -->
-    <!-- ANGULARJS 1.8.3 REACTIVE TWO-WAY DATA BINDING ENTERPRISE DECK      -->
-    <!-- ================================================================== -->
-    <section id="angular-enterprise-mount" ng-app="SevenseedEnterpriseApp" ng-controller="EnterpriseGridCtrl" class="glass-card rounded-3xl p-6 sm:p-8 border border-rose-500/30 space-y-5">
-      <div class="flex flex-wrap items-center justify-between gap-4">
+    <section class="card" aria-labelledby="net-h">
+      <div class="row" style="justify-content:space-between">
         <div>
-          <span class="px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
-            🛡️ REAL ANGULARJS 1.8.3 TWO-WAY DATA BINDING ENGINE (ng-app / ng-model / $scope)
-          </span>
-          <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-2">
-            Cross-Venture Live Telemetry & Reference Benchmark Command Matrix
-          </h2>
+          <h2 id="net-h">Network status</h2>
+          <p class="muted small" id="net-when">Checking the networks…</p>
         </div>
-        <div class="flex flex-wrap items-center gap-3">
-          <input
-            type="text"
-            ng-model="searchFilter"
-            placeholder="Angular ng-model live filter (e.g. Smartprix, SkyCiv, Devin)..."
-            class="bg-slate-950 border border-slate-700 rounded-xl px-4 py-2 text-xs text-white w-64 focus:outline-none focus:border-rose-400"
-          />
-          <button
-            ng-click="simulateTrafficSpike()"
-            class="px-4 py-2 rounded-xl text-xs font-bold bg-rose-500 text-white hover:bg-rose-400 transition"
-          >
-            ⚡ Simulate Live Traffic Spike (+RPS)
-          </button>
-        </div>
+        <button class="btn" type="button" id="net-refresh">Refresh</button>
       </div>
+      <div class="grid-net" id="net-grid" aria-live="polite"></div>
+    </section>
 
-      <!-- Live AngularJS Bound KPI Summary Row -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-        <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800">
-          <div class="text-slate-400">Live Filter Query (Two-Way Bound)</div>
-          <div class="text-sm font-mono font-bold text-rose-300 mt-1" ng-bind="searchFilter || 'ALL_8_VENTURES'"></div>
-        </div>
-        <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800">
-          <div class="text-slate-400">Aggregate Cluster Throughput</div>
-          <div class="text-sm font-mono font-bold text-emerald-400 mt-1"><span ng-bind="totalRps()"></span> req/sec</div>
-        </div>
-        <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800">
-          <div class="text-slate-400">Combined Venture ARR Run-Rate</div>
-          <div class="text-sm font-mono font-bold text-sky-400 mt-1">₹<span ng-bind="totalArr()"></span> Cr/yr</div>
-        </div>
-        <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800">
-          <div class="text-slate-400">Render Free-Tier Memory</div>
-          <div class="text-sm font-mono font-bold text-amber-300 mt-1"><span ng-bind="ramMb"></span> MB / 512 MB</div>
-        </div>
+    <section class="card stack" aria-labelledby="fp-h">
+      <div>
+        <h2 id="fp-h">1. Make a fingerprint</h2>
+        <p class="muted">A SHA-256 fingerprint is a 64-character code. Change even one letter of the file and the code changes completely.</p>
       </div>
-
-      <!-- AngularJS ng-repeat Venture Table -->
-      <div class="overflow-x-auto rounded-2xl border border-slate-800">
-        <table class="w-full text-left text-xs">
-          <thead class="bg-slate-950 text-slate-400 uppercase">
-            <tr>
-              <th class="p-3">Venture</th>
-              <th class="p-3">Integrated Reference Sites & Tech</th>
-              <th class="p-3">Throughput (RPS)</th>
-              <th class="p-3">P99 Latency</th>
-              <th class="p-3">ARR (₹ Cr)</th>
-              <th class="p-3">Status</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-800 bg-slate-900/80">
-            <tr ng-repeat="v in ventures | filter:searchFilter" class="hover:bg-slate-800/70 transition">
-              <td class="p-3 font-bold text-white" ng-bind="v.name"></td>
-              <td class="p-3 text-sky-300" ng-bind="v.stack"></td>
-              <td class="p-3 font-mono text-emerald-400"><span ng-bind="v.rps"></span> rps</td>
-              <td class="p-3 font-mono text-amber-300"><span ng-bind="v.p99_ms"></span> ms</td>
-              <td class="p-3 font-mono font-bold text-white">₹<span ng-bind="v.arr_cr"></span> Cr</td>
-              <td class="p-3">
-                <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold text-[10px]" ng-bind="v.status"></span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="tabs" role="tablist" aria-label="What to fingerprint">
+        <button class="tab" role="tab" aria-selected="true" aria-controls="fp-file" id="tab-file" type="button">A file</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="fp-text" id="tab-text" type="button">Some text</button>
+      </div>
+      <div id="fp-file" role="tabpanel" aria-labelledby="tab-file">
+        <label class="drop" id="drop">
+          <input type="file" id="file-in" />
+          <strong>Choose a file</strong> <span class="muted">or drop it here</span>
+          <div class="muted small" id="file-name">Any type and size. It stays on your device.</div>
+        </label>
+      </div>
+      <div id="fp-text" role="tabpanel" aria-labelledby="tab-text" hidden>
+        <label class="field">Text to fingerprint<textarea id="text-in" placeholder="Paste an agreement, a statement, a recipe…"></textarea></label>
+      </div>
+      <label class="field">Label (optional, saved in the proof)<input type="text" id="label-in" maxlength="120" placeholder="e.g. Site inspection photos, 11 Nov" /></label>
+      <div class="hashbox" aria-live="polite">
+        <div class="small muted">Fingerprint (SHA-256)</div>
+        <div class="mono" id="hash-out">Nothing yet</div>
       </div>
     </section>
 
-  </div>
+    <section class="two">
+      <div class="card stack">
+        <div>
+          <h2>2a. Sign it with your wallet</h2>
+          <p class="muted">Free and instant: no transaction, no fee. Proves that your wallet address vouched for this fingerprint at this time. Keep the proof file somewhere safe.</p>
+        </div>
+        <button class="btn primary" type="button" id="sign-btn" disabled>Sign with wallet</button>
+        <div id="sign-out" aria-live="polite"></div>
+      </div>
+      <div class="card stack">
+        <div>
+          <h2>2b. Record it on a blockchain</h2>
+          <p class="muted">Sends a transaction from your wallet to itself with the fingerprint inside, so the proof is public and dated by the network. You pay the network fee and confirm it in your wallet.</p>
+        </div>
+        <label class="field">Network<select id="chain-in"></select></label>
+        <p class="small muted" id="fee-out">Estimated fee appears once the network status loads.</p>
+        <button class="btn primary" type="button" id="anchor-btn" disabled>Record on chain</button>
+        <div id="anchor-out" aria-live="polite"></div>
+      </div>
+    </section>
 
-  <!-- Load Master Datasets & React 18 Application (Supports both /static/ and relative paths) -->
-  <script src="app-data.js" onerror="var s=document.createElement('script');s.src='/static/app-data.js';document.head.appendChild(s);"></script>
+    <section class="card stack" aria-labelledby="ver-h">
+      <div>
+        <h2 id="ver-h">3. Check a proof</h2>
+        <p class="muted">Make the fingerprint of the file you were given (step 1), then check it against the proof.</p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Kind of proof">
+        <button class="tab" role="tab" aria-selected="true" aria-controls="ver-tx" id="tab-vtx" type="button">A blockchain transaction</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="ver-sig" id="tab-vsig" type="button">A signed proof file</button>
+      </div>
+      <div id="ver-tx" role="tabpanel" aria-labelledby="tab-vtx" class="stack">
+        <div class="two">
+          <label class="field">Network<select id="vchain-in"></select></label>
+          <label class="field">Transaction hash<input type="text" id="vtx-in" placeholder="0x…" spellcheck="false" /></label>
+        </div>
+        <div class="row"><button class="btn primary" type="button" id="vtx-btn">Check transaction</button></div>
+      </div>
+      <div id="ver-sig" role="tabpanel" aria-labelledby="tab-vsig" hidden class="stack">
+        <label class="drop"><input type="file" id="vsig-in" accept=".json,application/json" /><strong>Choose the proof file</strong> <span class="muted">(.json from step 2a)</span><div class="muted small" id="vsig-name"></div></label>
+      </div>
+      <div id="ver-out" aria-live="polite"></div>
+    </section>
+
+    <section class="card stack" aria-labelledby="plan-h">
+      <div>
+        <h2 id="plan-h">Planned for the Sevenseed companies</h2>
+        <p class="muted">These use the same fingerprint idea. None of them is live yet, and Sevenseed has no smart contracts deployed, so nothing on this site mints tokens or certificates today.</p>
+      </div>
+      <div class="plan">
+        <div><span class="tag">AVP University</span><h3 style="margin-top:8px">Verifiable certificates</h3><p class="small muted">Employers check a course certificate against its recorded fingerprint.</p></div>
+        <div><span class="tag">Rakshak AI</span><h3 style="margin-top:8px">Evidence fingerprints</h3><p class="small muted">Record photos and videos the moment they're taken, so you can later show they weren't edited. You can do this now with steps 1 and 2.</p></div>
+        <div><span class="tag">AVP Charitable Trust</span><h3 style="margin-top:8px">Public donation record</h3><p class="small muted">Each month's donation report is fingerprinted, so anyone can confirm it wasn't changed afterwards.</p></div>
+        <div><span class="tag">Breakdown Factor</span><h3 style="margin-top:8px">Site milestone records</h3><p class="small muted">Inspection reports and bills of quantities recorded at each construction milestone.</p></div>
+        <div><span class="tag">Comonk</span><h3 style="margin-top:8px">Checkable work history</h3><p class="small muted">An employer signs a fingerprint of your experience letter so the next employer can check it.</p></div>
+        <div><span class="tag">AVP E-Mart</span><h3 style="margin-top:8px">Purchase receipts</h3><p class="small muted">Fingerprint an invoice to settle warranty or refund disputes.</p></div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="faq-h">
+      <h2 id="faq-h" style="margin-bottom:8px">Questions</h2>
+      <details><summary>Is my file uploaded anywhere?</summary><p>No. Your browser computes the fingerprint. Only the 64-character fingerprint goes into a signature or a transaction, and nobody can rebuild the file from it.</p></details>
+      <details><summary>Which wallet do I need?</summary><p>Any browser wallet that works with Ethereum-style networks, such as MetaMask, or the built-in browser of a mobile wallet app. Signing (2a) needs no funds. Recording on chain (2b) needs a small balance on that network to pay the fee.</p></details>
+      <details><summary>Does a proof show who wrote the file?</summary><p>No. It shows that this exact file existed when it was signed or recorded, and which wallet did it. It says nothing about who created the content or whether it is true.</p></details>
+      <details><summary>Can I delete a blockchain record?</summary><p>No. Blockchain records are permanent and public, which is the point. The fingerprint reveals nothing about your file, but your wallet address is visible.</p></details>
+    </section>
+  </main>
+
+  <script src="/static/ss-web3.js?v=1"></script>
   <script>
-    window.__INITIAL_ADVANCE_TAB__ = 'ventures';
-    window.addEventListener('DOMContentLoaded', function () {
-      function bootReact() {
-        if (window.SEVENSEED_ADVANCE_DATA) {
-          var s = document.createElement('script');
-          s.src = 'react-app.js';
-          s.onerror = function () {
-            var s2 = document.createElement('script');
-            s2.src = '/static/react-app.js';
-            document.body.appendChild(s2);
-          };
-          document.body.appendChild(s);
-        } else {
-          setTimeout(bootReact, 50);
-        }
-      }
-      bootReact();
+  (function () {
+    "use strict";
+    var W = window.SSWeb3;
+    var $ = function (id) { return document.getElementById(id); };
+    var state = { hash: "", net: {} };
+    // Gas for a 0-value transfer carrying 32 bytes of data: 21000 + 32 non-zero bytes * 16.
+    var PROOF_GAS = 21512;
+
+    function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+    function note(el, kind, html) { el.innerHTML = '<div class="note ' + kind + '">' + html + "</div>"; }
+    function download(obj, name) {
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" }));
+      a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    }
+
+    // Tabs
+    function wireTabs(pairs) {
+      pairs.forEach(function (p) {
+        $(p[0]).addEventListener("click", function () {
+          pairs.forEach(function (q) { $(q[0]).setAttribute("aria-selected", String(q === p)); $(q[1]).hidden = q !== p; });
+          if (p[2]) p[2]();
+        });
+      });
+    }
+    wireTabs([["tab-file", "fp-file", function () { if (state.file) hashFile(state.file); else setHash(""); }], ["tab-text", "fp-text", function () { hashText(); }]]);
+    wireTabs([["tab-vtx", "ver-tx"], ["tab-vsig", "ver-sig"]]);
+
+    // Networks
+    var selects = [$("chain-in"), $("vchain-in")];
+    Object.keys(W.CHAINS).forEach(function (k) {
+      selects.forEach(function (s) { var o = document.createElement("option"); o.value = k; o.textContent = W.CHAINS[k].name; s.appendChild(o); });
     });
-  </script>
+    $("chain-in").value = "base";
+    $("vchain-in").value = "base";
 
-  <!-- AngularJS 1.8.3 Enterprise Module & Controller -->
-  <script>
-    (function () {
-      if (!window.angular) return;
-      var app = angular.module('SevenseedEnterpriseApp', []);
-      app.controller('EnterpriseGridCtrl', ['$scope', '$http', function ($scope, $http) {
-        $scope.searchFilter = '';
-        $scope.ramMb = 72.4;
-        $scope.ventures = [
-          { code: 'EMART', name: 'AVP Emart', stack: 'Google Shopping (?udm=28) + Smartprix 0-100 + BuyHatke Spend Lens + Xerve NEFT', rps: 420, p99_ms: 18, arr_cr: 4.8, status: 'HEALTHY' },
-          { code: 'AVPU', name: 'AVP University', stack: 'Learn-Anything.xyz DAG + Obsidian + LearnAnythingAI.in + FreeCodeCamp + Duolingo + LawsOfUX + Fs.blog + MarketingExamples', rps: 310, p99_ms: 22, arr_cr: 3.6, status: 'HEALTHY' },
-          { code: 'PHARM', name: 'Decode Forest Pharmacy', stack: 'DrugBank CYP450/ADMET + Tata 1mg Substitutes + Jan Aushadhi + NEWS2', rps: 195, p99_ms: 14, arr_cr: 2.9, status: 'HEALTHY' },
-          { code: 'CIVIL', name: 'Breakdown Factor', stack: 'SkyCiv Beam SFD/BMD Solver + Autodesk Tandem 3D BIM + IS 456 Deflection', rps: 140, p99_ms: 29, arr_cr: 5.2, status: 'HEALTHY' },
-          { code: 'TRUST', name: 'AVP Charitable Trust', stack: 'GiveIndia 80G Form 10BE + Charity Navigator + Polygon SHA-256 Merkle Audit', rps: 110, p99_ms: 12, arr_cr: 1.8, status: 'VERIFIED' },
-          { code: 'RAKSHAK', name: 'Rakshak AI Safety', stack: 'Citizen App Radar + Amber Alert + BNS 2023 Legal Mapper + 128-D Biometrics', rps: 260, p99_ms: 24, arr_cr: 3.1, status: 'GUARDING' },
-          { code: 'COMONK', name: 'Comonk Career AI', stack: 'Levels.fyi Total Comp Percentiles + TryExponent System Design & STAR Grader', rps: 285, p99_ms: 19, arr_cr: 2.4, status: 'HEALTHY' },
-          { code: '7FORCE', name: 'Sevenforce Swarm', stack: 'Devin.ai Autonomous Engineer + LangGraph Studio 5-Node StateGraph + WhatsApp', rps: 510, p99_ms: 21, arr_cr: 6.4, status: 'SCALING' }
-        ];
+    function fee() {
+      var k = $("chain-in").value, n = state.net[k];
+      if (!n || !n.online || n.gas_gwei == null) { $("fee-out").textContent = "Fee estimate unavailable right now."; return; }
+      var amount = (PROOF_GAS * n.gas_gwei) / 1e9;
+      $("fee-out").textContent = "Estimated network fee right now: about " + (amount < 0.000001 ? amount.toExponential(2) : amount.toPrecision(2)) + " " + n.symbol + " (" + n.gas_gwei + " gwei). Your wallet shows the exact fee before you confirm.";
+    }
+    $("chain-in").addEventListener("change", fee);
 
-        $http.get('/api/angular/enterprise-feed').then(function (res) {
-          if (res.data && res.data.ventures) {
-            $scope.ramMb = res.data.render_free_tier_ram_mb || 72.4;
-          }
-        }).catch(function () {});
-
-        $scope.totalRps = function () {
-          return $scope.ventures.reduce(function (sum, v) { return sum + v.rps; }, 0);
-        };
-        $scope.totalArr = function () {
-          return $scope.ventures.reduce(function (sum, v) { return sum + v.arr_cr; }, 0).toFixed(1);
-        };
-        $scope.simulateTrafficSpike = function () {
-          $scope.ventures.forEach(function (v) {
-            v.rps += Math.floor(Math.random() * 45) + 15;
-          });
-          $scope.ramMb = +(72.4 + Math.random() * 3.2).toFixed(1);
-        };
-      }]);
-    })();
-  </script>
-
-  <!-- Three.js WebGL 3D Interactive Background Shader & Geometry (Spline / Unicorn Studio / 21st.dev) -->
-  <script>
-    (function () {
-      if (!window.THREE) return;
-      var canvas = document.getElementById('webgl-hero-canvas');
-      if (!canvas) return;
-      var scene = new THREE.Scene();
-      var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.z = 28;
-
-      var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-      // Wireframe Quantum TorusKnot
-      var knotGeo = new THREE.TorusKnotGeometry(9, 2.2, 120, 16);
-      var knotMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.16 });
-      var knot = new THREE.Mesh(knotGeo, knotMat);
-      scene.add(knot);
-
-      // Particle Field
-      var pCount = 900;
-      var pGeo = new THREE.BufferGeometry();
-      var positions = new Float32Array(pCount * 3);
-      for (var i = 0; i < pCount * 3; i++) {
-        positions[i] = (Math.random() - 0.5) * 90;
+    async function loadNet() {
+      $("net-when").textContent = "Checking the networks…";
+      try {
+        var d = await W.status();
+        state.net = {};
+        $("net-grid").innerHTML = d.chains.map(function (c) {
+          state.net[c.id] = c;
+          return '<div class="net"><b><span class="dot ' + (c.online ? "on" : "off") + '"></span>' + esc(c.name) + "</b>" +
+            (c.online
+              ? '<div class="small muted">Block <span class="mono">' + c.block.toLocaleString("en-IN") + "</span></div>" + (c.gas_gwei != null ? '<div class="small muted">Gas ' + c.gas_gwei + " gwei</div>" : '<div class="small muted">Slot height</div>')
+              : '<div class="small muted">Not reachable right now</div>') + "</div>";
+        }).join("");
+        $("net-when").textContent = "Read live from public network endpoints at " + new Date(d.checked_at * 1000).toLocaleTimeString() + ".";
+        fee();
+      } catch (e) {
+        $("net-when").textContent = "Couldn't reach the networks: " + e.message;
       }
-      pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      var pMat = new THREE.PointsMaterial({ color: 0x10b981, size: 0.22, transparent: true, opacity: 0.65 });
-      var points = new THREE.Points(pGeo, pMat);
-      scene.add(points);
+    }
+    $("net-refresh").addEventListener("click", loadNet);
+    loadNet();
 
-      var mouseX = 0, mouseY = 0;
-      window.addEventListener('mousemove', function (e) {
-        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-      });
+    // Fingerprint
+    function setHash(h) {
+      state.hash = h;
+      $("hash-out").textContent = h || "Nothing yet";
+      $("sign-btn").disabled = $("anchor-btn").disabled = !h;
+    }
+    async function hashFile(f) {
+      state.file = f;
+      $("file-name").textContent = f.name + " · " + (f.size / 1024).toFixed(1) + " KB";
+      $("hash-out").textContent = "Working…";
+      setHash(await W.fingerprint(f));
+    }
+    async function hashText() {
+      var t = $("text-in").value;
+      setHash(t ? await W.fingerprint(t) : "");
+    }
+    $("file-in").addEventListener("change", function (e) { if (e.target.files[0]) hashFile(e.target.files[0]); });
+    $("text-in").addEventListener("input", hashText);
+    var drop = $("drop");
+    ["dragenter", "dragover"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add("over"); }); });
+    ["dragleave", "drop"].forEach(function (ev) { drop.addEventListener(ev, function () { drop.classList.remove("over"); }); });
+    drop.addEventListener("drop", function (e) { e.preventDefault(); if (e.dataTransfer.files[0]) hashFile(e.dataTransfer.files[0]); });
 
-      window.addEventListener('resize', function () {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
+    var preset = new URLSearchParams(location.search).get("hash");
+    if (preset && /^[0-9a-f]{64}$/i.test(preset)) setHash(preset.toLowerCase());
 
-      function animate() {
-        requestAnimationFrame(animate);
-        knot.rotation.x += 0.003 + mouseY * 0.002;
-        knot.rotation.y += 0.004 + mouseX * 0.002;
-        points.rotation.y -= 0.0012;
-        renderer.render(scene, camera);
+    function noWallet(el) {
+      note(el, "warn", "No wallet found in this browser. Install <a href=\"https://metamask.io/download/\" target=\"_blank\" rel=\"noopener noreferrer\">MetaMask</a>, or open this page inside your mobile wallet app's browser.");
+    }
+
+    // 2a. Sign
+    $("sign-btn").addEventListener("click", async function () {
+      var out = $("sign-out");
+      if (!W.hasWallet()) return noWallet(out);
+      this.disabled = true;
+      note(out, "", "Approve the signature request in your wallet…");
+      try {
+        var proof = await W.sign(state.hash, $("label-in").value.trim());
+        state.lastSig = proof;
+        note(out, "good", "Signed by <span class=\"mono\">" + esc(proof.address) + "</span>. Download the proof file and keep it with the original file.<div class=\"row\" style=\"margin-top:10px\"><button class=\"btn\" type=\"button\" id=\"sig-dl\">Download proof (.json)</button></div>");
+        $("sig-dl").addEventListener("click", function () { download(proof, "proof-" + proof.sha256.slice(0, 12) + ".json"); });
+      } catch (e) {
+        note(out, "bad", esc(e.message));
+      } finally { this.disabled = !state.hash; }
+    });
+
+    // 2b. Anchor
+    $("anchor-btn").addEventListener("click", async function () {
+      var out = $("anchor-out"), k = $("chain-in").value;
+      if (!W.hasWallet()) return noWallet(out);
+      this.disabled = true;
+      note(out, "", "Confirm the transaction in your wallet. It may ask to switch to " + esc(W.CHAINS[k].name) + " first…");
+      try {
+        var proof = await W.anchor(state.hash, k);
+        proof.label = $("label-in").value.trim();
+        note(out, "good", "Sent. It usually confirms within a minute. <a href=\"" + esc(proof.explorer_url) + "\" target=\"_blank\" rel=\"noopener noreferrer\">View it on the block explorer</a>.<div class=\"mono small\" style=\"margin-top:6px\">" + esc(proof.tx_hash) + "</div><div class=\"row\" style=\"margin-top:10px\"><button class=\"btn\" type=\"button\" id=\"tx-dl\">Download proof (.json)</button></div>");
+        $("tx-dl").addEventListener("click", function () { download(proof, "chain-proof-" + proof.sha256.slice(0, 12) + ".json"); });
+        $("vchain-in").value = k; $("vtx-in").value = proof.tx_hash;
+      } catch (e) {
+        note(out, "bad", esc(e.message));
+      } finally { this.disabled = !state.hash; }
+    });
+
+    // 3. Verify a transaction
+    $("vtx-btn").addEventListener("click", async function () {
+      var out = $("ver-out"), tx = $("vtx-in").value.trim(), k = $("vchain-in").value;
+      if (!/^0x[0-9a-fA-F]{64}$/.test(tx)) return note(out, "bad", "A transaction hash is 0x followed by 64 letters and numbers.");
+      this.disabled = true;
+      note(out, "", "Looking it up on " + esc(W.CHAINS[k].name) + "…");
+      try {
+        var r = await W.lookupTx(k, tx, state.hash);
+        if (!r.found) return note(out, "bad", esc(r.message));
+        var when = r.timestamp ? new Date(r.timestamp * 1000).toLocaleString() : "not yet (still pending)";
+        var base = "Transaction found. Recorded: <strong>" + esc(when) + "</strong> by <span class=\"mono\">" + esc(r.from) + "</span>. <a href=\"" + esc(r.explorer_url) + "\" target=\"_blank\" rel=\"noopener noreferrer\">Open in explorer</a>.";
+        if (!state.hash) note(out, "warn", base + "<br>Make a fingerprint of the file in step 1 to check whether it matches.");
+        else if (r.matches) note(out, r.confirmed ? "good" : "warn", "<strong>Match.</strong> This transaction contains the fingerprint of your file" + (r.confirmed ? "" : ", but it hasn't confirmed yet") + ". " + base);
+        else note(out, "bad", "<strong>No match.</strong> This transaction doesn't contain your file's fingerprint, so the file differs from what was recorded (or it's the wrong transaction). " + base);
+      } catch (e) {
+        note(out, "bad", esc(e.message));
+      } finally { this.disabled = false; }
+    });
+
+    // 3. Verify a signed proof file
+    $("vsig-in").addEventListener("change", async function (e) {
+      var out = $("ver-out"), f = e.target.files[0];
+      if (!f) return;
+      $("vsig-name").textContent = f.name;
+      try {
+        var proof = JSON.parse(await f.text());
+        if (proof.type === "sevenseed-chain-proof") {
+          $("tab-vtx").click(); $("vchain-in").value = proof.chain; $("vtx-in").value = proof.tx_hash; $("vtx-btn").click(); return;
+        }
+        if (proof.type !== "sevenseed-signed-proof" || !proof.message || !proof.signature) throw new Error("This isn't a Sevenseed proof file.");
+        note(out, "", "Checking the signature…");
+        var v = await W.verifySignature(proof);
+        if (!v.signerMatches) return note(out, "bad", "<strong>Invalid.</strong> The signature doesn't belong to the address in the file. The proof was altered.");
+        var signedAt = (proof.message.match(/Signed at: (.+)/) || [])[1] || "";
+        var base = "Signature valid, made by <span class=\"mono\">" + esc(v.signer) + "</span>" + (signedAt ? " at " + esc(new Date(signedAt).toLocaleString()) : "") + ".";
+        if (!state.hash) note(out, "warn", base + " Make a fingerprint of the file in step 1 to check whether it matches.");
+        else if (v.hash === state.hash) note(out, "good", "<strong>Match.</strong> " + base + " Your file is the one that was signed.");
+        else note(out, "bad", "<strong>No match.</strong> " + base + " But your file's fingerprint is different, so the file was changed or it's a different file.");
+      } catch (err) {
+        note(out, "bad", esc(err.message));
       }
-      animate();
-    })();
+    });
+  })();
   </script>
-  
-  
-<script src="/static/quantum-enhancer.js?v=6.1" defer></script>
+  <script src="/static/quantum-enhancer.js?v=6.3" defer></script>
 </body>
 </html>
-

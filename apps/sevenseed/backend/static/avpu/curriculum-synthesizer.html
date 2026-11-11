@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Dynamic Knowledge Graph &amp; Curriculum Synthesizer — AVPU / Curriculum Synthesizer | Sevenseed</title>
-  <meta name="description" content="Dynamic DAG syllabus generator inspired by Learn-Anything.xyz. Visualize topological prerequisite paths, interactive quizzes, and code challenges for any topic. 100% Free BYOK.">
+  <meta name="description" content="Dynamic DAG syllabus generator.xyz. Visualize topological prerequisite paths, interactive quizzes, and code challenges for any topic. 100% Free BYOK.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -134,7 +134,7 @@
     .exp-btn { flex: 1; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #cbd5e1; font-size: 11px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s; }
     .exp-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
   </style>
-<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.1"/></head>
+<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.3"/></head>
 <body>
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
@@ -165,7 +165,7 @@
   <div class="dag-hero">
     <div class="dag-badge"><i class="fas fa-graduation-cap"></i> Interactive Prerequisite Tree Generator</div>
     <h1 class="dag-title">Dynamic Knowledge Graph & <span>Curriculum Synthesizer</span></h1>
-    <p class="dag-sub">Generate interactive topological prerequisite maps inspired by Learn-Anything.xyz and Khan Academy. Type any skill or choose a venture track to map concepts, test your intuition with live flashcard quizzes, and export to Obsidian Canvas.</p>
+    <p class="dag-sub">Generate interactive topological prerequisite maps. Type any skill or choose a venture track to map concepts, test your intuition with live flashcard quizzes, and export as a canvas file.</p>
   </div>
 
   <!-- Synthesizer Control Bar -->
@@ -294,7 +294,7 @@ def solve_topo(graph):
 
       <!-- Export Bar -->
       <div class="export-bar">
-        <button class="exp-btn" onclick="exportObsidianCanvas()"><i class="fas fa-file-code"></i> Obsidian Canvas</button>
+        <button class="exp-btn" onclick="exportObsidianCanvas()"><i class="fas fa-file-code"></i> Canvas</button>
         <button class="exp-btn" onclick="exportMarkdown()"><i class="fas fa-file-alt"></i> Markdown Plan</button>
         <button class="exp-btn" onclick="copyShareLink()"><i class="fas fa-link"></i> Share Link</button>
       </div>
@@ -927,6 +927,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<script src="/static/quantum-enhancer.js?v=6.1" defer></script>
+<script src="/static/quantum-enhancer.js?v=6.3" defer></script>
 </body>
 </html>

@@ -1,204 +1,112 @@
 "use client";
 
-import React, { useState } from "react";
-import { TrendingDown, Bell, ShieldCheck, AlertCircle, ArrowUpRight, CheckCircle2 } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import { TrendingDown, Plus, Trash2, ExternalLink, LineChart } from "lucide-react";
 
-export function PriceHistoryGraph({
-  productName = "NeuralEdge Workstation Pro",
-  currentPrice = 124999,
-  highestPrice = 149999,
-  lowestPrice = 118500,
-  className = "",
-}: {
-  productName?: string;
-  currentPrice?: number;
-  highestPrice?: number;
-  lowestPrice?: number;
-  className?: string;
-}) {
-  const [targetAlertPrice, setTargetAlertPrice] = useState(120000);
-  const [alertSubscribed, setAlertSubscribed] = useState(false);
-  const [timeframe, setTimeframe] = useState<"30d" | "60d" | "90d">("90d");
+// Personal price log. Sevenseed has no store price feed, so the history comes from the
+// prices the shopper records (the old version drew invented points for a made-up product
+// and claimed an "instant email/SMS" alert it could not send). Saved on this device.
 
-  // Synthetic price points across 90 days
-  const points = [
-    { day: "Day 1", price: 149999 },
-    { day: "Day 15", price: 144999 },
-    { day: "Day 30", price: 139999 },
-    { day: "Day 45", price: 132000 },
-    { day: "Day 60", price: 118500 }, // Lowest dip (Festival)
-    { day: "Day 75", price: 129999 },
-    { day: "Day 90", price: 124999 }, // Current
-  ];
+type Point = { price: number; at: string; store: string };
+type Log = Record<string, Point[]>;
+const KEY = "ss-emart-price-log";
+const inr = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 
-  const minP = 110000;
-  const maxP = 155000;
-  const svgWidth = 600;
-  const svgHeight = 200;
+export function PriceHistoryGraph({ className = "" }: { productName?: string; currentPrice?: number; highestPrice?: number; lowestPrice?: number; className?: string }) {
+  const [log, setLog] = useState<Log>({});
+  const [product, setProduct] = useState("");
+  const [price, setPrice] = useState("");
+  const [store, setStore] = useState("Amazon");
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
 
-  const getCoordinates = (index: number, price: number) => {
-    const x = (index / (points.length - 1)) * (svgWidth - 40) + 20;
-    const y = svgHeight - 20 - ((price - minP) / (maxP - minP)) * (svgHeight - 40);
-    return { x, y };
+  useEffect(() => { try { setLog(JSON.parse(localStorage.getItem(KEY) || "{}")); } catch { /* ignore */ } }, []);
+  const save = (l: Log) => { setLog(l); try { localStorage.setItem(KEY, JSON.stringify(l)); } catch { /* ignore */ } };
+  const names = Object.keys(log);
+  const active = product.trim() && log[product.trim()] ? product.trim() : names[0] || "";
+  const pts = useMemo(() => (log[active] || []).slice().sort((a, b) => a.at.localeCompare(b.at)), [log, active]);
+
+  const add = (e: React.FormEvent) => {
+    e.preventDefault();
+    const p = parseFloat(price), name = product.trim();
+    if (!name || !(p > 0)) return;
+    save({ ...log, [name]: [...(log[name] || []), { price: p, at: date, store: store.trim() || "Store" }] });
+    setPrice("");
   };
 
-  const pathD = points
-    .map((p, idx) => {
-      const { x, y } = getCoordinates(idx, p.price);
-      return `${idx === 0 ? "M" : "L"} ${x} ${y}`;
-    })
-    .join(" ");
-
-  const areaD = `${pathD} L ${svgWidth - 20} ${svgHeight - 20} L 20 ${svgHeight - 20} Z`;
+  const stats = pts.length ? { min: Math.min(...pts.map((p) => p.price)), max: Math.max(...pts.map((p) => p.price)), last: pts[pts.length - 1].price } : null;
+  const W = 600, H = 200;
+  const lo = stats ? stats.min * 0.97 : 0, hi = stats ? stats.max * 1.03 : 1;
+  const xy = (i: number, p: number) => ({ x: pts.length > 1 ? 30 + (i / (pts.length - 1)) * (W - 60) : W / 2, y: H - 25 - ((p - lo) / (hi - lo || 1)) * (H - 50) });
+  const path = pts.map((p, i) => `${i ? "L" : "M"} ${xy(i, p.price).x} ${xy(i, p.price).y}`).join(" ");
+  const input = "px-3 py-2.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-sky-400";
 
   return (
-    <div className={`w-full bg-[#050814] border border-slate-800 rounded-2xl p-6 space-y-6 ${className}`}>
-      {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
-        <div>
-          <div className="text-xs font-mono uppercase text-sky-400">Price Intelligence Engine (BuyHatke System)</div>
-          <h3 className="text-xl font-bold text-slate-100">{productName} — 90-Day Trend</h3>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {(["30d", "60d", "90d"] as const).map((tf) => (
-            <button
-              key={tf}
-              onClick={() => setTimeframe(tf)}
-              className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                timeframe === tf ? "bg-sky-500 text-black font-bold" : "bg-slate-900 text-slate-400 hover:text-white"
-              }`}
-            >
-              {tf.toUpperCase()}
-            </button>
-          ))}
-        </div>
+    <div className={`w-full bg-[#050814] border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-6 ${className}`}>
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2"><LineChart className="w-6 h-6 text-sky-400" /> Price Tracker</h1>
+        <p className="mt-1 text-sm text-slate-300 max-w-2xl">Each time you check a product's price, log it here. Over a few weeks you'll see whether today's “sale” is really the lowest price. Saved on this device.</p>
       </div>
 
-      {/* Metrics Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-        <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-          <span className="text-slate-500 uppercase block text-[10px]">Current Price</span>
-          <span className="text-base font-bold text-slate-100 font-mono">₹{currentPrice.toLocaleString()}</span>
+      <form onSubmit={add} className="grid gap-2 sm:grid-cols-[1.5fr_0.8fr_0.8fr_0.9fr_auto]">
+        <label className="sr-only" htmlFor="pt-product">Product</label>
+        <input id="pt-product" list="pt-products" value={product} onChange={(e) => setProduct(e.target.value)} placeholder="Product, e.g. Sony WH-1000XM5" className={input} />
+        <datalist id="pt-products">{names.map((n) => <option key={n} value={n} />)}</datalist>
+        <label className="sr-only" htmlFor="pt-price">Price in rupees</label>
+        <input id="pt-price" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value.replace(/[^\d.]/g, ""))} placeholder="Price ₹" className={input + " font-mono"} />
+        <label className="sr-only" htmlFor="pt-store">Store</label>
+        <input id="pt-store" value={store} onChange={(e) => setStore(e.target.value)} placeholder="Store" className={input} />
+        <label className="sr-only" htmlFor="pt-date">Date</label>
+        <input id="pt-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className={input} />
+        <button type="submit" className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-black font-bold text-sm"><Plus className="w-4 h-4" /> Log price</button>
+      </form>
+
+      {names.length > 1 && (
+        <div className="flex flex-wrap gap-2">
+          {names.map((n) => <button key={n} type="button" onClick={() => setProduct(n)} className={`px-3 py-1.5 rounded-lg text-sm border ${n === active ? "border-sky-400 bg-sky-500/15 text-white" : "border-slate-700 text-slate-300"}`}>{n}</button>)}
         </div>
-        <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-          <span className="text-slate-500 uppercase block text-[10px]">All-Time Low</span>
-          <span className="text-base font-bold text-emerald-400 font-mono">₹{lowestPrice.toLocaleString()}</span>
-        </div>
-        <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-          <span className="text-slate-500 uppercase block text-[10px]">All-Time High</span>
-          <span className="text-base font-bold text-rose-400 font-mono">₹{highestPrice.toLocaleString()}</span>
-        </div>
-        <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-          <div>
-            <span className="text-slate-500 uppercase block text-[10px]">Verdict</span>
-            <span className="text-xs font-bold text-sky-400">Good Time to Buy</span>
+      )}
+
+      {!active ? (
+        <p className="text-sm text-slate-400">No prices logged yet. Add the first one above.</p>
+      ) : (
+        <section aria-live="polite" className="space-y-4">
+          <h2 className="text-lg font-bold text-white">{active}</h2>
+          {stats && (
+            <div className="grid grid-cols-3 gap-3 text-center">
+              <div className="p-3 rounded-xl bg-slate-900/70 border border-slate-800"><div className="text-xs text-slate-400">Lowest seen</div><div className="font-mono font-bold text-emerald-300">{inr(stats.min)}</div></div>
+              <div className="p-3 rounded-xl bg-slate-900/70 border border-slate-800"><div className="text-xs text-slate-400">Highest seen</div><div className="font-mono font-bold text-rose-300">{inr(stats.max)}</div></div>
+              <div className="p-3 rounded-xl bg-slate-900/70 border border-slate-800"><div className="text-xs text-slate-400">Latest</div><div className="font-mono font-bold text-white">{inr(stats.last)}</div></div>
+            </div>
+          )}
+          {stats && pts.length > 1 && (
+            <p className="text-sm text-slate-200 flex items-center gap-2"><TrendingDown className="w-4 h-4 text-sky-300" />
+              {stats.last <= stats.min ? "The latest price is the lowest you've recorded." : `The latest price is ${inr(stats.last - stats.min)} (${Math.round(((stats.last - stats.min) / stats.min) * 100)}%) above the lowest you've seen. Waiting may pay off.`}
+            </p>
+          )}
+          {pts.length > 1 && (
+            <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto rounded-xl bg-slate-950 border border-slate-800" role="img" aria-label={`Price history for ${active}`}>
+              <path d={path} fill="none" stroke="#38bdf8" strokeWidth="2.5" />
+              {pts.map((p, i) => { const c = xy(i, p.price); return <circle key={i} cx={c.x} cy={c.y} r="4" fill="#38bdf8"><title>{`${p.at}: ${inr(p.price)} at ${p.store}`}</title></circle>; })}
+            </svg>
+          )}
+          <ul className="divide-y divide-slate-900 text-sm">
+            {pts.slice().reverse().map((p, i) => (
+              <li key={i} className="py-2 flex justify-between items-center gap-2">
+                <span className="text-slate-300">{new Date(p.at).toLocaleDateString("en-IN")} · {p.store}</span>
+                <span className="flex items-center gap-2 font-mono text-white">{inr(p.price)}
+                  <button type="button" aria-label="Delete this entry" onClick={() => { const rest = (log[active] || []).filter((x) => x !== p); const l = { ...log }; if (rest.length) l[active] = rest; else delete l[active]; save(l); }} className="p-1.5 text-slate-500 hover:text-rose-300"><Trash2 className="w-4 h-4" /></button>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-wrap gap-2 text-sm">
+            <span className="text-slate-400 self-center">Check today's price:</span>
+            {[["Amazon", "https://www.amazon.in/s?k="], ["Flipkart", "https://www.flipkart.com/search?q="], ["Google Shopping", "https://www.google.com/search?tbm=shop&q="]].map(([s, u]) => (
+              <a key={s} href={u + encodeURIComponent(active)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-slate-700 text-slate-200 hover:border-sky-400">{s} <ExternalLink className="w-3 h-3" /></a>
+            ))}
           </div>
-          <ShieldCheck className="w-5 h-5 text-emerald-400" />
-        </div>
-      </div>
-
-      {/* SVG Price Chart */}
-      <div className="relative w-full h-[220px] bg-slate-950/80 border border-slate-800/80 rounded-xl p-3 overflow-hidden">
-        <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="w-full h-full overflow-visible">
-          <defs>
-            <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-
-          {/* Grid lines */}
-          <line x1="20" y1="40" x2={svgWidth - 20} y2="40" stroke="#1e293b" strokeDasharray="4 4" />
-          <line x1="20" y1="100" x2={svgWidth - 20} y2="100" stroke="#1e293b" strokeDasharray="4 4" />
-          <line x1="20" y1="160" x2={svgWidth - 20} y2="160" stroke="#1e293b" strokeDasharray="4 4" />
-
-          {/* Area fill */}
-          <path d={areaD} fill="url(#chartFill)" />
-
-          {/* Line stroke */}
-          <path d={pathD} fill="none" stroke="#38bdf8" strokeWidth="2.5" />
-
-          {/* Points */}
-          {points.map((p, idx) => {
-            const { x, y } = getCoordinates(idx, p.price);
-            const isLowest = p.price === lowestPrice;
-            const isCurrent = idx === points.length - 1;
-            return (
-              <g key={idx}>
-                <circle
-                  cx={x}
-                  cy={y}
-                  r={isLowest || isCurrent ? 5 : 3.5}
-                  fill={isLowest ? "#10b981" : isCurrent ? "#38bdf8" : "#64748b"}
-                  stroke="#050814"
-                  strokeWidth="2"
-                />
-                {(isLowest || isCurrent) && (
-                  <text
-                    x={x}
-                    y={y - 10}
-                    textAnchor="middle"
-                    fill={isLowest ? "#10b981" : "#38bdf8"}
-                    fontSize="10"
-                    fontFamily="monospace"
-                  >
-                    ₹{p.price.toLocaleString()}
-                  </text>
-                )}
-              </g>
-            );
-          })}
-        </svg>
-      </div>
-
-      {/* Price Drop Alert Trigger Slider */}
-      <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Bell className="w-4 h-4 text-sky-400" />
-            <span className="text-xs font-mono uppercase text-slate-300 font-bold">
-              Automated Price Drop Alert
-            </span>
-          </div>
-          <span className="text-xs font-mono text-emerald-400 font-bold">
-            Alert me when price drops below: ₹{targetAlertPrice.toLocaleString()}
-          </span>
-        </div>
-
-        <input
-          type="range"
-          min={lowestPrice - 5000}
-          max={currentPrice}
-          step={1000}
-          value={targetAlertPrice}
-          onChange={(e) => setTargetAlertPrice(Number(e.target.value))}
-          className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-sky-400"
-        />
-
-        <div className="flex items-center justify-between pt-1">
-          <span className="text-[10px] font-mono text-slate-500">Min: ₹{(lowestPrice - 5000).toLocaleString()}</span>
-          <button
-            onClick={() => setAlertSubscribed(true)}
-            disabled={alertSubscribed}
-            className={`px-4 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-colors ${
-              alertSubscribed
-                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
-                : "bg-sky-500 hover:bg-sky-400 text-black"
-            }`}
-          >
-            {alertSubscribed ? (
-              <>
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Alert Active! (Instant Email/SMS Triggered)</span>
-              </>
-            ) : (
-              <span>Set Alert</span>
-            )}
-          </button>
-          <span className="text-[10px] font-mono text-slate-500">Current: ₹{currentPrice.toLocaleString()}</span>
-        </div>
-      </div>
+        </section>
+      )}
     </div>
   );
 }

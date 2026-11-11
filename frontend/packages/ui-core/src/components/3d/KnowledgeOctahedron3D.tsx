@@ -53,12 +53,12 @@ export function KnowledgeOctahedron3D() {
 
     // Orbiting Satellite Nodes (representing reference sites)
     const nodes = [
-      { name: "Knowledge DAG (learn-anything)", color: 0x38bdf8, radius: 2.8, speed: 0.7, tilt: 0.3 },
-      { name: "In-Browser Code Lab (freeCodeCamp)", color: 0x10b981, radius: 3.2, speed: 0.5, tilt: -0.4 },
-      { name: "Gamified Streak (Duolingo)", color: 0xf59e0b, radius: 3.6, speed: 0.6, tilt: 0.6 },
-      { name: "Laws of UX (lawsofux.com)", color: 0xa855f7, radius: 4.0, speed: 0.4, tilt: -0.2 },
+      { name: "Knowledge DAG", color: 0x38bdf8, radius: 2.8, speed: 0.7, tilt: 0.3 },
+      { name: "In-Browser Code Lab", color: 0x10b981, radius: 3.2, speed: 0.5, tilt: -0.4 },
+      { name: "Daily Streak", color: 0xf59e0b, radius: 3.6, speed: 0.6, tilt: 0.6 },
+      { name: "Laws of UX", color: 0xa855f7, radius: 4.0, speed: 0.4, tilt: -0.2 },
       { name: "100-Day Challenge (100daysai)", color: 0x06b6d4, radius: 4.3, speed: 0.35, tilt: 0.5 },
-      { name: "Mental Models (fs.blog)", color: 0xec4899, radius: 4.6, speed: 0.3, tilt: -0.5 },
+      { name: "Mental Models", color: 0xec4899, radius: 4.6, speed: 0.3, tilt: -0.5 },
     ];
 
     const satelliteMeshes = nodes.map((n) => {
@@ -156,7 +156,7 @@ export function KnowledgeOctahedron3D() {
     <div className="relative w-full h-full min-h-[380px] flex items-center justify-center rounded-2xl bg-slate-950/60 border border-sky-500/20 backdrop-blur-xl overflow-hidden shadow-2xl shadow-sky-950/50">
       <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-sky-950/70 border border-sky-500/30 text-xs font-mono text-sky-400">
         <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
-        <span>AVPU Knowledge Octahedron · 60 FPS WebGL</span>
+        <span>AVP University</span>
       </div>
 
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2 text-xs font-mono text-slate-400">
@@ -169,9 +169,9 @@ export function KnowledgeOctahedron3D() {
       <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] font-mono text-slate-300 backdrop-blur-md">
         <div className="flex items-center gap-2 text-sky-300">
           <BookOpen className="w-3.5 h-3.5" />
-          <span>Curriculum Node: <strong>learn-anything + FreeCodeCamp + Duolingo</strong></span>
+          <span>Learn, practise, keep your streak</span>
         </div>
-        <span className="text-slate-500 text-[10px]">360° Real-time PBR Shader</span>
+        <span className="text-slate-500 text-[10px]">Drag to rotate</span>
       </div>
     </div>
   );

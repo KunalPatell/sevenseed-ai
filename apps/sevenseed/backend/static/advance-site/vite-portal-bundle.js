@@ -2023,16 +2023,8 @@
 
         <!-- RIGHT ACTIONS + WEB3 WALLET CONNECT -->
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <select id="vite-web3-chain" class="vite-v-btn" style="background:rgba(15,23,42,0.9);color:#6ee7b7;border-color:rgba(16,185,129,0.45);">
-            <option value="Polygon POS (ChainID: 137)">🟣 Polygon POS (137)</option>
-            <option value="Base L2 (ChainID: 8453)">🔵 Base L2 (8453)</option>
-            <option value="Solana Mainnet-Beta">🟢 Solana Mainnet</option>
-            <option value="Ethereum Mainnet (ChainID: 1)">💎 Ethereum L1</option>
-            <option value="Arbitrum Nitro (ChainID: 42161)">🔷 Arbitrum One</option>
-          </select>
-          <button id="vite-web3-connect-btn" class="vite-v-btn" style="background:linear-gradient(135deg,rgba(245,158,11,0.22),rgba(236,72,153,0.22));border-color:rgba(245,158,11,0.55);color:#fde68a;">
-            🦊 0x71C8...89A4 (ERC-4337 Connected)
-          </button>
+          <!-- Proofs are made in /web3-studio/ with the visitor's own wallet -->
+          <a href="/web3-studio/" class="vite-v-btn" style="text-decoration:none;border-color:rgba(245,158,11,0.55);color:#fde68a;">Web3 Studio</a>
           <button id="vite-open-spotlight" class="vite-v-btn" style="border-color:rgba(129,140,248,0.5);color:#c7d2fe;">
             🔍 Ctrl+K
           </button>
@@ -2122,7 +2114,7 @@
                   ⚡ Execute Live ${tool.title} Engine
                 </button>
                 <button id="vite-web3-exec-btn" class="vite-v-btn" style="padding:11px 16px;background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(6,182,212,0.22));border-color:rgba(16,185,129,0.55);color:#6ee7b7;font-weight:800;">
-                  ⛓️ Anchor On-Chain Web3 Proof (ERC-4337)
+                  Fingerprint this result
                 </button>
                 <button id="vite-export-json-btn" class="vite-v-btn" style="padding:11px 16px;">
                   📥 Export Telemetry JSON
@@ -2194,50 +2186,25 @@
     const runBtn = document.getElementById("vite-run-tool-btn");
     if (runBtn) runBtn.addEventListener("click", executeActiveTool);
 
+    // "Fingerprint this result": a real SHA-256 of the output shown, which the visitor can
+    // sign or record on chain in /web3-studio/ with their own wallet.
     const web3ExecBtn = document.getElementById("vite-web3-exec-btn");
     if (web3ExecBtn) {
       web3ExecBtn.addEventListener("click", async () => {
         const out = document.getElementById("vite-tool-output");
-        const chainSel = document.getElementById("vite-web3-chain");
-        const chain = chainSel ? chainSel.value : "Polygon POS (ChainID: 137)";
-        if (out) out.innerHTML = `<div style="color:#6ee7b7;font-weight:800;">⛓️ Broadcasting ERC-4337 Account Abstraction Tx to ${chain}...</div>`;
-        try {
-          const res = await fetch("/api/web3/execute", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ venture: v.id, chain, action: tool.title })
-          });
-          const data = await res.json();
-          if (out) {
-            out.innerHTML = `
-              <div style="padding:14px;border-radius:14px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.45);margin-bottom:12px;">
-                <div style="font-size:12px;font-weight:900;color:#34d399;">✅ WEB3 SMART CONTRACT CONFIRMED (${data.network})</div>
-                <div style="font-size:11.5px;color:#e2e8f0;margin-top:4px;">Contract: <strong>${data.smart_contract}</strong></div>
-                <div style="font-size:11px;color:#a5b4fc;margin-top:3px;word-break:break-all;">TxHash: <code>${data.tx_hash}</code></div>
-                <div style="font-size:11px;color:#6ee7b7;margin-top:3px;">IPFS CID: <code>${data.ipfs_metadata_cid}</code> • ${data.gas_used}</div>
-              </div>
-              <pre style="margin:0;max-height:240px;overflow:auto;padding:12px;border-radius:12px;background:rgba(2,6,23,0.9);border:1px solid rgba(148,163,184,0.2);color:#e2e8f0;font-size:12px;">${JSON.stringify(data, null, 2)}</pre>
-            `;
-          }
-        } catch (err) {
-          if (out) out.innerHTML = `<div style="color:#fca5a5;">Web3 Error: ${String(err)}</div>`;
+        const text = out ? (out.innerText || "").trim() : "";
+        if (!text) {
+          if (out) out.innerHTML = `<div style="color:#fcd34d;">Run the tool first, then fingerprint its result.</div>`;
+          return;
         }
-      });
-    }
-
-    const web3ConnBtn = document.getElementById("vite-web3-connect-btn");
-    if (web3ConnBtn) {
-      web3ConnBtn.addEventListener("click", async () => {
-        if (window.ethereum && window.ethereum.request) {
-          try {
-            const accs = await window.ethereum.request({ method: "eth_requestAccounts" });
-            if (accs && accs[0]) {
-              web3ConnBtn.textContent = `🦊 ${accs[0].slice(0, 6)}...${accs[0].slice(-4)} (EIP-1193)`;
-              return;
-            }
-          } catch (_) {}
-        }
-        web3ConnBtn.textContent = "🦊 0x94F2...C31B (ERC-4337 Session Active)";
+        const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+        const hash = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+        const box = document.createElement("div");
+        box.style.cssText = "padding:14px;border-radius:14px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.45);margin-bottom:12px;";
+        box.innerHTML = `<div style="font-size:12px;font-weight:800;color:#34d399;">SHA-256 fingerprint of this result</div>
+          <code style="display:block;font-size:11.5px;color:#e2e8f0;margin-top:6px;word-break:break-all;">${hash}</code>
+          <a href="/web3-studio/?hash=${hash}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:800;color:#6ee7b7;">Sign it or record it on chain with your wallet →</a>`;
+        out.prepend(box);
       });
     }
 

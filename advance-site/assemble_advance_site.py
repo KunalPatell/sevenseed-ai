@@ -21,13 +21,14 @@ import shutil
 from pathlib import Path
 
 ADVANCE_ROOT = Path(__file__).resolve().parent
+REPO_ROOT = ADVANCE_ROOT.parent if (ADVANCE_ROOT.parent / "sites").is_dir() else (ADVANCE_ROOT.parent / "sevenseed")
 OUT_DIR = ADVANCE_ROOT / "out"
 RUNTIME_DIR = ADVANCE_ROOT / "runtime"
-SEVENSEED_SITES = ADVANCE_ROOT.parent / "sevenseed" / "sites"
+SEVENSEED_SITES = REPO_ROOT / "sites"
 NEXT_BUILD_DIR = (
     ADVANCE_ROOT / ".next"
     if (ADVANCE_ROOT / ".next" / "server" / "app").is_dir()
-    else (ADVANCE_ROOT.parent / "sevenseed" / "frontend" / ".next")
+    else (REPO_ROOT / "frontend" / ".next")
 )
 
 
@@ -289,6 +290,11 @@ def assemble():
     shutil.copy2(RUNTIME_DIR / "aura-21st-ui.css", OUT_DIR / "aura-21st-ui.css")
     shutil.copy2(RUNTIME_DIR / "vite-portal-bundle.js", OUT_DIR / "vite-portal-bundle.js")
 
+    # 5b. Generate all 13 v7.0 Frontier Studios, New Ventures & Promoted Reference Workstations
+    from build_v7_studios import build_all_v7_pages
+    v7_count = build_all_v7_pages(OUT_DIR)
+    print(f"    -> Generated {v7_count} v7.0 Frontier Studios & Venture Workstations!")
+
     # 6. Upgrade every HTML file in OUT_DIR with v6.1 non-intrusive enhancer, unique <title>, and zero blocking CDN scripts
     print("[5/6] Upgrading all HTML pages with v6.1 Distinct-Venture Frontend + Unique Titles + Non-Blocking Enhancer...")
     head_inject = (
@@ -332,7 +338,9 @@ def assemble():
                 txt = f"{head_inject}\n" + txt
 
             if "</body>" in txt:
-                txt = txt.replace("</body>", f"{js_tag}\n</body>", 1)
+                # The LAST </body>: inline scripts can contain the same text inside a string.
+                cut = txt.rfind("</body>")
+                txt = txt[:cut] + f"{js_tag}\n" + txt[cut:]
             else:
                 txt = txt + f"\n{js_tag}\n"
 

@@ -707,6 +707,123 @@
     document.body.appendChild(dock);
   }
 
+
+  // 7. One menu and footer across the older pages, so every page has the same structure.
+  const SS_VENTURES = [
+    ["Comonk Technology", "/comonk/"], ["Sevenforce", "/sevenforce/"], ["AVP University", "/avpu/"],
+    ["AVP E-Mart", "/avp-emart/"], ["Decode Forest Pharmacy", "/pharmacy/"], ["Breakdown Factor", "/breakdown/"],
+    ["AVP Charitable Trust", "/trust/"], ["Rakshak AI", "/rakshak-ai/"], ["AgenticOS", "/agenticos/"],
+  ];
+  const SS_SPROUT = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></svg>';
+
+  function ssEl(tag, props, kids) {
+    const el = Object.assign(document.createElement(tag), props || {});
+    (kids || []).forEach((kid) => el.appendChild(kid));
+    return el;
+  }
+
+  function ssIsNextPage() {
+    return !!document.querySelector('script[src*="_next/static/chunks/main-app"]');
+  }
+
+  function ssFindLegacyNavs() {
+    const vw = window.innerWidth;
+    const found = Array.from(document.querySelectorAll('nav, .nav, .navbar, #mainNav, #navbar, [class*="topnav"], [class*="top-nav"]')).filter((el) => {
+      if (el.closest("#ss-bar, #adv-web3-ref-section, #adv-floating-dock, main, article")) return false;
+      const box = el.getBoundingClientRect();
+      const style = getComputedStyle(el);
+      return style.display !== "none" && box.height > 0 && box.height < 170 && box.top < 130 && box.width > vw * 0.5 && !el.querySelector("h1");
+    });
+    return found.filter((el) => !found.some((other) => other !== el && other.contains(el)));
+  }
+
+  function injectSiteBar() {
+    if (path === "/" || path === "/index.html" || ssIsNextPage() || document.getElementById("ss-bar")) return;
+
+    // Keep each old menu's links, so hiding it loses no way around the section.
+    const legacy = ssFindLegacyNavs();
+    const seen = new Set();
+    const sectionLinks = [];
+    const hadFixedNav = legacy.some((el) => ["fixed", "sticky"].includes(getComputedStyle(el).position));
+    legacy.forEach((el) => {
+      el.querySelectorAll("a[href]").forEach((a) => {
+        const label = (a.textContent || "").replace(/\s+/g, " ").trim();
+        const href = a.getAttribute("href");
+        if (!label || label.length > 34 || !href || href === "#" || seen.has(href)) return;
+        seen.add(href);
+        sectionLinks.push([label, href]);
+      });
+      el.classList.add("ss-legacy-nav");
+    });
+
+    const segment = path.split("/").filter(Boolean)[0] || "";
+    const isSection = path.split("/").filter(Boolean).length > 1;
+    const venture = isSection ? detectVentureProfile() : null;
+
+    const makeList = (title, links) =>
+      ssEl("div", {}, [ssEl("h2", { textContent: title })].concat(links.map(([label, href]) => ssEl("a", { textContent: label, href }))));
+
+    const groups = [];
+    if (sectionLinks.length) groups.push(makeList("In this section", sectionLinks.slice(0, 12)));
+    groups.push(makeList("Ventures", SS_VENTURES));
+    if (!sectionLinks.length) groups.push(makeList("Sevenseed", [["Home", "/"], ["All ventures", "/ventures/"], ["Contact", "/#contact"]]));
+    const menu = ssEl("div", { id: "ss-menu", hidden: true }, groups);
+
+    const toggle = ssEl("button", { type: "button", textContent: "Menu" });
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-controls", "ss-menu");
+    const setOpen = (open) => {
+      menu.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+    };
+    toggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setOpen(menu.hidden);
+    });
+    document.addEventListener("click", (event) => {
+      if (!menu.contains(event.target)) setOpen(false);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") setOpen(false);
+    });
+
+    const brand = ssEl("a", { className: "ss-brand", href: "/" });
+    brand.innerHTML = '<span class="ss-mark">' + SS_SPROUT + "</span>Sevenseed";
+    const parts = [brand];
+    if (venture && venture.name) parts.push(ssEl("a", { className: "ss-crumb", textContent: venture.name, href: "/" + segment + "/" }));
+    parts.push(ssEl("span", { className: "ss-push" }), toggle, ssEl("a", { className: "ss-cta", textContent: "Contact us", href: "/#contact" }), menu);
+    const bar = ssEl("div", { id: "ss-bar" }, parts);
+    bar.setAttribute("role", "navigation");
+    bar.setAttribute("aria-label", "Main");
+    document.body.insertBefore(bar, document.body.firstChild);
+
+    if (!hadFixedNav) {
+      const current = parseFloat(getComputedStyle(document.body).paddingTop) || 0;
+      if (current < 76) document.body.style.paddingTop = "76px";
+    }
+  }
+
+  function injectSiteFooter() {
+    if (path === "/" || path === "/index.html" || document.getElementById("ss-foot")) return;
+    const hasFooter = Array.from(document.querySelectorAll("footer")).some((el) => el.getBoundingClientRect().height > 0);
+    if (hasFooter) return;
+
+    const list = (links, className) =>
+      ssEl("ul", { className: className || "" }, links.map(([label, href]) => ssEl("li", {}, [ssEl("a", { textContent: label, href })])));
+    const about = ssEl("div", {}, [
+      ssEl("p", { className: "ss-name", textContent: "Sevenseed" }),
+      ssEl("p", { textContent: "An AI venture studio in Ahmedabad, building nine companies on one shared platform." }),
+    ]);
+    const ventures = ssEl("div", {}, [ssEl("h2", { textContent: "Ventures" }), list(SS_VENTURES, "ss-two")]);
+    const company = ssEl("div", {}, [
+      ssEl("h2", { textContent: "Sevenseed" }),
+      list([["Home", "/"], ["All ventures", "/ventures/"], ["Contact", "/#contact"], ["hello@sevenseed.in", "mailto:hello@sevenseed.in"]]),
+    ]);
+    const legal = ssEl("p", { className: "ss-legal", textContent: "© " + new Date().getFullYear() + " Sevenseed. All rights reserved." });
+    const foot = ssEl("footer", { id: "ss-foot" }, [ssEl("div", { className: "ss-grid" }, [about, ventures, company]), legal]);
+    document.body.appendChild(foot);
+  }
+
   function boot() {
     wireUniversalNavbar();
     ensureSemanticH1Header();
@@ -715,6 +832,8 @@
       injectFloatingQuickDock();
       injectVentureWeb3AndRefFooterSection();
     }
+    injectSiteBar();
+    injectSiteFooter();
     setTimeout(() => {
       hydrateHero3DContainers();
     }, 150);

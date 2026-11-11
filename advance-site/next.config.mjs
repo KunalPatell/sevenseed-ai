@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "export",
+  trailingSlash: true,
   reactStrictMode: true,
   transpilePackages: ["@main/ui-core"],
   typescript: { ignoreBuildErrors: true },

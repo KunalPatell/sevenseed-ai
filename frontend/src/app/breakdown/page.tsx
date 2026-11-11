@@ -94,7 +94,7 @@ export default function BreakdownFactorPage() {
               </div>
               <h1 className="text-xl sm:text-2xl font-bold text-slate-100 flex items-center gap-2">
                 <HardHat className="w-5 h-5 text-amber-400" />
-                <span>Breakdown Factor — CPWD DSR Civil BOQ & Safety Takeoff (Procore & OSHA)</span>
+                <span>Breakdown Factor — CPWD DSR Civil BOQ & Safety Takeoff</span>
               </h1>
             </div>
           </div>

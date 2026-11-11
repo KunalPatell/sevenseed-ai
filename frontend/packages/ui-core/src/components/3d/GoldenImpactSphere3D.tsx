@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { Heart, CheckCircle2, ShieldCheck } from "lucide-react";
 
 export function GoldenImpactSphere3D() {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -130,25 +129,8 @@ export function GoldenImpactSphere3D() {
 
   return (
     <div className="relative w-full h-full min-h-[380px] flex items-center justify-center rounded-2xl bg-amber-950/30 border border-amber-500/20 backdrop-blur-xl overflow-hidden shadow-2xl shadow-amber-950/50">
-      <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500/30 text-xs font-mono text-amber-400">
-        <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-        <span>AVP Trust Golden Impact Sphere · 100% Ledger</span>
-      </div>
-
-      <div className="absolute top-4 right-4 z-10 flex items-center gap-2 text-xs font-mono text-amber-300">
-        <Heart className="w-3.5 h-3.5 text-amber-400" />
-        <span>Section 80G Form 10BE Verified</span>
-      </div>
-
       <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
 
-      <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/80 border border-amber-800/40 text-[11px] font-mono text-slate-300 backdrop-blur-md">
-        <div className="flex items-center gap-2 text-amber-300">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-          <span>Charity Navigator 4-Star: <strong>88.4% Direct Program Allocation</strong></span>
-        </div>
-        <span className="text-emerald-400 text-[10px]">Zero Intermediary Leakage</span>
-      </div>
     </div>
   );
 }

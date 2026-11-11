@@ -36,3 +36,6 @@ PyJWT>=2.8.0
 cryptography>=42.0.0
 opencv-python-headless>=4.8.0
 dnspython>=2.6.0
+
+# FileResponse Range support (0.39+): Safari needs it to play video, and seeking needs it everywhere.
+starlette>=0.39.0

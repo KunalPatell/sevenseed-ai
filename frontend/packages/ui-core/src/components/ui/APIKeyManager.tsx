@@ -67,14 +67,14 @@ export function APIKeyManager({ isOpen, onClose }: APIKeyManagerProps) {
                     </span>
                   )}
                 </h3>
-                <p className="text-xs text-white/50">Plug in your custom API keys for 100% free, un-throttled AI access across all 7 software.</p>
+                <p className="text-xs text-white/50">Add your own AI key and every AI feature on Sevenseed is free to use, up to 120 requests an hour.</p>
               </div>
             </div>
 
             <div className="mb-5 rounded-xl border border-blue-500/20 bg-blue-500/5 p-3.5 text-xs text-blue-300 flex items-start gap-2.5">
               <Info className="h-4 w-4 shrink-0 text-blue-400 mt-0.5" />
               <p className="leading-relaxed">
-                All 7 ventures (Sevenseed, Comonk, Sevenforce, AVPU, Decode Forest, Breakdown Factor, AVP Trust, AVP Emart) are completely free. Your API keys are stored <strong>strictly in your browser&apos;s localStorage</strong> and sent directly in HTTP headers to run models.
+                With your own key, the AI cost is on your key, so we charge nothing. Your keys are stored <strong>only in this browser</strong> and sent with each AI request; our servers never save them. No key? You get 15 AI requests an hour, or see <a href="/pricing/" className="underline">Pricing</a> for the paid Sevenseed AI plan.
               </p>
             </div>
 

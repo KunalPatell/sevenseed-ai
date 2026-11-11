@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Infinite System Architecture Whiteboard | Sevenseed Studio</title>
+  <style>
+  :root {
+    --v7-bg: #070b14;
+    --v7-panel: #0f172a;
+    --v7-panel-2: #131e35;
+    --v7-border: rgba(148, 163, 184, 0.2);
+    --v7-text: #f8fafc;
+    --v7-muted: #94a3b8;
+    --v7-accent: #6366f1;
+    --v7-cyan: #06b6d4;
+    --v7-emerald: #10b981;
+    --v7-amber: #f59e0b;
+    --v7-rose: #f43f5e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at 15% 0%, rgba(99, 102, 241, 0.14), transparent 42%),
+                radial-gradient(circle at 85% 10%, rgba(6, 182, 212, 0.12), transparent 38%),
+                var(--v7-bg);
+    color: var(--v7-text);
+    font-family: "Inter Variable", system-ui, -apple-system, sans-serif;
+    line-height: 1.55;
+  }
+  main.v7-shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 18px 64px;
+  }
+  .v7-hero {
+    margin-bottom: 24px;
+    padding: 24px;
+    border-radius: 22px;
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.94), rgba(9, 14, 28, 0.94));
+    border: 1px solid var(--v7-border);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.38);
+  }
+  .v7-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.16);
+    border: 1px solid rgba(99, 102, 241, 0.42);
+    color: #a5b4fc;
+    margin-bottom: 10px;
+  }
+  .v7-hero h1 {
+    margin: 0 0 8px;
+    font-family: "Plus Jakarta Sans Variable", "Inter Variable", system-ui, sans-serif;
+    font-size: clamp(24px, 3.6vw, 36px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: #ffffff;
+  }
+  .v7-hero p {
+    margin: 0;
+    max-width: 780px;
+    color: #cbd5e1;
+    font-size: 15px;
+  }
+  .v7-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 18px;
+    align-items: start;
+  }
+  .v7-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 14px;
+  }
+  .adv-v7-card {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--v7-border);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  }
+  .adv-v7-card h2 {
+    margin: 0 0 12px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #f8fafc;
+  }
+  .v7-field { margin-bottom: 12px; }
+  .v7-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #cbd5e1;
+    margin-bottom: 5px;
+  }
+  .v7-input, .v7-select, .v7-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    background: #090e1c;
+    color: #f8fafc;
+    font-size: 13.5px;
+    font-family: inherit;
+  }
+  .v7-btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .v7-btn {
+    padding: 9px 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(99, 102, 241, 0.5);
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.14s ease, filter 0.14s ease;
+  }
+  .v7-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+  .v7-btn-ghost {
+    background: rgba(30, 41, 59, 0.85);
+    border-color: rgba(148, 163, 184, 0.3);
+    color: #e2e8f0;
+  }
+  .v7-stat {
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(9, 14, 28, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.16);
+  }
+  .v7-stat .k { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--v7-muted); }
+  .v7-stat .v { font-size: 22px; font-weight: 800; color: #ffffff; margin-top: 4px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .v7-pre {
+    background: #050811;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    color: #a7f3d0;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  canvas.v7-canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: #060a15;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 14px;
+  }
+  .v7-note {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fde68a;
+    font-size: 12px;
+  }
+</style>
+  <link rel="stylesheet" href="/static/aura-21st-ui.css?v=7.0"/>
+</head>
+<body data-v7-studio="1">
+  <main class="v7-shell">
+    <header class="v7-hero">
+      <div class="v7-kicker">Frontier AI Studio</div>
+      <h1>Infinite System Architecture Whiteboard</h1>
+      <p>Interactive HTML5 node-edge architecture canvas with M/M/1 queueing latency inflation, saturation bottleneck detection, and JSON graph export.</p>
+    </header>
+    
+    <div class="v7-grid-2">
+      <section class="adv-v7-card">
+        <h2>System Prompt & Queueing Load</h2>
+        <div class="v7-field">
+          <label for="cv-prompt">Architecture Description</label>
+          <input id="cv-prompt" class="v7-input" value="Multi-region AI RAG API with Redis cache, Kafka stream, and Postgres pgvector" />
+        </div>
+        <div class="v7-field">
+          <label for="cv-rps">Target Arrival Traffic (Requests / Sec)</label>
+          <input id="cv-rps" type="number" class="v7-input" value="3500" min="50" max="45000" step="250" />
+        </div>
+        <div class="v7-btn-row">
+          <button type="button" id="cv-gen" class="v7-btn">⚡ Generate & Simulate Load</button>
+          <button type="button" id="cv-add" class="v7-btn v7-btn-ghost">+ Add Service Node</button>
+          <button type="button" id="cv-export" class="v7-btn v7-btn-ghost">📋 Copy Graph JSON</button>
+        </div>
+        <div class="v7-grid-3" style="margin-top:16px;">
+          <div class="v7-stat"><div class="k">Critical Path p99</div><div id="cv-p99" class="v">-- ms</div></div>
+          <div class="v7-stat"><div class="k">Est. Cloud Spend</div><div id="cv-cost" class="v">$--/mo</div></div>
+          <div class="v7-stat"><div class="k">Active Nodes</div><div id="cv-cnt" class="v">0</div></div>
+        </div>
+        <div id="cv-warn" class="v7-note">Drag any node directly on the canvas to rearrange topology.</div>
+      </section>
+
+      <section class="adv-v7-card">
+        <h2>Interactive Architecture Whiteboard (Drag Nodes)</h2>
+        <canvas id="cv-board" class="v7-canvas" width="900" height="440"></canvas>
+      </section>
+    </div>
+    
+  </main>
+  <script>
+  (function() {
+    "use strict";
+    
+    const canvas = document.getElementById('cv-board');
+    const ctx = canvas.getContext('2d');
+    let nodes = [], edges = [], dragNode = null, dragOffX = 0, dragOffY = 0;
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = 'rgba(148,163,184,0.08)';
+      for (let x = 0; x < canvas.width; x += 36) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); }
+      for (let y = 0; y < canvas.height; y += 36) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
+
+      edges.forEach(e => {
+        const a = nodes.find(n => n.id === e.from), b = nodes.find(n => n.id === e.to);
+        if (!a || !b) return;
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(a.x + 85, a.y + 32);
+        ctx.lineTo(b.x + 85, b.y + 32);
+        ctx.stroke();
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '11px monospace';
+        ctx.fillText(e.label || '', (a.x + b.x)/2 + 55, (a.y + b.y)/2 + 26);
+      });
+
+      nodes.forEach(n => {
+        const hot = (n.utilization_pct || 0) >= 80;
+        ctx.fillStyle = '#0f172a';
+        ctx.strokeStyle = hot ? '#f43f5e' : '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(n.x, n.y, 175, 66, 12);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText((n.label || '').slice(0, 22), n.x + 10, n.y + 24);
+        ctx.fillStyle = hot ? '#fda4af' : '#6ee7b7';
+        ctx.font = '11px monospace';
+        ctx.fillText(`Util: ${n.utilization_pct || 12}% · ${n.effective_ms || 5}ms`, n.x + 10, n.y + 46);
+      });
+    }
+
+    function toCanvasCoords(ev) {
+      const r = canvas.getBoundingClientRect();
+      return {
+        x: (ev.clientX - r.left) * (canvas.width / r.width),
+        y: (ev.clientY - r.top) * (canvas.height / r.height)
+      };
+    }
+
+    canvas.addEventListener('pointerdown', ev => {
+      const p = toCanvasCoords(ev);
+      dragNode = nodes.find(n => p.x >= n.x && p.x <= n.x + 175 && p.y >= n.y && p.y <= n.y + 66) || null;
+      if (dragNode) { dragOffX = p.x - dragNode.x; dragOffY = p.y - dragNode.y; }
+    });
+    canvas.addEventListener('pointermove', ev => {
+      if (!dragNode) return;
+      const p = toCanvasCoords(ev);
+      dragNode.x = Math.max(8, Math.min(canvas.width - 183, p.x - dragOffX));
+      dragNode.y = Math.max(8, Math.min(canvas.height - 74, p.y - dragOffY));
+      draw();
+    });
+    window.addEventListener('pointerup', () => { dragNode = null; });
+
+    async function loadGraph() {
+      const res = await fetch('/api/canvas/architecture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: document.getElementById('cv-prompt').value,
+          target_rps: Number(document.getElementById('cv-rps').value || 2500)
+        })
+      });
+      const d = await res.json();
+      nodes = d.nodes || [];
+      edges = d.edges || [];
+      document.getElementById('cv-p99').textContent = d.estimated_p99_ms + ' ms';
+      document.getElementById('cv-cost').textContent = '$' + d.monthly_infra_estimate_usd;
+      document.getElementById('cv-cnt').textContent = String(nodes.length);
+      document.getElementById('cv-warn').textContent = (d.bottleneck_warnings || []).join(' | ');
+      draw();
+    }
+
+    document.getElementById('cv-gen').addEventListener('click', loadGraph);
+    document.getElementById('cv-add').addEventListener('click', () => {
+      const id = 'svc_' + (nodes.length + 1);
+      nodes.push({ id, label: 'Replica Worker #' + (nodes.length + 1), x: 300, y: 330, utilization_pct: 24, effective_ms: 9.4 });
+      if (nodes.length > 1) edges.push({ from: nodes[0].id, to: id, label: 'gRPC' });
+      document.getElementById('cv-cnt').textContent = String(nodes.length);
+      draw();
+    });
+    document.getElementById('cv-export').addEventListener('click', function() {
+      if (navigator.clipboard) navigator.clipboard.writeText(JSON.stringify({ nodes, edges }, null, 2));
+      this.textContent = 'Copied JSON ✓';
+      setTimeout(() => { this.textContent = '📋 Copy Graph JSON'; }, 1400);
+    });
+    loadGraph();
+    
+  })();
+  </script>
+  <script src="/static/quantum-enhancer.js?v=7.0" defer></script>
+</body>
+</html>

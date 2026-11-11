@@ -393,7 +393,7 @@
     .txt-sm { font-size: 12px; }
     .mono { font-family: 'JetBrains Mono', monospace; }
     .mb-16 { margin-bottom: 16px; }
-    /* ── LangGraph Studio Canvas & DAG ───────────────────────────── */
+    /* ── Workflow Builder Canvas & DAG ───────────────────────────── */
     .lg-studio-container { display: grid; grid-template-columns: 1fr 380px; gap: 20px; align-items: start; }
     @media(max-width: 1080px) { .lg-studio-container { grid-template-columns: 1fr; } }
     .lg-canvas-box { background: #03040a; border: 1px solid var(--bd); border-radius: 14px; padding: 20px; position: relative; overflow: hidden; }
@@ -456,7 +456,7 @@
     .tot-tool-tag { font-size: 10px; padding: 2px 6px; border-radius: 6px; background: rgba(6,182,212,.12); color: #67e8f9; font-family: 'JetBrains Mono', monospace; }
     .hidden { display: none !important; }
   </style>
-<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.1"/></head>
+<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.3"/></head>
 <body>
 
 <!-- Orbs -->
@@ -520,7 +520,7 @@
   <!-- Main Mode Tabs -->
   <div class="mode-tabs">
     <button class="mode-tab active" onclick="switchMode('orchestrate',this)"><i class="fas fa-circle-nodes"></i> Orchestrate</button>
-    <button class="mode-tab" onclick="switchMode('langgraph',this)"><i class="fas fa-diagram-project"></i> LangGraph Studio</button>
+    <button class="mode-tab" onclick="switchMode('langgraph',this)"><i class="fas fa-diagram-project"></i> Workflow Builder</button>
     <button class="mode-tab" onclick="switchMode('automation',this)"><i class="fas fa-bolt"></i> AI Automation</button>
     <button class="mode-tab" onclick="switchMode('debate',this)"><i class="fas fa-comments"></i> Debate Arena</button>
     <button class="mode-tab" onclick="switchMode('rag',this)"><i class="fas fa-brain"></i> RAG Intelligence</button>
@@ -1863,7 +1863,7 @@ async function runCode() {
   }
 }
 
-// ── LangGraph Studio State & Logic ───────────────────────────────────────────
+// ── Workflow Builder State & Logic ───────────────────────────────────────────
 let _lgActiveNode = 'supervisor';
 let _lgSimStep = 0;
 let _lgSimTimer = null;
@@ -2715,6 +2715,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<script src="/static/quantum-enhancer.js?v=6.1" defer></script>
+<script src="/static/quantum-enhancer.js?v=6.3" defer></script>
 </body>
 </html>

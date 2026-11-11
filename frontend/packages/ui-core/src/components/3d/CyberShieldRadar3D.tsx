@@ -141,7 +141,7 @@ export function CyberShieldRadar3D() {
     <div className="relative w-full h-full min-h-[380px] flex items-center justify-center rounded-2xl bg-red-950/30 border border-red-500/20 backdrop-blur-xl overflow-hidden shadow-2xl shadow-red-950/50">
       <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/80 border border-red-500/30 text-xs font-mono text-red-400">
         <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
-        <span>Rakshak AI Forcefield · 360° Tactical Radar</span>
+        <span>Rakshak AI</span>
       </div>
 
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2 text-xs font-mono text-red-300">
@@ -154,9 +154,9 @@ export function CyberShieldRadar3D() {
       <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/80 border border-red-800/40 text-[11px] font-mono text-slate-300 backdrop-blur-md">
         <div className="flex items-center gap-2 text-red-300">
           <Scale className="w-3.5 h-3.5" />
-          <span>Bharatiya Nyaya Sanhita: <strong>Auto-FIR under BNSS Sec 173</strong></span>
+          <span>Complaint drafts, scam checks, safety plans</span>
         </div>
-        <span className="text-red-400 text-[10px]">Active Threat Defense</span>
+        <span className="text-red-400 text-[10px]">Drag to rotate</span>
       </div>
     </div>
   );

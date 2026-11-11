@@ -32,7 +32,7 @@ export default function DuoLeagueRoute() {
               <div className="text-[11px] font-mono uppercase text-amber-400">AVPU Gamification Engine</div>
               <h1 className="text-xl sm:text-2xl font-bold text-slate-100 flex items-center gap-2">
                 <Flame className="w-5 h-5 text-amber-400 fill-current animate-bounce" />
-                <span>Daily Streak & Emerald League Arena (duolingo.com)</span>
+                <span>Daily Streak & Emerald League Arena</span>
               </h1>
             </div>
           </div>

@@ -69,7 +69,7 @@ export function AutonomousDevinOrb3D() {
     group.add(ring3);
 
     // Floating Devin Swarm Agent Satellites
-    const agentNames = ["Maya (Marketing)", "Kabir (Devin)", "Ananya (Sales)", "Rohan (QA)"];
+    const agentNames = ["Maya (Marketing)", "Kabir (Engineering)", "Ananya (Sales)", "Rohan (QA)"];
     const agentMeshes = agentNames.map((name, idx) => {
       const g = new THREE.DodecahedronGeometry(0.18);
       const m = new THREE.MeshStandardMaterial({
@@ -163,12 +163,12 @@ export function AutonomousDevinOrb3D() {
     <div className="relative w-full h-full min-h-[380px] flex items-center justify-center rounded-2xl bg-amber-950/40 border border-amber-500/20 backdrop-blur-xl overflow-hidden shadow-2xl shadow-amber-950/50">
       <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500/30 text-xs font-mono text-amber-400">
         <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-        <span>Sevenforce Autonomous AI Core · Gyroscope Reactor</span>
+        <span>Sevenforce</span>
       </div>
 
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2 text-xs font-mono text-amber-300">
         <Cpu className="w-3.5 h-3.5 text-amber-400" />
-        <span>LangGraph + Devin OS</span>
+        <span>Sevenforce agents</span>
       </div>
 
       <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
@@ -176,9 +176,9 @@ export function AutonomousDevinOrb3D() {
       <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/80 border border-amber-800/40 text-[11px] font-mono text-slate-300 backdrop-blur-md">
         <div className="flex items-center gap-2 text-amber-300">
           <Terminal className="w-3.5 h-3.5" />
-          <span>Swarm Cluster Status: <strong>7 Devin Agents Online (450k Tasks/Day)</strong></span>
+          <span>AI employees for repetitive work</span>
         </div>
-        <span className="text-amber-500 text-[10px]">LangGraph Cyclic State OK</span>
+        <span className="text-amber-500 text-[10px]">Drag to rotate</span>
       </div>
     </div>
   );

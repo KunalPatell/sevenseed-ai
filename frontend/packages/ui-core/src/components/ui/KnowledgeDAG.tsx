@@ -185,7 +185,7 @@ export function KnowledgeDAG({
       <div className="absolute top-4 left-4 z-20 flex items-center gap-3 bg-slate-900/90 backdrop-blur-md border border-slate-800 px-4 py-2 rounded-xl text-xs font-mono text-slate-300">
         <span className="flex items-center gap-2 text-sky-400">
           <Layers className="w-4 h-4" />
-          <span>Interactive Knowledge DAG (learn-anything.xyz engine)</span>
+          <span>Interactive Knowledge DAG</span>
         </span>
         <span className="text-slate-600">|</span>
         <div className="flex items-center gap-4">

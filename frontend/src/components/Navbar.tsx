@@ -17,7 +17,8 @@ import {
   Heart,
   Shield,
   Layers,
-  Search
+  Search,
+  Sprout
 } from "lucide-react";
 
 export function Navbar() {
@@ -58,6 +59,8 @@ export function Navbar() {
     { name: "BYOK Vault", href: "/byok", brand: "Sevenseed" }
   ];
 
+  if (pathname === "/") return <HomeNavbar ventures={VENTURES} tools={POPULAR_TOOLS} />;
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,7 +95,7 @@ export function Navbar() {
                 onClick={() => { setVentureMenuOpen(!ventureMenuOpen); setToolsMenuOpen(false); }}
                 className="flex items-center gap-1.5 text-xs font-bold text-slate-300 hover:text-white transition py-2"
               >
-                All 10 Ventures <ChevronDown className="w-3.5 h-3.5" />
+                Ventures <ChevronDown className="w-3.5 h-3.5" />
               </button>
 
               {ventureMenuOpen && (
@@ -129,7 +132,7 @@ export function Navbar() {
                 onClick={() => { setToolsMenuOpen(!toolsMenuOpen); setVentureMenuOpen(false); }}
                 className="flex items-center gap-1.5 text-xs font-bold text-slate-300 hover:text-white transition py-2"
               >
-                Feature Workstations <ChevronDown className="w-3.5 h-3.5" />
+                Tools <ChevronDown className="w-3.5 h-3.5" />
               </button>
 
               {toolsMenuOpen && (
@@ -226,6 +229,77 @@ export function Navbar() {
               </Link>
             ))}
           </div>
+        </div>
+      )}
+    </nav>
+  );
+}
+
+function HomeNavbar({ ventures, tools }: { ventures: { name: string; href: string; desc: string }[]; tools: { name: string; href: string; brand: string }[] }) {
+  const [openMenu, setOpenMenu] = useState<"ventures" | "tools" | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const linkClass = "text-sm font-medium text-[#344054] transition hover:text-[#6d28d9]";
+  const listedVentures = ventures.filter((v) => v.href !== "/");
+
+  return (
+    <nav aria-label="Main" className="ss-home fixed top-0 left-0 right-0 z-50 px-3 pt-3 sm:px-5">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between rounded-full border border-white/80 bg-white pl-5 pr-3 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.25)]">
+        <Link href="/" className="flex items-center gap-2.5 py-1">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#0f172a] text-[#8ee07a]"><Sprout className="h-5 w-5" /></span>
+          <span className="text-lg font-bold tracking-[-0.02em] text-[#0f172a]">Sevenseed</span>
+        </Link>
+
+        <div className="hidden items-center gap-7 lg:flex">
+          <div className="relative">
+            <button type="button" aria-expanded={openMenu === "ventures"} onClick={() => setOpenMenu(openMenu === "ventures" ? null : "ventures")} className={`flex items-center gap-1 py-2 ${linkClass}`}>
+              Ventures <ChevronDown className="h-4 w-4" />
+            </button>
+            {openMenu === "ventures" && (
+              <div onMouseLeave={() => setOpenMenu(null)} className="absolute left-0 top-full grid w-[420px] gap-1 rounded-xl border border-[#e4e7ec] bg-white p-2 shadow-xl">
+                {listedVentures.map((v) => (
+                  <Link key={v.name} href={v.href} onClick={() => setOpenMenu(null)} className="rounded-lg px-3 py-2 transition hover:bg-[#f5f3ff]">
+                    <span className="block text-sm font-semibold text-[#0f172a]">{v.name}</span>
+                    <span className="block text-[13px] text-[#475467]">{v.desc}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="relative">
+            <button type="button" aria-expanded={openMenu === "tools"} onClick={() => setOpenMenu(openMenu === "tools" ? null : "tools")} className={`flex items-center gap-1 py-2 ${linkClass}`}>
+              Products <ChevronDown className="h-4 w-4" />
+            </button>
+            {openMenu === "tools" && (
+              <div onMouseLeave={() => setOpenMenu(null)} className="absolute left-0 top-full grid w-[480px] grid-cols-2 gap-1 rounded-xl border border-[#e4e7ec] bg-white p-2 shadow-xl">
+                {tools.map((tool) => (
+                  <Link key={tool.name} href={tool.href} onClick={() => setOpenMenu(null)} className="rounded-lg px-3 py-2 transition hover:bg-[#f5f3ff]">
+                    <span className="block text-sm font-semibold text-[#0f172a]">{tool.name}</span>
+                    <span className="block text-[13px] text-[#475467]">{tool.brand}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+          <a href="#tour" className={linkClass}>See it in action</a>
+          <a href="#how" className={linkClass}>For founders</a>
+          <a href="#faq" className={linkClass}>FAQ</a>
+        </div>
+
+        <a href="#contact" className="ss-btn-primary !hidden !min-h-0 !py-2.5 !text-sm lg:!inline-flex">Contact us</a>
+
+        <button type="button" aria-label={mobileOpen ? "Close menu" : "Open menu"} aria-expanded={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)} className="p-2 text-[#344054] lg:hidden">
+          {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+      </div>
+
+      {mobileOpen && (
+        <div className="mx-auto mt-2 max-h-[calc(100dvh-6rem)] max-w-6xl overflow-y-auto rounded-3xl bg-white p-4 shadow-xl lg:hidden">
+          <div className="grid gap-1 text-[15px] font-medium text-[#344054]">
+            {[["#team", "Meet the team"], ["#tour", "See it in action"], ["#platform", "How it works"], ["#how", "For founders"], ["#faq", "FAQ"]].map(([href, name]) => (
+              <a key={href} href={href} onClick={() => setMobileOpen(false)} className="rounded-lg px-2 py-2.5 hover:bg-[#f5f3ff]">{name}</a>
+            ))}
+          </div>
+          <a href="#contact" onClick={() => setMobileOpen(false)} className="ss-btn-primary mt-3 w-full">Contact us</a>
         </div>
       )}
     </nav>

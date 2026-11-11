@@ -156,6 +156,50 @@ const ventures: Venture[] = [
     href: "/agenticos",
     icon: Terminal,
     color: "#14b8a6"
+  },
+  {
+    id: "langgraph-studio",
+    name: "LangChain + LangGraph Cyclic Studio",
+    sector: "Multi-Agent StateGraph & RAG",
+    desc: "Interactive 5-node Python StateGraph orchestrator with LangChain PromptTemplates, hybrid vector retrieval, and conditional critic reflection loops.",
+    metrics: "5 Stateful Nodes · <15ms Latency",
+    tech: "LangGraph v0.2 · LangChain Core · Groq 70B",
+    href: "/langgraph-studio",
+    icon: Cpu,
+    color: "#38bdf8"
+  },
+  {
+    id: "canva-studio",
+    name: "Canva Multi-Layer Vector Studio",
+    sector: "Interactive Design & Brand Kit",
+    desc: "Real-time SVG/Canvas multi-layer poster editor with Spline 3D halo orbs, Brand Kit palettes, coordinate sliders, and 1-click vector SVG export.",
+    metrics: "6 Vector Layers · 60fps Canvas",
+    tech: "Canva Scene Graph · SVG Serializer",
+    href: "/canva-studio",
+    icon: Sparkles,
+    color: "#f59e0b"
+  },
+  {
+    id: "framer-studio",
+    name: "Framer Motion & 21st.dev Shader Lab",
+    sector: "Spring Physics & TSX Codegen",
+    desc: "Live differential spring physics solver (stiffness, damping, mass, 3D perspective tilt) with 1-click Aceternity / 21st.dev React TSX export.",
+    metrics: "Real-Time ω₀ & ζ Solver · TSX Export",
+    tech: "Framer Motion · Three.js · Aceternity UI",
+    href: "/framer-studio",
+    icon: Layers,
+    color: "#a855f7"
+  },
+  {
+    id: "angular-enterprise",
+    name: "AngularJS 1.8 Enterprise Command Grid",
+    sector: "Two-Way Bound Telemetry & RAM Guard",
+    desc: "Reactive two-way bound venture telemetry dashboard monitoring RPS, P99 latency, ARR, and Render Free-Tier 72.4MB / 512MB RAM safety.",
+    metrics: "72.4 MB / 512 MB RAM · Zero OOM",
+    tech: "AngularJS 1.8 · FastAPI · Render Safe",
+    href: "/angular-enterprise",
+    icon: Activity,
+    color: "#f43f5e"
   }
 ];
 

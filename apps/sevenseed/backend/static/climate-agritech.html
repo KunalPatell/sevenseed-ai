@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TerraPulse Climate & AgriTech AI | Carbon, Irrigation & Solar Studio</title>
+  <style>
+  :root {
+    --v7-bg: #070b14;
+    --v7-panel: #0f172a;
+    --v7-panel-2: #131e35;
+    --v7-border: rgba(148, 163, 184, 0.2);
+    --v7-text: #f8fafc;
+    --v7-muted: #94a3b8;
+    --v7-accent: #6366f1;
+    --v7-cyan: #06b6d4;
+    --v7-emerald: #10b981;
+    --v7-amber: #f59e0b;
+    --v7-rose: #f43f5e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at 15% 0%, rgba(99, 102, 241, 0.14), transparent 42%),
+                radial-gradient(circle at 85% 10%, rgba(6, 182, 212, 0.12), transparent 38%),
+                var(--v7-bg);
+    color: var(--v7-text);
+    font-family: "Inter Variable", system-ui, -apple-system, sans-serif;
+    line-height: 1.55;
+  }
+  main.v7-shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 18px 64px;
+  }
+  .v7-hero {
+    margin-bottom: 24px;
+    padding: 24px;
+    border-radius: 22px;
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.94), rgba(9, 14, 28, 0.94));
+    border: 1px solid var(--v7-border);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.38);
+  }
+  .v7-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.16);
+    border: 1px solid rgba(99, 102, 241, 0.42);
+    color: #a5b4fc;
+    margin-bottom: 10px;
+  }
+  .v7-hero h1 {
+    margin: 0 0 8px;
+    font-family: "Plus Jakarta Sans Variable", "Inter Variable", system-ui, sans-serif;
+    font-size: clamp(24px, 3.6vw, 36px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: #ffffff;
+  }
+  .v7-hero p {
+    margin: 0;
+    max-width: 780px;
+    color: #cbd5e1;
+    font-size: 15px;
+  }
+  .v7-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 18px;
+    align-items: start;
+  }
+  .v7-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 14px;
+  }
+  .adv-v7-card {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--v7-border);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  }
+  .adv-v7-card h2 {
+    margin: 0 0 12px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #f8fafc;
+  }
+  .v7-field { margin-bottom: 12px; }
+  .v7-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #cbd5e1;
+    margin-bottom: 5px;
+  }
+  .v7-input, .v7-select, .v7-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    background: #090e1c;
+    color: #f8fafc;
+    font-size: 13.5px;
+    font-family: inherit;
+  }
+  .v7-btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .v7-btn {
+    padding: 9px 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(99, 102, 241, 0.5);
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.14s ease, filter 0.14s ease;
+  }
+  .v7-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+  .v7-btn-ghost {
+    background: rgba(30, 41, 59, 0.85);
+    border-color: rgba(148, 163, 184, 0.3);
+    color: #e2e8f0;
+  }
+  .v7-stat {
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(9, 14, 28, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.16);
+  }
+  .v7-stat .k { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--v7-muted); }
+  .v7-stat .v { font-size: 22px; font-weight: 800; color: #ffffff; margin-top: 4px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .v7-pre {
+    background: #050811;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    color: #a7f3d0;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  canvas.v7-canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: #060a15;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 14px;
+  }
+  .v7-note {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fde68a;
+    font-size: 12px;
+  }
+</style>
+  <link rel="stylesheet" href="/static/aura-21st-ui.css?v=7.0"/>
+</head>
+<body data-v7-studio="1">
+  <main class="v7-shell">
+    <header class="v7-hero">
+      <div class="v7-kicker">New Frontier Venture</div>
+      <h1>TerraPulse Climate & AgriTech AI</h1>
+      <p>Account for Scope 1/2/3 GHG emissions and EU CBAM exposure, solve FAO-56 crop evapotranspiration demand, and size commercial rooftop solar LCOE.</p>
+    </header>
+    
+    <div class="v7-grid-2">
+      <section class="adv-v7-card">
+        <h2>Carbon Scope 1–3, Crop & Solar Parameters</h2>
+        <div class="v7-grid-3">
+          <div class="v7-field"><label for="cl-diesel">Fleet Diesel (L/yr)</label><input id="cl-diesel" type="number" class="v7-input" value="18000" /></div>
+          <div class="v7-field"><label for="cl-kwh">Grid Power (kWh/yr)</label><input id="cl-kwh" type="number" class="v7-input" value="240000" /></div>
+          <div class="v7-field"><label for="cl-spend">Supply Spend ($/yr)</label><input id="cl-spend" type="number" class="v7-input" value="350000" /></div>
+          <div class="v7-field">
+            <label for="cl-crop">Crop Type (FAO Kc)</label>
+            <select id="cl-crop" class="v7-select">
+              <option value="wheat">Wheat (Kc 1.15)</option>
+              <option value="rice">Rice Paddy (Kc 1.20)</option>
+              <option value="cotton">Cotton (Kc 1.18)</option>
+              <option value="sugarcane">Sugarcane (Kc 1.25)</option>
+              <option value="drip-vegetables">Drip Vegetables (Kc 1.05)</option>
+            </select>
+          </div>
+          <div class="v7-field"><label for="cl-temp">Ambient Temp (°C)</label><input id="cl-temp" type="number" step="0.5" class="v7-input" value="33.5" /></div>
+          <div class="v7-field"><label for="cl-solar">Rooftop Solar (kWp)</label><input id="cl-solar" type="number" class="v7-input" value="50" /></div>
+        </div>
+        <div class="v7-btn-row">
+          <button type="button" id="cl-run" class="v7-btn">🌱 Compute GHG, FAO-56 ETc & Solar LCOE</button>
+        </div>
+        <div id="cl-stats" class="v7-grid-3" style="margin-top:16px;"></div>
+      </section>
+
+      <section class="adv-v7-card">
+        <h2>Scope 1 / 2 / 3 Emissions Breakdown (tCO2e/yr)</h2>
+        <canvas id="cl-chart" class="v7-canvas" width="640" height="280"></canvas>
+        <div class="v7-note">Emission factors: Diesel 2.68 kg CO2e/L (EPA), India Grid 0.716 kg CO2e/kWh (CEA baseline), FAO-56 vapour pressure deficit crop evapotranspiration.</div>
+      </section>
+    </div>
+    
+  </main>
+  <script>
+  (function() {
+    "use strict";
+    
+    async function solveClimate() {
+      const res = await fetch('/api/climate/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          diesel_liters_yr: Number(document.getElementById('cl-diesel').value),
+          electricity_kwh_yr: Number(document.getElementById('cl-kwh').value),
+          supply_chain_spend_usd: Number(document.getElementById('cl-spend').value),
+          crop: document.getElementById('cl-crop').value,
+          temp_c: Number(document.getElementById('cl-temp').value),
+          solar_kwp: Number(document.getElementById('cl-solar').value)
+        })
+      });
+      const d = await res.json();
+      const e = d.emissions_tco2e || {}, ir = d.precision_irrigation || {}, so = d.solar_rooftop || {};
+      const items = [
+        ['Total GHG', e.total_tco2e_yr + ' tCO2e'],
+        ['EU CBAM Exposure', '€' + e.eu_cbam_illustrative_eur],
+        ['Crop Water (ETc)', ir.etc_crop_mm_per_day + ' mm/d'],
+        ['Farm Irrigation', (ir.total_farm_liters_per_day || 0).toLocaleString() + ' L/d'],
+        ['Solar LCOE', '₹' + so.lcoe_inr_per_kwh + '/kWh'],
+        ['Solar Payback', so.simple_payback_years + ' yrs']
+      ];
+      document.getElementById('cl-stats').innerHTML = items.map(([k, v]) =>
+        `<div class="v7-stat"><div class="k">${k}</div><div class="v" style="font-size:16px;">${v}</div></div>`
+      ).join('');
+
+      const c = document.getElementById('cl-chart'), ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, c.width, c.height);
+      const bars = [
+        ['Scope 1 (Fleet)', e.scope_1_direct, '#f59e0b'],
+        ['Scope 2 (Grid CEA)', e.scope_2_grid_cea, '#06b6d4'],
+        ['Scope 3 (Supply)', e.scope_3_value_chain, '#10b981']
+      ];
+      const mx = Math.max(1, ...bars.map(b => b[1]));
+      bars.forEach(([lbl, val, col], idx) => {
+        const y = 38 + idx * 74;
+        const w = Math.max(8, (val / mx) * (c.width - 220));
+        ctx.fillStyle = col;
+        ctx.beginPath(); ctx.roundRect(160, y, w, 38, 8); ctx.fill();
+        ctx.fillStyle = '#e2e8f0'; ctx.font = '13px sans-serif';
+        ctx.fillText(lbl, 18, y + 24);
+        ctx.font = 'bold 13px monospace';
+        ctx.fillText(val + ' t', 168 + w, y + 24);
+      });
+    }
+    document.getElementById('cl-run').addEventListener('click', solveClimate);
+    solveClimate();
+    
+  })();
+  </script>
+  <script src="/static/quantum-enhancer.js?v=7.0" defer></script>
+</body>
+</html>

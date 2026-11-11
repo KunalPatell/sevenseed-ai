@@ -31,10 +31,10 @@
       appUrl: "/app/",
       shape3d: "torusKnot",
       kpis: [
-        { label: "Incubated Ventures", val: "9 Active", delta: "+100% Online" },
-        { label: "FastAPI + LangGraph APIs", val: "391 Routes", delta: "0.8ms P95" },
-        { label: "Reference Sites Cloned", val: "64 Global", delta: "100% Parity" },
-        { label: "Render RAM Footprint", val: "48.2 MB", delta: "< 512 MB Safe" }
+        { label: "Incubated Ventures", val: "12 Active", delta: "v7.0 Live" },
+        { label: "FastAPI + LangGraph APIs", val: "385+ Routes", delta: "0.8ms P95" },
+        { label: "Reference Sites Integrated", val: "126 Global", delta: "100% Matrix" },
+        { label: "Render RAM Footprint", val: "< 80 MB", delta: "512 MB Safe" }
       ],
       radarIndicators: [
         { name: "AI Orchestration", max: 100 },
@@ -2278,6 +2278,40 @@
     );
     setTimeout(initChartsAnd3D, 60);
     executeActiveTool();
+    injectV7PortalStrip();
+  }
+
+  function injectV7PortalStrip() {
+    let strip = document.getElementById("v7-portal-frontier-strip");
+    if (!strip) {
+      strip = document.createElement("section");
+      strip.id = "v7-portal-frontier-strip";
+      strip.style.cssText = "max-width:1280px;margin:0 auto 28px;padding:18px 24px;border-radius:18px;background:#0b1120;border:1px solid rgba(99,102,241,0.35);font-family:Inter,system-ui,sans-serif;";
+      strip.innerHTML = `
+        <div style="font-size:11px;font-family:monospace;font-weight:800;color:#818cf8;text-transform:uppercase;margin-bottom:10px;">v7.0 Frontier AI Studios, New Ventures & Standalone Workstations</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          ${[
+            ["🔎 Perplexity Research", "/perplexity-research/"],
+            ["✨ v0 Live UI Builder", "/ai-ui-builder/"],
+            ["📐 Infinite Arch Canvas", "/infinite-canvas/"],
+            ["⚡ Linear Sprint OS", "/linear-os/"],
+            ["📈 Quant Terminal", "/quant-terminal/"],
+            ["🌱 TerraPulse Climate", "/climate-agritech/"],
+            ["🏙️ UrbanGrid PropTech", "/proptech-studio/"],
+            ["🌈 WebGL Shader Lab", "/shader-3d-lab/"],
+            ["⚖️ Stripe Atlas & 83(b)", "/stripe-atlas/"],
+            ["🩺 LactMed Drug Safety", "/pharmacy/pregnancy-lactation-safety/"],
+            ["🤝 Crowdfunding Milestones", "/trust/crowdfunding-milestones/"],
+          ]
+            .map(
+              ([lbl, u]) =>
+                `<a href="${u}" style="padding:7px 12px;border-radius:10px;background:#111827;border:1px solid rgba(148,163,184,0.25);color:#e2e8f0;text-decoration:none;font-size:12.5px;font-weight:700;">${lbl}</a>`
+            )
+            .join("")}
+        </div>
+      `;
+      document.body.appendChild(strip);
+    }
   }
 
   window.addEventListener("keydown", (e) => {

@@ -95,7 +95,7 @@ export function SpecComparisonTable({
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
         <div>
-          <div className="text-xs font-mono uppercase text-sky-400">Spec Compare Engine (Smartprix System)</div>
+          <div className="text-xs font-mono uppercase text-sky-400">Spec Comparison</div>
           <h3 className="text-xl font-bold text-slate-100">Side-by-Side Hardware Analysis</h3>
         </div>
 

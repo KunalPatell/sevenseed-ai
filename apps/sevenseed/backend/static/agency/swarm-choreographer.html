@@ -347,7 +347,7 @@
     .byok-input:focus { border-color: #a855f7; }
     .byok-actions { display: flex; justify-content: flex-end; gap: 10px; }
   </style>
-<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.1"/></head>
+<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.3"/></head>
 <body>
 
   <!-- Navigation -->
@@ -361,7 +361,7 @@
         <a href="swarm-choreographer.html" style="color:#c084fc; font-weight:700; text-decoration:none;">Swarm Orchestrator</a>
         <a href="/ecosystem/design-system.html" style="color:#ec4899; text-decoration:none;"><i class="fas fa-palette"></i> UI Studio</a>
         <a href="employees.html" style="color:var(--text-muted); text-decoration:none;">7 AI Employees</a>
-        <a href="devin-terminal.html" style="color:var(--text-muted); text-decoration:none;">Devin Terminal</a>
+        <a href="devin-terminal.html" style="color:var(--text-muted); text-decoration:none;">AI Dev Terminal</a>
         <a href="workflows.html" style="color:var(--text-muted); text-decoration:none;">Workflows</a>
         <a href="/byok.html" style="color:#38bdf8; text-decoration:none;"><i class="fas fa-key"></i> BYOK Vault</a>
       </div>
@@ -442,7 +442,7 @@
 
         <div class="code-panel-view" id="codePanel">
           <!-- Populated when Devin writes code -->
-          # Devin Virtual Workspace
+          # AI Dev Workspace
           # Code output will stream here during execution.
         </div>
       </div>
@@ -467,7 +467,7 @@
     var NODES = [
       { id: 'supervisor', label: 'Supervisor', role: 'Decomposition DAG', x: 250, y: 80, radius: 24, color: '#a855f7', state: 'idle' },
       { id: 'maya', label: 'Maya', role: 'Copywriter & Value Prop', x: 100, y: 220, radius: 22, color: '#ec4899', state: 'idle' },
-      { id: 'devin', label: 'Devin', role: 'Software Engineer', x: 400, y: 220, radius: 22, color: '#38bdf8', state: 'idle' },
+      { id: 'devin', label: 'AI Dev', role: 'Software Engineer', x: 400, y: 220, radius: 22, color: '#38bdf8', state: 'idle' },
       { id: 'echo', label: 'Echo', role: 'SDR Outbound Growth', x: 130, y: 380, radius: 22, color: '#f59e0b', state: 'idle' },
       { id: 'sentinel', label: 'Sentinel', role: 'Legal & Risk Auditor', x: 370, y: 380, radius: 22, color: '#10b981', state: 'idle' }
     ];
@@ -679,7 +679,7 @@
             agent: 'supervisor',
             name: 'Supervisor Agent',
             color: '#a855f7',
-            deliverable: 'Task Decomposition Matrix (Computer Vision Pipeline):\n• Sub-task 1: Maya drafts clinical/spec defect classification hierarchy.\n• Sub-task 2: Devin scaffolds OpenCV & YOLOv8 high-speed ball inspection pipeline.\n• Sub-task 3: Echo structures automation reachout to manufacturing plants.\n• Sub-task 4: Sentinel verifies ASTM safety & calibration accuracy benchmarks.',
+            deliverable: 'Task Decomposition Matrix (Computer Vision Pipeline):\n• Sub-task 1: Maya drafts clinical/spec defect classification hierarchy.\n• Sub-task 2: AI Dev scaffolds OpenCV & YOLOv8 high-speed ball inspection pipeline.\n• Sub-task 3: Echo structures automation reachout to manufacturing plants.\n• Sub-task 4: Sentinel verifies ASTM safety & calibration accuracy benchmarks.',
             nextEdges: [['supervisor', 'maya', '#ec4899'], ['supervisor', 'devin', '#38bdf8']]
           },
           {
@@ -691,7 +691,7 @@
           },
           {
             agent: 'devin',
-            name: 'Devin (CV Software Engineer)',
+            name: 'AI Dev (CV Software Engineer)',
             color: '#38bdf8',
             deliverable: 'Python OpenCV & YOLOv8 Defect Tracking Pipeline:\n\n```python\nimport cv2\nimport numpy as np\nfrom ultralytics import YOLO\n\nclass BowlingBallDefectAnalyzer:\n    def __init__(self, model_path="best.pt"):\n        self.model = YOLO(model_path)\n        self.bg_subtractor = cv2.createBackgroundSubtractorMOG2(history=500, varThreshold=16)\n\n    def inspect_frame(self, frame):\n        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)\n        results = self.model.predict(rgb, conf=0.75, imgsz=640)\n        defects = []\n        for box in results[0].boxes:\n            cls_id = int(box.cls[0])\n            confidence = float(box.conf[0])\n            defects.append({"class": results[0].names[cls_id], "conf": round(confidence, 4)})\n        return {"passed": len(defects) == 0, "defects": defects}\n```\n• Validated: 120 FPS frame ingestion without buffer lag.',
             nextEdges: [['devin', 'sentinel', '#10b981']]
@@ -851,7 +851,7 @@
         var charIdx = 0;
         var streamSpeed = Math.max(8, Math.min(25, 1200 / fullText.length));
 
-        // Save code if Devin
+        // Save code if AI Dev
         if (step.agent === 'devin') {
           latestDevinCode = fullText;
           document.getElementById('codePanel').textContent = fullText;
@@ -944,6 +944,6 @@
     }
   </script>
 
-<script src="/static/quantum-enhancer.js?v=6.1" defer></script>
+<script src="/static/quantum-enhancer.js?v=6.3" defer></script>
 </body>
 </html>

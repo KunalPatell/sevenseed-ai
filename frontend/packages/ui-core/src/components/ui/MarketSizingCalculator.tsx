@@ -23,7 +23,7 @@ export function MarketSizingCalculator() {
     <div className="w-full max-w-5xl mx-auto p-6 md:p-8 bg-slate-900/90 border border-slate-800 rounded-2xl shadow-2xl backdrop-blur-xl">
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3">
-          <Target className="w-4 h-4" /> Y Combinator Bottom-Up Market Sizing
+          <Target className="w-4 h-4" /> Bottom-Up Market Sizing
         </div>
         <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
           TAM / SAM / SOM Market Sizer

@@ -37,10 +37,10 @@ const CHANGELOG: ChangelogEntry[] = [
 
 export function StudioChangelog() {
   return (
-    <div className="rounded-2xl bg-slate-950/80 border border-slate-800/90 p-6">
-      <div className="flex items-center gap-2 text-sm font-bold text-white mb-5">
-        <Sparkles className="w-4 h-4 text-indigo-400" />
-        <span>What&apos;s New Across the Studio</span>
+    <div className="rounded-3xl bg-white border border-[#e4e7ec] shadow-sm p-6">
+      <div className="flex items-center gap-2 text-[15px] font-semibold text-[#0f172a] mb-5">
+        <Sparkles className="w-4 h-4 text-[#6d28d9]" />
+        <span>Recent releases</span>
       </div>
 
       <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
@@ -48,17 +48,17 @@ export function StudioChangelog() {
           <Link
             key={i}
             href={c.href}
-            className="group block p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-indigo-500/40 transition-all"
+            className="group block p-4 rounded-xl bg-[#f9fafb] border border-[#e4e7ec] hover:border-[#c4b5fd] transition-all"
           >
             <div className="flex items-center justify-between gap-2 mb-1">
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-800/60 text-indigo-300">{c.venture}</span>
-              <span className="text-[10px] font-mono text-slate-500">{c.date}</span>
+              <span className="text-xs font-medium text-[#6d28d9]">{c.venture}</span>
+              <span className="text-[13px] text-[#475467]">{c.date}</span>
             </div>
             <div className="flex items-center justify-between gap-2">
-              <h4 className="text-sm font-bold text-slate-100 group-hover:text-indigo-400 transition-colors">{c.title}</h4>
-              <ArrowUpRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-indigo-400 transition-colors shrink-0" />
+              <h4 className="text-sm font-semibold text-[#0f172a] group-hover:text-[#6d28d9] transition-colors">{c.title}</h4>
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#667085] group-hover:text-[#6d28d9] transition-colors shrink-0" />
             </div>
-            <p className="text-xs text-slate-400 mt-1 leading-relaxed">{c.desc}</p>
+            <p className="text-[13px] text-[#475467] mt-1 leading-relaxed">{c.desc}</p>
           </Link>
         ))}
       </div>

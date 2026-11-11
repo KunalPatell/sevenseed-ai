@@ -145,12 +145,12 @@ export function NeuralSynapseNetwork3D() {
     <div className="relative w-full h-full min-h-[380px] flex items-center justify-center rounded-2xl bg-purple-950/40 border border-purple-500/20 backdrop-blur-xl overflow-hidden shadow-2xl shadow-purple-950/50">
       <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/80 border border-purple-500/30 text-xs font-mono text-purple-400">
         <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-        <span>Comonk Neural Brain · Synapse Telemetry</span>
+        <span>Comonk</span>
       </div>
 
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2 text-xs font-mono text-purple-300">
         <Brain className="w-3.5 h-3.5 text-fuchsia-400" />
-        <span>Levels.fyi + Jobscan Engine</span>
+        <span>Comonk career tools</span>
       </div>
 
       <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
@@ -158,9 +158,9 @@ export function NeuralSynapseNetwork3D() {
       <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/80 border border-purple-800/40 text-[11px] font-mono text-slate-300 backdrop-blur-md">
         <div className="flex items-center gap-2 text-purple-300">
           <Award className="w-3.5 h-3.5" />
-          <span>Verified Top AI Comp: <strong>₹1.4 Cr (Top 10% Staff AI)</strong></span>
+          <span>Resume, interview and offer tools</span>
         </div>
-        <span className="text-purple-400 text-[10px]">98.4% ATS Match Rate</span>
+        <span className="text-purple-400 text-[10px]">Drag to rotate</span>
       </div>
     </div>
   );

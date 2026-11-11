@@ -6,11 +6,11 @@ export default function VenturesPage() {
   const VENTURES = [
     { name: "Comonk Technology", href: "/comonk", tag: "AI Career Intelligence", desc: "Multi-agent career platform, ATS scoring, and FAANG technical interview simulations." },
     { name: "Sevenforce", href: "/sevenforce", tag: "Autonomous Workforce", desc: "7 Autonomous AI employees executing marketing, engineering, and sales pipelines." },
-    { name: "AVPU", href: "/avpu", tag: "AI University", desc: "Interactive DAG graphs, Duolingo arena, in-browser code labs, and Laws of UX." },
+    { name: "AVPU", href: "/avpu", tag: "AI University", desc: "Knowledge maps, daily learning streaks, in-browser code labs and UX psychology." },
     { name: "Decode Forest Pharmacy", href: "/pharmacy", tag: "Clinical AI", desc: "Jan Aushadhi generic salt finder, contraindication matrix, and hospital bed radar." },
     { name: "Breakdown Factor", href: "/breakdown", tag: "Construction AI", desc: "CPWD DSR 2023 BOQ takeoff estimator and computer vision site safety monitoring." },
-    { name: "AVP Charitable Trust", href: "/trust", tag: "Social Impact", desc: "Section 80G Form 10BE tax exemption and Charity Navigator 4-star financial ledger." },
-    { name: "AVP E-Mart", href: "/avp-emart", tag: "AI Shopping", desc: "Smartprix 3-way smartphone specs, quick commerce cart optimizer, and price history." },
+    { name: "AVP Charitable Trust", href: "/trust", tag: "Social Impact", desc: "Health camps and rural education support, with an 80G tax calculator and open donation records." },
+    { name: "AVP E-Mart", href: "/avp-emart", tag: "AI Shopping", desc: "Spec comparison, deal and fake-discount checks, grocery basket comparison and price logs." },
     { name: "Rakshak AI", href: "/rakshak-ai", tag: "Legal & Defense", desc: "Bharatiya Nyaya Sanhita (BNS 2023) auto-FIR drafter and threat radar." },
     { name: "AgenticOS", href: "/agenticos", tag: "Agent Kernel OS", desc: "Operating system kernel for coordinating autonomous enterprise multi-agent clusters." }
   ];

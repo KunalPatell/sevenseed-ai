@@ -40,22 +40,24 @@ export function Navbar() {
   ];
 
   const POPULAR_TOOLS = [
+    { name: "LangGraph 5-Node Studio", href: "/langgraph-studio", brand: "LangGraph AI" },
+    { name: "Canva Vector Studio", href: "/canva-studio", brand: "Canva Design" },
+    { name: "Framer Physics & TSX", href: "/framer-studio", brand: "Framer Motion" },
+    { name: "AngularJS Enterprise Grid", href: "/angular-enterprise", brand: "AngularJS 1.8" },
     { name: "Learn DAG Canvas", href: "/avpu/learn-dag", brand: "AVPU" },
     { name: "Duolingo League", href: "/avpu/duo-league", brand: "AVPU" },
     { name: "Spec Comparator", href: "/avp-emart/spec-compare", brand: "AVP E-Mart" },
     { name: "90-Day Price Trend", href: "/avp-emart/price-tracker", brand: "AVP E-Mart" },
     { name: "Jobscan ATS Matcher", href: "/comonk/resume-analyzer", brand: "Comonk" },
     { name: "FAANG Mock Arena", href: "/comonk/interview-arena", brand: "Comonk" },
-    { name: "LangGraph Studio", href: "/sevenforce/workflows", brand: "Sevenforce" },
+    { name: "Sevenforce Workflows", href: "/sevenforce/workflows", brand: "Sevenforce" },
     { name: "Devin Terminal", href: "/sevenforce/devin-terminal", brand: "Sevenforce" },
     { name: "Jan Aushadhi Generics", href: "/pharmacy/generic-finder", brand: "Pharmacy" },
     { name: "Drug Interactions", href: "/pharmacy/interaction-checker", brand: "Pharmacy" },
     { name: "CPWD BOQ Estimator", href: "/breakdown/boq-estimator", brand: "Breakdown" },
     { name: "80G Form 10BE", href: "/trust/tax-exemption", brand: "AVP Trust" },
     { name: "BNS Auto-FIR", href: "/rakshak-ai/fir-generator", brand: "Rakshak AI" },
-    { name: "Syndicate RUV", href: "/syndicate-ruv", brand: "Sevenseed" },
-    { name: "TAM/SAM/SOM Sizer", href: "/market-sizing", brand: "Sevenseed" },
-    { name: "BYOK Vault", href: "/byok", brand: "Sevenseed" }
+    { name: "Quantum All-in-One Deck", href: "/quantum-deck", brand: "Advance Site" }
   ];
 
   return (

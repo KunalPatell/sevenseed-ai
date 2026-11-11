@@ -457,15 +457,15 @@ export const projects: Project[] = [
     title: "AVP Charitable Trust",
     category: "AI Social Impact",
     description:
-      "100% free non-profit AI social welfare platform — matches citizen welfare needs to active community welfare programs, generates verified 80G tax-exempt PDF donation receipts with PAN verification, detects funding allocation anomalies, and delivers transparent public ledger reporting.",
+      "Non-profit arm of Sevenseed: runs health camps and supports rural education, publishes monthly donation records, and offers an 80G tax-saving calculator for donors.",
     architecture: [
       "Semantic distance matcher pairing beneficiary applications to NGO relief funds",
-      "Automated PDF tax receipt generator with digital signature verification",
+      "80G deduction calculator (Form 10BE is issued by the Trust after a donation)",
       "Public fund disbursement transparency ledger"
     ],
     impactMetrics: [
       { label: "Service Cost to Citizens", value: "100% Free" },
-      { label: "80G Tax Receipt Output", value: "Instant PDF" },
+      { label: "80G calculator", value: "Free" },
       { label: "Beneficiary Matching", value: "Semantic" },
     ],
     features: [
