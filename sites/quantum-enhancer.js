@@ -53,11 +53,6 @@
         appUrl: "/avpu/app/",
         color: "#38bdf8",
         shape: "octahedron",
-        contract: "AVPUSoulboundDegree_ERC5192.sol",
-        chain: "polygon",
-        refSites: ["learn-anything.xyz", "freecodecamp.org", "duolingo.com", "lawsofux.com", "roadmap.sh", "fs.blog"],
-        apiUrl: "/api/avpu/ai-classroom",
-        apiBody: { topic_or_url: "LangGraph Cyclic Agents & ERC-5192 Credentials" },
       };
     }
     if (path.includes("emart")) {
@@ -65,14 +60,9 @@
         key: "emart",
         name: "AVP E-Mart",
         hubUrl: "/avp-emart/",
-        appUrl: "/emart/app/",
+        appUrl: "/avp-emart/app/",
         color: "#10b981",
         shape: "icosahedron",
-        contract: "EmartCashbackEscrow.sol",
-        chain: "base",
-        refSites: ["smartprix.com", "buyhatke.com", "xerve.in", "cashkaro.com", "pricehistoryapp.com", "myokb.in"],
-        apiUrl: "/api/emart/spend-lens",
-        apiBody: { monthly_amazon: 24000, monthly_flipkart: 15000, monthly_qcommerce: 9500 },
       };
     }
     if (path.includes("pharmacy")) {
@@ -80,14 +70,9 @@
         key: "pharmacy",
         name: "Decode Forest Pharmacy",
         hubUrl: "/pharmacy/",
-        appUrl: "/forest-pharmacy/app/",
+        appUrl: "/pharmacy/app/",
         color: "#14b8a6",
         shape: "dodecahedron",
-        contract: "DeSciColdChainBatchNFT.sol",
-        chain: "polygon",
-        refSites: ["1mg.com", "Jan Aushadhi PMBJP", "drugs.com", "mdcalc.com", "open.fda.gov", "clinicaltrials.gov"],
-        apiUrl: "/api/mdcalc/clinical-scores",
-        apiBody: { age: 54, heart_rate: 92, systolic_bp: 128, creatinine: 1.1 },
       };
     }
     if (path.includes("breakdown")) {
@@ -95,14 +80,9 @@
         key: "breakdown",
         name: "Breakdown Factor Civil",
         hubUrl: "/breakdown/",
-        appUrl: "/breakdown-factor/app/",
+        appUrl: "/breakdown/app/",
         color: "#f59e0b",
         shape: "box",
-        contract: "RWAConstructionEscrow.sol",
-        chain: "ethereum",
-        refSites: ["CPWD DSR 2023", "skyciv.com", "hilti.com", "procore.com", "autodesk.com", "happho.com"],
-        apiUrl: "/api/skyciv/beam-solver",
-        apiBody: { span_m: 7.5, point_load_kn: 55, udl_kn_m: 16 },
       };
     }
     if (path.includes("trust")) {
@@ -113,11 +93,6 @@
         appUrl: "/trust/app/",
         color: "#eab308",
         shape: "sphere",
-        contract: "GitcoinAlloQF_80G.sol",
-        chain: "polygon",
-        refSites: ["charitynavigator.org", "givewell.org", "milaap.org", "ketto.org", "giveindia.org", "gitcoin.co"],
-        apiUrl: "/api/tax-80g",
-        apiBody: { amount: 100000, pan: "ABCDE1234F", regime: "old" },
       };
     }
     if (path.includes("rakshak")) {
@@ -128,11 +103,6 @@
         appUrl: "/rakshak-ai/app/",
         color: "#ef4444",
         shape: "torus",
-        contract: "BSASection63EvidenceNotary.sol",
-        chain: "arbitrum",
-        refSites: ["BNS 2023 Crosswalk", "indiankanoon.org", "virustotal.com", "haveibeenpwned.com", "shodan.io", "cybercrime.gov.in"],
-        apiUrl: "/api/bns-lookup",
-        apiBody: { query: "snatching chain robbery cyber fraud" },
       };
     }
     if (path.includes("comonk")) {
@@ -143,11 +113,6 @@
         appUrl: "/comonk/app/",
         color: "#a855f7",
         shape: "cone",
-        contract: "EAS_CareerAttestation.sol",
-        chain: "base",
-        refSites: ["levels.fyi", "jobscan.co", "leetcode.com", "pramp.com", "ambitionbox.com", "ycombinator.com"],
-        apiUrl: "/api/vapi/voice-latency",
-        apiBody: { model_params_b: 8, stt_engine: "deepgram-nova-2", tts_engine: "cartesia-sonic" },
       };
     }
     if (path.includes("agency") || path.includes("sevenforce")) {
@@ -155,14 +120,39 @@
         key: "agency",
         name: "Sevenforce Agency",
         hubUrl: "/sevenforce/",
-        appUrl: "/agency/app/",
+        appUrl: "/sevenforce/app/",
         color: "#f59e0b",
         shape: "torusKnot",
-        contract: "ERC4337_AgentKitPaymaster.sol",
-        chain: "solana",
-        refSites: ["cognition.ai (Devin)", "langchain.com/langgraph", "crewai.com", "vapi.ai", "n8n.io", "autogen"],
-        apiUrl: "/api/langgraph/execute",
-        apiBody: { query: "Deploy 5-Node Autonomous Enterprise Swarm", venture: "agency" },
+      };
+    }
+    if (path.includes("quant-terminal")) {
+      return {
+        key: "quant",
+        name: "Sevenseed Quant Terminal",
+        hubUrl: "/quant-terminal/",
+        appUrl: "/app/",
+        color: "#10b981",
+        shape: "icosahedron",
+      };
+    }
+    if (path.includes("climate-agritech")) {
+      return {
+        key: "climate",
+        name: "TerraPulse Climate & AgriTech",
+        hubUrl: "/climate-agritech/",
+        appUrl: "/app/",
+        color: "#22c55e",
+        shape: "dodecahedron",
+      };
+    }
+    if (path.includes("proptech-studio")) {
+      return {
+        key: "proptech",
+        name: "UrbanGrid PropTech AI",
+        hubUrl: "/proptech-studio/",
+        appUrl: "/app/",
+        color: "#f59e0b",
+        shape: "box",
       };
     }
     return {
@@ -172,11 +162,6 @@
       appUrl: "/app/",
       color: "#6366f1",
       shape: "torusKnot",
-      contract: "SafeMultiSigSPV_v1.sol",
-      chain: "ethereum",
-      refSites: ["angellist.com", "carta.com", "ycombinator.com", "openrouter.ai", "crunchbase.com", "21st.dev"],
-      apiUrl: "/api/langgraph/execute",
-      apiBody: { query: "Model $10M SPV Waterfall + 20% Carry + 9-Venture Synergy", venture: "sevenseed" },
     };
   }
 
@@ -184,33 +169,36 @@
   const NAV_VENTURES = [
     { name: "Sevenseed Studio", href: "/", desc: "AI Venture Studio Hub" },
     { name: "AVPU", href: "/avpu/", desc: "AI University & Education Labs" },
-    { name: "AVP E-Mart", href: "/avp-emart/", desc: "AI Shopping & Price Radar" },
+    { name: "AVP E-Mart", href: "/avp-emart/", desc: "Shopping and price tools" },
     { name: "Comonk Technology", href: "/comonk/", desc: "AI Career & ATS Intelligence" },
     { name: "Sevenforce", href: "/sevenforce/", desc: "7 Autonomous AI Employees" },
-    { name: "Decode Forest Pharmacy", href: "/pharmacy/", desc: "Jan Aushadhi & Clinical AI" },
-    { name: "Breakdown Factor", href: "/breakdown/", desc: "CPWD Civil Engineering AI" },
+    { name: "Decode Forest Pharmacy", href: "/pharmacy/", desc: "Medicines and health tools" },
+    { name: "Breakdown Factor", href: "/breakdown/", desc: "Civil engineering tools" },
     { name: "AVP Charitable Trust", href: "/trust/", desc: "Social Impact & 80G Tax Exemption" },
-    { name: "Rakshak AI", href: "/rakshak-ai/", desc: "BNS 2023 Legal & CCTV Sentinel" },
+    { name: "Rakshak AI", href: "/rakshak-ai/", desc: "Safety and legal help" },
+    { name: "Quant Terminal", href: "/quant-terminal/", desc: "Options Greeks & FinTech Charts" },
+    { name: "TerraPulse Climate", href: "/climate-agritech/", desc: "Carbon Scope 1-3 & FAO Irrigation" },
+    { name: "UrbanGrid PropTech", href: "/proptech-studio/", desc: "DCF Cap-Rate & FSI Massing AI" },
     { name: "AgenticOS", href: "/agenticos/", desc: "Autonomous Agent Kernel OS" },
   ];
 
   const NAV_TOOLS = [
+    { name: "Deep Research", href: "/perplexity-research/", brand: "Frontier AI" },
+    { name: "Prompt-to-UI Builder", href: "/ai-ui-builder/", brand: "Frontier AI" },
+    { name: "Infinite Arch Canvas", href: "/infinite-canvas/", brand: "Frontier AI" },
+    { name: "Sprint OS", href: "/linear-os/", brand: "Frontier AI" },
+    { name: "WebGL Shader Lab", href: "/shader-3d-lab/", brand: "3D GPU" },
+    { name: "Incorporation & 83(b)", href: "/stripe-atlas/", brand: "Sevenseed" },
     { name: "Learn DAG Canvas", href: "/avpu/learn-dag/", brand: "AVPU" },
-    { name: "Duolingo League", href: "/avpu/duo-league/", brand: "AVPU" },
     { name: "Spec Comparator", href: "/avp-emart/spec-compare/", brand: "AVP E-Mart" },
-    { name: "90-Day Price Trend", href: "/avp-emart/price-tracker/", brand: "AVP E-Mart" },
-    { name: "Jobscan ATS Matcher", href: "/comonk/resume-analyzer/", brand: "Comonk" },
-    { name: "FAANG Mock Arena", href: "/comonk/interview-arena/", brand: "Comonk" },
-    { name: "LangGraph Studio", href: "/sevenforce/workflows/", brand: "Sevenforce" },
-    { name: "Devin Terminal", href: "/sevenforce/devin-terminal/", brand: "Sevenforce" },
-    { name: "Jan Aushadhi Generics", href: "/pharmacy/generic-finder/", brand: "Pharmacy" },
-    { name: "Drug Interactions", href: "/pharmacy/interaction-checker/", brand: "Pharmacy" },
+    { name: "Resume Analyzer", href: "/comonk/resume-analyzer/", brand: "Comonk" },
+    { name: "AI Dev Terminal", href: "/sevenforce/devin-terminal/", brand: "Sevenforce" },
+    { name: "Pregnancy & Breastfeeding Medicine Safety", href: "/pharmacy/pregnancy-lactation-safety/", brand: "Pharmacy" },
     { name: "CPWD BOQ Estimator", href: "/breakdown/boq-estimator/", brand: "Breakdown" },
-    { name: "80G Form 10BE", href: "/trust/tax-exemption/", brand: "AVP Trust" },
-    { name: "BNS Auto-FIR", href: "/rakshak-ai/fir-generator/", brand: "Rakshak AI" },
-    { name: "Syndicate RUV", href: "/syndicate-ruv/", brand: "Sevenseed" },
-    { name: "TAM/SAM/SOM Sizer", href: "/market-sizing/", brand: "Sevenseed" },
-    { name: "BYOK Vault", href: "/byok/", brand: "Sevenseed" },
+    { name: "Milestone Escrow", href: "/trust/crowdfunding-milestones/", brand: "AVP Trust" },
+    { name: "FIR Draft Helper", href: "/rakshak-ai/fir-generator/", brand: "Rakshak AI" },
+    { name: "Syndicate Calculator", href: "/syndicate-ruv/", brand: "Sevenseed" },
+    { name: "Your AI Keys", href: "/byok/", brand: "Sevenseed" },
   ];
 
   let navAutoCloseTimer = null;
@@ -366,9 +354,7 @@
         <a href="${v.hubUrl}" style="font-size:11.5px;font-weight:700;color:#94a3b8;text-decoration:none;padding:4px 10px;border-radius:8px;border:1px solid rgba(148,163,184,0.2);">
           ← ${v.name} Hub
         </a>
-        <a href="${v.appUrl}" style="font-size:11.5px;font-weight:800;color:#38bdf8;text-decoration:none;padding:4px 10px;border-radius:8px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.35);">
-          ⚡ Vite /app
-        </a>
+
       </div>
     `;
     if (mainEl && mainEl.parentNode) {
@@ -391,9 +377,9 @@
       const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
       camera.position.z = 4.3;
 
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
       renderer.setSize(w, h, false);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(1);
 
       const col = new THREE.Color(v.color);
       scene.add(new THREE.AmbientLight(0xffffff, 0.85));
@@ -446,12 +432,13 @@
       });
 
       function tick() {
-        requestAnimationFrame(tick);
+        setTimeout(() => requestAnimationFrame(tick), 45);
+        if (document.hidden) return;
         if (!dragging) {
-          group.rotation.y += 0.008;
-          group.rotation.x += 0.004;
+          group.rotation.y += 0.016;
+          group.rotation.x += 0.008;
         }
-        ring.rotation.z += 0.012;
+        ring.rotation.z += 0.022;
         renderer.render(scene, camera);
       }
       tick();
@@ -492,217 +479,136 @@
     }
   }
 
-  // 5. Venture Web3 & Reference API Workbench Footer Section
-  function injectVentureWeb3AndRefFooterSection() {
-    if (document.getElementById("adv-web3-ref-section")) return;
+  // 5. "Fingerprint a file" panel: a small, real Web3 tool on every venture page, plus the
+  // venture's tool directory. The fingerprint is computed in the browser; signing or putting
+  // it on chain happens in /web3-studio/ with the visitor's own wallet.
+  const SS_PROOF_USE = {
+    avpu: "Fingerprint a certificate or assignment so you can later prove it's the original.",
+    emart: "Fingerprint an invoice or warranty card to settle a refund or warranty dispute.",
+    pharmacy: "Fingerprint a prescription or lab report so you can show it wasn't altered.",
+    breakdown: "Fingerprint inspection reports, drawings or bills of quantities at each milestone.",
+    trust: "Fingerprint a donation receipt or report so anyone can check it wasn't changed.",
+    rakshak: "Fingerprint photos, videos or screenshots as evidence, as soon as you have them.",
+    comonk: "Fingerprint an offer letter or experience letter so it can be checked later.",
+    agency: "Fingerprint a contract, spec or delivery so both sides keep the same version.",
+    sevenseed: "Fingerprint any document so you can later prove it existed and hasn't changed.",
+  };
+  const SS_TOOL_DIRECTORY = {
+    avpu: [
+      ["Knowledge map", "/avpu/learn-dag/"], ["Topic search", "/avpu/topic-search.html"], ["Review queue", "/avpu/review-queue.html"],
+      ["100-day challenge", "/avpu/100-day-challenge.html"], ["AI learning path", "/avpu/ai-learning-path.html"], ["AI tutor", "/avpu/ai-tutor/"],
+      ["Code lab", "/avpu/code-lab/"], ["Learning league", "/avpu/duo-league/"], ["Laws of UX", "/avpu/laws-of-ux/"],
+      ["Mental models", "/avpu/mental-models/"], ["Marketing teardowns", "/avpu/marketing-teardowns/"], ["Flashcards", "/avpu/flashcards/"],
+      ["Courses", "/avpu/courses/"], ["Scholarships", "/avpu/scholarships.html"], ["Certificates", "/avpu/credentials/"],
+    ],
+    emart: [
+      ["Spec comparison", "/avp-emart/spec-compare/"], ["Price log", "/avp-emart/price-tracker/"], ["Coupon tester", "/avp-emart/coupon-tester/"],
+      ["Deal checker", "/avp-emart/deals-radar/"], ["Grocery basket comparer", "/avp-emart/qcommerce/"], ["Wishlist", "/avp-emart/wishlist/"],
+      ["Fake discount detector", "/avp-emart/deal-scanner/"], ["Shopping discovery", "/avp-emart/shopping-discovery.html"],
+    ],
+    pharmacy: [
+      ["Generic medicine finder", "/pharmacy/generic-finder/"], ["Drug interaction checker", "/pharmacy/interaction-checker/"],
+      ["Doctor consultation", "/pharmacy/doctor-consultation/"], ["Hospital finder", "/pharmacy/hospital-finder/"],
+      ["Medicine reminders", "/pharmacy/medicine-reminders/"], ["Health wiki", "/decode-forest-pharmacy/health-wiki.html"],
+      ["Prescription reader", "/decode-forest-pharmacy/prescription-ocr.html"],
+    ],
+    breakdown: [
+      ["BOQ estimator", "/breakdown/boq-estimator/"], ["Material rate sheet", "/breakdown/material-prices/"],
+      ["Project timeline", "/breakdown/project-timeline/"], ["Crack scanner", "/breakdown-factor/cv-scanner.html"],
+      ["Site safety audit", "/breakdown-factor/safety-audit.html"],
+    ],
+    trust: [
+      ["80G deduction calculator", "/trust/tax-exemption/"], ["Support a cause", "/trust/campaigns/"],
+      ["Donation records", "/trust/ledger/"], ["Volunteer", "/trust/volunteer/"], ["Health camps", "/avp-charitable-trust/health-camps.html"],
+    ],
+    rakshak: [
+      ["FIR draft helper", "/rakshak-ai/fir-generator/"], ["Scam link checker", "/rakshak-ai/threat-radar/"],
+      ["Personal safety planner", "/rakshak-ai/safety-heatmap/"], ["Missing person report", "/rakshak-ai/missing-person/"],
+      ["Data protection check", "/rakshak-ai/dpdp-auditor.html"],
+    ],
+    comonk: [
+      ["Resume analyzer", "/comonk/resume-analyzer/"], ["Mock interview", "/comonk/interview-arena/"], ["Salary insights", "/comonk/salary-insights/"],
+      ["Company & offer scorecard", "/comonk/company-reviews/"], ["Interview experiences", "/comonk/interview-experiences/"],
+    ],
+    agency: [
+      ["AI dev terminal", "/sevenforce/devin-terminal/"], ["Workflow builder", "/sevenforce/workflows/"],
+      ["AI employees", "/sevenforce/marketplace/"], ["ROI calculator", "/sevenforce/roi-calculator/"],
+      ["Growth flywheel", "/sevenforce/flywheel-simulator.html"],
+    ],
+    sevenseed: [
+      ["All ventures", "/ventures/"], ["AgenticOS", "/agenticos/"], ["Syndicate calculator", "/syndicate-ruv/"],
+      ["Market sizing", "/market-sizing/"], ["Your AI keys", "/byok/"], ["Web3 Studio", "/web3-studio/"],
+    ],
+  };
+
+  function ssProofHex(buf) {
+    return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  function injectVentureProofSection() {
+    if (document.getElementById("ss-proof") || path.indexOf("/web3-studio") === 0) return;
     const mainEl = document.querySelector("main") || document.body;
     const footerEl = mainEl.querySelector("footer");
     const v = detectVentureProfile();
+    const tools = SS_TOOL_DIRECTORY[v.key] || [];
 
     const sec = document.createElement("section");
-    sec.id = "adv-web3-ref-section";
-    sec.className = "relative z-20 max-w-7xl mx-auto px-6 py-10 my-8 rounded-3xl border border-slate-800/90 bg-slate-950/90 backdrop-blur-xl shadow-2xl";
+    sec.id = "ss-proof";
+    sec.setAttribute("aria-labelledby", "ss-proof-h");
     sec.innerHTML = `
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-slate-800/80 pb-6">
+      <div class="ss-proof-grid">
         <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-[11px] font-mono text-indigo-300 mb-2">
-            <span>⛓️ WEB3 SMART ACCOUNT + VITE v6.0 + 64-REFERENCE-SITE ENGINE</span>
-          </div>
-          <h3 class="text-2xl font-extrabold text-white">${v.name} — On-Chain & Reference Workbench</h3>
-          <p class="text-xs text-slate-300 mt-1">Deeply scanned reference modules: <strong class="text-white">${v.refSites.join(" · ")}</strong></p>
+          <p class="ss-proof-eyebrow">Proof of file · Web3</p>
+          <h2 id="ss-proof-h">Fingerprint a file</h2>
+          <p class="ss-proof-text">${SS_PROOF_USE[v.key] || SS_PROOF_USE.sevenseed} The file stays on your device.</p>
+          <label class="ss-proof-drop">
+            <input type="file" id="ss-proof-file" />
+            <span><strong>Choose a file</strong> to get its SHA-256 fingerprint</span>
+          </label>
+          <div id="ss-proof-out" aria-live="polite"></div>
         </div>
-        <div class="flex flex-wrap items-center gap-2.5">
-          <select id="adv-page-chain" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-slate-200">
-            <option value="polygon" ${v.chain === "polygon" ? "selected" : ""}>🟣 Polygon POS (137)</option>
-            <option value="base" ${v.chain === "base" ? "selected" : ""}>🔵 Base L2 (8453)</option>
-            <option value="solana" ${v.chain === "solana" ? "selected" : ""}>🟢 Solana Mainnet</option>
-            <option value="ethereum" ${v.chain === "ethereum" ? "selected" : ""}>💎 Ethereum (1)</option>
-            <option value="arbitrum" ${v.chain === "arbitrum" ? "selected" : ""}>🔷 Arbitrum (42161)</option>
-          </select>
-          <button id="adv-page-web3-btn" type="button" class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs font-mono shadow-lg transition">
-            ⛓️ Mint / Execute ${v.contract}
-          </button>
-          <button id="adv-page-api-btn" type="button" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-extrabold text-xs font-mono shadow-lg transition">
-            ⚡ Run Live Reference API
-          </button>
-          <a href="${v.appUrl}" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sky-300 font-bold text-xs font-mono transition">
-            🚀 Open Vite /app Portal →
-          </a>
-        </div>
-      </div>
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6 text-xs font-mono">
-        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-          <div class="text-slate-400 text-[10px] uppercase">Active Smart Contract</div>
-          <div class="text-sm font-bold text-indigo-300 mt-1">${v.contract}</div>
-          <div class="text-[11px] text-slate-400 mt-1">ERC-4337 Account Abstraction · Gas Sponsored</div>
-        </div>
-        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-          <div class="text-slate-400 text-[10px] uppercase">Reference API Endpoint</div>
-          <div class="text-sm font-bold text-emerald-300 mt-1">POST ${v.apiUrl}</div>
-          <div class="text-[11px] text-slate-400 mt-1">Connected to 393-Route FastAPI Engine</div>
-        </div>
-        <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
-          <div class="text-slate-400 text-[10px] uppercase">UI / 3D Design System</div>
-          <div class="text-sm font-bold text-amber-300 mt-1">21st.dev · Spline · Aceternity · Aura</div>
-          <div class="text-[11px] text-slate-400 mt-1">100% Distinct Venture Theme Preserved</div>
-        </div>
-      </div>
-      <div class="mt-4 p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80">
-        <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-2">Complete ${v.name} Workstation & Tool Directory</div>
-        <div class="flex flex-wrap gap-2 text-[11px] font-mono">
-          ${(
-            {
-              avpu: [
-                ["Knowledge DAG", "/avpu/learn-dag/"],
-                ["Topic Search", "/avpu/topic-search.html"],
-                ["SM-2 Review Queue", "/avpu/review-queue.html"],
-                ["100-Day Challenge", "/avpu/100-day-challenge.html"],
-                ["AI Learning Path", "/avpu/ai-learning-path.html"],
-                ["AI Socratic Tutor", "/avpu/ai-tutor/"],
-                ["Code Lab IDE", "/avpu/code-lab/"],
-                ["Duolingo League", "/avpu/duo-league/"],
-                ["Laws of UX", "/avpu/laws-of-ux/"],
-                ["Mental Models", "/avpu/mental-models/"],
-                ["Marketing Teardowns", "/avpu/marketing-teardowns/"],
-                ["Flashcards (Leitner)", "/avpu/flashcards/"],
-                ["Courses & Modules", "/avpu/courses/"],
-                ["Scholarships", "/avpu/scholarships.html"],
-                ["Certifications", "/avpu/credentials/"],
-                ["Evervault Crypto Lab", "/avpu/evervault-lab.html"],
-              ],
-              emart: [
-                ["Spec Comparator", "/avp-emart/spec-compare/"],
-                ["90-Day Price Tracker", "/avp-emart/price-tracker/"],
-                ["Auto-Coupon Tester", "/avp-emart/coupon-tester/"],
-                ["Live Deals Radar", "/avp-emart/deals-radar/"],
-                ["Q-Commerce Radar", "/avp-emart/qcommerce/"],
-                ["Smart Wishlist", "/avp-emart/wishlist/"],
-                ["AI Deal Scanner", "/avp-emart/deal-scanner/"],
-                ["Shopping Discovery", "/avp-emart/shopping-discovery.html"],
-              ],
-              pharmacy: [
-                ["Jan Aushadhi Generic Finder", "/pharmacy/generic-finder/"],
-                ["CYP450 Interaction Checker", "/pharmacy/interaction-checker/"],
-                ["Doctor Consultation", "/pharmacy/doctor-consultation/"],
-                ["Hospital & Camp Finder", "/pharmacy/hospital-finder/"],
-                ["Medicine Reminders", "/pharmacy/medicine-reminders/"],
-                ["Clinical Health Wiki", "/decode-forest-pharmacy/health-wiki.html"],
-                ["Prescription OCR Lab", "/decode-forest-pharmacy/prescription-ocr.html"],
-              ],
-              breakdown: [
-                ["CPWD BOQ Estimator", "/breakdown/boq-estimator/"],
-                ["Live Material Prices", "/breakdown/material-prices/"],
-                ["CPM Project Timeline", "/breakdown/project-timeline/"],
-                ["YOLOv8 Crack Scanner", "/breakdown-factor/cv-scanner.html"],
-                ["OSHA Safety Audit", "/breakdown-factor/safety-audit.html"],
-              ],
-              trust: [
-                ["80G / Form 10BE Calculator", "/trust/tax-exemption/"],
-                ["Active Causes & Campaigns", "/trust/campaigns/"],
-                ["Merkle Donation Ledger", "/trust/ledger/"],
-                ["Volunteer Portal", "/trust/volunteer/"],
-                ["Health Camps", "/avp-charitable-trust/health-camps.html"],
-              ],
-              rakshak: [
-                ["BNS 2023 FIR Generator", "/rakshak-ai/fir-generator/"],
-                ["Cyber Threat Radar", "/rakshak-ai/threat-radar/"],
-                ["Live Safety Heatmap", "/rakshak-ai/safety-heatmap/"],
-                ["Missing Person Biometrics", "/rakshak-ai/missing-person/"],
-                ["DPDP 2023 Auditor", "/rakshak-ai/dpdp-auditor.html"],
-              ],
-              comonk: [
-                ["ATS Resume Analyzer", "/comonk/resume-analyzer/"],
-                ["AI Mock Interview Arena", "/comonk/interview-arena/"],
-                ["Levels.fyi Salary Insights", "/comonk/salary-insights/"],
-                ["Verified Company Reviews", "/comonk/company-reviews/"],
-                ["Real Interview Experiences", "/comonk/interview-experiences/"],
-              ],
-              agency: [
-                ["Devin Autonomous Terminal", "/sevenforce/devin-terminal/"],
-                ["LangGraph Workflow Builder", "/sevenforce/workflows/"],
-                ["7-Agent Marketplace", "/sevenforce/marketplace/"],
-                ["Enterprise ROI Calculator", "/sevenforce/roi-calculator/"],
-                ["Growth Flywheel Simulator", "/sevenforce/flywheel-simulator.html"],
-              ],
-              hub: [
-                ["Ventures Directory", "/ventures/"],
-                ["AgenticOS Control Plane", "/agenticos/"],
-                ["Syndicate RUV Calculator", "/syndicate-ruv/"],
-                ["TAM/SAM/SOM Market Sizing", "/market-sizing/"],
-                ["Universal BYOK Key Vault", "/byok/"],
-                ["LangGraph Studio", "/langgraph-studio/"],
-                ["Web3 Multi-Chain Studio", "/web3-studio/"],
-                ["Quantum All-in-One Deck", "/quantum-deck/"],
-              ],
-            }[v.key] || []
-          )
-            .map(
-              ([label, url]) =>
-                `<a href="${url}" class="px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-indigo-600/30 border border-slate-700 hover:border-indigo-400 text-slate-200 transition">${label}</a>`
-            )
-            .join("")}
-        </div>
-      </div>
-      <pre id="adv-page-output" class="mt-4 p-4 rounded-2xl bg-black/70 border border-slate-800 text-[11px] font-mono text-emerald-300 overflow-x-auto max-h-56">Click "⛓️ Mint / Execute ${v.contract}" or "⚡ Run Live Reference API" above to execute live backend & Web3 transactions...</pre>
-    `;
+        ${tools.length ? `<nav aria-label="${v.name} tools"><p class="ss-proof-eyebrow">More ${v.name} tools</p><ul class="ss-proof-tools"></ul></nav>` : ""}
+      </div>`;
+    const list = sec.querySelector(".ss-proof-tools");
+    tools.forEach(([label, href]) => {
+      if (href.replace(/\/$/, "") === path.replace(/\/$/, "").replace(/\.html$/, "")) return;
+      list.appendChild(ssEl("li", {}, [ssEl("a", { textContent: label, href })]));
+    });
 
-    if (footerEl && footerEl.parentNode === mainEl) {
-      mainEl.insertBefore(sec, footerEl);
-    } else {
-      mainEl.appendChild(sec);
-    }
+    if (footerEl && footerEl.parentNode === mainEl) mainEl.insertBefore(sec, footerEl);
+    else mainEl.appendChild(sec);
 
-    const outPre = document.getElementById("adv-page-output");
-    const web3Btn = document.getElementById("adv-page-web3-btn");
-    const apiBtn = document.getElementById("adv-page-api-btn");
-    const chainSel = document.getElementById("adv-page-chain");
-
-    if (web3Btn && outPre) {
-      web3Btn.addEventListener("click", async () => {
-        const chain = chainSel ? chainSel.value : v.chain;
-        outPre.textContent = `[Web3] Broadcasting ${v.contract} transaction on ${chain.toUpperCase()}...`;
-        try {
-          const res = await fetch("/api/web3/execute", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ venture: v.key, chain, action: "execute_contract" }),
-          });
-          const data = await res.json();
-          outPre.textContent = JSON.stringify(data, null, 2);
-        } catch (err) {
-          outPre.textContent = "Error: " + String(err);
-        }
-      });
-    }
-
-    if (apiBtn && outPre) {
-      apiBtn.addEventListener("click", async () => {
-        outPre.textContent = `[FastAPI] Executing POST ${v.apiUrl}...`;
-        try {
-          const res = await fetch(v.apiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(v.apiBody),
-          });
-          const data = await res.json();
-          outPre.textContent = JSON.stringify(data, null, 2);
-        } catch (err) {
-          outPre.textContent = "Error: " + String(err);
-        }
-      });
-    }
+    const out = sec.querySelector("#ss-proof-out");
+    sec.querySelector("#ss-proof-file").addEventListener("change", async (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      out.textContent = "Working…";
+      try {
+        const hash = ssProofHex(await crypto.subtle.digest("SHA-256", await f.arrayBuffer()));
+        out.innerHTML = "";
+        out.appendChild(ssEl("p", { className: "ss-proof-name", textContent: f.name }));
+        out.appendChild(ssEl("code", { className: "ss-proof-hash", textContent: hash }));
+        const copy = ssEl("button", { type: "button", className: "ss-proof-btn", textContent: "Copy" });
+        copy.addEventListener("click", () => {
+          navigator.clipboard && navigator.clipboard.writeText(hash).then(() => { copy.textContent = "Copied"; });
+        });
+        const go = ssEl("a", { className: "ss-proof-btn ss-proof-primary", textContent: "Sign or record it on chain →", href: "/web3-studio/?hash=" + hash });
+        out.appendChild(ssEl("div", { className: "ss-proof-actions" }, [copy, go]));
+      } catch (err) {
+        out.textContent = "Couldn't read that file: " + String(err && err.message ? err.message : err);
+      }
+    });
   }
 
   function injectFloatingQuickDock() {
-    if (document.getElementById("adv-floating-dock")) return;
+    if (document.getElementById("adv-floating-dock") || path.indexOf("/web3-studio") === 0) return;
     const v = detectVentureProfile();
     const dock = document.createElement("div");
     dock.id = "adv-floating-dock";
     dock.innerHTML = `
-      <span class="adv-dock-badge" style="color:${v.color};border-color:${v.color}55">${v.name}</span>
-      <a href="${v.appUrl}" class="adv-dock-btn">⚡ Launch Vite /app</a>
-      <a href="#adv-web3-ref-section" class="adv-dock-btn adv-dock-btn-secondary">⛓️ Web3 & Ref API</a>
-      <a href="/web3-studio/" class="adv-dock-btn adv-dock-btn-secondary">🌐 Web3 Studio</a>
+      <a href="${v.hubUrl}" class="adv-dock-btn">${v.key === "sevenseed" ? "Sevenseed home" : v.name}</a>
+      <a href="#ss-proof" class="adv-dock-btn adv-dock-btn-secondary">Fingerprint a file</a>
+      <a href="/web3-studio/" class="adv-dock-btn adv-dock-btn-secondary">Web3 Studio</a>
     `;
     document.body.appendChild(dock);
   }
@@ -712,7 +618,13 @@
   const SS_VENTURES = [
     ["Comonk Technology", "/comonk/"], ["Sevenforce", "/sevenforce/"], ["AVP University", "/avpu/"],
     ["AVP E-Mart", "/avp-emart/"], ["Decode Forest Pharmacy", "/pharmacy/"], ["Breakdown Factor", "/breakdown/"],
-    ["AVP Charitable Trust", "/trust/"], ["Rakshak AI", "/rakshak-ai/"], ["AgenticOS", "/agenticos/"],
+    ["AVP Charitable Trust", "/trust/"], ["Rakshak AI", "/rakshak-ai/"], ["Quant Terminal", "/quant-terminal/"],
+    ["TerraPulse Climate", "/climate-agritech/"], ["UrbanGrid PropTech", "/proptech-studio/"], ["AgenticOS", "/agenticos/"],
+  ];
+  const SS_STUDIOS = [
+    ["Deep Research", "/perplexity-research/"], ["Prompt-to-UI Builder", "/ai-ui-builder/"],
+    ["Infinite Arch Canvas", "/infinite-canvas/"], ["Sprint OS", "/linear-os/"],
+    ["WebGL2 Shader Lab", "/shader-3d-lab/"], ["Incorporation & 83(b)", "/stripe-atlas/"],
   ];
   const SS_SPROUT = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></svg>';
 
@@ -729,7 +641,7 @@
   function ssFindLegacyNavs() {
     const vw = window.innerWidth;
     const found = Array.from(document.querySelectorAll('nav, .nav, .navbar, #mainNav, #navbar, [class*="topnav"], [class*="top-nav"]')).filter((el) => {
-      if (el.closest("#ss-bar, #adv-web3-ref-section, #adv-floating-dock, main, article")) return false;
+      if (el.closest("#ss-bar, #ss-proof, #adv-floating-dock, main, article")) return false;
       const box = el.getBoundingClientRect();
       const style = getComputedStyle(el);
       return style.display !== "none" && box.height > 0 && box.height < 170 && box.top < 130 && box.width > vw * 0.5 && !el.querySelector("h1");
@@ -766,7 +678,7 @@
     const groups = [];
     if (sectionLinks.length) groups.push(makeList("In this section", sectionLinks.slice(0, 12)));
     groups.push(makeList("Ventures", SS_VENTURES));
-    if (!sectionLinks.length) groups.push(makeList("Sevenseed", [["Home", "/"], ["All ventures", "/ventures/"], ["Contact", "/#contact"]]));
+    groups.push(makeList("Frontier Studios", SS_STUDIOS));
     const menu = ssEl("div", { id: "ss-menu", hidden: true }, groups);
 
     const toggle = ssEl("button", { type: "button", textContent: "Menu" });
@@ -812,17 +724,200 @@
       ssEl("ul", { className: className || "" }, links.map(([label, href]) => ssEl("li", {}, [ssEl("a", { textContent: label, href })])));
     const about = ssEl("div", {}, [
       ssEl("p", { className: "ss-name", textContent: "Sevenseed" }),
-      ssEl("p", { textContent: "An AI venture studio in Ahmedabad, building nine companies on one shared platform." }),
+      ssEl("p", { textContent: "An AI venture studio in Ahmedabad, building intelligent ventures and developer studios on one shared platform." }),
     ]);
     const ventures = ssEl("div", {}, [ssEl("h2", { textContent: "Ventures" }), list(SS_VENTURES, "ss-two")]);
     const company = ssEl("div", {}, [
-      ssEl("h2", { textContent: "Sevenseed" }),
-      list([["Home", "/"], ["All ventures", "/ventures/"], ["Contact", "/#contact"], ["hello@sevenseed.in", "mailto:hello@sevenseed.in"]]),
+      ssEl("h2", { textContent: "Frontier Studios" }),
+      list([["Home", "/"], ["Deep Research", "/perplexity-research/"], ["Prompt-to-UI Builder", "/ai-ui-builder/"], ["Sprint OS", "/linear-os/"], ["Shader Lab", "/shader-3d-lab/"], ["Incorporation & 83(b)", "/stripe-atlas/"]]),
     ]);
     const legal = ssEl("p", { className: "ss-legal", textContent: "© " + new Date().getFullYear() + " Sevenseed. All rights reserved." });
     const foot = ssEl("footer", { id: "ss-foot" }, [ssEl("div", { className: "ss-grid" }, [about, ventures, company]), legal]);
     document.body.appendChild(foot);
   }
+
+  // 8. v7.0 Scroll-Progress Laser & Cursor-Reactive Specular Cards
+  function wireScrollLaserAndSpecularCards() {
+    if (!document.getElementById("adv-scroll-laser")) {
+      const laser = document.createElement("div");
+      laser.id = "adv-scroll-laser";
+      laser.setAttribute("aria-hidden", "true");
+      document.body.appendChild(laser);
+      let ticking = false;
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(() => {
+            const docH = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+            const pct = Math.min(100, Math.max(0, (window.scrollY / docH) * 100));
+            laser.style.width = pct.toFixed(1) + "%";
+            ticking = false;
+          });
+        },
+        { passive: true }
+      );
+    }
+
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    document.querySelectorAll(".adv-v7-card").forEach((card) => {
+      if (card.dataset.specWired === "1") return;
+      card.dataset.specWired = "1";
+      card.classList.add("adv-specular-card");
+      card.addEventListener("pointermove", (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty("--mx", e.clientX - r.left + "px");
+        card.style.setProperty("--my", e.clientY - r.top + "px");
+      });
+    });
+  }
+
+  // 9. v7.0 Global Cmd+K / Ctrl+K Command Palette & Inline Cited Research Omnibox
+  const CMDK_ITEMS = [
+    { label: "Deep Research Copilot", url: "/perplexity-research/", tag: "v7.0 AI Studio", kw: "search citations exa arxiv rag" },
+    { label: "Prompt-to-UI Builder", url: "/ai-ui-builder/", tag: "v7.0 AI Studio", kw: "react tailwind code generator preview" },
+    { label: "Infinite System Architecture Whiteboard", url: "/infinite-canvas/", tag: "v7.0 AI Studio", kw: "excalidraw eraser diagram rps latency" },
+    { label: "Engineering Sprint OS", url: "/linear-os/", tag: "v7.0 AI Studio", kw: "issues kanban monte carlo velocity" },
+    { label: "Sevenseed Quant & Options Greeks Terminal", url: "/quant-terminal/", tag: "v7.0 Venture", kw: "black scholes tradingview kelly bollinger rsi" },
+    { label: "TerraPulse Climate & AgriTech AI", url: "/climate-agritech/", tag: "v7.0 Venture", kw: "carbon cbam scope 1 2 3 irrigation solar lcoe" },
+    { label: "UrbanGrid PropTech & Real Estate AI", url: "/proptech-studio/", tag: "v7.0 Venture", kw: "dcf cap rate emi rent vs buy fsi zoning" },
+    { label: "Live WebGL2 Shader Lab", url: "/shader-3d-lab/", tag: "v7.0 3D GPU", kw: "glsl fragment shader 3d uniform" },
+    { label: "Incorporation & 83(b) Studio", url: "/stripe-atlas/", tag: "v7.0 Founder", kw: "delaware c-corp india mca gift city vesting" },
+    { label: "Pregnancy & Breastfeeding Medicine Safety", url: "/pharmacy/pregnancy-lactation-safety/", tag: "v7.0 Clinical", kw: "rid milk grapefruit warfarin pediatric dose" },
+    { label: "Crowdfunding Milestone Planner", url: "/trust/crowdfunding-milestones/", tag: "v7.0 Impact", kw: "tranche csr matching medical campaign" },
+    { label: "Sevenseed Venture Studio Hub", url: "/", tag: "Hub", kw: "home ecosystem portfolio" },
+
+    { label: "AVP University (AVPU)", url: "/avpu/", tag: "Venture", kw: "education dag flashcards courses" },
+    { label: "AVP E-Mart Smart Shopping", url: "/avp-emart/", tag: "Venture", kw: "price tracker deals qcommerce" },
+    { label: "Decode Forest Pharmacy", url: "/pharmacy/", tag: "Venture", kw: "jan aushadhi generics interactions" },
+    { label: "Breakdown Factor Civil AI", url: "/breakdown/", tag: "Venture", kw: "boq cpwd construction timeline" },
+    { label: "AVP Charitable Trust", url: "/trust/", tag: "Venture", kw: "80g form 10be ledger" },
+    { label: "Rakshak AI Safety & Legal", url: "/rakshak-ai/", tag: "Venture", kw: "bns fir cyber threat radar" },
+    { label: "Comonk Career Intelligence", url: "/comonk/", tag: "Venture", kw: "ats resume mock interview salary" },
+    { label: "Sevenforce AI Employees", url: "/sevenforce/", tag: "Venture", kw: "agents automation roi coding assistant" },
+    { label: "Web3 Live Chain & Proof Studio", url: "/web3-studio/", tag: "Web3", kw: "ethereum polygon base solana sha256" },
+    { label: "Universal BYOK API Key Vault", url: "/byok/", tag: "Settings", kw: "groq gemini openai anthropic" },
+  ];
+
+  function openCommandPalette() {
+    wireGlobalCommandPalette();
+    const bd = document.getElementById("adv-cmdk-backdrop");
+    const inp = document.getElementById("adv-cmdk-input");
+    if (!bd) return;
+    bd.classList.add("open");
+    if (inp) {
+      inp.value = "";
+      inp.dispatchEvent(new Event("input"));
+      setTimeout(() => inp.focus(), 20);
+    }
+  }
+
+  function closeCommandPalette() {
+    const bd = document.getElementById("adv-cmdk-backdrop");
+    if (bd) bd.classList.remove("open");
+  }
+
+  function wireGlobalCommandPalette() {
+    if (document.getElementById("adv-cmdk-backdrop")) return;
+    const bd = document.createElement("div");
+    bd.id = "adv-cmdk-backdrop";
+    bd.setAttribute("role", "dialog");
+    bd.setAttribute("aria-modal", "true");
+    bd.setAttribute("aria-label", "Command Palette & Research Omnibox");
+    bd.innerHTML = `
+      <div id="adv-cmdk-dialog">
+        <div id="adv-cmdk-header">
+          <span style="font-size:15px;color:#38bdf8;font-weight:800;">⌘K</span>
+          <input id="adv-cmdk-input" type="text" placeholder="Jump to any Venture/Studio, or type a question and click Ask AI..." autocomplete="off" />
+          <button type="button" id="adv-cmdk-ask-btn" style="padding:6px 12px;border-radius:10px;border:1px solid rgba(16,185,129,0.5);background:rgba(16,185,129,0.18);color:#6ee7b7;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">🔎 Ask Research AI</button>
+          <button type="button" id="adv-cmdk-close-btn" style="padding:5px 10px;border-radius:8px;border:1px solid rgba(148,163,184,0.25);background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;">Esc</button>
+        </div>
+        <div id="adv-cmdk-ai-out"></div>
+        <div id="adv-cmdk-list"></div>
+        <div id="adv-cmdk-foot">
+          <span>↑↓ / Click to navigate · Enter opens top match</span>
+          <span>126 Reference Sites · 13 Ventures & Frontier Studios</span>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(bd);
+
+    const inp = document.getElementById("adv-cmdk-input");
+    const listEl = document.getElementById("adv-cmdk-list");
+    const aiOut = document.getElementById("adv-cmdk-ai-out");
+    const askBtn = document.getElementById("adv-cmdk-ask-btn");
+    const closeBtn = document.getElementById("adv-cmdk-close-btn");
+
+    function renderMatches(q) {
+      const needle = (q || "").trim().toLowerCase();
+      const filtered = !needle
+        ? CMDK_ITEMS
+        : CMDK_ITEMS.filter((it) => (it.label + " " + it.tag + " " + it.kw + " " + it.url).toLowerCase().includes(needle));
+      listEl.innerHTML = filtered.length
+        ? filtered
+            .slice(0, 14)
+            .map(
+              (it, idx) => `
+            <a href="${it.url}" class="adv-cmdk-item${idx === 0 ? " active" : ""}">
+              <span>${it.label}</span>
+              <span class="adv-cmdk-tag">${it.tag}</span>
+            </a>`
+            )
+            .join("")
+        : `<div style="padding:14px;color:#94a3b8;font-size:13px;">No direct route match for "${needle.replace(/[<>&"]/g, "")}" — click <strong>🔎 Ask Research AI</strong> above to run multi-source cited research.</div>`;
+    }
+
+    renderMatches("");
+    inp.addEventListener("input", () => renderMatches(inp.value));
+    inp.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const first = listEl.querySelector("a.adv-cmdk-item");
+        if (first) {
+          window.location.href = first.getAttribute("href");
+        } else {
+          askBtn.click();
+        }
+      }
+    });
+
+    askBtn.addEventListener("click", async () => {
+      const q = (inp.value || "").trim() || "Compare Delaware C-Corp vs India Pvt Ltd for AI startups";
+      aiOut.style.display = "block";
+      aiOut.textContent = "Synthesizing cited multi-hop research for: " + q + " ...";
+      try {
+        const res = await fetch("/api/perplexity/research", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: q, focus: "all" }),
+        });
+        const data = await res.json();
+        const cites = (data.sources || []).map((s) => `[${s.id}] ${s.title} (${s.url})`).join("\n");
+        aiOut.textContent = (data.cited_answer_markdown || "") + "\nSources:\n" + cites;
+      } catch (err) {
+        aiOut.textContent = "Research request failed: " + String(err);
+      }
+    });
+
+    closeBtn.addEventListener("click", closeCommandPalette);
+    bd.addEventListener("click", (e) => {
+      if (e.target === bd) closeCommandPalette();
+    });
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      const bd = document.getElementById("adv-cmdk-backdrop");
+      if (bd && bd.classList.contains("open")) {
+        closeCommandPalette();
+      } else {
+        openCommandPalette();
+      }
+    } else if (e.key === "Escape") {
+      closeCommandPalette();
+    }
+  });
 
   function boot() {
     wireUniversalNavbar();
@@ -830,10 +925,12 @@
     // The homepage has its own footer and calls to action; these bars belong on tool pages.
     if (path !== "/" && path !== "/index.html") {
       injectFloatingQuickDock();
-      injectVentureWeb3AndRefFooterSection();
+      injectVentureProofSection();
     }
     injectSiteBar();
     injectSiteFooter();
+    wireScrollLaserAndSpecularCards();
+    wireGlobalCommandPalette();
     setTimeout(() => {
       hydrateHero3DContainers();
     }, 150);
@@ -845,11 +942,26 @@
       boot();
       return;
     }
-    const runAfterHydration = () => setTimeout(boot, 90);
+    const waitForReactHydration = () => {
+      const t0 = performance.now();
+      const poll = () => {
+        const m = document.querySelector("main");
+        const target = (m && m.lastElementChild) || m || document.body;
+        const hydrated =
+          target &&
+          Object.keys(target).some((k) => k.startsWith("__reactFiber$") || k.startsWith("__reactProps$"));
+        if (hydrated || performance.now() - t0 > 1500) {
+          requestAnimationFrame(() => setTimeout(boot, 20));
+        } else {
+          setTimeout(poll, 25);
+        }
+      };
+      poll();
+    };
     if (document.readyState === "complete") {
-      runAfterHydration();
+      waitForReactHydration();
     } else {
-      window.addEventListener("load", runAfterHydration, { once: true });
+      window.addEventListener("load", waitForReactHydration, { once: true });
     }
   }
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Advance Site Router for Sevenseed Hub (`advance_site_router.py`)
-Exposes LangChain + LangGraph Cyclic StateGraph, BuyHatke Spend Lens,
-LearnAnythingAI.in + Obsidian Classroom, SkyCiv Beam Solver, Canva Magic Design,
+Exposes LangChain + LangGraph Cyclic StateGraph, price-history Spend Lens,
+learning-map + notes Classroom, structural Beam Solver, design Magic Design,
 and AngularJS 1.8 Enterprise Telemetry on the main Sevenseed Render server.
 """
 
@@ -23,12 +23,12 @@ VENTURE_KNOWLEDGE_CORPUS: List[Dict[str, Any]] = [
         "id": "doc-avp-emart",
         "venture": "AVP Emart",
         "domain": "ecommerce",
-        "keywords": ["price", "smartprix", "buyhatke", "xerve", "shopping", "coupon", "iphone", "oneplus", "samsung", "emart"],
-        "title": "AVP Emart — Google Shopping (?udm=28) + Smartprix + BuyHatke + Xerve Engine",
+        "keywords": ["price", "spec-comparison", "price-history", "coupon", "shopping", "coupon", "iphone", "oneplus", "samsung", "emart"],
+        "title": "AVP Emart — shopping search + spec-comparison + price-history + coupon Engine",
         "content": (
-            "AVP Emart combines Google Shopping (?udm=28) AI Buying Briefs, Smartprix 0-100 Spec Score "
-            "comparators, BuyHatke 90-day price graphs, Auto-Coupon testing, Spend Lens expense auditing, "
-            "and Xerve HDFC/SBI/ICICI bank card cashback + instant NEFT payout."
+            "AVP Emart combines shopping search AI Buying Briefs, spec-comparison 0-100 Spec Score "
+            "comparators, price-history 90-day price graphs, Auto-Coupon testing, Spend Lens expense auditing, "
+            "and coupon HDFC/SBI/ICICI bank card cashback + instant NEFT payout."
         ),
         "metrics": {"spec_score_accuracy": "99.4%", "avg_coupon_savings_inr": 4250, "stores_tracked": 4},
     },
@@ -36,11 +36,11 @@ VENTURE_KNOWLEDGE_CORPUS: List[Dict[str, Any]] = [
         "id": "doc-avpu-edtech",
         "venture": "AVP University (AVPU)",
         "domain": "education",
-        "keywords": ["learn", "graph", "obsidian", "freecodecamp", "duolingo", "ux", "mental", "marketing", "roadmap", "avpu"],
-        "title": "AVPU — Learn-Anything.xyz DAG + Obsidian + FreeCodeCamp + Duolingo + LawsOfUX + Fs.blog",
+        "keywords": ["learn", "graph", "notes", "coding-practice", "streak", "ux", "mental", "marketing", "roadmap", "avpu"],
+        "title": "AVPU — learning-map DAG + notes + coding-practice + streak + LawsOfUX + Fs.blog",
         "content": (
-            "AVPU integrates Learn-Anything.xyz force-directed DAG roadmaps, Obsidian [[WikiLink]] notes, "
-            "LearnAnythingAI.in classroom generation, FreeCodeCamp assertion testing, Duolingo leagues, "
+            "AVPU integrates learning-map force-directed DAG roadmaps, notes [[WikiLink]] notes, "
+            "learning-map classroom generation, coding-practice assertion testing, streak leagues, "
             "100DaysOfNoCode/AI ship logs, LawsOfUX Fitts/Hick calculators, and Farnam Street mental models."
         ),
         "metrics": {"dag_nodes": 120, "sm2_retention": "94.8%", "active_challengers": 14800},
@@ -49,8 +49,8 @@ VENTURE_KNOWLEDGE_CORPUS: List[Dict[str, Any]] = [
         "id": "doc-decode-pharmacy",
         "venture": "Decode Forest Pharmacy",
         "domain": "healthcare",
-        "keywords": ["drug", "pharmacy", "warfarin", "aspirin", "cyp450", "1mg", "drugbank", "janaushadhi"],
-        "title": "Decode Forest Pharmacy — DrugBank CYP450/ADMET + Tata 1mg + Jan Aushadhi Engine",
+        "keywords": ["drug", "pharmacy", "warfarin", "aspirin", "cyp450", "online pharmacy", "drug-database", "janaushadhi"],
+        "title": "Decode Forest Pharmacy — drug-database CYP450/ADMET + online pharmacy + Jan Aushadhi Engine",
         "content": (
             "Screens multi-drug interactions across CYP2C9, CYP2D6, and CYP3A4 enzymes, predicts ADMET oral "
             "bioavailability, and computes PMBJPK Jan Aushadhi generic chemical salt savings up to 82%."
@@ -61,8 +61,8 @@ VENTURE_KNOWLEDGE_CORPUS: List[Dict[str, Any]] = [
         "id": "doc-breakdown-civil",
         "venture": "Breakdown Factor",
         "domain": "civil",
-        "keywords": ["beam", "skyciv", "bim", "seismic", "crack", "is456", "concrete", "deflection"],
-        "title": "Breakdown Factor — SkyCiv Beam SFD/BMD Solver + Autodesk Tandem 3D BIM + IS 456",
+        "keywords": ["beam", "structural", "bim", "seismic", "crack", "is456", "concrete", "deflection"],
+        "title": "Breakdown Factor — structural Beam SFD/BMD Solver + Autodesk Tandem 3D BIM + IS 456",
         "content": (
             "Computes simply-supported beam support reactions, Shear Force Diagrams (SFD), Bending Moment "
             "Diagrams (BMD), and IS 456:2000 span/250 deflection checks alongside 3D BIM structural twins."
@@ -73,10 +73,10 @@ VENTURE_KNOWLEDGE_CORPUS: List[Dict[str, Any]] = [
         "id": "doc-sevenforce-agency",
         "venture": "Sevenforce Autonomous Swarm",
         "domain": "agency",
-        "keywords": ["devin", "langgraph", "agent", "canva", "framer", "react", "angular", "render"],
-        "title": "Sevenforce — Devin.ai Autonomous Engineer + LangGraph Studio + Render 72MB Runtime",
+        "keywords": ["AI dev", "langgraph", "agent", "design", "framer", "react", "angular", "render"],
+        "title": "Sevenforce — AI dev.ai Autonomous Engineer + LangGraph Studio + Render 72MB Runtime",
         "content": (
-            "Orchestrates a cyclic 5-node LangGraph StateGraph with LangChain hybrid RAG, Canva multi-layer "
+            "Orchestrates a cyclic 5-node LangGraph StateGraph with LangChain hybrid RAG, design multi-layer "
             "vector design, Framer spring physics, and AngularJS enterprise telemetry under 75MB RAM."
         ),
         "metrics": {"render_ram_mb": 72.4, "render_limit_mb": 512, "agent_nodes": 5},
@@ -297,7 +297,7 @@ async def api_emart_spend_lens(req: SpendLensReq):
     timing_yr = round(annual * 0.048)
     return {
         "status": "ok",
-        "engine": "BuyHatke Spend Lens + Xerve NEFT Cashback Engine",
+        "engine": "price-history Spend Lens + coupon NEFT Cashback Engine",
         "total_monthly_inr": round(total_m),
         "annual_spend_inr": round(annual),
         "breakdown": {
@@ -315,7 +315,7 @@ async def api_avpu_ai_classroom(req: AIClassroomReq):
     t = req.topic_or_url.strip() or "Autonomous AI Engineering"
     md = (
         f"# 🧠 {t}\n"
-        f"**Tags**: `#learn-anything` `#obsidian-pkm` `#sm2-active`\n\n"
+        f"**Tags**: `#learning-map` `#notes` `#sm2-active`\n\n"
         f"- **Prerequisites**: [[Linear Algebra]] → [[Python 3.12 AsyncIO]] → [[Transformer Attention]]\n"
         f"- **Core Graph**: [[{t}]] ↔ [[LangChain Hybrid RAG]] ↔ [[LangGraph Cyclic StateGraph]]\n"
         f"- **Spaced Repetition**: Scheduled at `+1d`, `+6d`, `+15d`."
@@ -326,8 +326,8 @@ async def api_avpu_ai_classroom(req: AIClassroomReq):
         "obsidian_markdown": md,
         "modules": [
             {"step": 1, "title": f"Foundations & Mental Model of {t}", "duration": "25 min", "type": "Graph"},
-            {"step": 2, "title": f"Hands-On FreeCodeCamp Sandbox ({t})", "duration": "40 min", "type": "Code Lab"},
-            {"step": 3, "title": f"Duolingo Micro-Quiz & SM-2 Deck", "duration": "15 min", "type": "Quiz"},
+            {"step": 2, "title": f"Hands-On Coding Sandbox ({t})", "duration": "40 min", "type": "Code Lab"},
+            {"step": 3, "title": "Micro-Quiz & SM-2 Deck", "duration": "15 min", "type": "Quiz"},
         ],
     }
 
@@ -507,9 +507,9 @@ async def api_hilti_anchor_design(request: Request):
     rsmeans_cost_inr = round(rsmeans_area_sqft * 2150.0)
     return {
         "status": "ok",
-        "engine": "Hilti PROFIS Anchor/Rebar + RSMeans Cost Index",
+        "engine": "anchor-design Anchor/Rebar + cost-index Cost Index",
         "required_embedment_mm": min_embed_mm,
-        "adhesive_mortar": "Hilti HIT-RE 500 V4 Epoxy Anchor",
+        "adhesive_mortar": "anchor-design HIT-RE 500 V4 Epoxy Anchor",
         "design_pullout_capacity_kn": design_resistance_kn,
         "utilization_pct": round(min(99.0, (tensile_kn / max(1.0, design_resistance_kn)) * 100.0), 1),
         "rsmeans_estimated_cost_inr": rsmeans_cost_inr,
@@ -544,7 +544,7 @@ async def api_vapi_voice_latency(request: Request):
     vram_gb = round((params_b * (quant_bits / 8.0)) * 1.22, 2)
     return {
         "status": "ok",
-        "engine": "Vapi.ai Conversational Voice Pipeline + HuggingFace VRAM Sizer",
+        "engine": "voice Conversational Voice Pipeline + HuggingFace VRAM Sizer",
         "total_turnaround_latency_ms": total_voice_latency_ms,
         "breakdown_ms": {"deepgram_nova2_stt": stt_ms, "groq_llm_ttft": llm_ttft_ms, "elevenlabs_turbo_tts": tts_ms},
         "cost_per_minute_usd": 0.048,
@@ -571,7 +571,7 @@ async def api_roadmap_sh_progress(request: Request):
     total = 150
     return {
         "status": "ok",
-        "engine": "Roadmap.sh + Brilliant.org + NeetCode 150 Tracker",
+        "engine": "roadmap + practice + coding-practice 150 Tracker",
         "completed": completed,
         "total": total,
         "completion_pct": round((completed / total) * 100.0, 1),
@@ -594,78 +594,13 @@ async def api_counsel(request: Request):
 
 @router.get("/api/reference-sites/registry")
 async def api_reference_sites_registry():
-    ventures = {
-        "sevenseed_hub": [
-            "ycombinator.com", "carta.com", "angellist.com", "crunchbase.com",
-            "producthunt.com", "pitchbook.com", "stripe.com/atlas", "openrouter.ai",
-            "pulley.com", "clerky.com",
-        ],
-        "avpu": [
-            "learn-anything.xyz", "learnanything.com", "learnanythingai.in", "obsidian.md",
-            "freecodecamp.org", "duolingo.com", "100daysofnocode.com", "100daysai.com",
-            "lawsofux.com", "fs.blog/mental-models", "marketingexamples.com", "growthinreverse.com",
-            "roadmap.sh", "brilliant.org", "ankiweb.net", "exercism.org", "khanacademy.org",
-        ],
-        "avp_emart": [
-            "smartprix.com", "google.com/shopping?udm=28", "buyhatke.com", "xerve.in/prices",
-            "camelcamelcamel.com", "pricehistoryapp.com", "cashkaro.com", "blinkit.com",
-            "zepto.com", "myokb.in", "desidime.com",
-        ],
-        "decode_forest_pharmacy": [
-            "1mg.com", "pharmeasy.in", "medscape.com", "drugbank.com", "janaushadhi.gov.in",
-            "mdcalc.com", "webmd.com", "drugs.com", "ncbi.nlm.nih.gov/books/NBK501922 (LactMed)",
-            "open.fda.gov", "clinicaltrials.gov",
-        ],
-        "breakdown_factor": [
-            "skyciv.com", "autodesk.com/takeoff", "procore.com", "openspace.ai",
-            "hilti.com", "rsmeans.com", "cpwd.gov.in (DSR)", "happho.com",
-        ],
-        "avp_trust": [
-            "giveindia.org", "charitynavigator.org", "gitcoin.co", "ketto.org",
-            "milaap.org", "candid.org", "gofundme.com", "givewell.org",
-        ],
-        "rakshak_ai": [
-            "citizen.com", "missingkids.org", "indiacode.nic.in", "haveibeenpwned.com",
-            "virustotal.com", "ecourts.gov.in", "indiankanoon.org", "cybercrime.gov.in",
-        ],
-        "comonk": [
-            "levels.fyi", "jobscan.co", "tryexponent.com", "neetcode.io",
-            "teamblind.com", "pramp.com", "ambitionbox.com", "interviewing.io",
-        ],
-        "sevenforce": [
-            "devin.ai", "crewai.com", "n8n.io", "langchain.com/langgraph",
-            "vapi.ai", "huggingface.co", "zapier.com", "RelevanceAI",
-        ],
-        "frontier_ai_studios": [
-            "perplexity.ai", "exa.ai", "v0.dev", "bolt.new", "lovable.dev",
-            "excalidraw.com", "eraser.io", "linear.app", "raycast.com",
-        ],
-        "quant_fintech": [
-            "tradingview.com", "openbb.co", "koyfin.com", "streak.tech (Zerodha)",
-        ],
-        "climate_agritech": [
-            "electricitymaps.com", "climatetrace.org", "cropin.com", "fao.org (Penman-Monteith)",
-        ],
-        "proptech_realestate": [
-            "zillow.com", "matterport.com", "99acres.com", "airdna.co",
-        ],
-        "ui_3d_design": [
-            "21st.dev", "unicorn.studio", "motionsites.ai", "uiverse.io",
-            "ui.aceternity.com", "spline.com", "lusion.co", "shadertoy.com",
-            "aura.build/browse/components", "canva.com", "framer.com",
-        ],
-    }
-    # Add web3_stack to hit exact 108 integrated reference sites
-    ventures["web3_stack"] = [
-        "ethereum.org (ERC-4337 / EAS)", "polygon.technology", "base.org",
-        "solana.com", "allo.gitcoin.co",
-    ]
-    total = sum(len(v) for v in ventures.values())
+    """Used to publish a list of other companies' websites the tools were modelled on.
+    Sevenseed doesn't name other companies, so it now returns an empty registry."""
     return {
         "status": "ok",
-        "version": "7.0",
-        "total_reference_sites_integrated": total,
-        "ventures": ventures,
+        "total_reference_sites_integrated": 0,
+        "ventures": {},
+        "note": "Sevenseed's tools are its own. This registry is no longer published.",
     }
 
 
@@ -786,7 +721,7 @@ async def api_perplexity_research(request: Request):
         "follow_up_questions": [
             f"What are the edge-case failure modes or regulatory deadlines for {query[:45]}?",
             "Run a sensitivity table across conservative, base, and aggressive assumptions",
-            "Export structured Markdown + BibTeX citations for Obsidian / Notion",
+            "Export structured Markdown + BibTeX citations for notes / Notion",
         ],
     }
 
@@ -1284,7 +1219,7 @@ async def api_stripe_atlas_incorporate(request: Request):
 
     jurisdictions = [
         {
-            "jurisdiction": "Delaware C-Corp (Stripe Atlas / Clerky)",
+            "jurisdiction": "Delaware C-Corp (via an online incorporation service)",
             "formation_fee_usd": 500,
             "base_corporate_tax": "21% US Federal + DE Franchise Tax ($400+)",
             "best_for": "YC / US Venture Capital, SAFE notes, QSBS Sec 1202 eligibility",
@@ -1325,13 +1260,20 @@ async def api_stripe_atlas_incorporate(request: Request):
 async def api_drugs_safety_matrix(request: Request):
     """Pharmacokinetic Relative Infant Dose (RID %), food-drug interaction lookup, and mg/kg arithmetic check."""
     body = await _safe_json(request)
+    def num(key, default):
+        try:
+            v = body.get(key)
+            return default if v is None or v == "" else float(v)
+        except (TypeError, ValueError):
+            return default
+
     drug_class = str(body.get("drug") or "atorvastatin").strip().lower()
-    milk_conc_mg_l = max(0.0, float(body.get("milk_concentration_mg_l", 0.045) or 0.045))
-    maternal_dose_mg_day = max(0.1, float(body.get("maternal_dose_mg_day", 20.0) or 20.0))
-    maternal_weight_kg = max(30.0, float(body.get("maternal_weight_kg", 62.0) or 62.0))
-    child_weight_kg = max(2.0, float(body.get("child_weight_kg", 14.0) or 14.0))
-    ref_mg_per_kg_day = max(0.1, float(body.get("mg_per_kg_day", 15.0) or 15.0))
-    doses_per_day = max(1, int(body.get("doses_per_day", 3) or 3))
+    milk_conc_mg_l = max(0.0, num("milk_concentration_mg_l", 0.045))
+    maternal_dose_mg_day = max(0.1, num("maternal_dose_mg_day", 20.0))
+    maternal_weight_kg = max(30.0, num("maternal_weight_kg", 62.0))
+    child_weight_kg = max(2.0, num("child_weight_kg", 14.0))
+    ref_mg_per_kg_day = max(0.0, num("mg_per_kg_day", 15.0))
+    doses_per_day = max(1, int(num("doses_per_day", 3)))
 
     # Standard clinical PK formula: Infant intake = C_milk (mg/L) * 0.15 L/kg/day
     infant_dose_mg_kg_day = milk_conc_mg_l * 0.15
@@ -1345,10 +1287,11 @@ async def api_drugs_safety_matrix(request: Request):
         "ciprofloxacin": {"food": "Dairy milk, yogurt, calcium/iron supplements", "mechanism": "Divalent cations chelate fluoroquinolones in the gut, cutting oral absorption up to 40%.", "severity": "MODERATE"},
         "lisinopril": {"food": "Potassium salt substitutes / high-K+ supplements", "mechanism": "Reduced aldosterone excretion compounds hyperkalemia risk.", "severity": "MODERATE"},
     }
+    # Only five drugs are listed. For anything else say so, instead of inventing a warning.
     matched_food = next((v for k, v in food_matrix.items() if k in drug_class), {
-        "food": "Alcohol & unverified herbal extracts",
-        "mechanism": "Check official FDA package insert / LactMed monograph for substrate-specific hepatic & renal interactions.",
-        "severity": "CHECK_MONOGRAPH",
+        "food": None,
+        "mechanism": "This medicine isn't in our short list, so we can't tell you about food interactions. Check its NIH LactMed entry and ask your pharmacist.",
+        "severity": "NOT_IN_LIST",
     })
 
     total_daily_mg = round(child_weight_kg * ref_mg_per_kg_day, 1)

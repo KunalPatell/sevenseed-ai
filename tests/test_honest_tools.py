@@ -96,8 +96,6 @@ class TestNoInventedResults(unittest.TestCase):
 class TestDemoRedirects(unittest.TestCase):
     def test_redirects(self):
         cases = {
-            "/app/": "/ventures/",
-            "/avpu/app/": "/avpu/",
             "/trust/donation-ledger.html": "/trust/ledger/",
             "/trust/tax-80g/": "/trust/tax-exemption/",
             "/langgraph-studio/": "/ventures/",
@@ -107,6 +105,21 @@ class TestDemoRedirects(unittest.TestCase):
             r = client.get(src, follow_redirects=False)
             self.assertEqual(r.status_code, 301, src)
             self.assertEqual(r.headers["location"], dst, src)
+
+
+class TestAppPortalHonest(unittest.TestCase):
+    """The /app/ portal stays live, so its bundle must not fake a wallet, stats or clones."""
+
+    def test_bundle_has_no_fake_wallet_stats_or_clone_badges(self):
+        js = client.get("/static/vite-portal-bundle.js").text
+        for fake in ("0x71C8", "0x94F2", "/api/web3/execute", "v.kpis.map", "CLONE", "64 Reference Sites", "VITE SPA ADVANTAGE"):
+            self.assertNotIn(fake, js)
+        self.assertIn("Fingerprint this result", js)
+        self.assertIn("/web3-studio/", js)
+
+    def test_reference_registry_names_no_companies(self):
+        body = client.get("/api/reference-sites/registry").json()
+        self.assertEqual(body["ventures"], {})
 
 
 if __name__ == "__main__":

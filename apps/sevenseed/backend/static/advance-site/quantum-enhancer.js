@@ -60,7 +60,7 @@
         key: "emart",
         name: "AVP E-Mart",
         hubUrl: "/avp-emart/",
-        appUrl: "/emart/app/",
+        appUrl: "/avp-emart/app/",
         color: "#10b981",
         shape: "icosahedron",
       };
@@ -70,7 +70,7 @@
         key: "pharmacy",
         name: "Decode Forest Pharmacy",
         hubUrl: "/pharmacy/",
-        appUrl: "/forest-pharmacy/app/",
+        appUrl: "/pharmacy/app/",
         color: "#14b8a6",
         shape: "dodecahedron",
       };
@@ -80,7 +80,7 @@
         key: "breakdown",
         name: "Breakdown Factor Civil",
         hubUrl: "/breakdown/",
-        appUrl: "/breakdown-factor/app/",
+        appUrl: "/breakdown/app/",
         color: "#f59e0b",
         shape: "box",
       };
@@ -120,7 +120,7 @@
         key: "agency",
         name: "Sevenforce Agency",
         hubUrl: "/sevenforce/",
-        appUrl: "/agency/app/",
+        appUrl: "/sevenforce/app/",
         color: "#f59e0b",
         shape: "torusKnot",
       };
@@ -193,7 +193,7 @@
     { name: "Spec Comparator", href: "/avp-emart/spec-compare/", brand: "AVP E-Mart" },
     { name: "Resume Analyzer", href: "/comonk/resume-analyzer/", brand: "Comonk" },
     { name: "AI Dev Terminal", href: "/sevenforce/devin-terminal/", brand: "Sevenforce" },
-    { name: "LactMed & Drug Safety", href: "/pharmacy/pregnancy-lactation-safety/", brand: "Pharmacy" },
+    { name: "Pregnancy & Breastfeeding Medicine Safety", href: "/pharmacy/pregnancy-lactation-safety/", brand: "Pharmacy" },
     { name: "CPWD BOQ Estimator", href: "/breakdown/boq-estimator/", brand: "Breakdown" },
     { name: "Milestone Escrow", href: "/trust/crowdfunding-milestones/", brand: "AVP Trust" },
     { name: "FIR Draft Helper", href: "/rakshak-ai/fir-generator/", brand: "Rakshak AI" },
@@ -354,6 +354,7 @@
         <a href="${v.hubUrl}" style="font-size:11.5px;font-weight:700;color:#94a3b8;text-decoration:none;padding:4px 10px;border-radius:8px;border:1px solid rgba(148,163,184,0.2);">
           ← ${v.name} Hub
         </a>
+
       </div>
     `;
     if (mainEl && mainEl.parentNode) {
@@ -376,9 +377,9 @@
       const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
       camera.position.z = 4.3;
 
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
       renderer.setSize(w, h, false);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(1);
 
       const col = new THREE.Color(v.color);
       scene.add(new THREE.AmbientLight(0xffffff, 0.85));
@@ -431,12 +432,13 @@
       });
 
       function tick() {
-        requestAnimationFrame(tick);
+        setTimeout(() => requestAnimationFrame(tick), 45);
+        if (document.hidden) return;
         if (!dragging) {
-          group.rotation.y += 0.008;
-          group.rotation.x += 0.004;
+          group.rotation.y += 0.016;
+          group.rotation.x += 0.008;
         }
-        ring.rotation.z += 0.012;
+        ring.rotation.z += 0.022;
         renderer.render(scene, camera);
       }
       tick();
@@ -785,6 +787,7 @@
     { label: "Pregnancy & Breastfeeding Medicine Safety", url: "/pharmacy/pregnancy-lactation-safety/", tag: "v7.0 Clinical", kw: "rid milk grapefruit warfarin pediatric dose" },
     { label: "Crowdfunding Milestone Planner", url: "/trust/crowdfunding-milestones/", tag: "v7.0 Impact", kw: "tranche csr matching medical campaign" },
     { label: "Sevenseed Venture Studio Hub", url: "/", tag: "Hub", kw: "home ecosystem portfolio" },
+
     { label: "AVP University (AVPU)", url: "/avpu/", tag: "Venture", kw: "education dag flashcards courses" },
     { label: "AVP E-Mart Smart Shopping", url: "/avp-emart/", tag: "Venture", kw: "price tracker deals qcommerce" },
     { label: "Decode Forest Pharmacy", url: "/pharmacy/", tag: "Venture", kw: "jan aushadhi generics interactions" },
@@ -939,11 +942,26 @@
       boot();
       return;
     }
-    const runAfterHydration = () => setTimeout(boot, 90);
+    const waitForReactHydration = () => {
+      const t0 = performance.now();
+      const poll = () => {
+        const m = document.querySelector("main");
+        const target = (m && m.lastElementChild) || m || document.body;
+        const hydrated =
+          target &&
+          Object.keys(target).some((k) => k.startsWith("__reactFiber$") || k.startsWith("__reactProps$"));
+        if (hydrated || performance.now() - t0 > 1500) {
+          requestAnimationFrame(() => setTimeout(boot, 20));
+        } else {
+          setTimeout(poll, 25);
+        }
+      };
+      poll();
+    };
     if (document.readyState === "complete") {
-      runAfterHydration();
+      waitForReactHydration();
     } else {
-      window.addEventListener("load", runAfterHydration, { once: true });
+      window.addEventListener("load", waitForReactHydration, { once: true });
     }
   }
 

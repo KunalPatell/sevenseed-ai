@@ -31,10 +31,10 @@
       appUrl: "/app/",
       shape3d: "torusKnot",
       kpis: [
-        { label: "Incubated Ventures", val: "9 Active", delta: "+100% Online" },
-        { label: "FastAPI + LangGraph APIs", val: "391 Routes", delta: "0.8ms P95" },
-        { label: "Reference Sites Cloned", val: "64 Global", delta: "100% Parity" },
-        { label: "Render RAM Footprint", val: "48.2 MB", delta: "< 512 MB Safe" }
+        { label: "Incubated Ventures", val: "12 Active", delta: "v7.0 Live" },
+        { label: "FastAPI + LangGraph APIs", val: "385+ Routes", delta: "0.8ms P95" },
+        { label: "Reference Sites Integrated", val: "126 Global", delta: "100% Matrix" },
+        { label: "Render RAM Footprint", val: "< 80 MB", delta: "512 MB Safe" }
       ],
       radarIndicators: [
         { name: "AI Orchestration", max: 100 },
@@ -62,7 +62,7 @@
           id: "sandbox",
           icon: "🧪",
           title: "Venture Sandbox & Valuation AI",
-          desc: "Y-Combinator / Stripe Atlas style DCF + Berkus + VC Method valuation & unit economics simulator.",
+          desc: "Y-Combinator / incorporation style DCF + Berkus + VC Method valuation & unit economics simulator.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
             { key: "arr", label: "Projected Year-3 ARR ($M)", type: "number", default: 12.5 },
@@ -75,7 +75,7 @@
           id: "advisor",
           icon: "🤖",
           title: "Founder Advisor & Pitch Deck AI",
-          desc: "LangGraph 5-Node cyclic co-pilot for Sequoia/YC 12-slide pitch narratives and term sheet modeling.",
+          desc: "LangGraph 5-Node cyclic co-pilot for a standard 12-slide pitch narratives and term sheet modeling.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
             { key: "stage", label: "Funding Stage", type: "select", options: ["Pre-Seed", "Seed", "Series A", "Series B", "Revenue-Based"], default: "Seed" },
@@ -97,32 +97,21 @@
           ]
         },
         {
-          id: "competitors",
-          icon: "🌐",
-          title: "64-Reference-Site Registry",
-          desc: "Deep-scan feature parity explorer across all 64 global competitor reference sites & UI libraries.",
-          apiEndpoint: "/api/reference-sites/registry",
-          inputs: [
-            { key: "filter", label: "Filter by Domain / Keyword", type: "text", default: "AI" },
-            { key: "tier", label: "Parity Verification Mode", type: "select", options: ["All 64 Reference Sites", "Frontend UI & 3D Libraries", "Venture Competitor Clones"], default: "All 64 Reference Sites" }
-          ]
-        },
-        {
           id: "canva",
           icon: "🎨",
-          title: "Canva Multi-Layer Brand Studio",
+          title: "Multi-Layer Brand Studio",
           desc: "Interactive HTML5 vector poster, social banner, and pitch slide composer with Magic Design API.",
           apiEndpoint: "/api/canva/magic-design",
           inputs: [
             { key: "headline", label: "Canvas Headline", type: "text", default: "SEVENSEED ADVANCE v4.0" },
-            { key: "subhead", label: "Canvas Subtitle", type: "text", default: "21st.dev • Unicorn.studio • Spline 3D • Vite SPA" },
+            { key: "subhead", label: "Canvas Subtitle", type: "text", default: "UI • Unicorn.studio • 3D 3D • Vite SPA" },
             { key: "theme", label: "Color Palette", type: "select", options: ["Cyber Indigo", "Emerald Neon", "Solar Amber", "Crimson Pulse"], default: "Cyber Indigo" }
           ]
         },
         {
           id: "spline3d",
           icon: "🧊",
-          title: "Framer RK4 + Spline 3D Lab",
+          title: "RK4 Physics + 3D Lab",
           desc: "Live Three.js WebGL geometry morphing + Runge-Kutta RK4 spring physics configurator.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -137,7 +126,7 @@
       id: "avpu",
       name: "AVPU AI University",
       short: "AVPU EdTech",
-      badge: "COURSERA + DUOLINGO + ROADMAP.SH CLONE",
+      badge: "LEARNING TOOLS",
       accent: "#06b6d4",
       accent2: "#6366f1",
       landingUrl: "/avpu/",
@@ -145,7 +134,7 @@
       shape3d: "icosahedron",
       kpis: [
         { label: "Active Learners", val: "48,920", delta: "+34% YoY" },
-        { label: "Skill DAG Nodes", val: "420 Tracks", delta: "Roadmap.sh Sync" },
+        { label: "Skill DAG Nodes", val: "420 Tracks", delta: "roadmap Sync" },
         { label: "AI Tutor Latency", val: "110 ms", delta: "Socratic LLM" },
         { label: "Placement Rate", val: "94.8%", delta: "₹18.4L Avg CTC" }
       ],
@@ -164,7 +153,7 @@
           id: "classroom",
           icon: "🎓",
           title: "AI Classroom & Socratic Tutor",
-          desc: "Khanmigo / Coursera Coach style Socratic AI tutor with Bloom's taxonomy mastery grading.",
+          desc: "Khanmigo / online course Coach style Socratic AI tutor with Bloom's taxonomy mastery grading.",
           apiEndpoint: "/api/avpu/ai-classroom",
           inputs: [
             { key: "topic", label: "Subject / Concept", type: "text", default: "Transformer Multi-Head Self-Attention & KV-Cache Optimization" },
@@ -175,7 +164,7 @@
         {
           id: "roadmap",
           icon: "🗺️",
-          title: "Roadmap.sh Skill DAG Planner",
+          title: "Skill DAG Planner",
           desc: "Topological prerequisite graph for AI Engineer, Full-Stack, DevOps, and Embedded tracks.",
           apiEndpoint: "/api/roadmap-sh/progress",
           inputs: [
@@ -198,7 +187,7 @@
           id: "quiz",
           icon: "⚡",
           title: "Adaptive Quiz & SM-2 Spaced Repetition",
-          desc: "SuperMemo-2 retention curve scheduler + Duolingo XP streak & Diamond League simulator.",
+          desc: "SuperMemo-2 retention curve scheduler + streak XP streak & Diamond League simulator.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
             { key: "subject", label: "Quiz Module", type: "select", options: ["Distributed Systems", "Deep Learning", "Operating Systems", "DBMS & SQL", "Compiler Design"], default: "Distributed Systems" },
@@ -215,7 +204,7 @@
           inputs: [
             { key: "student", label: "Candidate Name", type: "text", default: "Aarav Sharma" },
             { key: "credential", label: "Degree / Micro-Credential", type: "text", default: "Honours Specialization in Agentic AI & LangGraph Systems" },
-            { key: "cgpa", label: "Verified CGPA", type: "number", default: 9.6 }
+            { key: "cgpa", label: "CGPA", type: "number", default: 9.6 }
           ]
         },
         {
@@ -225,7 +214,7 @@
           desc: "Matches student skill graphs with Tier-1 FAANG/High-Growth startups & predicts CTC bands.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
-            { key: "skills", label: "Verified Tech Stack", type: "text", default: "Python, PyTorch, FastAPI, React, TypeScript, Docker, Kubernetes" },
+            { key: "skills", label: "Tech stack", type: "text", default: "Python, PyTorch, FastAPI, React, TypeScript, Docker, Kubernetes" },
             { key: "projects", label: "Production Capstone Count", type: "number", default: 5 },
             { key: "leetcode", label: "DSA Problems Solved", type: "number", default: 340 }
           ]
@@ -247,11 +236,11 @@
       id: "emart",
       name: "AVP E-Mart Quick-Commerce",
       short: "AVP E-Mart",
-      badge: "BUYHATKE + CASHKARO + SMARTPRIX + BLINKIT CLONE",
+      badge: "SHOPPING & PRICE TOOLS",
       accent: "#f59e0b",
       accent2: "#10b981",
       landingUrl: "/emart/",
-      appUrl: "/emart/app/",
+      appUrl: "/avp-emart/app/",
       shape3d: "octahedron",
       kpis: [
         { label: "Tracked SKUs", val: "2.4M+", delta: "4-Store Live" },
@@ -262,7 +251,7 @@
       radarIndicators: [
         { name: "Price Arbitrage", max: 100 },
         { name: "Card Optimizer", max: 100 },
-        { name: "CashKaro Stack", max: 100 },
+        { name: "cashback Stack", max: 100 },
         { name: "90-Day History", max: 100 },
         { name: "10-Min Q-Comm", max: 100 }
       ],
@@ -273,7 +262,7 @@
         {
           id: "comparator",
           icon: "🛒",
-          title: "Smartprix 4-Store Price Arbitrage",
+          title: "4-Store Price Comparison",
           desc: "Real-time cross-marketplace price, warranty, and EMI comparison across Amazon, Flipkart, Croma & Jiomart.",
           apiEndpoint: "/api/cashkaro/stacker",
           inputs: [
@@ -285,7 +274,7 @@
         {
           id: "spendlens",
           icon: "💳",
-          title: "BuyHatke Spend Lens & Card Optimizer",
+          title: "Spend Lens & Card Optimizer",
           desc: "Analyzes annual e-commerce spend and recommends optimal credit card reward stacking.",
           apiEndpoint: "/api/emart/spend-lens",
           inputs: [
@@ -297,7 +286,7 @@
         {
           id: "stacker",
           icon: "💸",
-          title: "CashKaro Coupon + Bank Stacker",
+          title: "Coupon + Bank Offer Stacker",
           desc: "Cascading discount calculator combining promo codes, instant bank discounts, and portal cashback.",
           apiEndpoint: "/api/cashkaro/stacker",
           inputs: [
@@ -309,7 +298,7 @@
         {
           id: "camel",
           icon: "📉",
-          title: "CamelCamelCamel 90-Day Price Radar",
+          title: "90-Day Price Radar",
           desc: "Historical price floor detector, festival sale predictor, and Buy-Now vs Wait recommendation.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -321,7 +310,7 @@
         {
           id: "qcomm",
           icon: "⚡",
-          title: "Blinkit / Zepto 10-Min Dark-Store Router",
+          title: "Quick-Commerce Basket Router",
           desc: "Haversine geodesic dark-store picker, rider batching optimizer, and group-buy pool splitter.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -333,7 +322,7 @@
         {
           id: "fakespot",
           icon: "🔍",
-          title: "FakeSpot Review Authenticity Scanner",
+          title: "Review Authenticity Checker",
           desc: "Detects astroturfed 5-star review bursts, bot linguistic patterns, and verified buyer ratios.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -350,7 +339,7 @@
           apiEndpoint: "/api/canva/magic-design",
           inputs: [
             { key: "headline", label: "Sale Headline", type: "text", default: "MEGA STACKER FLASH SALE — 38% NET OFF" },
-            { key: "subhead", label: "Offer Details", type: "text", default: "Extra 5% SBI Cashback + 6.5% CashKaro Portal Rewards" }
+            { key: "subhead", label: "Offer Details", type: "text", default: "Extra 5% SBI Cashback + 6.5% cashback Portal Rewards" }
           ]
         }
       ]
@@ -359,22 +348,22 @@
       id: "pharmacy",
       name: "Decode Forest Pharmacy",
       short: "Forest Pharmacy",
-      badge: "TATA 1MG + DRUGBANK + MDCALC + EXAMINE CLONE",
+      badge: "MEDICINES & HEALTH TOOLS",
       accent: "#10b981",
       accent2: "#06b6d4",
       landingUrl: "/forest-pharmacy/",
-      appUrl: "/forest-pharmacy/app/",
+      appUrl: "/pharmacy/app/",
       shape3d: "dodecahedron",
       kpis: [
         { label: "NLEM Salt Index", val: "12,400+", delta: "Up to 85% Savings" },
-        { label: "CYP450 Pair Checks", val: "1.8M Pairs", delta: "DrugBank Verified" },
-        { label: "Clinical Calculators", val: "45 Scores", delta: "MDCalc Parity" },
+        { label: "CYP450 Pair Checks", val: "1.8M Pairs", delta: "drug database Verified" },
+        { label: "Clinical Calculators", val: "45 Scores", delta: "clinical Parity" },
         { label: "Phyto-Compounds", val: "680 Herbs", delta: "Examine.com Grade" }
       ],
       radarIndicators: [
         { name: "Generic Savings", max: 100 },
         { name: "CYP450 Safety", max: 100 },
-        { name: "MDCalc Accuracy", max: 100 },
+        { name: "clinical Accuracy", max: 100 },
         { name: "Lab OCR", max: 100 },
         { name: "Phyto Evidence", max: 100 }
       ],
@@ -397,7 +386,7 @@
         {
           id: "interactions",
           icon: "🧬",
-          title: "DrugBank CYP450 Interaction Matrix",
+          title: "CYP450 Interaction Matrix",
           desc: "Checks multi-drug cytochrome P450 enzyme inhibition, QT prolongation, and contraindications.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -409,7 +398,7 @@
         {
           id: "mdcalc",
           icon: "🩺",
-          title: "MDCalc Clinical Risk Score Suite",
+          title: "Clinical Risk Scores (partial)",
           desc: "Computes eGFR (CKD-EPI), BMI, MAP, CURB-65 Pneumonia Severity, and CHA2DS2-VASc stroke risk.",
           apiEndpoint: "/api/mdcalc/clinical-scores",
           inputs: [
@@ -422,7 +411,7 @@
         {
           id: "ayurveda",
           icon: "🌿",
-          title: "Examine.com Ayurvedic Bio-Actives",
+          title: "Ayurvedic Bio-Actives Evidence",
           desc: "Grades randomized controlled trial (RCT) evidence for Ashwagandha, Curcumin, Bacopa & Giloy.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -471,21 +460,21 @@
       id: "breakdown",
       name: "Breakdown Factor AEC Civil",
       short: "Breakdown Civil",
-      badge: "SKYCIV + HILTI PROFIS + CPWD DSR + PROCORE CLONE",
+      badge: "CIVIL ENGINEERING TOOLS",
       accent: "#f97316",
       accent2: "#eab308",
       landingUrl: "/breakdown-factor/",
-      appUrl: "/breakdown-factor/app/",
+      appUrl: "/breakdown/app/",
       shape3d: "box",
       kpis: [
-        { label: "Structural Solvers", val: "IS-456 / ACI", delta: "SkyCiv FEA Parity" },
+        { label: "Structural Solvers", val: "IS-456 / ACI", delta: "structural FEA Parity" },
         { label: "CPWD DSR Rates", val: "2024–26 Sync", delta: "±1.2% BOQ Accuracy" },
-        { label: "Hilti Anchor Checks", val: "EN 1992-4", delta: "Cone Breakout Safe" },
+        { label: "anchor Anchor Checks", val: "EN 1992-4", delta: "Cone Breakout Safe" },
         { label: "OSHA/IS Safety AI", val: "99.4%", delta: "YOLOv8 PPE Vision" }
       ],
       radarIndicators: [
         { name: "Beam FEA", max: 100 },
-        { name: "Hilti Anchor", max: 100 },
+        { name: "anchor Anchor", max: 100 },
         { name: "CPWD BOQ", max: 100 },
         { name: "PPE Vision", max: 100 },
         { name: "CPM Schedule", max: 100 }
@@ -497,7 +486,7 @@
         {
           id: "skyciv",
           icon: "🏗️",
-          title: "SkyCiv Euler-Bernoulli Beam FEA Solver",
+          title: "Euler-Bernoulli Beam Solver",
           desc: "Computes maximum bending moment, shear force, mid-span deflection (L/360), and Ast steel rebar area.",
           apiEndpoint: "/api/skyciv/beam-solver",
           inputs: [
@@ -510,7 +499,7 @@
         {
           id: "hilti",
           icon: "🔩",
-          title: "Hilti PROFIS Concrete Anchor Designer",
+          title: "Concrete Anchor Designer",
           desc: "EN 1992-4 / ACI 318 concrete cone breakout, steel tensile capacity, and utilization factor verification.",
           apiEndpoint: "/api/hilti/anchor-design",
           inputs: [
@@ -546,7 +535,7 @@
         {
           id: "procore",
           icon: "📅",
-          title: "Procore CPM Critical Path Scheduler",
+          title: "CPM Critical Path Scheduler",
           desc: "Critical Path Method (CPM) float analyzer, monsoon delay buffer calculator, and S-curve cashflow.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -574,7 +563,7 @@
           apiEndpoint: "/api/canva/magic-design",
           inputs: [
             { key: "headline", label: "Drawing Sheet Title", type: "text", default: "STRUCTURAL FRAMING PLAN — IS 456:2000 & IS 1893" },
-            { key: "subhead", label: "Engineer Seal", type: "text", default: "SkyCiv FEA Verified • Hilti PROFIS Anchor Approved" }
+            { key: "subhead", label: "Engineer Seal", type: "text", default: "Checked by a structural engineer" }
           ]
         }
       ]
@@ -583,7 +572,7 @@
       id: "trust",
       name: "AVP Charitable Trust",
       short: "AVP Trust",
-      badge: "GIVEINDIA + GITCOIN QF + CHARITYWATCH + KIVA CLONE",
+      badge: "GIVING & 80G TOOLS",
       accent: "#10b981",
       accent2: "#3b82f6",
       landingUrl: "/trust/",
@@ -609,7 +598,7 @@
         {
           id: "tax80g",
           icon: "🧾",
-          title: "Instant Section 80G & Form 10BE Generator",
+          title: "80G Tax Saving Estimate",
           desc: "Calculates Income Tax Act Section 80G deduction savings and generates verifiable Form 10BE receipts.",
           apiEndpoint: "/api/tax-80g",
           inputs: [
@@ -621,7 +610,7 @@
         {
           id: "gitcoin",
           icon: "💚",
-          title: "Gitcoin Quadratic Funding Matching Simulator",
+          title: "Quadratic Funding Matching Simulator",
           desc: "Applies Vitalik Buterin & Glen Weyl's CLR formula (Σ√c_i)² to amplify broad community support.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -633,7 +622,7 @@
         {
           id: "ledger",
           icon: "🔗",
-          title: "CharityWatch SHA-256 Proof-of-Impact Ledger",
+          title: "SHA-256 Report Fingerprint",
           desc: "Cryptographic Merkle-tree audit trail linking every rupee donated to geotagged field vendor invoices.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -644,7 +633,7 @@
         {
           id: "kiva",
           icon: "🌾",
-          title: "Kiva Zero-Interest Micro-Grant Tracker",
+          title: "Zero-Interest Micro-Grant Tracker",
           desc: "Tracks revolving community micro-grants for rural women entrepreneurs and artisan collectives.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -683,7 +672,7 @@
           apiEndpoint: "/api/canva/magic-design",
           inputs: [
             { key: "headline", label: "Certificate Title", type: "text", default: "CERTIFICATE OF SOVEREIGN SOCIAL IMPACT (SECTION 80G)" },
-            { key: "subhead", label: "Verification Note", type: "text", default: "SHA-256 Ledger Verified • 94.2% Direct Field Deployment" }
+            { key: "subhead", label: "Verification Note", type: "text", default: "Report fingerprint attached" }
           ]
         }
       ]
@@ -692,7 +681,7 @@
       id: "rakshak",
       name: "Rakshak AI Legal & Cyber Shield",
       short: "Rakshak AI",
-      badge: "HARVEY AI + BNS 2023 + HIBP + VIRUSTOTAL CLONE",
+      badge: "SAFETY & LEGAL TOOLS",
       accent: "#ef4444",
       accent2: "#8b5cf6",
       landingUrl: "/rakshak-ai/",
@@ -738,7 +727,7 @@
         {
           id: "hibp",
           icon: "🛡️",
-          title: "HIBP + VirusTotal + URLScan Threat Radar",
+          title: "HIBP + link scanner + URLScan Threat Radar",
           desc: "Scans email/domain breach exposure, homograph phishing URLs, and password Shannon entropy.",
           apiEndpoint: "/api/hibp/breach-scan",
           inputs: [
@@ -797,15 +786,15 @@
       id: "comonk",
       name: "Comonk AI Career & Talent Cloud",
       short: "Comonk Career",
-      badge: "EIGHTFOLD + JOBSCAN + LEVELS.FYI + PRAMP CLONE",
+      badge: "CAREER TOOLS",
       accent: "#a855f7",
       accent2: "#ec4899",
       landingUrl: "/comonk/",
       appUrl: "/comonk/app/",
       shape3d: "cone",
       kpis: [
-        { label: "ATS Match Lift", val: "+64% Callbacks", delta: "Jobscan TF-IDF" },
-        { label: "Verified CTC Data", val: "185,000+ Offers", delta: "Levels.fyi Parity" },
+        { label: "ATS Match Lift", val: "+64% Callbacks", delta: "ATS TF-IDF" },
+        { label: "Verified CTC Data", val: "185,000+ Offers", delta: "salary Parity" },
         { label: "AI Mock Interviews", val: "42,000 Runs", delta: "STAR + System Design" },
         { label: "Skill Adjacency Graph", val: "1,200 Roles", delta: "Eightfold AI Engine" }
       ],
@@ -823,7 +812,7 @@
         {
           id: "jobscan",
           icon: "📄",
-          title: "Jobscan ATS Resume vs JD TF-IDF Scorer",
+          title: "ATS ATS Resume vs JD TF-IDF Scorer",
           desc: "Computes cosine similarity between your resume and target Job Description, highlighting missing hard skills.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -835,7 +824,7 @@
         {
           id: "levels",
           icon: "💰",
-          title: "Levels.fyi / AmbitionBox CTC & Equity Decoder",
+          title: "salary / AmbitionBox CTC & Equity Decoder",
           desc: "Breaks down Base Salary, 4-year RSU vesting schedule, sign-on bonus, and tax-adjusted take-home pay.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -847,7 +836,7 @@
         {
           id: "pramp",
           icon: "🎙️",
-          title: "Pramp / Interviewing.io AI Mock Interviewer",
+          title: "peer / Interviewing.io AI Mock Interviewer",
           desc: "Simulates FAANG System Design & Behavioral leadership interviews with real-time rubric grading.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -869,12 +858,12 @@
         {
           id: "eightfold",
           icon: "🕸️",
-          title: "Eightfold.ai Skill Adjacency & Role Transition",
+          title: "Skill Adjacency & Role Transition",
           desc: "Calculates shortest upskilling path from Backend/Full-Stack to Principal AI Systems Architect.",
           apiEndpoint: "/api/roadmap-sh/progress",
           inputs: [
             { key: "track", label: "Target Career Vector", type: "select", options: ["ai-engineer", "fullstack-next", "devops-sre"], default: "ai-engineer" },
-            { key: "completed", label: "Existing Verified Skills", type: "text", default: "python,fastapi,docker,postgresql" }
+            { key: "completed", label: "Skills you have", type: "text", default: "python,fastapi,docker,postgresql" }
           ]
         },
         {
@@ -905,23 +894,23 @@
       id: "agency",
       name: "Sevenforce Autonomous AI Agency",
       short: "Sevenforce Agency",
-      badge: "DEVIN + VAPI + N8N + LANGGRAPH + CLAY CLONE",
+      badge: "AI EMPLOYEES & AUTOMATION",
       accent: "#ec4899",
       accent2: "#6366f1",
       landingUrl: "/agency/",
-      appUrl: "/agency/app/",
+      appUrl: "/sevenforce/app/",
       shape3d: "torusKnot",
       kpis: [
-        { label: "Voice AI Latency", val: "385 ms", delta: "Vapi Sub-500ms SLA" },
+        { label: "Voice AI Latency", val: "385 ms", delta: "voice Sub-500ms SLA" },
         { label: "LangGraph Cyclic Nodes", val: "5-Node DAG", delta: "Zero Hallucination" },
         { label: "Outbound Enrichment", val: "96.4% Match", delta: "Clay 12-Source Waterfall" },
         { label: "Client Automation ROI", val: "8.4x ROAS", delta: "-72% Support Cost" }
       ],
       radarIndicators: [
         { name: "LangGraph DAG", max: 100 },
-        { name: "Vapi Voice SLA", max: 100 },
-        { name: "Devin SWE Speed", max: 100 },
-        { name: "Clay Waterfall", max: 100 },
+        { name: "voice Voice SLA", max: 100 },
+        { name: "AI dev SWE Speed", max: 100 },
+        { name: "Lead Enrichment", max: 100 },
         { name: "FinOps Savings", max: 100 }
       ],
       radarValues: [100, 98, 96, 99, 97],
@@ -931,7 +920,7 @@
         {
           id: "langgraph",
           icon: "🕸️",
-          title: "LangGraph + n8n 5-Node Workflow Studio",
+          title: "LangGraph + automation 5-Node Workflow Studio",
           desc: "Executes cyclic multi-agent workflows: Supervisor → Researcher → ToolExecutor → Critic → Synthesizer.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -942,7 +931,7 @@
         {
           id: "vapi",
           icon: "📞",
-          title: "Vapi / Bland Sub-500ms Voice Latency & VRAM Sizer",
+          title: "voice / Bland Sub-500ms Voice Latency & VRAM Sizer",
           desc: "Calculates end-to-end voice turn latency (Deepgram Nova-2 + Groq/vLLM + Cartesia Sonic) and GPU VRAM.",
           apiEndpoint: "/api/vapi/voice-latency",
           inputs: [
@@ -955,7 +944,7 @@
         {
           id: "devin",
           icon: "👨‍💻",
-          title: "Devin / Factory Autonomous SWE Sprint Planner",
+          title: "AI dev / Factory Autonomous SWE Sprint Planner",
           desc: "Estimates autonomous PR resolution rate, unit test coverage lift, and engineering hours saved.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
@@ -967,8 +956,8 @@
         {
           id: "clay",
           icon: "📬",
-          title: "Clay + Apollo B2B Waterfall Enrichment",
-          desc: "Chains 12 data providers (Apollo, Clearbit, LinkedIn, GitHub, Crunchbase) for 96%+ verified buyer emails.",
+          title: "B2B Lead Enrichment",
+          desc: "Chains 12 data providers (Apollo, Clearbit, LinkedIn, GitHub, startup database) for 96%+ verified buyer emails.",
           apiEndpoint: "/api/langgraph/execute",
           inputs: [
             { key: "icp", label: "Ideal Customer Profile (ICP)", type: "text", default: "VP Engineering & CTOs at Series A-C SaaS companies (50-500 employees)" },
@@ -1000,7 +989,7 @@
         {
           id: "canva",
           icon: "🎨",
-          title: "Ad Creative Canva Studio & 3D Agent Swarm",
+          title: "Ad Creative design Studio & 3D Agent Swarm",
           desc: "Design high-CTR campaign creatives and visualize the 3D autonomous agent mesh.",
           apiEndpoint: "/api/canva/magic-design",
           inputs: [
@@ -1049,7 +1038,7 @@
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
         overflow-x: hidden;
       }
-      body > *:not(#vite-app-root):not(#vite-spotlight-modal) {
+      body > *:not(#vite-app-root):not(#vite-spotlight-modal):not(#v7-portal-frontier-strip) {
         display: none !important;
       }
       #vite-app-root {
@@ -1419,9 +1408,9 @@
       const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
       camera.position.set(0, 0.25, 4.4);
 
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
       renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(1);
       threeContainer.appendChild(renderer.domElement);
       threeRenderer = renderer;
 
@@ -1537,15 +1526,18 @@
       });
 
       function animate() {
-        threeAnimId = requestAnimationFrame(animate);
+        setTimeout(() => {
+          threeAnimId = requestAnimationFrame(animate);
+        }, 45);
+        if (document.hidden) return;
         if (!isDragging) {
-          group.rotation.x += 0.005;
-          group.rotation.y += 0.009;
+          group.rotation.x += 0.01;
+          group.rotation.y += 0.018;
         }
         rings.forEach((rg, idx) => {
-          rg.rotation.z += (idx + 1) * 0.012;
+          rg.rotation.z += (idx + 1) * 0.022;
         });
-        particles.rotation.y -= 0.0025;
+        particles.rotation.y -= 0.004;
         renderer.render(scene, camera);
       }
       animate();
@@ -1598,7 +1590,7 @@
       if (data.estimated_annual_savings_inr !== undefined) summaryCards.push({ k: "Annual Card Savings", v: "₹" + Number(data.estimated_annual_savings_inr).toLocaleString() });
       if (data.max_moment_knm !== undefined) summaryCards.push({ k: "Max Bending Moment", v: data.max_moment_knm + " kN·m" });
       if (data.max_deflection_mm !== undefined) summaryCards.push({ k: "Mid-Span Deflection", v: data.max_deflection_mm + " mm" });
-      if (data.combined_utilization !== undefined) summaryCards.push({ k: "Hilti Utilization", v: (data.combined_utilization * 100).toFixed(1) + "%" });
+      if (data.combined_utilization !== undefined) summaryCards.push({ k: "anchor Utilization", v: (data.combined_utilization * 100).toFixed(1) + "%" });
       if (data.egfr_ml_min !== undefined) summaryCards.push({ k: "eGFR (CKD-EPI)", v: data.egfr_ml_min + " mL/min" });
       if (data.total_turn_latency_ms !== undefined) summaryCards.push({ k: "Voice Turn Latency", v: data.total_turn_latency_ms + " ms" });
       if (data.tax_saved_inr !== undefined) summaryCards.push({ k: "Section 80G Tax Saved", v: "₹" + Number(data.tax_saved_inr).toLocaleString() });
@@ -1618,7 +1610,7 @@
       outputBox.innerHTML = `
         ${cardsHtml}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <span style="font-size:12px;font-weight:800;color:#a5b4fc;">🟢 LIVE FASTAPI + LANGGRAPH TELEMETRY PAYLOAD (${tool.apiEndpoint})</span>
+          <span style="font-size:12px;font-weight:800;color:#a5b4fc;">Full response (${tool.apiEndpoint})</span>
           <span style="font-size:11px;color:#6ee7b7;">HTTP ${res.status} OK</span>
         </div>
         <pre style="margin:0;max-height:280px;overflow:auto;padding:12px;border-radius:12px;background:rgba(2,6,23,0.9);border:1px solid rgba(148,163,184,0.2);color:#e2e8f0;font-size:12px;line-height:1.45;">${JSON.stringify(data, null, 2)}</pre>
@@ -1649,7 +1641,7 @@
       <div style="width:min(680px,92vw);background:#0f172a;border:1px solid rgba(129,140,248,0.45);border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,0.65);overflow:hidden;">
         <div style="padding:16px 20px;border-bottom:1px solid rgba(148,163,184,0.18);display:flex;align-items:center;gap:12px;">
           <span style="font-size:18px;">🔍</span>
-          <input id="vite-spotlight-input" placeholder="Search all 63 Vite /app tools across 9 Ventures (e.g. SkyCiv, 80G, BNS, CashKaro, Vapi, MDCalc)..." style="flex:1;background:transparent;border:none;color:#fff;font-size:15px;outline:none;"/>
+          <input id="vite-spotlight-input" placeholder="Search all 63 Vite /app tools across 9 Ventures (e.g. structural, 80G, BNS, cashback, voice, clinical)..." style="flex:1;background:transparent;border:none;color:#fff;font-size:15px;outline:none;"/>
           <button id="vite-spotlight-close" style="background:rgba(148,163,184,0.15);border:none;color:#cbd5e1;padding:5px 10px;border-radius:8px;cursor:pointer;font-size:12px;">ESC</button>
         </div>
         <div id="vite-spotlight-list" style="max-height:58vh;overflow-y:auto;padding:12px;"></div>
@@ -1701,283 +1693,16 @@
   }
 
   function renderVentureSignatureWorkbench(v) {
-    if (v.id === "emart") {
-      return `
-        <div class="vite-card" style="border:1px solid rgba(245,158,11,0.4);background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(16,185,129,0.06));">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
-            <div>
-              <span style="font-size:11px;font-weight:800;color:#fbbf24;text-transform:uppercase;">🛒 SMARTPRIX + BUYHATKE + BLINKIT LIVE STOREFRONT</span>
-              <h3 style="margin:3px 0 0;font-size:18px;font-weight:900;color:#fff;">4-Marketplace Live Price Arbitrage & Spec Score Matrix</h3>
-            </div>
-            <a href="/avp-emart/spec-compare/" style="text-decoration:none;padding:6px 12px;border-radius:8px;background:rgba(245,158,11,0.2);color:#fde68a;font-size:11.5px;font-weight:800;">Open Full Hardware Spec Comparator →</a>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:12px;">
-            ${[
-              { name: "iPhone 16 Pro (256GB)", score: "96/100", amz: "₹1,12,900", flp: "₹1,11,499", crm: "₹1,13,500", net: "₹99,850 (HDFC + CashKaro)" },
-              { name: "MacBook Air M3 (16/512GB)", score: "95/100", amz: "₹1,14,900", flp: "₹1,12,990", crm: "₹1,14,000", net: "₹98,400 (SBI 5% + Coupon)" },
-              { name: "Sony WH-1000XM5 ANC", score: "93/100", amz: "₹26,990", flp: "₹25,999", crm: "₹27,490", net: "₹21,890 (90-Day Low Match)" },
-              { name: "Samsung Galaxy S24 Ultra", score: "97/100", amz: "₹1,09,999", flp: "₹1,08,499", crm: "₹1,10,999", net: "₹94,200 (Exchange + Stacker)" }
-            ].map((p) => `
-              <div style="padding:14px;border-radius:14px;background:rgba(2,6,23,0.85);border:1px solid rgba(245,158,11,0.28);">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                  <span style="font-size:13.5px;font-weight:900;color:#fff;">${p.name}</span>
-                  <span style="padding:2px 7px;border-radius:6px;background:rgba(16,185,129,0.2);color:#6ee7b7;font-size:10.5px;font-weight:800;">Spec ${p.score}</span>
-                </div>
-                <div style="font-size:11.5px;color:#94a3b8;display:flex;flex-direction:column;gap:3px;margin-bottom:8px;">
-                  <div>Amazon IN: <strong style="color:#e2e8f0;">${p.amz}</strong></div>
-                  <div>Flipkart: <strong style="color:#38bdf8;">${p.flp}</strong></div>
-                  <div>Croma / Jiomart: <strong style="color:#e2e8f0;">${p.crm}</strong></div>
-                </div>
-                <div style="padding:7px 10px;border-radius:8px;background:rgba(16,185,129,0.14);border:1px solid rgba(16,185,129,0.35);font-size:11.5px;font-weight:800;color:#34d399;">
-                  ⚡ Net Stacked: ${p.net}
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        </div>
-      `;
-    }
-    if (v.id === "avpu") {
-      return `
-        <div class="vite-card" style="border:1px solid rgba(6,182,212,0.4);background:linear-gradient(135deg,rgba(6,182,212,0.08),rgba(99,102,241,0.06));">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-            <div>
-              <span style="font-size:11px;font-weight:800;color:#22d3ee;text-transform:uppercase;">🎓 LEARN-ANYTHING.XYZ DAG + FREECODECAMP IDE + DUOLINGO LEAGUE</span>
-              <h3 style="margin:3px 0 0;font-size:18px;font-weight:900;color:#fff;">Topological Skill Curriculum & Gamified Mastery Bar</h3>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-              <span style="padding:5px 10px;border-radius:999px;background:rgba(245,158,11,0.2);color:#fbbf24;font-size:12px;font-weight:800;">🔥 42 Day Streak</span>
-              <span style="padding:5px 10px;border-radius:999px;background:rgba(239,68,68,0.2);color:#f87171;font-size:12px;font-weight:800;">❤️❤️❤️❤️❤️ 5 Hearts</span>
-              <span style="padding:5px 10px;border-radius:999px;background:rgba(56,189,248,0.2);color:#38bdf8;font-size:12px;font-weight:800;">💎 Diamond League #1</span>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;">
-            ${[
-              { step: "Node 01", title: "Linear Algebra & Tensors", status: "✅ Mastered (SM-2 +15d)", href: "/avpu/learn-dag/" },
-              { step: "Node 02", title: "Transformer Self-Attention", status: "✅ Mastered (100% Quiz)", href: "/avpu/code-lab/" },
-              { step: "Node 03", title: "LangGraph Cyclic StateGraph", status: "⚡ Active Lab (In Progress)", href: "/avpu/ai-tutor/" },
-              { step: "Node 04", title: "Laws of UX & Mental Models", status: "🔓 Unlocked Capstone", href: "/avpu/laws-of-ux/" },
-              { step: "Node 05", title: "100DaysAI Public Ship", status: "🏆 W3C Badge Ready", href: "/avpu/challenge-100days/" }
-            ].map((n) => `
-              <a href="${n.href}" style="text-decoration:none;padding:12px;border-radius:12px;background:rgba(2,6,23,0.85);border:1px solid rgba(6,182,212,0.3);display:block;">
-                <div style="font-size:10.5px;font-weight:800;color:#22d3ee;">${n.step}</div>
-                <div style="font-size:13px;font-weight:900;color:#fff;margin:4px 0;">${n.title}</div>
-                <div style="font-size:11px;color:#34d399;font-weight:700;">${n.status}</div>
-              </a>
-            `).join("")}
-          </div>
-        </div>
-      `;
-    }
-    if (v.id === "pharmacy") {
-      return `
-        <div class="vite-card" style="border:1px solid rgba(16,185,129,0.4);background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(6,182,212,0.06));">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-            <div>
-              <span style="font-size:11px;font-weight:800;color:#34d399;text-transform:uppercase;">💊 TATA 1MG + JAN AUSHADHI NLEM + DRUGBANK CYP450</span>
-              <h3 style="margin:3px 0 0;font-size:18px;font-weight:900;color:#fff;">Bio-Equivalent Generic Salt Substitution & Clinical Safety Matrix</h3>
-            </div>
-            <a href="/pharmacy/interaction-checker/" style="text-decoration:none;padding:6px 12px;border-radius:8px;background:rgba(16,185,129,0.2);color:#6ee7b7;font-size:11.5px;font-weight:800;">Open CYP450 Matrix →</a>
-          </div>
-          <div style="overflow-x:auto;">
-            <table style="width:100%;border-collapse:collapse;font-size:12.5px;text-align:left;">
-              <thead>
-                <tr style="border-bottom:1px solid rgba(148,163,184,0.2);color:#94a3b8;">
-                  <th style="padding:8px;">Branded Rx</th>
-                  <th style="padding:8px;">Active NLEM Chemical Salt</th>
-                  <th style="padding:8px;">Branded MRP</th>
-                  <th style="padding:8px;">Jan Aushadhi Generic</th>
-                  <th style="padding:8px;">CYP450 / Renal Note</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style="border-bottom:1px solid rgba(148,163,184,0.1);">
-                  <td style="padding:8px;font-weight:800;color:#fff;">Augmentin 625 Duo</td>
-                  <td style="padding:8px;color:#cbd5e1;">Amoxicillin 500mg + Clavulanic Acid 125mg</td>
-                  <td style="padding:8px;color:#f87171;text-decoration:line-through;">₹223.00</td>
-                  <td style="padding:8px;color:#34d399;font-weight:900;">₹54.00 (Save 76%)</td>
-                  <td style="padding:8px;color:#6ee7b7;">Adjust if CrCl &lt; 30 mL/min</td>
-                </tr>
-                <tr style="border-bottom:1px solid rgba(148,163,184,0.1);">
-                  <td style="padding:8px;font-weight:800;color:#fff;">Crestor 20mg</td>
-                  <td style="padding:8px;color:#cbd5e1;">Rosuvastatin Calcium 20mg IP</td>
-                  <td style="padding:8px;color:#f87171;text-decoration:line-through;">₹388.00</td>
-                  <td style="padding:8px;color:#34d399;font-weight:900;">₹42.00 (Save 89%)</td>
-                  <td style="padding:8px;color:#fbbf24;">CYP2C9 Substrate • Avoid Gemfibrozil</td>
-                </tr>
-                <tr>
-                  <td style="padding:8px;font-weight:800;color:#fff;">Janumet 50/500</td>
-                  <td style="padding:8px;color:#cbd5e1;">Sitagliptin 50mg + Metformin 500mg</td>
-                  <td style="padding:8px;color:#f87171;text-decoration:line-through;">₹395.00</td>
-                  <td style="padding:8px;color:#34d399;font-weight:900;">₹68.00 (Save 83%)</td>
-                  <td style="padding:8px;color:#6ee7b7;">Hold 48h prior to IV contrast</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-    if (v.id === "breakdown") {
-      return `
-        <div class="vite-card" style="border:1px solid rgba(249,115,22,0.4);background:linear-gradient(135deg,rgba(249,115,22,0.08),rgba(234,179,8,0.06));">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-            <div>
-              <span style="font-size:11px;font-weight:800;color:#fb923c;text-transform:uppercase;">🏗️ SKYCIV STRUCTURAL FEA + HILTI PROFIS + CPWD DSR 2024</span>
-              <h3 style="margin:3px 0 0;font-size:18px;font-weight:900;color:#fff;">Live Euler-Bernoulli Beam SFD/BMD Visualizer & IS-456 Check</h3>
-            </div>
-            <a href="/breakdown/boq-estimator/" style="text-decoration:none;padding:6px 12px;border-radius:8px;background:rgba(249,115,22,0.2);color:#fed7aa;font-size:11.5px;font-weight:800;">Open Full CPWD BOQ Sheet →</a>
-          </div>
-          <svg viewBox="0 0 700 130" style="width:100%;height:auto;background:rgba(2,6,23,0.88);border-radius:12px;border:1px solid rgba(249,115,22,0.3);">
-            <!-- Beam Line -->
-            <line x1="60" y1="45" x2="640" y2="45" stroke="#f97316" stroke-width="6"/>
-            <!-- Supports -->
-            <polygon points="60,48 48,70 72,70" fill="#38bdf8"/>
-            <polygon points="640,48 628,70 652,70" fill="#38bdf8"/>
-            <!-- Parabolic Bending Moment Curve -->
-            <path d="M 60 45 Q 350 125 640 45" fill="rgba(249,115,22,0.18)" stroke="#eab308" stroke-width="2.5"/>
-            <text x="275" y="112" fill="#fde047" font-size="12" font-weight="bold">M_max = wL²/8 + PL/4 = 168.0 kN·m (IS 456 Safe)</text>
-            <text x="65" y="28" fill="#94a3b8" font-size="11">R_A = 92.0 kN ↓ UDL w = 24 kN/m + Point Load P = 40 kN</text>
-          </svg>
-        </div>
-      `;
-    }
-    if (v.id === "trust") {
-      return `
-        <div class="vite-card" style="border:1px solid rgba(16,185,129,0.4);background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(59,130,246,0.06));">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-            <div>
-              <span style="font-size:11px;font-weight:800;color:#34d399;text-transform:uppercase;">💚 GIVEINDIA 80G + GITCOIN QUADRATIC FUNDING + CHARITYNAVIGATOR</span>
-              <h3 style="margin:3px 0 0;font-size:18px;font-weight:900;color:#fff;">Verified Grassroots Campaigns & Quadratic Matching Pool</h3>
-            </div>
-            <a href="/trust/tax-exemption/" style="text-decoration:none;padding:6px 12px;border-radius:8px;background:rgba(16,185,129,0.2);color:#6ee7b7;font-size:11.5px;font-weight:800;">Download Form 10BE Receipt →</a>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;">
-            ${[
-              { title: "Thar Desert Solar Borewell #14", raised: "₹18.4L / ₹20L", donors: "642 Grassroots Donors", match: "3.8x Gitcoin QF Match", pct: 92 },
-              { title: "Kutch Tribal Girls STEM & AI Lab", raised: "₹14.2L / ₹15L", donors: "518 Grassroots Donors", match: "4.1x Gitcoin QF Match", pct: 95 },
-              { title: "Mobile Rural Cataract Surgery Unit", raised: "₹22.8L / ₹25L", donors: "890 Grassroots Donors", match: "4.6x Gitcoin QF Match", pct: 91 }
-            ].map((c) => `
-              <div style="padding:14px;border-radius:14px;background:rgba(2,6,23,0.85);border:1px solid rgba(16,185,129,0.28);">
-                <div style="font-size:13.5px;font-weight:900;color:#fff;">${c.title}</div>
-                <div style="font-size:11.5px;color:#94a3b8;margin:4px 0 8px;">${c.donors} • <span style="color:#6ee7b7;font-weight:700;">${c.match}</span></div>
-                <div style="height:8px;border-radius:999px;background:#1e293b;overflow:hidden;margin-bottom:6px;">
-                  <div style="width:${c.pct}%;height:100%;background:linear-gradient(90deg,#10b981,#3b82f6);"></div>
-                </div>
-                <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:#e2e8f0;">
-                  <span>${c.raised}</span>
-                  <span style="color:#34d399;">${c.pct}% Funded (80G Verified)</span>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        </div>
-      `;
-    }
-    if (v.id === "rakshak") {
-      return `
-        <div class="vite-card" style="border:1px solid rgba(239,68,68,0.4);background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(139,92,246,0.06));">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-            <div>
-              <span style="font-size:11px;font-weight:800;color:#f87171;text-transform:uppercase;">⚖️ INDIACODE BNS 2023 + CITIZEN RADAR + HIBP / VIRUSTOTAL</span>
-              <h3 style="margin:3px 0 0;font-size:18px;font-weight:900;color:#fff;">IPC 1860 ↔ Bharatiya Nyaya Sanhita (BNS) 2023 Statutory Crosswalk</h3>
-            </div>
-            <a href="/rakshak-ai/fir-generator/" style="text-decoration:none;padding:6px 12px;border-radius:8px;background:rgba(239,68,68,0.2);color:#fca5a5;font-size:11.5px;font-weight:800;">Open Zero-FIR Drafter →</a>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
-            ${[
-              { ipc: "IPC Sec 420 (Cheating)", bns: "BNS Section 318(4)", bail: "Cognizable • Non-Bailable • Up to 7 Yrs" },
-              { ipc: "IPC Sec 379A (Snatching)", bns: "BNS Section 304", bail: "New Dedicated Offense • Up to 3 Yrs + Fine" },
-              { ipc: "IPC Sec 302 (Murder)", bns: "BNS Section 103(1)", bail: "Cognizable • Non-Bailable • Death / Life" },
-              { ipc: "IT Act Sec 66D (Cyber Fraud)", bns: "BNS Sec 319 + BNSS 173", bail: "Zero-FIR Any Station • BSA Sec 63 Hash" }
-            ].map((law) => `
-              <div style="padding:12px;border-radius:12px;background:rgba(2,6,23,0.85);border:1px solid rgba(239,68,68,0.3);">
-                <div style="font-size:11px;color:#94a3b8;text-decoration:line-through;">Legacy: ${law.ipc}</div>
-                <div style="font-size:14px;font-weight:900;color:#f87171;margin:3px 0;">→ ${law.bns}</div>
-                <div style="font-size:11px;color:#cbd5e1;font-weight:700;">${law.bail}</div>
-              </div>
-            `).join("")}
-          </div>
-        </div>
-      `;
-    }
-    if (v.id === "comonk") {
-      return `
-        <div class="vite-card" style="border:1px solid rgba(168,85,247,0.4);background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(236,72,153,0.06));">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-            <div>
-              <span style="font-size:11px;font-weight:800;color:#c084fc;text-transform:uppercase;">💰 LEVELS.FYI + JOBSCAN ATS + TRYEXPONENT MOCK ARENA</span>
-              <h3 style="margin:3px 0 0;font-size:18px;font-weight:900;color:#fff;">Cross-Company Engineering Level Equivalency & India CTC Benchmarks</h3>
-            </div>
-            <a href="/comonk/salary-insights/" style="text-decoration:none;padding:6px 12px;border-radius:8px;background:rgba(168,85,247,0.2);color:#e9d5ff;font-size:11.5px;font-weight:800;">Open Levels.fyi Explorer →</a>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;">
-            ${[
-              { tier: "Entry / SDE-1", eq: "Google L3 = Meta E3 = MSFT 59/60 = AMZN L4", ctc: "₹28L – ₹42L (Base + RSU)" },
-              { tier: "Mid-Level / SDE-2", eq: "Google L4 = Meta E4 = MSFT 61/62 = AMZN L5", ctc: "₹52L – ₹78L (Base + RSU)" },
-              { tier: "Senior SWE", eq: "Google L5 = Meta E5 = MSFT 63/64 = AMZN L6", ctc: "₹88L – ₹1.35Cr (Base + RSU)" },
-              { tier: "Staff / Principal", eq: "Google L6 = Meta E6 = MSFT 65/66 = AMZN L7", ctc: "₹1.55Cr – ₹2.60Cr+" }
-            ].map((lv) => `
-              <div style="padding:12px;border-radius:12px;background:rgba(2,6,23,0.85);border:1px solid rgba(168,85,247,0.3);">
-                <div style="font-size:12px;font-weight:900;color:#c084fc;">${lv.tier}</div>
-                <div style="font-size:11.5px;color:#e2e8f0;margin:4px 0;font-weight:700;">${lv.eq}</div>
-                <div style="font-size:12.5px;color:#34d399;font-weight:900;">${lv.ctc}</div>
-              </div>
-            `).join("")}
-          </div>
-        </div>
-      `;
-    }
-    if (v.id === "agency") {
-      return `
-        <div class="vite-card" style="border:1px solid rgba(236,72,153,0.4);background:linear-gradient(135deg,rgba(236,72,153,0.08),rgba(99,102,241,0.06));">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-            <div>
-              <span style="font-size:11px;font-weight:800;color:#f472b6;text-transform:uppercase;">👨‍💻 DEVIN SWE TERMINAL + LANGGRAPH 5-NODE DAG + VAPI VOICE</span>
-              <h3 style="margin:3px 0 0;font-size:18px;font-weight:900;color:#fff;">Autonomous AI Workforce & Live 5-Node StateGraph Pipeline</h3>
-            </div>
-            <a href="/sevenforce/devin-terminal/" style="text-decoration:none;padding:6px 12px;border-radius:8px;background:rgba(236,72,153,0.2);color:#fbcfe8;font-size:11.5px;font-weight:800;">Open Full Devin 4-Pane Terminal →</a>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
-            ${[
-              { node: "01. Supervisor", desc: "Intent Router & Guardrails", lat: "12 ms" },
-              { node: "02. Researcher", desc: "ChromaDB Hybrid RAG", lat: "38 ms" },
-              { node: "03. ToolExecutor", desc: "391 FastAPI Endpoints", lat: "19 ms" },
-              { node: "04. Critic QA", desc: "Score >= 0.85 Reflection", lat: "15 ms" },
-              { node: "05. Synthesizer", desc: "Structured JSON + Voice", lat: "22 ms" }
-            ].map((nd) => `
-              <div style="padding:12px;border-radius:12px;background:rgba(2,6,23,0.85);border:1px solid rgba(236,72,153,0.3);">
-                <div style="font-size:12.5px;font-weight:900;color:#f472b6;">${nd.node}</div>
-                <div style="font-size:11px;color:#cbd5e1;margin:3px 0;">${nd.desc}</div>
-                <div style="font-size:11px;color:#34d399;font-weight:800;">⚡ ${nd.lat}</div>
-              </div>
-            `).join("")}
-          </div>
-        </div>
-      `;
-    }
+    // honest-workbench: the old showcases listed invented prices, streaks, campaigns and
+    // salaries. Point to the venture's working tools instead.
     return `
-      <div class="vite-card" style="border:1px solid rgba(99,102,241,0.4);background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(236,72,153,0.06));">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+      <div class="vite-card" style="border:1px solid ${v.accent}55;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
           <div>
-            <span style="font-size:11px;font-weight:800;color:#a5b4fc;text-transform:uppercase;">🚀 Y-COMBINATOR SAFE + CARTA CAP TABLE + ANGELLIST RUV</span>
-            <h3 style="margin:3px 0 0;font-size:18px;font-weight:900;color:#fff;">Sovereign 9-Venture Portfolio & Syndicate Command Matrix</h3>
+            <div style="font-size:11px;font-weight:800;color:${v.accent};text-transform:uppercase;">${v.name}</div>
+            <div style="font-size:14px;color:#cbd5e1;margin-top:4px;">Quick versions of ${v.short}'s tools. The full tools, with saving and more options, are on the venture site.</div>
           </div>
-          <div style="display:flex;gap:8px;">
-            <a href="/syndicate-ruv/" style="text-decoration:none;padding:6px 12px;border-radius:8px;background:rgba(99,102,241,0.2);color:#c7d2fe;font-size:11.5px;font-weight:800;">Syndicate RUV →</a>
-            <a href="/market-sizing/" style="text-decoration:none;padding:6px 12px;border-radius:8px;background:rgba(16,185,129,0.2);color:#6ee7b7;font-size:11.5px;font-weight:800;">TAM/SAM/SOM Sizer →</a>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;">
-          ${Object.values(VENTURE_APPS).filter((x) => x.id !== "hub").map((ven) => `
-            <a href="${ven.landingUrl}" style="text-decoration:none;padding:11px 13px;border-radius:12px;background:rgba(2,6,23,0.85);border:1px solid ${ven.accent}55;display:flex;justify-content:space-between;align-items:center;">
-              <div>
-                <div style="font-size:13px;font-weight:900;color:#fff;">${ven.short}</div>
-                <div style="font-size:10.5px;color:#94a3b8;">${ven.kpis[0].val}</div>
-              </div>
-              <span style="font-size:11px;color:${ven.accent};font-weight:800;">Visit Site →</span>
-            </a>
-          `).join("")}
+          <a href="${v.landingUrl}" class="vite-v-btn" style="text-decoration:none;">Open ${v.short} tools →</a>
         </div>
       </div>
     `;
@@ -2008,7 +1733,7 @@
               <span style="font-size:16px;font-weight:900;letter-spacing:-0.02em;color:#fff;">${v.name}</span>
               <span class="vite-hmr-pill">🟢 VITE v6.0 + REACT 18 SPA • ONLINE AI ENGINE</span>
             </div>
-            <div style="font-size:11.5px;color:#94a3b8;margin-top:2px;">${v.badge} • 391 FastAPI Routes + LangGraph StateGraph + 64 Reference Sites</div>
+            <div style="font-size:11.5px;color:#94a3b8;margin-top:2px;">${v.badge}</div>
           </div>
         </div>
 
@@ -2023,16 +1748,8 @@
 
         <!-- RIGHT ACTIONS + WEB3 WALLET CONNECT -->
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <select id="vite-web3-chain" class="vite-v-btn" style="background:rgba(15,23,42,0.9);color:#6ee7b7;border-color:rgba(16,185,129,0.45);">
-            <option value="Polygon POS (ChainID: 137)">🟣 Polygon POS (137)</option>
-            <option value="Base L2 (ChainID: 8453)">🔵 Base L2 (8453)</option>
-            <option value="Solana Mainnet-Beta">🟢 Solana Mainnet</option>
-            <option value="Ethereum Mainnet (ChainID: 1)">💎 Ethereum L1</option>
-            <option value="Arbitrum Nitro (ChainID: 42161)">🔷 Arbitrum One</option>
-          </select>
-          <button id="vite-web3-connect-btn" class="vite-v-btn" style="background:linear-gradient(135deg,rgba(245,158,11,0.22),rgba(236,72,153,0.22));border-color:rgba(245,158,11,0.55);color:#fde68a;">
-            🦊 0x71C8...89A4 (ERC-4337 Connected)
-          </button>
+
+          <a href="/web3-studio/" class="vite-v-btn" style="text-decoration:none;border-color:rgba(245,158,11,0.55);color:#fde68a;">Web3 Studio</a>
           <button id="vite-open-spotlight" class="vite-v-btn" style="border-color:rgba(129,140,248,0.5);color:#c7d2fe;">
             🔍 Ctrl+K
           </button>
@@ -2049,7 +1766,7 @@
           <div style="padding:10px 12px;border-radius:12px;background:rgba(30,41,59,0.55);border:1px solid rgba(148,163,184,0.14);margin-bottom:4px;">
             <div style="font-size:10.5px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;">ACTIVE WORKSPACE</div>
             <div style="font-size:14px;font-weight:900;color:#fff;margin-top:3px;">${v.name}</div>
-            <div style="font-size:11.5px;color:#34d399;margin-top:4px;font-weight:700;">● 7 Specialized Modules Ready</div>
+            <div style="font-size:11.5px;color:#34d399;margin-top:4px;font-weight:700;">● Tools for this venture</div>
           </div>
 
           ${v.tools.map((t, idx) => `
@@ -2062,29 +1779,12 @@
             </button>
           `).join("")}
 
-          <div style="margin-top:auto;padding:12px;border-radius:14px;background:linear-gradient(135deg,rgba(99,102,241,0.14),rgba(16,185,129,0.12));border:1px solid rgba(99,102,241,0.28);">
-            <div style="font-size:11px;font-weight:800;color:#a5b4fc;">⚡ VITE SPA ADVANTAGE</div>
-            <div style="font-size:11px;color:#cbd5e1;margin-top:4px;line-height:1.45;">
-              Zero Next.js Turbopack chunk 404s. Instant 0ms tool switching across 63 modules & 391 FastAPI routes.
-            </div>
-          </div>
         </aside>
 
         <!-- CENTER / RIGHT WORKSTATION -->
         <main class="vite-main">
           <!-- VENTURE-SPECIFIC DOMAIN SIGNATURE WORKBENCH -->
           ${renderVentureSignatureWorkbench(v)}
-
-          <!-- KPI ROW -->
-          <div class="vite-kpi-grid">
-            ${v.kpis.map((k) => `
-              <div class="vite-card" style="border-top:3px solid ${v.accent};">
-                <div style="font-size:11.5px;color:#94a3b8;font-weight:700;text-transform:uppercase;">${k.label}</div>
-                <div style="font-size:26px;font-weight:900;color:#ffffff;margin-top:6px;">${k.val}</div>
-                <div style="font-size:11.5px;color:#34d399;font-weight:700;margin-top:4px;">▲ ${k.delta}</div>
-              </div>
-            `).join("")}
-          </div>
 
           <!-- ACTIVE TOOL WORKSTATION + LIVE OUTPUT -->
           <div class="vite-workstation-grid">
@@ -2119,13 +1819,13 @@
 
               <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
                 <button id="vite-run-tool-btn" class="vite-run-btn">
-                  ⚡ Execute Live ${tool.title} Engine
+                  Run ${tool.title}
                 </button>
                 <button id="vite-web3-exec-btn" class="vite-v-btn" style="padding:11px 16px;background:linear-gradient(135deg,rgba(16,185,129,0.22),rgba(6,182,212,0.22));border-color:rgba(16,185,129,0.55);color:#6ee7b7;font-weight:800;">
-                  ⛓️ Anchor On-Chain Web3 Proof (ERC-4337)
+                  Fingerprint this result
                 </button>
                 <button id="vite-export-json-btn" class="vite-v-btn" style="padding:11px 16px;">
-                  📥 Export Telemetry JSON
+                  Download result (.json)
                 </button>
               </div>
 
@@ -2142,8 +1842,8 @@
             <!-- RIGHT: LIVE API TELEMETRY OUTPUT -->
             <div class="vite-card" style="display:flex;flex-direction:column;">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-                <span style="font-size:13px;font-weight:800;color:#6ee7b7;">📡 REAL-TIME FASTAPI + LANGGRAPH OUTPUT</span>
-                <span style="font-size:11px;color:#94a3b8;">StateGraph 5-Node Verified</span>
+                <span style="font-size:13px;font-weight:800;color:#6ee7b7;">Result</span>
+                <span style="font-size:11px;color:#94a3b8;">From the Sevenseed API</span>
               </div>
               <div id="vite-tool-output" style="flex:1;"></div>
             </div>
@@ -2151,14 +1851,6 @@
 
           <!-- BOTTOM ROW: ECHARTS 5 RADAR + ECHARTS 5 BAR + THREE.JS 3D SPLINE VIEWPORT -->
           <div class="vite-charts-row">
-            <div class="vite-card">
-              <div style="font-size:12.5px;font-weight:800;color:#a5b4fc;margin-bottom:8px;">🕸️ APACHE ECHARTS 5 — CAPABILITY RADAR</div>
-              <div id="vite-echarts-radar" style="width:100%;height:230px;"></div>
-            </div>
-            <div class="vite-card">
-              <div style="font-size:12.5px;font-weight:800;color:#34d399;margin-bottom:8px;">📊 APACHE ECHARTS 5 — BENCHMARK TELEMETRY</div>
-              <div id="vite-echarts-bar" style="width:100%;height:230px;"></div>
-            </div>
             <div class="vite-card">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
                 <span style="font-size:12.5px;font-weight:800;color:#f472b6;">🧊 SPLINE / THREE.JS 3D WEBGL LAB</span>
@@ -2194,50 +1886,25 @@
     const runBtn = document.getElementById("vite-run-tool-btn");
     if (runBtn) runBtn.addEventListener("click", executeActiveTool);
 
+    // "Fingerprint this result": a real SHA-256 of the output shown, which the visitor can
+    // sign or record on chain in /web3-studio/ with their own wallet.
     const web3ExecBtn = document.getElementById("vite-web3-exec-btn");
     if (web3ExecBtn) {
       web3ExecBtn.addEventListener("click", async () => {
         const out = document.getElementById("vite-tool-output");
-        const chainSel = document.getElementById("vite-web3-chain");
-        const chain = chainSel ? chainSel.value : "Polygon POS (ChainID: 137)";
-        if (out) out.innerHTML = `<div style="color:#6ee7b7;font-weight:800;">⛓️ Broadcasting ERC-4337 Account Abstraction Tx to ${chain}...</div>`;
-        try {
-          const res = await fetch("/api/web3/execute", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ venture: v.id, chain, action: tool.title })
-          });
-          const data = await res.json();
-          if (out) {
-            out.innerHTML = `
-              <div style="padding:14px;border-radius:14px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.45);margin-bottom:12px;">
-                <div style="font-size:12px;font-weight:900;color:#34d399;">✅ WEB3 SMART CONTRACT CONFIRMED (${data.network})</div>
-                <div style="font-size:11.5px;color:#e2e8f0;margin-top:4px;">Contract: <strong>${data.smart_contract}</strong></div>
-                <div style="font-size:11px;color:#a5b4fc;margin-top:3px;word-break:break-all;">TxHash: <code>${data.tx_hash}</code></div>
-                <div style="font-size:11px;color:#6ee7b7;margin-top:3px;">IPFS CID: <code>${data.ipfs_metadata_cid}</code> • ${data.gas_used}</div>
-              </div>
-              <pre style="margin:0;max-height:240px;overflow:auto;padding:12px;border-radius:12px;background:rgba(2,6,23,0.9);border:1px solid rgba(148,163,184,0.2);color:#e2e8f0;font-size:12px;">${JSON.stringify(data, null, 2)}</pre>
-            `;
-          }
-        } catch (err) {
-          if (out) out.innerHTML = `<div style="color:#fca5a5;">Web3 Error: ${String(err)}</div>`;
+        const text = out ? (out.innerText || "").trim() : "";
+        if (!text) {
+          if (out) out.innerHTML = `<div style="color:#fcd34d;">Run the tool first, then fingerprint its result.</div>`;
+          return;
         }
-      });
-    }
-
-    const web3ConnBtn = document.getElementById("vite-web3-connect-btn");
-    if (web3ConnBtn) {
-      web3ConnBtn.addEventListener("click", async () => {
-        if (window.ethereum && window.ethereum.request) {
-          try {
-            const accs = await window.ethereum.request({ method: "eth_requestAccounts" });
-            if (accs && accs[0]) {
-              web3ConnBtn.textContent = `🦊 ${accs[0].slice(0, 6)}...${accs[0].slice(-4)} (EIP-1193)`;
-              return;
-            }
-          } catch (_) {}
-        }
-        web3ConnBtn.textContent = "🦊 0x94F2...C31B (ERC-4337 Session Active)";
+        const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+        const hash = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+        const box = document.createElement("div");
+        box.style.cssText = "padding:14px;border-radius:14px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.45);margin-bottom:12px;";
+        box.innerHTML = `<div style="font-size:12px;font-weight:800;color:#34d399;">SHA-256 fingerprint of this result</div>
+          <code style="display:block;font-size:11.5px;color:#e2e8f0;margin-top:6px;word-break:break-all;">${hash}</code>
+          <a href="/web3-studio/?hash=${hash}" style="display:inline-block;margin-top:8px;font-size:12px;font-weight:800;color:#6ee7b7;">Sign it or record it on chain with your wallet →</a>`;
+        out.prepend(box);
       });
     }
 
@@ -2278,6 +1945,60 @@
     );
     setTimeout(initChartsAnd3D, 60);
     executeActiveTool();
+    injectV7PortalStrip();
+  }
+
+  let deferredPwaPrompt = null;
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPwaPrompt = e;
+  });
+
+  function injectV7PortalStrip() {
+    let strip = document.getElementById("v7-portal-frontier-strip");
+    if (!strip) {
+      strip = document.createElement("section");
+      strip.id = "v7-portal-frontier-strip";
+      strip.style.cssText = "max-width:1280px;margin:0 auto 28px;padding:18px 24px;border-radius:18px;background:#0b1120;border:1px solid rgba(99,102,241,0.35);font-family:Inter,system-ui,sans-serif;";
+      strip.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
+          <div style="font-size:11px;font-family:monospace;font-weight:800;color:#818cf8;text-transform:uppercase;">v7.0 Frontier AI Studios, New Ventures & Standalone Workstations</div>
+          <button type="button" id="v7-install-pwa-btn" style="padding:6px 12px;border-radius:9px;background:linear-gradient(135deg,#10b981,#06b6d4);border:none;color:#020617;font-size:12px;font-weight:800;cursor:pointer;">📲 Install App (PWA)</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          ${[
+            ["🔎 research Research", "/perplexity-research/"],
+            ["✨ v0 Live UI Builder", "/ai-ui-builder/"],
+            ["📐 Infinite Arch Canvas", "/infinite-canvas/"],
+            ["⚡ Linear Sprint OS", "/linear-os/"],
+            ["📈 Quant Terminal", "/quant-terminal/"],
+            ["🌱 TerraPulse Climate", "/climate-agritech/"],
+            ["🏙️ UrbanGrid PropTech", "/proptech-studio/"],
+            ["🌈 WebGL Shader Lab", "/shader-3d-lab/"],
+            ["⚖️ incorporation & 83(b)", "/stripe-atlas/"],
+            ["🩺 LactMed Drug Safety", "/pharmacy/pregnancy-lactation-safety/"],
+            ["🤝 Crowdfunding Milestones", "/trust/crowdfunding-milestones/"],
+          ]
+            .map(
+              ([lbl, u]) =>
+                `<a href="${u}" style="padding:7px 12px;border-radius:10px;background:#111827;border:1px solid rgba(148,163,184,0.25);color:#e2e8f0;text-decoration:none;font-size:12.5px;font-weight:700;">${lbl}</a>`
+            )
+            .join("")}
+        </div>
+      `;
+      document.body.appendChild(strip);
+      const pwaBtn = document.getElementById("v7-install-pwa-btn");
+      if (pwaBtn) {
+        pwaBtn.addEventListener("click", async () => {
+          if (deferredPwaPrompt) {
+            deferredPwaPrompt.prompt();
+            deferredPwaPrompt = null;
+          } else {
+            pwaBtn.textContent = "✓ Ready: Use Browser 'Install App / Add to Home Screen'";
+          }
+        });
+      }
+    }
   }
 
   window.addEventListener("keydown", (e) => {
