@@ -1016,7 +1016,7 @@ def page_shader_3d_lab() -> str:
 
       <section class="adv-v7-card">
         <h2>Real-Time Viewport</h2>
-        <canvas id="sh-canvas" class="v7-canvas" width="720" height="440"></canvas>
+        <canvas id="sh-canvas" class="v7-canvas" width="400" height="240"></canvas>
       </section>
     </div>
     """
@@ -1115,7 +1115,7 @@ void main() {
           ctx.fillStyle = g; ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
       }
-      requestAnimationFrame(frame);
+      setTimeout(() => requestAnimationFrame(frame), 45);
     }
 
     document.getElementById('sh-preset').addEventListener('change', e => {
@@ -1413,4 +1413,7 @@ def build_all_v7_pages(out_dir: Path) -> int:
         idx_p.parent.mkdir(parents=True, exist_ok=True)
         flat_p.parent.mkdir(parents=True, exist_ok=True)
         idx_p.write_text(html_content, encoding="utf-8")
-        flat_p.write_text(html_content, encodin
+        flat_p.write_text(html_content, encoding="utf-8")
+        count += 1
+    return count
+

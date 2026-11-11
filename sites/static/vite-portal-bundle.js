@@ -31,10 +31,10 @@
       appUrl: "/app/",
       shape3d: "torusKnot",
       kpis: [
-        { label: "Incubated Ventures", val: "9 Active", delta: "+100% Online" },
-        { label: "FastAPI + LangGraph APIs", val: "391 Routes", delta: "0.8ms P95" },
-        { label: "Reference Sites Cloned", val: "64 Global", delta: "100% Parity" },
-        { label: "Render RAM Footprint", val: "48.2 MB", delta: "< 512 MB Safe" }
+        { label: "Incubated Ventures", val: "12 Active", delta: "v7.0 Live" },
+        { label: "FastAPI + LangGraph APIs", val: "385+ Routes", delta: "0.8ms P95" },
+        { label: "Reference Sites Integrated", val: "126 Global", delta: "100% Matrix" },
+        { label: "Render RAM Footprint", val: "< 80 MB", delta: "512 MB Safe" }
       ],
       radarIndicators: [
         { name: "AI Orchestration", max: 100 },
@@ -251,7 +251,7 @@
       accent: "#f59e0b",
       accent2: "#10b981",
       landingUrl: "/emart/",
-      appUrl: "/emart/app/",
+      appUrl: "/avp-emart/app/",
       shape3d: "octahedron",
       kpis: [
         { label: "Tracked SKUs", val: "2.4M+", delta: "4-Store Live" },
@@ -363,7 +363,7 @@
       accent: "#10b981",
       accent2: "#06b6d4",
       landingUrl: "/forest-pharmacy/",
-      appUrl: "/forest-pharmacy/app/",
+      appUrl: "/pharmacy/app/",
       shape3d: "dodecahedron",
       kpis: [
         { label: "NLEM Salt Index", val: "12,400+", delta: "Up to 85% Savings" },
@@ -475,7 +475,7 @@
       accent: "#f97316",
       accent2: "#eab308",
       landingUrl: "/breakdown-factor/",
-      appUrl: "/breakdown-factor/app/",
+      appUrl: "/breakdown/app/",
       shape3d: "box",
       kpis: [
         { label: "Structural Solvers", val: "IS-456 / ACI", delta: "SkyCiv FEA Parity" },
@@ -909,7 +909,7 @@
       accent: "#ec4899",
       accent2: "#6366f1",
       landingUrl: "/agency/",
-      appUrl: "/agency/app/",
+      appUrl: "/sevenforce/app/",
       shape3d: "torusKnot",
       kpis: [
         { label: "Voice AI Latency", val: "385 ms", delta: "Vapi Sub-500ms SLA" },
@@ -1049,7 +1049,7 @@
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
         overflow-x: hidden;
       }
-      body > *:not(#vite-app-root):not(#vite-spotlight-modal) {
+      body > *:not(#vite-app-root):not(#vite-spotlight-modal):not(#v7-portal-frontier-strip) {
         display: none !important;
       }
       #vite-app-root {
@@ -1419,9 +1419,9 @@
       const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
       camera.position.set(0, 0.25, 4.4);
 
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
       renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(1);
       threeContainer.appendChild(renderer.domElement);
       threeRenderer = renderer;
 
@@ -1537,15 +1537,18 @@
       });
 
       function animate() {
-        threeAnimId = requestAnimationFrame(animate);
+        setTimeout(() => {
+          threeAnimId = requestAnimationFrame(animate);
+        }, 45);
+        if (document.hidden) return;
         if (!isDragging) {
-          group.rotation.x += 0.005;
-          group.rotation.y += 0.009;
+          group.rotation.x += 0.01;
+          group.rotation.y += 0.018;
         }
         rings.forEach((rg, idx) => {
-          rg.rotation.z += (idx + 1) * 0.012;
+          rg.rotation.z += (idx + 1) * 0.022;
         });
-        particles.rotation.y -= 0.0025;
+        particles.rotation.y -= 0.004;
         renderer.render(scene, camera);
       }
       animate();
@@ -2278,6 +2281,60 @@
     );
     setTimeout(initChartsAnd3D, 60);
     executeActiveTool();
+    injectV7PortalStrip();
+  }
+
+  let deferredPwaPrompt = null;
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPwaPrompt = e;
+  });
+
+  function injectV7PortalStrip() {
+    let strip = document.getElementById("v7-portal-frontier-strip");
+    if (!strip) {
+      strip = document.createElement("section");
+      strip.id = "v7-portal-frontier-strip";
+      strip.style.cssText = "max-width:1280px;margin:0 auto 28px;padding:18px 24px;border-radius:18px;background:#0b1120;border:1px solid rgba(99,102,241,0.35);font-family:Inter,system-ui,sans-serif;";
+      strip.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
+          <div style="font-size:11px;font-family:monospace;font-weight:800;color:#818cf8;text-transform:uppercase;">v7.0 Frontier AI Studios, New Ventures & Standalone Workstations</div>
+          <button type="button" id="v7-install-pwa-btn" style="padding:6px 12px;border-radius:9px;background:linear-gradient(135deg,#10b981,#06b6d4);border:none;color:#020617;font-size:12px;font-weight:800;cursor:pointer;">📲 Install App (PWA)</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          ${[
+            ["🔎 Perplexity Research", "/perplexity-research/"],
+            ["✨ v0 Live UI Builder", "/ai-ui-builder/"],
+            ["📐 Infinite Arch Canvas", "/infinite-canvas/"],
+            ["⚡ Linear Sprint OS", "/linear-os/"],
+            ["📈 Quant Terminal", "/quant-terminal/"],
+            ["🌱 TerraPulse Climate", "/climate-agritech/"],
+            ["🏙️ UrbanGrid PropTech", "/proptech-studio/"],
+            ["🌈 WebGL Shader Lab", "/shader-3d-lab/"],
+            ["⚖️ Stripe Atlas & 83(b)", "/stripe-atlas/"],
+            ["🩺 LactMed Drug Safety", "/pharmacy/pregnancy-lactation-safety/"],
+            ["🤝 Crowdfunding Milestones", "/trust/crowdfunding-milestones/"],
+          ]
+            .map(
+              ([lbl, u]) =>
+                `<a href="${u}" style="padding:7px 12px;border-radius:10px;background:#111827;border:1px solid rgba(148,163,184,0.25);color:#e2e8f0;text-decoration:none;font-size:12.5px;font-weight:700;">${lbl}</a>`
+            )
+            .join("")}
+        </div>
+      `;
+      document.body.appendChild(strip);
+      const pwaBtn = document.getElementById("v7-install-pwa-btn");
+      if (pwaBtn) {
+        pwaBtn.addEventListener("click", async () => {
+          if (deferredPwaPrompt) {
+            deferredPwaPrompt.prompt();
+            deferredPwaPrompt = null;
+          } else {
+            pwaBtn.textContent = "✓ Ready: Use Browser 'Install App / Add to Home Screen'";
+          }
+        });
+      }
+    }
   }
 
   window.addEventListener("keydown", (e) => {
