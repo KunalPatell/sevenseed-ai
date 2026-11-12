@@ -92,12 +92,8 @@ TEST_ROUTES = [
     ("POST", "/api/drugs/safety-matrix", "Pharmacokinetic RID% & Food-Drug API", {"drug": "atorvastatin", "maternal_dose_mg_day": 20}),
     ("POST", "/api/ketto/milestone-escrow", "Crowdfunding Milestone Tranche API", {"goal_inr": 1500000, "current_raised_inr": 420000}),
 
-    # 7. Sevenforce Omnichannel WABA, Native Flows v7.1 & India Compliance Hub (RichAutomate Reference)
-    ("GET", "/sevenforce/waba-automation-hub.html", "Sevenforce Omnichannel WABA & Compliance Hub"),
-    ("POST", "/api/sevenforce/waba/build-flow", "15-Node WABA + Telegram Flow Synthesizer API", {"prompt": "COD to Prepaid", "industry": "d2c"}),
-    ("POST", "/api/sevenforce/waba/cost-calculator", "WABA Dual-Engine INR Cost Calculator API", {"marketing_msgs": 15000, "utility_msgs": 8000, "seats": 8}),
-    ("POST", "/api/sevenforce/waba/compliance-audit", "DPDP 2023, RBI & IRDAI Compliance Audit API", {"framework": "RBI_RECOVERY", "send_hour_ist": 11}),
-    ("POST", "/api/sevenforce/waba/template-ab-sim", "25-Var Meta Template A/B/C/D Split API", {"total_recipients": 12000}),
+    # 7. Sevenforce WhatsApp Workspace (page; its API lives in the sevenforce child app under /sevenforce/api/whatsapp)
+    ("GET", "/sevenforce/waba-automation-hub.html", "Sevenforce WhatsApp Workspace"),
 ]
 
 import sys

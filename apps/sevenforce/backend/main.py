@@ -328,6 +328,9 @@ def delete_pitch(item_id: int):
 from authdep import require_user
 from features import router as _feat_router
 app.include_router(_feat_router)
+# Wave's WhatsApp workspace: real Cloud API sends, webhook inbox, flows, knowledge-base bot
+from whatsapp import router as _wa_router
+app.include_router(_wa_router)
 
 @app.get("/app")
 def _sf_dashboard():

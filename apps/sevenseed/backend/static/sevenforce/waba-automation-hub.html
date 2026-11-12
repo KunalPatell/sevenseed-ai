@@ -4,81 +4,56 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Omnichannel WABA, Native Flows v7.1 &amp; DPDP Compliance Hub — Sevenforce</title>
-  <meta name="description" content="Official Meta Cloud API WhatsApp & Telegram automation workstation: 15-node visual flow builder with payment pause/auto-resume, Native Flows v7.1, 25-variable A/B/C/D templates, multi-agent shared inbox + Kanban, WABA cost calculator, and DPDP 2023 / RBI / IRDAI compliance.">
+  <title>WhatsApp Workspace — Sevenforce</title>
+  <meta name="description" content="Run WhatsApp for your business on the official Meta Cloud API with your own account: shared inbox, opt-in broadcasts with approved templates, keyword flows, and a bot that answers only from your own documents.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; margin: 0; }
-    [data-theme="light"] body { background: #f8fafc; color: #0f172a; }
-    .hub-container { max-width: 1420px; margin: 0 auto; padding: 88px 24px 72px; }
-    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 12px; border-radius: 99px; background: rgba(37,211,102,0.12); color: #25d366; border: 1px solid rgba(37,211,102,0.32); }
-    .hud-header h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(25px, 3.3vw, 36px); font-weight: 800; letter-spacing: -0.5px; margin: 10px 0 6px; }
-    .hud-sub { color: #94a3b8; font-size: 14px; max-width: 820px; line-height: 1.6; margin: 0; }
-
-    .tab-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
-    .tab-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 12px; background: rgba(15,23,42,0.82); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-    .tab-btn:hover { border-color: rgba(37,211,102,0.45); color: #fff; }
-    .tab-btn.active { background: linear-gradient(135deg, #10b981, #059669); border-color: #10b981; color: #fff; box-shadow: 0 6px 20px rgba(16,185,129,0.32); }
-    .tab-pane { display: none; }
-    .tab-pane.active { display: block; }
-
-    .grid-2 { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 22px; }
-    .grid-equal { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
-    @media (max-width: 1060px) { .grid-2, .grid-equal { grid-template-columns: 1fr; } }
-
-    .card-panel { background: rgba(15, 23, 42, 0.78); border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 20px; padding: 22px; backdrop-filter: blur(16px); box-shadow: 0 18px 45px rgba(0,0,0,0.42); }
-    .sec-kicker { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #34d399; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-    .styled-input { width: 100%; box-sizing: border-box; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 10px 13px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13px; outline: none; }
-    .styled-input:focus { border-color: #10b981; }
-    .lbl { display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-    .node-palette { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 16px; }
-    .node-chip { font-size: 11.5px; font-weight: 600; padding: 6px 10px; border-radius: 8px; background: #090e1a; border: 1px solid #1e293b; color: #cbd5e1; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; }
-    .node-chip:hover { border-color: #10b981; color: #34d399; transform: translateY(-1px); }
-
-    .flow-list { display: flex; flex-direction: column; gap: 10px; max-height: 460px; overflow-y: auto; padding-right: 4px; }
-    .flow-node { background: #020617; border: 1px solid rgba(148,163,184,0.2); border-left: 3px solid #10b981; border-radius: 12px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-    .flow-node.pause-gate { border-left-color: #f59e0b; background: rgba(245,158,11,0.06); }
-    .badge-mini { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: rgba(16,185,129,0.14); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
-    .badge-mini.amber { background: rgba(245,158,11,0.15); color: #fbbf24; border-color: rgba(245,158,11,0.35); }
-    .badge-mini.red { background: rgba(239,68,68,0.16); color: #f87171; border-color: rgba(239,68,68,0.35); }
-
-    .btn-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 16px; border-radius: 10px; border: none; font-weight: 700; font-size: 13px; cursor: pointer; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-family: inherit; transition: all 0.2s; }
-    .btn-action:hover { transform: translateY(-1px); }
-    .btn-sec { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 13px; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0; font-weight: 600; font-size: 12.5px; cursor: pointer; font-family: inherit; }
-    .btn-sec:hover { border-color: #38bdf8; color: #38bdf8; }
-
-    /* Phone Simulator */
-    .phone-mockup { max-width: 430px; margin: 0 auto; background: #0b141a; border: 2px solid #202c33; border-radius: 28px; overflow: hidden; position: relative; box-shadow: 0 22px 55px rgba(0,0,0,0.75); }
-    .phone-header { background: #202c33; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
-    .phone-screen { padding: 16px; min-height: 360px; max-height: 420px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #0b141a; }
-    .wa-bubble { background: #1f2c34; border-radius: 10px; border-top-left-radius: 0; padding: 11px 13px; max-width: 88%; color: #e9edef; font-size: 12.8px; line-height: 1.5; }
-    .wa-bubble.user { background: #005c4b; align-self: flex-end; border-top-left-radius: 10px; border-top-right-radius: 0; }
-    .wa-flow-drawer { position: absolute; inset: 52px 0 0 0; background: #111b21; padding: 18px; display: none; flex-direction: column; justify-content: space-between; z-index: 10; border-top: 2px solid #25d366; }
-    .wa-flow-drawer.open { display: flex; }
-
-    /* Shared Inbox & Kanban */
-    .inbox-layout { display: grid; grid-template-columns: 310px 1fr; gap: 18px; margin-bottom: 22px; }
-    @media (max-width: 900px) { .inbox-layout { grid-template-columns: 1fr; } }
-    .thread-item { padding: 12px; border-radius: 12px; background: #020617; border: 1px solid #1e293b; cursor: pointer; margin-bottom: 8px; transition: border-color 0.15s; }
-    .thread-item.active, .thread-item:hover { border-color: #10b981; }
-    .kanban-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-    @media (max-width: 980px) { .kanban-grid { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 600px) { .kanban-grid { grid-template-columns: 1fr; } }
-    .kanban-col { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 12px; min-height: 190px; }
-    .kanban-card { background: #0f172a; border: 1px solid rgba(148,163,184,0.2); border-radius: 10px; padding: 10px; margin-top: 8px; font-size: 12.5px; }
-
-    /* Cost Cards */
-    .cost-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 16px; }
-    .cost-card { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 16px; }
-    .cost-card.best { border-color: #10b981; background: linear-gradient(180deg, rgba(16,185,129,0.12), #020617); }
-    .mono-val { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 800; color: #fff; margin: 6px 0; }
-
-    #hubToast { position: fixed; bottom: 22px; right: 22px; background: #064e3b; border: 1px solid #10b981; color: #ecfdf5; padding: 11px 18px; border-radius: 12px; font-size: 13px; font-weight: 600; display: none; z-index: 9999; box-shadow: 0 12px 30px rgba(0,0,0,0.5); }
+    :root { --bg:#030712; --panel:rgba(15,23,42,.8); --panel2:#020617; --line:#1e293b; --tx:#f8fafc; --mut:#94a3b8; --acc:#10b981; --acc2:#25d366; --bad:#f87171; --warn:#fbbf24; }
+    [data-theme="light"] { --bg:#f8fafc; --panel:#ffffff; --panel2:#f1f5f9; --line:#cbd5e1; --tx:#0f172a; --mut:#475569; --acc:#059669; --acc2:#16a34a; --bad:#dc2626; --warn:#b45309; }
+    body { background:var(--bg); color:var(--tx); font-family:'Inter',sans-serif; margin:0; }
+    .wrap { max-width:1280px; margin:0 auto; padding:88px 20px 64px; }
+    h1 { font-family:'Space Grotesk',sans-serif; font-size:clamp(24px,3.2vw,34px); margin:10px 0 6px; }
+    .sub { color:var(--mut); font-size:14px; line-height:1.6; max-width:820px; margin:0 0 18px; }
+    .wa-tag { display:inline-flex; gap:6px; align-items:center; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; padding:4px 12px; border-radius:99px; color:var(--acc2); border:1px solid color-mix(in srgb,var(--acc2) 40%,transparent); }
+    .tabs { display:flex; gap:6px; flex-wrap:wrap; margin:18px 0; }
+    .tabs button { padding:9px 14px; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--tx); font:600 13px Inter,sans-serif; cursor:pointer; }
+    .tabs button.on { background:var(--acc); border-color:var(--acc); color:#fff; }
+    .tabs button[disabled] { opacity:.45; cursor:not-allowed; }
+    .pane { display:none; } .pane.on { display:block; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px; margin-bottom:16px; }
+    .card h3 { margin:0 0 4px; font-size:16px; } .card p.h { color:var(--mut); font-size:13px; margin:0 0 12px; line-height:1.55; }
+    .g2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; } .g3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    @media (max-width:900px){ .g2,.g3 { grid-template-columns:1fr; } }
+    label { display:block; font-size:12px; font-weight:600; color:var(--mut); margin:10px 0 4px; }
+    input,textarea,select { width:100%; box-sizing:border-box; background:var(--panel2); border:1px solid var(--line); border-radius:9px; padding:9px 11px; color:var(--tx); font:13px Inter,sans-serif; }
+    textarea { min-height:80px; resize:vertical; } input:focus,textarea:focus,select:focus { outline:2px solid var(--acc); border-color:transparent; }
+    .btn { display:inline-flex; align-items:center; gap:7px; padding:9px 14px; border-radius:9px; border:1px solid var(--line); background:var(--panel2); color:var(--tx); font:600 13px Inter,sans-serif; cursor:pointer; }
+    .btn.p { background:var(--acc); border-color:var(--acc); color:#fff; } .btn.d { color:var(--bad); } .btn.sm { padding:5px 10px; font-size:12px; }
+    .btn:disabled { opacity:.5; cursor:wait; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:12px; }
+    .mono { font-family:'JetBrains Mono',monospace; font-size:12px; word-break:break-all; }
+    .note { font-size:12.5px; color:var(--mut); line-height:1.55; }
+    .msg { margin-top:10px; font-size:13px; padding:9px 12px; border-radius:9px; display:none; white-space:pre-wrap; }
+    .msg.ok { display:block; background:color-mix(in srgb,var(--acc) 14%,transparent); color:var(--acc); }
+    .msg.err { display:block; background:color-mix(in srgb,var(--bad) 14%,transparent); color:var(--bad); }
+    table { width:100%; border-collapse:collapse; font-size:13px; } th,td { text-align:left; padding:8px 6px; border-bottom:1px solid var(--line); vertical-align:top; }
+    th { color:var(--mut); font-weight:600; font-size:12px; }
+    .pill { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; background:var(--panel2); border:1px solid var(--line); }
+    .pill.g { color:var(--acc); } .pill.r { color:var(--bad); } .pill.y { color:var(--warn); }
+    .stat { background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:12px; } .stat b { display:block; font-size:22px; } .stat span { font-size:12px; color:var(--mut); }
+    .inbox { display:grid; grid-template-columns:300px 1fr; gap:16px; min-height:520px; } @media (max-width:900px){ .inbox { grid-template-columns:1fr; } }
+    .clist { max-height:600px; overflow:auto; } .citem { padding:10px; border-radius:10px; cursor:pointer; border:1px solid transparent; } .citem:hover,.citem.on { background:var(--panel2); border-color:var(--line); }
+    .citem .n { font-weight:600; font-size:13px; display:flex; justify-content:space-between; gap:6px; } .citem .l { font-size:12px; color:var(--mut); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .chat { display:flex; flex-direction:column; gap:6px; max-height:430px; overflow:auto; padding:6px; background:var(--panel2); border-radius:12px; min-height:300px; }
+    .bub { max-width:75%; padding:8px 11px; border-radius:12px; font-size:13px; white-space:pre-wrap; line-height:1.45; }
+    .bub.in { align-self:flex-start; background:var(--panel); border:1px solid var(--line); } .bub.out { align-self:flex-end; background:color-mix(in srgb,var(--acc) 22%,var(--panel)); }
+    .bub small { display:block; font-size:10.5px; color:var(--mut); margin-top:3px; }
+    .step { border:1px solid var(--line); border-radius:12px; padding:12px; margin-top:10px; background:var(--panel2); }
+    .step .hd { display:flex; justify-content:space-between; align-items:center; gap:8px; font-weight:700; font-size:13px; }
+    .empty { color:var(--mut); font-size:13px; padding:20px; text-align:center; }
   </style>
 </head>
 <body>
@@ -91,8 +66,7 @@
   <div class="nav-links">
     <a href="workflows.html"><i class="fas fa-diagram-project"></i> LangGraph Studio</a>
     <a href="employees.html"><i class="fas fa-users-gear"></i> 7 AI Employees</a>
-    <a href="whatsapp-studio.html"><i class="fab fa-whatsapp"></i> Broadcast Studio</a>
-    <a href="waba-automation-hub.html" style="color:#25d366;font-weight:700;"><i class="fas fa-sitemap"></i> WABA Cloud Hub</a>
+    <a href="waba-automation-hub.html" style="color:#25d366;font-weight:700;"><i class="fab fa-whatsapp"></i> WhatsApp Workspace</a>
     <a href="pricing.html"><i class="fas fa-calculator"></i> ROI &amp; Pricing</a>
     <a href="/byok.html" style="color:#f59e0b;font-weight:700;"><i class="fas fa-key"></i> BYOK Vault</a>
   </div>
@@ -102,756 +76,528 @@
   </div>
 </nav>
 
-<main class="hub-container">
-  <div class="hud-header">
-    <div>
-      <span class="hud-tag"><i class="fab fa-whatsapp"></i> Official Meta Cloud API · Telegram Bot · India Regulatory Stack</span>
-      <h1>Sevenforce Omnichannel WABA &amp; Compliance Hub</h1>
-      <p class="hud-sub">
-        15-node visual automation builder with payment-link pause &amp; webhook auto-resume, Native WhatsApp Flows (v7.1), 25-variable A/B/C/D template split lab, multi-agent shared inbox + Kanban CRM, zero-margin cost calculator, and DPDP Act 2023 / RBI / IRDAI compliance audit.
-      </p>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <a href="whatsapp-studio.html" class="btn-sec" style="text-decoration:none;"><i class="fab fa-whatsapp" style="color:#25d366;"></i> Broadcast Simulator</a>
-      <a href="/byok.html" class="btn-sec" style="text-decoration:none;"><i class="fas fa-key" style="color:#fbbf24;"></i> ₹0/mo BYOK Key Vault</a>
-    </div>
+<main class="wrap">
+  <span class="wa-tag"><i class="fab fa-whatsapp"></i> Wave · Official Meta WhatsApp Cloud API · your own account</span>
+  <h1>WhatsApp Workspace</h1>
+  <p class="sub">Connect your own WhatsApp Business number and run it from here: a shared inbox, opt-in broadcasts with your approved templates, keyword flows, and a bot that answers only from documents you give it, handing the chat to a person when it can't. There's no platform fee. Meta bills your account directly for messages.</p>
+
+  <div class="tabs" id="tabs">
+    <button data-t="setup" class="on"><i class="fas fa-plug"></i> Setup</button>
+    <button data-t="inbox" data-need="1"><i class="fas fa-inbox"></i> Inbox</button>
+    <button data-t="send" data-need="1"><i class="fas fa-paper-plane"></i> Send &amp; broadcast</button>
+    <button data-t="contacts" data-need="1"><i class="fas fa-address-book"></i> Contacts</button>
+    <button data-t="flows" data-need="1"><i class="fas fa-diagram-project"></i> Flows</button>
+    <button data-t="bot" data-need="1"><i class="fas fa-robot"></i> Knowledge &amp; bot</button>
+    <button data-t="cost"><i class="fas fa-calculator"></i> Cost calculator</button>
   </div>
 
-  <!-- 5 Interactive Workstation Tabs -->
-  <div class="tab-bar" role="tablist">
-    <button type="button" class="tab-btn active" data-tab="tab-flow"><i class="fas fa-diagram-project"></i> 1. 15-Node Flow &amp; Payment Auto-Resume</button>
-    <button type="button" class="tab-btn" data-tab="tab-templates"><i class="fas fa-window-restore"></i> 2. Native Flows v7.1 &amp; 25-Var A/B/C/D Lab</button>
-    <button type="button" class="tab-btn" data-tab="tab-inbox"><i class="fas fa-inbox"></i> 3. Shared Team Inbox &amp; Kanban (WA + TG)</button>
-    <button type="button" class="tab-btn" data-tab="tab-cost"><i class="fas fa-indian-rupee-sign"></i> 4. WABA Cost &amp; Billing Calculator</button>
-    <button type="button" class="tab-btn" data-tab="tab-compliance"><i class="fas fa-scale-balanced"></i> 5. DPDP 2023 · RBI · IRDAI Compliance</button>
-  </div>
+  <!-- SETUP -->
+  <section class="pane on" id="p-setup">
+    <div class="card" id="ws-none">
+      <h3>1 · Create your workspace</h3>
+      <p class="h">A workspace holds your connection, contacts, messages, flows and documents. Its key is kept only in this browser. Save it somewhere safe, because it's the only way back in.</p>
+      <label>Business name</label><input id="ws-name" placeholder="e.g. Asha Sarees">
+      <div class="row"><button class="btn p" id="ws-create"><i class="fas fa-plus"></i> Create workspace</button></div>
+      <label style="margin-top:18px">…or open an existing workspace with its key</label>
+      <div class="row" style="margin-top:0"><input id="ws-key" placeholder="workspace key" style="flex:1"><button class="btn" id="ws-open">Open</button></div>
+      <div class="msg" id="ws-msg"></div>
+    </div>
 
-  <!-- TAB 1: 15-Node Visual Flow Builder + Payment Link Auto-Resume -->
-  <section id="tab-flow" class="tab-pane active">
-    <div class="grid-2">
-      <div class="card-panel">
-        <div class="sec-kicker"><i class="fas fa-wand-magic-sparkles"></i> Build Automation Flow with AI (15 Node Types)</div>
-        <div style="display:grid;grid-template-columns:1fr 170px 130px;gap:10px;margin-bottom:10px;">
-          <input id="flowPrompt" class="styled-input" value="Convert COD orders to prepaid with ₹75 instant discount link and auto-resume receipt" placeholder="Describe your WhatsApp + Telegram journey...">
-          <select id="flowIndustry" class="styled-input">
-            <option value="d2c">D2C &amp; E-Commerce</option>
-            <option value="bfsi">BFSI &amp; Lending</option>
-            <option value="healthcare">Healthcare &amp; NHCX</option>
-            <option value="edtech">EdTech &amp; Admissions</option>
-          </select>
-          <input id="flowAmt" type="number" class="styled-input" value="1499" min="1" title="Payment Amount (INR)">
+    <div id="ws-some" style="display:none">
+      <div class="card">
+        <div class="row" style="margin:0;justify-content:space-between">
+          <div><h3 id="ws-title"></h3><div class="note" id="ws-status"></div></div>
+          <div class="row" style="margin:0">
+            <button class="btn sm" id="ws-showkey"><i class="fas fa-key"></i> Show workspace key</button>
+            <button class="btn sm" id="ws-logout">Close</button>
+            <button class="btn sm d" id="ws-delete"><i class="fas fa-trash"></i> Delete workspace</button>
+          </div>
         </div>
-        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:12px;font-size:12.5px;color:#cbd5e1;">
-          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="flowChkPay" checked> Include Payment Pause/Auto-Resume Node</label>
-          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="flowChkTg" checked> Mirror High-Intent Alerts to Telegram Bot</label>
-          <button type="button" id="btnBuildFlow" class="btn-action" style="margin-left:auto;"><i class="fas fa-bolt"></i> Build with AI</button>
-        </div>
-
-        <div class="lbl"><span>Click Any of the 15 Node Types to Append to Canvas</span><span id="flowNodeCount">10 Nodes Active</span></div>
-        <div class="node-palette" id="nodePalette"></div>
-
-        <div class="flow-list" id="flowCanvasList"></div>
-
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
-          <button type="button" id="btnCopyFlowJson" class="btn-sec"><i class="fas fa-copy"></i> Copy Meta Cloud API JSON</button>
-          <button type="button" id="btnDownloadFlowJson" class="btn-sec"><i class="fas fa-download"></i> Export Flow (.json)</button>
-        </div>
+        <div class="mono" id="ws-keyshow" style="display:none;margin-top:10px"></div>
+        <div class="g3" style="margin-top:14px" id="stats"></div>
       </div>
 
-      <div class="card-panel">
-        <div class="sec-kicker"><i class="fas fa-mobile-screen"></i> Live Payment Pause → Webhook Auto-Resume Simulator</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;background:#020617;padding:10px 14px;border-radius:12px;border:1px solid #1e293b;">
-          <span style="font-size:12px;color:#94a3b8;">Runtime State: <strong id="simFlowState" class="badge-mini">IDLE_READY</strong></span>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;">
-            <button type="button" id="btnSimPause" class="btn-sec" style="border-color:#f59e0b;color:#fbbf24;"><i class="fas fa-pause"></i> 1. Send Payment Link (Pause)</button>
-            <button type="button" id="btnSimWebhook" class="btn-action" style="padding:8px 12px;font-size:12px;"><i class="fas fa-play"></i> 2. Fire Webhook (Auto-Resume)</button>
-          </div>
+      <div class="g2">
+        <div class="card">
+          <h3>2 · Connect WhatsApp</h3>
+          <p class="h">From your Meta app's WhatsApp → API Setup page. Use a <b>permanent System User token</b>, because the temporary one expires in 24 hours. These are stored on our server so incoming messages can be answered while you're away. Delete the workspace to remove them.</p>
+          <label>Access token <span id="cn-tok-now" class="note"></span></label><input id="cn-token" type="password" placeholder="EAAG… (leave blank to keep the saved one)">
+          <label>Phone number ID</label><input id="cn-phone" placeholder="e.g. 1234567890123">
+          <label>WhatsApp Business Account ID (needed to list templates)</label><input id="cn-waba" placeholder="e.g. 1029384756">
+          <label>App secret (to verify webhook signatures) <span id="cn-sec-now" class="note"></span></label><input id="cn-secret" type="password" placeholder="from App settings → Basic">
+          <div class="row"><button class="btn p" id="cn-save"><i class="fas fa-check"></i> Save &amp; verify with Meta</button></div>
+          <div class="msg" id="cn-msg"></div>
         </div>
-
-        <div class="phone-mockup">
-          <div class="phone-header">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:34px;height:34px;border-radius:50%;background:#128c7e;display:flex;align-items:center;justify-content:center;color:#fff;"><i class="fab fa-whatsapp"></i></div>
-              <div>
-                <div style="font-size:13.5px;font-weight:700;color:#e9edef;">Sevenforce Commerce Desk <i class="fas fa-circle-check" style="color:#25d366;font-size:11px;"></i></div>
-                <div style="font-size:11px;color:#8696a0;">Official Cloud API · Webhook Active</div>
-              </div>
-            </div>
-            <button type="button" id="btnResetFlowChat" style="background:rgba(255,255,255,0.08);border:none;color:#cbd5e1;padding:4px 8px;border-radius:6px;font-size:11px;cursor:pointer;">Reset</button>
-          </div>
-          <div class="phone-screen" id="flowPhoneScreen"></div>
+        <div class="card">
+          <h3>3 · Point Meta's webhook here</h3>
+          <p class="h">In your Meta app: WhatsApp → Configuration → Webhook → Edit. Paste these two values, then subscribe to the <b>messages</b> field. Incoming messages, delivery and read receipts will then show up in the Inbox.</p>
+          <label>Callback URL</label><div class="mono" id="wh-url"></div>
+          <label>Verify token</label><div class="mono" id="wh-tok"></div>
+          <div class="row"><button class="btn sm" id="wh-copy"><i class="fas fa-copy"></i> Copy both</button></div>
+          <p class="note" style="margin-top:12px"><i class="fas fa-circle-info"></i> This service runs on a free host that sleeps when idle. The first webhook after a quiet spell can take up to a minute while it wakes. Meta retries, so messages aren't lost, but that first reply can be slow. Without an app secret, anyone who knows the callback URL could post fake events to it, so add the secret.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- TAB 2: Native WhatsApp Flows (v7.1) & 25-Variable A/B/C/D Template Lab -->
-  <section id="tab-templates" class="tab-pane">
-    <div class="grid-2">
-      <div class="card-panel">
-        <div class="sec-kicker"><i class="fas fa-flask"></i> Meta Template Editor ({{1}}..{{25}}) &amp; A/B/C/D Split Allocator</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-          <div>
-            <label class="lbl" for="tplCategory">Template Category</label>
-            <select id="tplCategory" class="styled-input">
-              <option value="MARKETING">MARKETING (Promotions &amp; Offers)</option>
-              <option value="UTILITY">UTILITY (Order &amp; Billing Alerts)</option>
-              <option value="AUTHENTICATION">AUTHENTICATION (OTP Verification)</option>
-            </select>
-          </div>
-          <div>
-            <label class="lbl" for="tplAudienceTotal">Total Campaign Recipients</label>
-            <input id="tplAudienceTotal" type="number" class="styled-input" value="12000" min="100" step="500">
+  <!-- INBOX -->
+  <section class="pane" id="p-inbox">
+    <div class="card">
+      <div class="inbox">
+        <div>
+          <div class="row" style="margin:0 0 8px"><select id="ib-filter"><option value="">All chats</option><option value="human">Waiting for a person</option><option value="window">Open 24h window</option></select><button class="btn sm" id="ib-refresh" title="Refresh"><i class="fas fa-rotate"></i></button></div>
+          <div class="clist" id="ib-list"><div class="empty">No conversations yet.</div></div>
+        </div>
+        <div>
+          <div id="ib-head" class="note">Pick a conversation.</div>
+          <div class="chat" id="ib-chat"></div>
+          <div id="ib-compose" style="display:none">
+            <div class="row"><textarea id="ib-text" placeholder="Type a reply…" style="min-height:56px;flex:1"></textarea></div>
+            <div class="row">
+              <button class="btn p" id="ib-send"><i class="fas fa-paper-plane"></i> Send</button>
+              <button class="btn" id="ib-bot"></button>
+              <span class="note" id="ib-window"></span>
+            </div>
+            <div class="msg" id="ib-msg"></div>
           </div>
         </div>
-
-        <div class="lbl"><span>Insert Dynamic Variables ({{1}} to {{25}}) into Variant A</span></div>
-        <div class="node-palette" id="varChipBar" style="margin-top:4px;margin-bottom:12px;"></div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-          <div style="background:#020617;padding:12px;border-radius:12px;border:1px solid #1e293b;">
-            <div class="lbl"><span>Variant A Body</span><span>Split %: <input id="spA" type="number" value="35" min="0" max="100" style="width:52px;background:#0f172a;color:#fff;border:1px solid #334155;border-radius:6px;padding:2px 5px;"></span></div>
-            <textarea id="bodyA" rows="3" class="styled-input">Hi {{1}}, your order {{2}} worth ₹{{3}} is ready! Tap below to book your delivery slot via in-chat Flow.</textarea>
-            <input id="ctaA" class="styled-input" value="Open Secure Form" style="margin-top:6px;" placeholder="CTA (max 25 chars)">
-          </div>
-          <div style="background:#020617;padding:12px;border-radius:12px;border:1px solid #1e293b;">
-            <div class="lbl"><span>Variant B Body</span><span>Split %: <input id="spB" type="number" value="25" min="0" max="100" style="width:52px;background:#0f172a;color:#fff;border:1px solid #334155;border-radius:6px;padding:2px 5px;"></span></div>
-            <textarea id="bodyB" rows="3" class="styled-input">Hey {{1}}, confirm slot for order {{2}} (₹{{3}}) now and unlock priority same-day dispatch.</textarea>
-            <input id="ctaB" class="styled-input" value="Confirm Slot" style="margin-top:6px;">
-          </div>
-          <div style="background:#020617;padding:12px;border-radius:12px;border:1px solid #1e293b;">
-            <div class="lbl"><span>Variant C Body</span><span>Split %: <input id="spC" type="number" value="20" min="0" max="100" style="width:52px;background:#0f172a;color:#fff;border:1px solid #334155;border-radius:6px;padding:2px 5px;"></span></div>
-            <textarea id="bodyC" rows="2" class="styled-input">Namaste {{1}}, complete 1-tap slot selection for shipment {{2}}.</textarea>
-            <input id="ctaC" class="styled-input" value="Pick Time Slot" style="margin-top:6px;">
-          </div>
-          <div style="background:#020617;padding:12px;border-radius:12px;border:1px solid #1e293b;">
-            <div class="lbl"><span>Variant D Body</span><span>Split %: <input id="spD" type="number" value="20" min="0" max="100" style="width:52px;background:#0f172a;color:#fff;border:1px solid #334155;border-radius:6px;padding:2px 5px;"></span></div>
-            <textarea id="bodyD" rows="2" class="styled-input">Hi {{1}}, your package {{2}} awaits slot confirmation. Reply STOP to opt out.</textarea>
-            <input id="ctaD" class="styled-input" value="Select Window" style="margin-top:6px;">
-          </div>
-        </div>
-
-        <button type="button" id="btnRunAbSim" class="btn-action"><i class="fas fa-vial-circle-check"></i> Validate Variables &amp; Allocate A/B/C/D Cohorts</button>
-        <div id="abSimOutput" style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;"></div>
       </div>
+      <p class="note">Refreshes every 10 seconds while this tab is open. When the bot or a flow hands a chat over, the bot pauses for that person until you press “Hand back to bot”.</p>
+    </div>
+  </section>
 
-      <div class="card-panel">
-        <div class="sec-kicker"><i class="fas fa-window-restore"></i> Interactive Native WhatsApp Flow (v7.1) In-Chat Form</div>
-        <p style="font-size:12.5px;color:#94a3b8;margin:0 0 12px;">Click <strong>"Open Native Flow v7.1 Form"</strong> inside the phone below to test an encrypted full-screen in-chat appointment &amp; order configuration screen.</p>
-        <div class="phone-mockup">
-          <div class="phone-header">
-            <div style="font-size:13px;font-weight:700;color:#e9edef;"><i class="fab fa-whatsapp" style="color:#25d366;"></i> Native Flow v7.1 Sandbox</div>
-            <span class="badge-mini">AES-GCM Webhook</span>
-          </div>
-          <div class="phone-screen" id="v71ChatThread">
-            <div class="wa-bubble">
-              <div style="font-weight:800;color:#25d366;margin-bottom:4px;">Sevenforce Express Desk</div>
-              <div id="v71PreviewBody">Hi Aarav, your order #SF-4092 worth ₹1,499 is ready! Tap below to book your delivery slot via in-chat Flow.</div>
-              <button type="button" id="btnOpenNativeFlow" class="btn-action" style="width:100%;margin-top:10px;padding:9px;"><i class="fas fa-up-right-from-square"></i> Open Native Flow v7.1 Form</button>
-            </div>
-          </div>
-          <!-- Full-screen Native Flow Drawer -->
-          <div class="wa-flow-drawer" id="nativeFlowDrawer">
-            <div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                <strong style="font-size:14px;color:#25d366;">Configure Delivery &amp; Slot (v7.1)</strong>
-                <button type="button" id="btnCloseNativeFlow" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:15px;"><i class="fas fa-xmark"></i></button>
-              </div>
-              <label class="lbl" for="nfSlot">Preferred Window</label>
-              <select id="nfSlot" class="styled-input" style="margin-bottom:10px;">
-                <option value="Today · 4:00 PM – 7:00 PM">Today · 4:00 PM – 7:00 PM</option>
-                <option value="Tomorrow · 10:00 AM – 1:00 PM">Tomorrow · 10:00 AM – 1:00 PM</option>
-                <option value="Saturday · 11:00 AM – 2:00 PM">Saturday · 11:00 AM – 2:00 PM</option>
-              </select>
-              <label class="lbl" for="nfPayMode">Payment Preference</label>
-              <select id="nfPayMode" class="styled-input" style="margin-bottom:10px;">
-                <option value="UPI Instant (Save ₹75)">UPI Instant (Save ₹75)</option>
-                <option value="Card / NetBanking">Card / NetBanking</option>
-                <option value="Pay on Delivery">Pay on Delivery</option>
-              </select>
-              <label class="lbl" for="nfNote">Gate / Landmark Note</label>
-              <input id="nfNote" class="styled-input" value="Leave with Tower B Concierge">
-            </div>
-            <button type="button" id="btnSubmitNativeFlow" class="btn-action" style="width:100%;"><i class="fas fa-lock"></i> Submit Encrypted Flow Payload</button>
-          </div>
+  <!-- SEND -->
+  <section class="pane" id="p-send">
+    <div class="g2">
+      <div class="card">
+        <h3>Send one message</h3>
+        <p class="h">WhatsApp only allows free-form text within 24 hours of the customer's last message. Outside that window, you need an approved template.</p>
+        <label>To (with country code)</label><input id="s1-to" placeholder="919812345678">
+        <label>Template (leave empty to send text)</label><select id="s1-tpl"><option value="">— free-form text —</option></select>
+        <div id="s1-vars"></div>
+        <label id="s1-text-l">Text</label><textarea id="s1-text"></textarea>
+        <div class="row"><button class="btn p" id="s1-send"><i class="fas fa-paper-plane"></i> Send</button></div>
+        <div class="msg" id="s1-msg"></div>
+      </div>
+      <div class="card">
+        <h3>Broadcast a template</h3>
+        <p class="h">Goes only to contacts marked <b>opted in</b> who haven't replied STOP. Use <span class="mono">{{name}}</span> in a variable to insert each contact's name.</p>
+        <label>Template</label><select id="bc-tpl"></select>
+        <div id="bc-vars"></div>
+        <label>Only contacts tagged (optional)</label><input id="bc-tag" placeholder="e.g. vip">
+        <div class="row"><button class="btn" id="bc-dry"><i class="fas fa-users"></i> Count recipients</button><button class="btn p" id="bc-send"><i class="fas fa-bullhorn"></i> Send broadcast</button></div>
+        <div class="msg" id="bc-msg"></div>
+        <div id="bc-fail"></div>
+      </div>
+    </div>
+    <div class="card"><div class="row" style="margin:0;justify-content:space-between"><h3>Your templates</h3><button class="btn sm" id="tp-refresh"><i class="fas fa-rotate"></i> Reload from Meta</button></div>
+      <p class="h">Create and edit templates in WhatsApp Manager. Meta reviews them, and only APPROVED ones can be sent.</p><div id="tp-list" class="empty">Not loaded.</div></div>
+  </section>
+
+  <!-- CONTACTS -->
+  <section class="pane" id="p-contacts">
+    <div class="g2">
+      <div class="card">
+        <h3>Add a contact</h3>
+        <label>Phone (with country code; 10-digit numbers are treated as Indian)</label><input id="ct-phone">
+        <div class="g2"><div><label>Name</label><input id="ct-name"></div><div><label>Tags (comma separated)</label><input id="ct-tags"></div></div>
+        <label><input type="checkbox" id="ct-opt" style="width:auto"> This person agreed to receive WhatsApp messages from us</label>
+        <input id="ct-src" placeholder="How did they agree? e.g. checkbox at checkout on 1 Nov" style="display:none">
+        <div class="row"><button class="btn p" id="ct-add">Add</button></div><div class="msg" id="ct-msg"></div>
+      </div>
+      <div class="card">
+        <h3>Import CSV</h3>
+        <p class="h">One contact per line: <span class="mono">phone,name,tag1,tag2</span>. Anyone who replied STOP stays unsubscribed.</p>
+        <textarea id="im-csv" placeholder="919812345678,Asha,vip"></textarea>
+        <label><input type="checkbox" id="im-opt" style="width:auto"> Everyone in this list agreed to receive WhatsApp messages</label>
+        <input id="im-src" placeholder="How did they agree?" style="display:none">
+        <div class="row"><button class="btn p" id="im-go">Import</button></div><div class="msg" id="im-msg"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row" style="margin:0"><input id="ct-q" placeholder="Search name or number" style="flex:1"><button class="btn sm" id="ct-refresh"><i class="fas fa-rotate"></i></button></div>
+      <div id="ct-list" style="margin-top:10px;overflow:auto"></div>
+      <p class="note">People who reply STOP (or UNSUBSCRIBE / CANCEL) are opted out automatically and told how to come back. Replying START opts them back in.</p>
+    </div>
+  </section>
+
+  <!-- FLOWS -->
+  <section class="pane" id="p-flows">
+    <div class="g2">
+      <div class="card">
+        <div class="row" style="margin:0;justify-content:space-between"><h3>Flows</h3><button class="btn sm p" id="fl-new"><i class="fas fa-plus"></i> New flow</button></div>
+        <p class="h">A flow starts when an incoming message contains one of its keywords. Use <span class="mono">*</span> for a flow that catches every message no other flow matches.</p>
+        <div id="fl-list"></div>
+      </div>
+      <div class="card" id="fl-edit" style="display:none">
+        <h3 id="fl-etitle">New flow</h3>
+        <label>Name</label><input id="fl-name">
+        <label>Trigger keywords (comma separated)</label><input id="fl-kw" placeholder="order, track, status">
+        <label><input type="checkbox" id="fl-active" style="width:auto" checked> Active</label>
+        <div id="fl-steps"></div>
+        <div class="row">
+          <select id="fl-addtype" style="width:auto"><option value="text">Send text</option><option value="ask">Ask &amp; save answer</option><option value="buttons">Buttons / menu</option><option value="ai">Answer from knowledge base</option><option value="handoff">Hand off to a person</option><option value="end">End</option></select>
+          <button class="btn sm" id="fl-add"><i class="fas fa-plus"></i> Add step</button>
         </div>
+        <p class="note">Text can use <span class="mono">{{name}}</span> and any saved answer, e.g. <span class="mono">{{order}}</span>. “Go to step” jumps to that step number; leave it empty to continue to the next step.</p>
+        <div class="row"><button class="btn p" id="fl-save">Save flow</button><button class="btn" id="fl-cancel">Cancel</button><button class="btn d" id="fl-del" style="display:none">Delete</button></div>
+        <div class="msg" id="fl-msg"></div>
       </div>
     </div>
   </section>
 
-  <!-- TAB 3: Shared Multi-Agent Inbox (WhatsApp + Telegram) & Kanban Pipeline -->
-  <section id="tab-inbox" class="tab-pane">
-    <div class="card-panel">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
-        <div class="sec-kicker" style="margin:0;"><i class="fas fa-comments"></i> Multi-Agent Shared Team Inbox (WhatsApp Cloud + Telegram Bot)</div>
-        <div style="display:flex;gap:6px;">
-          <button type="button" class="btn-sec inbox-filter" data-ch="ALL">All Channels (4)</button>
-          <button type="button" class="btn-sec inbox-filter" data-ch="WA"><i class="fab fa-whatsapp" style="color:#25d366;"></i> WhatsApp</button>
-          <button type="button" class="btn-sec inbox-filter" data-ch="TG"><i class="fab fa-telegram" style="color:#38bdf8;"></i> Telegram</button>
-        </div>
+  <!-- BOT -->
+  <section class="pane" id="p-bot">
+    <div class="g2">
+      <div class="card">
+        <h3>Bot settings</h3>
+        <p class="h">When no flow matches, the bot searches your documents. It replies only if it finds a relevant passage and the AI can answer from it. Otherwise it sends your handoff message and flags the chat for a person.</p>
+        <label><input type="checkbox" id="bt-on" style="width:auto"> Bot answers incoming messages</label>
+        <div class="g2"><div><label>AI provider</label><select id="bt-prov"><option value="groq">Groq</option><option value="openai">OpenAI</option><option value="gemini">Gemini</option></select></div>
+          <div><label>AI key <span class="note" id="bt-keynow"></span></label><input id="bt-key" type="password" placeholder="leave blank to keep"></div></div>
+        <p class="note">The bot needs a saved key because it replies when you're not here. It's stored with the workspace and used only for this bot.</p>
+        <label>Instructions (tone, what not to promise)</label><textarea id="bt-ins" placeholder="Reply in the customer's language. Never promise delivery dates."></textarea>
+        <label>Handoff message</label><input id="bt-hand">
+        <label>Minimum match score <span class="note">(higher = hands off more often)</span></label><input id="bt-min" type="number" step="0.1" min="0">
+        <div class="row"><button class="btn p" id="bt-save">Save</button><label style="margin:0"><input type="checkbox" id="bt-clear" style="width:auto"> remove saved AI key</label></div>
+        <div class="msg" id="bt-msg"></div>
       </div>
-
-      <div class="inbox-layout">
-        <div id="inboxThreadList"></div>
-        <div style="background:#020617;border:1px solid #1e293b;border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;min-height:300px;">
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-bottom:12px;border-bottom:1px solid #1e293b;">
-              <div>
-                <strong id="activeLeadName" style="font-size:15px;">Riya Mehta</strong>
-                <span id="activeLeadChannel" class="badge-mini" style="margin-left:8px;">WhatsApp</span>
-                <span id="activeLeadSla" class="badge-mini amber" style="margin-left:6px;">SLA: 08m left</span>
-              </div>
-              <div style="display:flex;gap:8px;align-items:center;">
-                <select id="assignAgentSel" class="styled-input" style="width:auto;padding:6px 10px;font-size:12px;">
-                  <option value="Wave (Sales AI)">Assigned: Wave (Sales AI)</option>
-                  <option value="Maya (Growth AI)">Assigned: Maya (Growth AI)</option>
-                  <option value="Scout (HR AI)">Assigned: Scout (HR AI)</option>
-                  <option value="Human Escalation Desk">Assigned: Human Escalation Desk</option>
-                </select>
-                <select id="moveStageSel" class="styled-input" style="width:auto;padding:6px 10px;font-size:12px;">
-                  <option value="New Inbound">Stage: New Inbound</option>
-                  <option value="AI Qualified">Stage: AI Qualified</option>
-                  <option value="Payment Pending">Stage: Payment Pending</option>
-                  <option value="Closed Won">Stage: Closed Won</option>
-                </select>
-              </div>
-            </div>
-            <div id="activeChatMessages" style="padding:14px 0;max-height:210px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;"></div>
-          </div>
-
-          <div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
-              <button type="button" class="node-chip quick-macro" data-msg="Sharing your instant ₹0-markup UPI checkout link now — chat will auto-confirm once paid.">⚡ Send Payment Link Macro</button>
-              <button type="button" class="node-chip quick-macro" data-msg="Your cashless pre-authorisation packet has been logged (1-hr TAT).">🏥 IRDAI 1-Hr TAT Update</button>
-              <button type="button" class="node-chip quick-macro" data-msg="Syncing your request to our human specialist with full context.">🤝 Human Handoff Note</button>
-            </div>
-            <div style="display:flex;gap:8px;">
-              <input id="inboxReplyInput" class="styled-input" placeholder="Reply across WhatsApp / Telegram as assigned agent...">
-              <button type="button" id="btnSendInboxReply" class="btn-action"><i class="fas fa-paper-plane"></i> Send</button>
-            </div>
-          </div>
-        </div>
+      <div class="card">
+        <h3>Test it</h3>
+        <p class="h">Same search and rules as live replies. If no key is saved, the test uses the keys in your <a href="/byok.html">BYOK vault</a>.</p>
+        <textarea id="ak-q" placeholder="What are your opening hours?"></textarea>
+        <div class="row"><button class="btn p" id="ak-go">Ask</button></div>
+        <div id="ak-out"></div>
       </div>
-
-      <div class="sec-kicker"><i class="fas fa-table-columns"></i> Live Synced Kanban Lead Pipeline</div>
-      <div class="kanban-grid" id="kanbanBoard"></div>
+    </div>
+    <div class="card">
+      <h3>Knowledge base</h3>
+      <div class="g2">
+        <div><label>Title</label><input id="kb-title" placeholder="Returns policy"><label>Text (paste FAQs, policies, price lists, PDF text…)</label><textarea id="kb-text" style="min-height:120px"></textarea><div class="row"><button class="btn p" id="kb-add">Add document</button></div></div>
+        <div><label>…or learn from a public web page</label><input id="kb-url" placeholder="https://yourshop.in/faq"><div class="row"><button class="btn" id="kb-fetch"><i class="fas fa-globe"></i> Fetch page</button></div><div class="msg" id="kb-msg"></div></div>
+      </div>
+      <div id="kb-list" style="margin-top:14px"></div>
     </div>
   </section>
 
-  <!-- TAB 4: Dual-Engine WABA Cost & Billing Calculator -->
-  <section id="tab-cost" class="tab-pane">
-    <div class="card-panel">
-      <div class="sec-kicker"><i class="fas fa-calculator"></i> Official Meta Cloud API (India INR) Monthly Expenditure &amp; Billing Model Simulator</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:12px;">
-        <div>
-          <div class="lbl"><span>Marketing Messages</span><strong id="lblMkt" style="color:#fff;">15,000</strong></div>
-          <input type="range" id="slMkt" min="0" max="100000" step="1000" value="15000" style="width:100%;accent-color:#10b981;">
-          <div style="font-size:11px;color:#64748b;">Meta India base: ₹0.7846 / msg</div>
-        </div>
-        <div>
-          <div class="lbl"><span>Utility Messages</span><strong id="lblUtil" style="color:#fff;">8,000</strong></div>
-          <input type="range" id="slUtil" min="0" max="100000" step="1000" value="8000" style="width:100%;accent-color:#38bdf8;">
-          <div style="font-size:11px;color:#64748b;">Meta India base: ₹0.1150 / msg</div>
-        </div>
-        <div>
-          <div class="lbl"><span>Authentication OTPs</span><strong id="lblAuth" style="color:#fff;">4,000</strong></div>
-          <input type="range" id="slAuth" min="0" max="50000" step="500" value="4000" style="width:100%;accent-color:#a855f7;">
-          <div style="font-size:11px;color:#64748b;">Meta India base: ₹0.1150 / msg</div>
-        </div>
-        <div>
-          <div class="lbl"><span>24h Service Replies (Free)</span><strong id="lblSvc" style="color:#fff;">12,000</strong></div>
-          <input type="range" id="slSvc" min="0" max="100000" step="1000" value="12000" style="width:100%;accent-color:#25d366;">
-          <div style="font-size:11px;color:#64748b;">User-initiated 24h window: ₹0.00</div>
-        </div>
-        <div>
-          <div class="lbl"><span>Shared Inbox Seats</span><strong id="lblSeats" style="color:#fff;">8 Seats</strong></div>
-          <input type="range" id="slSeats" min="1" max="30" step="1" value="8" style="width:100%;accent-color:#f59e0b;">
-          <div style="font-size:11px;color:#64748b;">Sevenforce BYOK seat fee: ₹0</div>
-        </div>
+  <!-- COST -->
+  <section class="pane" id="p-cost">
+    <div class="card">
+      <h3>Monthly cost calculator</h3>
+      <p class="h">Meta charges per template message, and the rate depends on the category and your customers' country. Look up the current rates on <a href="https://developers.facebook.com/docs/whatsapp/pricing" target="_blank" rel="noopener">Meta's pricing page</a> and enter them here. Nothing is pre-filled because rates change. Replies inside the 24-hour window are free on Meta's current model, so leave that row at 0 unless your plan says otherwise.</p>
+      <table id="cc-t"><thead><tr><th>Message category</th><th>Messages / month</th><th>Rate per message (₹)</th><th>Cost (₹)</th></tr></thead><tbody></tbody></table>
+      <div class="g3" style="margin-top:14px">
+        <div><label>Other provider: monthly platform fee (₹)</label><input id="cc-fee" type="number" min="0" placeholder="0"></div>
+        <div><label>Other provider: markup per template message (₹)</label><input id="cc-mk" type="number" min="0" step="0.01" placeholder="0"></div>
+        <div><label>Other provider: per-seat fee × seats (₹)</label><input id="cc-seat" type="number" min="0" placeholder="0"></div>
       </div>
-
-      <div class="cost-grid" id="costCardsContainer"></div>
-    </div>
-  </section>
-
-  <!-- TAB 5: India Regulatory Compliance Engine (DPDP 2023, RBI, IRDAI/NHCX) -->
-  <section id="tab-compliance" class="tab-pane">
-    <div class="grid-equal">
-      <div class="card-panel">
-        <div class="sec-kicker"><i class="fas fa-shield-halved"></i> Pre-Send Regulatory Guardrail Linter (DPDP 2023 · RBI · IRDAI)</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-          <div>
-            <label class="lbl" for="cmpFramework">Regulatory Framework</label>
-            <select id="cmpFramework" class="styled-input">
-              <option value="DPDP_2023">DPDP Act 2023 (Consent &amp; PII Masking)</option>
-              <option value="RBI_RECOVERY">RBI Master Directions (08:00–19:00 IST)</option>
-              <option value="IRDAI_NHCX">IRDAI Cashless &amp; NHCX Claim Desk</option>
-            </select>
-          </div>
-          <div>
-            <label class="lbl" for="cmpHour">Scheduled Send Hour (IST): <strong id="cmpHourLbl" style="color:#fff;">11:00 IST</strong></label>
-            <input type="range" id="cmpHour" min="0" max="23" value="11" style="width:100%;accent-color:#10b981;margin-top:6px;">
-          </div>
-        </div>
-
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;font-size:12.5px;">
-          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="cmpConsent" checked> Affirmative Opt-In Consent Logged (Sec. 6)</label>
-          <button type="button" class="node-chip" id="btnPresetViolation">Test 21:00 IST + Unmasked PAN Violation</button>
-          <button type="button" class="node-chip" id="btnPresetClean">Load Compliant Template</button>
-        </div>
-
-        <label class="lbl" for="cmpMessage">Outbound Template Text</label>
-        <textarea id="cmpMessage" rows="4" class="styled-input">Namaste {{1}}, your health policy claim #{{2}} pre-authorisation is under cashless review (1-hr IRDAI TAT). Helpline: 1800-000-000. Reply STOP to opt out.</textarea>
-
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
-          <button type="button" id="btnRunCompliance" class="btn-action"><i class="fas fa-gavel"></i> Run Compliance Audit &amp; Log Hash</button>
-          <button type="button" id="btnExportDpdp" class="btn-sec"><i class="fas fa-file-export"></i> Export DPDP Data (.json)</button>
-          <button type="button" id="btnTriggerErasure" class="btn-sec" style="border-color:#ef4444;color:#f87171;"><i class="fas fa-user-slash"></i> Simulate STOP / Right-to-Erasure</button>
-        </div>
-
-        <div id="cmpAuditResult" style="margin-top:14px;"></div>
-      </div>
-
-      <div class="card-panel">
-        <div class="sec-kicker"><i class="fas fa-fingerprint"></i> Append-Only SHA-256 DPDP Consent &amp; Erasure Audit Ledger</div>
-        <p style="font-size:12.5px;color:#94a3b8;margin:0 0 12px;">Every consent check, message audit, and citizen <code>STOP</code> withdrawal appends a verifiable cryptographic entry across WABA contacts, message logs, sheet cache, and CRM cards.</p>
-        <div id="dpdpLedgerList" class="flow-list"></div>
-      </div>
+      <div class="g3" style="margin-top:14px" id="cc-out"></div>
     </div>
   </section>
 </main>
 
-<div id="hubToast" role="status" aria-live="polite"></div>
-
 <script>
 (function () {
-  'use strict';
+  var API = '/sevenforce/api/whatsapp', KEY = 'sf_wa_credential';
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
+  var store = { get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+                set: function (k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} } };
+  var cred = store.get(KEY), ws = null, templates = [], current = null, editing = null, steps = [];
 
-  function toast(msg) {
-    var el = document.getElementById('hubToast');
-    el.textContent = msg;
-    el.style.display = 'block';
-    clearTimeout(window._hubToastTimer);
-    window._hubToastTimer = setTimeout(function () { el.style.display = 'none'; }, 3000);
+  function say(id, text, ok) { var m = $(id); m.className = 'msg ' + (ok ? 'ok' : 'err'); m.textContent = text; }
+  function clear(id) { $(id).className = 'msg'; $(id).textContent = ''; }
+  async function api(method, path, body) {
+    var h = { 'Content-Type': 'application/json' };
+    if (cred) h['X-SF-Workspace'] = cred;
+    [['user_groq_key','X-Groq-API-Key'],['user_gemini_key','X-Gemini-API-Key'],['user_openai_key','X-OpenAI-API-Key']].forEach(function (p) { var v = store.get(p[0]); if (v) h[p[1]] = v; });
+    var r = await fetch(API + path, { method: method, headers: h, body: body ? JSON.stringify(body) : undefined });
+    var d = await r.json().catch(function () { return {}; });
+    if (!r.ok) throw new Error(d.detail || d.error || ('HTTP ' + r.status));
+    return d;
   }
+  function busy(btn, on) { btn.disabled = on; }
+  function when(ts) { if (!ts) return ''; var d = new Date(ts); return isNaN(d) ? ts : d.toLocaleString(); }
 
-  // Tab switching
-  document.querySelectorAll('.tab-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
-      document.querySelectorAll('.tab-pane').forEach(function (p) { p.classList.remove('active'); });
-      btn.classList.add('active');
-      var target = document.getElementById(btn.getAttribute('data-tab'));
-      if (target) target.classList.add('active');
-    });
-  });
-
-  // ── TAB 1: 15-Node Flow Builder & Payment Pause/Resume ────────────────
-  var currentFlowData = null;
-  var currentNodes = [];
-
-  function renderFlowNodes() {
-    var list = document.getElementById('flowCanvasList');
-    document.getElementById('flowNodeCount').textContent = currentNodes.length + ' Nodes Active';
-    list.innerHTML = currentNodes.map(function (n, idx) {
-      var isPause = n.type === 'RAZORPAY_PAYMENT_PAUSE' || n.status === 'PAUSE_GATE';
-      return '<div class="flow-node ' + (isPause ? 'pause-gate' : '') + '">' +
-        '<div>' +
-          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
-            '<span class="badge-mini ' + (isPause ? 'amber' : '') + '">' + (idx + 1) + ' · ' + n.type + '</span>' +
-            '<strong style="font-size:13.5px;color:#fff;">' + n.title + '</strong>' +
-          '</div>' +
-          '<div style="font-size:12px;color:#94a3b8;">' + n.detail + '</div>' +
-        '</div>' +
-        '<button type="button" data-rm="' + idx + '" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:13px;" title="Remove node"><i class="fas fa-trash"></i></button>' +
-      '</div>';
-    }).join('');
-    list.querySelectorAll('[data-rm]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var i = parseInt(b.getAttribute('data-rm'), 10);
-        currentNodes.splice(i, 1);
-        renderFlowNodes();
-      });
-    });
-  }
-
-  async function buildFlow() {
-    var payload = {
-      prompt: document.getElementById('flowPrompt').value,
-      industry: document.getElementById('flowIndustry').value,
-      payment_amount_inr: parseFloat(document.getElementById('flowAmt').value) || 1499,
-      include_payment_pause: document.getElementById('flowChkPay').checked,
-      include_telegram: document.getElementById('flowChkTg').checked
+  // ── tabs
+  document.querySelectorAll('#tabs button').forEach(function (b) {
+    b.onclick = function () {
+      if (b.disabled) return;
+      document.querySelectorAll('#tabs button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      document.querySelectorAll('.pane').forEach(function (p) { p.classList.toggle('on', p.id === 'p-' + b.dataset.t); });
+      ({ inbox: loadInbox, send: loadTemplates, contacts: loadContacts, flows: loadFlows, bot: loadDocs })[b.dataset.t] && ({ inbox: loadInbox, send: loadTemplates, contacts: loadContacts, flows: loadFlows, bot: loadDocs })[b.dataset.t]();
     };
-    var res = await fetch('/api/sevenforce/waba/build-flow', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-    });
-    var d = await res.json();
-    currentFlowData = d;
-    currentNodes = d.nodes || [];
-    renderFlowNodes();
+  });
+  function lockTabs() { document.querySelectorAll('#tabs button[data-need]').forEach(function (b) { b.disabled = !ws; b.title = ws ? '' : 'Create or open a workspace first'; }); }
 
-    var pal = document.getElementById('nodePalette');
-    if (!pal.innerHTML && d.available_node_catalog) {
-      pal.innerHTML = d.available_node_catalog.map(function (c) {
-        return '<button type="button" class="node-chip" data-ntype="' + c.type + '" data-nlabel="' + c.label + '">' +
-          '<i class="fas ' + c.icon + '" style="color:#10b981;"></i> ' + c.label + '</button>';
-      }).join('');
-      pal.querySelectorAll('.node-chip').forEach(function (chip) {
-        chip.addEventListener('click', function () {
-          currentNodes.push({
-            id: 'n' + (currentNodes.length + 1),
-            type: chip.getAttribute('data-ntype'),
-            title: chip.getAttribute('data-nlabel'),
-            detail: 'Appended interactive step in omnichannel execution graph.',
-            status: chip.getAttribute('data-ntype') === 'RAZORPAY_PAYMENT_PAUSE' ? 'PAUSE_GATE' : 'ACTIVE'
-          });
-          renderFlowNodes();
-          toast('Added node: ' + chip.getAttribute('data-nlabel'));
-        });
-      });
-    }
+  // ── workspace
+  function renderWs() {
+    lockTabs();
+    $('ws-none').style.display = ws ? 'none' : '';
+    $('ws-some').style.display = ws ? '' : 'none';
+    if (!ws) return;
+    $('ws-title').textContent = ws.name;
+    $('ws-status').innerHTML = ws.connected
+      ? (ws.verified_name ? '<span class="pill g">Connected</span> ' + esc(ws.verified_name) + ' · ' + esc(ws.display_phone) : '<span class="pill y">Saved, not verified</span> Meta did not confirm this number. Check the token and phone number ID.')
+      : '<span class="pill y">Not connected</span> Add your WhatsApp credentials below.';
+    $('cn-phone').value = ws.phone_number_id || ''; $('cn-waba').value = ws.waba_id || '';
+    $('cn-tok-now').textContent = ws.token ? '(saved ' + ws.token + ')' : '';
+    $('cn-sec-now').textContent = ws.app_secret_set ? '(saved)' : '(not set)';
+    $('wh-url').textContent = location.origin + ws.webhook_path;
+    $('wh-tok').textContent = ws.verify_token;
+    var b = ws.bot; $('bt-on').checked = b.enabled; $('bt-prov').value = b.ai_provider; $('bt-ins').value = b.instructions;
+    $('bt-hand').value = b.handoff_text; $('bt-min').value = b.min_score; $('bt-keynow').textContent = b.ai_key ? '(saved ' + b.ai_key + ')' : '(none saved)';
+    loadStats();
   }
-
-  function resetFlowPhone() {
-    var amt = parseInt(document.getElementById('flowAmt').value, 10) || 1499;
-    document.getElementById('simFlowState').textContent = 'IDLE_READY';
-    document.getElementById('simFlowState').className = 'badge-mini';
-    document.getElementById('flowPhoneScreen').innerHTML =
-      '<div class="wa-bubble">' +
-        '<div style="font-weight:800;color:#25d366;margin-bottom:4px;">Order #SF-8821 Received</div>' +
-        '<div>Hi Customer, switch your ₹' + amt.toLocaleString('en-IN') + ' order to prepaid now for ₹75 instant discount!</div>' +
-      '</div>';
+  async function loadWs() {
+    if (!cred) { ws = null; return renderWs(); }
+    try { ws = await api('GET', '/workspace'); } catch (e) { ws = null; if (/credential|not found/i.test(e.message)) { cred = null; store.set(KEY, null); } say('ws-msg', e.message); }
+    renderWs();
   }
-
-  document.getElementById('btnSimPause').addEventListener('click', function () {
-    var amt = Math.max(1, (parseInt(document.getElementById('flowAmt').value, 10) || 1499) - 75);
-    var st = document.getElementById('simFlowState');
-    st.textContent = 'PAUSED_AWAITING_PAYMENT';
-    st.className = 'badge-mini amber';
-    var scr = document.getElementById('flowPhoneScreen');
-    scr.innerHTML +=
-      '<div class="wa-bubble" style="border-left:3px solid #f59e0b;">' +
-        '<div style="font-weight:800;color:#fbbf24;">💳 Instant Payment Link Generated</div>' +
-        '<div>Amount: <strong>₹' + amt.toLocaleString('en-IN') + '</strong><br>Link: <code>pay.sevenforce.in/plink_8821</code><br><em style="color:#94a3b8;font-size:11.5px;">Flow paused until webhook confirms payment...</em></div>' +
-      '</div>';
-    scr.scrollTop = scr.scrollHeight;
-  });
-
-  document.getElementById('btnSimWebhook').addEventListener('click', function () {
-    var st = document.getElementById('simFlowState');
-    st.textContent = 'RESUMED_COMPLETED';
-    st.className = 'badge-mini';
-    var scr = document.getElementById('flowPhoneScreen');
-    scr.innerHTML +=
-      '<div class="wa-bubble user"><div>✓ Webhook: payment.captured (UPIVerified)</div></div>' +
-      '<div class="wa-bubble" style="border-left:3px solid #10b981;">' +
-        '<div style="font-weight:800;color:#25d366;">✅ Payment Confirmed — Flow Auto-Resumed!</div>' +
-        '<div>Receipt #RCPT-8821 generated, 2-way sheet updated, Telegram alert dispatched, and priority shipment scheduled!</div>' +
-      '</div>';
-    scr.scrollTop = scr.scrollHeight;
-    toast('Webhook captured — paused flow automatically resumed!');
-  });
-
-  document.getElementById('btnResetFlowChat').addEventListener('click', resetFlowPhone);
-  document.getElementById('btnBuildFlow').addEventListener('click', function () { buildFlow().then(function () { toast('15-node AI flow synthesized!'); }); });
-  document.getElementById('btnCopyFlowJson').addEventListener('click', function () {
-    var txt = JSON.stringify(currentFlowData || { nodes: currentNodes }, null, 2);
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).catch(function () {});
-    toast('Meta Cloud API Flow JSON copied!');
-  });
-  document.getElementById('btnDownloadFlowJson').addEventListener('click', function () {
-    var blob = new Blob([JSON.stringify(currentFlowData || { nodes: currentNodes }, null, 2)], { type: 'application/json' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'sevenforce-waba-flow.json';
-    a.click();
-    toast('Exported sevenforce-waba-flow.json');
-  });
-
-  // ── TAB 2: 25-Var Template Chip Bar + A/B/C/D Sim + Native Flow v7.1 ──
-  var varBar = document.getElementById('varChipBar');
-  var chipsHtml = '';
-  for (var v = 1; v <= 25; v++) {
-    chipsHtml += '<button type="button" class="node-chip" data-var="{{' + v + '}}">{{' + v + '}}</button>';
+  async function loadStats() {
+    try {
+      var s = await api('GET', '/stats'), o = s.outbound_by_status_30d || {};
+      var sent = Object.keys(o).reduce(function (a, k) { return a + (k !== 'failed' ? o[k] : 0); }, 0);
+      var cells = [['Sent (30 days)', sent], ['Delivered', (o.delivered || 0) + (o.read || 0)], ['Read', o.read || 0], ['Failed', o.failed || 0],
+                   ['Received (30 days)', s.inbound_30d], ['Waiting for a person', s.waiting_for_human], ['Contacts', s.contacts], ['Opted in', s.opted_in], ['Opted out', s.opted_out]];
+      $('stats').innerHTML = cells.map(function (c) { return '<div class="stat"><b>' + c[1] + '</b><span>' + c[0] + '</span></div>'; }).join('');
+    } catch (e) { $('stats').innerHTML = ''; }
   }
-  varBar.innerHTML = chipsHtml;
-  varBar.querySelectorAll('[data-var]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var ta = document.getElementById('bodyA');
-      ta.value = ta.value + ' ' + btn.getAttribute('data-var');
-      toast('Inserted ' + btn.getAttribute('data-var') + ' into Variant A');
-    });
-  });
+  $('ws-create').onclick = async function () {
+    busy(this, true);
+    try { var r = await api('POST', '/workspaces', { name: $('ws-name').value.trim() || 'My business' }); cred = r.credential; store.set(KEY, cred); ws = r.workspace; renderWs(); $('ws-keyshow').style.display = ''; $('ws-keyshow').textContent = 'Workspace key (save it): ' + cred; }
+    catch (e) { say('ws-msg', e.message); } busy(this, false);
+  };
+  $('ws-open').onclick = function () { cred = $('ws-key').value.trim(); store.set(KEY, cred); loadWs(); };
+  $('ws-showkey').onclick = function () { var k = $('ws-keyshow'); k.style.display = k.style.display ? '' : 'none'; k.textContent = 'Workspace key: ' + cred; };
+  $('ws-logout').onclick = function () { cred = null; store.set(KEY, null); ws = null; renderWs(); };
+  $('ws-delete').onclick = async function () {
+    if (!confirm('Delete this workspace and everything in it (credentials, contacts, messages, flows, documents)? This cannot be undone.')) return;
+    try { await api('DELETE', '/workspace'); cred = null; store.set(KEY, null); ws = null; renderWs(); } catch (e) { alert(e.message); }
+  };
+  $('cn-save').onclick = async function () {
+    busy(this, true); clear('cn-msg');
+    try {
+      var r = await api('PUT', '/workspace/connection', { access_token: $('cn-token').value, phone_number_id: $('cn-phone').value, waba_id: $('cn-waba').value, app_secret: $('cn-secret').value });
+      ws = r.workspace; $('cn-token').value = ''; $('cn-secret').value = ''; renderWs();
+      r.verified ? say('cn-msg', 'Meta confirmed: ' + (r.meta.verified_name || '') + ' · ' + (r.meta.display_phone_number || '') + (r.meta.quality_rating ? ' · quality ' + r.meta.quality_rating : ''), true)
+                 : say('cn-msg', 'Saved, but Meta rejected it: ' + (r.meta.error || 'unknown error'));
+    } catch (e) { say('cn-msg', e.message); } busy(this, false);
+  };
+  $('wh-copy').onclick = function () { navigator.clipboard && navigator.clipboard.writeText($('wh-url').textContent + '\n' + $('wh-tok').textContent); this.innerHTML = '<i class="fas fa-check"></i> Copied'; };
 
-  async function runAbSim() {
-    var payload = {
-      category: document.getElementById('tplCategory').value,
-      total_recipients: parseInt(document.getElementById('tplAudienceTotal').value, 10) || 12000,
-      variants: [
-        { name: 'Variant A', body: document.getElementById('bodyA').value, cta: document.getElementById('ctaA').value, split_pct: parseFloat(document.getElementById('spA').value) || 0 },
-        { name: 'Variant B', body: document.getElementById('bodyB').value, cta: document.getElementById('ctaB').value, split_pct: parseFloat(document.getElementById('spB').value) || 0 },
-        { name: 'Variant C', body: document.getElementById('bodyC').value, cta: document.getElementById('ctaC').value, split_pct: parseFloat(document.getElementById('spC').value) || 0 },
-        { name: 'Variant D', body: document.getElementById('bodyD').value, cta: document.getElementById('ctaD').value, split_pct: parseFloat(document.getElementById('spD').value) || 0 }
-      ]
-    };
-    var res = await fetch('/api/sevenforce/waba/template-ab-sim', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-    });
-    var d = await res.json();
-    document.getElementById('abSimOutput').innerHTML = (d.variants || []).map(function (vr) {
-      return '<div class="cost-card">' +
-        '<div style="display:flex;justify-content:space-between;align-items:center;">' +
-          '<strong>' + vr.name + ' (' + vr.split_pct + '%)</strong>' +
-          '<span class="badge-mini ' + (vr.meta_linter_valid ? '' : 'red') + '">' + (vr.meta_linter_valid ? 'META VALID' : 'LINT ISSUE') + '</span>' +
-        '</div>' +
-        '<div style="font-size:18px;font-weight:800;font-family:monospace;margin:6px 0;color:#38bdf8;">' + vr.cohort_recipients.toLocaleString('en-IN') + ' recipients</div>' +
-        '<div style="font-size:11.5px;color:#94a3b8;">Vars: ' + (vr.variables_detected.join(', ') || 'None') + '</div>' +
-        (vr.linter_issues.length ? '<div style="font-size:11px;color:#f87171;margin-top:4px;">' + vr.linter_issues.join(' ') + '</div>' : '') +
-      '</div>';
+  // ── inbox
+  var poll = null;
+  async function loadInbox() {
+    clearInterval(poll); poll = setInterval(function () { if ($('p-inbox').classList.contains('on') && !document.hidden) { loadInbox.quiet = true; refreshInbox(); } }, 10000);
+    refreshInbox();
+  }
+  async function refreshInbox() {
+    try {
+      var d = await api('GET', '/conversations'), f = $('ib-filter').value;
+      var list = d.conversations.filter(function (c) { return !f || (f === 'human' ? c.needs_human : c.in_window); });
+      $('ib-list').innerHTML = list.length ? list.map(function (c) {
+        return '<div class="citem' + (c.phone === current ? ' on' : '') + '" data-p="' + esc(c.phone) + '"><div class="n"><span>' + esc(c.name || '+' + c.phone) + '</span>' +
+          (c.needs_human ? '<span class="pill y">needs you</span>' : c.in_window ? '<span class="pill g">open</span>' : '') + '</div><div class="l">' + (c.direction === 'out' ? 'You: ' : '') + esc(c.body) + '</div></div>';
+      }).join('') : '<div class="empty">No conversations' + (f ? ' match this filter' : ' yet. Once the webhook is connected, incoming messages appear here') + '.</div>';
+      $('ib-list').querySelectorAll('.citem').forEach(function (el) { el.onclick = function () { current = el.dataset.p; refreshInbox(); }; });
+      if (current) openChat(current);
+    } catch (e) { $('ib-list').innerHTML = '<div class="empty">' + esc(e.message) + '</div>'; }
+  }
+  $('ib-refresh').onclick = refreshInbox; $('ib-filter').onchange = refreshInbox;
+  async function openChat(p) {
+    var d = await api('GET', '/conversations/' + p), c = d.contact, chat = $('ib-chat'), atBottom = chat.scrollHeight - chat.scrollTop - chat.clientHeight < 40;
+    $('ib-head').innerHTML = '<b>' + esc(c.name || '+' + c.phone) + '</b> <span class="mono">+' + esc(c.phone) + '</span> ' + (c.opted_out ? '<span class="pill r">opted out</span> ' : c.opted_in ? '<span class="pill g">opted in</span> ' : '') + (c.bot_paused ? '<span class="pill y">bot paused</span>' : '');
+    chat.innerHTML = d.messages.map(function (m) {
+      var st = m.direction === 'out' ? (m.status || '') + (m.source && m.source !== 'manual' ? ' · ' + m.source : '') : '';
+      return '<div class="bub ' + m.direction + '">' + esc(m.body) + '<small>' + esc(when(m.ts)) + (st ? ' · ' + esc(st) : '') + (m.error ? ' · <span style="color:var(--bad)">' + esc(m.error) + '</span>' : '') + '</small></div>';
     }).join('');
+    if (atBottom || !loadInbox.quiet) chat.scrollTop = chat.scrollHeight; loadInbox.quiet = false;
+    $('ib-compose').style.display = '';
+    $('ib-window').textContent = c.in_window ? '24-hour window open: free-form replies allowed.' : 'Window closed. Send an approved template from “Send & broadcast”.';
+    $('ib-send').disabled = !c.in_window;
+    $('ib-bot').innerHTML = c.bot_paused ? '<i class="fas fa-robot"></i> Hand back to bot' : '<i class="fas fa-hand"></i> Take over (pause bot)';
+    $('ib-bot').onclick = async function () { await api('PATCH', '/contacts/' + c.phone, { bot_paused: !c.bot_paused, needs_human: false }); openChat(c.phone); };
   }
-  document.getElementById('btnRunAbSim').addEventListener('click', runAbSim);
+  $('ib-send').onclick = async function () {
+    var t = $('ib-text').value.trim(); if (!t || !current) return; busy(this, true); clear('ib-msg');
+    try { var r = await api('POST', '/send', { to: current, text: t }); if (!r.ok) say('ib-msg', r.error); else $('ib-text').value = ''; await api('PATCH', '/contacts/' + current, { needs_human: false }).catch(function(){}); openChat(current); }
+    catch (e) { say('ib-msg', e.message); } busy(this, false);
+  };
 
-  document.getElementById('btnOpenNativeFlow').addEventListener('click', function () {
-    document.getElementById('nativeFlowDrawer').classList.add('open');
-  });
-  document.getElementById('btnCloseNativeFlow').addEventListener('click', function () {
-    document.getElementById('nativeFlowDrawer').classList.remove('open');
-  });
-  document.getElementById('btnSubmitNativeFlow').addEventListener('click', function () {
-    var slot = document.getElementById('nfSlot').value;
-    var pay = document.getElementById('nfPayMode').value;
-    var note = document.getElementById('nfNote').value;
-    document.getElementById('nativeFlowDrawer').classList.remove('open');
-    var th = document.getElementById('v71ChatThread');
-    th.innerHTML +=
-      '<div class="wa-bubble user"><div>📋 Flow v7.1 Submitted: ' + slot + ' · ' + pay + '</div></div>' +
-      '<div class="wa-bubble"><div style="font-weight:800;color:#25d366;">✓ Slot Confirmed via Encrypted Webhook</div><div>Window: ' + slot + '<br>Mode: ' + pay + '<br>Note: ' + note + '</div></div>';
-    th.scrollTop = th.scrollHeight;
-    toast('Native WhatsApp Flow v7.1 response captured!');
-  });
+  // ── templates / send / broadcast
+  async function loadTemplates(force) {
+    if (templates.length && !force) return fillTpl();
+    $('tp-list').innerHTML = 'Loading…';
+    try { var d = await api('GET', '/templates'); templates = d.templates || [];
+      $('tp-list').innerHTML = d.error ? esc(d.error) : templates.length ? '<table><tr><th>Name</th><th>Language</th><th>Category</th><th>Status</th><th>Body</th></tr>' + templates.map(function (t) {
+        return '<tr><td class="mono">' + esc(t.name) + '</td><td>' + esc(t.language) + '</td><td>' + esc(t.category) + '</td><td><span class="pill ' + (t.status === 'APPROVED' ? 'g' : t.status === 'REJECTED' ? 'r' : 'y') + '">' + esc(t.status) + '</span></td><td>' + esc(t.body) + '</td></tr>'; }).join('') + '</table>' : 'No templates in this WhatsApp Business Account yet.';
+    } catch (e) { $('tp-list').textContent = e.message; }
+    fillTpl();
+  }
+  function fillTpl() {
+    var ok = templates.filter(function (t) { return t.status === 'APPROVED'; });
+    var opts = ok.map(function (t, i) { return '<option value="' + i + '">' + esc(t.name) + ' (' + esc(t.language) + ')</option>'; }).join('');
+    $('s1-tpl').innerHTML = '<option value="">— free-form text —</option>' + opts;
+    $('bc-tpl').innerHTML = opts || '<option value="">No approved templates</option>';
+    fillTpl.ok = ok; varsFor('s1'); varsFor('bc');
+  }
+  function varsFor(p) {
+    var t = (fillTpl.ok || [])[$(p + '-tpl').value], box = $(p + '-vars'), n = t ? t.variables : 0, h = '';
+    if (t) h += '<p class="note" style="margin:8px 0 0">' + esc(t.body) + '</p>';
+    for (var i = 1; i <= n; i++) h += '<label>Variable {{' + i + '}}</label><input data-v="' + i + '">';
+    box.innerHTML = h;
+    if (p === 's1') { $('s1-text').style.display = t ? 'none' : ''; $('s1-text-l').style.display = t ? 'none' : ''; }
+  }
+  function vars(p) { return Array.prototype.map.call($(p + '-vars').querySelectorAll('input[data-v]'), function (i) { return i.value; }); }
+  $('s1-tpl').onchange = function () { varsFor('s1'); }; $('bc-tpl').onchange = function () { varsFor('bc'); };
+  $('tp-refresh').onclick = function () { loadTemplates(true); };
+  $('s1-send').onclick = async function () {
+    var t = (fillTpl.ok || [])[$('s1-tpl').value]; busy(this, true); clear('s1-msg');
+    try { var r = await api('POST', '/send', t ? { to: $('s1-to').value, template: t.name, language: t.language, params: vars('s1') } : { to: $('s1-to').value, text: $('s1-text').value });
+      r.ok ? say('s1-msg', 'Sent. Meta message id ' + r.message_id + '. Delivery status will update in the Inbox.', true) : say('s1-msg', 'Meta refused it: ' + r.error); }
+    catch (e) { say('s1-msg', e.message); } busy(this, false);
+  };
+  function bcBody(extra) { var t = (fillTpl.ok || [])[$('bc-tpl').value]; if (!t) throw new Error('Pick an approved template.'); return Object.assign({ template: t.name, language: t.language, params: vars('bc'), tag: $('bc-tag').value.trim() }, extra); }
+  $('bc-dry').onclick = async function () { clear('bc-msg'); try { var r = await api('POST', '/broadcast', bcBody({ dry_run: true })); say('bc-msg', r.eligible + ' opted-in recipient(s) would get this.', true); } catch (e) { say('bc-msg', e.message); } };
+  $('bc-send').onclick = async function () {
+    var btn = this; clear('bc-msg'); $('bc-fail').innerHTML = '';
+    try {
+      var d = await api('POST', '/broadcast', bcBody({ dry_run: true }));
+      if (!d.eligible) return say('bc-msg', 'No opted-in recipients match.');
+      if (!confirm('Send "' + bcBody().template + '" to ' + d.eligible + ' people? Meta will bill your account for each message.')) return;
+      busy(btn, true); var off = 0, sent = 0, failed = [];
+      while (true) {
+        var r = await api('POST', '/broadcast', bcBody({ offset: off }));
+        sent += r.sent; failed = failed.concat(r.failed); off = r.processed;
+        say('bc-msg', 'Sending… ' + off + ' / ' + r.eligible + ' (accepted by Meta: ' + sent + ', failed: ' + failed.length + ')', true);
+        if (r.done) break;
+      }
+      say('bc-msg', 'Done. Meta accepted ' + sent + ', rejected ' + failed.length + '. Delivery and read status will update as receipts arrive.', !failed.length || sent > 0);
+      if (failed.length) $('bc-fail').innerHTML = '<table><tr><th>Number</th><th>Meta error</th></tr>' + failed.slice(0, 100).map(function (f) { return '<tr><td class="mono">+' + esc(f.to) + '</td><td>' + esc(f.error) + '</td></tr>'; }).join('') + '</table>';
+      loadStats();
+    } catch (e) { say('bc-msg', e.message); } busy(btn, false);
+  };
 
-  // ── TAB 3: Shared Multi-Agent Inbox & Kanban Pipeline ─────────────────
-  var leads = [
-    { id: 'L1', name: 'Riya Mehta · D2C Skincare', ch: 'WA', sla: '08m left', agent: 'Wave (Sales AI)', stage: 'Payment Pending', msgs: [{ from: 'lead', text: 'Can I switch my ₹2,199 COD kit to UPI and get express delivery?' }, { from: 'agent', text: 'Yes! Tap the UPI link above for ₹75 instant off + same-day dispatch.' }] },
-    { id: 'L2', name: 'Vikram Desai · FinServe NBFC', ch: 'WA', sla: '14m left', agent: 'Scout (HR AI)', stage: 'AI Qualified', msgs: [{ from: 'lead', text: 'Need DPDP + RBI 8AM–7PM guardrails for 40k monthly EMI reminders.' }] },
-    { id: 'L3', name: 'Dr. Kavita Nair · Apex Multispecialty', ch: 'TG', sla: '05m left', agent: 'Maya (Growth AI)', stage: 'New Inbound', msgs: [{ from: 'lead', text: 'Connected our Telegram OPD bot — can patients book slots into the same inbox?' }] },
-    { id: 'L4', name: 'Arjun Kulkarni · CloudSprint SaaS', ch: 'TG', sla: 'Cleared', agent: 'Human Escalation Desk', stage: 'Closed Won', msgs: [{ from: 'lead', text: 'Annual 15-seat BYOK cluster approved. Invoice paid!' }] }
-  ];
-  var activeLeadId = 'L1';
-  var channelFilter = 'ALL';
+  // ── contacts
+  $('ct-opt').onchange = function () { $('ct-src').style.display = this.checked ? '' : 'none'; };
+  $('im-opt').onchange = function () { $('im-src').style.display = this.checked ? '' : 'none'; };
+  $('ct-add').onclick = async function () {
+    clear('ct-msg');
+    try { var r = await api('POST', '/contacts', { phone: $('ct-phone').value, name: $('ct-name').value, tags: $('ct-tags').value, opted_in: $('ct-opt').checked, consent_source: $('ct-src').value });
+      say('ct-msg', 'Saved +' + r.phone, true); $('ct-phone').value = $('ct-name').value = ''; loadContacts(); } catch (e) { say('ct-msg', e.message); }
+  };
+  $('im-go').onclick = async function () {
+    busy(this, true); clear('im-msg');
+    try { var r = await api('POST', '/contacts/import', { csv: $('im-csv').value, opted_in: $('im-opt').checked, consent_source: $('im-src').value });
+      say('im-msg', 'Imported ' + r.imported + '.' + (r.invalid_count ? ' Skipped ' + r.invalid_count + ' invalid number(s): ' + r.invalid.join(', ') : ''), true); loadContacts(); }
+    catch (e) { say('im-msg', e.message); } busy(this, false);
+  };
+  async function loadContacts() {
+    try { var d = await api('GET', '/contacts?q=' + encodeURIComponent($('ct-q').value)), cs = d.contacts;
+      $('ct-list').innerHTML = cs.length ? '<table><tr><th>Number</th><th>Name</th><th>Tags</th><th>Consent</th><th>Last message</th><th></th></tr>' + cs.map(function (c) {
+        var cons = c.opted_out ? '<span class="pill r">opted out</span>' : c.opted_in ? '<span class="pill g">opted in</span><div class="note">' + esc(c.consent_source) + '</div>' : '<span class="pill">no consent</span>';
+        return '<tr><td class="mono">+' + esc(c.phone) + '</td><td>' + esc(c.name) + '</td><td>' + esc(c.tags) + '</td><td>' + cons + '</td><td>' + esc(when(c.last_inbound)) + '</td><td style="white-space:nowrap">' +
+          (c.opted_out ? '' : c.opted_in ? '<button class="btn sm" data-a="out" data-p="' + c.phone + '">Mark opted out</button>' : '<button class="btn sm" data-a="in" data-p="' + c.phone + '">Record consent</button>') +
+          ' <button class="btn sm d" data-a="del" data-p="' + c.phone + '" title="Delete contact and messages"><i class="fas fa-trash"></i></button></td></tr>'; }).join('') + '</table>' : '<div class="empty">No contacts yet.</div>';
+      $('ct-list').querySelectorAll('button[data-a]').forEach(function (b) { b.onclick = async function () {
+        var p = b.dataset.p, a = b.dataset.a;
+        if (a === 'del') { if (!confirm('Delete +' + p + ' and their message history?')) return; await api('DELETE', '/contacts/' + p); }
+        else if (a === 'out') await api('PATCH', '/contacts/' + p, { opted_out: true, opted_in: false });
+        else { var src = prompt('How did +' + p + ' agree to receive WhatsApp messages?'); if (!src) return; await api('PATCH', '/contacts/' + p, { opted_in: true, consent_source: src }); }
+        loadContacts(); }; });
+    } catch (e) { $('ct-list').textContent = e.message; }
+  }
+  $('ct-refresh').onclick = loadContacts; $('ct-q').oninput = function () { clearTimeout(loadContacts.t); loadContacts.t = setTimeout(loadContacts, 300); };
 
-  function renderInboxAndKanban() {
-    var filtered = leads.filter(function (l) { return channelFilter === 'ALL' || l.ch === channelFilter; });
-    var tList = document.getElementById('inboxThreadList');
-    tList.innerHTML = filtered.map(function (l) {
-      return '<div class="thread-item ' + (l.id === activeLeadId ? 'active' : '') + '" data-lid="' + l.id + '">' +
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">' +
-          '<strong style="font-size:13px;color:#fff;">' + l.name + '</strong>' +
-          '<span class="badge-mini">' + (l.ch === 'WA' ? 'WhatsApp' : 'Telegram') + '</span>' +
-        '</div>' +
-        '<div style="font-size:11.5px;color:#94a3b8;">' + l.agent + ' · <strong>' + l.stage + '</strong></div>' +
-      '</div>';
+  // ── flows
+  var LABEL = { text: 'Send text', ask: 'Ask & save answer', buttons: 'Buttons / menu', ai: 'Answer from knowledge base', handoff: 'Hand off to a person', end: 'End' };
+  async function loadFlows() {
+    try { var d = await api('GET', '/flows'); loadFlows.all = d.flows;
+      $('fl-list').innerHTML = d.flows.length ? d.flows.map(function (f, i) { return '<div class="citem" data-i="' + i + '"><div class="n"><span>' + esc(f.name) + '</span><span class="pill ' + (f.active ? 'g' : '') + '">' + (f.active ? 'active' : 'off') + '</span></div><div class="l">Keywords: ' + esc(f.keywords || '(none)') + ' · ' + f.steps.length + ' steps</div></div>'; }).join('') : '<div class="empty">No flows yet.</div>';
+      $('fl-list').querySelectorAll('.citem').forEach(function (el) { el.onclick = function () { editFlow(loadFlows.all[el.dataset.i]); }; });
+    } catch (e) { $('fl-list').textContent = e.message; }
+  }
+  function editFlow(f) {
+    editing = f; steps = f ? JSON.parse(JSON.stringify(f.steps)) : [{ type: 'text', text: 'Hi {{name}}! How can we help?' }];
+    $('fl-edit').style.display = ''; $('fl-etitle').textContent = f ? 'Edit flow' : 'New flow';
+    $('fl-name').value = f ? f.name : ''; $('fl-kw').value = f ? f.keywords : ''; $('fl-active').checked = f ? f.active : true;
+    $('fl-del').style.display = f ? '' : 'none'; clear('fl-msg'); drawSteps();
+  }
+  function drawSteps() {
+    $('fl-steps').innerHTML = steps.map(function (s, i) {
+      var h = '<div class="step" data-i="' + i + '"><div class="hd"><span>Step ' + (i + 1) + ' · ' + LABEL[s.type] + '</span><span><button class="btn sm" data-m="up">↑</button> <button class="btn sm" data-m="down">↓</button> <button class="btn sm d" data-m="rm">✕</button></span></div>';
+      if (s.type === 'text' || s.type === 'ask' || s.type === 'buttons' || s.type === 'handoff') h += '<label>Message' + (s.type === 'handoff' ? ' (empty = your handoff message)' : '') + '</label><textarea data-f="text">' + esc(s.text || '') + '</textarea>';
+      if (s.type === 'ask' || s.type === 'buttons') h += '<label>Save answer as</label><input data-f="save_as" value="' + esc(s.save_as || '') + '" placeholder="e.g. order">';
+      if (s.type === 'buttons') h += '<label>Options: one per line, <span class="mono">Title | go to step</span> (up to 3 show as buttons, up to 10 as a list)</label><textarea data-f="options">' + esc((s.options || []).map(function (o) { return o.title + (o.goto ? ' | ' + o.goto : ''); }).join('\n')) + '</textarea>';
+      if (s.type === 'text' || s.type === 'ask' || s.type === 'ai') h += '<label>Then go to step (optional)</label><input data-f="goto" value="' + esc(s.goto || '') + '" placeholder="next">';
+      return h + '</div>';
     }).join('');
-    tList.querySelectorAll('[data-lid]').forEach(function (el) {
-      el.addEventListener('click', function () {
-        activeLeadId = el.getAttribute('data-lid');
-        renderInboxAndKanban();
-      });
+    $('fl-steps').querySelectorAll('.step').forEach(function (el) {
+      var i = +el.dataset.i;
+      el.querySelectorAll('[data-f]').forEach(function (inp) { inp.oninput = function () {
+        if (inp.dataset.f === 'options') steps[i].options = inp.value.split('\n').filter(Boolean).map(function (l) { var p = l.split('|'); return { title: p[0].trim(), goto: (p[1] || '').trim() }; });
+        else steps[i][inp.dataset.f] = inp.value; }; });
+      el.querySelectorAll('[data-m]').forEach(function (b) { b.onclick = function () {
+        var m = b.dataset.m; if (m === 'rm') steps.splice(i, 1); else { var j = m === 'up' ? i - 1 : i + 1; if (j < 0 || j >= steps.length) return; var t = steps[i]; steps[i] = steps[j]; steps[j] = t; }
+        drawSteps(); }; });
     });
-
-    var cur = leads.find(function (l) { return l.id === activeLeadId; }) || leads[0];
-    document.getElementById('activeLeadName').textContent = cur.name;
-    document.getElementById('activeLeadChannel').textContent = cur.ch === 'WA' ? 'WhatsApp Cloud' : 'Telegram Bot';
-    document.getElementById('activeLeadSla').textContent = 'SLA: ' + cur.sla;
-    document.getElementById('assignAgentSel').value = cur.agent;
-    document.getElementById('moveStageSel').value = cur.stage;
-    document.getElementById('activeChatMessages').innerHTML = cur.msgs.map(function (m) {
-      return '<div class="wa-bubble ' + (m.from === 'agent' ? 'user' : '') + '">' + m.text + '</div>';
-    }).join('');
-
-    var stages = ['New Inbound', 'AI Qualified', 'Payment Pending', 'Closed Won'];
-    document.getElementById('kanbanBoard').innerHTML = stages.map(function (st) {
-      var cards = leads.filter(function (l) { return l.stage === st; }).map(function (l) {
-        return '<div class="kanban-card">' +
-          '<strong>' + l.name + '</strong>' +
-          '<div style="font-size:11px;color:#94a3b8;margin-top:4px;">' + (l.ch === 'WA' ? 'WhatsApp' : 'Telegram') + ' · ' + l.agent + '</div>' +
-        '</div>';
-      }).join('');
-      return '<div class="kanban-col"><div class="lbl"><span>' + st + '</span></div>' + (cards || '<div style="font-size:11.5px;color:#475569;margin-top:8px;">No leads</div>') + '</div>';
-    }).join('');
   }
+  $('fl-new').onclick = function () { editFlow(null); };
+  $('fl-add').onclick = function () { var t = $('fl-addtype').value; steps.push(t === 'buttons' ? { type: t, text: '', options: [] } : { type: t, text: '' }); drawSteps(); };
+  $('fl-cancel').onclick = function () { $('fl-edit').style.display = 'none'; };
+  $('fl-save').onclick = async function () {
+    clear('fl-msg');
+    var body = { name: $('fl-name').value.trim() || 'Untitled flow', keywords: $('fl-kw').value, active: $('fl-active').checked, steps: steps };
+    try { if (editing) await api('PUT', '/flows/' + editing.id, body); else editing = { id: (await api('POST', '/flows', body)).id };
+      say('fl-msg', 'Saved. It runs the next time someone sends a matching message.', true); loadFlows(); } catch (e) { say('fl-msg', e.message); }
+  };
+  $('fl-del').onclick = async function () { if (!editing || !confirm('Delete this flow?')) return; await api('DELETE', '/flows/' + editing.id); $('fl-edit').style.display = 'none'; loadFlows(); };
 
-  document.querySelectorAll('.inbox-filter').forEach(function (b) {
-    b.addEventListener('click', function () { channelFilter = b.getAttribute('data-ch'); renderInboxAndKanban(); });
-  });
-  document.getElementById('assignAgentSel').addEventListener('change', function (e) {
-    var cur = leads.find(function (l) { return l.id === activeLeadId; });
-    if (cur) { cur.agent = e.target.value; renderInboxAndKanban(); toast('Assigned to ' + cur.agent); }
-  });
-  document.getElementById('moveStageSel').addEventListener('change', function (e) {
-    var cur = leads.find(function (l) { return l.id === activeLeadId; });
-    if (cur) { cur.stage = e.target.value; renderInboxAndKanban(); toast('Moved to ' + cur.stage); }
-  });
-  function sendInboxMsg(txt) {
-    if (!txt) return;
-    var cur = leads.find(function (l) { return l.id === activeLeadId; });
-    if (cur) { cur.msgs.push({ from: 'agent', text: txt }); cur.sla = 'Responded ✓'; renderInboxAndKanban(); }
+  // ── knowledge & bot
+  async function loadDocs() {
+    try { var d = await api('GET', '/knowledge');
+      $('kb-list').innerHTML = d.documents.length ? '<table><tr><th>Document</th><th>Source</th><th>Size</th><th></th></tr>' + d.documents.map(function (x) {
+        return '<tr><td>' + esc(x.title) + '</td><td class="mono">' + esc(x.source) + '</td><td>' + Math.round(x.chars / 1000 * 10) / 10 + 'k chars</td><td><button class="btn sm d" data-id="' + x.id + '"><i class="fas fa-trash"></i></button></td></tr>'; }).join('') + '</table>' : '<div class="empty">No documents yet. The bot hands every question to a person until you add some.</div>';
+      $('kb-list').querySelectorAll('button[data-id]').forEach(function (b) { b.onclick = async function () { await api('DELETE', '/knowledge/' + b.dataset.id); loadDocs(); }; });
+    } catch (e) { $('kb-list').textContent = e.message; }
   }
-  document.getElementById('btnSendInboxReply').addEventListener('click', function () {
-    var inp = document.getElementById('inboxReplyInput');
-    sendInboxMsg(inp.value.trim());
-    inp.value = '';
-  });
-  document.querySelectorAll('.quick-macro').forEach(function (m) {
-    m.addEventListener('click', function () { sendInboxMsg(m.getAttribute('data-msg')); });
-  });
+  $('kb-add').onclick = async function () { clear('kb-msg'); try { var r = await api('POST', '/knowledge', { title: $('kb-title').value.trim(), text: $('kb-text').value }); say('kb-msg', 'Added (' + r.chunks + ' passages).', true); $('kb-text').value = $('kb-title').value = ''; loadDocs(); } catch (e) { say('kb-msg', e.message); } };
+  $('kb-fetch').onclick = async function () { busy(this, true); clear('kb-msg'); try { var r = await api('POST', '/knowledge/url', { url: $('kb-url').value.trim() }); say('kb-msg', 'Learned "' + r.title + '" (' + r.chunks + ' passages).', true); $('kb-url').value = ''; loadDocs(); } catch (e) { say('kb-msg', e.message); } busy(this, false); };
+  $('bt-save').onclick = async function () {
+    clear('bt-msg');
+    try { ws = await api('PUT', '/workspace/bot', { enabled: $('bt-on').checked, instructions: $('bt-ins').value, handoff_text: $('bt-hand').value, ai_provider: $('bt-prov').value, ai_key: $('bt-key').value, clear_ai_key: $('bt-clear').checked, min_score: parseFloat($('bt-min').value) || 0 });
+      $('bt-key').value = ''; $('bt-clear').checked = false; renderWs(); say('bt-msg', ws.bot.enabled ? (ws.bot.ai_key ? 'Saved. The bot is on.' : 'Saved, but no AI key is saved, so the bot will hand every chat to a person.') : 'Saved. The bot is off.', true); }
+    catch (e) { say('bt-msg', e.message); }
+  };
+  $('ak-go').onclick = async function () {
+    busy(this, true); $('ak-out').innerHTML = '';
+    try { var r = await api('POST', '/knowledge/ask', { question: $('ak-q').value });
+      var h = r.handoff ? '<div class="msg err" style="display:block">Would hand off to a person: ' + esc(r.reason) + '</div>' : '<div class="msg ok" style="display:block">' + esc(r.answer) + '</div>';
+      if (r.hits && r.hits.length) h += '<p class="note" style="margin-top:10px">Passages found:</p>' + r.hits.map(function (x) { return '<div class="step"><div class="hd"><span>' + esc(x.title) + '</span><span class="pill">score ' + x.score + '</span></div><div class="note">' + esc(x.text.slice(0, 300)) + (x.text.length > 300 ? '…' : '') + '</div></div>'; }).join('');
+      $('ak-out').innerHTML = h;
+    } catch (e) { $('ak-out').innerHTML = '<div class="msg err" style="display:block">' + esc(e.message) + '</div>'; } busy(this, false);
+  };
 
-  // ── TAB 4: WABA Cost & Billing Model Calculator ───────────────────────
-  async function updateCostCalc() {
-    var mkt = parseInt(document.getElementById('slMkt').value, 10);
-    var util = parseInt(document.getElementById('slUtil').value, 10);
-    var auth = parseInt(document.getElementById('slAuth').value, 10);
-    var svc = parseInt(document.getElementById('slSvc').value, 10);
-    var seats = parseInt(document.getElementById('slSeats').value, 10);
-    document.getElementById('lblMkt').textContent = mkt.toLocaleString('en-IN');
-    document.getElementById('lblUtil').textContent = util.toLocaleString('en-IN');
-    document.getElementById('lblAuth').textContent = auth.toLocaleString('en-IN');
-    document.getElementById('lblSvc').textContent = svc.toLocaleString('en-IN');
-    document.getElementById('lblSeats').textContent = seats + ' Seats';
-
-    var res = await fetch('/api/sevenforce/waba/cost-calculator', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ marketing_msgs: mkt, utility_msgs: util, auth_msgs: auth, service_msgs: svc, seats: seats })
-    });
-    var d = await res.json();
-    var m = d.models_monthly_inr;
-    document.getElementById('costCardsContainer').innerHTML =
-      '<div class="cost-card best">' +
-        '<span class="badge-mini">₹0/mo Platform Fee · Direct Meta</span>' +
-        '<h4 style="margin:8px 0 2px;">Sevenforce Sovereign BYOK</h4>' +
-        '<div class="mono-val" style="color:#34d399;">₹' + Math.round(m.sevenforce_zero_margin_byok).toLocaleString('en-IN') + '<span style="font-size:12px;color:#94a3b8;">/mo</span></div>' +
-        '<div style="font-size:12px;color:#a7f3d0;">Saves ₹' + Math.round(d.savings.annual_saved_inr).toLocaleString('en-IN') + '/yr vs legacy seat+markup plans</div>' +
-      '</div>' +
-      '<div class="cost-card">' +
-        '<span class="badge-mini">₹0 Sub + ₹0.10/msg Gateway</span>' +
-        '<h4 style="margin:8px 0 2px;">Client-Pay Consumption</h4>' +
-        '<div class="mono-val">₹' + Math.round(m.client_pay_consumption).toLocaleString('en-IN') + '<span style="font-size:12px;color:#94a3b8;">/mo</span></div>' +
-        '<div style="font-size:12px;color:#94a3b8;">Pay Meta directly + flat per-message routing</div>' +
-      '</div>' +
-      '<div class="cost-card">' +
-        '<span class="badge-mini">Single INR Invoice · ₹0 Floor</span>' +
-        '<h4 style="margin:8px 0 2px;">All-In Pay-As-You-Go</h4>' +
-        '<div class="mono-val">₹' + Math.round(m.consolidated_all_in_payg).toLocaleString('en-IN') + '<span style="font-size:12px;color:#94a3b8;">/mo</span></div>' +
-        '<div style="font-size:12px;color:#94a3b8;">₹1.50/mkt · ₹0.50/utility &amp; auth · ₹0/service</div>' +
-      '</div>' +
-      '<div class="cost-card">' +
-        '<span class="badge-mini amber">Base Sub + Seat Fee + 18% Markup</span>' +
-        '<h4 style="margin:8px 0 2px;">Typical Legacy Seat BSP</h4>' +
-        '<div class="mono-val" style="color:#f87171;">₹' + Math.round(m.legacy_seat_markup_bsp).toLocaleString('en-IN') + '<span style="font-size:12px;color:#94a3b8;">/mo</span></div>' +
-        '<div style="font-size:12px;color:#94a3b8;">Includes base fee + extra agent seat surcharges</div>' +
-      '</div>';
+  // ── cost calculator (rates entered by the user; nothing pre-filled)
+  var CATS = [['marketing', 'Marketing templates'], ['utility', 'Utility templates (outside the 24h window)'], ['auth', 'Authentication templates'], ['service', 'Replies inside the 24h window']];
+  $('cc-t').querySelector('tbody').innerHTML = CATS.map(function (c) { return '<tr><td>' + c[1] + '</td><td><input type="number" min="0" data-n="' + c[0] + '" placeholder="0"></td><td><input type="number" min="0" step="0.0001" data-r="' + c[0] + '" placeholder="from Meta"></td><td data-o="' + c[0] + '">—</td></tr>'; }).join('');
+  var CC_KEY = 'sf_wa_cost';
+  function calc() {
+    var meta = 0, tplMsgs = 0, saved = {};
+    CATS.forEach(function (c) { var n = parseFloat(document.querySelector('[data-n="' + c[0] + '"]').value) || 0, r = parseFloat(document.querySelector('[data-r="' + c[0] + '"]').value) || 0;
+      saved[c[0]] = [document.querySelector('[data-n="' + c[0] + '"]').value, document.querySelector('[data-r="' + c[0] + '"]').value];
+      meta += n * r; if (c[0] !== 'service') tplMsgs += n; document.querySelector('[data-o="' + c[0] + '"]').textContent = (n * r).toLocaleString('en-IN', { maximumFractionDigits: 2 }); });
+    var other = meta + (parseFloat($('cc-fee').value) || 0) + tplMsgs * (parseFloat($('cc-mk').value) || 0) + (parseFloat($('cc-seat').value) || 0);
+    saved.fee = $('cc-fee').value; saved.mk = $('cc-mk').value; saved.seat = $('cc-seat').value; store.set(CC_KEY, JSON.stringify(saved));
+    var f = function (v) { return '₹' + v.toLocaleString('en-IN', { maximumFractionDigits: 0 }); };
+    $('cc-out').innerHTML = '<div class="stat"><b>' + f(meta) + '</b><span>Here: Meta\'s charges only (paid to Meta directly)</span></div><div class="stat"><b>' + f(other) + '</b><span>With the other provider\'s fees you entered</span></div><div class="stat"><b>' + f(Math.max(0, other - meta)) + '</b><span>Difference per month</span></div>';
   }
-  ['slMkt', 'slUtil', 'slAuth', 'slSvc', 'slSeats'].forEach(function (id) {
-    document.getElementById(id).addEventListener('input', updateCostCalc);
-  });
+  try { var sv = JSON.parse(store.get(CC_KEY) || '{}'); CATS.forEach(function (c) { if (sv[c[0]]) { document.querySelector('[data-n="' + c[0] + '"]').value = sv[c[0]][0]; document.querySelector('[data-r="' + c[0] + '"]').value = sv[c[0]][1]; } }); $('cc-fee').value = sv.fee || ''; $('cc-mk').value = sv.mk || ''; $('cc-seat').value = sv.seat || ''; } catch (e) {}
+  document.querySelectorAll('#p-cost input').forEach(function (i) { i.oninput = calc; }); calc();
 
-  // ── TAB 5: DPDP 2023, RBI & IRDAI Compliance Audit & Ledger ───────────
-  var auditLedger = [];
-  document.getElementById('cmpHour').addEventListener('input', function (e) {
-    document.getElementById('cmpHourLbl').textContent = String(e.target.value).padStart(2, '0') + ':00 IST';
-  });
-  document.getElementById('btnPresetViolation').addEventListener('click', function () {
-    document.getElementById('cmpFramework').value = 'RBI_RECOVERY';
-    document.getElementById('cmpHour').value = 21;
-    document.getElementById('cmpHourLbl').textContent = '21:00 IST';
-    document.getElementById('cmpMessage').value = 'Urgent notice for PAN ABCDE1234F: pay overdue EMI immediately or police warrant action starts.';
-    runCompliance();
-  });
-  document.getElementById('btnPresetClean').addEventListener('click', function () {
-    document.getElementById('cmpFramework').value = 'IRDAI_NHCX';
-    document.getElementById('cmpHour').value = 11;
-    document.getElementById('cmpHourLbl').textContent = '11:00 IST';
-    document.getElementById('cmpConsent').checked = true;
-    document.getElementById('cmpMessage').value = 'Namaste {{1}}, your health policy claim #{{2}} pre-authorisation is under cashless review (1-hr IRDAI TAT). Reply STOP to opt out.';
-    runCompliance();
-  });
-
-  function renderLedger() {
-    document.getElementById('dpdpLedgerList').innerHTML = auditLedger.map(function (e) {
-      return '<div class="flow-node">' +
-        '<div>' +
-          '<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">' +
-            '<span class="badge-mini ' + (e.verdict === 'COMPLIANT' || e.verdict === 'ERASURE_EXECUTED' ? '' : 'red') + '">' + e.verdict + '</span>' +
-            '<strong style="font-size:12.5px;">' + e.framework + ' · ' + e.principal + '</strong>' +
-          '</div>' +
-          '<div style="font-family:monospace;font-size:11px;color:#94a3b8;word-break:break-all;">SHA-256: ' + e.hash + '</div>' +
-        '</div>' +
-      '</div>';
-    }).join('');
-  }
-
-  async function runCompliance() {
-    var payload = {
-      framework: document.getElementById('cmpFramework').value,
-      send_hour_ist: parseInt(document.getElementById('cmpHour').value, 10),
-      has_explicit_consent: document.getElementById('cmpConsent').checked,
-      message_text: document.getElementById('cmpMessage').value
-    };
-    var res = await fetch('/api/sevenforce/waba/compliance-audit', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-    });
-    var d = await res.json();
-    var ok = d.verdict === 'COMPLIANT';
-    var html = '<div style="padding:14px;border-radius:12px;background:' + (ok ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.12)') + ';border:1px solid ' + (ok ? '#10b981' : '#ef4444') + ';">' +
-      '<strong style="color:' + (ok ? '#34d399' : '#f87171') + ';">Verdict: ' + d.verdict + ' (' + d.framework + ')</strong>' +
-      '<ul style="margin:8px 0 0;padding-left:18px;font-size:12.5px;color:#e2e8f0;">' +
-      (d.findings || []).map(function (f) { return '<li style="color:#fca5a5;"><strong>[' + f.code + ']</strong> ' + f.detail + '</li>'; }).join('') +
-      (d.passed_checks || []).map(function (p) { return '<li style="color:#a7f3d0;">✓ ' + p + '</li>'; }).join('') +
-      '</ul></div>';
-    document.getElementById('cmpAuditResult').innerHTML = html;
-
-    auditLedger.unshift({
-      verdict: d.verdict,
-      framework: d.framework,
-      principal: d.dpdp_audit_ledger_entry.data_principal_id,
-      hash: d.dpdp_audit_ledger_entry.sha256_append_only_hash,
-      raw: d
-    });
-    renderLedger();
-  }
-
-  document.getElementById('btnRunCompliance').addEventListener('click', runCompliance);
-  document.getElementById('btnExportDpdp').addEventListener('click', function () {
-    var blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), dpdp_sec_11_portability_ledger: auditLedger }, null, 2)], { type: 'application/json' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'dpdp-2023-consent-export.json';
-    a.click();
-    toast('Exported DPDP Sec. 11 Data Principal JSON');
-  });
-  document.getElementById('btnTriggerErasure').addEventListener('click', function () {
-    var fakeHash = Array.from(crypto.getRandomValues(new Uint8Array(32))).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
-    auditLedger.unshift({
-      verdict: 'ERASURE_EXECUTED',
-      framework: 'DPDP_SEC_12_ERASURE',
-      principal: 'principal_+9198XXXXXX10 (STOP Revoked)',
-      hash: fakeHash
-    });
-    renderLedger();
-    toast('Right-to-Erasure cascade executed across WABA, Sheets & CRM!');
-  });
-
-  // Boot initial live views
-  resetFlowPhone();
-  buildFlow();
-  runAbSim();
-  renderInboxAndKanban();
-  updateCostCalc();
-  runCompliance();
+  loadWs();
 })();
 </script>
 </body>
 </html>
-
