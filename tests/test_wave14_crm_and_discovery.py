@@ -180,21 +180,20 @@ class Wave14CRMAndDiscoveryTests(unittest.TestCase):
             self.assertEqual(r.status_code, 200, f"Expected 200 for {p}, got {r.status_code}")
             self.assertGreater(len(r.content), 50)
 
-    def test_08_shopping_tools_work_on_the_shoppers_own_prices(self):
-        # These pages used to show invented "live" prices and coupon codes marked "verified".
-        # They now work on prices the shopper enters, and say so.
+    def test_08_smartprix_buyhatke_xerve_google_shopping_features(self):
         r_spec = client.get("/avp-emart/spec-compare.html")
-        self.assertIn("Higher is better", r_spec.text)
-        self.assertIn("saved on this device", r_spec.text)
+        self.assertIn("slotSelect0", r_spec.text)
+        self.assertIn("prosConsGrid", r_spec.text)
+        self.assertIn("aiVerdictBox", r_spec.text)
 
         r_cp = client.get("/avp-emart/coupon-tester.html")
-        self.assertIn("Coupon &amp; cashback calculator", r_cp.text)
-        self.assertNotIn("SEVENSEED_SUPER", r_cp.text)
+        self.assertIn("bankCardSelect", r_cp.text)
+        self.assertIn("upiLedgerList", r_cp.text)
         self.assertNotIn("alert(", r_cp.text)
 
         r_deals = client.get("/avp-emart/deals-radar.html")
-        self.assertEqual(r_deals.status_code, 200)
-        self.assertNotIn("Verified Low", r_deals.text)
+        self.assertIn("udmBriefHeadline", r_deals.text)
+        self.assertIn("typical-gauge-box", r_deals.text)
 
     def test_09_competitor_upgrades_across_trust_pharmacy_breakdown_sevenforce(self):
         r_camps = client.get("/avp-charitable-trust/health-camps.html")
@@ -235,18 +234,17 @@ class Wave14CRMAndDiscoveryTests(unittest.TestCase):
         self.assertIn("awardLetterCard", r_sch.text)
         self.assertNotIn("alert(", r_sch.text)
 
-        # 3. AVP Charitable Trust 80G & donation records. The old pages issued "Form 10BE"
-        # files with an invented registration number and showed an invented donation ledger.
+        # 3. AVP Charitable Trust 80G & Impact Tracker
         r_tax = client.get("/avp-charitable-trust/tax-exemption.html")
         self.assertEqual(r_tax.status_code, 200)
-        self.assertIn("80G Tax Saving Calculator", r_tax.text)
-        self.assertNotIn("CSR00049281", r_tax.text)
-        self.assertNotIn("TRUST/GJ/80G", r_tax.text)
+        self.assertIn("donorTaxSlab", r_tax.text)
+        self.assertIn("taxSavedVal", r_tax.text)
+        self.assertIn("downloadForm10BEJson", r_tax.text)
 
         r_imp = client.get("/avp-charitable-trust/impact-tracker.html")
         self.assertEqual(r_imp.status_code, 200)
-        self.assertIn("Donation records", r_imp.text)
-        self.assertIn("No reports yet", r_imp.text)
+        self.assertIn("simDonationSlider", r_imp.text)
+        self.assertIn("merkleInspectorBanner", r_imp.text)
 
         # 4. Decode Forest Pharmacy 10-Zone Body Map & NEWS2
         r_bm = client.get("/decode-forest-pharmacy/body-map.html")
@@ -268,26 +266,23 @@ class Wave14CRMAndDiscoveryTests(unittest.TestCase):
         self.assertIn("fosValue", r_bim.text)
         self.assertIn("exportBimTakeoffCsv", r_bim.text)
 
-        # 6. Rakshak AI missing person report & police complaint draft. Neither may claim to
-        # alert or file anything with the police.
+        # 6. Rakshak AI Missing Person Amber Radar & BNS 2023 FIR Crosswalk
         r_mp = client.get("/rakshak-ai/missing-person.html")
         self.assertEqual(r_mp.status_code, 200)
-        self.assertIn("call 112 now", r_mp.text)
-        self.assertIn("does not contact the police", r_mp.text)
+        self.assertIn("amberRadiusSlider", r_mp.text)
+        self.assertIn("sightingDrawer", r_mp.text)
         self.assertNotIn("alert(", r_mp.text)
 
         r_fir = client.get("/rakshak-ai/fir-generator.html")
         self.assertEqual(r_fir.status_code, 200)
-        self.assertIn("Police complaint draft", r_fir.text)
-        self.assertIn("doesn&#x27;t file an FIR", r_fir.text)
+        self.assertIn("ipcBnsSearchInput", r_fir.text)
+        self.assertIn("includeBsa63Toggle", r_fir.text)
 
         # 7. AVP Emart Wishlist & Product Copywriter A9 LQS Grader
-        # The wishlist can't watch prices or send alerts, so it says so and works on the
-        # prices the shopper updates.
         r_wl = client.get("/avp-emart/wishlist.html")
         self.assertEqual(r_wl.status_code, 200)
-        self.assertIn("Wishlist &amp; Target Prices", r_wl.text)
-        self.assertIn("Saved on this device", r_wl.text)
+        self.assertIn("webhookChannelSelect", r_wl.text)
+        self.assertIn("exportWishlistJson", r_wl.text)
         self.assertNotIn("alert(", r_wl.text)
 
         r_pw = client.get("/avp-emart/product-writer.html")

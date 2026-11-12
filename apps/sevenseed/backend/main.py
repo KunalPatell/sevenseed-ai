@@ -536,16 +536,16 @@ if config.STATIC_DIR.exists():
             app.mount(f"/{prefix}", StaticFiles(directory=str(static_sub), html=True), name=prefix)
             mounted.add(prefix)
 
-    # Alias mounts for long URL compatibility (/comonk is served directly from static/comonk by root mount)
+    # Alias mounts for long URL compatibility
     aliases = {
+        "comonk": "comonk-ai",
         "decode-forest-pharmacy": "pharmacy",
         "breakdown-factor": "breakdown",
         "avp-charitable-trust": "trust"
     }
     for alias_name, target_prefix in aliases.items():
         if alias_name not in mounted:
-            own_sub = config.STATIC_DIR / alias_name
-            target_sub = own_sub if own_sub.exists() else (config.STATIC_DIR / target_prefix)
+            target_sub = config.STATIC_DIR / target_prefix
             if target_sub.exists():
                 app.mount(f"/{alias_name}", StaticFiles(directory=str(target_sub), html=True), name=f"alias_{alias_name}")
                 mounted.add(alias_name)

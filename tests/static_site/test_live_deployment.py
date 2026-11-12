@@ -10,9 +10,12 @@ BASE_URL = os.environ.get("BASE_URL", "https://sevenseed.onrender.com")
 
 TEST_ROUTES = [
     # 1. Core & Hub
-    ("GET", "/", "Sevenseed Hub Home"),
-    ("GET", "/app/", "Vite v7.0 Unified /app Portal"),
-    ("GET", "/avpu/app/", "AVPU Vite v7.0 /app Portal"),
+    ("GET", "/", "Sevenseed Parent Hub Home"),
+    ("GET", "/app/", "Sevenseed Original /app Workspace"),
+    ("GET", "/avpu/app/", "AVPU Original /app Workspace"),
+    ("GET", "/advance-site/vite-app.html", "Advance Multi-App Suite"),
+    ("GET", "/canva-studio/", "Canva Vector Studio"),
+    ("GET", "/web3-studio/", "Web3 & RWA Studio"),
     ("GET", "/manifest.json", "PWA Web App Manifest"),
     ("GET", "/byok.html", "Universal BYOK Vault"),
     ("GET", "/workstations.html", "Workstations Directory"),
