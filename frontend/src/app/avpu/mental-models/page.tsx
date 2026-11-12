@@ -81,7 +81,7 @@ const mentalModels: MentalModel[] = [
     explanation: "A small fraction of inputs, components, or features drives the overwhelming majority of user delight and performance.",
     scenario: {
       dilemma: "Which UI elements give the highest visual WOW factor?",
-      action: "The 20% elements: 3D visuals, spotlight cards and smooth scrolling deliver 80% of the perceived quality."
+      action: "The 20% elements: 3D WebGL PBR materials, Aceternity spotlight cards, and smooth Lenis scrolling deliver 80% of the perceived quality."
     }
   },
   {
@@ -166,7 +166,7 @@ export default function MentalModelsRoute() {
               <div className="text-[11px] font-mono uppercase text-pink-400">AVPU Decision Sciences</div>
               <h1 className="text-xl sm:text-2xl font-bold text-slate-100 flex items-center gap-2">
                 <Brain className="w-5 h-5 text-pink-400" />
-                <span>Latticework of Mental Models</span>
+                <span>Latticework of Mental Models (fs.blog/mental-models)</span>
               </h1>
             </div>
           </div>

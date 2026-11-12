@@ -130,12 +130,12 @@ export function DnaDoubleHelix3D() {
     <div className="relative w-full h-full min-h-[380px] flex items-center justify-center rounded-2xl bg-teal-950/40 border border-teal-500/20 backdrop-blur-xl overflow-hidden shadow-2xl shadow-teal-950/50">
       <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-teal-950/80 border border-teal-500/30 text-xs font-mono text-teal-400">
         <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-        <span>Decode Forest Pharmacy</span>
+        <span>Decode Forest DNA Helix · Molecular Bio-Telemetry</span>
       </div>
 
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2 text-xs font-mono text-teal-300">
         <HeartPulse className="w-3.5 h-3.5 text-rose-400" />
-        <span>Jan Aushadhi generics</span>
+        <span>1mg + Jan Aushadhi Core</span>
       </div>
 
       <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
@@ -143,9 +143,9 @@ export function DnaDoubleHelix3D() {
       <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/80 border border-teal-800/40 text-[11px] font-mono text-slate-300 backdrop-blur-md">
         <div className="flex items-center gap-2 text-teal-300">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Generic medicines, reminders, hospitals</span>
+          <span>PMBJP Generic Equivalent Savings: <strong>Up to 90% (Jan Aushadhi)</strong></span>
         </div>
-        <span className="text-rose-400 text-[10px]">Drag to rotate</span>
+        <span className="text-rose-400 text-[10px]">Zero Drug Interactions</span>
       </div>
     </div>
   );

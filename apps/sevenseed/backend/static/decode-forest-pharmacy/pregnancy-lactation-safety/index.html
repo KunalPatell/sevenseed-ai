@@ -172,7 +172,7 @@
 <body data-v7-studio="1">
   <main class="v7-shell">
     <header class="v7-hero">
-      <div class="v7-kicker">Decode Forest Pharmacy</div>
+      <div class="v7-kicker">Decode Forest Pharmacy · Drugs.com + NIH LactMed Reference</div>
       <h1>Lactation RID % & Food-Drug Interaction Workstation</h1>
       <p>Pharmacokinetic Relative Infant Dose (RID %) calculator, food-drug interaction screening, and weight-based dosing arithmetic verifier.</p>
     </header>
@@ -237,11 +237,10 @@
         ['mg/kg Arithmetic', w.computed_per_dose_mg + ' mg × ' + w.doses_per_day + '/d']
       ].map(([k, v]) => `<div class="v7-stat"><div class="k">${k}</div><div class="v" style="font-size:16px;">${v}</div></div>`).join('');
 
-      const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-      document.getElementById('dr-food').innerHTML = f.food
-        ? `<div style="font-size:11.5px;font-family:monospace;color:#fda4af;font-weight:700;">SEVERITY: ${esc(f.severity)} · AVOID: ${esc(f.food)}</div>
-           <div style="font-size:13.5px;color:#f8fafc;margin-top:6px;">${esc(f.mechanism)}</div>`
-        : `<div style="font-size:13.5px;color:#fcd34d;">${esc(f.mechanism)}</div>`;
+      document.getElementById('dr-food').innerHTML = `
+        <div style="font-size:11.5px;font-family:monospace;color:#fda4af;font-weight:700;">SEVERITY: ${f.severity} · CONTRAINDICATED FOOD: ${f.food}</div>
+        <div style="font-size:13.5px;color:#f8fafc;margin-top:6px;">${f.mechanism}</div>
+      `;
       document.getElementById('dr-bench').textContent = r.benchmark_note || '';
       document.getElementById('dr-disc').textContent = d.disclaimer || '';
     }

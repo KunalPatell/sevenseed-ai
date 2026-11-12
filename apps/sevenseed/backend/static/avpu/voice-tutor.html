@@ -42,7 +42,7 @@
     .bubble-ai { background: var(--bg-2, #141c30); border: 1px solid rgba(37,99,235,0.25); color: #e2e8f0; align-self: flex-start; }
     .bubble-user { background: rgba(37,99,235,0.18); border: 1px solid rgba(37,99,235,0.4); color: #fff; align-self: flex-end; }
   </style>
-<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.3"/></head>
+<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.1"/></head>
 <body>
   <nav class="nav">
     <div class="nav-inner">
@@ -86,7 +86,7 @@
     <div class="voice-stage">
       <canvas id="waveCanvas"></canvas>
       <div>
-        <button type="button" id="micBtn" class="mic-btn" onclick="toggleMic()" aria-label="Start or stop speaking" title="Tap and speak your answer"><i class="fas fa-microphone" aria-hidden="true"></i></button>
+        <button id="micBtn" class="mic-btn" onclick="toggleMic()"><i class="fas fa-microphone"></i></button>
       </div>
       <div class="status-text" id="statusText">Click microphone to begin your verbal viva session</div>
       <div class="status-hint" id="statusHint">Works natively in Chrome, Edge, and Safari with zero third-party audio costs.</div>
@@ -287,6 +287,6 @@
     resetDialogue();
   </script>
 
-<script src="/static/quantum-enhancer.js?v=6.3" defer></script>
+<script src="/static/quantum-enhancer.js?v=6.1" defer></script>
 </body>
 </html>

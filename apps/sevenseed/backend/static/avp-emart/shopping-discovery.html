@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Smart Commerce Discovery Lab — AVP E-Mart / Shopping Discovery | Sevenseed</title>
-  <meta name="description" content="Premium product discovery lab. Real-time price intelligence, 90-day sparklines, Smartprix spec scores, and AI coupon stacking across Amazon, Flipkart, Croma and Reliance Digital.">
+  <meta name="description" content="Premium product discovery lab inspired by Google Shopping (?udm=28), Smartprix, BuyHatke and Xerve. Real-time price intelligence, 90-day sparklines, Smartprix spec scores, and AI coupon stacking across Amazon, Flipkart, Croma and Reliance Digital.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E🛍️%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -112,7 +112,7 @@
     .ai-drawer { position: fixed; bottom: 150px; right: 24px; width: 390px; max-width: calc(100vw - 48px); background: rgba(15,23,42,0.96); border: 1px solid rgba(56,189,248,0.35); border-radius: 20px; box-shadow: 0 24px 70px rgba(0,0,0,0.75); z-index: 960; display: none; flex-direction: column; overflow: hidden; backdrop-filter: blur(20px); }
     .ai-drawer.open { display: flex; }
   </style>
-<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.3"/></head>
+<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.1"/></head>
 <body>
   <canvas id="meshCanvas"></canvas>
   <div class="noise"></div>
@@ -128,7 +128,7 @@
       <a href="/"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
       <a href="index.html">Emart Home</a>
       <a href="shopping-discovery.html" class="active"><i class="fas fa-wand-magic-sparkles"></i> Discovery Lab</a>
-      <a href="spec-compare.html"><i class="fas fa-scale-balanced"></i> Spec Compare</a>
+      <a href="spec-compare.html"><i class="fas fa-scale-balanced"></i> Smartprix Specs</a>
       <a href="deals-radar.html"><i class="fas fa-satellite-dish"></i> Deals Radar</a>
       <a href="price-tracker.html"><i class="fas fa-chart-line"></i> Price Tracker</a>
       <a href="coupon-tester.html"><i class="fas fa-ticket"></i> Coupon Stacker</a>
@@ -142,9 +142,9 @@
       <!-- HEADER -->
       <div class="hud-header glass">
         <div class="hud-title-wrap">
-          <span class="hud-tag"><i class="fas fa-wand-magic-sparkles"></i> Compare, track and save</span>
+          <span class="hud-tag"><i class="fas fa-wand-magic-sparkles"></i> Google Shopping (?udm=28) + Smartprix + BuyHatke + Xerve</span>
           <h1><i class="fas fa-bag-shopping" style="color:#38bdf8;"></i> Smart Commerce Discovery Lab</h1>
-          <p style="color:#94a3b8;margin-top:6px;font-size:14px;">Real-time price intelligence, 0–100 spec scores, 90-day price sparklines and bank-offer stacking across stores.</p>
+          <p style="color:#94a3b8;margin-top:6px;font-size:14px;">Real-time price intelligence, Smartprix 0–100 Spec Scores, 90-day BuyHatke sparklines &amp; Xerve bank cashback stacking across 6 stores.</p>
         </div>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
           <button class="btn-sm" id="compareToggle"><i class="fas fa-scale-balanced"></i> Compare (<span id="compareCount">0</span>)</button>
@@ -183,7 +183,7 @@
         <div class="glass udm-card">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
             <div>
-              <span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#38bdf8;"><i class="fas fa-sparkles"></i> AI Buying Concierge</span>
+              <span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#38bdf8;"><i class="fas fa-sparkles"></i> Google Shopping (?udm=28) AI Buying Concierge</span>
               <h2 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;margin-top:2px;">Personalized Research Brief &amp; Bank Card Net Price Optimizer</h2>
             </div>
             <select id="globalBankCardSelect" class="filter-select" style="border-color:rgba(16,185,129,0.4);color:#34d399;font-weight:700;">
@@ -222,14 +222,14 @@
                 <ul style="font-size:11.5px;color:#e2e8f0;margin-top:6px;padding-left:16px;line-height:1.6;" id="udmChecklist">
                   <li>Check 90-day sparkline before checkout</li>
                   <li>Stack Bank Instant Discount + Coupon</li>
-                  <li>Compare Spec Score &ge; 90</li>
+                  <li>Compare Smartprix Spec Score &ge; 90</li>
                 </ul>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 3D Holographic Deal Orbit Visualizer (Spline / style) -->
+        <!-- 3D Holographic Deal Orbit Visualizer (Spline / 21st.dev style) -->
         <div class="glass holo-stage">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
             <div>
@@ -315,7 +315,7 @@
       <div class="glass deal-drawer" id="priceHistoryModal" style="border-color:rgba(168,85,247,0.4);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
           <h3 style="font-family:'Space Grotesk',sans-serif;font-size:18px;display:flex;align-items:center;gap:8px;">
-            <i class="fas fa-chart-area" style="color:#a855f7;"></i> <span id="historyModalTitle">90-Day Price History &amp; Drop Probability</span>
+            <i class="fas fa-chart-area" style="color:#a855f7;"></i> <span id="historyModalTitle">BuyHatke 90-Day Price History &amp; Drop Probability</span>
           </h3>
           <button class="btn-sm" id="closeHistoryModal" style="flex:none;padding:6px 12px;"><i class="fas fa-xmark"></i> Close</button>
         </div>
@@ -331,7 +331,7 @@
       <div class="glass compare-panel" id="comparePanel">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
           <h3 style="font-family:'Space Grotesk',sans-serif;font-size:18px;display:flex;align-items:center;gap:8px;">
-            <i class="fas fa-scale-balanced" style="color:#38bdf8;"></i> Side-by-Side Spec &amp; Arbitrage Comparison
+            <i class="fas fa-scale-balanced" style="color:#38bdf8;"></i> Smartprix Side-by-Side Spec &amp; Arbitrage Comparison
           </h3>
           <div style="display:flex;gap:8px;align-items:center;">
             <label style="font-size:12px;color:#cbd5e1;display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
@@ -501,7 +501,7 @@
       const titleEl = document.getElementById('dealDrawerTitle');
       const bodyEl = document.getElementById('dealDrawerBody');
       drawer.style.display = 'block';
-      titleEl.textContent = 'AI Coupon Stack & coupon Bank Matrix — ' + prod.name;
+      titleEl.textContent = 'AI Coupon Stack & Xerve Bank Matrix — ' + prod.name;
       bodyEl.innerHTML = '<div style="color:#94a3b8;font-size:13px;"><i class="fas fa-spinner fa-spin"></i> Querying /api/coupons/stack across partner stores…</div>';
 
       const primaryStore = storeNames[prod.stores[0]] || 'Amazon';
@@ -558,7 +558,7 @@
       const titleEl = document.getElementById('historyModalTitle');
       const bodyEl = document.getElementById('historyModalBody');
       modal.style.display = 'block';
-      titleEl.textContent = 'price history 90-Day Price Graph & Target Alert — ' + prod.name;
+      titleEl.textContent = 'BuyHatke 90-Day Price Graph & Target Alert — ' + prod.name;
       const hist = prod.history || [prod.mrp || prod.price, prod.price];
       const low90 = Math.min(...hist);
       const high90 = Math.max(...hist);
@@ -759,7 +759,7 @@
             '<tr><th>Attribute</th>' + sel.map(p => '<th>' + p.img + ' ' + p.name + '</th>').join('') + '</tr>' +
           '</thead>' +
           '<tbody>' +
-            '<tr><td>Spec Score</td>' + sel.map(p => {
+            '<tr><td>Smartprix Spec Score</td>' + sel.map(p => {
               const win = (p.specScore || 90) === maxSpec;
               return '<td style="' + (win && highlightWin ? 'background:rgba(16,185,129,0.14);' : '') + '"><strong style="color:#34d399;font-family:\'JetBrains Mono\',monospace;">' + (p.specScore || 90) + ' / 100</strong> ' + (win ? '🏆' : '') + '</td>';
             }).join('') + '</tr>' +
@@ -830,7 +830,7 @@
         tag: 'AI RESEARCH BRIEF · ALL CATEGORIES',
         head: 'Top Spec-to-Price Champions: OnePlus 12 (95 Spec Score) & MacBook Air M3 (97 Spec Score)',
         body: 'Across 6 Indian retailers, stacking HDFC/SBI cashback with active store promos saves an average of 11.8% today. Products marked BUY NOW are trading within 3% of their 90-day historical floor.',
-        checks: ['Check 90-day sparkline before checkout', 'Stack Bank Instant Discount + Coupon', 'Compare Spec Score ≥ 90']
+        checks: ['Check 90-day sparkline before checkout', 'Stack Bank Instant Discount + Coupon', 'Compare Smartprix Spec Score ≥ 90']
       },
       'camera-phone': {
         tag: 'AI RESEARCH BRIEF · PRO CAMERA & AI PHONES',
@@ -887,7 +887,7 @@
         const ans = await window.Vertex.ask('Act as Google Shopping AI Concierge. Give a concise 2-sentence buying recommendation comparing: ' + topNames + ' with max budget ₹' + state.maxBudget);
         bodyEl.textContent = ans;
       } else {
-        bodyEl.textContent = 'AI Verdict: Based on your ₹' + state.maxBudget.toLocaleString('en-IN') + ' ceiling across ' + list.length + ' items, prioritize highest Spec Score and stack your selected bank card for immediate 5–10% off.';
+        bodyEl.textContent = 'AI Verdict: Based on your ₹' + state.maxBudget.toLocaleString('en-IN') + ' ceiling across ' + list.length + ' items, prioritize highest Smartprix Spec Score and stack your selected bank card for immediate 5–10% off.';
       }
     });
 
@@ -1106,7 +1106,7 @@
       drawHolo();
     }
 
-    // Mesh Canvas Background (aesthetic)
+    // Mesh Canvas Background (Unicorn Studio aesthetic)
     const canvas = document.getElementById('meshCanvas');
     const ctx = canvas.getContext('2d');
     let w, h;
@@ -1154,6 +1154,6 @@
   </script>
   <script src="../ws-shell.js"></script>
 
-<script src="/static/quantum-enhancer.js?v=6.3" defer></script>
+<script src="/static/quantum-enhancer.js?v=6.1" defer></script>
 </body>
 </html>

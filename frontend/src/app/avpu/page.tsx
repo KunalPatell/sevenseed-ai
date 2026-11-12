@@ -33,6 +33,7 @@ const avpuModules = [
   {
     id: "learn-dag",
     name: "Interactive Knowledge DAG",
+    reference: "learn-anything.xyz",
     desc: "Graph-structured visual curriculum with prerequisite dependency links, topic mind-maps & curated resources.",
     icon: Network,
     badge: "Curriculum Graph",
@@ -42,6 +43,7 @@ const avpuModules = [
   {
     id: "code-lab",
     name: "In-Browser Code Lab",
+    reference: "freecodecamp.org",
     desc: "Interactive sandboxed compiler with real-time test assertions, console logs, hints, and unit assertions.",
     icon: Code2,
     badge: "Live Runner",
@@ -51,15 +53,17 @@ const avpuModules = [
   {
     id: "duo-league",
     name: "Gamified Streak & Leagues",
+    reference: "duolingo.com",
     desc: "Daily streak flames, heart deduction mechanics, XP scoring, and Bronze-to-Diamond weekly leaderboards.",
     icon: Flame,
-    badge: "Streaks & Leagues",
+    badge: "Duolingo Mechanics",
     color: "#f59e0b",
     href: "/avpu/duo-league",
   },
   {
     id: "laws-of-ux",
     name: "Interactive Laws of UX",
+    reference: "lawsofux.com",
     desc: "Cognitive psychology heuristics (Fitts's, Hick's, Miller's, Jakob's) with live physics & latency simulation cards.",
     icon: Scale,
     badge: "Cognitive Heuristics",
@@ -69,6 +73,7 @@ const avpuModules = [
   {
     id: "challenge-100days",
     name: "100 Days of AI Habit Challenge",
+    reference: "100daysofnocode.com / 100daysai.com",
     desc: "Day 1 to 100 roadmap with daily prompt check-ins, project submission cards, and completion certificates.",
     icon: CalendarCheck2,
     badge: "Habit Tracker",
@@ -77,7 +82,8 @@ const avpuModules = [
   },
   {
     id: "marketing-teardowns",
-    name: "Marketing & Growth Teardowns",
+    name: "Marketing Examples & Growth Teardowns",
+    reference: "marketingexamples.com / growthinreverse.com",
     desc: "Annotated visual before/after case studies, viral hook formulas, copywriting audits, and newsletter funnels.",
     icon: TrendingUp,
     badge: "Growth Teardowns",
@@ -87,6 +93,7 @@ const avpuModules = [
   {
     id: "mental-models",
     name: "Latticework of Mental Models",
+    reference: "fs.blog/mental-models",
     desc: "First-principles thinking, inversion, second-order effects & Pareto decision dilemma simulators.",
     icon: Brain,
     badge: "Decision Science",
@@ -96,6 +103,7 @@ const avpuModules = [
   {
     id: "ai-tutor",
     name: "Socratic AI Tutor Dialogue",
+    reference: "learnanythingai.in",
     desc: "Conversational pedagogical agent that guides through inquiry rather than spoon-feeding solutions.",
     icon: Bot,
     badge: "Pedagogy AI",
@@ -105,6 +113,7 @@ const avpuModules = [
   {
     id: "flashcards",
     name: "Spaced Repetition Flashcards",
+    reference: "Anki / learn-anything.xyz",
     desc: "Leitner-box style flashcard review — cards you know move up a box, cards you miss reset for extra practice.",
     icon: Layers,
     badge: "Memory Retention",
@@ -175,7 +184,7 @@ export default function AVPUHubPage() {
             </h1>
 
             <p className="text-slate-400 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
-              Map out what to learn next, practise code in your browser, keep a daily streak, and learn the psychology behind good design. All free.
+              Synthesizing graph learning paths from <em className="text-sky-300 not-italic font-medium">learn-anything</em>, in-browser compilation from <em className="text-emerald-300 not-italic font-medium">freeCodeCamp</em>, gamification from <em className="text-amber-300 not-italic font-medium">Duolingo</em>, and cognitive psychology from <em className="text-purple-300 not-italic font-medium">Laws of UX</em>.
             </p>
 
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
@@ -234,6 +243,9 @@ export default function AVPUHubPage() {
                         >
                           <Icon className="w-5 h-5" />
                         </div>
+                        <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-slate-800/80 text-slate-300 border border-slate-700/80">
+                          Ref: {mod.reference}
+                        </span>
                       </div>
 
                       <div>

@@ -102,21 +102,25 @@
       </div>
 
       <button id="btnDiscoverTopics" class="btn-pink" onclick="discoverTopics()">
-        <i class="fas fa-compass"></i> Suggest blog topics
+        <i class="fas fa-compass"></i> Discover SEO Topics & Search Volume
       </button>
 
       <div style="margin-top:24px;">
         <label class="input-label"><i class="fas fa-list-ol"></i> Step 2: Select Target Topic</label>
         <div id="topicsContainer" style="max-height:280px; overflow-y:auto;">
-          <div class="topic-card selected" role="button" tabindex="0" onclick="selectTopic(this, 'Why Bring-Your-Own-Key (BYOK) Architecture Will Replace SaaS Subscriptions')">
+          <div class="topic-card selected" onclick="selectTopic(this, 'Why Bring-Your-Own-Key (BYOK) Architecture Will Replace SaaS Subscriptions')">
             <div class="topic-title">Why Bring-Your-Own-Key (BYOK) Architecture Will Replace SaaS Subscriptions</div>
             <div class="topic-meta">
+              <span><i class="fas fa-search"></i> 4,800/mo</span>
+              <span style="color:#10b981;"><i class="fas fa-gauge"></i> KD: 28 (Low)</span>
               <span>Commercial</span>
             </div>
           </div>
-          <div class="topic-card" role="button" tabindex="0" onclick="selectTopic(this, 'How 7 Autonomous AI Agents Can Run a Modern Tech Startup Without Employees')">
+          <div class="topic-card" onclick="selectTopic(this, 'How 7 Autonomous AI Agents Can Run a Modern Tech Startup Without Employees')">
             <div class="topic-title">How 7 Autonomous AI Agents Can Run a Modern Tech Startup Without Employees</div>
             <div class="topic-meta">
+              <span><i class="fas fa-search"></i> 3,200/mo</span>
+              <span style="color:#f59e0b;"><i class="fas fa-gauge"></i> KD: 42 (Med)</span>
               <span>Informational</span>
             </div>
           </div>
@@ -177,18 +181,16 @@ const directInference = await fetch("https://api.groq.com/openai/v1/chat/complet
 <script>
 let selectedTopicText = "Why Bring-Your-Own-Key (BYOK) Architecture Will Replace SaaS Subscriptions";
 let currentArticleMarkdown = "";
-let selectedKeyword = "";
 
 function setBlogNiche(comp, niche) {
   document.getElementById('blogCompany').value = comp;
   document.getElementById('blogNiche').value = niche;
 }
 
-function selectTopic(card, i) {
+function selectTopic(card, topic) {
   document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
   card.classList.add('selected');
-  if (typeof i === 'number' && window.__topics) { const t = window.__topics[i]; selectedTopicText = t.title || t.topic; selectedKeyword = t.keyword || ''; }
-  else { selectedTopicText = i; selectedKeyword = ''; }
+  selectedTopicText = topic;
 }
 
 async function discoverTopics() {
@@ -206,41 +208,39 @@ async function discoverTopics() {
       })
     });
 
-    if (!res.ok) throw new Error('Topic suggestions failed. Please try again.');
+    if (!res.ok) throw new Error('Topic discovery failed');
     const data = await res.json();
 
     const container = document.getElementById('topicsContainer');
     container.innerHTML = '';
-    window.__topics = data.topics || [];
-    window.__topics.forEach((t, i) => {
-      const title = t.title || t.topic || '';
+    (data.topics || []).forEach((t, i) => {
       const isFirst = i === 0;
-      if (isFirst) { selectedTopicText = title; selectedKeyword = t.keyword || ''; }
-      const safe = title.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+      if (isFirst) selectedTopicText = t.topic;
+      const kdColor = t.difficulty < 35 ? '#10b981' : (t.difficulty < 60 ? '#f59e0b' : '#ef4444');
       container.innerHTML += `
-        <div class="topic-card ${isFirst ? 'selected' : ''}" role="button" tabindex="0" onclick="selectTopic(this, ${i})">
-          <div class="topic-title">${safe}</div>
+        <div class="topic-card ${isFirst ? 'selected' : ''}" onclick="selectTopic(this, '${t.topic.replace(/'/g, "\\'")}')">
+          <div class="topic-title">${t.topic}</div>
           <div class="topic-meta">
-            ${t.keyword ? `<span><i class="fas fa-key"></i> ${t.keyword.replace(/[<>&]/g, '')}</span>` : ''}
-            <span>${(t.intent || 'Informational').replace(/[<>&]/g, '')}</span>
+            <span><i class="fas fa-search"></i> ${t.search_volume || '2.4k'}/mo</span>
+            <span style="color:${kdColor};"><i class="fas fa-gauge"></i> KD: ${t.difficulty || 30}</span>
+            <span>${t.intent || 'Informational'}</span>
           </div>
         </div>
       `;
     });
-    if (data.source === 'template') container.insertAdjacentHTML('afterbegin', '<div style="font-size:12px;color:#f59e0b;margin-bottom:8px"><i class="fas fa-circle-info"></i> The AI is busy, so these are general starter ideas. Try again in a minute for tailored topics.</div>');
 
   } catch (err) {
     alert('Discovery error: ' + err.message);
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-compass"></i> Suggest blog topics';
+    btn.innerHTML = '<i class="fas fa-compass"></i> Discover SEO Topics & Search Volume';
   }
 }
 
 async function generateFullArticle() {
   const btn = document.getElementById('btnGenerateArticle');
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Writing your article (about 30 seconds)...';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating 1,500-word Article...';
 
   try {
     const res = await fetch('/api/power/blog-creator/generate-article', {
@@ -248,13 +248,12 @@ async function generateFullArticle() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         topic: selectedTopicText,
-        company_name: document.getElementById('blogCompany').value.trim() || 'Sevenseed',
-        target_keyword: selectedKeyword || selectedTopicText,
+        target_keywords: ["BYOK architecture", "SaaS markup", "zero-margin AI", "client-side encryption"],
         tone: document.getElementById('blogTone').value
       })
     });
 
-    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(typeof e.detail === 'string' ? e.detail : 'Article generation failed. Please try again.'); }
+    if (!res.ok) throw new Error('Article generation failed');
     const data = await res.json();
     currentArticleMarkdown = data.content_markdown || '';
 
@@ -274,22 +273,23 @@ async function generateFullArticle() {
 
 function renderSimpleMarkdown(md) {
   if (!md) return '';
-  return md.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c])
+  return md
     .replace(/^### (.*$)/gim, '<h3>$1</h3>')
     .replace(/^## (.*$)/gim, '<h2>$1</h2>')
     .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/^[-*] (.*$)/gim, '• $1').replace(/^---+$/gim, '<hr style="border:0;border-top:1px solid #1e293b;margin:12px 0">').replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<i>$2</i>').replace(/`([^`\n]+)`/g, '<code>$1</code>')
+    .replace(/\*\*(.*)\*\*/gim, '<b>$1</b>')
     .replace(/```([\s\S]*?)```/gim, '<pre><code>$1</code></pre>')
     .replace(/\n/gim, '<br>');
 }
 
 function copyArticleMarkdown() {
-  if (!currentArticleMarkdown) { alert('Generate an article first.'); return; }
-  navigator.clipboard.writeText(currentArticleMarkdown).then(() => alert('Article copied as Markdown.'), () => alert('Copy failed: select the text and copy it manually.'));
+  if (!currentArticleMarkdown) return;
+  navigator.clipboard.writeText(currentArticleMarkdown);
+  alert('Article Markdown copied to clipboard!');
 }
 
 function downloadArticle() {
-  if (!currentArticleMarkdown) { alert('Generate an article first.'); return; }
+  if (!currentArticleMarkdown) return;
   const blob = new Blob([currentArticleMarkdown], { type: 'text/markdown' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);

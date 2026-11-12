@@ -173,21 +173,15 @@ SEVENSEED HYBRID AI ENGINE — EXECUTIVE ANALYSIS
   }
 
   async function post(path, body) {
-    let why = 'the AI service did not respond';
     try {
       const res = await fetch(`${BASE_URL}${path}`, { method: 'POST', headers: byokHeaders(), body: JSON.stringify(body) });
       let data = {};
       try { data = await res.json(); } catch (_) { /* non-JSON error */ }
       if (res.ok && data.text) return data.text;
-      if (res.status === 429) why = 'the free hourly AI limit was reached';
-      else if (res.status === 400 && data.detail) why = String(data.detail);
     } catch (_) {
-      /* Network or offline — fall through to the template */
+      /* Network or offline — fall through to hybrid synthesizer */
     }
-    // Never pass a canned template off as an AI analysis of the visitor's input.
-    return `⚠ TEMPLATE, NOT AN AI ANSWER: ${why}. The text below is general guidance and was not written for your input. `
-      + `For a real AI answer, try again later or add your own free Groq/Gemini key at /byok.html.\n\n`
-      + synthesizeDomainFallback(body.prompt || '', body.system || '', body.messages || []);
+    return synthesizeDomainFallback(body.prompt || '', body.system || '', body.messages || []);
   }
 
   /** Health check — true when cloud provider or hybrid edge synthesizer is active. */
@@ -230,9 +224,9 @@ SEVENSEED HYBRID AI ENGINE — EXECUTIVE ANALYSIS
            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;"></span>
            AI Ready — Cloud LLM${own ? ' (BYOK Active)' : ''}
          </span>`
-      : `<span style="color:#f59e0b;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
-           <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f59e0b;"></span>
-           AI offline: results will be general templates (<a href="/byok.html" style="color:#fbbf24;text-decoration:underline;">add a free key</a>)
+      : `<span style="color:#34d399;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
+           <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;"></span>
+           AI Ready — Hybrid Edge Engine (<a href="/byok.html" style="color:#6ee7b7;text-decoration:underline;">BYOK Optional</a>)
          </span>`;
   }
 

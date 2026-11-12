@@ -107,7 +107,7 @@
     .toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 10px; background: #0f172a; border: 1px solid var(--accent); color: #fff; font-size: 13px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: none; align-items: center; gap: 10px; z-index: 9999; animation: slideUp 0.3s ease; }
     @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   </style>
-<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.3"/></head>
+<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.1"/></head>
 <body>
 
 <nav class="nav">
@@ -120,8 +120,8 @@
       <a href="index.html">Home</a>
       <a href="brain-ai.html" style="color:var(--accent-l); font-weight:700;"><i class="fas fa-brain"></i> Brain AI & Recipes</a>
       <a href="employees.html">7 AI Employees</a>
-      <a href="devin-terminal.html">AI Dev Terminal</a>
-      <a href="workflows.html">Workflow Builder</a>
+      <a href="devin-terminal.html">Devin Terminal</a>
+      <a href="workflows.html">LangGraph Studio</a>
       <a href="/byok.html">BYOK Vault</a>
     </div>
     <div class="nav-actions" style="display:flex; align-items:center; gap:8px;">
@@ -134,7 +134,7 @@
 <div class="brain-container">
   
   <div class="brain-hero">
-    <div class="hero-badge"><i class="fas fa-microchip"></i> Benchmark Architecture</div>
+    <div class="hero-badge"><i class="fas fa-microchip"></i> Sintra.ai & Automusk Benchmark Architecture</div>
     <h1 class="hero-title">Centralized <span>Brain AI</span> & 1-Click Task Recipes</h1>
     <p class="hero-sub">Train your digital team once. The centralized Brain AI shares company memory, voice, and ideal customer context across all 7 autonomous agents. Execute high-converting workflows in one click.</p>
   </div>
@@ -145,7 +145,7 @@
       <i class="fas fa-layer-group" style="color:#38bdf8; font-size:20px;"></i>
       <div>
         <div class="bm-label">Benchmark Model</div>
-        <div class="bm-val">other AI tools ($97/mo) + Owl ($199/mo)</div>
+        <div class="bm-val">Sintra.ai ($97/mo) + Owl ($199/mo)</div>
       </div>
     </div>
     <div class="bm-item">
@@ -215,7 +215,7 @@
       <!-- Recipe Filter Tabs -->
       <div>
         <div style="font-size:18px; font-weight:800; color:#fff; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-          <i class="fas fa-bolt" style="color:var(--accent);"></i> 1-Click Task Recipes
+          <i class="fas fa-bolt" style="color:var(--accent);"></i> Sintra & Automusk 1-Click Task Recipes
         </div>
         <div class="filter-tabs">
           <button class="filter-tab active" onclick="filterRecipes('all', this)">All Recipes (12)</button>
@@ -303,7 +303,7 @@
         <!-- Recipe 8: Full-Stack FastAPI Async Scaffold -->
         <div class="recipe-card" data-cat="dev" onclick="selectRecipe(7)">
           <div>
-            <span class="recipe-tag tag-dev"><i class="fas fa-code"></i> AI</span>
+            <span class="recipe-tag tag-dev"><i class="fas fa-code"></i> Devin / Leo</span>
             <h4 class="recipe-title">FastAPI Microservice Generator</h4>
             <p class="recipe-desc">Production-grade async endpoint with Pydantic v2 validation, rate limiting, and SSE streaming token response.</p>
           </div>
@@ -357,7 +357,7 @@
             <button class="out-btn" onclick="downloadOutputDoc()"><i class="fas fa-download"></i> Save as Markdown</button>
           </div>
           <div id="outputContent">// Ready for dispatch.
-// Select any 1-click recipe above and click 'Dispatch Agent'.
+// Select any Sintra or Automusk 1-click recipe above and click 'Dispatch Agent'.
 // The Brain AI context from the left vault will automatically inject company memory.</div>
         </div>
       </div>
@@ -512,7 +512,7 @@ SCENE 2 (0:04 - 0:11) — THE RELATABLE PAIN POINT
 • Voiceover: "You're hiring copywriters, recruiters, and dev agencies—and your burn rate is through the roof."
 
 SCENE 3 (0:11 - 0:22) — THE SEVENSEED REVELATION
-• Camera Angle: Rapid screen capture showing Sevenforce Brain AI & AI Dev Terminal executing in real-time.
+• Camera Angle: Rapid screen capture showing Sevenforce Brain AI & Devin Terminal executing in real-time.
 • Visual Action: 1-click execution: green checkmarks flashing, code streaming at 840 tokens/sec.
 • On-Screen Text: "7 Autonomous Employees. $0 Platform Fee."
 • Audio Cue: Deep synth bass swell (energetic tech pacing).
@@ -644,7 +644,7 @@ Sevenforce connects 7 specialized employees to one shared Brain AI. When marketi
 OBJECTION 2: "We don't have the budget for a new platform this quarter."
 • The Underlying Fear: "I can't justify capital expenditure right now."
 • The Script:
-"That is the best part: Sevenforce has zero software subscription fees. You don't pay us $97/mo like other AI tools or $199/mo like AutomationOwl. You connect your own direct Groq or Gemini API key, which costs pennies per million tokens. We built this to reduce your operational expenses by $4,000/month immediately."
+"That is the best part: Sevenforce has zero software subscription fees. You don't pay us $97/mo like Sintra or $199/mo like AutomationOwl. You connect your own direct Groq or Gemini API key, which costs pennies per million tokens. We built this to reduce your operational expenses by $4,000/month immediately."
 
 ──────────────────────────────────────────────────────────────────
 OBJECTION 3: "Is our company data secure? Will it be used for model training?"
@@ -690,7 +690,7 @@ PROMPT 4: SOCIAL MEDIA AD / HIGH-CONTRAST BENTO DISPLAY
       title: "FastAPI Microservice Generator",
       category: "dev",
       agent: "Leo (Full-Stack AI Engineer)",
-      tag: "AI",
+      tag: "Devin / Leo",
       defaultPrompt: "Generate an asynchronous FastAPI endpoint with rate limiting, Pydantic validation, and streaming tokens.",
       generator: (b, topic) => {
         return `# ══════════════════════════════════════════════════════════════════
@@ -1003,6 +1003,6 @@ ORDER BY c.cohort_month DESC, c.month_number ASC;
 </script>
 
 
-<script src="/static/quantum-enhancer.js?v=6.3" defer></script>
+<script src="/static/quantum-enhancer.js?v=6.1" defer></script>
 </body>
 </html>

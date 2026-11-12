@@ -49,10 +49,10 @@ const teardowns: Teardown[] = [
   },
   {
     id: "td-4",
-    brand: "A language-learning app",
+    brand: "Duolingo",
     category: "Social",
     headline: "Post as an Unhinged Mascot, Not a Brand Account",
-    before: "Learn a new language today! Download the app and start your streak. #LanguageLearning #EdTech",
+    before: "Learn a new language today! Download Duolingo and start your streak. #LanguageLearning #EdTech",
     after: "A TikTok of the owl mascot 'threatening' users who broke their streak — millions of organic shares from the bit alone.",
     whyItWorks: "Brand-safe corporate voice gets scrolled past. A recurring, slightly unhinged character people can quote is what actually spreads.",
     liftMetric: "4M+ TikTok Followers",
@@ -122,7 +122,7 @@ export default function MarketingTeardownsRoute() {
               <div className="text-[11px] font-mono uppercase text-sky-400">AVPU Growth Engine</div>
               <h1 className="text-xl sm:text-2xl font-bold text-slate-100 flex items-center gap-2">
                 <Megaphone className="w-5 h-5 text-sky-400" />
-                <span>Visual Marketing Teardowns</span>
+                <span>Visual Marketing Teardowns (marketingexamples.com)</span>
               </h1>
             </div>
           </div>

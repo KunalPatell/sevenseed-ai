@@ -69,9 +69,9 @@ export function CommerceDiamondPrism3D() {
 
     // Floating Merchant Nodes (Smartprix, BuyHatke, Xerve, Amazon, Flipkart)
     const merchants = [
-      { name: "Spec compare", color: 0x10b981, r: 2.7, s: 0.6 },
-      { name: "Price log", color: 0x06b6d4, r: 3.1, s: 0.45 },
-      { name: "Coupons", color: 0xf59e0b, r: 3.5, s: 0.35 },
+      { name: "Smartprix", color: 0x10b981, r: 2.7, s: 0.6 },
+      { name: "BuyHatke", color: 0x06b6d4, r: 3.1, s: 0.45 },
+      { name: "Xerve Coupons", color: 0xf59e0b, r: 3.5, s: 0.35 },
       { name: "Amazon IN", color: 0x3b82f6, r: 3.9, s: 0.5 },
     ];
 
@@ -162,12 +162,12 @@ export function CommerceDiamondPrism3D() {
     <div className="relative w-full h-full min-h-[380px] flex items-center justify-center rounded-2xl bg-emerald-950/40 border border-emerald-500/20 backdrop-blur-xl overflow-hidden shadow-2xl shadow-emerald-950/50">
       <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-xs font-mono text-emerald-400">
         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-        <span>AVP E-Mart</span>
+        <span>AVP E-Mart Prism Core · Hardware Laser Scanner</span>
       </div>
 
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2 text-xs font-mono text-emerald-300">
         <TrendingDown className="w-3.5 h-3.5 text-emerald-400" />
-        <span>AVP E-Mart tools</span>
+        <span>Smartprix + BuyHatke Engine</span>
       </div>
 
       <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
@@ -175,9 +175,9 @@ export function CommerceDiamondPrism3D() {
       <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/80 border border-emerald-800/40 text-[11px] font-mono text-slate-300 backdrop-blur-md">
         <div className="flex items-center gap-2 text-emerald-300">
           <SlidersHorizontal className="w-3.5 h-3.5" />
-          <span>Compare, check and track prices</span>
+          <span>Spec Diagnostic Score: <strong>94/100 (Smartprix Algorithm)</strong></span>
         </div>
-        <span className="text-emerald-500 text-[10px]">Drag to rotate</span>
+        <span className="text-emerald-500 text-[10px]">10-Min Flash Dispatch</span>
       </div>
     </div>
   );

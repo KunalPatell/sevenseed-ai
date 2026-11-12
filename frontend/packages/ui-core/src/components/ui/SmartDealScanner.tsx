@@ -1,64 +1,98 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Scan, ShieldAlert, ShieldCheck, Plus, Trash2 } from "lucide-react";
+import React, { useState } from "react";
+import { Scan, ShieldAlert, ShieldCheck, Filter } from "lucide-react";
 
-// Fake-discount detector. For each deal the shopper enters the MRP, the sale price and
-// what it usually sold for before the sale (from their own price log, a price-history
-// extension or memory). A big "% off MRP" with a small real drop means the MRP is padded.
-// Starts with clearly labelled examples; saved on this device.
+type Deal = {
+  id: string;
+  name: string;
+  category: "Electronics" | "Fashion" | "Home" | "Grocery";
+  mrp: number;
+  saleePrice: number;
+  preSaleTypicalPrice: number;
+};
 
-type Deal = { id: string; name: string; mrp: string; sale: string; usual: string };
-const EXAMPLES: Deal[] = [
-  { id: "e1", name: "Example: wireless earbuds", mrp: "2999", sale: "799", usual: "1099" },
-  { id: "e2", name: "Example: 55-inch 4K TV", mrp: "64990", sale: "38990", usual: "41500" },
-  { id: "e3", name: "Example: running shoes", mrp: "11995", sale: "6999", usual: "8999" },
+const DEALS: Deal[] = [
+  { id: "d1", name: "boAt Airdopes 141", category: "Electronics", mrp: 2999, saleePrice: 799, preSaleTypicalPrice: 1099 },
+  { id: "d2", name: "Levi's 511 Slim Jeans", category: "Fashion", mrp: 3499, saleePrice: 1399, preSaleTypicalPrice: 1450 },
+  { id: "d3", name: "Prestige Induction Cooktop", category: "Home", mrp: 2795, saleePrice: 1399, preSaleTypicalPrice: 1899 },
+  { id: "d4", name: "Samsung 55\" Crystal 4K TV", category: "Electronics", mrp: 64990, saleePrice: 38990, preSaleTypicalPrice: 41500 },
+  { id: "d5", name: "Tata Sampann Toor Dal 1kg", category: "Grocery", mrp: 189, saleePrice: 165, preSaleTypicalPrice: 168 },
+  { id: "d6", name: "Nike Air Zoom Pegasus", category: "Fashion", mrp: 11995, saleePrice: 6999, preSaleTypicalPrice: 8999 },
 ];
-const KEY = "ss-emart-deal-scanner";
-const n = (s: string) => parseFloat(s);
+
+const CATEGORIES = ["All", "Electronics", "Fashion", "Home", "Grocery"] as const;
 
 export function SmartDealScanner() {
-  const [deals, setDeals] = useState<Deal[]>(EXAMPLES);
-  useEffect(() => { try { const v = JSON.parse(localStorage.getItem(KEY) || "null"); if (Array.isArray(v)) setDeals(v); } catch { /* ignore */ } }, []);
-  useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(deals)); } catch { /* ignore */ } }, [deals]);
-  const set = (id: string, k: keyof Deal, v: string) => setDeals((ds) => ds.map((d) => (d.id === id ? { ...d, [k]: k === "name" ? v : v.replace(/[^\d.]/g, "") } : d)));
-  const cell = "w-full px-2.5 py-2 rounded-lg bg-[#012018] border border-emerald-900/50 text-sm text-white focus:outline-none focus:border-emerald-500";
+  const [budget, setBudget] = useState(50000);
+  const [minDiscount, setMinDiscount] = useState(40);
+  const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("All");
+
+  const analyzed = DEALS.map((d) => {
+    const discountPct = Math.round(((d.mrp - d.saleePrice) / d.mrp) * 100);
+    const realDiscountPct = Math.round(((d.preSaleTypicalPrice - d.saleePrice) / d.preSaleTypicalPrice) * 100);
+    const inflatedMrp = discountPct - realDiscountPct > 15;
+    return { ...d, discountPct, realDiscountPct, inflatedMrp };
+  });
+
+  const filtered = analyzed.filter(
+    (d) => d.saleePrice <= budget && d.discountPct >= minDiscount && (category === "All" || d.category === category)
+  );
 
   return (
-    <div className="w-full max-w-4xl mx-auto rounded-2xl border border-emerald-800/40 bg-emerald-950/20 overflow-hidden">
-      <div className="px-5 sm:px-6 py-5 border-b border-emerald-800/40">
-        <h1 className="text-2xl font-bold text-white flex items-center gap-2"><Scan className="w-6 h-6 text-emerald-400" /> Fake Discount Detector</h1>
-        <p className="mt-1 text-sm text-slate-300 max-w-2xl">“70% off!” often means the MRP was padded. Enter the sale price and what the product usually sold for, and see the real discount. Replace the examples with deals you're looking at.</p>
+    <div className="w-full max-w-4xl mx-auto rounded-2xl border border-emerald-800/40 bg-emerald-950/20 backdrop-blur-xl overflow-hidden">
+      <div className="flex items-center gap-2 px-6 py-4 border-b border-emerald-800/40 text-sm font-bold text-slate-100">
+        <Scan className="w-4 h-4 text-emerald-400" />
+        <span>Smart Deal Scanner</span>
+        <span className="text-[10px] font-mono text-slate-500">(buyhatke-style, flags inflated MRP)</span>
       </div>
-      <div className="divide-y divide-emerald-900/30">
-        {deals.map((d) => {
-          const mrp = n(d.mrp), sale = n(d.sale), usual = n(d.usual);
-          const off = mrp > 0 && sale > 0 ? Math.round(((mrp - sale) / mrp) * 100) : null;
-          const real = usual > 0 && sale > 0 ? Math.round(((usual - sale) / usual) * 100) : null;
-          const padded = off !== null && real !== null && off - real > 15;
-          return (
-            <div key={d.id} className="p-4 sm:px-6 grid gap-2 sm:grid-cols-[1.6fr_0.8fr_0.8fr_0.8fr_auto] items-end">
-              <label className="text-xs text-slate-400">Product<input className={cell + " mt-1"} value={d.name} onChange={(e) => set(d.id, "name", e.target.value)} /></label>
-              <label className="text-xs text-slate-400">MRP ₹<input inputMode="decimal" className={cell + " mt-1 font-mono"} value={d.mrp} onChange={(e) => set(d.id, "mrp", e.target.value)} /></label>
-              <label className="text-xs text-slate-400">Sale ₹<input inputMode="decimal" className={cell + " mt-1 font-mono"} value={d.sale} onChange={(e) => set(d.id, "sale", e.target.value)} /></label>
-              <label className="text-xs text-slate-400">Usual ₹<input inputMode="decimal" className={cell + " mt-1 font-mono"} value={d.usual} onChange={(e) => set(d.id, "usual", e.target.value)} /></label>
-              <button type="button" aria-label={`Remove ${d.name}`} onClick={() => setDeals((ds) => ds.filter((x) => x.id !== d.id))} className="p-2.5 text-slate-500 hover:text-rose-300"><Trash2 className="w-4 h-4" /></button>
-              <div className="sm:col-span-5 text-sm" aria-live="polite">
-                {off === null || real === null ? <span className="text-slate-500">Fill in the sale price and either the MRP or the usual price.</span> : padded ? (
-                  <span className="inline-flex items-center gap-1.5 text-rose-200"><ShieldAlert className="w-4 h-4 text-rose-400" /> Says {off}% off, but it's really only {real}% below its usual price. The MRP looks padded.</span>
-                ) : real <= 0 ? (
-                  <span className="inline-flex items-center gap-1.5 text-amber-200"><ShieldAlert className="w-4 h-4 text-amber-400" /> Not a deal: the “sale” price isn't lower than usual.</span>
-                ) : (
-                  <span className="inline-flex items-center gap-1.5 text-emerald-200"><ShieldCheck className="w-4 h-4 text-emerald-400" /> Genuine: {real}% below its usual price.</span>
-                )}
-              </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-5 border-b border-emerald-800/40">
+        <div>
+          <div className="flex justify-between text-[11px] text-slate-400 mb-1">
+            <span>Max budget</span>
+            <span className="font-mono text-emerald-400">₹{budget.toLocaleString("en-IN")}</span>
+          </div>
+          <input type="range" min={500} max={70000} step={500} value={budget} onChange={(e) => setBudget(Number(e.target.value))} className="w-full accent-emerald-500" />
+        </div>
+        <div>
+          <div className="flex justify-between text-[11px] text-slate-400 mb-1">
+            <span>Min. discount off MRP</span>
+            <span className="font-mono text-emerald-400">{minDiscount}%</span>
+          </div>
+          <input type="range" min={0} max={80} step={5} value={minDiscount} onChange={(e) => setMinDiscount(Number(e.target.value))} className="w-full accent-emerald-500" />
+        </div>
+        <div>
+          <div className="flex items-center gap-1.5 text-[11px] text-slate-400 mb-1"><Filter className="w-3 h-3" /> Category</div>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value as (typeof CATEGORIES)[number])}
+            className="w-full px-3 py-1.5 rounded-lg bg-[#012018] border border-emerald-900/50 text-xs text-white focus:outline-none"
+          >
+            {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div className="divide-y divide-emerald-900/30 max-h-96 overflow-y-auto">
+        {filtered.length === 0 && <div className="p-6 text-center text-xs text-slate-500">No deals match these filters — try loosening the discount or budget.</div>}
+        {filtered.map((d) => (
+          <div key={d.id} className="flex items-center justify-between gap-3 px-6 py-4">
+            <div>
+              <div className="text-sm font-bold text-slate-100">{d.name}</div>
+              <div className="text-[11px] font-mono text-slate-500">{d.category} · MRP ₹{d.mrp.toLocaleString("en-IN")} → ₹{d.saleePrice.toLocaleString("en-IN")} ({d.discountPct}% off)</div>
             </div>
-          );
-        })}
-      </div>
-      <div className="p-4 sm:px-6 border-t border-emerald-800/40 flex flex-wrap gap-2">
-        <button type="button" onClick={() => setDeals((ds) => [...ds, { id: `d-${Date.now()}`, name: "", mrp: "", sale: "", usual: "" }])} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-700 text-sm text-slate-200 hover:border-emerald-500"><Plus className="w-4 h-4" /> Add a deal</button>
-        <button type="button" onClick={() => setDeals([])} className="px-3 py-2 rounded-lg border border-slate-700 text-sm text-slate-300 hover:border-emerald-500">Clear examples</button>
+            {d.inflatedMrp ? (
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 shrink-0">
+                <ShieldAlert className="w-3 h-3" /> MRP inflated — real discount ~{d.realDiscountPct}%
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shrink-0">
+                <ShieldCheck className="w-3 h-3" /> Genuine deal
+              </span>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

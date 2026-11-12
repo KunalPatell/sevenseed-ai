@@ -17,7 +17,7 @@ const BLIPS: RadarBlip[] = [
   { id: "agentic", name: "Multi-Agent Systems", category: "LangGraph · Sevenforce", angle: 0.85, distance: 0.68, strength: 0.96, pulse: 0 },
   { id: "vision", name: "Computer Vision", category: "YOLOv8 · Real-Time Edge", angle: 2.35, distance: 0.78, strength: 0.94, pulse: 0 },
   { id: "fastapi", name: "FastAPI & LLMs", category: "Async Microservices", angle: 3.95, distance: 0.62, strength: 0.98, pulse: 0 },
-  { id: "automation", name: "Enterprise Automation", category: "Scaled Workflows", angle: 5.4, distance: 0.72, strength: 0.92, pulse: 0 },
+  { id: "automation", name: "Enterprise Automation", category: "n8n · Scaled Workflows", angle: 5.4, distance: 0.72, strength: 0.92, pulse: 0 },
   { id: "rag", name: "Hybrid RAG & Vectors", category: "Qdrant · Embeddings", angle: 1.6, distance: 0.48, strength: 0.90, pulse: 0 },
 ];
 

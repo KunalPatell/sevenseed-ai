@@ -118,7 +118,7 @@ export function CodeRunner({
         <div className="space-y-3">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-xs font-mono text-sky-400">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Interactive Code Lab</span>
+            <span>Interactive Code Lab (freecodecamp engine)</span>
           </div>
 
           <h3 className="text-base font-bold text-slate-100">{exercise.title}</h3>

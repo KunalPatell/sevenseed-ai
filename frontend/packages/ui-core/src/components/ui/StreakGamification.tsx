@@ -47,7 +47,7 @@ export function StreakGamification({
       {/* Top Telemetry Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
         <div>
-          <div className="text-xs font-mono uppercase text-sky-400">Streaks & Leagues</div>
+          <div className="text-xs font-mono uppercase text-sky-400">Gamification Engine (Duolingo System)</div>
           <h3 className="text-xl font-bold text-slate-100">Daily Study Streak & League Division</h3>
         </div>
 

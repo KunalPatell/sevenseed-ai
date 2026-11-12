@@ -179,7 +179,7 @@ export default function LawsOfUXRoute() {
               <div className="text-[11px] font-mono uppercase text-purple-400">AVPU Cognitive Science</div>
               <h1 className="text-xl sm:text-2xl font-bold text-slate-100 flex items-center gap-2">
                 <Scale className="w-5 h-5 text-purple-400" />
-                <span>Interactive Laws of UX Psychology</span>
+                <span>Interactive Laws of UX Psychology (lawsofux.com)</span>
               </h1>
             </div>
           </div>

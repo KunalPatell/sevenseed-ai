@@ -22,7 +22,7 @@ const SATELLITES_DATA: Omit<SatelliteNode, "mesh">[] = [
   { name: "YOLOv8", color: "#cfae6e", orbitRadius: 3.1, speed: 0.48, tilt: -0.35, phase: 0.9 },
   { name: "ChromaDB", color: "#60a5fa", orbitRadius: 3.4, speed: 0.38, tilt: 0.52, phase: 1.8 },
   { name: "FastAPI", color: "#34d399", orbitRadius: 3.8, speed: 0.32, tilt: -0.22, phase: 2.7 },
-  { name: "Automation", color: "#f59e0b", orbitRadius: 4.1, speed: 0.25, tilt: 0.41, phase: 3.6 },
+  { name: "n8n", color: "#f59e0b", orbitRadius: 4.1, speed: 0.25, tilt: 0.41, phase: 3.6 },
   { name: "Groq", color: "#f43f5e", orbitRadius: 4.4, speed: 0.22, tilt: -0.48, phase: 4.5 },
   { name: "PyTorch", color: "#ec4899", orbitRadius: 4.7, speed: 0.18, tilt: 0.15, phase: 5.4 },
 ];
@@ -594,7 +594,7 @@ export function QuantumCore3DWebGL() {
 
             <div className="hidden sm:flex items-center gap-1 text-white/40">
               <span className="h-1.5 w-1.5 rounded-full bg-[#9ed8ff] animate-ping" />
-              <span>Nine companies, one platform</span>
+              <span>7 Satellites Online</span>
             </div>
           </div>
         </div>

@@ -4,8 +4,8 @@
   <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Comonk AI / Marketing Teardowns Workstation | Sevenseed Ecosystem</title>
-  <meta name="description" content="Real Indian company marketing tactics filtered by Acquisition, Retention, SEO, Cold Email. Free Sevenseed tool">
+  <title>Comonk AI / Marketing Examples Workstation | Sevenseed Ecosystem</title>
+  <meta name="description" content="Real Indian company marketing tactics filtered by Acquisition, Retention, SEO, Cold Email. Inspired by marketingexamples.com and growthinreverse.com.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -83,7 +83,7 @@
     .steal-modal textarea{width:100%;background:#12121e;border:1px solid rgba(255,255,255,.07);border-radius:10px;color:#eeeef8;font-family:inherit;font-size:13px;padding:12px;resize:vertical;min-height:100px;outline:none;}
     .steal-modal-footer{display:flex;gap:10px;margin-top:14px;justify-content:flex-end;}
   </style>
-<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.3"/></head>
+<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.1"/></head>
 <body>
 <nav class="nav">
   <a class="nav-brand" href="index.html">
@@ -125,7 +125,7 @@
 
   <main>
     <div class="main-header">
-      <h2 id="mainTitle">All Marketing Teardowns</h2>
+      <h2 id="mainTitle">All Marketing Examples</h2>
       <p>Real tactics from Indian startups with measurable results you can steal.</p>
     </div>
     <div class="search-wrap">
@@ -262,7 +262,7 @@
         <div class="me-body">
           <div class="me-company"><div class="me-company-dot" style="background:rgba(16,185,129,.15);">&#x1F3E5;</div><span class="me-company-name">Practo</span></div>
           <div class="me-title">Doctor x Speciality x City: 500K+ profile pages as SEO assets</div>
-          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Search ads for dermatologist Mumbai at 180 rupees per click.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Each doctor gets an optimized profile page. User lands and books on the app.</div></div>
+          <div class="ba-box"><div class="ba-pane ba-before"><span class="ba-label">Before</span>Search ads for dermatologist Mumbai at 180 rupees per click.</div><div class="ba-pane ba-after"><span class="ba-label">After</span>Each doctor gets an optimized profile page. User lands and books on Practo.</div></div>
           <p class="me-lesson"><strong>Lesson:</strong> Turn every entity in your database into a high-intent SEO landing page.</p>
           <span class="me-steal" onclick="openSteal('Supply-side SEO','Every item in your database deserves its own optimized landing page.')"><i class="fas fa-wand-magic-sparkles"></i> Steal this tactic</span>
         </div>
@@ -388,7 +388,7 @@
 function filterCards(cat,btn){
   document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
-  document.getElementById('mainTitle').textContent=cat==='all'?'All Marketing Teardowns':cat.charAt(0).toUpperCase()+cat.slice(1)+' Examples';
+  document.getElementById('mainTitle').textContent=cat==='all'?'All Marketing Examples':cat.charAt(0).toUpperCase()+cat.slice(1)+' Examples';
   var cards=document.querySelectorAll('.me-card'),count=0;
   cards.forEach(function(c){var show=cat==='all'||c.dataset.cat===cat;c.classList.toggle('hidden',!show);if(show)count++;});
   document.getElementById('visibleCount').textContent=count;
@@ -412,6 +412,6 @@ function copySteal(){
 document.getElementById('stealModal').addEventListener('click',function(e){if(e.target===e.currentTarget)closeSteal();});
 </script>
 
-<script src="/static/quantum-enhancer.js?v=6.3" defer></script>
+<script src="/static/quantum-enhancer.js?v=6.1" defer></script>
 </body>
 </html>

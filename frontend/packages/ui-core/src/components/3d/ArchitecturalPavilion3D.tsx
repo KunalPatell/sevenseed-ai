@@ -138,7 +138,7 @@ export function ArchitecturalPavilion3D() {
     <div className="relative w-full h-full min-h-[380px] flex items-center justify-center rounded-2xl bg-amber-950/30 border border-amber-500/20 backdrop-blur-xl overflow-hidden shadow-2xl shadow-amber-950/50">
       <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500/30 text-xs font-mono text-amber-400">
         <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-        <span>Breakdown Factor</span>
+        <span>Breakdown Factor Civil BIM · DSR 2023 Mesh</span>
       </div>
 
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2 text-xs font-mono text-amber-300">
@@ -151,9 +151,9 @@ export function ArchitecturalPavilion3D() {
       <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/80 border border-amber-800/40 text-[11px] font-mono text-slate-300 backdrop-blur-md">
         <div className="flex items-center gap-2 text-amber-300">
           <HardHat className="w-3.5 h-3.5" />
-          <span>Estimates, rate sheets, timelines</span>
+          <span>Statutory Takeoff: <strong>15% Profit + 18% GST Auto-Audit</strong></span>
         </div>
-        <span className="text-amber-500 text-[10px]">Drag to rotate</span>
+        <span className="text-amber-500 text-[10px]">Laser Leveling 0.02mm</span>
       </div>
     </div>
   );

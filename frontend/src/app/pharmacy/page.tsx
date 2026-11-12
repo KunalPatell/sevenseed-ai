@@ -96,7 +96,7 @@ export default function PharmacyPage() {
               </div>
               <h1 className="text-xl sm:text-2xl font-bold text-slate-100 flex items-center gap-2">
                 <HeartPulse className="w-5 h-5 text-rose-400" />
-                <span>Decode Forest Pharmacy — Jan Aushadhi Generics & Health Tools</span>
+                <span>Decode Forest Pharmacy — Jan Aushadhi Generic & OCR Engine (1mg & Netmeds)</span>
               </h1>
             </div>
           </div>

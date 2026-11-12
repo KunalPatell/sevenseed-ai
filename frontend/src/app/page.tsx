@@ -1,39 +1,48 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { PortfolioHealthMonitor } from "../components/PortfolioHealthMonitor";
 import { StudioChangelog } from "../components/StudioChangelog";
-import { ProductFilm } from "../components/ProductFilm";
-import { HomeMotion } from "../components/HomeMotion";
-import { SeedCharacter } from "../components/SeedCharacter";
-import { CAST, VentureTeam } from "../components/VentureTeam";
+import { Grain, SparklesCore, TextGenerateEffect, CardSpotlight, BorderBeam, FloatingDock } from "@main/ui-core";
 import {
+  Sparkles,
   Cpu,
   GraduationCap,
   ShoppingBag,
   HeartPulse,
   Wrench,
   Shield,
-  ArrowRight,
+  Layers,
   ArrowUpRight,
+  Activity,
+  Server,
   Zap,
   CheckCircle2,
-  Circle,
-  ChevronDown,
+  ChevronRight,
   Send,
   Search,
+  Moon,
+  Sun,
   X,
   MessageSquare,
   BarChart3,
   Calculator,
   Key,
-  Layers,
+  HelpCircle,
   Mail,
   Phone,
   MapPin,
+  Flame,
+  Bot,
   Terminal,
+  Code,
+  Check,
   Building2,
+  Users,
+  Compass,
+  Briefcase,
+  Menu
 } from "lucide-react";
 
 interface Venture {
@@ -42,8 +51,6 @@ interface Venture {
   sector: string;
   desc: string;
   metrics: string;
-  tool: string;
-  toolLabel: string;
   tech: string;
   href: string;
   icon: any;
@@ -56,9 +63,7 @@ const ventures: Venture[] = [
     name: "Alpaben Vipulbhai Patel University",
     sector: "EdTech & Higher Education",
     desc: "AI-powered university education adapting to every learner with adaptive DAG knowledge trees and gamified leagues.",
-    metrics: "Adaptive knowledge graph · Leagues",
-    tool: "/avpu/learn-dag",
-    toolLabel: "Knowledge graph",
+    metrics: "20+ Programs · 90% Placement",
     tech: "LangGraph · EdgeDB · Canvas DAG",
     href: "/avpu",
     icon: GraduationCap,
@@ -68,11 +73,9 @@ const ventures: Venture[] = [
     id: "avp-emart",
     name: "AVP E-Mart",
     sector: "Q-Commerce & Price Intelligence",
-    desc: "AI shopping engine that compares products and tracks prices across major Indian marketplaces.",
-    metrics: "Spec compare · Price tracking",
-    tool: "/avp-emart/spec-compare",
-    toolLabel: "Spec compare",
-    tech: "Spec comparison · Deal checker",
+    desc: "AI shopping engine comparing live prices across Amazon, Flipkart, Reliance & Snapdeal with 10-min fulfillment.",
+    metrics: "4 Platforms · 10k+ Products · ₹1Cr GMV",
+    tech: "Smartprix Scraper · Buyhatke Radar",
     href: "/avp-emart",
     icon: ShoppingBag,
     color: "#10b981"
@@ -82,10 +85,8 @@ const ventures: Venture[] = [
     name: "Comonk Technology",
     sector: "Career & Talent Intelligence",
     desc: "AI career copilot for tech jobs featuring ATS resume scoring, FAANG mock interview rooms, and salary insights.",
-    metrics: "ATS scoring · Mock interviews · Free",
-    tool: "/comonk/resume-analyzer",
-    toolLabel: "ATS resume scorer",
-    tech: "Resume analyzer · Mock interviews",
+    metrics: "2,000+ Companies · 100% Free",
+    tech: "Jobscan Engine · Judge0 Sandbox",
     href: "/comonk",
     icon: Cpu,
     color: "#a855f7"
@@ -95,10 +96,8 @@ const ventures: Venture[] = [
     name: "Sevenforce",
     sector: "Autonomous Enterprise Workforce",
     desc: "Team of specialized AI employees for marketing, sales, hiring, meetings, and code execution running 24/7.",
-    metrics: "7 AI employees · Workflow studio",
-    tool: "/sevenforce/workflows",
-    toolLabel: "Agent workflows",
-    tech: "AI employees · Coding assistant",
+    metrics: "7 AI Employees · 450k Tasks/Day",
+    tech: "LangGraph Studio · Devin Shell",
     href: "/sevenforce",
     icon: Zap,
     color: "#f59e0b"
@@ -108,9 +107,7 @@ const ventures: Venture[] = [
     name: "Decode Forest Pharmacy",
     sector: "HealthTech & Tele-Pharmacy",
     desc: "AI prescription OCR scanner, Jan Aushadhi generic alternative finder, and critical drug-drug interaction matrix.",
-    metrics: "Generic finder · Interaction checker",
-    tool: "/pharmacy/generic-finder",
-    toolLabel: "Generic finder",
+    metrics: "12,000+ Salts · 75% Savings",
     tech: "Tesseract OCR · RxNorm Clinical RAG",
     href: "/pharmacy",
     icon: HeartPulse,
@@ -121,9 +118,7 @@ const ventures: Venture[] = [
     name: "Breakdown Factor",
     sector: "Civil Engineering & Safety",
     desc: "AI-driven construction management with CPWD DSR BOQ estimation, computer-vision site PPE monitoring, and defect audit.",
-    metrics: "CPWD DSR 2023 rates · PPE vision",
-    tool: "/breakdown/boq-estimator",
-    toolLabel: "BOQ estimator",
+    metrics: "99.4% CV Accuracy · DSR 2023",
     tech: "YOLOv8 Vision · CPWD BOQ Engine",
     href: "/breakdown",
     icon: Wrench,
@@ -134,9 +129,7 @@ const ventures: Venture[] = [
     name: "AVP Charitable Trust",
     sector: "Social Impact & Philanthropy",
     desc: "Non-profit platform using AI for rural community needs assessment, mobile health camps, and instant 80G tax receipts.",
-    metrics: "80G receipts · Health camps",
-    tool: "/trust/campaigns",
-    toolLabel: "Campaigns",
+    metrics: "50,000+ Beneficiaries · 100% Transparent",
     tech: "Form 10BE Generator · QR Verification",
     href: "/trust",
     icon: Building2,
@@ -147,9 +140,7 @@ const ventures: Venture[] = [
     name: "Rakshak AI Safety",
     sector: "Public Safety & Law Enforcement",
     desc: "Citizen safety copilot with automated BNS 2023 FIR drafting, cybercrime scam detector, and crowd security analytics.",
-    metrics: "BNS clause mapping · Helpline 1930",
-    tool: "/rakshak-ai/fir-generator",
-    toolLabel: "Complaint drafter",
+    metrics: "BNS Clause Mapping · Helpline 1930",
     tech: "Legal RAG · Surveillance Vision",
     href: "/rakshak-ai",
     icon: Shield,
@@ -160,9 +151,7 @@ const ventures: Venture[] = [
     name: "AgenticOS",
     sector: "Agent Infrastructure & Kernel OS",
     desc: "The operating system kernel coordinating every autonomous agent cluster across the portfolio — memory heaps, process locks, and IPC message queues.",
-    metrics: "Agent kernel · Sandboxed workers",
-    tool: "/agenticos",
-    toolLabel: "Control plane",
+    metrics: "18 Worker Processes · SECCOMP Sandboxed",
     tech: "Agent Kernel · Multi-Process IPC",
     href: "/agenticos",
     icon: Terminal,
@@ -173,15 +162,15 @@ const ventures: Venture[] = [
 const faqs = [
   {
     q: "What makes Sevenseed fundamentally AI-native?",
-    a: "Every venture is engineered on a shared AI backbone — LangGraph multi-agent orchestration, Groq-hosted open-model inference, and ChromaDB vector retrieval — so AI isn't an afterthought, it's the core engine from day one."
+    a: "Every venture is engineered on a shared AI backbone — LangGraph multi-agent orchestration, Groq LLaMA 3.3 70B inference, and ChromaDB vector retrieval — so AI isn't an afterthought, it's the core engine from day one."
   },
   {
     q: "How do external founders partner with the studio?",
     a: "We incubate in-house but selectively co-found with exceptional domain leaders. We provide capital, shared AI infrastructure, and a dedicated team of engineers to build and launch within 90 days."
   },
   {
-    q: "Are the tools free?",
-    a: "Tools that don't use AI, like the market sizer, BOQ estimator and spec comparison, are free for everyone. AI features are free when you add your own AI key, because the AI cost is then on your key. Without a key you can try them 15 times an hour. If you'd rather not manage a key, our paid Sevenseed AI plan runs the AI for you: see Pricing."
+    q: "Are the tools and workstations free to try?",
+    a: "Yes! All interactive workstations — including the YC TAM Calculator, ATS Resume Scorer, Knowledge DAG, Spec Comparator, and BOQ Estimator — are fully functional and accessible right in your browser."
   },
   {
     q: "How does the Zero-Margin BYOK Vault work?",
@@ -189,56 +178,25 @@ const faqs = [
   }
 ];
 
-
-const pillars = [
-  { title: "AI from day one", desc: "Every venture starts with agents and retrieval in the core product, not added later." },
-  { title: "One shared backbone", desc: "Models, vector search and tooling are built once and reused across the portfolio." },
-  { title: "Founders first", desc: "Hands-on engineering and a weekly shipping rhythm, without the red tape." },
-  { title: "Six industries", desc: "Learning from education, health, retail, construction and more feeds every venture." },
-];
-
-const studioTools = [
-  { title: "Syndicate & RUV simulator", desc: "Model SPV returns, carry, management fees, LP waterfalls and exit multiples.", href: "/syndicate-ruv", icon: BarChart3 },
-  { title: "TAM / SAM / SOM sizer", desc: "Size a market bottom-up and top-down, ready for your pitch deck.", href: "/market-sizing", icon: Calculator },
-  { title: "Portfolio directory", desc: "Browse every venture, its AI stack and all of its tools in one place.", href: "/ventures", icon: Layers },
-  { title: "BYOK key vault", desc: "Use your own Groq, OpenAI, Anthropic or Gemini keys, encrypted in your browser.", href: "/byok", icon: Key },
-];
-
-const stages = [
-  { title: "Find the bottleneck", desc: "We study real workflows and look for painful, expensive steps where AI changes the economics." },
-  { title: "Plug into the stack", desc: "New ventures start on our existing agents, vector search and model gateway." },
-  { title: "Ship in 90 days", desc: "Studio engineers pair with domain founders to get a production MVP live inside 12 weeks." },
-  { title: "Compound", desc: "Each venture shares tooling and lessons with the rest of the portfolio as it grows." },
-];
-
-// A transparent checklist, so the result is explainable and identical for identical input.
-const fitChecks = [
-  { label: "Names who it is for", test: /\b(for|students?|patients?|doctors?|teachers?|engineers?|contractors?|shops?|retailers?|farmers?|founders?|teams?|citizens?|recruiters?|donors?)\b/i },
-  { label: "Describes the problem", test: /\b(problem|pain|slow|manual|costly|expensive|delay|waste|hard|error|missing|balanc\w*|reduc\w*|sav\w*)\b/i },
-  { label: "Says what the AI does", test: /\b(ai|agents?|llm|model|vision|forecast\w*|predict\w*|automat\w*|classif\w*|rag|ocr|autonomous)\b/i },
-  { label: "Uses a specific data source", test: /\b(data|real-time|realtime|records?|sensors?|images?|documents?|logs?|telemetry|prices?|forecast\w*)\b/i },
-];
-
-const heroCast = ["avp-emart", "comonk", "pharmacy", "sevenforce", "avpu"];
-
-const steps = [
-  { title: "Pick a tool", desc: "Choose from career, learning, health, shopping, construction, safety and more. No account needed to look around." },
-  { title: "Add your own AI key, if you want", desc: "Some tools work straight away. For AI features, add your own key. It stays encrypted in your browser." },
-  { title: "Free with your key, or let us run it", desc: "With your own key we charge nothing and add no markup. Prefer not to manage a key? Our paid Sevenseed AI plan provides the AI for you." },
-];
-
-const comparison = [
-  ["Price to use the tools", "Free with your own AI key, or a paid plan", "Monthly subscription"],
-  ["AI usage", "Your own key with no markup, or provided by us", "Bundled, with limits or markup"],
-  ["Where your AI key lives", "Encrypted in your browser", "No key needed; the vendor runs the AI"],
-  ["Range", "Nine ventures on one platform", "Usually one product"],
-];
-
 export default function SevenseedHomePage() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   // Evaluator Sandbox State
   const [evalName, setEvalName] = useState("EcoFlow AI");
   const [evalSector, setEvalSector] = useState("CleanTech & Energy");
   const [evalIdea, setEvalIdea] = useState("Autonomous smart microgrid balancing agent using real-time solar forecasting.");
+  const [evaluating, setEvaluating] = useState(false);
+  const [evalResult, setEvalResult] = useState<{
+    score: number;
+    verdict: string;
+    tam: string;
+    synergy: string;
+  } | null>({
+    score: 92,
+    verdict: "High-Priority Studio Fit",
+    tam: "$14.2 Billion Global Addressable Market",
+    synergy: "Directly plugs into Sevenforce multi-agent dispatcher and Breakdown Factor industrial telemetry."
+  });
 
   // Contact Form State
   const [cName, setCName] = useState("");
@@ -252,13 +210,159 @@ export default function SevenseedHomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   // Command Palette & Chat Drawer
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cmdkOpen, setCmdkOpen] = useState(false);
   const [cmdkSearch, setCmdkSearch] = useState("");
   const [chatOpen, setChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState("");
   const [chatMessages, setChatMessages] = useState<Array<{ role: "bot" | "user"; text: string }>>([
-    { role: "bot", text: "Hello! I am the Sevenseed guide. Ask me about our 9 incubated ventures, investment syndicates, or how to launch an AI startup with us." }
+    { role: "bot", text: "Hello! I am the Sevenseed AI Studio Assistant. Ask me about our 9 incubated ventures, investment syndicates, or how to launch an AI startup with us." }
   ]);
+
+  // Three.js 3D WebGL PBR Engine
+  useEffect(() => {
+    let animationFrameId: number;
+    let renderer: any = null;
+    let scene: any = null;
+    let camera: any = null;
+    let mesh: any = null;
+    let ring1: any = null;
+    let ring2: any = null;
+    let particles: any = null;
+
+    const initThree = async () => {
+      if (!canvasRef.current) return;
+      const THREE = await import("three");
+
+      const width = canvasRef.current.clientWidth || 500;
+      const height = canvasRef.current.clientHeight || 500;
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.z = 5.5;
+
+      renderer = new THREE.WebGLRenderer({
+        canvas: canvasRef.current,
+        alpha: true,
+        antialias: true
+      });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Central Polyhedron
+      const geo = new THREE.IcosahedronGeometry(1.4, 1);
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0x6366f1,
+        roughness: 0.25,
+        metalness: 0.85,
+        wireframe: true
+      });
+      mesh = new THREE.Mesh(geo, mat);
+      scene.add(mesh);
+
+      // Core Solid Glow Sphere
+      const coreGeo = new THREE.SphereGeometry(0.8, 32, 32);
+      const coreMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        emissive: 0x1d4ed8,
+        emissiveIntensity: 0.6,
+        roughness: 0.3,
+        metalness: 0.7
+      });
+      const core = new THREE.Mesh(coreGeo, coreMat);
+      scene.add(core);
+
+      // Ring 1
+      const ringGeo1 = new THREE.TorusGeometry(2.1, 0.035, 16, 100);
+      const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x818cf8 });
+      ring1 = new THREE.Mesh(ringGeo1, ringMat1);
+      ring1.rotation.x = Math.PI / 3;
+      scene.add(ring1);
+
+      // Ring 2
+      const ringGeo2 = new THREE.TorusGeometry(2.3, 0.025, 16, 100);
+      const ringMat2 = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+      ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+      ring2.rotation.y = Math.PI / 4;
+      scene.add(ring2);
+
+      // Star Particles
+      const particleGeo = new THREE.BufferGeometry();
+      const count = 180;
+      const posArray = new Float32Array(count * 3);
+      for (let i = 0; i < count * 3; i++) {
+        posArray[i] = (Math.random() - 0.5) * 12;
+      }
+      particleGeo.setAttribute("position", new THREE.BufferAttribute(posArray, 3));
+      const particleMat = new THREE.PointsMaterial({
+        size: 0.04,
+        color: 0xc7d2fe
+      });
+      particles = new THREE.Points(particleGeo, particleMat);
+      scene.add(particles);
+
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+      scene.add(ambientLight);
+
+      const pointLight1 = new THREE.PointLight(0x38bdf8, 2.5, 20);
+      pointLight1.position.set(4, 4, 4);
+      scene.add(pointLight1);
+
+      const pointLight2 = new THREE.PointLight(0xa855f7, 2, 20);
+      pointLight2.position.set(-4, -4, 2);
+      scene.add(pointLight2);
+
+      // Drag controls
+      let isDragging = false;
+      let prevMousePos = { x: 0, y: 0 };
+
+      const onMouseDown = (e: MouseEvent) => {
+        isDragging = true;
+        prevMousePos = { x: e.clientX, y: e.clientY };
+      };
+      const onMouseMove = (e: MouseEvent) => {
+        if (!isDragging || !mesh) return;
+        const deltaX = e.clientX - prevMousePos.x;
+        const deltaY = e.clientY - prevMousePos.y;
+        mesh.rotation.y += deltaX * 0.01;
+        mesh.rotation.x += deltaY * 0.01;
+        prevMousePos = { x: e.clientX, y: e.clientY };
+      };
+      const onMouseUp = () => { isDragging = false; };
+
+      const canvas = canvasRef.current;
+      canvas?.addEventListener("mousedown", onMouseDown);
+      window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("mouseup", onMouseUp);
+
+      const animate = () => {
+        animationFrameId = requestAnimationFrame(animate);
+        if (mesh) {
+          mesh.rotation.y += 0.005;
+          mesh.rotation.x += 0.002;
+        }
+        if (ring1) ring1.rotation.z += 0.008;
+        if (ring2) ring2.rotation.z -= 0.006;
+        if (particles) particles.rotation.y += 0.001;
+        renderer.render(scene, camera);
+      };
+      animate();
+
+      return () => {
+        canvas?.removeEventListener("mousedown", onMouseDown);
+        window.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("mouseup", onMouseUp);
+      };
+    };
+
+    initThree();
+
+    return () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      if (renderer) renderer.dispose();
+    };
+  }, []);
 
   // Keyboard shortcut for CmdK
   useEffect(() => {
@@ -276,8 +380,20 @@ export default function SevenseedHomePage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const fitResults = fitChecks.map((check) => ({ label: check.label, passed: check.test.test(evalIdea) }));
-  const fitPassed = fitResults.filter((check) => check.passed).length;
+  // Run Evaluator
+  const handleEvaluate = (e: React.FormEvent) => {
+    e.preventDefault();
+    setEvaluating(true);
+    setTimeout(() => {
+      setEvaluating(false);
+      setEvalResult({
+        score: Math.floor(Math.random() * 16) + 82,
+        verdict: "High-Priority Studio Fit",
+        tam: `$${(Math.random() * 20 + 8).toFixed(1)} Billion TAM`,
+        synergy: `Direct alignment with Sevenseed shared AI vector storage and Groq high-throughput inference in ${evalSector}.`
+      });
+    }, 600);
+  };
 
   // Submit Contact Form
   const handleContactSubmit = async (e: React.FormEvent) => {
@@ -321,7 +437,7 @@ export default function SevenseedHomePage() {
       let reply = "Sevenseed is an AI-first venture studio. You can explore all our interactive subpages: AVP University (/avpu), AVP E-Mart (/avp-emart), Comonk Career (/comonk), and Sevenforce Enterprise (/sevenforce). How can we assist your venture?";
       const lower = userMsg.toLowerCase();
       if (lower.includes("avpu") || lower.includes("university")) {
-        reply = "AVPU features interactive learning tools like the Knowledge DAG (/avpu/learn-dag), the learning league (/avpu/duo-league), and Code Lab (/avpu/code-lab).";
+        reply = "AVPU features interactive learning tools like the Knowledge DAG (/avpu/learn-dag), Duolingo Leagues (/avpu/duo-league), and Code Lab (/avpu/code-lab).";
       } else if (lower.includes("emart") || lower.includes("shopping") || lower.includes("price")) {
         reply = "AVP E-Mart offers our 3-Way Flagship Spec Comparator (/avp-emart/spec-compare) and 90-day price tracker across Amazon, Flipkart, and Reliance.";
       } else if (lower.includes("comonk") || lower.includes("job") || lower.includes("resume")) {
@@ -337,180 +453,429 @@ export default function SevenseedHomePage() {
       v.sector.toLowerCase().includes(cmdkSearch.toLowerCase())
   );
 
-  const input =
-    "w-full rounded-lg border border-[#d0d5dd] bg-white px-3.5 py-2.5 text-[15px] text-[#0f172a] placeholder:text-[#667085] shadow-sm transition focus:border-[#7c3aed] focus:outline-none focus:ring-2 focus:ring-[#7c3aed]/20";
-  const label = "mb-1.5 block text-sm font-medium text-[#344054]";
-  const eyebrow = "text-sm font-bold uppercase tracking-[0.08em] text-[#7c3aed]";
-  const sectionTitle = "mt-3 text-[2rem] font-bold leading-[1.12] tracking-[-0.025em] text-[#0f172a] sm:text-5xl";
-  const sectionLead = "mt-4 text-lg leading-relaxed text-[#475467]";
-
   return (
-    <div className="ss-home relative min-h-screen bg-white text-[#475467] selection:bg-[#0f172a] selection:text-white">
-      <HomeMotion />
-      {/* Hero */}
-      <header className="relative -mt-16 overflow-hidden bg-[linear-gradient(160deg,#fde8f3_0%,#efe9ff_42%,#dff3ff_78%,#e4fbf0_100%)] pt-16">
-        <div className="ss-mesh pointer-events-none absolute inset-0" aria-hidden="true" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-5 pb-12 pt-16 sm:px-8 lg:grid-cols-12 lg:pb-20 lg:pt-24">
-          <div className="lg:col-span-6">
-            <p className="text-sm font-bold uppercase tracking-[0.08em] text-[#7c3aed]">AI venture studio, Ahmedabad</p>
-            <h1 className="mt-4 text-[2.5rem] font-bold leading-[1.08] tracking-[-0.03em] text-[#0f172a] sm:text-[3.75rem]">
-              <span className="block">Nine AI companies.</span>
-              <span className="block">One studio.</span>
-              <span className="block">Free with your own AI key.</span>
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-[#344054] sm:text-xl">
-              Sevenseed builds and runs nine AI companies on one shared platform: career, learning, health, shopping, construction, safety and more.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <a href="#team" className="ss-btn-primary">Meet the team <ArrowRight className="h-4 w-4" /></a>
-              <a href="#contact" className="ss-btn-ghost">Partner with us</a>
+    <div className="min-h-screen bg-[#060814] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white relative">
+      <Grain />
+      {/* Sticky Global Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#060814]/80 backdrop-blur-xl border-b border-slate-800/80 transition-all">
+        <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform">
+              🌱
             </div>
-            <p className="mt-6 text-sm font-medium text-[#475467]"><span data-count="9">9</span> ventures · <span data-count="6">6</span> industries · <span data-count="1">1</span> shared AI platform</p>
+            <div>
+              <span className="font-extrabold text-xl tracking-tight text-white flex items-center gap-1">
+                Seven<span className="text-indigo-400">seed</span>
+              </span>
+              <div className="text-[10px] font-mono uppercase tracking-widest text-slate-400">AI Venture Studio</div>
+            </div>
+          </Link>
+
+          {/* Desktop Nav Links */}
+          <div className="hidden lg:flex items-center gap-6 font-medium text-sm text-slate-300">
+            <Link href="/syndicate-ruv" className="hover:text-indigo-400 transition-colors flex items-center gap-1.5">
+              <BarChart3 className="w-4 h-4 text-indigo-400" /> Syndicate & RUV
+            </Link>
+            <Link href="/market-sizing" className="hover:text-indigo-400 transition-colors flex items-center gap-1.5">
+              <Calculator className="w-4 h-4 text-indigo-400" /> TAM / SOM
+            </Link>
+            <Link href="/ventures" className="hover:text-indigo-400 transition-colors flex items-center gap-1.5">
+              <Layers className="w-4 h-4 text-indigo-400" /> Portfolio
+            </Link>
+            <Link href="/pricing" className="hover:text-indigo-400 transition-colors">
+              Pricing
+            </Link>
+            <Link href="/byok" className="hover:text-indigo-400 transition-colors flex items-center gap-1.5">
+              <Key className="w-4 h-4 text-indigo-400" /> BYOK Vault
+            </Link>
+            <a href="#sandbox" className="hover:text-indigo-400 transition-colors">
+              AI Evaluator
+            </a>
+            <a href="#faq" className="hover:text-indigo-400 transition-colors">
+              FAQ
+            </a>
           </div>
-          <div className="lg:col-span-6">
-            <div className="mx-auto flex max-w-[620px] items-end justify-center">
-              {heroCast.map((id, index) => {
-                const c = CAST[id];
-                const venture = ventures.find((item) => item.id === id);
-                const sizes = ["w-[21%] -mr-[3%]", "w-[26%] -mr-[4%] z-10", "w-[32%] z-20", "w-[26%] -ml-[4%] z-10", "w-[21%] -ml-[3%]"];
-                return (
-                  <SeedCharacter key={id} id={`hero-${id}`} color={c.color} shade={c.shade} icon={venture?.icon} gaze={index < 2 ? 3 : index > 2 ? -3 : 0} mood={c.mood} tall={c.tall} className={`ss-float ${sizes[index]}`} />
-                );
-              })}
+
+          {/* Right Action Icons */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setCmdkOpen(true)}
+              className="px-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-800 text-xs font-mono text-slate-400 hover:text-white hover:border-slate-700 transition-all flex items-center gap-2"
+              title="Search (Ctrl+K)"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Search</span>
+              <kbd className="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300">Ctrl K</kbd>
+            </button>
+
+            <a
+              href="#contact"
+              className="hidden sm:flex px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-sky-500 hover:from-indigo-500 hover:to-sky-400 text-white text-sm font-semibold shadow-lg shadow-indigo-500/25 transition-all items-center gap-2"
+            >
+              <Mail className="w-4 h-4" /> Partner With Us
+            </a>
+
+            <button
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              className="lg:hidden p-2 rounded-lg bg-slate-900/90 border border-slate-800 text-slate-300 hover:text-white transition-colors"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Nav Drawer */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden border-t border-slate-800/80 bg-[#060814]/95 backdrop-blur-xl px-6 py-4 flex flex-col gap-1 font-medium text-sm text-slate-300">
+            <Link href="/syndicate-ruv" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-indigo-400 transition-colors flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-indigo-400" /> Syndicate & RUV
+            </Link>
+            <Link href="/market-sizing" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-indigo-400 transition-colors flex items-center gap-2">
+              <Calculator className="w-4 h-4 text-indigo-400" /> TAM / SOM
+            </Link>
+            <Link href="/ventures" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-indigo-400 transition-colors flex items-center gap-2">
+              <Layers className="w-4 h-4 text-indigo-400" /> Portfolio
+            </Link>
+            <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-indigo-400 transition-colors">
+              Pricing
+            </Link>
+            <Link href="/byok" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-indigo-400 transition-colors flex items-center gap-2">
+              <Key className="w-4 h-4 text-indigo-400" /> BYOK Vault
+            </Link>
+            <a href="#sandbox" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-indigo-400 transition-colors">
+              AI Evaluator
+            </a>
+            <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="py-2.5 hover:text-indigo-400 transition-colors">
+              FAQ
+            </a>
+            <a
+              href="#contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mt-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-sky-500 text-white font-semibold flex items-center justify-center gap-2"
+            >
+              <Mail className="w-4 h-4" /> Partner With Us
+            </a>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero Header */}
+      <header className="relative pt-36 pb-20 px-6 max-w-7xl mx-auto overflow-hidden">
+        {/* Overhead Ambient Lamp Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-indigo-600/25 via-sky-500/10 to-transparent blur-3xl pointer-events-none -z-10" />
+        <SparklesCore particleColor="#818cf8" particleDensity={35} minSize={0.4} maxSize={1.2} className="-z-10" />
+
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+          {/* Left Hero Content */}
+          <div className="flex-1 space-y-6 text-center lg:text-left z-10">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-xs font-mono text-indigo-300 shadow-inner">
+              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+              <span>AI-Native Studio · LangGraph Agents · Shared AI Infrastructure</span>
+            </div>
+
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] text-white">
+              We build <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-sky-300 to-indigo-200">AI-native</span> companies from seed to scale
+            </h1>
+
+            <TextGenerateEffect
+              words="An AI-first startup studio that ideates, incubates, and launches ventures powered by LLM agents, RAG, and computer vision — on a shared AI infrastructure used across the entire portfolio."
+              className="text-slate-300 text-lg sm:text-xl max-w-xl mx-auto lg:mx-0 leading-relaxed"
+              duration={0.4}
+            />
+
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+              <a
+                href="#contact"
+                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-sky-500 hover:from-indigo-500 hover:to-sky-400 text-white font-semibold text-base shadow-xl shadow-indigo-600/30 hover:scale-[1.02] transition-all flex items-center gap-2"
+              >
+                <Send className="w-4 h-4" /> Partner with Sevenseed
+              </a>
+              <a
+                href="#ventures"
+                className="px-6 py-3.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-slate-200 font-semibold text-base hover:bg-slate-800/80 transition-all flex items-center gap-2"
+              >
+                <Cpu className="w-4 h-4 text-indigo-400" /> See All Ventures
+              </a>
+            </div>
+
+            {/* Quick Metrics Bar */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-2xl bg-slate-950/70 border border-slate-800/80 max-w-xl mx-auto lg:mx-0 text-left font-mono">
+              <div>
+                <div className="text-2xl sm:text-3xl font-bold text-white">9</div>
+                <div className="text-xs text-slate-400 uppercase tracking-wider">AI Ventures</div>
+              </div>
+              <div>
+                <div className="text-2xl sm:text-3xl font-bold text-white">6</div>
+                <div className="text-xs text-slate-400 uppercase tracking-wider">Industries</div>
+              </div>
+              <div>
+                <div className="text-2xl sm:text-3xl font-bold text-white">3</div>
+                <div className="text-xs text-slate-400 uppercase tracking-wider">New/Year</div>
+              </div>
+              <div>
+                <div className="text-2xl sm:text-3xl font-bold text-white">1</div>
+                <div className="text-xs text-slate-400 uppercase tracking-wider">Shared Stack</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Hero 3D WebGL PBR Stage */}
+          <div className="flex-1 flex flex-col items-center justify-center relative w-full max-w-[540px]">
+            <div className="relative w-full h-[460px] sm:h-[500px] rounded-3xl bg-gradient-to-b from-slate-900/40 to-slate-950/80 border border-slate-800/70 shadow-2xl shadow-indigo-500/10 flex items-center justify-center overflow-hidden">
+              <canvas ref={canvasRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+              <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-slate-950/80 border border-slate-800 text-[11px] font-mono text-emerald-400 flex items-center gap-2 pointer-events-none">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>120 FPS WebGL · PBR Core</span>
+              </div>
+              <div className="absolute bottom-4 right-4 px-3 py-1 rounded-full bg-slate-950/80 border border-slate-800 text-[11px] font-mono text-slate-400 pointer-events-none">
+                360° Drag & Orbit
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Industries */}
-      <section aria-label="Industries" className="border-b border-[#e4e7ec]">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-6 sm:px-8 lg:flex-row lg:items-center lg:gap-10">
-          <p className="shrink-0 text-sm font-medium text-[#475467]">Building across</p>
-          <ul className="flex flex-wrap gap-x-8 gap-y-2 text-[15px] font-semibold text-[#344054]">
-            {["Education", "Healthcare", "Retail", "Construction", "Public safety", "Social impact"].map((item) => <li key={item}>{item}</li>)}
-          </ul>
-        </div>
-      </section>
-
-      {/* Team */}
-      <section id="team" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-20 sm:px-8 lg:py-28">
-        <div data-reveal className="mx-auto max-w-3xl text-center">
-          <p className={eyebrow}>Meet the team</p>
-          <h2 className={sectionTitle}>One AI helper for every part of life and work</h2>
-          <p className={sectionLead}>Each venture does one job well. Pick one to see what it does, then try the real tool.</p>
-        </div>
-        <div data-reveal className="mt-10"><VentureTeam ventures={ventures} /></div>
-      </section>
-
-      {/* Product film */}
-      <section id="tour" className="scroll-mt-24 bg-[#f6f5fb]">
-        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 lg:py-28">
-          <div data-reveal className="mx-auto max-w-3xl text-center">
-            <p className={eyebrow}>See it in action</p>
-            <h2 className={sectionTitle}>Real tools, doing real work</h2>
-            <p className={sectionLead}>A 36-second tour of seven products. Choose one below to jump straight to it.</p>
+      {/* 4 Pillars Band */}
+      <section className="border-y border-slate-800/80 bg-slate-950/40 py-8 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-900/40 border border-slate-800/60">
+            <div className="p-2.5 rounded-lg bg-indigo-500/10 text-indigo-400">
+              <Cpu className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="font-bold text-sm text-white">AI-Native Architecture</h4>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">Every venture is engineered with LLM agents and RAG from inception.</p>
+            </div>
           </div>
-          <div data-reveal className="mt-10"><ProductFilm /></div>
-        </div>
-      </section>
 
-      {/* How it works */}
-      <section id="platform" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-20 sm:px-8 lg:py-28">
-        <div data-reveal className="mx-auto max-w-3xl text-center">
-          <p className={eyebrow}>How it works</p>
-          <h2 className={sectionTitle}>Up and running in three steps</h2>
-        </div>
-        <ol data-reveal className="relative mt-14 grid gap-10 md:grid-cols-3 md:gap-8">
-          <div className="absolute left-[16%] right-[16%] top-7 hidden h-0.5 bg-gradient-to-r from-[#c4b5fd] via-[#f9a8d4] to-[#7dd3fc] md:block" aria-hidden="true" />
-          {steps.map((step, index) => (
-            <li key={step.title} className="relative text-center">
-              <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#0f172a] text-lg font-bold text-white shadow-lg">{index + 1}</span>
-              <h3 className="mt-5 text-xl font-bold text-[#0f172a]">{step.title}</h3>
-              <p className="mx-auto mt-2 max-w-sm text-[15px] leading-relaxed">{step.desc}</p>
-            </li>
-          ))}
-        </ol>
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-900/40 border border-slate-800/60">
+            <div className="p-2.5 rounded-lg bg-sky-500/10 text-sky-400">
+              <Server className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="font-bold text-sm text-white">Shared AI Backbone</h4>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">One unified ChromaDB + Groq cluster power the entire portfolio.</p>
+            </div>
+          </div>
 
-        <div className="mx-auto mt-20 max-w-4xl overflow-hidden rounded-3xl border border-[#e4e7ec] bg-white shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[560px] border-collapse text-left text-[15px]">
-              <caption className="sr-only">How Sevenseed compares with typical paid AI tools</caption>
-              <thead>
-                <tr className="border-b border-[#e4e7ec]">
-                  <th scope="col" className="p-5 font-medium text-[#475467]">&nbsp;</th>
-                  <th scope="col" className="bg-[#f5f3ff] p-5 font-bold text-[#0f172a]">Sevenseed</th>
-                  <th scope="col" className="p-5 font-semibold text-[#475467]">Typical paid AI tool</th>
-                </tr>
-              </thead>
-              <tbody>
-                {comparison.map(([rowName, ours, theirs]) => (
-                  <tr key={rowName} className="border-b border-[#f2f4f7] last:border-0">
-                    <th scope="row" className="p-5 font-medium text-[#344054]">{rowName}</th>
-                    <td className="bg-[#f5f3ff] p-5 font-semibold text-[#0f172a]"><span className="inline-flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#16a34a]" />{ours}</span></td>
-                    <td className="p-5">{theirs}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-900/40 border border-slate-800/60">
+            <div className="p-2.5 rounded-lg bg-amber-500/10 text-amber-400">
+              <Users className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="font-bold text-sm text-white">Founder-First Studio</h4>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">Hands-on AI engineering, weekly shipping cadence, and zero red-tape.</p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-900/40 border border-slate-800/60">
+            <div className="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+              <Compass className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="font-bold text-sm text-white">Diversified Synergy</h4>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">Six distinct industries sharing models, data pipelines, and intelligence.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* How we work */}
-      <section id="how" className="scroll-mt-24 px-3 sm:px-5">
-        <div className="mx-auto max-w-[88rem] rounded-[2.5rem] bg-[linear-gradient(140deg,#0f172a,#2b1d5c)] px-5 py-16 text-[#cdd5e4] sm:px-12 lg:py-24">
-          <div className="mx-auto max-w-7xl">
-            <p className="text-sm font-bold uppercase tracking-[0.08em] text-[#c4b5fd]">For founders</p>
-            <h2 className="mt-3 max-w-3xl text-[2rem] font-bold leading-[1.12] tracking-[-0.025em] text-white sm:text-5xl">Have an idea? We build companies with you in four stages.</h2>
-            <ol data-reveal className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {stages.map((stage, index) => (
-                <li key={stage.title} className="rounded-3xl bg-white/[0.07] p-6">
-                  <span className="text-sm font-bold text-[#c4b5fd]">Stage {index + 1}</span>
-                  <h3 className="mt-2 text-lg font-bold text-white">{stage.title}</h3>
-                  <p className="mt-2 text-[15px] leading-relaxed">{stage.desc}</p>
-                </li>
-              ))}
-            </ol>
+      {/* Studio Labs Workstations */}
+      <section className="py-20 px-6 max-w-7xl mx-auto">
+        <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono text-sky-400">
+            <Compass className="w-3.5 h-3.5" />
+            <span>Interactive Studio Engines</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Venture Architecture Workstations</h2>
+          <p className="text-slate-400 text-sm sm:text-base">
+            Engineered to AngelList syndicate waterfall standards, Y Combinator market-sizing methodologies, and client-side BYOK security.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex flex-col justify-between hover:border-indigo-500/40 transition-all group">
+            <div className="space-y-3">
+              <div className="text-3xl">📊</div>
+              <h3 className="font-bold text-lg text-white group-hover:text-indigo-400 transition-colors">AngelList Syndicate & RUV</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Model SPV investment returns, 20% carry splits, 2% management fees, LP payout waterfalls, and exit MOIC multiples.
+              </p>
+            </div>
+            <Link
+              href="/syndicate-ruv"
+              className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-400 hover:text-indigo-300 font-mono"
+            >
+              <span>Model Syndicate</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex flex-col justify-between hover:border-sky-500/40 transition-all group">
+            <div className="space-y-3">
+              <div className="text-3xl">🎯</div>
+              <h3 className="font-bold text-lg text-white group-hover:text-sky-400 transition-colors">YC TAM / SAM / SOM Sizer</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Bottom-up & top-down market sizing with ARPU, serviceable obtainable market share, and pitch deck slide export.
+              </p>
+            </div>
+            <Link
+              href="/market-sizing"
+              className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-sky-400 hover:text-sky-300 font-mono"
+            >
+              <span>Calculate TAM / SOM</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex flex-col justify-between hover:border-amber-500/40 transition-all group">
+            <div className="space-y-3">
+              <div className="text-3xl">🏢</div>
+              <h3 className="font-bold text-lg text-white group-hover:text-amber-400 transition-colors">Portfolio Directory</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Explore live operational metrics, full AI stacks, and deep subpage tools across all 9 incubated studio enterprises.
+              </p>
+            </div>
+            <Link
+              href="/ventures"
+              className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 font-mono"
+            >
+              <span>View Directory</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex flex-col justify-between hover:border-emerald-500/40 transition-all group">
+            <div className="space-y-3">
+              <div className="text-3xl">🔑</div>
+              <h3 className="font-bold text-lg text-white group-hover:text-emerald-400 transition-colors">Zero-Margin BYOK Vault</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Client-side AES-GCM encrypted API key manager for Groq, OpenAI, Anthropic, and Gemini with zero SaaS markup.
+              </p>
+            </div>
+            <Link
+              href="/byok"
+              className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 font-mono"
+            >
+              <span>Open Key Vault</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Founder tools */}
-      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-24">
-        <div data-reveal className="max-w-2xl">
-          <p className={eyebrow}>For founders and investors</p>
-          <h2 className={sectionTitle}>Tools to plan your next venture</h2>
+      {/* Ventures Showcase Grid */}
+      <section id="ventures" className="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800/80">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+          <div>
+            <div className="text-xs font-mono uppercase tracking-widest text-indigo-400 mb-2">Incubated Ventures</div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">The Sevenseed AI Portfolio</h2>
+          </div>
+          <p className="text-slate-400 text-sm max-w-md">
+            Click any venture to launch its dedicated Next.js workstation and test live interactive features in your browser.
+          </p>
         </div>
-        <div data-reveal className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {studioTools.map((tool) => {
-            const Icon = tool.icon;
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {ventures.map((v, idx) => {
+            const Icon = v.icon;
+            const isHighlight = idx === 0 || idx === 1;
             return (
-              <Link key={tool.href} href={tool.href} className="group flex flex-col rounded-3xl border border-[#e4e7ec] bg-white p-6 shadow-sm transition hover:border-[#c4b5fd] hover:shadow-[0_12px_32px_-12px_rgba(16,24,40,0.2)]">
-                <span className="grid h-10 w-10 place-items-center rounded-lg bg-[#f3efff] text-[#6d28d9]"><Icon className="h-5 w-5" /></span>
-                <h3 className="mt-4 text-base font-semibold text-[#0f172a]">{tool.title}</h3>
-                <p className="mt-2 flex-1 text-[15px] leading-relaxed">{tool.desc}</p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#6d28d9]">Open tool <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></span>
-              </Link>
+              <div key={v.id} className="relative rounded-2xl h-full">
+                <CardSpotlight color={`${v.color}22`} className="h-full">
+                  {isHighlight && (
+                    <BorderBeam size={170} duration={10} colorFrom={v.color} colorTo="#6366f1" borderWidth={1.5} />
+                  )}
+                  <Link href={v.href} className="group p-6 flex flex-col justify-between h-full">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div
+                          className="w-12 h-12 rounded-xl flex items-center justify-center text-white"
+                          style={{ backgroundColor: `${v.color}15`, color: v.color }}
+                        >
+                          <Icon className="w-6 h-6" />
+                        </div>
+                        <span className="text-[11px] font-mono text-slate-500 group-hover:text-slate-300 transition-colors flex items-center gap-1">
+                          Launch <ArrowUpRight className="w-3 h-3" />
+                        </span>
+                      </div>
+
+                      <div>
+                        <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400">{v.sector}</span>
+                        <h3 className="font-bold text-lg text-white mt-1 group-hover:text-indigo-400 transition-colors">
+                          {v.name}
+                        </h3>
+                      </div>
+
+                      <p className="text-xs text-slate-400 leading-relaxed">{v.desc}</p>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-slate-800/60 space-y-1.5 font-mono text-[11px]">
+                      <div className="text-slate-300 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                        <span>{v.metrics}</span>
+                      </div>
+                      <div className="text-slate-500">{v.tech}</div>
+                    </div>
+                  </Link>
+                </CardSpotlight>
+              </div>
             );
           })}
         </div>
       </section>
 
-      {/* Idea checklist */}
-      <section id="sandbox" className="scroll-mt-20 border-y border-[#e4e7ec] bg-[#f9fafb]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:py-24">
-          <div>
-            <p className={eyebrow}>Idea checklist</p>
-            <h2 className={sectionTitle}>Is your idea ready to pitch?</h2>
-            <p className={sectionLead}>Describe your idea in a sentence or two. The checklist updates as you type and shows what a stronger pitch would include.</p>
-            <div className="mt-8 space-y-4">
+      {/* Live Portfolio Status + Studio Changelog */}
+      <section className="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800/80">
+        <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
+          <div className="text-xs font-mono uppercase tracking-widest text-indigo-400">Transparency</div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Live, Not Just a Landing Page</h2>
+          <p className="text-slate-400 text-sm sm:text-base">
+            Real uptime checks against every venture route, and an honest log of what shipped and when.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <PortfolioHealthMonitor ventures={ventures} />
+          <StudioChangelog />
+        </div>
+      </section>
+
+      {/* Interactive AI Venture Idea Evaluator (Sandbox) */}
+      <section id="sandbox" className="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800/80">
+        <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-b from-slate-950 to-[#0b0e24] border border-indigo-500/20 shadow-2xl">
+          <div className="max-w-3xl mx-auto text-center space-y-3 mb-10">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-500/30 text-xs font-mono text-indigo-400">
+              <Bot className="w-4 h-4" />
+              <span>Interactive AI Studio Sandbox</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">AI Venture Idea Evaluator</h2>
+            <p className="text-slate-400 text-sm sm:text-base">
+              Test your startup idea against Sevenseed's investment rubric, shared LangGraph infrastructure fit, and bottom-up market sizing.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-5xl mx-auto">
+            {/* Form */}
+            <form onSubmit={handleEvaluate} className="lg:col-span-6 space-y-4 bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80">
               <div>
-                <label htmlFor="eval-name" className={label}>Project name</label>
-                <input id="eval-name" type="text" value={evalName} onChange={(e) => setEvalName(e.target.value)} className={input} />
+                <label className="block text-xs font-mono uppercase text-slate-400 mb-1.5">Venture / Project Name</label>
+                <input
+                  type="text"
+                  value={evalName}
+                  onChange={(e) => setEvalName(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                  required
+                />
               </div>
+
               <div>
-                <label htmlFor="eval-sector" className={label}>Industry</label>
-                <select id="eval-sector" value={evalSector} onChange={(e) => setEvalSector(e.target.value)} className={input}>
+                <label className="block text-xs font-mono uppercase text-slate-400 mb-1.5">Target Industry Sector</label>
+                <select
+                  value={evalSector}
+                  onChange={(e) => setEvalSector(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                >
                   <option>CleanTech & Energy</option>
                   <option>EdTech & Higher Ed</option>
                   <option>Q-Commerce & Retail</option>
@@ -519,129 +884,249 @@ export default function SevenseedHomePage() {
                   <option>GovTech & Citizen Safety</option>
                 </select>
               </div>
+
               <div>
-                <label htmlFor="eval-idea" className={label}>The problem and your AI solution</label>
-                <textarea id="eval-idea" rows={4} value={evalIdea} onChange={(e) => setEvalIdea(e.target.value)} className={input} />
+                <label className="block text-xs font-mono uppercase text-slate-400 mb-1.5">Core Problem & AI Solution</label>
+                <textarea
+                  rows={3}
+                  value={evalIdea}
+                  onChange={(e) => setEvalIdea(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                  required
+                />
               </div>
-            </div>
-          </div>
-          <div className="self-start rounded-3xl border border-[#e4e7ec] bg-white p-6 shadow-sm sm:p-8 lg:sticky lg:top-24" aria-live="polite">
-            <p className="text-sm">{evalName || "Your idea"} · {evalSector}</p>
-            <p className="mt-2 text-5xl font-semibold tracking-[-0.02em] text-[#0f172a]">{fitPassed}<span className="text-[#667085]"> / {fitChecks.length}</span></p>
-            <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#f2f4f7]">
-              <div className="h-full rounded-full bg-[#0f172a] transition-all" style={{ width: `${(fitPassed / fitChecks.length) * 100}%` }} />
-            </div>
-            <ul className="mt-6 space-y-3">
-              {fitResults.map((check) => (
-                <li key={check.label} className={`flex items-center gap-3 text-[15px] ${check.passed ? "font-medium text-[#0f172a]" : ""}`}>
-                  {check.passed ? <CheckCircle2 className="h-5 w-5 shrink-0 text-[#6d28d9]" /> : <Circle className="h-5 w-5 shrink-0 text-[#98a2b3]" />}
-                  {check.label}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 border-t border-[#e4e7ec] pt-4 text-[13px] leading-relaxed">A simple keyword check, not an AI review or an investment decision.</p>
-            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold text-[#6d28d9]">
-              <Link href="/market-sizing" className="inline-flex items-center gap-1 py-1 hover:underline">Size the market <ArrowUpRight className="h-4 w-4" /></Link>
-              <a href="#contact" className="inline-flex items-center gap-1 py-1 hover:underline">Talk to us <ArrowRight className="h-4 w-4" /></a>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Status */}
-      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-24">
-        <div data-reveal className="max-w-2xl">
-          <p className={eyebrow}>Transparency</p>
-          <h2 className={sectionTitle}>Live status and recent releases</h2>
-          <p className={sectionLead}>These checks run in your browser against every venture right now, next to a log of what we recently shipped.</p>
-        </div>
-        <div data-reveal className="mt-10 grid gap-6 lg:grid-cols-2">
-          <PortfolioHealthMonitor ventures={ventures} />
-          <StudioChangelog />
-        </div>
-      </section>
+              <button
+                type="submit"
+                disabled={evaluating}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-sky-500 hover:from-indigo-500 hover:to-sky-400 text-white font-semibold text-sm shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2"
+              >
+                {evaluating ? (
+                  <>
+                    <Activity className="w-4 h-4 animate-spin" /> Evaluating Architecture…
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-4 h-4" /> Evaluate Studio Fit
+                  </>
+                )}
+              </button>
+            </form>
 
-      {/* FAQ */}
-      <section id="faq" className="scroll-mt-20 border-t border-[#e4e7ec]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 sm:px-8 lg:grid-cols-12 lg:py-24">
-          <div className="lg:col-span-4">
-            <p className={eyebrow}>FAQ</p>
-            <h2 className={sectionTitle}>Frequently asked questions</h2>
-          </div>
-          <div className="divide-y divide-[#e4e7ec] border-y border-[#e4e7ec] lg:col-span-8">
-            {faqs.map((faq, index) => {
-              const open = openFaq === index;
-              return (
-                <div key={faq.q}>
-                  <h3>
-                    <button type="button" onClick={() => setOpenFaq(open ? null : index)} aria-expanded={open} className="flex w-full items-center justify-between gap-4 py-5 text-left text-[17px] font-semibold text-[#0f172a] transition hover:text-[#6d28d9]">
-                      {faq.q}
-                      <ChevronDown className={`h-5 w-5 shrink-0 text-[#667085] transition-transform ${open ? "rotate-180" : ""}`} />
-                    </button>
-                  </h3>
-                  {open && <p className="max-w-2xl pb-6 text-[15px] leading-relaxed">{faq.a}</p>}
+            {/* Results Display */}
+            <div className="lg:col-span-6 bg-slate-950 p-6 rounded-2xl border border-slate-800/80 flex flex-col justify-between font-mono">
+              {evalResult && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <div>
+                      <div className="text-xs text-slate-400">STUDIO FIT SCORE</div>
+                      <div className="text-3xl font-black text-indigo-400 mt-1">{evalResult.score} / 100</div>
+                    </div>
+                    <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs">
+                      {evalResult.verdict}
+                    </span>
+                  </div>
+
+                  <div className="space-y-4 text-xs">
+                    <div>
+                      <div className="text-slate-500 uppercase">Estimated TAM</div>
+                      <div className="text-slate-200 mt-0.5">{evalResult.tam}</div>
+                    </div>
+                    <div>
+                      <div className="text-slate-500 uppercase">Platform Synergy</div>
+                      <div className="text-slate-300 mt-0.5 leading-relaxed">{evalResult.synergy}</div>
+                    </div>
+                    <div className="pt-2">
+                      <div className="text-slate-500 uppercase mb-2">Recommended Next Milestones</div>
+                      <div className="space-y-1 text-slate-300">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
+                          <span>Define initial LangGraph multi-agent loop</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
+                          <span>Connect shared ChromaDB vector collection</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
+                          <span>Deploy prototype on port 8000+ FastAPI cluster</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              );
-            })}
+              )}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Contact */}
-      <section id="contact" className="scroll-mt-24 bg-[linear-gradient(160deg,#fde8f3,#efe9ff_55%,#dff3ff)]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:py-24">
-          <div>
-            <p className={eyebrow}>Contact</p>
-            <h2 className={sectionTitle}>Have a bold idea? Let&apos;s build it together.</h2>
-            <p className={`${sectionLead} max-w-md`}>Co-found a venture, invest alongside us, or get help building your own AI product.</p>
-            <ul className="mt-8 space-y-2 text-[15px] text-[#344054]">
-              <li><a href="mailto:hello@sevenseed.in" className="inline-flex items-center gap-3 py-1 hover:text-[#6d28d9]"><Mail className="h-4 w-4 text-[#6d28d9]" /> hello@sevenseed.in</a></li>
-              <li><a href="tel:+918490861586" className="inline-flex items-center gap-3 py-1 hover:text-[#6d28d9]"><Phone className="h-4 w-4 text-[#6d28d9]" /> +91 84908 61586</a></li>
-              <li className="flex items-center gap-3 py-1"><MapPin className="h-4 w-4 text-[#6d28d9]" /> Ahmedabad, Gujarat, India</li>
-            </ul>
+      {/* Incubation Process */}
+      <section className="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800/80">
+        <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
+          <div className="text-xs font-mono uppercase tracking-widest text-indigo-400">Our Method</div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">How We Build AI Companies</h2>
+          <p className="text-slate-400 text-sm sm:text-base">
+            From algorithmic thesis discovery to shared infrastructure scaling in four synchronized stages.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="p-6 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3">
+            <div className="text-xs font-mono text-indigo-400">STAGE 01</div>
+            <h3 className="font-bold text-lg text-white">LLM Market Discovery</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              We scrape industry workflows, analyze margin pools, and identify high-pain bottlenecks where LLMs deliver 10x ROI.
+            </p>
           </div>
+
+          <div className="p-6 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3">
+            <div className="text-xs font-mono text-indigo-400">STAGE 02</div>
+            <h3 className="font-bold text-lg text-white">Shared AI Architecture</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              New startups plug directly into our pre-built LangGraph agents, ChromaDB vector collections, and model inference gateway.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3">
+            <div className="text-xs font-mono text-indigo-400">STAGE 03</div>
+            <h3 className="font-bold text-lg text-white">Rapid 90-Day Build</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Dedicated studio AI engineers pair program alongside domain founders to ship production MVPs in under 12 weeks.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3">
+            <div className="text-xs font-mono text-indigo-400">STAGE 04</div>
+            <h3 className="font-bold text-lg text-white">Portfolio Synergy Scale</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Each company cross-sells within the ecosystem, sharing customer data pipelines and compounding proprietary AI fine-tunes.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section id="faq" className="py-20 px-6 max-w-4xl mx-auto border-t border-slate-800/80">
+        <div className="text-center space-y-3 mb-12">
+          <div className="text-xs font-mono uppercase tracking-widest text-indigo-400">Frequently Asked Questions</div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Everything You Need to Know</h2>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((f, i) => (
+            <div
+              key={i}
+              onClick={() => setOpenFaq(openFaq === i ? null : i)}
+              className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800/80 hover:border-slate-700 cursor-pointer transition-all"
+            >
+              <div className="flex items-center justify-between font-semibold text-white text-base">
+                <span>{f.q}</span>
+                <ChevronRight
+                  className={`w-5 h-5 text-indigo-400 transition-transform ${
+                    openFaq === i ? "rotate-90" : ""
+                  }`}
+                />
+              </div>
+              {openFaq === i && (
+                <p className="mt-3 text-sm text-slate-400 leading-relaxed border-t border-slate-900 pt-3">
+                  {f.a}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-20 px-6 max-w-4xl mx-auto border-t border-slate-800/80">
+        <div className="p-8 sm:p-12 rounded-3xl bg-slate-950/90 border border-slate-800/90 space-y-8">
+          <div className="text-center space-y-2">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Partner with Sevenseed</h2>
+            <p className="text-slate-400 text-sm">
+              Co-found an AI enterprise, invest via our AngelList syndicate, or consult on custom LLM architecture.
+            </p>
+          </div>
+
           {cStatus === "success" ? (
-            <div className="self-start rounded-xl border border-[#c4b5fd] bg-white p-8 shadow-sm" role="status">
-              <CheckCircle2 className="h-8 w-8 text-[#6d28d9]" />
-              <h3 className="mt-4 text-xl font-semibold text-[#0f172a]">Message received.</h3>
-              <p className="mt-2 text-[15px] leading-relaxed">Thank you. We&apos;ll reply to the email address you gave us.</p>
+            <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center space-y-2">
+              <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
+              <h3 className="text-lg font-bold text-white">Message Received!</h3>
+              <p className="text-xs text-slate-300">
+                Thank you. Our founding partners will reach out within 24 hours at the provided email address.
+              </p>
             </div>
           ) : (
-            <form onSubmit={handleContactSubmit} className="space-y-4 rounded-3xl border border-[#e4e7ec] bg-white p-6 shadow-sm sm:p-8">
-              <div className="grid gap-4 sm:grid-cols-2">
+            <form onSubmit={handleContactSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="c-name" className={label}>Your name</label>
-                  <input id="c-name" type="text" autoComplete="name" value={cName} onChange={(e) => setCName(e.target.value)} className={input} required />
+                  <label className="block text-xs font-mono uppercase text-slate-400 mb-1">Your Name</label>
+                  <input
+                    type="text"
+                    value={cName}
+                    onChange={(e) => setCName(e.target.value)}
+                    placeholder="Kunal Patel"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                    required
+                  />
                 </div>
                 <div>
-                  <label htmlFor="c-email" className={label}>Work email</label>
-                  <input id="c-email" type="email" autoComplete="email" value={cEmail} onChange={(e) => setCEmail(e.target.value)} placeholder="you@company.com" className={input} required />
+                  <label className="block text-xs font-mono uppercase text-slate-400 mb-1">Work Email</label>
+                  <input
+                    type="email"
+                    value={cEmail}
+                    onChange={(e) => setCEmail(e.target.value)}
+                    placeholder="kunal@example.com"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                    required
+                  />
                 </div>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2">
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="c-company" className={label}>Company (optional)</label>
-                  <input id="c-company" type="text" autoComplete="organization" value={cCompany} onChange={(e) => setCCompany(e.target.value)} className={input} />
+                  <label className="block text-xs font-mono uppercase text-slate-400 mb-1">Company / Organization</label>
+                  <input
+                    type="text"
+                    value={cCompany}
+                    onChange={(e) => setCCompany(e.target.value)}
+                    placeholder="Studio or Fund Name"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                  />
                 </div>
                 <div>
-                  <label htmlFor="c-type" className={label}>What is this about?</label>
-                  <select id="c-type" value={cType} onChange={(e) => setCType(e.target.value)} className={input}>
+                  <label className="block text-xs font-mono uppercase text-slate-400 mb-1">Inquiry Type</label>
+                  <select
+                    value={cType}
+                    onChange={(e) => setCType(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                  >
                     <option>Venture Co-Founding</option>
-                    <option>Online syndicate / SPV</option>
+                    <option>AngelList Syndicate / SPV</option>
                     <option>Enterprise AI Consultation</option>
                     <option>General Media / Press</option>
                   </select>
                 </div>
               </div>
+
               <div>
-                <label htmlFor="c-message" className={label}>Message</label>
-                <textarea id="c-message" rows={5} value={cMessage} onChange={(e) => setCMessage(e.target.value)} placeholder="What do you want to build or invest in?" className={input} required />
+                <label className="block text-xs font-mono uppercase text-slate-400 mb-1">Message / Proposal</label>
+                <textarea
+                  rows={4}
+                  value={cMessage}
+                  onChange={(e) => setCMessage(e.target.value)}
+                  placeholder="Tell us about what you want to build or invest in…"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                  required
+                />
               </div>
-              {cStatus === "error" && (
-                <p className="text-[15px] text-[#b42318]" role="alert">That didn&apos;t send. Please try again, or email hello@sevenseed.in. Your message is still here.</p>
-              )}
-              <button type="submit" disabled={cStatus === "submitting"} className="ss-btn-primary w-full disabled:opacity-60">
-                {cStatus === "submitting" ? "Sending…" : "Send message"} <Send className="h-4 w-4" />
+
+              <button
+                type="submit"
+                disabled={cStatus === "submitting"}
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-sky-500 hover:from-indigo-500 hover:to-sky-400 text-white font-semibold text-sm shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-2"
+              >
+                {cStatus === "submitting" ? "Forwarding to Studio…" : "Send Message"}
               </button>
             </form>
           )}
@@ -649,73 +1134,165 @@ export default function SevenseedHomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[#e4e7ec] bg-white">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:grid-cols-2 sm:px-8 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <p className="text-lg font-semibold tracking-[-0.01em] text-[#0f172a]">Sevenseed</p>
-            <p className="mt-3 max-w-xs text-[15px] leading-relaxed">An AI venture studio building companies across education, healthcare, retail, construction, public safety and social impact.</p>
+      <footer className="border-t border-slate-800/80 bg-slate-950 py-12 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🌱</span>
+              <span className="font-extrabold text-lg text-white">Sevenseed</span>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              An AI-first venture studio engineering autonomous enterprises across technology, education, healthcare, construction, e-commerce, and public safety.
+            </p>
           </div>
-          <nav aria-label="Ventures" className="lg:col-span-5">
-            <p className="text-sm font-semibold text-[#0f172a]">Ventures</p>
-            <ul className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 text-[15px] sm:grid-cols-2">
-              {ventures.map((venture) => (
-                <li key={venture.id}><Link href={venture.href} className="inline-block py-1 hover:text-[#6d28d9]">{venture.name}</Link></li>
-              ))}
+
+          <div>
+            <div className="font-mono text-xs uppercase text-slate-300 font-bold mb-3">Workstations</div>
+            <ul className="space-y-2 text-xs text-slate-400">
+              <li><Link href="/syndicate-ruv" className="hover:text-white">Syndicate & RUV Simulator</Link></li>
+              <li><Link href="/market-sizing" className="hover:text-white">YC TAM / SAM / SOM Sizer</Link></li>
+              <li><Link href="/ventures" className="hover:text-white">Portfolio Directory</Link></li>
+              <li><Link href="/pricing" className="hover:text-white">Studio Pricing & Terms</Link></li>
+              <li><Link href="/byok" className="hover:text-white">Zero-Margin BYOK Vault</Link></li>
             </ul>
-          </nav>
-          <nav aria-label="Company" className="lg:col-span-3">
-            <p className="text-sm font-semibold text-[#0f172a]">Company</p>
-            <ul className="mt-3 space-y-1 text-[15px]">
-              {studioTools.map((tool) => (
-                <li key={tool.href}><Link href={tool.href} className="inline-block py-1 hover:text-[#6d28d9]">{tool.title}</Link></li>
-              ))}
-              <li><Link href="/pricing" className="inline-block py-1 hover:text-[#6d28d9]">Pricing & terms</Link></li>
+          </div>
+
+          <div>
+            <div className="font-mono text-xs uppercase text-slate-300 font-bold mb-3">Ventures</div>
+            <ul className="space-y-2 text-xs text-slate-400">
+              <li><Link href="/avpu" className="hover:text-white">AVP University</Link></li>
+              <li><Link href="/avp-emart" className="hover:text-white">AVP E-Mart</Link></li>
+              <li><Link href="/comonk" className="hover:text-white">Comonk AI</Link></li>
+              <li><Link href="/sevenforce" className="hover:text-white">Sevenforce</Link></li>
+              <li><Link href="/pharmacy" className="hover:text-white">Decode Forest Pharmacy</Link></li>
+              <li><Link href="/breakdown" className="hover:text-white">Breakdown Factor</Link></li>
             </ul>
-          </nav>
+          </div>
+
+          <div className="space-y-2 text-xs text-slate-400">
+            <div className="font-mono text-xs uppercase text-slate-300 font-bold mb-3">Contact</div>
+            <div className="flex items-center gap-2"><Mail className="w-3.5 h-3.5 text-indigo-400" /> hello@sevenseed.in</div>
+            <div className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-indigo-400" /> +91 84908 61586</div>
+            <div className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-indigo-400" /> Ahmedabad, Gujarat, India</div>
+          </div>
         </div>
-        <div className="mx-auto max-w-7xl border-t border-[#e4e7ec] px-5 py-6 pr-24 text-[13px] sm:px-8">© {new Date().getFullYear()} Sevenseed. All rights reserved.</div>
+
+        <div className="max-w-7xl mx-auto pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
+          <div>© {new Date().getFullYear()} Sevenseed AI Platform. All rights reserved.</div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span>Node.js Next.js 15 App Router · TypeScript React</span>
+          </div>
+        </div>
       </footer>
 
-      {/* Guide */}
-      <button type="button" onClick={() => setChatOpen((prev) => !prev)} aria-label={chatOpen ? "Close the guide" : "Open the guide"} aria-expanded={chatOpen} className="fixed bottom-5 right-5 z-40 grid h-12 w-12 place-items-center rounded-full bg-[#0f172a] text-white shadow-lg transition hover:bg-[#1e293b]">
-        {chatOpen ? <X className="h-5 w-5" /> : <MessageSquare className="h-5 w-5" />}
+      {/* Floating Quick-Nav Dock */}
+      <FloatingDock
+        items={[
+          { label: "Ventures", href: "#ventures", icon: Layers },
+          { label: "AI Evaluator", href: "#sandbox", icon: Bot },
+          { label: "Portfolio Directory", href: "/ventures", icon: Compass },
+          { label: "BYOK Vault", href: "/byok", icon: Key },
+          { label: "FAQ", href: "#faq", icon: HelpCircle },
+          { label: "Contact", href: "#contact", icon: Mail },
+        ]}
+      />
+
+      {/* Floating Chat Assistant Trigger */}
+      <button
+        onClick={() => setChatOpen((prev) => !prev)}
+        className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-gradient-to-tr from-indigo-600 to-sky-500 text-white shadow-2xl shadow-indigo-500/40 hover:scale-105 transition-transform"
+        title="Chat with Sevenseed AI"
+      >
+        <MessageSquare className="w-6 h-6" />
       </button>
 
+      {/* Floating Chat Drawer */}
       {chatOpen && (
-        <div className="fixed bottom-20 right-5 z-40 flex h-[460px] max-h-[calc(100dvh-7rem)] w-[360px] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-3xl border border-[#e4e7ec] bg-white shadow-2xl">
-          <div className="border-b border-[#e4e7ec] px-4 py-3">
-            <p className="text-[15px] font-semibold text-[#0f172a]">Sevenseed guide</p>
-            <p className="text-[13px]">Quick pointers to the right venture</p>
+        <div className="fixed bottom-22 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)] h-[480px] rounded-2xl bg-slate-950 border border-slate-800 shadow-2xl flex flex-col overflow-hidden">
+          <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
+            <div className="flex items-center gap-2">
+              <span className="text-base">🌱</span>
+              <span className="font-bold text-sm text-white">Sevenseed AI Assistant</span>
+            </div>
+            <button onClick={() => setChatOpen(false)} className="text-slate-400 hover:text-white">
+              <X className="w-4 h-4" />
+            </button>
           </div>
-          <div className="flex-1 space-y-3 overflow-y-auto p-4 text-sm" aria-live="polite">
-            {chatMessages.map((message, index) => (
-              <div key={index} className={`max-w-[85%] rounded-lg p-3 leading-relaxed ${message.role === "bot" ? "mr-auto bg-[#f2f4f7] text-[#344054]" : "ml-auto bg-[#0f172a] text-white"}`}>{message.text}</div>
+
+          <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs">
+            {chatMessages.map((m, idx) => (
+              <div
+                key={idx}
+                className={`p-3 rounded-xl max-w-[85%] leading-relaxed ${
+                  m.role === "bot"
+                    ? "bg-slate-900 border border-slate-800 text-slate-200 mr-auto"
+                    : "bg-indigo-600 text-white ml-auto"
+                }`}
+              >
+                {m.text}
+              </div>
             ))}
           </div>
-          <form onSubmit={handleSendChat} className="flex gap-2 border-t border-[#e4e7ec] p-3">
-            <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} placeholder="Ask about a venture…" aria-label="Your question" className="min-w-0 flex-1 rounded-lg border border-[#d0d5dd] px-3 py-2 text-sm text-[#0f172a] placeholder:text-[#667085] focus:border-[#7c3aed] focus:outline-none" />
-            <button type="submit" aria-label="Send" className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#0f172a] text-white"><Send className="h-4 w-4" /></button>
+
+          <form onSubmit={handleSendChat} className="p-3 border-t border-slate-800 bg-slate-900/50 flex gap-2">
+            <input
+              type="text"
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              placeholder="Ask about ventures, tech stack, or deals…"
+              className="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-indigo-500"
+            />
+            <button
+              type="submit"
+              className="p-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white"
+            >
+              <Send className="w-4 h-4" />
+            </button>
           </form>
         </div>
       )}
 
-      {/* Ctrl+K search */}
+      {/* Command Palette Modal (Ctrl+K) */}
       {cmdkOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-[#101828]/50 p-4 pt-[15vh]" onClick={(e) => { if (e.target === e.currentTarget) setCmdkOpen(false); }}>
-          <div role="dialog" aria-modal="true" aria-label="Search ventures" className="w-full max-w-lg overflow-hidden rounded-3xl border border-[#e4e7ec] bg-white shadow-2xl">
-            <div className="flex items-center gap-3 border-b border-[#e4e7ec] p-3">
-              <Search className="h-4 w-4" />
-              <input type="text" autoFocus value={cmdkSearch} onChange={(e) => setCmdkSearch(e.target.value)} placeholder="Search ventures…" aria-label="Search ventures" className="w-full bg-transparent text-[15px] text-[#0f172a] placeholder:text-[#667085] focus:outline-none" />
-              <button type="button" onClick={() => setCmdkOpen(false)} aria-label="Close search" className="hover:text-[#0f172a]"><X className="h-4 w-4" /></button>
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-lg rounded-2xl bg-slate-950 border border-slate-800 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <div className="p-3 border-b border-slate-800 flex items-center gap-3">
+              <Search className="w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                autoFocus
+                value={cmdkSearch}
+                onChange={(e) => setCmdkSearch(e.target.value)}
+                placeholder="Type a venture, tool, or shortcut…"
+                className="w-full bg-transparent text-sm text-white focus:outline-none"
+              />
+              <button onClick={() => setCmdkOpen(false)} className="text-slate-500 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
             </div>
-            <div className="max-h-72 space-y-1 overflow-y-auto p-2">
-              {filteredVentures.map((venture) => (
-                <Link key={venture.id} href={venture.href} onClick={() => setCmdkOpen(false)} className="flex items-center justify-between gap-3 rounded-lg p-2.5 text-sm transition-colors hover:bg-[#f2f4f7]">
-                  <span className="font-medium text-[#0f172a]">{venture.name}</span>
-                  <span className="truncate text-[13px]">{venture.sector}</span>
+
+            <div className="p-2 max-h-72 overflow-y-auto space-y-1">
+              {filteredVentures.map((v) => (
+                <Link
+                  key={v.id}
+                  href={v.href}
+                  onClick={() => setCmdkOpen(false)}
+                  className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-900 text-xs text-slate-300 transition-colors"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="p-1 rounded bg-indigo-500/10 text-indigo-400">🌱</span>
+                    <span className="font-semibold text-white">{v.name}</span>
+                    <span className="text-slate-500">({v.sector})</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-slate-500">{v.href}</span>
                 </Link>
               ))}
-              {filteredVentures.length === 0 && <p className="p-3 text-sm">No venture matches that search.</p>}
+            </div>
+
+            <div className="p-3 border-t border-slate-900 bg-slate-900/40 flex items-center justify-between text-[11px] font-mono text-slate-500">
+              <span>Navigate with arrow keys</span>
+              <span>ESC to close</span>
             </div>
           </div>
         </div>

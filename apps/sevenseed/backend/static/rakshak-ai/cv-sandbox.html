@@ -93,7 +93,7 @@
     .act-btn { padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #cbd5e1; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s; }
     .act-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
   </style>
-<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.3"/></head>
+<script>window.__next_f=window.__next_f||[];</script><link rel="stylesheet" href="/static/aura-21st-ui.css?v=6.1"/></head>
 <body>
 <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
 
@@ -142,7 +142,7 @@
         <option value="sim-traffic">Synthetic Feed: Traffic Intersection Surveillance</option>
         <option value="webcam">Live Hardware: Webcam Stream (Local)</option>
       </select>
-      <button type="button" class="feed-toggle-btn" id="toggleFeedBtn" onclick="toggleFeed()"><i class="fas fa-pause"></i> Pause Engine</button>
+      <button class="feed-toggle-btn" id="toggleFeedBtn" onclick="toggleFeed()"><i class="fas fa-play"></i> Start Engine</button>
     </div>
   </div>
 
@@ -766,6 +766,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<script src="/static/quantum-enhancer.js?v=6.3" defer></script>
+<script src="/static/quantum-enhancer.js?v=6.1" defer></script>
 </body>
 </html>

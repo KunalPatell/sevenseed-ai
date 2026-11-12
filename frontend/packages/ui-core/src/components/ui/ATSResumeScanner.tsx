@@ -39,7 +39,7 @@ export function ATSResumeScanner() {
     <div className="w-full max-w-5xl mx-auto p-6 md:p-8 bg-slate-900/90 border border-slate-800 rounded-2xl shadow-2xl backdrop-blur-xl">
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-semibold uppercase tracking-wider mb-3">
-          <FileText className="w-4 h-4" /> Resume & Job Description Matcher
+          <FileText className="w-4 h-4" /> Jobscan-Grade Semantic Resume Screener
         </div>
         <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
           AI ATS Resume Scorer & Keyword Gap Analyzer

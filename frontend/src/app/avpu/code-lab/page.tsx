@@ -24,7 +24,7 @@ export default function CodeLabRoute() {
               <div className="text-[11px] font-mono uppercase text-emerald-400">AVPU Interactive Coding</div>
               <h1 className="text-xl sm:text-2xl font-bold text-slate-100 flex items-center gap-2">
                 <Code2 className="w-5 h-5 text-emerald-400" />
-                <span>In-Browser Code Lab & Test Runner</span>
+                <span>In-Browser Code Lab & Test Runner (freecodecamp.org)</span>
               </h1>
             </div>
           </div>

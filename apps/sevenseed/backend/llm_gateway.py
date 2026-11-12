@@ -84,17 +84,10 @@ def _call(provider: str, key: str, messages: list[dict], temperature: float, max
     model = os.environ.get(model_env, default_model)
     if provider == "groq" and not user_key:
         model = os.environ.get("GROQ_DEMO_MODEL", "llama-3.1-8b-instant")  # cheaper model on the shared key
-    body = {"model": model, "messages": messages, "temperature": temperature, "max_tokens": max_tokens}
-    if provider == "groq" and "gpt-oss" in model:
-        # Reasoning models spend the token budget on hidden reasoning first; with the
-        # small public cap that left the answer empty on every request.
-        body.update(reasoning_effort="low", include_reasoning=False)
-    r = httpx.post(url, headers={"Authorization": f"Bearer {key}"}, timeout=45, json=body)
+    r = httpx.post(url, headers={"Authorization": f"Bearer {key}"}, timeout=45,
+                   json={"model": model, "messages": messages, "temperature": temperature, "max_tokens": max_tokens})
     r.raise_for_status()
-    text = (r.json()["choices"][0]["message"].get("content") or "").strip()
-    if not text:
-        raise ValueError("empty completion")  # let the next provider try
-    return text
+    return r.json()["choices"][0]["message"]["content"]
 
 
 def _complete(request: Request, messages: list[dict], temperature: float, max_tokens: Optional[int]) -> dict:
