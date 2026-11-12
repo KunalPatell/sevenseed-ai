@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(){try{var t=localStorage.getItem('ss-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Omnichannel WABA, Native Flows v7.1 &amp; DPDP Compliance Hub — Sevenforce</title>
+  <meta name="description" content="Official Meta Cloud API WhatsApp & Telegram automation workstation: 15-node visual flow builder with payment pause/auto-resume, Native Flows v7.1, 25-variable A/B/C/D templates, multi-agent shared inbox + Kanban, WABA cost calculator, and DPDP 2023 / RBI / IRDAI compliance.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #030712; color: #f9fafb; font-family: 'Inter', sans-serif; margin: 0; }
+    [data-theme="light"] body { background: #f8fafc; color: #0f172a; }
+    .hub-container { max-width: 1420px; margin: 0 auto; padding: 88px 24px 72px; }
+    .hud-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hud-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 4px 12px; border-radius: 99px; background: rgba(37,211,102,0.12); color: #25d366; border: 1px solid rgba(37,211,102,0.32); }
+    .hud-header h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(25px, 3.3vw, 36px); font-weight: 800; letter-spacing: -0.5px; margin: 10px 0 6px; }
+    .hud-sub { color: #94a3b8; font-size: 14px; max-width: 820px; line-height: 1.6; margin: 0; }
+
+    .tab-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .tab-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 12px; background: rgba(15,23,42,0.82); border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .tab-btn:hover { border-color: rgba(37,211,102,0.45); color: #fff; }
+    .tab-btn.active { background: linear-gradient(135deg, #10b981, #059669); border-color: #10b981; color: #fff; box-shadow: 0 6px 20px rgba(16,185,129,0.32); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    .grid-2 { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 22px; }
+    .grid-equal { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    @media (max-width: 1060px) { .grid-2, .grid-equal { grid-template-columns: 1fr; } }
+
+    .card-panel { background: rgba(15, 23, 42, 0.78); border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 20px; padding: 22px; backdrop-filter: blur(16px); box-shadow: 0 18px 45px rgba(0,0,0,0.42); }
+    .sec-kicker { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #34d399; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .styled-input { width: 100%; box-sizing: border-box; background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 10px 13px; color: #f8fafc; font-family: 'Inter', sans-serif; font-size: 13px; outline: none; }
+    .styled-input:focus { border-color: #10b981; }
+    .lbl { display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .node-palette { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 16px; }
+    .node-chip { font-size: 11.5px; font-weight: 600; padding: 6px 10px; border-radius: 8px; background: #090e1a; border: 1px solid #1e293b; color: #cbd5e1; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; }
+    .node-chip:hover { border-color: #10b981; color: #34d399; transform: translateY(-1px); }
+
+    .flow-list { display: flex; flex-direction: column; gap: 10px; max-height: 460px; overflow-y: auto; padding-right: 4px; }
+    .flow-node { background: #020617; border: 1px solid rgba(148,163,184,0.2); border-left: 3px solid #10b981; border-radius: 12px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .flow-node.pause-gate { border-left-color: #f59e0b; background: rgba(245,158,11,0.06); }
+    .badge-mini { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: rgba(16,185,129,0.14); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .badge-mini.amber { background: rgba(245,158,11,0.15); color: #fbbf24; border-color: rgba(245,158,11,0.35); }
+    .badge-mini.red { background: rgba(239,68,68,0.16); color: #f87171; border-color: rgba(239,68,68,0.35); }
+
+    .btn-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 16px; border-radius: 10px; border: none; font-weight: 700; font-size: 13px; cursor: pointer; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-family: inherit; transition: all 0.2s; }
+    .btn-action:hover { transform: translateY(-1px); }
+    .btn-sec { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 13px; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0; font-weight: 600; font-size: 12.5px; cursor: pointer; font-family: inherit; }
+    .btn-sec:hover { border-color: #38bdf8; color: #38bdf8; }
+
+    /* Phone Simulator */
+    .phone-mockup { max-width: 430px; margin: 0 auto; background: #0b141a; border: 2px solid #202c33; border-radius: 28px; overflow: hidden; position: relative; box-shadow: 0 22px 55px rgba(0,0,0,0.75); }
+    .phone-header { background: #202c33; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .phone-screen { padding: 16px; min-height: 360px; max-height: 420px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #0b141a; }
+    .wa-bubble { background: #1f2c34; border-radius: 10px; border-top-left-radius: 0; padding: 11px 13px; max-width: 88%; color: #e9edef; font-size: 12.8px; line-height: 1.5; }
+    .wa-bubble.user { background: #005c4b; align-self: flex-end; border-top-left-radius: 10px; border-top-right-radius: 0; }
+    .wa-flow-drawer { position: absolute; inset: 52px 0 0 0; background: #111b21; padding: 18px; display: none; flex-direction: column; justify-content: space-between; z-index: 10; border-top: 2px solid #25d366; }
+    .wa-flow-drawer.open { display: flex; }
+
+    /* Shared Inbox & Kanban */
+    .inbox-layout { display: grid; grid-template-columns: 310px 1fr; gap: 18px; margin-bottom: 22px; }
+    @media (max-width: 900px) { .inbox-layout { grid-template-columns: 1fr; } }
+    .thread-item { padding: 12px; border-radius: 12px; background: #020617; border: 1px solid #1e293b; cursor: pointer; margin-bottom: 8px; transition: border-color 0.15s; }
+    .thread-item.active, .thread-item:hover { border-color: #10b981; }
+    .kanban-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    @media (max-width: 980px) { .kanban-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .kanban-grid { grid-template-columns: 1fr; } }
+    .kanban-col { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 12px; min-height: 190px; }
+    .kanban-card { background: #0f172a; border: 1px solid rgba(148,163,184,0.2); border-radius: 10px; padding: 10px; margin-top: 8px; font-size: 12.5px; }
+
+    /* Cost Cards */
+    .cost-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 16px; }
+    .cost-card { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 16px; }
+    .cost-card.best { border-color: #10b981; background: linear-gradient(180deg, rgba(16,185,129,0.12), #020617); }
+    .mono-val { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 800; color: #fff; margin: 6px 0; }
+
+    #hubToast { position: fixed; bottom: 22px; right: 22px; background: #064e3b; border: 1px solid #10b981; color: #ecfdf5; padding: 11px 18px; border-radius: 12px; font-size: 13px; font-weight: 600; display: none; z-index: 9999; box-shadow: 0 12px 30px rgba(0,0,0,0.5); }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <span class="logo-icon"><i class="fas fa-users-gear"></i></span>
+    <span class="logo-text">Seven <span class="logo-accent">force</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="workflows.html"><i class="fas fa-diagram-project"></i> LangGraph Studio</a>
+    <a href="employees.html"><i class="fas fa-users-gear"></i> 7 AI Employees</a>
+    <a href="whatsapp-studio.html"><i class="fab fa-whatsapp"></i> Broadcast Studio</a>
+    <a href="waba-automation-hub.html" style="color:#25d366;font-weight:700;"><i class="fas fa-sitemap"></i> WABA Cloud Hub</a>
+    <a href="pricing.html"><i class="fas fa-calculator"></i> ROI &amp; Pricing</a>
+    <a href="/byok.html" style="color:#f59e0b;font-weight:700;"><i class="fas fa-key"></i> BYOK Vault</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-ghost sm" href="/"><i class="fas fa-seedling" style="color:#10b981;"></i> Sevenseed Hub</a>
+    <a class="btn btn-ghost sm" href="index.html">← Back to Sevenforce</a>
+  </div>
+</nav>
+
+<main class="hub-container">
+  <div class="hud-header">
+    <div>
+      <span class="hud-tag"><i class="fab fa-whatsapp"></i> Official Meta Cloud API · Telegram Bot · India Regulatory Stack</span>
+      <h1>Sevenforce Omnichannel WABA &amp; Compliance Hub</h1>
+      <p class="hud-sub">
+        15-node visual automation builder with payment-link pause &amp; webhook auto-resume, Native WhatsApp Flows (v7.1), 25-variable A/B/C/D template split lab, multi-agent shared inbox + Kanban CRM, zero-margin cost calculator, and DPDP Act 2023 / RBI / IRDAI compliance audit.
+      </p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <a href="whatsapp-studio.html" class="btn-sec" style="text-decoration:none;"><i class="fab fa-whatsapp" style="color:#25d366;"></i> Broadcast Simulator</a>
+      <a href="/byok.html" class="btn-sec" style="text-decoration:none;"><i class="fas fa-key" style="color:#fbbf24;"></i> ₹0/mo BYOK Key Vault</a>
+    </div>
+  </div>
+
+  <!-- 5 Interactive Workstation Tabs -->
+  <div class="tab-bar" role="tablist">
+    <button type="button" class="tab-btn active" data-tab="tab-flow"><i class="fas fa-diagram-project"></i> 1. 15-Node Flow &amp; Payment Auto-Resume</button>
+    <button type="button" class="tab-btn" data-tab="tab-templates"><i class="fas fa-window-restore"></i> 2. Native Flows v7.1 &amp; 25-Var A/B/C/D Lab</button>
+    <button type="button" class="tab-btn" data-tab="tab-inbox"><i class="fas fa-inbox"></i> 3. Shared Team Inbox &amp; Kanban (WA + TG)</button>
+    <button type="button" class="tab-btn" data-tab="tab-cost"><i class="fas fa-indian-rupee-sign"></i> 4. WABA Cost &amp; Billing Calculator</button>
+    <button type="button" class="tab-btn" data-tab="tab-compliance"><i class="fas fa-scale-balanced"></i> 5. DPDP 2023 · RBI · IRDAI Compliance</button>
+  </div>
+
+  <!-- TAB 1: 15-Node Visual Flow Builder + Payment Link Auto-Resume -->
+  <section id="tab-flow" class="tab-pane active">
+    <div class="grid-2">
+      <div class="card-panel">
+        <div class="sec-kicker"><i class="fas fa-wand-magic-sparkles"></i> Build Automation Flow with AI (15 Node Types)</div>
+        <div style="display:grid;grid-template-columns:1fr 170px 130px;gap:10px;margin-bottom:10px;">
+          <input id="flowPrompt" class="styled-input" value="Convert COD orders to prepaid with ₹75 instant discount link and auto-resume receipt" placeholder="Describe your WhatsApp + Telegram journey...">
+          <select id="flowIndustry" class="styled-input">
+            <option value="d2c">D2C &amp; E-Commerce</option>
+            <option value="bfsi">BFSI &amp; Lending</option>
+            <option value="healthcare">Healthcare &amp; NHCX</option>
+            <option value="edtech">EdTech &amp; Admissions</option>
+          </select>
+          <input id="flowAmt" type="number" class="styled-input" value="1499" min="1" title="Payment Amount (INR)">
+        </div>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:12px;font-size:12.5px;color:#cbd5e1;">
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="flowChkPay" checked> Include Payment Pause/Auto-Resume Node</label>
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="flowChkTg" checked> Mirror High-Intent Alerts to Telegram Bot</label>
+          <button type="button" id="btnBuildFlow" class="btn-action" style="margin-left:auto;"><i class="fas fa-bolt"></i> Build with AI</button>
+        </div>
+
+        <div class="lbl"><span>Click Any of the 15 Node Types to Append to Canvas</span><span id="flowNodeCount">10 Nodes Active</span></div>
+        <div class="node-palette" id="nodePalette"></div>
+
+        <div class="flow-list" id="flowCanvasList"></div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+          <button type="button" id="btnCopyFlowJson" class="btn-sec"><i class="fas fa-copy"></i> Copy Meta Cloud API JSON</button>
+          <button type="button" id="btnDownloadFlowJson" class="btn-sec"><i class="fas fa-download"></i> Export Flow (.json)</button>
+        </div>
+      </div>
+
+      <div class="card-panel">
+        <div class="sec-kicker"><i class="fas fa-mobile-screen"></i> Live Payment Pause → Webhook Auto-Resume Simulator</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;background:#020617;padding:10px 14px;border-radius:12px;border:1px solid #1e293b;">
+          <span style="font-size:12px;color:#94a3b8;">Runtime State: <strong id="simFlowState" class="badge-mini">IDLE_READY</strong></span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button type="button" id="btnSimPause" class="btn-sec" style="border-color:#f59e0b;color:#fbbf24;"><i class="fas fa-pause"></i> 1. Send Payment Link (Pause)</button>
+            <button type="button" id="btnSimWebhook" class="btn-action" style="padding:8px 12px;font-size:12px;"><i class="fas fa-play"></i> 2. Fire Webhook (Auto-Resume)</button>
+          </div>
+        </div>
+
+        <div class="phone-mockup">
+          <div class="phone-header">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:34px;height:34px;border-radius:50%;background:#128c7e;display:flex;align-items:center;justify-content:center;color:#fff;"><i class="fab fa-whatsapp"></i></div>
+              <div>
+                <div style="font-size:13.5px;font-weight:700;color:#e9edef;">Sevenforce Commerce Desk <i class="fas fa-circle-check" style="color:#25d366;font-size:11px;"></i></div>
+                <div style="font-size:11px;color:#8696a0;">Official Cloud API · Webhook Active</div>
+              </div>
+            </div>
+            <button type="button" id="btnResetFlowChat" style="background:rgba(255,255,255,0.08);border:none;color:#cbd5e1;padding:4px 8px;border-radius:6px;font-size:11px;cursor:pointer;">Reset</button>
+          </div>
+          <div class="phone-screen" id="flowPhoneScreen"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: Native WhatsApp Flows (v7.1) & 25-Variable A/B/C/D Template Lab -->
+  <section id="tab-templates" class="tab-pane">
+    <div class="grid-2">
+      <div class="card-panel">
+        <div class="sec-kicker"><i class="fas fa-flask"></i> Meta Template Editor ({{1}}..{{25}}) &amp; A/B/C/D Split Allocator</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+          <div>
+            <label class="lbl" for="tplCategory">Template Category</label>
+            <select id="tplCategory" class="styled-input">
+              <option value="MARKETING">MARKETING (Promotions &amp; Offers)</option>
+              <option value="UTILITY">UTILITY (Order &amp; Billing Alerts)</option>
+              <option value="AUTHENTICATION">AUTHENTICATION (OTP Verification)</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl" for="tplAudienceTotal">Total Campaign Recipients</label>
+            <input id="tplAudienceTotal" type="number" class="styled-input" value="12000" min="100" step="500">
+          </div>
+        </div>
+
+        <div class="lbl"><span>Insert Dynamic Variables ({{1}} to {{25}}) into Variant A</span></div>
+        <div class="node-palette" id="varChipBar" style="margin-top:4px;margin-bottom:12px;"></div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+          <div style="background:#020617;padding:12px;border-radius:12px;border:1px solid #1e293b;">
+            <div class="lbl"><span>Variant A Body</span><span>Split %: <input id="spA" type="number" value="35" min="0" max="100" style="width:52px;background:#0f172a;color:#fff;border:1px solid #334155;border-radius:6px;padding:2px 5px;"></span></div>
+            <textarea id="bodyA" rows="3" class="styled-input">Hi {{1}}, your order {{2}} worth ₹{{3}} is ready! Tap below to book your delivery slot via in-chat Flow.</textarea>
+            <input id="ctaA" class="styled-input" value="Open Secure Form" style="margin-top:6px;" placeholder="CTA (max 25 chars)">
+          </div>
+          <div style="background:#020617;padding:12px;border-radius:12px;border:1px solid #1e293b;">
+            <div class="lbl"><span>Variant B Body</span><span>Split %: <input id="spB" type="number" value="25" min="0" max="100" style="width:52px;background:#0f172a;color:#fff;border:1px solid #334155;border-radius:6px;padding:2px 5px;"></span></div>
+            <textarea id="bodyB" rows="3" class="styled-input">Hey {{1}}, confirm slot for order {{2}} (₹{{3}}) now and unlock priority same-day dispatch.</textarea>
+            <input id="ctaB" class="styled-input" value="Confirm Slot" style="margin-top:6px;">
+          </div>
+          <div style="background:#020617;padding:12px;border-radius:12px;border:1px solid #1e293b;">
+            <div class="lbl"><span>Variant C Body</span><span>Split %: <input id="spC" type="number" value="20" min="0" max="100" style="width:52px;background:#0f172a;color:#fff;border:1px solid #334155;border-radius:6px;padding:2px 5px;"></span></div>
+            <textarea id="bodyC" rows="2" class="styled-input">Namaste {{1}}, complete 1-tap slot selection for shipment {{2}}.</textarea>
+            <input id="ctaC" class="styled-input" value="Pick Time Slot" style="margin-top:6px;">
+          </div>
+          <div style="background:#020617;padding:12px;border-radius:12px;border:1px solid #1e293b;">
+            <div class="lbl"><span>Variant D Body</span><span>Split %: <input id="spD" type="number" value="20" min="0" max="100" style="width:52px;background:#0f172a;color:#fff;border:1px solid #334155;border-radius:6px;padding:2px 5px;"></span></div>
+            <textarea id="bodyD" rows="2" class="styled-input">Hi {{1}}, your package {{2}} awaits slot confirmation. Reply STOP to opt out.</textarea>
+            <input id="ctaD" class="styled-input" value="Select Window" style="margin-top:6px;">
+          </div>
+        </div>
+
+        <button type="button" id="btnRunAbSim" class="btn-action"><i class="fas fa-vial-circle-check"></i> Validate Variables &amp; Allocate A/B/C/D Cohorts</button>
+        <div id="abSimOutput" style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;"></div>
+      </div>
+
+      <div class="card-panel">
+        <div class="sec-kicker"><i class="fas fa-window-restore"></i> Interactive Native WhatsApp Flow (v7.1) In-Chat Form</div>
+        <p style="font-size:12.5px;color:#94a3b8;margin:0 0 12px;">Click <strong>"Open Native Flow v7.1 Form"</strong> inside the phone below to test an encrypted full-screen in-chat appointment &amp; order configuration screen.</p>
+        <div class="phone-mockup">
+          <div class="phone-header">
+            <div style="font-size:13px;font-weight:700;color:#e9edef;"><i class="fab fa-whatsapp" style="color:#25d366;"></i> Native Flow v7.1 Sandbox</div>
+            <span class="badge-mini">AES-GCM Webhook</span>
+          </div>
+          <div class="phone-screen" id="v71ChatThread">
+            <div class="wa-bubble">
+              <div style="font-weight:800;color:#25d366;margin-bottom:4px;">Sevenforce Express Desk</div>
+              <div id="v71PreviewBody">Hi Aarav, your order #SF-4092 worth ₹1,499 is ready! Tap below to book your delivery slot via in-chat Flow.</div>
+              <button type="button" id="btnOpenNativeFlow" class="btn-action" style="width:100%;margin-top:10px;padding:9px;"><i class="fas fa-up-right-from-square"></i> Open Native Flow v7.1 Form</button>
+            </div>
+          </div>
+          <!-- Full-screen Native Flow Drawer -->
+          <div class="wa-flow-drawer" id="nativeFlowDrawer">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <strong style="font-size:14px;color:#25d366;">Configure Delivery &amp; Slot (v7.1)</strong>
+                <button type="button" id="btnCloseNativeFlow" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:15px;"><i class="fas fa-xmark"></i></button>
+              </div>
+              <label class="lbl" for="nfSlot">Preferred Window</label>
+              <select id="nfSlot" class="styled-input" style="margin-bottom:10px;">
+                <option value="Today · 4:00 PM – 7:00 PM">Today · 4:00 PM – 7:00 PM</option>
+                <option value="Tomorrow · 10:00 AM – 1:00 PM">Tomorrow · 10:00 AM – 1:00 PM</option>
+                <option value="Saturday · 11:00 AM – 2:00 PM">Saturday · 11:00 AM – 2:00 PM</option>
+              </select>
+              <label class="lbl" for="nfPayMode">Payment Preference</label>
+              <select id="nfPayMode" class="styled-input" style="margin-bottom:10px;">
+                <option value="UPI Instant (Save ₹75)">UPI Instant (Save ₹75)</option>
+                <option value="Card / NetBanking">Card / NetBanking</option>
+                <option value="Pay on Delivery">Pay on Delivery</option>
+              </select>
+              <label class="lbl" for="nfNote">Gate / Landmark Note</label>
+              <input id="nfNote" class="styled-input" value="Leave with Tower B Concierge">
+            </div>
+            <button type="button" id="btnSubmitNativeFlow" class="btn-action" style="width:100%;"><i class="fas fa-lock"></i> Submit Encrypted Flow Payload</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: Shared Multi-Agent Inbox (WhatsApp + Telegram) & Kanban Pipeline -->
+  <section id="tab-inbox" class="tab-pane">
+    <div class="card-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+        <div class="sec-kicker" style="margin:0;"><i class="fas fa-comments"></i> Multi-Agent Shared Team Inbox (WhatsApp Cloud + Telegram Bot)</div>
+        <div style="display:flex;gap:6px;">
+          <button type="button" class="btn-sec inbox-filter" data-ch="ALL">All Channels (4)</button>
+          <button type="button" class="btn-sec inbox-filter" data-ch="WA"><i class="fab fa-whatsapp" style="color:#25d366;"></i> WhatsApp</button>
+          <button type="button" class="btn-sec inbox-filter" data-ch="TG"><i class="fab fa-telegram" style="color:#38bdf8;"></i> Telegram</button>
+        </div>
+      </div>
+
+      <div class="inbox-layout">
+        <div id="inboxThreadList"></div>
+        <div style="background:#020617;border:1px solid #1e293b;border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;min-height:300px;">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-bottom:12px;border-bottom:1px solid #1e293b;">
+              <div>
+                <strong id="activeLeadName" style="font-size:15px;">Riya Mehta</strong>
+                <span id="activeLeadChannel" class="badge-mini" style="margin-left:8px;">WhatsApp</span>
+                <span id="activeLeadSla" class="badge-mini amber" style="margin-left:6px;">SLA: 08m left</span>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <select id="assignAgentSel" class="styled-input" style="width:auto;padding:6px 10px;font-size:12px;">
+                  <option value="Wave (Sales AI)">Assigned: Wave (Sales AI)</option>
+                  <option value="Maya (Growth AI)">Assigned: Maya (Growth AI)</option>
+                  <option value="Scout (HR AI)">Assigned: Scout (HR AI)</option>
+                  <option value="Human Escalation Desk">Assigned: Human Escalation Desk</option>
+                </select>
+                <select id="moveStageSel" class="styled-input" style="width:auto;padding:6px 10px;font-size:12px;">
+                  <option value="New Inbound">Stage: New Inbound</option>
+                  <option value="AI Qualified">Stage: AI Qualified</option>
+                  <option value="Payment Pending">Stage: Payment Pending</option>
+                  <option value="Closed Won">Stage: Closed Won</option>
+                </select>
+              </div>
+            </div>
+            <div id="activeChatMessages" style="padding:14px 0;max-height:210px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+
+          <div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+              <button type="button" class="node-chip quick-macro" data-msg="Sharing your instant ₹0-markup UPI checkout link now — chat will auto-confirm once paid.">⚡ Send Payment Link Macro</button>
+              <button type="button" class="node-chip quick-macro" data-msg="Your cashless pre-authorisation packet has been logged (1-hr TAT).">🏥 IRDAI 1-Hr TAT Update</button>
+              <button type="button" class="node-chip quick-macro" data-msg="Syncing your request to our human specialist with full context.">🤝 Human Handoff Note</button>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <input id="inboxReplyInput" class="styled-input" placeholder="Reply across WhatsApp / Telegram as assigned agent...">
+              <button type="button" id="btnSendInboxReply" class="btn-action"><i class="fas fa-paper-plane"></i> Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-kicker"><i class="fas fa-table-columns"></i> Live Synced Kanban Lead Pipeline</div>
+      <div class="kanban-grid" id="kanbanBoard"></div>
+    </div>
+  </section>
+
+  <!-- TAB 4: Dual-Engine WABA Cost & Billing Calculator -->
+  <section id="tab-cost" class="tab-pane">
+    <div class="card-panel">
+      <div class="sec-kicker"><i class="fas fa-calculator"></i> Official Meta Cloud API (India INR) Monthly Expenditure &amp; Billing Model Simulator</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:12px;">
+        <div>
+          <div class="lbl"><span>Marketing Messages</span><strong id="lblMkt" style="color:#fff;">15,000</strong></div>
+          <input type="range" id="slMkt" min="0" max="100000" step="1000" value="15000" style="width:100%;accent-color:#10b981;">
+          <div style="font-size:11px;color:#64748b;">Meta India base: ₹0.7846 / msg</div>
+        </div>
+        <div>
+          <div class="lbl"><span>Utility Messages</span><strong id="lblUtil" style="color:#fff;">8,000</strong></div>
+          <input type="range" id="slUtil" min="0" max="100000" step="1000" value="8000" style="width:100%;accent-color:#38bdf8;">
+          <div style="font-size:11px;color:#64748b;">Meta India base: ₹0.1150 / msg</div>
+        </div>
+        <div>
+          <div class="lbl"><span>Authentication OTPs</span><strong id="lblAuth" style="color:#fff;">4,000</strong></div>
+          <input type="range" id="slAuth" min="0" max="50000" step="500" value="4000" style="width:100%;accent-color:#a855f7;">
+          <div style="font-size:11px;color:#64748b;">Meta India base: ₹0.1150 / msg</div>
+        </div>
+        <div>
+          <div class="lbl"><span>24h Service Replies (Free)</span><strong id="lblSvc" style="color:#fff;">12,000</strong></div>
+          <input type="range" id="slSvc" min="0" max="100000" step="1000" value="12000" style="width:100%;accent-color:#25d366;">
+          <div style="font-size:11px;color:#64748b;">User-initiated 24h window: ₹0.00</div>
+        </div>
+        <div>
+          <div class="lbl"><span>Shared Inbox Seats</span><strong id="lblSeats" style="color:#fff;">8 Seats</strong></div>
+          <input type="range" id="slSeats" min="1" max="30" step="1" value="8" style="width:100%;accent-color:#f59e0b;">
+          <div style="font-size:11px;color:#64748b;">Sevenforce BYOK seat fee: ₹0</div>
+        </div>
+      </div>
+
+      <div class="cost-grid" id="costCardsContainer"></div>
+    </div>
+  </section>
+
+  <!-- TAB 5: India Regulatory Compliance Engine (DPDP 2023, RBI, IRDAI/NHCX) -->
+  <section id="tab-compliance" class="tab-pane">
+    <div class="grid-equal">
+      <div class="card-panel">
+        <div class="sec-kicker"><i class="fas fa-shield-halved"></i> Pre-Send Regulatory Guardrail Linter (DPDP 2023 · RBI · IRDAI)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+          <div>
+            <label class="lbl" for="cmpFramework">Regulatory Framework</label>
+            <select id="cmpFramework" class="styled-input">
+              <option value="DPDP_2023">DPDP Act 2023 (Consent &amp; PII Masking)</option>
+              <option value="RBI_RECOVERY">RBI Master Directions (08:00–19:00 IST)</option>
+              <option value="IRDAI_NHCX">IRDAI Cashless &amp; NHCX Claim Desk</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl" for="cmpHour">Scheduled Send Hour (IST): <strong id="cmpHourLbl" style="color:#fff;">11:00 IST</strong></label>
+            <input type="range" id="cmpHour" min="0" max="23" value="11" style="width:100%;accent-color:#10b981;margin-top:6px;">
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;font-size:12.5px;">
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" id="cmpConsent" checked> Affirmative Opt-In Consent Logged (Sec. 6)</label>
+          <button type="button" class="node-chip" id="btnPresetViolation">Test 21:00 IST + Unmasked PAN Violation</button>
+          <button type="button" class="node-chip" id="btnPresetClean">Load Compliant Template</button>
+        </div>
+
+        <label class="lbl" for="cmpMessage">Outbound Template Text</label>
+        <textarea id="cmpMessage" rows="4" class="styled-input">Namaste {{1}}, your health policy claim #{{2}} pre-authorisation is under cashless review (1-hr IRDAI TAT). Helpline: 1800-000-000. Reply STOP to opt out.</textarea>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+          <button type="button" id="btnRunCompliance" class="btn-action"><i class="fas fa-gavel"></i> Run Compliance Audit &amp; Log Hash</button>
+          <button type="button" id="btnExportDpdp" class="btn-sec"><i class="fas fa-file-export"></i> Export DPDP Data (.json)</button>
+          <button type="button" id="btnTriggerErasure" class="btn-sec" style="border-color:#ef4444;color:#f87171;"><i class="fas fa-user-slash"></i> Simulate STOP / Right-to-Erasure</button>
+        </div>
+
+        <div id="cmpAuditResult" style="margin-top:14px;"></div>
+      </div>
+
+      <div class="card-panel">
+        <div class="sec-kicker"><i class="fas fa-fingerprint"></i> Append-Only SHA-256 DPDP Consent &amp; Erasure Audit Ledger</div>
+        <p style="font-size:12.5px;color:#94a3b8;margin:0 0 12px;">Every consent check, message audit, and citizen <code>STOP</code> withdrawal appends a verifiable cryptographic entry across WABA contacts, message logs, sheet cache, and CRM cards.</p>
+        <div id="dpdpLedgerList" class="flow-list"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="hubToast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  function toast(msg) {
+    var el = document.getElementById('hubToast');
+    el.textContent = msg;
+    el.style.display = 'block';
+    clearTimeout(window._hubToastTimer);
+    window._hubToastTimer = setTimeout(function () { el.style.display = 'none'; }, 3000);
+  }
+
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('.tab-pane').forEach(function (p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      var target = document.getElementById(btn.getAttribute('data-tab'));
+      if (target) target.classList.add('active');
+    });
+  });
+
+  // ── TAB 1: 15-Node Flow Builder & Payment Pause/Resume ────────────────
+  var currentFlowData = null;
+  var currentNodes = [];
+
+  function renderFlowNodes() {
+    var list = document.getElementById('flowCanvasList');
+    document.getElementById('flowNodeCount').textContent = currentNodes.length + ' Nodes Active';
+    list.innerHTML = currentNodes.map(function (n, idx) {
+      var isPause = n.type === 'RAZORPAY_PAYMENT_PAUSE' || n.status === 'PAUSE_GATE';
+      return '<div class="flow-node ' + (isPause ? 'pause-gate' : '') + '">' +
+        '<div>' +
+          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
+            '<span class="badge-mini ' + (isPause ? 'amber' : '') + '">' + (idx + 1) + ' · ' + n.type + '</span>' +
+            '<strong style="font-size:13.5px;color:#fff;">' + n.title + '</strong>' +
+          '</div>' +
+          '<div style="font-size:12px;color:#94a3b8;">' + n.detail + '</div>' +
+        '</div>' +
+        '<button type="button" data-rm="' + idx + '" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:13px;" title="Remove node"><i class="fas fa-trash"></i></button>' +
+      '</div>';
+    }).join('');
+    list.querySelectorAll('[data-rm]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = parseInt(b.getAttribute('data-rm'), 10);
+        currentNodes.splice(i, 1);
+        renderFlowNodes();
+      });
+    });
+  }
+
+  async function buildFlow() {
+    var payload = {
+      prompt: document.getElementById('flowPrompt').value,
+      industry: document.getElementById('flowIndustry').value,
+      payment_amount_inr: parseFloat(document.getElementById('flowAmt').value) || 1499,
+      include_payment_pause: document.getElementById('flowChkPay').checked,
+      include_telegram: document.getElementById('flowChkTg').checked
+    };
+    var res = await fetch('/api/sevenforce/waba/build-flow', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    var d = await res.json();
+    currentFlowData = d;
+    currentNodes = d.nodes || [];
+    renderFlowNodes();
+
+    var pal = document.getElementById('nodePalette');
+    if (!pal.innerHTML && d.available_node_catalog) {
+      pal.innerHTML = d.available_node_catalog.map(function (c) {
+        return '<button type="button" class="node-chip" data-ntype="' + c.type + '" data-nlabel="' + c.label + '">' +
+          '<i class="fas ' + c.icon + '" style="color:#10b981;"></i> ' + c.label + '</button>';
+      }).join('');
+      pal.querySelectorAll('.node-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          currentNodes.push({
+            id: 'n' + (currentNodes.length + 1),
+            type: chip.getAttribute('data-ntype'),
+            title: chip.getAttribute('data-nlabel'),
+            detail: 'Appended interactive step in omnichannel execution graph.',
+            status: chip.getAttribute('data-ntype') === 'RAZORPAY_PAYMENT_PAUSE' ? 'PAUSE_GATE' : 'ACTIVE'
+          });
+          renderFlowNodes();
+          toast('Added node: ' + chip.getAttribute('data-nlabel'));
+        });
+      });
+    }
+  }
+
+  function resetFlowPhone() {
+    var amt = parseInt(document.getElementById('flowAmt').value, 10) || 1499;
+    document.getElementById('simFlowState').textContent = 'IDLE_READY';
+    document.getElementById('simFlowState').className = 'badge-mini';
+    document.getElementById('flowPhoneScreen').innerHTML =
+      '<div class="wa-bubble">' +
+        '<div style="font-weight:800;color:#25d366;margin-bottom:4px;">Order #SF-8821 Received</div>' +
+        '<div>Hi Customer, switch your ₹' + amt.toLocaleString('en-IN') + ' order to prepaid now for ₹75 instant discount!</div>' +
+      '</div>';
+  }
+
+  document.getElementById('btnSimPause').addEventListener('click', function () {
+    var amt = Math.max(1, (parseInt(document.getElementById('flowAmt').value, 10) || 1499) - 75);
+    var st = document.getElementById('simFlowState');
+    st.textContent = 'PAUSED_AWAITING_PAYMENT';
+    st.className = 'badge-mini amber';
+    var scr = document.getElementById('flowPhoneScreen');
+    scr.innerHTML +=
+      '<div class="wa-bubble" style="border-left:3px solid #f59e0b;">' +
+        '<div style="font-weight:800;color:#fbbf24;">💳 Instant Payment Link Generated</div>' +
+        '<div>Amount: <strong>₹' + amt.toLocaleString('en-IN') + '</strong><br>Link: <code>pay.sevenforce.in/plink_8821</code><br><em style="color:#94a3b8;font-size:11.5px;">Flow paused until webhook confirms payment...</em></div>' +
+      '</div>';
+    scr.scrollTop = scr.scrollHeight;
+  });
+
+  document.getElementById('btnSimWebhook').addEventListener('click', function () {
+    var st = document.getElementById('simFlowState');
+    st.textContent = 'RESUMED_COMPLETED';
+    st.className = 'badge-mini';
+    var scr = document.getElementById('flowPhoneScreen');
+    scr.innerHTML +=
+      '<div class="wa-bubble user"><div>✓ Webhook: payment.captured (UPIVerified)</div></div>' +
+      '<div class="wa-bubble" style="border-left:3px solid #10b981;">' +
+        '<div style="font-weight:800;color:#25d366;">✅ Payment Confirmed — Flow Auto-Resumed!</div>' +
+        '<div>Receipt #RCPT-8821 generated, 2-way sheet updated, Telegram alert dispatched, and priority shipment scheduled!</div>' +
+      '</div>';
+    scr.scrollTop = scr.scrollHeight;
+    toast('Webhook captured — paused flow automatically resumed!');
+  });
+
+  document.getElementById('btnResetFlowChat').addEventListener('click', resetFlowPhone);
+  document.getElementById('btnBuildFlow').addEventListener('click', function () { buildFlow().then(function () { toast('15-node AI flow synthesized!'); }); });
+  document.getElementById('btnCopyFlowJson').addEventListener('click', function () {
+    var txt = JSON.stringify(currentFlowData || { nodes: currentNodes }, null, 2);
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).catch(function () {});
+    toast('Meta Cloud API Flow JSON copied!');
+  });
+  document.getElementById('btnDownloadFlowJson').addEventListener('click', function () {
+    var blob = new Blob([JSON.stringify(currentFlowData || { nodes: currentNodes }, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'sevenforce-waba-flow.json';
+    a.click();
+    toast('Exported sevenforce-waba-flow.json');
+  });
+
+  // ── TAB 2: 25-Var Template Chip Bar + A/B/C/D Sim + Native Flow v7.1 ──
+  var varBar = document.getElementById('varChipBar');
+  var chipsHtml = '';
+  for (var v = 1; v <= 25; v++) {
+    chipsHtml += '<button type="button" class="node-chip" data-var="{{' + v + '}}">{{' + v + '}}</button>';
+  }
+  varBar.innerHTML = chipsHtml;
+  varBar.querySelectorAll('[data-var]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var ta = document.getElementById('bodyA');
+      ta.value = ta.value + ' ' + btn.getAttribute('data-var');
+      toast('Inserted ' + btn.getAttribute('data-var') + ' into Variant A');
+    });
+  });
+
+  async function runAbSim() {
+    var payload = {
+      category: document.getElementById('tplCategory').value,
+      total_recipients: parseInt(document.getElementById('tplAudienceTotal').value, 10) || 12000,
+      variants: [
+        { name: 'Variant A', body: document.getElementById('bodyA').value, cta: document.getElementById('ctaA').value, split_pct: parseFloat(document.getElementById('spA').value) || 0 },
+        { name: 'Variant B', body: document.getElementById('bodyB').value, cta: document.getElementById('ctaB').value, split_pct: parseFloat(document.getElementById('spB').value) || 0 },
+        { name: 'Variant C', body: document.getElementById('bodyC').value, cta: document.getElementById('ctaC').value, split_pct: parseFloat(document.getElementById('spC').value) || 0 },
+        { name: 'Variant D', body: document.getElementById('bodyD').value, cta: document.getElementById('ctaD').value, split_pct: parseFloat(document.getElementById('spD').value) || 0 }
+      ]
+    };
+    var res = await fetch('/api/sevenforce/waba/template-ab-sim', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    var d = await res.json();
+    document.getElementById('abSimOutput').innerHTML = (d.variants || []).map(function (vr) {
+      return '<div class="cost-card">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+          '<strong>' + vr.name + ' (' + vr.split_pct + '%)</strong>' +
+          '<span class="badge-mini ' + (vr.meta_linter_valid ? '' : 'red') + '">' + (vr.meta_linter_valid ? 'META VALID' : 'LINT ISSUE') + '</span>' +
+        '</div>' +
+        '<div style="font-size:18px;font-weight:800;font-family:monospace;margin:6px 0;color:#38bdf8;">' + vr.cohort_recipients.toLocaleString('en-IN') + ' recipients</div>' +
+        '<div style="font-size:11.5px;color:#94a3b8;">Vars: ' + (vr.variables_detected.join(', ') || 'None') + '</div>' +
+        (vr.linter_issues.length ? '<div style="font-size:11px;color:#f87171;margin-top:4px;">' + vr.linter_issues.join(' ') + '</div>' : '') +
+      '</div>';
+    }).join('');
+  }
+  document.getElementById('btnRunAbSim').addEventListener('click', runAbSim);
+
+  document.getElementById('btnOpenNativeFlow').addEventListener('click', function () {
+    document.getElementById('nativeFlowDrawer').classList.add('open');
+  });
+  document.getElementById('btnCloseNativeFlow').addEventListener('click', function () {
+    document.getElementById('nativeFlowDrawer').classList.remove('open');
+  });
+  document.getElementById('btnSubmitNativeFlow').addEventListener('click', function () {
+    var slot = document.getElementById('nfSlot').value;
+    var pay = document.getElementById('nfPayMode').value;
+    var note = document.getElementById('nfNote').value;
+    document.getElementById('nativeFlowDrawer').classList.remove('open');
+    var th = document.getElementById('v71ChatThread');
+    th.innerHTML +=
+      '<div class="wa-bubble user"><div>📋 Flow v7.1 Submitted: ' + slot + ' · ' + pay + '</div></div>' +
+      '<div class="wa-bubble"><div style="font-weight:800;color:#25d366;">✓ Slot Confirmed via Encrypted Webhook</div><div>Window: ' + slot + '<br>Mode: ' + pay + '<br>Note: ' + note + '</div></div>';
+    th.scrollTop = th.scrollHeight;
+    toast('Native WhatsApp Flow v7.1 response captured!');
+  });
+
+  // ── TAB 3: Shared Multi-Agent Inbox & Kanban Pipeline ─────────────────
+  var leads = [
+    { id: 'L1', name: 'Riya Mehta · D2C Skincare', ch: 'WA', sla: '08m left', agent: 'Wave (Sales AI)', stage: 'Payment Pending', msgs: [{ from: 'lead', text: 'Can I switch my ₹2,199 COD kit to UPI and get express delivery?' }, { from: 'agent', text: 'Yes! Tap the UPI link above for ₹75 instant off + same-day dispatch.' }] },
+    { id: 'L2', name: 'Vikram Desai · FinServe NBFC', ch: 'WA', sla: '14m left', agent: 'Scout (HR AI)', stage: 'AI Qualified', msgs: [{ from: 'lead', text: 'Need DPDP + RBI 8AM–7PM guardrails for 40k monthly EMI reminders.' }] },
+    { id: 'L3', name: 'Dr. Kavita Nair · Apex Multispecialty', ch: 'TG', sla: '05m left', agent: 'Maya (Growth AI)', stage: 'New Inbound', msgs: [{ from: 'lead', text: 'Connected our Telegram OPD bot — can patients book slots into the same inbox?' }] },
+    { id: 'L4', name: 'Arjun Kulkarni · CloudSprint SaaS', ch: 'TG', sla: 'Cleared', agent: 'Human Escalation Desk', stage: 'Closed Won', msgs: [{ from: 'lead', text: 'Annual 15-seat BYOK cluster approved. Invoice paid!' }] }
+  ];
+  var activeLeadId = 'L1';
+  var channelFilter = 'ALL';
+
+  function renderInboxAndKanban() {
+    var filtered = leads.filter(function (l) { return channelFilter === 'ALL' || l.ch === channelFilter; });
+    var tList = document.getElementById('inboxThreadList');
+    tList.innerHTML = filtered.map(function (l) {
+      return '<div class="thread-item ' + (l.id === activeLeadId ? 'active' : '') + '" data-lid="' + l.id + '">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">' +
+          '<strong style="font-size:13px;color:#fff;">' + l.name + '</strong>' +
+          '<span class="badge-mini">' + (l.ch === 'WA' ? 'WhatsApp' : 'Telegram') + '</span>' +
+        '</div>' +
+        '<div style="font-size:11.5px;color:#94a3b8;">' + l.agent + ' · <strong>' + l.stage + '</strong></div>' +
+      '</div>';
+    }).join('');
+    tList.querySelectorAll('[data-lid]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        activeLeadId = el.getAttribute('data-lid');
+        renderInboxAndKanban();
+      });
+    });
+
+    var cur = leads.find(function (l) { return l.id === activeLeadId; }) || leads[0];
+    document.getElementById('activeLeadName').textContent = cur.name;
+    document.getElementById('activeLeadChannel').textContent = cur.ch === 'WA' ? 'WhatsApp Cloud' : 'Telegram Bot';
+    document.getElementById('activeLeadSla').textContent = 'SLA: ' + cur.sla;
+    document.getElementById('assignAgentSel').value = cur.agent;
+    document.getElementById('moveStageSel').value = cur.stage;
+    document.getElementById('activeChatMessages').innerHTML = cur.msgs.map(function (m) {
+      return '<div class="wa-bubble ' + (m.from === 'agent' ? 'user' : '') + '">' + m.text + '</div>';
+    }).join('');
+
+    var stages = ['New Inbound', 'AI Qualified', 'Payment Pending', 'Closed Won'];
+    document.getElementById('kanbanBoard').innerHTML = stages.map(function (st) {
+      var cards = leads.filter(function (l) { return l.stage === st; }).map(function (l) {
+        return '<div class="kanban-card">' +
+          '<strong>' + l.name + '</strong>' +
+          '<div style="font-size:11px;color:#94a3b8;margin-top:4px;">' + (l.ch === 'WA' ? 'WhatsApp' : 'Telegram') + ' · ' + l.agent + '</div>' +
+        '</div>';
+      }).join('');
+      return '<div class="kanban-col"><div class="lbl"><span>' + st + '</span></div>' + (cards || '<div style="font-size:11.5px;color:#475569;margin-top:8px;">No leads</div>') + '</div>';
+    }).join('');
+  }
+
+  document.querySelectorAll('.inbox-filter').forEach(function (b) {
+    b.addEventListener('click', function () { channelFilter = b.getAttribute('data-ch'); renderInboxAndKanban(); });
+  });
+  document.getElementById('assignAgentSel').addEventListener('change', function (e) {
+    var cur = leads.find(function (l) { return l.id === activeLeadId; });
+    if (cur) { cur.agent = e.target.value; renderInboxAndKanban(); toast('Assigned to ' + cur.agent); }
+  });
+  document.getElementById('moveStageSel').addEventListener('change', function (e) {
+    var cur = leads.find(function (l) { return l.id === activeLeadId; });
+    if (cur) { cur.stage = e.target.value; renderInboxAndKanban(); toast('Moved to ' + cur.stage); }
+  });
+  function sendInboxMsg(txt) {
+    if (!txt) return;
+    var cur = leads.find(function (l) { return l.id === activeLeadId; });
+    if (cur) { cur.msgs.push({ from: 'agent', text: txt }); cur.sla = 'Responded ✓'; renderInboxAndKanban(); }
+  }
+  document.getElementById('btnSendInboxReply').addEventListener('click', function () {
+    var inp = document.getElementById('inboxReplyInput');
+    sendInboxMsg(inp.value.trim());
+    inp.value = '';
+  });
+  document.querySelectorAll('.quick-macro').forEach(function (m) {
+    m.addEventListener('click', function () { sendInboxMsg(m.getAttribute('data-msg')); });
+  });
+
+  // ── TAB 4: WABA Cost & Billing Model Calculator ───────────────────────
+  async function updateCostCalc() {
+    var mkt = parseInt(document.getElementById('slMkt').value, 10);
+    var util = parseInt(document.getElementById('slUtil').value, 10);
+    var auth = parseInt(document.getElementById('slAuth').value, 10);
+    var svc = parseInt(document.getElementById('slSvc').value, 10);
+    var seats = parseInt(document.getElementById('slSeats').value, 10);
+    document.getElementById('lblMkt').textContent = mkt.toLocaleString('en-IN');
+    document.getElementById('lblUtil').textContent = util.toLocaleString('en-IN');
+    document.getElementById('lblAuth').textContent = auth.toLocaleString('en-IN');
+    document.getElementById('lblSvc').textContent = svc.toLocaleString('en-IN');
+    document.getElementById('lblSeats').textContent = seats + ' Seats';
+
+    var res = await fetch('/api/sevenforce/waba/cost-calculator', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ marketing_msgs: mkt, utility_msgs: util, auth_msgs: auth, service_msgs: svc, seats: seats })
+    });
+    var d = await res.json();
+    var m = d.models_monthly_inr;
+    document.getElementById('costCardsContainer').innerHTML =
+      '<div class="cost-card best">' +
+        '<span class="badge-mini">₹0/mo Platform Fee · Direct Meta</span>' +
+        '<h4 style="margin:8px 0 2px;">Sevenforce Sovereign BYOK</h4>' +
+        '<div class="mono-val" style="color:#34d399;">₹' + Math.round(m.sevenforce_zero_margin_byok).toLocaleString('en-IN') + '<span style="font-size:12px;color:#94a3b8;">/mo</span></div>' +
+        '<div style="font-size:12px;color:#a7f3d0;">Saves ₹' + Math.round(d.savings.annual_saved_inr).toLocaleString('en-IN') + '/yr vs legacy seat+markup plans</div>' +
+      '</div>' +
+      '<div class="cost-card">' +
+        '<span class="badge-mini">₹0 Sub + ₹0.10/msg Gateway</span>' +
+        '<h4 style="margin:8px 0 2px;">Client-Pay Consumption</h4>' +
+        '<div class="mono-val">₹' + Math.round(m.client_pay_consumption).toLocaleString('en-IN') + '<span style="font-size:12px;color:#94a3b8;">/mo</span></div>' +
+        '<div style="font-size:12px;color:#94a3b8;">Pay Meta directly + flat per-message routing</div>' +
+      '</div>' +
+      '<div class="cost-card">' +
+        '<span class="badge-mini">Single INR Invoice · ₹0 Floor</span>' +
+        '<h4 style="margin:8px 0 2px;">All-In Pay-As-You-Go</h4>' +
+        '<div class="mono-val">₹' + Math.round(m.consolidated_all_in_payg).toLocaleString('en-IN') + '<span style="font-size:12px;color:#94a3b8;">/mo</span></div>' +
+        '<div style="font-size:12px;color:#94a3b8;">₹1.50/mkt · ₹0.50/utility &amp; auth · ₹0/service</div>' +
+      '</div>' +
+      '<div class="cost-card">' +
+        '<span class="badge-mini amber">Base Sub + Seat Fee + 18% Markup</span>' +
+        '<h4 style="margin:8px 0 2px;">Typical Legacy Seat BSP</h4>' +
+        '<div class="mono-val" style="color:#f87171;">₹' + Math.round(m.legacy_seat_markup_bsp).toLocaleString('en-IN') + '<span style="font-size:12px;color:#94a3b8;">/mo</span></div>' +
+        '<div style="font-size:12px;color:#94a3b8;">Includes base fee + extra agent seat surcharges</div>' +
+      '</div>';
+  }
+  ['slMkt', 'slUtil', 'slAuth', 'slSvc', 'slSeats'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', updateCostCalc);
+  });
+
+  // ── TAB 5: DPDP 2023, RBI & IRDAI Compliance Audit & Ledger ───────────
+  var auditLedger = [];
+  document.getElementById('cmpHour').addEventListener('input', function (e) {
+    document.getElementById('cmpHourLbl').textContent = String(e.target.value).padStart(2, '0') + ':00 IST';
+  });
+  document.getElementById('btnPresetViolation').addEventListener('click', function () {
+    document.getElementById('cmpFramework').value = 'RBI_RECOVERY';
+    document.getElementById('cmpHour').value = 21;
+    document.getElementById('cmpHourLbl').textContent = '21:00 IST';
+    document.getElementById('cmpMessage').value = 'Urgent notice for PAN ABCDE1234F: pay overdue EMI immediately or police warrant action starts.';
+    runCompliance();
+  });
+  document.getElementById('btnPresetClean').addEventListener('click', function () {
+    document.getElementById('cmpFramework').value = 'IRDAI_NHCX';
+    document.getElementById('cmpHour').value = 11;
+    document.getElementById('cmpHourLbl').textContent = '11:00 IST';
+    document.getElementById('cmpConsent').checked = true;
+    document.getElementById('cmpMessage').value = 'Namaste {{1}}, your health policy claim #{{2}} pre-authorisation is under cashless review (1-hr IRDAI TAT). Reply STOP to opt out.';
+    runCompliance();
+  });
+
+  function renderLedger() {
+    document.getElementById('dpdpLedgerList').innerHTML = auditLedger.map(function (e) {
+      return '<div class="flow-node">' +
+        '<div>' +
+          '<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">' +
+            '<span class="badge-mini ' + (e.verdict === 'COMPLIANT' || e.verdict === 'ERASURE_EXECUTED' ? '' : 'red') + '">' + e.verdict + '</span>' +
+            '<strong style="font-size:12.5px;">' + e.framework + ' · ' + e.principal + '</strong>' +
+          '</div>' +
+          '<div style="font-family:monospace;font-size:11px;color:#94a3b8;word-break:break-all;">SHA-256: ' + e.hash + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  async function runCompliance() {
+    var payload = {
+      framework: document.getElementById('cmpFramework').value,
+      send_hour_ist: parseInt(document.getElementById('cmpHour').value, 10),
+      has_explicit_consent: document.getElementById('cmpConsent').checked,
+      message_text: document.getElementById('cmpMessage').value
+    };
+    var res = await fetch('/api/sevenforce/waba/compliance-audit', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    var d = await res.json();
+    var ok = d.verdict === 'COMPLIANT';
+    var html = '<div style="padding:14px;border-radius:12px;background:' + (ok ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.12)') + ';border:1px solid ' + (ok ? '#10b981' : '#ef4444') + ';">' +
+      '<strong style="color:' + (ok ? '#34d399' : '#f87171') + ';">Verdict: ' + d.verdict + ' (' + d.framework + ')</strong>' +
+      '<ul style="margin:8px 0 0;padding-left:18px;font-size:12.5px;color:#e2e8f0;">' +
+      (d.findings || []).map(function (f) { return '<li style="color:#fca5a5;"><strong>[' + f.code + ']</strong> ' + f.detail + '</li>'; }).join('') +
+      (d.passed_checks || []).map(function (p) { return '<li style="color:#a7f3d0;">✓ ' + p + '</li>'; }).join('') +
+      '</ul></div>';
+    document.getElementById('cmpAuditResult').innerHTML = html;
+
+    auditLedger.unshift({
+      verdict: d.verdict,
+      framework: d.framework,
+      principal: d.dpdp_audit_ledger_entry.data_principal_id,
+      hash: d.dpdp_audit_ledger_entry.sha256_append_only_hash,
+      raw: d
+    });
+    renderLedger();
+  }
+
+  document.getElementById('btnRunCompliance').addEventListener('click', runCompliance);
+  document.getElementById('btnExportDpdp').addEventListener('click', function () {
+    var blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), dpdp_sec_11_portability_ledger: auditLedger }, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'dpdp-2023-consent-export.json';
+    a.click();
+    toast('Exported DPDP Sec. 11 Data Principal JSON');
+  });
+  document.getElementById('btnTriggerErasure').addEventListener('click', function () {
+    var fakeHash = Array.from(crypto.getRandomValues(new Uint8Array(32))).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+    auditLedger.unshift({
+      verdict: 'ERASURE_EXECUTED',
+      framework: 'DPDP_SEC_12_ERASURE',
+      principal: 'principal_+9198XXXXXX10 (STOP Revoked)',
+      hash: fakeHash
+    });
+    renderLedger();
+    toast('Right-to-Erasure cascade executed across WABA, Sheets & CRM!');
+  });
+
+  // Boot initial live views
+  resetFlowPhone();
+  buildFlow();
+  runAbSim();
+  renderInboxAndKanban();
+  updateCostCalc();
+  runCompliance();
+})();
+</script>
+</body>
+</html>
+

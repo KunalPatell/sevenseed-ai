@@ -558,3 +558,21 @@ All four remaining items from Section 5 above have now been resolved, verified w
    - Launched 4 New Sevenseed Showcases/Ventures: `/quant-terminal/` (`POST /api/quant/analyze` — analytical Black-Scholes Greeks + Kelly + Bollinger/RSI), `/climate-agritech/` (`POST /api/climate/analyze` — Scope 1–3 GHG, CBAM, FAO-56 irrigation & Solar LCOE), `/proptech-studio/` (`POST /api/proptech/valuation` — DCF Cap-Rate, EMI, Rent-vs-Buy crossover & FSI isometric massing), and `/shader-3d-lab/` (live WebGL GLSL compiler).
 
 
+
+---
+
+## 8. Build Log — 2026-11-12 (Sevenforce Omnichannel WABA & India Regulatory Reference: `https://richautomate.in`)
+
+- **Reference Platform**: `https://richautomate.in` (Official Meta Cloud API WhatsApp Business Solution Provider + Telegram Automation + India Regulatory Stack — Platform #127 in `/api/reference-sites/registry`).
+- **Domain**: Omnichannel WhatsApp Cloud API & Telegram Automation, Native Flows v7.1, Dual-Engine Consumption Pricing & India Regulatory Guardrails (DPDP Act 2023, RBI Master Directions, IRDAI/NHCX).
+- **Extracted Capabilities & Sevenforce Mapping** ([`waba-automation-hub.html`](../apps/sevenseed/backend/static/sevenforce/waba-automation-hub.html) & [`advance_site_router.py`](../apps/sevenseed/backend/advance_site_router.py)):
+  1. **15-Node Visual Flow Builder & Payment Pause/Auto-Resume** (`POST /api/sevenforce/waba/build-flow`):
+     - Interactive palette of 15 node types (`KEYWORD_TRIGGER`, `DPDP_CONSENT_GATE`, `AI_INTENT_ROUTER`, `QUICK_REPLY_MENU`, `NATIVE_FLOW_V71`, `VARIABLE_CAPTURE`, `CONDITION_BRANCH`, `SHOPIFY_ORDER_SYNC`, `SHEETS_2WAY_SYNC`, `ZOHO_CRM_PUSH`, `RAZORPAY_PAYMENT_PAUSE`, `DELAY_TIMER`, `TELEGRAM_MIRROR`, `AGENT_HANDOFF`, `CSAT_SURVEY`) with runtime `PAUSED_AWAITING_PAYMENT` state machine that automatically resumes upon `payment.captured` webhook verification.
+  2. **Native WhatsApp Flows (v7.1) & 25-Variable A/B/C/D Template Lab** (`POST /api/sevenforce/waba/template-ab-sim`):
+     - Sequential `{{1}}`..`{{25}}` dynamic variable chip inserter, Meta Graph API `message_templates` linter, 4-way A/B/C/D cohort allocator, and encrypted full-screen in-chat Native Flow v7.1 drawer.
+  3. **Multi-Agent Shared Team Inbox (WhatsApp + Telegram) & Kanban Pipeline**:
+     - Unified inbox with SLA timers, quick-reply macros, agent assignment across Sevenforce AI Employees (`Wave`, `Maya`, `Scout`) and human specialists, synced live to a 4-stage Kanban CRM board.
+  4. **Dual-Engine WABA Cost & Billing Calculator** (`POST /api/sevenforce/waba/cost-calculator`):
+     - Compares Sevenforce Sovereign BYOK (`₹0/mo` platform fee, direct Meta India pass-through rates: `₹0.7846` marketing, `₹0.115` utility/auth, `₹0.00` 24h service window) against Client-Pay (`₹0.10/msg`), Consolidated All-In Pay-As-You-Go, and legacy per-seat + markup BSP plans.
+  5. **India Regulatory Compliance Engine** (`POST /api/sevenforce/waba/compliance-audit`):
+     - Pre-send linter enforcing **DPDP Act 2023** (Sec. 6 affirmative consent, `STOP` withdrawal, Aadhaar/PAN PII masking, append-only SHA-256 consent ledger, Sec. 11 JSON export & Sec. 12 Right-to-Erasure cascade), **RBI Master Directions** (`08:00–19:00 IST` borrower contact window & non-coercive script verification), and **IRDAI/NHCX** cashless claim TAT disclosures.
